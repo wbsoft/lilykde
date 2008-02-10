@@ -363,7 +363,7 @@ class LogWindow(LazyToolView):
                     KURL(u"mailto:?attach=%s" % url), "", True)
 
 
-def runLilyPond(doc, preview=True):
+def runLilyPond(doc, preview=False):
     """
     Run Lilypond on the specified kate.document() and produce a PDF in the same
     directory if that is writable. If param `preview` is True, the PDF will
@@ -391,9 +391,13 @@ def runLilyPond(doc, preview=True):
 
 
 # actions
-@kate.onAction(_("Run LilyPond (Preview)"), "Ctrl+Shift+M", "tools")
+@kate.onAction(_("Run LilyPond (preview)"), "Ctrl+Shift+M", "tools")
 def actionRunLilyPondPreview():
-    runLilyPond(kate.document(), True)
+    runLilyPond(kate.document(), preview=True)
+
+@kate.onAction(_("Run LilyPond (publish)"), "Ctrl+Shift+P", "tools")
+def actionRunLilyPondPublish():
+    runLilyPond(kate.document())
 
 @kate.onWindowShown
 def initLilyPond():
