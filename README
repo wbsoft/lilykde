@@ -1,0 +1,36 @@
+Lilypond Point and Click for KDE (3.x and 4.x)
+==============================================
+
+Nederlandse uitleg (English see below):
+
+1. Plaats textedit.protocol in de KDE-services map, bijvoorbeeld
+   ~/.kde/share/services/ of /usr/share/services/.
+
+2. Plaats ktexteditservice ergens in het systeempad, bijvoorbeeld
+   ~/bin/ of /usr/local/bin/ en maakt het uitvoerbaar:
+   chmod +x ktexteditservice
+
+Maak nu een Lilypond-bestand aan in Kate. Laat Lilypond een PDF
+aanmaken, open deze in KPDF en klik in de PDF op een muzieknoot. Voilá!
+
+
+English:
+
+1. Put textedit.protocol somewhere in the KDE services directory, for
+   example in ~/.kde/share/services/ or /usr/share/services/.
+
+2. Put ktexteditservice somewhere in the system PATH, for example in
+   ~/bin/ of /usr/local/bin/ and make it executable:
+   chmod +x ktexteditservice
+
+Now create a .ly file with Kate. Run Lilypond and open the resulting
+PDF with KPDF. Click on music notes and see the cursor jump to the
+correct location!
+
+
+Note: Kate from KDE3 uses a different line numbering scheme than Kate
+from KDE4. Please (un)comment the corresponding lines in ktexteditservice.
+
+Contact: Wilbert Berendsen <info@wilbertberendsen.nl>
+http://www.wilbertberendsen.nl/
+Wed Jan 30 15:35:23 CET 2008
