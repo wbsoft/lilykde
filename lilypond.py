@@ -15,7 +15,7 @@ import os.path
 
 import gettext
 try:
-    _ = gettext.translation('frescobaldi').ugettext
+    _ = gettext.translation('lilykde').ugettext
 except IOError:
     def _(message): return message
 
