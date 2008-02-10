@@ -244,11 +244,11 @@ class LyJob(Job):
                     # the query string. Later on, we prepend the "mailto:?" :)
                     if self.f.preview:
                         actions.append((
-                          "emailpreview=file://%s" % htmlescapeurl(self.f.pdf),
+                          "emailpreview=file://%s" % self.f.pdf,
                           _("Email PDF (preview)")))
                     else:
                         actions.append((
-                          "email=file://%s" % htmlescapeurl(self.f.pdf),
+                          "email=file://%s" % self.f.pdf,
                           _("Email PDF")))
         else:
             self.log.fail(_("LilyPond exited abnormally."))
@@ -335,7 +335,8 @@ class LogWindow(LazyToolView):
 
     def actions(self, actions, color="blue", bold=True):
         if actions:
-            self.msg(" - ".join(['<a href="%s">%s</a>' % a for a in actions]),
+            self.msg(" - ".join(['<a href="%s">%s</a>' % \
+                (htmlescapeurl(u), htmlescape(m)) for u, m in actions]),
                 color, bold)
 
     def runURL(self, url):
