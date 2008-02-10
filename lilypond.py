@@ -23,7 +23,7 @@ import kate
 import kate.gui
 
 from qt import *
-from kdecore import i18n, KApplication, KURL, KProcess
+from kdecore import KApplication, KURL, KProcess
 from kdeui import KMessageBox, KTextBrowser
 from kparts import createReadOnlyPart
 from kio import KRun
@@ -41,6 +41,7 @@ def warncontinue(s):
         KMessageBox.Continue
 
 def htmlescape(s):
+    """Escape strings for use in HTML text and attributes."""
     for a, b in (
         ("&", "&amp;"),
         (">", "&gt;"),
@@ -51,6 +52,7 @@ def htmlescape(s):
     return s
 
 def htmlescapeurl(s):
+    """Escape strings for use as URL in HTML href attributes etc."""
     for a, b in (
         ('%', '%25'),
         ('&nbsp;', "%20"),
