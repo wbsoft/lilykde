@@ -40,6 +40,15 @@ def warncontinue(s):
     return KMessageBox.warningContinueCancel(kate.mainWidget(),s) == \
         KMessageBox.Continue
 
+def encodeurl(s):
+    """Encode an URL, but leave html entities alone."""
+    for a, b in (
+        ('%', '%25'),
+        (' ', "%20"),
+        ('~', "%7E"),
+        ): s = s.replace(a,b)
+    return s
+
 def htmlescape(s):
     """Escape strings for use in HTML text and attributes."""
     for a, b in (
@@ -53,18 +62,9 @@ def htmlescape(s):
 
 def htmlescapeurl(s):
     """Escape strings for use as URL in HTML href attributes etc."""
-    for a, b in (
-        ('%', '%25'),
-        ('&nbsp;', "%20"),
-        ("&", "&amp;"),
-        (">", "&gt;"),
-        ("<", "&lt;"),
-        ("'", "&apos;"),
-        ('"', "&quot;"),
-        (' ', "%20"),
-        ('~', "%7E"),
-        ): s = s.replace(a,b)
-    return s
+    return htmlescape(encodeurl(s))
+
+
 
 # Classes
 
@@ -124,8 +124,7 @@ class Outputter:
         Write a line of LilyPond console output to the logger, replacing
         file- and line numbers with clickable textedit:// links.
         """
-        line = line.replace("  ", "&nbsp; ") # preserve spaces in LogWindow
-        line = line.replace("  ", "&nbsp; ") # one possible couple of 2 spaces.
+        line = htmlescape(line)
         line = self._editstr(self._texteditrepl, line, 1)
         self.log.append_html(
           u'<span style="font-family:monospace;">%s</span>' % line, self.color)
@@ -134,7 +133,7 @@ class Outputter:
         file, line, col = m.group(1), int(m.group(2)), int(m.group(3) or 0)
         file = os.path.join(self.f.directory, file)
         return u'<a href="textedit://%s:%d:%d:%d">%s</a>' % \
-            (htmlescapeurl(file), line, col, col, m.group())
+            (encodeurl(file), line, col, col, m.group())
 
     def close(self):
         s = "".join(self.buf)
