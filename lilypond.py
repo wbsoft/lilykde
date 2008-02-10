@@ -127,7 +127,7 @@ class Outputter:
         line = htmlescape(line)
         line = self._editstr(self._texteditrepl, line, 1)
         self.log.append_html(
-          u'<span style="font-family:monospace;">%s</span>' % line, self.color)
+          u'<span style="font-family:monospace;white-space:pre-wrap;">%s</span>' % line, self.color)
 
     def _texteditrepl(self, m):
         file, line, col = m.group(1), int(m.group(2)), int(m.group(3) or 0)
