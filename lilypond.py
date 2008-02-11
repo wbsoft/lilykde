@@ -153,16 +153,16 @@ class MyKRun(object):
         MyKRun._jobs.append(self)
         self.p = KRun(KURL(url))
         self.p.setAutoDelete(False)
-        self.p.connect(self.p, SIGNAL("finished()"), self.__exit__)
+        self.p.connect(self.p, SIGNAL("finished()"), self._finish)
 
-    def __exit__(self):
+    def _finish(self):
         MyKRun._jobs.remove(self)
 
 
 class Job(object):
     """
     To be subclassed. To instatiate a job, and keep a pointer so the instance
-    will not go out of scope. You must call __init__(), and also __exit__()
+    will not go out of scope. You must call __init__(), and also _finish()
     when your process has been finished.
     """
     _jobs = []
@@ -174,7 +174,7 @@ class Job(object):
             # set a busy cursor if this is the first subprocess
             QApplication.setOverrideCursor(QCursor(Qt.BusyCursor))
 
-    def __exit__(self):
+    def _finish(self):
         self.p.wait()
         Job._jobs.remove(self)
         if len(Job._jobs) == 0:
@@ -191,38 +191,31 @@ class LyJob(Job):
         self.f = f
         self.p.setExecutable("lilypond")
         self.p.setWorkingDirectory(f.directory)
-        args = ["--pdf", "-o", f.basename]
-        if not f.preview: args.append("-dno-point-and-click")
-        args.append(f.ly)
-        self.p.setArguments(args)
         self.log = log
         self.stdout = Outputter(log, f)
         self.stderr = Outputter(log, f)
 
-        QObject.connect(
-            self.p, SIGNAL("receivedStdout(KProcess*, char*, int)"),
+        QObject.connect(self.p, SIGNAL("receivedStdout(KProcess*, char*, int)"),
             self.stdout.receive)
-        QObject.connect(
-            self.p, SIGNAL("receivedStderr(KProcess*, char*, int)"),
+        QObject.connect(self.p, SIGNAL("receivedStderr(KProcess*, char*, int)"),
             self.stderr.receive)
-        QObject.connect(
-            self.p, SIGNAL("processExited(KProcess*)"),
-            self.finish)
+        QObject.connect(self.p, SIGNAL("processExited(KProcess*)"),
+            self._finish)
 
-    def run(self):
-        if self.f.preview:
-            self.log.ok(
-                _("LilyPond [%s] starting (preview mode)...") % self.f.ly)
+    def _run(self, args, callback, mode=None):
+        self._finishFunc = callback
+        self.p.setArguments(args)
+        if mode:
+            self.log.ok(_("LilyPond [%s] starting (%s)...") % (self.f.ly, mode))
         else:
-            self.log.ok(
-                _("LilyPond [%s] starting...") % self.f.ly)
+            self.log.ok(_("LilyPond [%s] starting...") % self.f.ly)
         if not self.p.start(KProcess.NotifyOnExit, KProcess.AllOutput):
             self.log.fail(_("Could not start LilyPond."))
 
-    def finish(self):
+    def _finish(self):
         self.stdout.close()
         self.stderr.close()
-        actions = []
+        success = False
         if self.p.signalled():
             self.log.fail(
               _("LilyPond was terminated by signal %d.") % self.p.exitSignal())
@@ -232,29 +225,37 @@ class LyJob(Job):
                 _("LilyPond exited with return code %d.") % self.p.exitStatus())
             else:
                 self.log.ok(_("LilyPond [%s] finished.") % self.f.ly)
-                if self.f.pdf:
-                    self.f.previewPDF()
-                    actions.append((
-                        "file://%s" % htmlescapeurl(self.f.directory),
-                        _("Open folder")))
-                    actions.append((
-                        "file://%s" % htmlescapeurl(self.f.pdf),
-                        _("Open PDF")))
-                    # hack: prevent QTextView from recognizing mailto urls, as
-                    # it then uses the mailClick signal, which does not give us
-                    # the query string. Later on, we prepend the "mailto:?" :)
-                    if self.f.preview:
-                        actions.append((
-                          "emailpreview=file://%s" % self.f.pdf,
-                          _("Email PDF (preview)")))
-                    else:
-                        actions.append((
-                          "email=file://%s" % self.f.pdf,
-                          _("Email PDF")))
+                success = True
         else:
             self.log.fail(_("LilyPond exited abnormally."))
-        self.log.actions(actions)
-        self.__exit__()
+        self._finishFunc(success)
+        super(LyJob, self)._finish()
+
+    def ly2PDF(self, preview=False):
+        args = ["--pdf", "-o", self.f.basename]
+        if not preview: args.append("-dno-point-and-click")
+        args.append(f.ly)
+        mode = _("preview mode") and preview or None
+        self.preview = preview
+        self._run(args, self._finishPDF, mode)
+
+    def _finishPDF(self, success):
+        if success and self.f.pdf:
+            self.f.previewPDF()
+            actions = [
+                ("file://%s" % self.f.directory, _("Open folder")),
+                ("file://%s" % self.f.pdf, _("Open PDF"))]
+            # hack: prevent QTextView from recognizing mailto urls, as
+            # it then uses the mailClick signal, which does not give us
+            # the query string. Later on, we prepend the "mailto:?" :)
+            if self.preview:
+                actions.append(("emailpreview=file://%s" % self.f.pdf,
+                    _("Email PDF (preview)")))
+            else:
+                actions.append(("email=file://%s" % self.f.pdf,
+                    _("Email PDF")))
+            self.log.actions(actions)
+
 
 
 class LazyToolView(object):
@@ -384,8 +385,7 @@ def runLilyPond(doc, preview=False):
                    "Please save your document to a local file."))
         return
 
-    f.preview = preview
-    LyJob(f, LogWindow().create()).run()
+    LyJob(f, LogWindow().create()).ly2PDF(preview)
 
 
 
