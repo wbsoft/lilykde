@@ -73,6 +73,7 @@ def keepspaces(s):
     s = s.replace("  ","&nbsp; ")
     return re.sub("^ ", "&nbsp;", s)
 
+
 # Classes
 
 class LyFile(object):
