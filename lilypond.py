@@ -164,12 +164,16 @@ class Job(object):
     To be subclassed. To instatiate a job, and keep a pointer so the instance
     will not go out of scope. You must call __init__(), and also _finish()
     when your process has been finished.
+
+    Child classes should implement a run() and a completed() method.
     """
     _jobs = []
 
     def __init__(self):
         self.p = KProcess()
         Job._jobs.append(self)
+        QObject.connect(self.p, SIGNAL("processExited(KProcess*)"),
+            self._finish)
         if len(Job._jobs) == 1:
             # set a busy cursor if this is the first subprocess
             QApplication.setOverrideCursor(QCursor(Qt.BusyCursor))
@@ -183,6 +187,7 @@ class Job(object):
 
 class LyJob(Job):
     """
+    To be subclassed.
     Class to run a lilypond job. Expects a LyFile object with all the data, and
     a LogWindow to write stdout and stderr to.
     """
@@ -199,11 +204,8 @@ class LyJob(Job):
             self.stdout.receive)
         QObject.connect(self.p, SIGNAL("receivedStderr(KProcess*, char*, int)"),
             self.stderr.receive)
-        QObject.connect(self.p, SIGNAL("processExited(KProcess*)"),
-            self._finish)
 
-    def _run(self, args, callback, mode=None):
-        self._finishFunc = callback
+    def _run(self, args, mode=None):
         self.p.setArguments(args)
         if mode:
             self.log.ok(_("LilyPond [%s] starting (%s)...") % (self.f.ly, mode))
@@ -228,18 +230,26 @@ class LyJob(Job):
                 success = True
         else:
             self.log.fail(_("LilyPond exited abnormally."))
-        self._finishFunc(success)
+        self.completed(success)
         super(LyJob, self)._finish()
 
-    def ly2PDF(self, preview=False):
-        args = ["--pdf", "-o", self.f.basename]
-        if not preview: args.append("-dno-point-and-click")
-        args.append(f.ly)
-        mode = _("preview mode") and preview or None
-        self.preview = preview
-        self._run(args, self._finishPDF, mode)
 
-    def _finishPDF(self, success):
+class Ly2PDF(LyJob):
+    """
+    Converts a LilyPond file to PDF
+    """
+    def run(self, preview=False):
+        self.preview = preview
+        args = ["--pdf", "-o", self.f.basename]
+        if preview:
+            mode = _("preview mode")
+        else:
+            mode = _("publish mode")
+            args.append("-dno-point-and-click")
+        args.append(self.f.ly)
+        self._run(args, mode)
+
+    def completed(success):
         if success and self.f.pdf:
             self.f.previewPDF()
             actions = [
@@ -255,7 +265,6 @@ class LyJob(Job):
                 actions.append(("email=file://%s" % self.f.pdf,
                     _("Email PDF")))
             self.log.actions(actions)
-
 
 
 class LazyToolView(object):
@@ -279,7 +288,6 @@ class LazyToolView(object):
 
     def hide(self):
         if self.tv: self.tv.hide()
-
 
 
 class PDFToolView(LazyToolView):
@@ -385,7 +393,7 @@ def runLilyPond(doc, preview=False):
                    "Please save your document to a local file."))
         return
 
-    LyJob(f, LogWindow().create()).ly2PDF(preview)
+    Ly2PDF(f, LogWindow().create()).run(preview)
 
 
 
