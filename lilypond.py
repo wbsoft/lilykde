@@ -64,7 +64,14 @@ def htmlescapeurl(s):
     """Escape strings for use as URL in HTML href attributes etc."""
     return htmlescape(encodeurl(s))
 
-
+def keepspaces(s):
+    """
+    Changes "  " into "&nbsp; ".
+    Hack needed because otherwise the spaces disappear in the LogWindow.
+    """
+    s = s.replace("  ","&nbsp; ")
+    s = s.replace("  ","&nbsp; ")
+    return re.sub("^ ", "&nbsp;", s)
 
 # Classes
 
@@ -325,6 +332,7 @@ class LogWindow(LazyToolView):
         self.show()
 
     def append_html(self, text, color=None, bold=False):
+        text = keepspaces(text)
         if bold:
             text = "<b>%s</b>" % text
         if color:
