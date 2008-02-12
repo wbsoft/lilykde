@@ -53,6 +53,7 @@ def documentChanged(doc):
         if f.hasUpdatedPDF():
             f.previewPDF()
     elif 'lilykde' in sys.modules:
+        import lilykde
         # Hide the PDF toolview (if it exists) when a probably non-lilypond
         # document is selected. Only if lilykde really loaded.
         lilykde.PDFToolView().hide()
