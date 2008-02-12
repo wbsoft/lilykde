@@ -252,19 +252,21 @@ class Ly2PDF(LyJob):
 
     def completed(self, success):
         if success and self.f.pdf:
-            self.f.previewPDF()
-            actions = [
-                ("file://%s" % self.f.directory, _("Open folder")),
-                ("file://%s" % self.f.pdf, _("Open PDF"))]
-            # hack: prevent QTextView from recognizing mailto urls, as
-            # it then uses the mailClick signal, which does not give us
-            # the query string. Later on, we prepend the "mailto:?" :)
-            if self.preview:
-                actions.append(("emailpreview=file://%s" % self.f.pdf,
-                    _("Email PDF (preview)")))
+            actions = [("file://%s" % self.f.directory, _("Open folder"))]
+            if self.f.hasUpdatedPDF():
+                self.f.previewPDF()
+                actions.append(("file://%s" % self.f.pdf, _("Open PDF")))
+                # hack: prevent QTextView from recognizing mailto urls, as
+                # it then uses the mailClick signal, which does not give us
+                # the query string. Later on, we prepend the "mailto:?" :)
+                if self.preview:
+                    actions.append(("emailpreview=file://%s" % self.f.pdf,
+                        _("Email PDF (preview)")))
+                else:
+                    actions.append(("email=file://%s" % self.f.pdf,
+                        _("Email PDF")))
             else:
-                actions.append(("email=file://%s" % self.f.pdf,
-                    _("Email PDF")))
+                self.log.msg(_("LilyPond did not write a PDF. You probably forgot <b>\layout</b>?"))
             self.log.actions(actions)
 
 
@@ -336,7 +338,7 @@ class LogWindow(LazyToolView):
     def append(self, text, color=None, bold=False):
         self.append_html(htmlescape(text), color, bold)
 
-    def msg(self, text, color=None, bold=True):
+    def msg(self, text, color=None, bold=False):
         self.append_html(u"*** %s" % text, color, bold)
 
     def ok(self, text, color="darkgreen", bold=True):
