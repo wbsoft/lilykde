@@ -1,5 +1,5 @@
 [Protocol]
-exec=ktexteditservice %u
+exec=python ~/.kde/share/apps/lilykde/ktexteditservice.py %u
 protocol=textedit
 input=none
 output=none
