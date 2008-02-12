@@ -138,9 +138,9 @@ class Outputter:
           u'<span style="font-family:monospace;">%s</span>' % line, self.color)
 
     def _texteditrepl(self, m):
-        file, line, col = m.group(1), int(m.group(2)), int(m.group(3) or 0)
+        (file, line), col = m.group(1,2), m.group(3) or "0"
         file = os.path.join(self.f.directory, file)
-        return u'<a href="textedit://%s:%d:%d:%d">%s</a>' % \
+        return u'<a href="textedit://%s:%s:%s:%s">%s</a>' % \
             (encodeurl(file), line, col, col, m.group())
 
     def close(self):
