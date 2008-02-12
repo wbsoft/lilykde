@@ -1,10 +1,14 @@
 KDEHOME ?= ~/.kde
 LILYKDE = $(KDEHOME)/share/apps/lilykde
 
-all: ly.png
+all = ly.png textedit.protocol
+all: $(all)
 
 ly.png: ly.svg
 	ksvgtopng 128 128 "`pwd`/$<" "`pwd`/$@"
+
+textedit.protocol: textedit.protocol.in
+	sed 's!LILYKDEDIR!$(LILYKDE)!' $< > $@
 
 install: all
 	# plugin
@@ -31,3 +35,6 @@ install: all
 
 	# Finally, rebuild the local kde config database
 	kbuildsycoca
+
+clean:
+	rm $(all)
