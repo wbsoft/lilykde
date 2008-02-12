@@ -25,5 +25,9 @@ install: all
 	cp textedit.protocol $(KDEHOME)/share/services/
 	cp ktexteditservice.py $(LILYKDE)/
 
+	# LilyPond syntax highlighting
+	mkdir -p $(KDEHOME)/share/apps/katepart/syntax
+	cp lilypond.xml $(KDEHOME)/share/apps/katepart/syntax/
+
 	# Finally, rebuild the local kde config database
 	kbuildsycoca
