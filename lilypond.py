@@ -2,22 +2,12 @@
 
 A LilyPond Kate/Pate plugin.
 
-Makes it easy to run LilyPond from within Kate.
+This part is loaded when the LilyPond is first called.
 
 """
 
-__title__ = "LilyPond"
-__author__ = "Wilbert Berendsen <info@wilbertberendsen.nl>"
-__license__ = "LGPL"
-
 import re
 import os.path
-
-import gettext
-try:
-    _ = gettext.translation('lilykde').ugettext
-except IOError:
-    def _(message): return message
 
 import kate
 import kate.gui
@@ -27,6 +17,9 @@ from kdecore import KApplication, KURL, KProcess
 from kdeui import KMessageBox, KTextBrowser
 from kparts import createReadOnlyPart
 from kio import KRun
+
+# translate the messages
+from lilykde_i18n import _
 
 # Small utility functions
 # TODO: change to passive popups
