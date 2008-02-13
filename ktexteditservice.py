@@ -2,7 +2,9 @@
 import sys, os, re
 
 if len(sys.argv) != 2:
-  sys.stderr.write("Usage:\nktexteditservice.py textedit:///path/to/file:line:char:col\n")
+  sys.stderr.write(
+    "Usage:\n"
+    "ktexteditservice.py textedit:///path/to/file:line:char:col\n")
   sys.exit(2)
 
 url = unicode(sys.argv[1])
@@ -15,4 +17,3 @@ if m:
 else:
   sys.stderr.write("Not a valid textedit URL: %s\n" % url)
   sys.exit(1)
-  
