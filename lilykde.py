@@ -92,12 +92,25 @@ class LyFile(object):
         return self.doc.information.mimeType == 'text/x-lilypond' or \
                self.extension in ('.ly', '.ily', 'lyi')
 
+    def updated(self, file):
+        return os.path.getmtime(self.path) <= os.path.getmtime(file)
+
     def hasUpdatedPDF(self):
         return self.isLocalFile() and os.path.isfile(self.pdf) and \
-            os.path.getmtime(self.path) <= os.path.getmtime(self.pdf)
+            self.updated(self.pdf)
 
     def previewPDF(self):
         self.pdf and PDFToolView().create().openFile(self.pdf)
+
+    def hasUpdatedMIDIs(self):
+        self.midis = []
+        midi = os.path.join(self.directory, self.basename + ".midi")
+        if os.path.isfile(midi) and self.updated(midi):
+            self.midis.append(midi)
+        from glob import glob
+        files = glob(os.path.join(self.directory, self.basename + "?*.midi"))
+        self.midis.extend(f for f in files if self.updated(f))
+        return bool(self.midis)
 
 
 class Outputter:
@@ -266,7 +279,12 @@ class Ly2PDF(LyJob):
                     actions.append(("email=file://%s" % self.f.pdf,
                         _("Email PDF")))
             else:
-                self.log.msg(_("LilyPond did not write a PDF. You probably forgot <b>\layout</b>?"))
+                self.log.msg(_("LilyPond did not write a PDF. "
+                               "You probably forgot <b>\layout</b>?"))
+            if self.f.hasUpdatedMIDIs():
+                actions.append(("file://%s" % self.f.midis[0], _("Play MIDI")))
+                actions.extend([("file://%s" % m, str(n+1))
+                    for n, m in enumerate(self.f.midis[1:])])
             self.log.actions(actions)
 
 

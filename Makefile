@@ -34,7 +34,7 @@ install: all
 	cp lilypond.xml $(KDEHOME)/share/apps/katepart/syntax/
 
 	# Finally, rebuild the local kde config database
-	kbuildsycoca
+	kbuildsycoca 2> /dev/null
 
 clean:
 	rm $(all)
