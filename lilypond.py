@@ -39,25 +39,24 @@ def initLilyPond():
 
 @kate.documentManager.onChanged
 def documentChanged(doc):
-    # only if kate already started and lilykde has been loaded
-    if not kate.application.mainWindow():
-        return
-
-    # load lilykde if this is probably a lilypond file
-    if doc.information.mimeType == 'text/x-lilypond' or \
-            os.path.splitext(doc.url)[1] in ('.ly', '.ily', 'lyi'):
-        import lilykde
-        f = lilykde.LyFile(doc)
-        # Show the corresponding PDF if it is not older than the LilyPond file.
-        # TODO: make it a config option whether to directly show the PDF.
-        if f.hasUpdatedPDF():
-            f.previewPDF()
-    elif 'lilykde' in sys.modules:
-        import lilykde
-        # Hide the PDF toolview (if it exists) when a probably non-lilypond
-        # document is selected. Only if lilykde really loaded.
-        lilykde.PDFToolView().hide()
-        lilykde.LogWindow().hide()
+    # only if kate already started, lilykde has been loaded, and the document
+    # has a name
+    if kate.application.mainWindow() and doc.url:
+        # load lilykde if this is probably a lilypond file
+        if doc.information.mimeType == 'text/x-lilypond' or \
+                os.path.splitext(doc.url)[1] in ('.ly', '.ily', 'lyi'):
+            import lilykde
+            f = lilykde.LyFile(doc)
+            # Show corresponding PDF if it's not older than the LilyPond file.
+            # TODO: make it a config option whether to directly show the PDF.
+            if f.hasUpdatedPDF():
+                f.previewPDF()
+        elif 'lilykde' in sys.modules:
+            import lilykde
+            # Hide the PDF toolview (if it exists) when a probably non-lilypond
+            # document is selected. Only if lilykde really loaded.
+            lilykde.PDFToolView().hide()
+            lilykde.LogWindow().hide()
 
 
 # kate: indent-width 4;
