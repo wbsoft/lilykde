@@ -4,20 +4,21 @@ LilyPond KDE Integration
 http://lilykde.googlecode.com/
 
 
-This is a set of tools to integrate the very fine LilyPond music typesetter into
-KDE 3.x.
+This is a set of tools to integrate the very fine LilyPond music
+typesetter into KDE 3.x.
 
 It currently consists of:
 
-* a Kate plugin (using Pate, written in Python) that can run LilyPond for you,
-  embedding a PDF preview right into Kate and other nice things,
+* a Kate plugin (using Pate, written in Python) that can run LilyPond
+  for you, embedding a PDF preview right into Kate and other nice
+  things,
 
-* A textedit service so you can click on the notes in the preview (or any other
-  PDF viewer) and have Kate jump to the correct position,
+* A textedit service so you can click on the notes in the preview (or
+  any other PDF viewer) and have Kate jump to the correct position,
 
 * Powerful LilyPond syntax highlighting (already part of KDE)
 
-* An icon and mimetype for *.ly files.  The icon was taken from LilyPond.
+* An icon and mimetype for *.ly files. The icon was taken from LilyPond.
 
 
 Requirements
@@ -35,25 +36,26 @@ Installation
 
 make && make install
 
-This currently installs LilyKDE to your home directory. Systemwide installation
-is possible with export KDEHOME=/usr/path/to/kde where kdelibs and pate are
-installed to.  Your mileage may vary.
+This currently installs LilyKDE to your home directory. Systemwide
+installation is possible with export KDEHOME=/usr/path/to/kde where
+kdelibs and pate are installed to.  Your mileage may vary.
 
 
 License and Disclaimer
 ======================
 
-This program is free software: you can redistribute it and/or modify it under
-the terms of the Library GNU General Public License as published by the Free
-Software Foundation, either version 2 of the License, or (at your option) any
-later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the Library GNU General Public License as published
+by the Free Software Foundation, either version 2 of the License, or (at
+your option) any later version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with
-this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Contact: Wilbert Berendsen <info@wilbertberendsen.nl>
 http://www.wilbertberendsen.nl/
