@@ -1,4 +1,6 @@
-.PHONY: all install install-plugin clean uninstall
+installtargets = install-mimetype install-syntax install-textedit install-plugin
+uninstalltargets = uninstall-mimetype uninstall-syntax uninstall-textedit uninstall-plugin
+.PHONY: all install clean uninstall $(installtargets) $(uninstalltargets)
 
 KDEHOME ?= ~/.kde
 LILYKDE = $(KDEHOME)/share/apps/lilykde
@@ -14,7 +16,7 @@ textedit.protocol: textedit.protocol.in
 	@echo Creating textedit.protocol...
 	@sed 's!LILYKDEDIR!$(LILYKDE)!' $< > $@
 
-install: install-mimetype install-syntax install-textedit install-plugin
+install: $(installtargets)
 	@kbuildsycoca 2> /dev/null
 
 install-mimetype: ly.png
@@ -45,7 +47,7 @@ install-plugin:
 clean:
 	rm $(all)
 
-uninstall: uninstall-mimetype uninstall-syntax uninstall-textedit uninstall-plugin
+uninstall: $(uninstalltargets)
 	@kbuildsycoca 2> /dev/null
 
 uninstall-mimetype:
