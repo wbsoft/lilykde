@@ -36,9 +36,12 @@ Installation
 
 make && make install
 
-This currently installs LilyKDE to your home directory. Systemwide
+This currently installs LilyKDE to your home directory. (Systemwide
 installation is possible with export KDEHOME=/usr/path/to/kde where
-kdelibs and pate are installed to.  Your mileage may vary.
+kdelibs and Pate are installed to.  Your mileage may vary.)
+
+Then launch Kate and enable Pate in Settings->Configure Kate->Plugins.
+Then select Settings->Configure Python Plugins and enable LilyPond.
 
 
 License and Disclaimer
