@@ -43,6 +43,15 @@ kdelibs and Pate are installed to.  Your mileage may vary.)
 Then launch Kate and enable Pate in Settings->Configure Kate->Plugins.
 Then select Settings->Configure Python Plugins and enable LilyPond.
 
+You may associate Kate with LilyPond files. Right-click a LilyPond file,
+select Properties, and click on the small configure icon. Then, under
+Applications for this filetype, click Add and select Kate or enter the
+command:
+
+	kate -u %U
+
+Close the dialogs by clicking OK.
+
 
 License and Disclaimer
 ======================
