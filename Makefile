@@ -46,7 +46,8 @@ install-plugin:
 
 install-katefiletype:
 	@echo Adding LilyKDE to katefiletyperc:
-	@-sed -i '/\[LilyKDE\]/,/^$$/d' $(KDEHOME)/share/config/katefiletyperc
+	@if test -r $(KDEHOME)/share/config/katefiletyperc; then \
+		sed -i '/\[LilyKDE\]/,/^$$/d' $(KDEHOME)/share/config/katefiletyperc; fi
 	cat katefiletyperc >> $(KDEHOME)/share/config/katefiletyperc
 
 clean:
@@ -78,4 +79,5 @@ uninstall-plugin:
 
 uninstall-katefiletype:
 	@echo Removing LilyKDE from katefiletyperc:
-	@-sed -i '/\[LilyKDE\]/,/^$$/d' $(KDEHOME)/share/config/katefiletyperc
+	@if test -r $(KDEHOME)/share/config/katefiletyperc; then \
+		sed -i '/\[LilyKDE\]/,/^$$/d' $(KDEHOME)/share/config/katefiletyperc; fi
