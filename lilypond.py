@@ -22,13 +22,19 @@ sys.path.extend(map(str, KStandardDirs().findDirs("data","lilykde/py")))
 from lilykde_i18n import _
 
 # actions
+@kate.onAction(_("Clear LilyPond Log"), None, "view")
+def clearLog():
+    if 'lilykde' in sys.modules:
+        import lilykde
+        lilykde.LogWindow().clear()
+
 @kate.onAction(_("Run LilyPond (preview)"), "Ctrl+Shift+M", "tools")
-def actionRunLilyPondPreview():
+def runLilyPondPreview():
     import lilykde
     lilykde.runLilyPond(kate.document(), preview=True)
 
 @kate.onAction(_("Run LilyPond (publish)"), "Ctrl+Shift+P", "tools")
-def actionRunLilyPondPublish():
+def runLilyPondPublish():
     import lilykde
     lilykde.runLilyPond(kate.document())
 
@@ -39,8 +45,7 @@ def initLilyPond():
 
 @kate.documentManager.onChanged
 def documentChanged(doc):
-    # only if kate already started, lilykde has been loaded, and the document
-    # has a name
+    # only if kate already started and the document has a name
     if kate.application.mainWindow() and doc.url:
         # load lilykde if this is probably a lilypond file
         if doc.information.mimeType == 'text/x-lilypond' or \

@@ -345,6 +345,10 @@ class LogWindow(LazyToolView):
         self.q.setFocusPolicy(QWidget.NoFocus)
         self.show()
 
+    def clear(self):
+        if self.tv:
+            self.q.clear()
+
     def append_html(self, text, color=None, bold=False):
         text = keepspaces(text)
         if bold:
