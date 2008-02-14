@@ -1,5 +1,5 @@
-installtargets = install-mimetype install-syntax install-textedit install-plugin
-uninstalltargets = uninstall-mimetype uninstall-syntax uninstall-textedit uninstall-plugin
+installtargets = install-mimetype install-syntax install-textedit install-plugin install-katefiletype
+uninstalltargets = uninstall-mimetype uninstall-syntax uninstall-textedit uninstall-plugin uninstall-katefiletype
 .PHONY: all install clean uninstall $(installtargets) $(uninstalltargets)
 
 KDEHOME ?= ~/.kde
@@ -44,6 +44,11 @@ install-plugin:
 	@mkdir -p $(LILYKDE)/py
 	cp lilykde.py lilykde_i18n.py $(LILYKDE)/py/
 
+install-katefiletype:
+	@echo Adding LilyKDE to katefiletyperc:
+	@-sed -i '/\[LilyKDE\]/,/^$$/d' $(KDEHOME)/share/config/katefiletyperc
+	cat katefiletyperc >> $(KDEHOME)/share/config/katefiletyperc
+
 clean:
 	rm $(all)
 
@@ -70,3 +75,7 @@ uninstall-plugin:
 	rm -f $(KDEHOME)/share/apps/kate/pyplugins/lilypond.py
 	rm -f $(LILYKDE)/py/lilykde.py
 	rm -f $(LILYKDE)/py/lilykde_i18n.py
+
+uninstall-katefiletype:
+	@echo Removing LilyKDE from katefiletyperc:
+	@-sed -i '/\[LilyKDE\]/,/^$$/d' $(KDEHOME)/share/config/katefiletyperc

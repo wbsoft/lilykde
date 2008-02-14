@@ -16,7 +16,7 @@ import kate
 # The rest of the plugin is located in KDE/share/apps/lilykde/, with the
 # python modules in ./py/.
 from kdecore import KStandardDirs
-sys.path.extend(map(str, KStandardDirs().findDirs("data","lilykde/py")))
+sys.path.extend(map(str, KStandardDirs().findDirs("data", "lilykde/py")))
 
 # translate the messages
 from lilykde_i18n import _

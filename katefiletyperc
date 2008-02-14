@@ -1,0 +1,7 @@
+
+[LilyKDE]
+Mimetypes=text/x-lilypond
+Priority=10
+Section=LilyPond
+Variables=kate: encoding utf8;tab-width 2;indent-width 2;replace-tabs on;replace-tabs-save on;dynamic-word-wrap off;show-tabs off;indent-mode varindent;var-indent-indent-after (\\{[^}]*$|<<(?![^>]*>>));var-indent-unindent ^\\s*(#?\\}|>>);var-indent-triggerchars }>;
+Wildcards=*.ly; *.ily; *.lyi
