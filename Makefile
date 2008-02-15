@@ -76,6 +76,7 @@ uninstall-plugin:
 	rm -f $(KDEHOME)/share/apps/kate/pyplugins/lilypond.py
 	rm -f $(LILYKDE)/py/lilykde.py
 	rm -f $(LILYKDE)/py/lilykde_i18n.py
+	rm -f $(LILYKDE)/py/lymenu.py
 
 uninstall-katefiletype:
 	@echo Removing LilyKDE from katefiletyperc:
