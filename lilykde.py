@@ -102,16 +102,15 @@ class LyFile(object):
     def previewPDF(self):
         self.pdf and PDFToolView().create().openFile(self.pdf)
 
-    def hasUpdatedMIDIs(self):
-        self.midis = []
-        midi = os.path.join(self.directory, self.basename + ".midi")
-        if os.path.isfile(midi) and self.updated(midi):
-            self.midis.append(midi)
+    def getUpdated(self, ext):
+        files = []
+        f = os.path.join(self.directory, self.basename + ext)
+        if os.path.isfile(f) and self.updated(f):
+            files.append(f)
         from glob import glob
-        files = glob(os.path.join(self.directory, self.basename + "?*.midi"))
-        self.midis.extend(f for f in files if self.updated(f))
-        return bool(self.midis)
-
+        files.extend(f for f in glob(
+            os.path.join(self.directory, self.basename + "?*" + ext)))
+        return files
 
 class Outputter:
     """
@@ -281,10 +280,11 @@ class Ly2PDF(LyJob):
             else:
                 self.log.msg(_("LilyPond did not write a PDF. "
                                "You probably forgot <b>\layout</b>?"))
-            if self.f.hasUpdatedMIDIs():
-                actions.append(("file://%s" % self.f.midis[0], _("Play MIDI")))
+            midis = self.f.getUpdated(".midi")
+            if midis:
+                actions.append(("file://%s" % midis[0], _("Play MIDI")))
                 actions.extend([("file://%s" % m, str(n+1))
-                    for n, m in enumerate(self.f.midis[1:])])
+                    for n, m in enumerate(midis[1:])])
             self.log.actions(actions)
 
 
