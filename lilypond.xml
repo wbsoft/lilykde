@@ -15,7 +15,7 @@
   <!ENTITY deprecatedmarkup "center">
   <!ENTITY headervars "dedication|(sub){,2}title|poet|composer|meter|opus|arranger|instrument|piece|breakbefore|copyright|tagline|mutopia(title|composer|poet|opus|instrument)|date|enteredby|source|style|maintainer(Email|Web)?|moreInfo|lastupdated|texidoc">
   <!ENTITY papervars "annotate-spacing|(print-)?first-page-number|print-page-number|paper-(width|height)|(top|bottom|left|right)-margin|line-width|(head|foot)-separation|page-top-space|ragged-(bottom|last-bottom|right)|page-count|between-system-(space|padding)|page-breaking-between-system-padding|horizontal-shift|(before|after|between)-title-space|printallheaders|indent|force-assignment|input-encoding|output-scale|blank(-after-score|-last)?-page-force|page-limit-inter-system-space(-factor)?|(systemSeparator|(even|odd)(Footer|Header)|(book|score|toc)Title|tocItem)Markup">
-  <!ENTITY layoutvars "system-count|indent">
+  <!ENTITY layoutvars "system-count|(short-)?indent">
   <!ENTITY toplevelvars "dash(Hat|Plus|Dash|Bar|Larger|Dot|Underscore)|fermataMarkup|pipeSymbol|slashSeparator">
   <!ENTITY performer "Beam|Control_track|Drum_note|Dynamic|Key|Lyric|Note|Piano_pedal|Slur|Staff|Swallow|Tempo|Tie|Time_signature">
   <!ENTITY translator "Note_swallow|Rest_swallow|Skip_event_swallow|Timing">
