@@ -18,12 +18,12 @@ import kate
 from kdecore import KStandardDirs
 sys.path[0:0]=map(str, KStandardDirs().findDirs("data", "lilykde/py"))
 
-# Setup the LilyPond main menu
-import lymenu
-
 @kate.onWindowShown
 def initLilyPond():
-    # init stuff
+    # Setup the LilyPond main menu
+    from lymenu import menu
+    menu.plug(kate.mainWidget().topLevelWidget().menuBar(), 5)
+    # init toolviews if LilyPond document
     documentChanged(kate.document())
 
 @kate.documentManager.onChanged

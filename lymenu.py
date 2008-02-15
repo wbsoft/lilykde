@@ -47,9 +47,4 @@ def clearLog():
         import lilykde
         lilykde.LogWindow().clear()
 
-@kate.onWindowShown
-def init():
-    global menu
-    menu.plug(kate.mainWidget().topLevelWidget().menuBar(), 5)
-
 # kate: indent-width 4;
