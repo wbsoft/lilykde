@@ -18,25 +18,8 @@ import kate
 from kdecore import KStandardDirs
 sys.path.extend(map(str, KStandardDirs().findDirs("data", "lilykde/py")))
 
-# translate the messages
-from lilykde_i18n import _
-
-# actions
-@kate.onAction(_("Clear LilyPond Log"), None, "view")
-def clearLog():
-    if 'lilykde' in sys.modules:
-        import lilykde
-        lilykde.LogWindow().clear()
-
-@kate.onAction(_("Run LilyPond (preview)"), "Ctrl+Shift+M", "tools")
-def runLilyPondPreview():
-    import lilykde
-    lilykde.runLilyPond(kate.document(), preview=True)
-
-@kate.onAction(_("Run LilyPond (publish)"), "Ctrl+Shift+P", "tools")
-def runLilyPondPublish():
-    import lilykde
-    lilykde.runLilyPond(kate.document())
+# Setup the LilyPond main menu
+import lymenu
 
 @kate.onWindowShown
 def initLilyPond():

@@ -42,7 +42,7 @@ install-plugin:
 	@mkdir -p $(KDEHOME)/share/apps/kate/pyplugins
 	cp lilypond.py $(KDEHOME)/share/apps/kate/pyplugins/
 	@mkdir -p $(LILYKDE)/py
-	cp lilykde.py lilykde_i18n.py $(LILYKDE)/py/
+	cp lilykde.py lilykde_i18n.py lymenu.py $(LILYKDE)/py/
 
 install-katefiletype:
 	@echo Adding LilyKDE to katefiletyperc:
