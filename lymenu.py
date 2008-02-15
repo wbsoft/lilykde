@@ -18,38 +18,38 @@ from lilykde_i18n import _
 from kdecore import KShortcut
 from kdeui import KAction, KActionMenu, KActionSeparator
 
-menu = KActionMenu(_("LilyPond"), None, "lilypond")
+class Menu(KActionMenu):
+    def add(self, text, key="", icon=""):
+        """ Returns a function that when called returns a KAction. """
+        def action(func):
+            a = KAction(text, icon, KShortcut(key), func, self, "")
+            self.insert(a)
+            return a
+        return action
 
-def add(name, shortcut=None, icon=None):
-    """
-    This function returns a function that when called returns a KAction.
-    """
-    def action(func):
-        global menu
-        a = KAction(name, icon or "", KShortcut(shortcut or ""), func, menu, "")
-        menu.insert(a)
-        return a
-    return action
+menu = Menu(_("LilyPond"))
 
-@add(_("Run LilyPond (preview)"), "Ctrl+Shift+M", "ly")
+@menu.add(_("Run LilyPond (preview)"), "Ctrl+Shift+M", "ly")
 def preview():
     import lilykde
     lilykde.runLilyPond(kate.document(), preview=True)
 
-@add(_("Run LilyPond (publish)"), "Ctrl+Shift+P", "ly")
+@menu.add(_("Run LilyPond (publish)"), "Ctrl+Shift+P", "ly")
 def publish():
     import lilykde
     lilykde.runLilyPond(kate.document())
 
 menu.insert(KActionSeparator())
 
-@add(_("Clear LilyPond Log"))
+@menu.add(_("Clear LilyPond Log"), "", "eraser")
 def clearLog():
     if 'lilykde' in sys.modules:
         import lilykde
         lilykde.LogWindow().clear()
 
 @kate.onWindowShown
-def initLilyPond():
+def init():
     global menu
     menu.plug(kate.mainWidget().topLevelWidget().menuBar(), 5)
+
+# kate: indent-width 4;
