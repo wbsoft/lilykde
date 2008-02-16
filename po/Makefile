@@ -20,7 +20,7 @@ mofiles = $(patsubst %.po,%.mo,$(pofiles))
 
 all: $(mofiles)
 
-lilykde.pot:
+lilykde.pot: $(translate)
 	$(PYGETTEXT) -o lilykde.pot $(translate)
 
 $(pofiles): lilykde.pot
