@@ -32,8 +32,8 @@ def error(message, **a):
 def sorry(message, **a):
     popup(message, icon="messagebox_warning", **a)
 
-def warncontinue(s):
-    return KMessageBox.warningContinueCancel(kate.mainWidget(),s) == \
+def warncontinue(message):
+    return KMessageBox.warningContinueCancel(kate.mainWidget(),message) == \
         KMessageBox.Continue
 
 def encodeurl(s):
