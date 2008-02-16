@@ -27,12 +27,10 @@ def popup(message, timeout=5, **a):
     kate.gui.showPassivePopup(message, timeout, **a)
 
 def error(message, **a):
-    a.setdefault('icon', "error")
-    popup(message, **a)
+    popup(message, icon="error", **a)
 
 def sorry(message, **a):
-    a.setdefault('icon', "messagebox_warning")
-    popup(message, **a)
+    popup(message, icon="messagebox_warning", **a)
 
 def warncontinue(s):
     return KMessageBox.warningContinueCancel(kate.mainWidget(),s) == \
