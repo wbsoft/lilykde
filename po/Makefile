@@ -1,4 +1,4 @@
-.PHONY: all
+.PHONY: all install uninstall clean
 
 PYGETTEXT ?= pygettext.py
 MSGMERGE ?= msgmerge
@@ -37,3 +37,6 @@ install: all
 uninstall:
 	@echo Uninstalling message catalogs...
 	@rm -rf "$(LOCALE)"
+
+clean:
+	rm $(mofiles)

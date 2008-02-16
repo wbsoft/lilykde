@@ -7,6 +7,7 @@ LILYKDE = $(KDEHOME)/share/apps/lilykde
 
 all = ly.png textedit.protocol
 all: $(all)
+	@make -C po
 
 ly.png: ly.svg
 	@echo Creating ly.png from ly.svg...
@@ -57,6 +58,7 @@ install-i18n:
 
 clean:
 	rm $(all)
+	@make -C po clean
 
 uninstall: $(uninstalltargets)
 	@kbuildsycoca 2> /dev/null
