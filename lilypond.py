@@ -14,12 +14,11 @@ from kdecore import KStandardDirs
 sys.path[0:0]=map(str, KStandardDirs().findDirs("data", "lilykde/py"))
 
 from lilykde_i18n import _
-__doc__ = _("""
-A LilyPond Kate/Pate plugin.
+__doc__ = _("""A LilyPond Kate/Pate plugin.
 
 This is LilyKDE, a plugin to make it easy to run the LilyPond music typesetter from within Kate.
 
-If you also enable the Expand plugin, you get nice shorthands for often used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in the Expand configuration dialog.
+If you also enable the Expand plugin, you get some nice shorthands for often used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in the Expand configuration dialog.
 
 Version: %s
 Homepage: %s
