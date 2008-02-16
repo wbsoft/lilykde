@@ -24,7 +24,7 @@ lilykde.pot: $(translate)
 	$(PYGETTEXT) -o lilykde.pot $(translate)
 
 $(pofiles): lilykde.pot
-	$(MSGMERGE) -U $@ $<
+	$(MSGMERGE) -U $@ $< && touch $@
 
 $(mofiles): %.mo: %.po
 	$(MSGFMT) $<
