@@ -1,13 +1,6 @@
-"""
-A LilyPond Kate/Pate plugin.
-
-Makes it easy to run LilyPond from within Kate.
-"""
-
 __title__ = "LilyPond"
 __author__ = "Wilbert Berendsen <info@wilbertberendsen.nl>"
 __license__ = "LGPL"
-
 
 import sys
 import os
@@ -17,6 +10,18 @@ import kate
 # python modules in ./py/.
 from kdecore import KStandardDirs
 sys.path[0:0]=map(str, KStandardDirs().findDirs("data", "lilykde/py"))
+
+from lilykde_i18n import _
+__doc__ = _("""
+A LilyPond Kate/Pate plugin.
+
+This is LilyKDE, a plugin to make it easy to run LilyPond from within Kate.
+
+If you also enable the Expand plugin, you get nice shorthands for often used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in the Expand configuration dialog. To use them, type a shorthand and then Ctrl+Space.
+
+LilyKDE homepage: http://lilykde.googlecode.com/
+""")
+
 
 @kate.onWindowShown
 def initLilyPond():
