@@ -22,12 +22,17 @@ from kio import KRun
 from lilykde_i18n import _
 
 # Small utility functions
-# TODO: change to passive popups
-def error(s):
-    KMessageBox.error(kate.mainWidget(),s)
+def popup(message, timeout=5, **a):
+    a.setdefault('parent', kate.mainWidget().topLevelWidget())
+    kate.gui.showPassivePopup(message, timeout, **a)
 
-def sorry(s):
-    KMessageBox.sorry(kate.mainWidget(),s)
+def error(message, **a):
+    a.setdefault('icon', "error")
+    popup(message, **a)
+
+def sorry(message, **a):
+    a.setdefault('icon', "messagebox_warning")
+    popup(message, **a)
 
 def warncontinue(s):
     return KMessageBox.warningContinueCancel(kate.mainWidget(),s) == \
