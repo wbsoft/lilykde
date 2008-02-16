@@ -4,14 +4,15 @@
 # Wilbert Berendsen <wbsoft@xs4all.nl>, 2008.
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
-"PO-Revision-Date: 2008-02-16 16:22+0100\n"
 "Project-Id-Version: nl\n"
+"POT-Creation-Date: 2008-02-16 15:56+CET\n"
+"PO-Revision-Date: 2008-02-16 16:22+0100\n"
+"Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"MIME-Version: 1.0\n"
 
 #: ../lilykde.py:227
 msgid "LilyPond [%s] starting (%s)..."
@@ -67,7 +68,9 @@ msgstr "PDF e-mailen"
 
 #: ../lilykde.py:284
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
-msgstr "LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>\\layout</b> vergeten?"
+msgstr ""
+"LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
+"\\layout</b> vergeten?"
 
 #: ../lilykde.py:288
 msgid "Play MIDI"
@@ -84,9 +87,10 @@ msgid ""
 "point-and-click urls (publish mode), because they are much smaller. Continue "
 "anyway?"
 msgstr ""
-"Dit PDF-bestand is aangemaakt met \"point-and-click\" URLs (vooruitblik), waardoor "
-"het bestand veel groter dan noodzakelijk is. Het is beter om documenten te mailen "
-"zonder de \"point-and-click\" URLs, omdat deze veel kleiner zijn. Toch doorgaan?"
+"Dit PDF-bestand is aangemaakt met \"point-and-click\" URLs (vooruitblik), "
+"waardoor het bestand veel groter dan noodzakelijk is. Het is beter om "
+"documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
+"kleiner zijn. Toch doorgaan?"
 
 #: ../lilykde.py:411
 msgid "Your document currently has no filename, please save first."
@@ -123,9 +127,9 @@ msgstr ""
 "Dit is LilyKDE, een plugin waarmee het eenvoudig is om het LilyPond "
 "muziekgraveer-programma vanuit Kate te gebruiken.\n"
 "\n"
-"Als u ook de Expand-plugin inschakelt, kunt u veelgebruikte LilyPond-constructies "
-"sneller typen. Om deze te bekijken raadpleegt u het x-lilypond mime-type in het "
-"instelscherm van de Expand-plugin.\n"
+"Als u ook de Expand-plugin inschakelt, kunt u veelgebruikte LilyPond-"
+"constructies sneller typen. Om deze te bekijken raadpleegt u het x-lilypond "
+"mime-type in het instelscherm van de Expand-plugin.\n"
 "\n"
 "Versie: %s\n"
 "Homepage: %s\n"
@@ -145,4 +149,3 @@ msgstr "LilyPond starten (publiceren)"
 #: ../lymenu.py:44
 msgid "Clear LilyPond Log"
 msgstr "LilyPond uitvoer wissen"
-

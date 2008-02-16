@@ -1,8 +1,8 @@
-installtargets = install-mimetype install-syntax install-textedit install-plugin install-katefiletype
-uninstalltargets = uninstall-mimetype uninstall-syntax uninstall-textedit uninstall-plugin uninstall-katefiletype
+installtargets = install-mimetype install-syntax install-textedit install-plugin install-katefiletype install-i18n
+uninstalltargets = uninstall-mimetype uninstall-syntax uninstall-textedit uninstall-i18n uninstall-plugin uninstall-katefiletype
 .PHONY: all install clean uninstall $(installtargets) $(uninstalltargets)
 
-KDEHOME ?= ~/.kde
+KDEHOME ?= $(HOME)/.kde
 LILYKDE = $(KDEHOME)/share/apps/lilykde
 
 all = ly.png textedit.protocol
@@ -52,6 +52,9 @@ install-katefiletype:
 		sed -i '/\[LilyKDE\]/,/^$$/d' $(KDEHOME)/share/config/katefiletyperc; fi
 	cat katefiletyperc >> $(KDEHOME)/share/config/katefiletyperc
 
+install-i18n:
+	@make -C po install
+
 clean:
 	rm $(all)
 
@@ -72,6 +75,9 @@ uninstall-textedit: textedit.protocol
 	@echo Uninstalling textedit integration:
 	rm -f $(KDEHOME)/share/services/textedit.protocol
 	rm -f $(LILYKDE)/ktexteditservice.py
+
+uninstall-i18n:
+	@make -C po uninstall
 
 uninstall-plugin:
 	@echo Uninstalling plugin:
