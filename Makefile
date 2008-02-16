@@ -43,6 +43,8 @@ install-plugin:
 	cp lilypond.py $(KDEHOME)/share/apps/kate/pyplugins/
 	@mkdir -p $(LILYKDE)/py
 	cp lilykde.py lilykde_i18n.py lymenu.py $(LILYKDE)/py/
+	@mkdir -p $(KDEHOME)/share/apps/kate/pyplugins/expand
+	-cp x-lilypond.conf $(KDEHOME)/share/apps/kate/pyplugins/expand/
 
 install-katefiletype:
 	@echo Adding LilyKDE to katefiletyperc:
@@ -77,6 +79,7 @@ uninstall-plugin:
 	rm -f $(LILYKDE)/py/lilykde.py
 	rm -f $(LILYKDE)/py/lilykde_i18n.py
 	rm -f $(LILYKDE)/py/lymenu.py
+	rm -f $(KDEHOME)/share/apps/kate/pyplugins/expand/x-lilypond.conf
 
 uninstall-katefiletype:
 	@echo Removing LilyKDE from katefiletyperc:
