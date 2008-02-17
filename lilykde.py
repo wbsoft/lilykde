@@ -112,7 +112,8 @@ class LyFile(object):
             files.append(f)
         from glob import glob
         files.extend(f for f in glob(
-            os.path.join(self.directory, self.basename + "?*" + ext)))
+            os.path.join(self.directory, self.basename + "?*" + ext))
+            if self.updated(f))
         return files
 
 class Outputter:
