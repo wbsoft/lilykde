@@ -106,15 +106,12 @@ class LyFile(object):
         self.pdf and PDFToolView().create().openFile(self.pdf)
 
     def getUpdated(self, ext):
-        files = []
-        f = os.path.join(self.directory, self.basename + ext)
-        if os.path.isfile(f) and self.updated(f):
-            files.append(f)
         from glob import glob
-        files.extend(f for f in glob(
-            os.path.join(self.directory, self.basename + "?*" + ext))
-            if self.updated(f))
-        return files
+        files = [os.path.join(self.directory, self.basename + ext)]
+        files.extend(
+            glob(os.path.join(self.directory, self.basename + "?*" + ext)))
+        return [f for f in files if os.path.isfile(f) and self.updated(f)]
+
 
 class Outputter:
     """
