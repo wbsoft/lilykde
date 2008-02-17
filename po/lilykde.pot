@@ -1,0 +1,127 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2008-02-17 23:15+CET\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: ../lilykde.py:225
+msgid "LilyPond [%s] starting (%s)..."
+msgstr ""
+
+#: ../lilykde.py:227
+msgid "LilyPond [%s] starting..."
+msgstr ""
+
+#: ../lilykde.py:229
+msgid "Could not start LilyPond."
+msgstr ""
+
+#: ../lilykde.py:237
+msgid "LilyPond was terminated by signal %d."
+msgstr ""
+
+#: ../lilykde.py:241
+msgid "LilyPond exited with return code %d."
+msgstr ""
+
+#: ../lilykde.py:243
+msgid "LilyPond [%s] finished."
+msgstr ""
+
+#: ../lilykde.py:246
+msgid "LilyPond exited abnormally."
+msgstr ""
+
+#: ../lilykde.py:259
+msgid "preview mode"
+msgstr ""
+
+#: ../lilykde.py:261
+msgid "publish mode"
+msgstr ""
+
+#: ../lilykde.py:268
+msgid "Open folder"
+msgstr ""
+
+#: ../lilykde.py:271
+msgid "Open PDF"
+msgstr ""
+
+#: ../lilykde.py:277
+msgid "Email PDF (preview)"
+msgstr ""
+
+#: ../lilykde.py:280
+msgid "Email PDF"
+msgstr ""
+
+#: ../lilykde.py:282
+msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
+msgstr ""
+
+#: ../lilykde.py:286
+msgid "Play MIDI"
+msgstr ""
+
+#: ../lilykde.py:341
+msgid "LilyPond Log"
+msgstr ""
+
+#: ../lilykde.py:392
+msgid "This PDF has been created with point-and-click urls (preview mode), which increases the file size dramatically. It's better to email documents without point-and-click urls (publish mode), because they are much smaller. Continue anyway?"
+msgstr ""
+
+#: ../lilykde.py:409
+msgid "Your document currently has no filename, please save first."
+msgstr ""
+
+#: ../lilykde.py:413
+msgid "Your document has been modified, please save first."
+msgstr ""
+
+#: ../lilykde.py:419
+msgid ""
+"Sorry, support for remote files is not yet implemented.\n"
+"Please save your document to a local file."
+msgstr ""
+
+#: ../lilypond.py:17
+msgid ""
+"A LilyPond Kate/Pate plugin.\n"
+"\n"
+"This is LilyKDE, a plugin to make it easy to run the LilyPond music typesetter from within Kate.\n"
+"\n"
+"If you also enable the Expand plugin, you get some nice shorthands for often used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in the Expand configuration dialog.\n"
+"\n"
+"Version: %s\n"
+"Homepage: %s\n"
+msgstr ""
+
+#: ../lymenu.py:30
+msgid "LilyPond"
+msgstr ""
+
+#: ../lymenu.py:32
+msgid "Run LilyPond (preview)"
+msgstr ""
+
+#: ../lymenu.py:37
+msgid "Run LilyPond (publish)"
+msgstr ""
+
+#: ../lymenu.py:44
+msgid "Clear LilyPond Log"
+msgstr ""
+

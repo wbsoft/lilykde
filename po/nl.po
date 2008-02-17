@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
-"POT-Creation-Date: 2008-02-16 15:56+CET\n"
+"POT-Creation-Date: 2008-02-17 23:15+CET\n"
 "PO-Revision-Date: 2008-02-16 16:22+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -14,73 +14,73 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../lilykde.py:227
+#: ../lilykde.py:225
 msgid "LilyPond [%s] starting (%s)..."
 msgstr "LilyPond [%s] wordt gestart (%s)..."
 
-#: ../lilykde.py:229
+#: ../lilykde.py:227
 msgid "LilyPond [%s] starting..."
 msgstr "LilyPond [%s] wordt gestart..."
 
-#: ../lilykde.py:231
+#: ../lilykde.py:229
 msgid "Could not start LilyPond."
 msgstr "Kan LilyPond niet starten."
 
-#: ../lilykde.py:239
+#: ../lilykde.py:237
 msgid "LilyPond was terminated by signal %d."
 msgstr "LilyPond werd beëindigd door signaal %d."
 
-#: ../lilykde.py:243
+#: ../lilykde.py:241
 msgid "LilyPond exited with return code %d."
 msgstr "LilyPond stopte met foutcode %d."
 
-#: ../lilykde.py:245
+#: ../lilykde.py:243
 msgid "LilyPond [%s] finished."
 msgstr "LilyPond [%s] voltooid."
 
-#: ../lilykde.py:248
+#: ../lilykde.py:246
 msgid "LilyPond exited abnormally."
 msgstr "Het LilyPond-proces werd afgebroken."
 
-#: ../lilykde.py:261
+#: ../lilykde.py:259
 msgid "preview mode"
 msgstr "vooruitblik"
 
-#: ../lilykde.py:263
+#: ../lilykde.py:261
 msgid "publish mode"
 msgstr "publiceren"
 
-#: ../lilykde.py:270
+#: ../lilykde.py:268
 msgid "Open folder"
 msgstr "Map openen"
 
-#: ../lilykde.py:273
+#: ../lilykde.py:271
 msgid "Open PDF"
 msgstr "PDF weergeven"
 
-#: ../lilykde.py:279
+#: ../lilykde.py:277
 msgid "Email PDF (preview)"
 msgstr "PDF e-mailen (vooruitblik)"
 
-#: ../lilykde.py:282
+#: ../lilykde.py:280
 msgid "Email PDF"
 msgstr "PDF e-mailen"
 
-#: ../lilykde.py:284
+#: ../lilykde.py:282
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
 "\\layout</b> vergeten?"
 
-#: ../lilykde.py:288
+#: ../lilykde.py:286
 msgid "Play MIDI"
 msgstr "MIDI afspelen"
 
-#: ../lilykde.py:343
+#: ../lilykde.py:341
 msgid "LilyPond Log"
 msgstr "LilyPond-uitvoer"
 
-#: ../lilykde.py:394
+#: ../lilykde.py:392
 msgid ""
 "This PDF has been created with point-and-click urls (preview mode), which "
 "increases the file size dramatically. It's better to email documents without "
@@ -92,15 +92,15 @@ msgstr ""
 "documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
 "kleiner zijn. Toch doorgaan?"
 
-#: ../lilykde.py:411
+#: ../lilykde.py:409
 msgid "Your document currently has no filename, please save first."
 msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
 
-#: ../lilykde.py:415
+#: ../lilykde.py:413
 msgid "Your document has been modified, please save first."
 msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
 
-#: ../lilykde.py:421
+#: ../lilykde.py:419
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
