@@ -47,4 +47,15 @@ def clearLog():
         import lilykde
         lilykde.LogWindow().clear()
 
+menu.insert(KActionSeparator())
+
+@menu.add(_("Insert LilyPond version ()"), "Ctrl+Shift+V", "ok")
+def insertVersion():
+    import lyversion
+    lyversion.insertVersion()
+
+insertVersion.setEnabled(False)
+
+
+
 # kate: indent-width 4;

@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
-"POT-Creation-Date: 2008-02-17 23:15+CET\n"
-"PO-Revision-Date: 2008-02-16 16:22+0100\n"
+"POT-Creation-Date: 2008-02-18 08:09+CET\n"
+"PO-Revision-Date: 2008-02-18 08:10+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -108,7 +108,7 @@ msgstr ""
 "Helaas, netwerkbestanden worden nog niet ondersteund.\n"
 "Gelieve uw document naar een locaal bestand op te slaan."
 
-#: ../lilypond.py:17
+#: ../lilypond.py:18
 msgid ""
 "A LilyPond Kate/Pate plugin.\n"
 "\n"
@@ -149,3 +149,12 @@ msgstr "LilyPond starten (publiceren)"
 #: ../lymenu.py:44
 msgid "Clear LilyPond Log"
 msgstr "LilyPond uitvoer wissen"
+
+#: ../lymenu.py:52
+msgid "Insert LilyPond version ()"
+msgstr "LilyPond-versie () invoegen"
+
+#: ../lyversion.py:38
+msgid "Your document has already a LilyPond version statement."
+msgstr "Uw document heeft reeds een LilyPond versie-commando."
+

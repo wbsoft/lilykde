@@ -14,6 +14,8 @@ translate = \
 	../lilypond.py \
 	../lilykde.py \
 	../lymenu.py \
+	../lyversion.py \
+
 
 pofiles = $(wildcard *.po)
 mofiles = $(patsubst %.po,%.mo,$(pofiles))

@@ -14,6 +14,7 @@ from kdecore import KStandardDirs
 sys.path[0:0]=map(str, KStandardDirs().findDirs("data", "lilykde/py"))
 
 from lilykde_i18n import _
+
 __doc__ = _("""A LilyPond Kate/Pate plugin.
 
 This is LilyKDE, a plugin to make it easy to run the LilyPond music typesetter from within Kate.
@@ -24,12 +25,13 @@ Version: %s
 Homepage: %s
 """) % (__version__, "http://lilykde.googlecode.com/")
 
-
 @kate.onWindowShown
 def initLilyPond():
     # Setup the LilyPond main menu
     from lymenu import menu
     menu.plug(kate.mainWidget().topLevelWidget().menuBar(), 5)
+    # Run LilyPond once to determine the version
+    import lyversion
     # init toolviews if LilyPond document
     documentChanged(kate.document())
 

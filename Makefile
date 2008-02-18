@@ -5,6 +5,8 @@ uninstalltargets = uninstall-mimetype uninstall-syntax uninstall-textedit uninst
 KDEHOME ?= $(HOME)/.kde
 LILYKDE = $(KDEHOME)/share/apps/lilykde
 
+lymodules = lilykde.py lilykde_i18n.py lymenu.py lyversion.py
+
 all = ly.png textedit.protocol
 all: $(all)
 	@make -C po
@@ -43,7 +45,7 @@ install-plugin:
 	@mkdir -p $(KDEHOME)/share/apps/kate/pyplugins
 	cp lilypond.py $(KDEHOME)/share/apps/kate/pyplugins/
 	@mkdir -p $(LILYKDE)/py
-	cp lilykde.py lilykde_i18n.py lymenu.py $(LILYKDE)/py/
+	cp $(lymodules) $(LILYKDE)/py/
 	@mkdir -p $(KDEHOME)/share/apps/kate/pyplugins/expand
 	-cp x-lilypond.conf $(KDEHOME)/share/apps/kate/pyplugins/expand/
 
@@ -84,9 +86,7 @@ uninstall-i18n:
 uninstall-plugin:
 	@echo Uninstalling plugin:
 	rm -f $(KDEHOME)/share/apps/kate/pyplugins/lilypond.py
-	rm -f $(LILYKDE)/py/lilykde.py
-	rm -f $(LILYKDE)/py/lilykde_i18n.py
-	rm -f $(LILYKDE)/py/lymenu.py
+	rm -rf $(LILYKDE)/py
 	rm -f $(KDEHOME)/share/apps/kate/pyplugins/expand/x-lilypond.conf
 
 uninstall-katefiletype:
