@@ -48,5 +48,5 @@ def insertVersion():
         sorry(_("Your document has already a LilyPond version statement."))
         d.view.cursor.position = pos
     else:
-        d.insertLine(0, '\\version "%s"' % version)
+        d.insertLine(0, '\\version "%d.%d.%d"' % version)
         d.view.cursor.position = (0, d.lineLength(0))
