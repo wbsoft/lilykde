@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-02-18 08:09+CET\n"
+"POT-Creation-Date: 2008-02-18 08:26+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,7 +129,11 @@ msgstr ""
 msgid "Insert LilyPond version ()"
 msgstr ""
 
-#: ../lyversion.py:38
+#: ../lyversion.py:29
+msgid "Could not start LilyPond: %s"
+msgstr ""
+
+#: ../lyversion.py:43
 msgid "Your document has already a LilyPond version statement."
 msgstr ""
 

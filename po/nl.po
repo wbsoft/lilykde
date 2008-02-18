@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
-"POT-Creation-Date: 2008-02-18 08:09+CET\n"
-"PO-Revision-Date: 2008-02-18 08:10+0100\n"
+"POT-Creation-Date: 2008-02-18 08:24+CET\n"
+"PO-Revision-Date: 2008-02-18 08:25+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -154,7 +154,11 @@ msgstr "LilyPond uitvoer wissen"
 msgid "Insert LilyPond version ()"
 msgstr "LilyPond-versie () invoegen"
 
-#: ../lyversion.py:38
+#: ../lyversion.py:29
+msgid "Could not start LilyPond: %s"
+msgstr "Kan LilyPond niet starten: %s"
+
+#: ../lyversion.py:43
 msgid "Your document has already a LilyPond version statement."
 msgstr "Uw document heeft reeds een LilyPond versie-commando."
 
