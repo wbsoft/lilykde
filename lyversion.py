@@ -19,18 +19,23 @@ def timer(msec):
 
 @timer(1000)
 def init():
+    import re
     from subprocess import Popen, PIPE
-    global version
     try:
-        version = Popen(("lilypond","-v"),
-            stdout=PIPE).communicate()[0].split('\n')[0].split(' ')[-1]
+        match = re.search(r"(\d+)\.(\d+)(?:\.(\d+))?", Popen(("lilypond","-v"),
+            stdout=PIPE).communicate()[0].splitlines()[0])
     except OSError, e:
+        match = None
         from lilykde import error
         error(_("Could not start LilyPond: %s") % e)
-    else:
-        from lymenu import insertVersion as v
-        v.setText(unicode(v.text()) % version)
+    from lymenu import insertVersion as v
+    global version
+    if match:
+        version = tuple(int(s or "0") for s in match.groups())
+        v.setText(unicode(v.text()) % "%d.%d.%d" % version)
         v.setEnabled(True)
+    else:
+        v.setText(unicode(v.text()) % _("unknown"))
 
 def insertVersion():
     """ insert LilyPond version in the current document """
