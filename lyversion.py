@@ -29,7 +29,7 @@ def init():
         error(_("Could not start LilyPond: %s") % e)
     else:
         from lymenu import insertVersion as v
-        v.setText(v.text().replace('()','(%s)' % version))
+        v.setText(unicode(v.text()) % version)
         v.setEnabled(True)
 
 def insertVersion():

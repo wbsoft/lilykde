@@ -49,7 +49,7 @@ def clearLog():
 
 menu.insert(KActionSeparator())
 
-@menu.add(_("Insert LilyPond version ()"), "Ctrl+Shift+V", "ok")
+@menu.add(_("Insert LilyPond version (%s)"), "Ctrl+Shift+V", "ok")
 def insertVersion():
     import lyversion
     lyversion.insertVersion()
