@@ -75,8 +75,18 @@ def convertLy():
                             stdin=PIPE, stdout=PIPE, stderr=PIPE
                             ).communicate(kate.document().text.encode('utf8'))
             if out:
-                kate.document().text = u"%s\n\n%%{\n%s\n%%}\n" % (
-                out.decode('utf8'), err.decode('utf8'))
+                d = kate.document()
+                # Just setting d.text does work, but triggers a bug in the
+                # Katepart syntax highlighting: the first part of the document
+                # looses its highlighting when a user undoes the conversion
+                # with Ctrl+Z
+                d.editingSequence.begin()
+                # d.clear() is broken in Pate 0.5.1
+                for i in range(d.numberOfLines):
+                    d.removeLine(0)
+                d.text = u"%s\n\n%%{\n%s\n%%}\n" % (
+                    out.decode('utf8'), err.decode('utf8'))
+                d.editingSequence.end()
                 info(_(
                  "The document has been processed with convert-ly. You'll find "
                  "the messages of convert-ly in a comment block at the end. "
