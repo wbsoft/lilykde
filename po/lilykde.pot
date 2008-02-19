@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-02-19 12:03+CET\n"
+"POT-Creation-Date: 2008-02-19 12:26+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,39 +133,39 @@ msgstr ""
 msgid "Update with convert-ly"
 msgstr ""
 
-#: ../lyversion.py:36
+#: ../lyversion.py:27
 msgid "Could not start LilyPond: %s"
 msgstr ""
 
-#: ../lyversion.py:43
+#: ../lyversion.py:34
 msgid "unknown"
 msgstr ""
 
-#: ../lyversion.py:51
+#: ../lyversion.py:42
 msgid "Your document has already a LilyPond version statement."
 msgstr ""
 
-#: ../lyversion.py:71
+#: ../lyversion.py:62
 msgid "Can't determine the LilyPond version of the current document. Please add a \\version statement with the correct version."
 msgstr ""
 
-#: ../lyversion.py:74
+#: ../lyversion.py:65
 msgid "Can't determine the version of LilyPond. Please check your LilyPond installation."
 msgstr ""
 
-#: ../lyversion.py:77
+#: ../lyversion.py:68
 msgid "This LilyPond document is already up-to-date."
 msgstr ""
 
-#: ../lyversion.py:89
+#: ../lyversion.py:80
 msgid "The document has been processed with convert-ly. You'll find the messages of convert-ly in a comment block at the end. You still may have to edit some parts manually."
 msgstr ""
 
-#: ../lyversion.py:95
+#: ../lyversion.py:86
 msgid "The document has been processed with convert-ly, but remained unchanged. This is the message given by convert-ly: %s"
 msgstr ""
 
-#: ../lyversion.py:100
+#: ../lyversion.py:91
 msgid "Could not start convert-ly: %s"
 msgstr ""
 

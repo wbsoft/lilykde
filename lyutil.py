@@ -1,8 +1,10 @@
 """ Contains small often used utility functions """
 
+from qt import QTimer
+from kdeui import KMessageBox
+
 import kate
 import kate.gui
-from kdeui import KMessageBox
 
 # No translatable messages in this file!
 
@@ -22,3 +24,12 @@ def info(message, **a):
 def warncontinue(message):
     return KMessageBox.warningContinueCancel(kate.mainWidget(),message) == \
         KMessageBox.Continue
+
+def timer(msec):
+    """ decorator that executes a function after the given time interval
+    in milliseconds """
+    def action(func):
+        QTimer.singleShot(msec, func)
+        return func
+    return action
+

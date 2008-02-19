@@ -2,7 +2,7 @@ __title__ = "LilyPond"
 __author__ = "Wilbert Berendsen <info@wilbertberendsen.nl>"
 __license__ = "LGPL"
 
-__version__ = "0.3.2"
+__version__ = "0.4.1"
 
 import sys
 import os

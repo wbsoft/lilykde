@@ -5,25 +5,16 @@
 
 import re
 from subprocess import Popen, PIPE
-from qt import QTimer
 import kate
 
 # Some popups
-from lyutil import info, sorry, error
+from lyutil import timer, info, sorry, error
 
 # Translate the messages
 from lilykde_i18n import _
 
 
 version = None
-
-def timer(msec):
-    """ decorator that executes a function after the given time interval
-    in milliseconds """
-    def action(func):
-        QTimer.singleShot(msec, func)
-        return func
-    return action
 
 @timer(1000)
 def init():
