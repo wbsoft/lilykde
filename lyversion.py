@@ -8,6 +8,10 @@ from subprocess import Popen, PIPE
 from qt import QTimer
 import kate
 
+# Some popups
+from lyutil import info, sorry, error
+
+# Translate the messages
 from lilykde_i18n import _
 
 
@@ -29,7 +33,6 @@ def init():
             stdout=PIPE).communicate()[0].splitlines()[0])
     except OSError, e:
         match = None
-        from lilykde import error
         error(_("Could not start LilyPond: %s") % e)
     from lymenu import insertVersion as v
     if match:
@@ -45,7 +48,6 @@ def insertVersion():
     d = kate.document()
     match, pos, length = d.search("\\version", (0, 0))
     if match:
-        from lilykde import sorry
         sorry(_("Your document has already a LilyPond version statement."))
         d.view.cursor.position = pos
     else:
@@ -63,7 +65,6 @@ def getVersion():
 
 def convertLy():
     """ Run convert-ly on the current document """
-    from lilykde import sorry, info, error
     global version
     docVersion = getVersion()
     if not docVersion:

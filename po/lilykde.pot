@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-02-19 11:54+CET\n"
+"POT-Creation-Date: 2008-02-19 12:03+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,83 +15,83 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: ../lilykde.py:228
+#: ../lilykde.py:214
 msgid "LilyPond [%s] starting (%s)..."
 msgstr ""
 
-#: ../lilykde.py:230
+#: ../lilykde.py:216
 msgid "LilyPond [%s] starting..."
 msgstr ""
 
-#: ../lilykde.py:232
+#: ../lilykde.py:218
 msgid "Could not start LilyPond."
 msgstr ""
 
-#: ../lilykde.py:240
+#: ../lilykde.py:226
 msgid "LilyPond was terminated by signal %d."
 msgstr ""
 
-#: ../lilykde.py:244
+#: ../lilykde.py:230
 msgid "LilyPond exited with return code %d."
 msgstr ""
 
-#: ../lilykde.py:246
+#: ../lilykde.py:232
 msgid "LilyPond [%s] finished."
 msgstr ""
 
-#: ../lilykde.py:249
+#: ../lilykde.py:235
 msgid "LilyPond exited abnormally."
 msgstr ""
 
-#: ../lilykde.py:262
+#: ../lilykde.py:248
 msgid "preview mode"
 msgstr ""
 
-#: ../lilykde.py:264
+#: ../lilykde.py:250
 msgid "publish mode"
 msgstr ""
 
-#: ../lilykde.py:271
+#: ../lilykde.py:257
 msgid "Open folder"
 msgstr ""
 
-#: ../lilykde.py:274
+#: ../lilykde.py:260
 msgid "Open PDF"
 msgstr ""
 
-#: ../lilykde.py:280
+#: ../lilykde.py:266
 msgid "Email PDF (preview)"
 msgstr ""
 
-#: ../lilykde.py:283
+#: ../lilykde.py:269
 msgid "Email PDF"
 msgstr ""
 
-#: ../lilykde.py:285
+#: ../lilykde.py:271
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 
-#: ../lilykde.py:289
+#: ../lilykde.py:275
 msgid "Play MIDI"
 msgstr ""
 
-#: ../lilykde.py:344
+#: ../lilykde.py:330
 msgid "LilyPond Log"
 msgstr ""
 
-#: ../lilykde.py:395
+#: ../lilykde.py:381
 msgid "This PDF has been created with point-and-click urls (preview mode), which increases the file size dramatically. It's better to email documents without point-and-click urls (publish mode), because they are much smaller. Continue anyway?"
 msgstr ""
 
-#: ../lilykde.py:412
+#: ../lilykde.py:398
 msgid "Your document currently has no filename, please save first."
 msgstr ""
 
-#: ../lilykde.py:416
+#: ../lilykde.py:402
 msgid "Your document has been modified, please save first."
 msgstr ""
 
-#: ../lilykde.py:422
+#: ../lilykde.py:408
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -133,39 +133,39 @@ msgstr ""
 msgid "Update with convert-ly"
 msgstr ""
 
-#: ../lyversion.py:33
+#: ../lyversion.py:36
 msgid "Could not start LilyPond: %s"
 msgstr ""
 
-#: ../lyversion.py:40
+#: ../lyversion.py:43
 msgid "unknown"
 msgstr ""
 
-#: ../lyversion.py:49
+#: ../lyversion.py:51
 msgid "Your document has already a LilyPond version statement."
 msgstr ""
 
-#: ../lyversion.py:70
+#: ../lyversion.py:71
 msgid "Can't determine the LilyPond version of the current document. Please add a \\version statement with the correct version."
 msgstr ""
 
-#: ../lyversion.py:73
+#: ../lyversion.py:74
 msgid "Can't determine the version of LilyPond. Please check your LilyPond installation."
 msgstr ""
 
-#: ../lyversion.py:76
+#: ../lyversion.py:77
 msgid "This LilyPond document is already up-to-date."
 msgstr ""
 
-#: ../lyversion.py:88
+#: ../lyversion.py:89
 msgid "The document has been processed with convert-ly. You'll find the messages of convert-ly in a comment block at the end. You still may have to edit some parts manually."
 msgstr ""
 
-#: ../lyversion.py:94
+#: ../lyversion.py:95
 msgid "The document has been processed with convert-ly, but remained unchanged. This is the message given by convert-ly: %s"
 msgstr ""
 
-#: ../lyversion.py:99
+#: ../lyversion.py:100
 msgid "Could not start convert-ly: %s"
 msgstr ""
 

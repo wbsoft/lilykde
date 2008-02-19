@@ -5,7 +5,7 @@ uninstalltargets = uninstall-mimetype uninstall-syntax uninstall-textedit uninst
 KDEHOME ?= $(HOME)/.kde
 LILYKDE = $(KDEHOME)/share/apps/lilykde
 
-lymodules = lilykde.py lilykde_i18n.py lymenu.py lyversion.py
+lymodules = lilykde.py lilykde_i18n.py lymenu.py lyversion.py lyutil.py
 
 all = ly.png textedit.protocol
 all: $(all)

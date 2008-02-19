@@ -14,31 +14,17 @@ import kate.gui
 
 from qt import *
 from kdecore import KApplication, KURL, KProcess
-from kdeui import KMessageBox, KTextBrowser
+from kdeui import KTextBrowser
 from kparts import createReadOnlyPart
 from kio import KRun
+
+# Some utility functions
+from lyutil import *
 
 # translate the messages
 from lilykde_i18n import _
 
-# Small utility functions
-def popup(message, timeout=5, **a):
-    a.setdefault('parent', kate.mainWidget().topLevelWidget())
-    kate.gui.showPassivePopup(message, timeout, **a)
-
-def error(message, **a):
-    popup(message, icon="error", **a)
-
-def sorry(message, **a):
-    popup(message, icon="messagebox_warning", **a)
-
-def info(message, **a):
-    popup(message, icon="messagebox_info", **a)
-
-def warncontinue(message):
-    return KMessageBox.warningContinueCancel(kate.mainWidget(),message) == \
-        KMessageBox.Continue
-
+# Small html functions
 def encodeurl(s):
     """Encode an URL, but leave html entities alone."""
     for a, b in (
