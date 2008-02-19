@@ -56,6 +56,10 @@ def insertVersion():
 
 insertVersion.setEnabled(False)
 
+@menu.add(_("Update with convert-ly"), "", "add")
+def convertLy():
+    import lyversion
+    lyversion.convertLy()
 
 
 # kate: indent-width 4;

@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
-"POT-Creation-Date: 2008-02-18 22:24+CET\n"
-"PO-Revision-Date: 2008-02-18 22:25+0100\n"
+"POT-Creation-Date: 2008-02-19 08:43+CET\n"
+"PO-Revision-Date: 2008-02-19 08:50+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -14,73 +14,73 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../lilykde.py:225
+#: ../lilykde.py:228
 msgid "LilyPond [%s] starting (%s)..."
 msgstr "LilyPond [%s] wordt gestart (%s)..."
 
-#: ../lilykde.py:227
+#: ../lilykde.py:230
 msgid "LilyPond [%s] starting..."
 msgstr "LilyPond [%s] wordt gestart..."
 
-#: ../lilykde.py:229
+#: ../lilykde.py:232
 msgid "Could not start LilyPond."
 msgstr "Kan LilyPond niet starten."
 
-#: ../lilykde.py:237
+#: ../lilykde.py:240
 msgid "LilyPond was terminated by signal %d."
 msgstr "LilyPond werd beëindigd door signaal %d."
 
-#: ../lilykde.py:241
+#: ../lilykde.py:244
 msgid "LilyPond exited with return code %d."
 msgstr "LilyPond stopte met foutcode %d."
 
-#: ../lilykde.py:243
+#: ../lilykde.py:246
 msgid "LilyPond [%s] finished."
 msgstr "LilyPond [%s] voltooid."
 
-#: ../lilykde.py:246
+#: ../lilykde.py:249
 msgid "LilyPond exited abnormally."
 msgstr "Het LilyPond-proces werd afgebroken."
 
-#: ../lilykde.py:259
+#: ../lilykde.py:262
 msgid "preview mode"
 msgstr "vooruitblik"
 
-#: ../lilykde.py:261
+#: ../lilykde.py:264
 msgid "publish mode"
 msgstr "publiceren"
 
-#: ../lilykde.py:268
+#: ../lilykde.py:271
 msgid "Open folder"
 msgstr "Map openen"
 
-#: ../lilykde.py:271
+#: ../lilykde.py:274
 msgid "Open PDF"
 msgstr "PDF weergeven"
 
-#: ../lilykde.py:277
+#: ../lilykde.py:280
 msgid "Email PDF (preview)"
 msgstr "PDF e-mailen (vooruitblik)"
 
-#: ../lilykde.py:280
+#: ../lilykde.py:283
 msgid "Email PDF"
 msgstr "PDF e-mailen"
 
-#: ../lilykde.py:282
+#: ../lilykde.py:285
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
 "\\layout</b> vergeten?"
 
-#: ../lilykde.py:286
+#: ../lilykde.py:289
 msgid "Play MIDI"
 msgstr "MIDI afspelen"
 
-#: ../lilykde.py:341
+#: ../lilykde.py:344
 msgid "LilyPond Log"
 msgstr "LilyPond-uitvoer"
 
-#: ../lilykde.py:392
+#: ../lilykde.py:395
 msgid ""
 "This PDF has been created with point-and-click urls (preview mode), which "
 "increases the file size dramatically. It's better to email documents without "
@@ -92,15 +92,15 @@ msgstr ""
 "documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
 "kleiner zijn. Toch doorgaan?"
 
-#: ../lilykde.py:409
+#: ../lilykde.py:412
 msgid "Your document currently has no filename, please save first."
 msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
 
-#: ../lilykde.py:413
+#: ../lilykde.py:416
 msgid "Your document has been modified, please save first."
 msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
 
-#: ../lilykde.py:419
+#: ../lilykde.py:422
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -154,15 +154,42 @@ msgstr "LilyPond uitvoer wissen"
 msgid "Insert LilyPond version (%s)"
 msgstr "LilyPond-versie (%s) invoegen"
 
-#: ../lyversion.py:30
+#: ../lymenu.py:59
+msgid "Update with convert-ly"
+msgstr "Bijwerken met convert-ly"
+
+#: ../lyversion.py:32
 msgid "Could not start LilyPond: %s"
 msgstr "Kan LilyPond niet starten: %s"
 
-#: ../lyversion.py:38
+#: ../lyversion.py:40
 msgid "unknown"
 msgstr "onbekend"
 
-#: ../lyversion.py:48
+#: ../lyversion.py:49
 msgid "Your document has already a LilyPond version statement."
 msgstr "Uw document heeft reeds een LilyPond versie-commando."
+
+#: ../lyversion.py:70
+msgid ""
+"Can't determine the LilyPond version of the current document. Please add a "
+"\\version statement with the correct version."
+msgstr "Kan de LilyPond-versie van het huidige document niet bepalen. Voeg een \\version commando toe met de correcte versie van het document."
+
+#: ../lyversion.py:73
+msgid ""
+"Can't determine the version of LilyPond. Please check your LilyPond "
+"installation."
+msgstr "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
+
+#: ../lyversion.py:76
+msgid "This LilyPond document is already up-to-date."
+msgstr "Dit LilyPond-document is reeds bijgewerkt."
+
+#: ../lyversion.py:87
+msgid ""
+"The document has been processed with convert-ly. You'll find the messages of "
+"convert-ly in a comment block at the end. You still may have to edit some "
+"parts manually."
+msgstr "Het document is verwerkt door convert-ly. De berichten van convert-ly vindt u aan het eind in een commentaarblok. Het kan zijn dat u bepaalde wijzigingen nog handmatig dient door te voeren."
 
