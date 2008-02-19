@@ -23,6 +23,7 @@ def timer(msec):
 
 @timer(1000)
 def init():
+    global version
     try:
         match = re.search(r"(\d+)\.(\d+)(?:\.(\d+))?", Popen(("lilypond","-v"),
             stdout=PIPE).communicate()[0].splitlines()[0])
@@ -31,7 +32,6 @@ def init():
         from lilykde import error
         error(_("Could not start LilyPond: %s") % e)
     from lymenu import insertVersion as v
-    global version
     if match:
         version = tuple(int(s or "0") for s in match.groups())
         v.setText(unicode(v.text()) % "%d.%d.%d" % version)
@@ -63,7 +63,7 @@ def getVersion():
 
 def convertLy():
     """ Run convert-ly on the current document """
-    from lilykde import sorry, info
+    from lilykde import sorry, info, error
     global version
     docVersion = getVersion()
     if not docVersion:
@@ -78,17 +78,22 @@ def convertLy():
         # Ok, let's run convert-ly.
         # We add the from-version. Only in that case convert-ly wants to
         # read from stdin.
-        out, err = Popen(("convert-ly", "-f", "%d.%d.%d" % docVersion, "-"),
-                         stdin=PIPE, stdout=PIPE, stderr=PIPE
-                         ).communicate(kate.document().text.encode('utf8'))
-        if not out:
-            msg = err.decode('utf8').replace('\n', '<br>')
-            info(_("The document has been processed with convert-ly, but "
-                   "remained unchanged. This is the message given by "
-                   "convert-ly: %s") % "<br><br>%s" % msg, timeout=10)
-        else:
-            kate.document().text = u"%s\n\n%%{\n%s\n%%}\n" % (
-            out.decode('utf8'), err.decode('utf8'))
-            info(_("The document has been processed with convert-ly. You'll find "
-            "the messages of convert-ly in a comment block at the end. "
-            "You still may have to edit some parts manually."), timeout=10)
+        try:
+            out, err = Popen(("convert-ly", "-f", "%d.%d.%d" % docVersion, "-"),
+                            stdin=PIPE, stdout=PIPE, stderr=PIPE
+                            ).communicate(kate.document().text.encode('utf8'))
+            if out:
+                kate.document().text = u"%s\n\n%%{\n%s\n%%}\n" % (
+                out.decode('utf8'), err.decode('utf8'))
+                info(_(
+                 "The document has been processed with convert-ly. You'll find "
+                 "the messages of convert-ly in a comment block at the end. "
+                 "You still may have to edit some parts manually."), timeout=10)
+            else:
+                msg = err.decode('utf8').replace('\n', '<br>')
+                info(_(
+                 "The document has been processed with convert-ly, but "
+                 "remained unchanged. This is the message given by "
+                 "convert-ly: %s") % "<br><br>%s" % msg, timeout=10)
+        except OSError, e:
+            error(_("Could not start convert-ly: %s") % e)
