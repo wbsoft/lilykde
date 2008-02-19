@@ -48,7 +48,7 @@ def insertVersion():
 def getVersion():
     """ determine the LilyPond version of the current document """
     d = kate.document()
-    match = re.search(r'\\version\s*"(\d+)(?:\.(\d+)(?:\.(\d+))?)?"', d.text)
+    match = re.search(r'\\version\s*"(\d+)(?:\.(\d+)(?:\.(\d+))?)?', d.text)
     if match:
         return tuple(int(s or "0") for s in match.groups())
     else:
