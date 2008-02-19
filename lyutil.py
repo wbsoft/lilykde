@@ -1,6 +1,6 @@
 """ Contains small often used utility functions """
 
-from qt import QTimer
+from qt import Qt, QApplication, QCursor, QTimer
 from kdeui import KMessageBox
 
 import kate
@@ -33,3 +33,9 @@ def timer(msec):
         return func
     return action
 
+def busy(b=True, cursor=QCursor(Qt.BusyCursor)):
+    """ if True, set a busy mouse cursor for the whole app, otherwise unset. """
+    if b:
+        QApplication.setOverrideCursor(cursor)
+    else:
+        QApplication.restoreOverrideCursor()

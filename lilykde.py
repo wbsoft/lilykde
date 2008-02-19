@@ -179,13 +179,13 @@ class Job(object):
             self._finish)
         if len(Job._jobs) == 1:
             # set a busy cursor if this is the first subprocess
-            QApplication.setOverrideCursor(QCursor(Qt.BusyCursor))
+            busy()
 
     def _finish(self):
         self.p.wait()
         Job._jobs.remove(self)
         if len(Job._jobs) == 0:
-            QApplication.restoreOverrideCursor()
+            busy(False)
 
 
 class LyJob(Job):
