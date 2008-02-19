@@ -78,10 +78,9 @@ def convertLy():
         # Ok, let's run convert-ly.
         # We add the from-version. Only in that case convert-ly wants to
         # read from stdin.
-        out, err = Popen(
-            ("convert-ly", "-s", "-f", "%d.%d.%d" % docVersion, "-"),
-            stdin=PIPE, stdout=PIPE, stderr=PIPE
-            ).communicate(kate.document().text.encode('utf8'))
+        out, err = Popen(("convert-ly", "-f", "%d.%d.%d" % docVersion, "-"),
+                         stdin=PIPE, stdout=PIPE, stderr=PIPE
+                         ).communicate(kate.document().text.encode('utf8'))
         kate.document().text = u"%s\n\n%%{\n%s\n%%}\n" % (
             out.decode('utf8'), err.decode('utf8'))
         info(_("The document has been processed with convert-ly. You'll find "
