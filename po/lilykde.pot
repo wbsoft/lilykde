@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-02-19 08:55+CET\n"
+"POT-Creation-Date: 2008-02-19 09:38+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -158,6 +158,10 @@ msgid "This LilyPond document is already up-to-date."
 msgstr ""
 
 #: ../lyversion.py:86
+msgid "The document has been processed with convert-ly, but remained unchanged. This is the message given by convert-ly: %s"
+msgstr ""
+
+#: ../lyversion.py:92
 msgid "The document has been processed with convert-ly. You'll find the messages of convert-ly in a comment block at the end. You still may have to edit some parts manually."
 msgstr ""
 

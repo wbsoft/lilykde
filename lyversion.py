@@ -81,8 +81,14 @@ def convertLy():
         out, err = Popen(("convert-ly", "-f", "%d.%d.%d" % docVersion, "-"),
                          stdin=PIPE, stdout=PIPE, stderr=PIPE
                          ).communicate(kate.document().text.encode('utf8'))
-        kate.document().text = u"%s\n\n%%{\n%s\n%%}\n" % (
+        if not out:
+            msg = err.decode('utf8').replace('\n', '<br>')
+            info(_("The document has been processed with convert-ly, but "
+                   "remained unchanged. This is the message given by "
+                   "convert-ly: %s") % "<br><br>%s" % msg, timeout=10)
+        else:
+            kate.document().text = u"%s\n\n%%{\n%s\n%%}\n" % (
             out.decode('utf8'), err.decode('utf8'))
-        info(_("The document has been processed with convert-ly. You'll find "
-               "the messages of convert-ly in a comment block at the end. "
-               "You still may have to edit some parts manually."), timeout=10)
+            info(_("The document has been processed with convert-ly. You'll find "
+            "the messages of convert-ly in a comment block at the end. "
+            "You still may have to edit some parts manually."), timeout=10)
