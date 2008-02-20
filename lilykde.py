@@ -154,6 +154,8 @@ class MyKRun(object):
         self.p.setAutoDelete(False)
         # save our instance in this inner function
         def finish():
+            # delete p, so the signal is also disconnected and we get garbage
+            # collected.
             del self.p
         self.p.connect(self.p, SIGNAL("finished()"), finish)
 
@@ -174,6 +176,9 @@ class Job(object):
             self._finish()
             del self.p
         self.p.connect(self.p, SIGNAL("processExited(KProcess*)"), finish)
+
+    def _finish(self):
+        pass
 
 
 class LyJob(Job):
