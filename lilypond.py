@@ -53,7 +53,9 @@ def documentChanged(doc):
             # Hide the PDF toolview (if it exists) when a probably non-lilypond
             # document is selected. Only if lilykde really loaded.
             lilykde.PDFToolView().hide()
-            lilykde.LogWindow().hide()
+            if 'lylog' in sys.modules:
+                import lylog
+                lylog.hide()
 
 
 # kate: indent-width 4;

@@ -129,7 +129,7 @@ class Outputter:
         """
         line = htmlescape(line)
         line = self._editstr(self._texteditrepl, line, 1)
-        self.log.append_html(
+        self.log.append(
           u'<span style="font-family:monospace;">%s</span>' % line, self.color)
 
     def _texteditrepl(self, m):
@@ -314,72 +314,6 @@ class PDFToolView(LazyToolView):
             #self.file = pdf
 
 
-class LogWindow(LazyToolView):
-    """
-    A text window messages can be written to in different styles.  Instantiate
-    only one!
-    """
-    def _initialize(self):
-        self.tv = kate.gui.Tool(_("LilyPond Log"), "log", kate.gui.Tool.bottom)
-        self.q = KTextBrowser(self.tv.widget, None, True)
-        self.q.connect(self.q, SIGNAL("urlClick(const QString&)"), self.runURL)
-        self.q.setTextFormat(Qt.RichText)
-        self.q.setFont(QFont("Sans", 9))
-        self.q.setFocusPolicy(QWidget.NoFocus)
-        self.show()
-
-    def clear(self):
-        if self.tv:
-            self.q.clear()
-
-    def append_html(self, text, color=None, bold=False):
-        text = keepspaces(text)
-        if bold:
-            text = "<b>%s</b>" % text
-        if color:
-            text = "<font color=%s>%s</font>" % (color, text)
-        self.q.append(text)
-
-    def append(self, text, color=None, bold=False):
-        self.append_html(htmlescape(text), color, bold)
-
-    def msg(self, text, color=None, bold=False):
-        self.append_html(u"*** %s" % text, color, bold)
-
-    def ok(self, text, color="darkgreen", bold=True):
-        self.msg(text, color, bold)
-
-    def fail(self, text, color="red", bold=True):
-        self.msg(text, color, bold)
-
-    def actions(self, actions, color="blue", bold=True):
-        if actions:
-            self.msg(" - ".join(['<a href="%s">%s</a>' % \
-                (htmlescapeurl(u), htmlescape(m)) for u, m in actions]),
-                color, bold)
-
-    def runURL(self, url):
-        """
-        Runs an URL with KRun. If url starts with "email=" or "emailpreview=",
-        it is converted to a mailto: link with the url attached, and opened in
-        the default KDE mailer.
-        """
-        # hack: prevent QTextView recognizing mailto: urls cos it can't handle
-        # query string
-        url = unicode(url)        # url can be a QString
-        m = re.match("([a-z]+)=(.*)", url)
-        if not m: return MyKRun(url)
-        command, url = m.groups()
-        if command in ('email', 'emailpreview'):
-            if command == "email" or warncontinue(_(
-              "This PDF has been created with point-and-click urls (preview "
-              "mode), which increases the file size dramatically. It's better "
-              "to email documents without point-and-click urls (publish mode), "
-              "because they are much smaller. Continue anyway?")):
-                KApplication.kApplication().invokeMailer(
-                    KURL(u"mailto:?attach=%s" % url), "", True)
-
-
 def runLilyPond(doc, preview=False):
     """
     Run Lilypond on the specified kate.document() and produce a PDF in the same
@@ -402,6 +336,7 @@ def runLilyPond(doc, preview=False):
                    "Please save your document to a local file."))
         return
 
-    Ly2PDF(f, LogWindow().create()).run(preview)
+    import lylog
+    Ly2PDF(f, lylog).run(preview)
 
 # kate: indent-width 4;
