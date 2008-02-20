@@ -7,7 +7,7 @@ import re
 import kate
 import kate.gui
 
-from qt import SIGNAL, QFont, Qt, QWidget
+from qt import QFont, Qt, QWidget
 from kdecore import KApplication, KURL
 from kdeui import KTextBrowser
 from kio import KRun

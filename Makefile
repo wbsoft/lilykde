@@ -7,7 +7,7 @@ LILYKDE = $(KDEHOME)/share/apps/lilykde
 
 PYCOMPILE = python -m py_compile
 
-lymodules = lilykde.py lilykde_i18n.py lymenu.py lyversion.py lyutil.py lylog.py
+lymodules = lilykde.py lilykde_i18n.py lymenu.py lyversion.py lyutil.py lylog.py lypdf.py
 
 all = ly.png textedit.protocol
 all: $(all)

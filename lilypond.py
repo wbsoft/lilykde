@@ -48,11 +48,12 @@ def documentChanged(doc):
             # TODO: make it a config option whether to directly show the PDF.
             if f.hasUpdatedPDF():
                 f.previewPDF()
-        elif 'lilykde' in sys.modules:
-            import lilykde
-            # Hide the PDF toolview (if it exists) when a probably non-lilypond
-            # document is selected. Only if lilykde really loaded.
-            lilykde.PDFToolView().hide()
+        else:
+            # Hide the toolviews (if they exist) when a probably non-lilypond
+            # document is selected.
+            if 'lypdf' in sys.modules:
+                import lypdf
+                lypdf.hide()
             if 'lylog' in sys.modules:
                 import lylog
                 lylog.hide()

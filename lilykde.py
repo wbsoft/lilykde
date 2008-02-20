@@ -12,11 +12,8 @@ import os.path
 import kate
 import kate.gui
 
-from qt import *
-from kdecore import KApplication, KURL, KProcess
-from kdeui import KTextBrowser
-from kparts import createReadOnlyPart
-from kio import KRun
+from qt import SIGNAL, QString, QObject
+from kdecore import KURL, KProcess
 
 # Some utility functions
 from lyutil import *
@@ -57,7 +54,9 @@ class LyFile(object):
             self.updated(self.pdf)
 
     def previewPDF(self):
-        self.pdf and PDFToolView().create().openFile(self.pdf)
+        if self.pdf:
+            import lypdf
+            lypdf.openFile(self.pdf)
 
     def getUpdated(self, ext):
         from glob import glob
@@ -218,49 +217,6 @@ class Ly2PDF(LyJob):
                 actions.extend([("file://%s" % m, str(n+1))
                     for n, m in enumerate(midis[1:])])
             self.log.actions(actions)
-
-
-class LazyToolView(object):
-    """
-    To be subclassed. Creates or returns an existing ToolView. The toolview is
-    really created when create() is called.
-    """
-    def __new__(cls):
-        if not '_instance' in cls.__dict__:
-            cls._instance = object.__new__(cls)
-            cls._instance.tv = None
-        return cls._instance
-
-    def create(self):
-        if not self.tv:
-            self._initialize()    # should be implemented in the child class
-        return self
-
-    def show(self):
-        if self.tv: self.tv.show()
-
-    def hide(self):
-        if self.tv: self.tv.hide()
-
-
-class PDFToolView(LazyToolView):
-    """
-    Returns a/the PDF preview ToolView. Call .create() to really create and show
-    the view.
-    """
-    def _initialize(self):
-        self.tv = kate.gui.Tool("PDF", "pdf", kate.gui.Tool.right)
-        self.pdfpart = createReadOnlyPart("libkpdfpart", self.tv.widget)
-        self.pdfpart.widget().setFocusPolicy(QWidget.NoFocus)
-        self.show()
-        self.file = ""
-
-    def openFile(self, pdf):
-        #if self.file != pdf:
-            # KPDF does not always watch the file for updates if the inode
-            # number changes, which LilyPond does...
-            self.pdfpart.openURL(KURL(pdf))
-            #self.file = pdf
 
 
 def runLilyPond(doc, preview=False):
