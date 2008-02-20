@@ -65,7 +65,6 @@ def _runURL(url):
     m = re.match("([a-z]+)=(.*)", url)
     if not m:
         return OpenURL(url)
-        return
     command, url = m.groups()
     if command in ('email', 'emailpreview'):
         if command == "email" or warncontinue(_(
