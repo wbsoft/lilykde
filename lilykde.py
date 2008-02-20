@@ -173,6 +173,7 @@ class Job(object):
         busy()
         def finish():
             busy(False)
+            self.p.wait()
             self._finish()
             del self.p
         self.p.connect(self.p, SIGNAL("processExited(KProcess*)"), finish)
