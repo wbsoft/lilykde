@@ -13,7 +13,7 @@ if m:
   file, (line, char, col) = "file://%s" % m.group(1), map(int, m.group(2,3,4))
   line -= 1 # for KDE 3.x
   #col += 1 # for KDE 4.x
-  os.execlp("kate", "--use", "--line", str(line), "--column", str(col), file)
+  os.execlp("kate", "kate", "--use", "--line", str(line), "--column", str(col), file)
 else:
   sys.stderr.write("Not a valid textedit URL: %s\n" % url)
   sys.exit(1)
