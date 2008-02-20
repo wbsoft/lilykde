@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-02-20 16:55+CET\n"
+"POT-Creation-Date: 2008-02-20 17:42+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,75 +15,75 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: ../lilykde.py:208
+#: ../lilykde.py:157
 msgid "LilyPond [%s] starting (%s)..."
 msgstr ""
 
-#: ../lilykde.py:210
+#: ../lilykde.py:159
 msgid "LilyPond [%s] starting..."
 msgstr ""
 
-#: ../lilykde.py:212
+#: ../lilykde.py:161
 msgid "Could not start LilyPond."
 msgstr ""
 
-#: ../lilykde.py:220
+#: ../lilykde.py:169
 msgid "LilyPond was terminated by signal %d."
 msgstr ""
 
-#: ../lilykde.py:224
+#: ../lilykde.py:173
 msgid "LilyPond exited with return code %d."
 msgstr ""
 
-#: ../lilykde.py:226
+#: ../lilykde.py:175
 msgid "LilyPond [%s] finished."
 msgstr ""
 
-#: ../lilykde.py:229
+#: ../lilykde.py:178
 msgid "LilyPond exited abnormally."
 msgstr ""
 
-#: ../lilykde.py:241
+#: ../lilykde.py:190
 msgid "preview mode"
 msgstr ""
 
-#: ../lilykde.py:243
+#: ../lilykde.py:192
 msgid "publish mode"
 msgstr ""
 
-#: ../lilykde.py:250
+#: ../lilykde.py:199
 msgid "Open folder"
 msgstr ""
 
-#: ../lilykde.py:253
+#: ../lilykde.py:202
 msgid "Open PDF"
 msgstr ""
 
-#: ../lilykde.py:259
+#: ../lilykde.py:208
 msgid "Email PDF (preview)"
 msgstr ""
 
-#: ../lilykde.py:262
+#: ../lilykde.py:211
 msgid "Email PDF"
 msgstr ""
 
-#: ../lilykde.py:264
+#: ../lilykde.py:213
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 
-#: ../lilykde.py:268
+#: ../lilykde.py:217
 msgid "Play MIDI"
 msgstr ""
 
-#: ../lilykde.py:325
+#: ../lilykde.py:274
 msgid "Your document currently has no filename, please save first."
 msgstr ""
 
-#: ../lilykde.py:329
+#: ../lilykde.py:278
 msgid "Your document has been modified, please save first."
 msgstr ""
 
-#: ../lilykde.py:335
+#: ../lilykde.py:284
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -101,11 +101,11 @@ msgid ""
 "Homepage: %s\n"
 msgstr ""
 
-#: ../lylog.py:25
+#: ../lylog.py:20
 msgid "LilyPond Log"
 msgstr ""
 
-#: ../lylog.py:76
+#: ../lylog.py:71
 msgid "This PDF has been created with point-and-click urls (preview mode), which increases the file size dramatically. It's better to email documents without point-and-click urls (publish mode), because they are much smaller. Continue anyway?"
 msgstr ""
 

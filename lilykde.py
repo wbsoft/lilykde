@@ -24,41 +24,6 @@ from lyutil import *
 # translate the messages
 from lilykde_i18n import _
 
-# Small html functions
-def encodeurl(s):
-    """Encode an URL, but leave html entities alone."""
-    for a, b in (
-        ('%', '%25'),
-        (' ', "%20"),
-        ('~', "%7E"),
-        ): s = s.replace(a,b)
-    return s
-
-def htmlescape(s):
-    """Escape strings for use in HTML text and attributes."""
-    for a, b in (
-        ("&", "&amp;"),
-        (">", "&gt;"),
-        ("<", "&lt;"),
-        ("'", "&apos;"),
-        ('"', "&quot;"),
-        ): s = s.replace(a,b)
-    return s
-
-def htmlescapeurl(s):
-    """Escape strings for use as URL in HTML href attributes etc."""
-    return htmlescape(encodeurl(s))
-
-def keepspaces(s):
-    """
-    Changes "  " into "&nbsp; ".
-    Hack needed because otherwise the spaces disappear in the LogWindow.
-    """
-    s = s.replace("  ","&nbsp; ")
-    s = s.replace("  ","&nbsp; ")
-    return re.sub("^ ", "&nbsp;", s)
-
-
 # Classes
 
 class LyFile(object):
@@ -144,22 +109,6 @@ class Outputter:
             self.log.append(s, self.color)
 
 
-class MyKRun(object):
-    """
-    Runs an URL with KRun, but keeps a pointer so the instance will not go
-    out of scope, causing the process to terminate.
-    """
-    def __init__(self, url):
-        self.p = KRun(KURL(url))
-        self.p.setAutoDelete(False)
-        # save our instance in this inner function
-        def finish():
-            # delete p, so the signal is also disconnected and we get garbage
-            # collected.
-            del self.p
-        self.p.connect(self.p, SIGNAL("finished()"), finish)
-
-
 class Job(object):
     """
     To be subclassed. To instatiate a job, and keep a pointer so the instance
@@ -171,12 +120,12 @@ class Job(object):
     def __init__(self):
         self.p = KProcess()
         busy()
+        @onSignal(self.p, "processExited(KProcess*)")
         def finish():
             busy(False)
             self.p.wait()
             self._finish()
             del self.p
-        self.p.connect(self.p, SIGNAL("processExited(KProcess*)"), finish)
 
     def _finish(self):
         pass

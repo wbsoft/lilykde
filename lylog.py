@@ -12,15 +12,10 @@ from kdecore import KApplication, KURL
 from kdeui import KTextBrowser
 from kio import KRun
 
+from lyutil import *
+
 # translate the messages
 from lilykde_i18n import _
-
-def onSignal(sender, signal):
-    """ a decorator that connects a function to a Qt signal """
-    def sig(func):
-        sender.connect(sender, SIGNAL(signal), func)
-        return func
-    return sig
 
 tool = kate.gui.Tool(_("LilyPond Log"), "log", kate.gui.Tool.bottom)
 log = KTextBrowser(tool.widget, None, True)
@@ -58,7 +53,7 @@ def actions(actions, color="blue", bold=True):
             for u, m in actions]), color, bold)
 
 @onSignal(log, "urlClick(const QString&)")
-def runURL(url):
+def _runURL(url):
     """
     Runs an URL with KRun. If url starts with "email=" or "emailpreview=",
     it is converted to a mailto: link with the url attached, and opened in
@@ -69,7 +64,7 @@ def runURL(url):
     url = unicode(url)        # url could be a QString
     m = re.match("([a-z]+)=(.*)", url)
     if not m:
-        openURL(url)
+        return OpenURL(url)
         return
     command, url = m.groups()
     if command in ('email', 'emailpreview'):
@@ -81,43 +76,8 @@ def runURL(url):
             KApplication.kApplication().invokeMailer(
                 KURL(u"mailto:?attach=%s" % url), "", True)
 
-#log.connect(log, SIGNAL("urlClick(const QString&)"), runURL)
 
-# Small html functions
-def encodeurl(s):
-    """Encode an URL, but leave html entities alone."""
-    for a, b in (
-        ('%', '%25'),
-        (' ', "%20"),
-        ('~', "%7E"),
-        ): s = s.replace(a,b)
-    return s
-
-def htmlescape(s):
-    """Escape strings for use in HTML text and attributes."""
-    for a, b in (
-        ("&", "&amp;"),
-        (">", "&gt;"),
-        ("<", "&lt;"),
-        ("'", "&apos;"),
-        ('"', "&quot;"),
-        ): s = s.replace(a,b)
-    return s
-
-def htmlescapeurl(s):
-    """Escape strings for use as URL in HTML href attributes etc."""
-    return htmlescape(encodeurl(s))
-
-def keepspaces(s):
-    """
-    Changes "  " into "&nbsp; ".
-    Hack needed because otherwise the spaces disappear in the LogWindow.
-    """
-    s = s.replace("  ","&nbsp; ")
-    s = s.replace("  ","&nbsp; ")
-    return re.sub("^ ", "&nbsp;", s)
-
-class openURL(object):
+class OpenURL(object):
     """
     Runs an URL with KRun, but keeps a pointer so the instance will not go
     out of scope, causing the process to terminate.
@@ -132,4 +92,4 @@ class openURL(object):
             # collected.
             del self.p
 
-# kate: indent-width: 4
+# kate: indent-width 4
