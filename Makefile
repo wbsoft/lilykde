@@ -5,7 +5,7 @@ uninstalltargets = uninstall-mimetype uninstall-syntax uninstall-textedit uninst
 KDEHOME ?= $(HOME)/.kde
 LILYKDE = $(KDEHOME)/share/apps/lilykde
 
-PYCOMPILE = python -O -m py_compile
+PYCOMPILE = python -m py_compile
 
 lymodules = lilykde.py lilykde_i18n.py lymenu.py lyversion.py lyutil.py lylog.py
 
