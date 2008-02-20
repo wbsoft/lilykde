@@ -149,43 +149,31 @@ class MyKRun(object):
     Runs an URL with KRun, but keeps a pointer so the instance will not go
     out of scope, causing the process to terminate.
     """
-
-    _jobs = []
-
     def __init__(self, url):
-        MyKRun._jobs.append(self)
         self.p = KRun(KURL(url))
         self.p.setAutoDelete(False)
-        self.p.connect(self.p, SIGNAL("finished()"), self._finish)
-
-    def _finish(self):
-        MyKRun._jobs.remove(self)
+        # save our instance in this inner function
+        def finish():
+            del self.p
+        self.p.connect(self.p, SIGNAL("finished()"), finish)
 
 
 class Job(object):
     """
     To be subclassed. To instatiate a job, and keep a pointer so the instance
-    will not go out of scope. You must call __init__(), and also _finish()
-    when your process has been finished.
+    will not go out of scope. You must call our __init__() if you reimplement
+    it.
 
-    Child classes should implement a run() and a completed() method.
+    Child classes should implement a _finish() method.
     """
-    _jobs = []
-
     def __init__(self):
         self.p = KProcess()
-        Job._jobs.append(self)
-        QObject.connect(self.p, SIGNAL("processExited(KProcess*)"),
-            self._finish)
-        if len(Job._jobs) == 1:
-            # set a busy cursor if this is the first subprocess
-            busy()
-
-    def _finish(self):
-        self.p.wait()
-        Job._jobs.remove(self)
-        if len(Job._jobs) == 0:
+        busy()
+        def finish():
             busy(False)
+            self._finish()
+            del self.p
+        self.p.connect(self.p, SIGNAL("processExited(KProcess*)"), finish)
 
 
 class LyJob(Job):
@@ -234,7 +222,6 @@ class LyJob(Job):
         else:
             self.log.fail(_("LilyPond exited abnormally."))
         self.completed(success)
-        super(LyJob, self)._finish()
 
 
 class Ly2PDF(LyJob):
