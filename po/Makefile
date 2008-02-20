@@ -15,6 +15,7 @@ translate = \
 	../lilykde.py \
 	../lymenu.py \
 	../lyversion.py \
+	../lylog.py \
 
 
 pofiles = $(wildcard *.po)

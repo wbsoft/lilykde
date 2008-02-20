@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
-"POT-Creation-Date: 2008-02-20 16:46+CET\n"
+"POT-Creation-Date: 2008-02-20 16:55+CET\n"
 "PO-Revision-Date: 2008-02-19 11:55+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -118,6 +118,22 @@ msgstr ""
 "Versie: %s\n"
 "Homepage: %s\n"
 
+#: ../lylog.py:25
+msgid "LilyPond Log"
+msgstr "LilyPond-uitvoer"
+
+#: ../lylog.py:76
+msgid ""
+"This PDF has been created with point-and-click urls (preview mode), which "
+"increases the file size dramatically. It's better to email documents without "
+"point-and-click urls (publish mode), because they are much smaller. Continue "
+"anyway?"
+msgstr ""
+"Dit PDF-bestand is aangemaakt met \"point-and-click\" URLs (vooruitblik), "
+"waardoor het bestand veel groter dan noodzakelijk is. Het is beter om "
+"documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
+"kleiner zijn. Toch doorgaan?"
+
 #: ../lymenu.py:30
 msgid "LilyPond"
 msgstr "LilyPond"
@@ -194,17 +210,3 @@ msgstr ""
 #: ../lyversion.py:101
 msgid "Could not start convert-ly: %s"
 msgstr "Kan convert-ly niet starten: %s"
-
-#~ msgid "LilyPond Log"
-#~ msgstr "LilyPond-uitvoer"
-
-#~ msgid ""
-#~ "This PDF has been created with point-and-click urls (preview mode), which "
-#~ "increases the file size dramatically. It's better to email documents "
-#~ "without point-and-click urls (publish mode), because they are much "
-#~ "smaller. Continue anyway?"
-#~ msgstr ""
-#~ "Dit PDF-bestand is aangemaakt met \"point-and-click\" URLs (vooruitblik), "
-#~ "waardoor het bestand veel groter dan noodzakelijk is. Het is beter om "
-#~ "documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
-#~ "kleiner zijn. Toch doorgaan?"
