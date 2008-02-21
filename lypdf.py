@@ -15,7 +15,7 @@ tool.show()
 show = tool.show
 hide = tool.hide
 
-_file = ""
+#_file = ""
 
 def openFile(pdf):
     #if _file != pdf:
