@@ -40,6 +40,7 @@ install-textedit: textedit.protocol
 	@echo Installing textedit integration:
 	@mkdir -p $(KDEHOME)/share/services
 	cp textedit.protocol $(KDEHOME)/share/services/
+	@mkdir -p $(LILYKDE)
 	cp ktexteditservice.py $(LILYKDE)/
 
 install-plugin:
