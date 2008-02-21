@@ -20,15 +20,25 @@ It currently consists of:
 
 * An icon and mimetype for *.ly files. The icon was taken from LilyPond.
 
+* Some settings in katefiletyperc, to indent LilyPond files nicely and
+  always use utf8 encoding by default.
+
 
 Requirements
 ============
 
-KDE3.5:     http://www.kde.org/
-PyKDE:      http://www.riverbankcomputing.co.uk/pykde/
-PyQt:       http://www.riverbankcomputing.co.uk/pyqt/
-Python 2.4: http://www.python.org/
-Pate 0.5.1: http://paul.giannaros.org/pate/
+package  tested   website
+         with:
+-------------------------
+KDE      3.5      http://www.kde.org/
+PyKDE    3.17.4   http://www.riverbankcomputing.co.uk/pykde/
+PyQt     3.16     http://www.riverbankcomputing.co.uk/pyqt/
+Python   2.4      http://www.python.org/
+Pate     0.5.1    http://paul.giannaros.org/pate/
+
+Please use the tools of your operating system to install these
+prerequisites.  If you need to build Pate from source, install it to the
+same prefix as KDE, e.g. ./configure --prefix=$(kde-config --prefix)
 
 
 Installation

@@ -69,6 +69,7 @@ clean:
 	@make -C po clean
 
 uninstall: $(uninstalltargets)
+	rm -rf $(LILYKDE)
 	@kbuildsycoca 2> /dev/null
 
 uninstall-mimetype:
@@ -93,7 +94,7 @@ uninstall-plugin:
 	@echo Uninstalling plugin:
 	rm -f $(KDEHOME)/share/apps/kate/pyplugins/lilypond.py*
 	rm -rf $(LILYKDE)/py
-	rm -f $(KDEHOME)/share/apps/kate/pyplugins/expand/x-lilypond.conf
+	#rm -f $(KDEHOME)/share/apps/kate/pyplugins/expand/x-lilypond.conf # might be changed by user
 
 uninstall-katefiletype:
 	@echo Removing LilyKDE from katefiletyperc:
