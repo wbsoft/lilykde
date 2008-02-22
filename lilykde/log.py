@@ -30,6 +30,23 @@ show = tool.show
 hide = tool.hide
 clear = log.clear
 
+
+class OpenURL(object):
+    """
+    Runs an URL with KRun, but keeps a pointer so the instance will not go
+    out of scope, causing the process to terminate.
+    """
+    def __init__(self, url):
+        self.p = KRun(KURL(url))
+        self.p.setAutoDelete(False)
+        # save our instance in this inner function
+        @onSignal(self.p, "finished()")
+        def finish():
+            # delete p, so the signal is also disconnected and we get garbage
+            # collected.
+            del self.p
+
+
 def append(text, color=None, bold=False):
     text = keepspaces(text)
     if bold:
@@ -75,20 +92,5 @@ def _runURL(url):
             KApplication.kApplication().invokeMailer(
                 KURL(u"mailto:?attach=%s" % url), "", True)
 
-
-class OpenURL(object):
-    """
-    Runs an URL with KRun, but keeps a pointer so the instance will not go
-    out of scope, causing the process to terminate.
-    """
-    def __init__(self, url):
-        self.p = KRun(KURL(url))
-        self.p.setAutoDelete(False)
-        # save our instance in this inner function
-        @onSignal(self.p, "finished()")
-        def finish():
-            # delete p, so the signal is also disconnected and we get garbage
-            # collected.
-            del self.p
 
 # kate: indent-width 4
