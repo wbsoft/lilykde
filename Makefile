@@ -7,8 +7,6 @@ LILYKDE = $(KDEHOME)/share/apps/lilykde
 
 PYCOMPILE = python -m py_compile
 
-lymodules = lilykde.py lilykde_i18n.py lymenu.py lyversion.py lyutil.py lylog.py lypdf.py
-
 all = ly.png textedit.protocol
 all: $(all)
 	@make -C po
@@ -47,12 +45,12 @@ install-plugin:
 	@echo Installing plugin:
 	@mkdir -p $(KDEHOME)/share/apps/kate/pyplugins
 	cp lilypond.py $(KDEHOME)/share/apps/kate/pyplugins/
-	@mkdir -p $(LILYKDE)/py
-	cp $(lymodules) $(LILYKDE)/py/
+	@mkdir -p $(LILYKDE)/lilykde
+	cp lilykde/*.py $(LILYKDE)/lilykde/
 	@mkdir -p $(KDEHOME)/share/apps/kate/pyplugins/expand
 	-cp x-lilypond.conf $(KDEHOME)/share/apps/kate/pyplugins/expand/
 	@echo Compiling Python modules:
-	@cd $(LILYKDE)/py/ && $(PYCOMPILE) $(lymodules)
+	@cd $(LILYKDE)/lilykde/ && $(PYCOMPILE) *.py
 	@cd $(KDEHOME)/share/apps/kate/pyplugins/ && $(PYCOMPILE) lilypond.py
 
 install-katefiletype:
@@ -93,7 +91,7 @@ uninstall-i18n:
 uninstall-plugin:
 	@echo Uninstalling plugin:
 	rm -f $(KDEHOME)/share/apps/kate/pyplugins/lilypond.py*
-	rm -rf $(LILYKDE)/py
+	rm -rf $(LILYKDE)/lilykde
 	#rm -f $(KDEHOME)/share/apps/kate/pyplugins/expand/x-lilypond.conf # might be changed by user
 
 uninstall-katefiletype:

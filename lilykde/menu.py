@@ -10,7 +10,7 @@ import sys
 import kate
 
 # translate the messages
-from lilykde_i18n import _
+from lilykde.i18n import _
 
 # setup LilyPond menu. Somehow it seems not to be possible to use pate's
 # standard decorators on an own toplevel menu.
@@ -31,35 +31,35 @@ menu = Menu(_("LilyPond"))
 
 @menu.add(_("Run LilyPond (preview)"), "Ctrl+Shift+M", "ly")
 def preview():
-    import lilykde
-    lilykde.runLilyPond(kate.document(), preview=True)
+    from lilykde.runlily import runLilyPond
+    runLilyPond(kate.document(), preview=True)
 
 @menu.add(_("Run LilyPond (publish)"), "Ctrl+Shift+P", "ly")
 def publish():
-    import lilykde
-    lilykde.runLilyPond(kate.document())
+    from lilykde.runlily import runLilyPond
+    runLilyPond(kate.document())
 
 menu.insert(KActionSeparator())
 
 @menu.add(_("Clear LilyPond Log"), "", "eraser")
 def clearLog():
-    if 'lylog' in sys.modules:
-        import lylog
-        lylog.clear()
+    if 'lilykde.log' in sys.modules:
+        from lilykde import log
+        log.clear()
 
 menu.insert(KActionSeparator())
 
 @menu.add(_("Insert LilyPond version (%s)"), "Ctrl+Shift+V", "ok")
 def insertVersion():
-    import lyversion
-    lyversion.insertVersion()
+    from lilykde import version
+    version.insertVersion()
 
 insertVersion.setEnabled(False)
 
 @menu.add(_("Update with convert-ly"), "", "add")
 def convertLy():
-    import lyversion
-    lyversion.convertLy()
+    from lilykde import version
+    version.convertLy()
 
 
 # kate: indent-width 4;

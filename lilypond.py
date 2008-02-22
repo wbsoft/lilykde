@@ -11,9 +11,9 @@ import kate
 # The rest of the plugin is located in KDE/share/apps/lilykde/, with the
 # python modules in ./py/.
 from kdecore import KStandardDirs
-sys.path[0:0]=map(str, KStandardDirs().findDirs("data", "lilykde/py"))
+sys.path[0:0]=map(str, KStandardDirs().findDirs("data", "lilykde"))
 
-from lilykde_i18n import _
+from lilykde.i18n import _
 
 __doc__ = _("A LilyPond Kate/Pate plugin.\n"
 "\n"
@@ -31,10 +31,10 @@ __doc__ = _("A LilyPond Kate/Pate plugin.\n"
 @kate.onWindowShown
 def initLilyPond():
     # Setup the LilyPond main menu
-    from lymenu import menu
+    from lilykde.menu import menu
     menu.plug(kate.mainWidget().topLevelWidget().menuBar(), 5)
     # Run LilyPond once to determine the version
-    import lyversion
+    import lilykde.version
     # init toolviews if LilyPond document
     documentChanged(kate.document())
 
@@ -45,8 +45,8 @@ def documentChanged(doc):
         # load lilykde if this is probably a lilypond file
         if doc.information.mimeType == 'text/x-lilypond' or \
                 os.path.splitext(doc.url)[1] in ('.ly', '.ily', 'lyi'):
-            import lilykde
-            f = lilykde.LyFile(doc)
+            from lilykde import runlily
+            f = runlily.LyFile(doc)
             # Show corresponding PDF if it's not older than the LilyPond file.
             # TODO: make it a config option whether to directly show the PDF.
             if f.hasUpdatedPDF():
@@ -54,12 +54,12 @@ def documentChanged(doc):
         else:
             # Hide the toolviews (if they exist) when a probably non-lilypond
             # document is selected.
-            if 'lypdf' in sys.modules:
-                import lypdf
-                lypdf.hide()
+            if 'lilykde.pdf' in sys.modules:
+                from lilykde import pdf
+                pdf.hide()
             if 'lylog' in sys.modules:
-                import lylog
-                lylog.hide()
+                from lilykde import log
+                log.hide()
 
 
 # kate: indent-width 4;

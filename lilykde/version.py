@@ -8,10 +8,10 @@ from subprocess import Popen, PIPE
 import kate
 
 # Some popups
-from lyutil import timer, info, sorry, error
+from lilykde.util import timer, info, sorry, error
 
 # Translate the messages
-from lilykde_i18n import _
+from lilykde.i18n import _
 
 
 version = None
@@ -25,7 +25,7 @@ def init():
     except OSError, e:
         match = None
         error(_("Could not start LilyPond: %s") % e)
-    from lymenu import insertVersion as v
+    from lilykde.menu import insertVersion as v
     if match:
         version = tuple(int(s or "0") for s in match.groups())
         v.setText(unicode(v.text()) % "%d.%d.%d" % version)

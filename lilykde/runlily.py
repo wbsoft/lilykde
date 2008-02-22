@@ -16,10 +16,10 @@ from qt import SIGNAL, QString, QObject
 from kdecore import KURL, KProcess
 
 # Some utility functions
-from lyutil import *
+from lilykde.util import *
 
 # translate the messages
-from lilykde_i18n import _
+from lilykde.i18n import _
 
 # Classes
 
@@ -55,8 +55,8 @@ class LyFile(object):
 
     def previewPDF(self):
         if self.pdf:
-            import lypdf
-            lypdf.openFile(self.pdf)
+            from lilykde import pdf
+            pdf.openFile(self.pdf)
 
     def getUpdated(self, ext):
         from glob import glob
@@ -241,7 +241,7 @@ def runLilyPond(doc, preview=False):
                    "Please save your document to a local file."))
         return
 
-    import lylog
-    Ly2PDF(f, lylog).run(preview)
+    from lilykde import log
+    Ly2PDF(f, log).run(preview)
 
 # kate: indent-width 4;

@@ -7,7 +7,10 @@ from qt import QWidget
 from kdecore import KURL
 from kparts import createReadOnlyPart
 
-tool = kate.gui.Tool("PDF", "pdf", kate.gui.Tool.right)
+# translate the messages
+from lilykde.i18n import _
+
+tool = kate.gui.Tool(_("PDF"), "pdf", kate.gui.Tool.right)
 pdfpart = createReadOnlyPart("libkpdfpart", tool.widget)
 pdfpart.widget().setFocusPolicy(QWidget.NoFocus)
 tool.show()

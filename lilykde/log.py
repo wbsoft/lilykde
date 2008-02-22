@@ -12,10 +12,10 @@ from kdecore import KApplication, KURL
 from kdeui import KTextBrowser
 from kio import KRun
 
-from lyutil import *
+from lilykde.util import *
 
 # translate the messages
-from lilykde_i18n import _
+from lilykde.i18n import _
 
 tool = kate.gui.Tool(_("LilyPond Log"), "log", kate.gui.Tool.bottom)
 log = KTextBrowser(tool.widget, None, True)

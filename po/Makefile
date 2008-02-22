@@ -5,17 +5,19 @@ MSGMERGE ?= msgmerge
 MSGFMT ?= msgfmt.py
 
 KDEHOME ?= $(HOME)/.kde
-LILYKDE = $(KDEHOME)/share/apps/lilykde
+LILYKDE ?= $(KDEHOME)/share/apps/lilykde
 
 # Todo: add possibility to place message catalogs in system-wide locale dirs
 LOCALE = $(LILYKDE)/mo
 
 translate = \
 	../lilypond.py \
-	../lilykde.py \
-	../lymenu.py \
-	../lyversion.py \
-	../lylog.py \
+	../lilykde/runlily.py \
+	../lilykde/menu.py \
+	../lilykde/version.py \
+	../lilykde/log.py \
+	../lilykde/pdf.py \
+
 
 
 pofiles = $(wildcard *.po)
