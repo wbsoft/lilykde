@@ -58,7 +58,7 @@ def documentChanged(doc):
             if 'lilykde.pdf' in sys.modules:
                 from lilykde import pdf
                 pdf.hide()
-            if 'lylog' in sys.modules:
+            if 'lilykde.log' in sys.modules:
                 from lilykde import log
                 log.hide()
 
