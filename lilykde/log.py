@@ -66,8 +66,9 @@ def fail(text, color="red", bold=True):
 
 def actions(actions, color="blue", bold=True):
     if actions:
-        msg(" - ".join(['<a href="%s">%s</a>' % (htmlescapeurl(u), htmlescape(m))
-            for u, m in actions]), color, bold)
+        msg(" - ".join([
+            '<a href="%s">%s</a>' % (htmlescapeurl(u), htmlescape(m))
+                for u, m in actions]), color, bold)
 
 @onSignal(log, "urlClick(const QString&)")
 def _runURL(url):
@@ -93,4 +94,4 @@ def _runURL(url):
                 KURL(u"mailto:?attach=%s" % url), "", True)
 
 
-# kate: indent-width 4
+# kate: indent-width 4;

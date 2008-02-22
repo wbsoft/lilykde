@@ -67,15 +67,15 @@ def convertLy():
     elif docVersion >= version:
         sorry(_("This LilyPond document is already up-to-date."))
     else:
+        d = kate.document()
         # Ok, let's run convert-ly.
         # We add the from-version. Only in that case convert-ly wants to
         # read from stdin.
         try:
             out, err = Popen(("convert-ly", "-f", "%d.%d.%d" % docVersion, "-"),
                             stdin=PIPE, stdout=PIPE, stderr=PIPE
-                            ).communicate(kate.document().text.encode('utf8'))
+                            ).communicate(d.text.encode('utf8'))
             if out:
-                d = kate.document()
                 # Just setting d.text does work, but triggers a bug in the
                 # Katepart syntax highlighting: the first part of the document
                 # looses its highlighting when a user undoes the conversion

@@ -9,9 +9,6 @@ This part is loaded when the LilyPond is first called.
 import re
 import os.path
 
-import kate
-import kate.gui
-
 from qt import SIGNAL, QString, QObject
 from kdecore import KURL, KProcess
 
