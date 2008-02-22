@@ -44,8 +44,7 @@ menu.insert(KActionSeparator())
 @menu.add(_("Clear LilyPond Log"), "", "eraser")
 def clearLog():
     if 'lilykde.log' in sys.modules:
-        from lilykde import log
-        log.clear()
+        sys.modules['lilykde.log'].clear()
 
 menu.insert(KActionSeparator())
 
