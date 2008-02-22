@@ -12,18 +12,19 @@ import kate
 # python package named lilykde.
 # TODO: install lilykde as site package if system-wide install
 from kdecore import KStandardDirs
-sys.path[0:0]=map(str, KStandardDirs().findDirs("data", "lilykde"))
+sys.path.extend(map(str, KStandardDirs().findDirs("data", "lilykde")))
 
 from lilykde.i18n import _
 
-__doc__ = _("A LilyPond Kate/Pate plugin.\n"
+__doc__ = _(
+    "A LilyPond Kate/Pate plugin.\n"
     "\n"
     "This is LilyKDE, a plugin to make it easy to run the LilyPond music "
     "typesetter from within Kate.\n"
     "\n"
-    "If you also enable the Expand plugin, you get some nice shorthands for often "
-    "used LilyPond constructs. To view those, look at the x-lilypond MIME-Type "
-    "in the Expand configuration dialog.\n"
+    "If you also enable the Expand plugin, you get some nice shorthands for "
+    "often used LilyPond constructs. To view those, look at the x-lilypond "
+    "MIME-Type in the Expand configuration dialog.\n"
     "\n"
     "Version: %(version)s\n"
     "Homepage: %(homepage)s\n"

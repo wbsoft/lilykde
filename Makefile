@@ -1,100 +1,121 @@
-installtargets = install-mimetype install-syntax install-textedit install-plugin install-katefiletype install-i18n
-uninstalltargets = uninstall-mimetype uninstall-syntax uninstall-textedit uninstall-i18n uninstall-plugin uninstall-katefiletype
-.PHONY: all install clean uninstall $(installtargets) $(uninstalltargets)
+install = \
+	install-mimetype \
+	install-syntax \
+	install-textedit \
+	install-plugin \
+	install-katefiletype \
+	install-i18n
 
-KDEHOME ?= $(HOME)/.kde
-LILYKDE = $(KDEHOME)/share/apps/lilykde
+uninstall = \
+	uninstall-mimetype \
+	uninstall-syntax \
+	uninstall-textedit \
+	uninstall-i18n \
+	uninstall-plugin \
+	uninstall-katefiletype
+
+.PHONY: all install clean uninstall $(install) $(uninstall)
+
+DESTDIR =
+PREFIX = $(HOME)/.kde
+DATADIR = $(DESTDIR)$(PREFIX)/share
+
+LILYKDE = $(DATADIR)/apps/lilykde
+ICONDIR = $(DATADIR)/icons
+SERVICEDIR = $(DATADIR)/services
+KATEPARTDIR = $(DATADIR)/apps/katepart
+PYPLUGINS = $(DATADIR)/apps/kate/pyplugins
+MIMELNK = $(DATADIR)/mimelnk
+CONFIGDIR = $(DATADIR)/config
 
 PYCOMPILE = python -m py_compile
 
-all = ly.png textedit.protocol
+
+all = ly.png
+
 all: $(all)
-	@make -C po
+	@$(MAKE) -C po
 
 ly.png: ly.svg
 	@echo Creating ly.png from ly.svg...
-	@ksvgtopng 128 128 "`pwd`/$<" "`pwd`/$@"
+	@ksvgtopng 128 128 "`pwd`/ly.svg" "`pwd`/ly.png"
 
-textedit.protocol: textedit.protocol.in
-	@echo Creating textedit.protocol...
-	@sed 's!LILYKDEDIR!$(LILYKDE)!' $< > $@
-
-install: $(installtargets)
-	@kbuildsycoca 2> /dev/null
-
-install-mimetype: ly.png
-	@echo Installing LilyPond icon and mimetype:
-	@mkdir -p $(KDEHOME)/share/icons
-	cp ly.png ly.svg $(KDEHOME)/share/icons/
-	@mkdir -p $(KDEHOME)/share/mimelnk/text
-	cp x-lilypond.desktop $(KDEHOME)/share/mimelnk/text/
-
-install-syntax:
-	@echo Installing LilyPond syntax highlighting:
-	@mkdir -p $(KDEHOME)/share/apps/katepart/syntax
-	cp lilypond.xml $(KDEHOME)/share/apps/katepart/syntax/
-
-install-textedit: textedit.protocol
-	@echo Installing textedit integration:
-	@mkdir -p $(KDEHOME)/share/services
-	cp textedit.protocol $(KDEHOME)/share/services/
-	@mkdir -p $(LILYKDE)
-	cp ktexteditservice.py $(LILYKDE)/
-
-install-plugin:
-	@echo Installing plugin:
-	@mkdir -p $(KDEHOME)/share/apps/kate/pyplugins
-	cp lilypond.py $(KDEHOME)/share/apps/kate/pyplugins/
-	@mkdir -p $(LILYKDE)/lilykde
-	cp lilykde/*.py $(LILYKDE)/lilykde/
-	@mkdir -p $(KDEHOME)/share/apps/kate/pyplugins/expand
-	-cp x-lilypond.conf $(KDEHOME)/share/apps/kate/pyplugins/expand/
-	@echo Compiling Python modules:
-	@cd $(LILYKDE)/lilykde/ && $(PYCOMPILE) *.py
-	@cd $(KDEHOME)/share/apps/kate/pyplugins/ && $(PYCOMPILE) lilypond.py
-
-install-katefiletype:
-	@echo Adding LilyKDE to katefiletyperc:
-	@if test -r $(KDEHOME)/share/config/katefiletyperc; then \
-		sed -i '/\[LilyKDE\]/,/^$$/d' $(KDEHOME)/share/config/katefiletyperc; fi
-	cat katefiletyperc >> $(KDEHOME)/share/config/katefiletyperc
-
-install-i18n:
-	@make -C po install
+install: $(install)
 
 clean:
 	rm $(all)
 	@make -C po clean
 
-uninstall: $(uninstalltargets)
+uninstall: $(uninstall)
 	rm -rf $(LILYKDE)
-	@kbuildsycoca 2> /dev/null
+
+install-mimetype: ly.png
+	@echo Installing LilyPond icon and mimetype:
+	@mkdir -p $(ICONDIR)
+	cp ly.svg ly.png $(ICONDIR)/
+	@mkdir -p $(MIMELNK)/text
+	cp x-lilypond.desktop $(MIMELNK)/text/
 
 uninstall-mimetype:
 	@echo Uninstalling LilyPond icon and mimetype:
-	rm -f $(KDEHOME)/share/icons/ly.png
-	rm -f $(KDEHOME)/share/icons/ly.svg
-	rm -f $(KDEHOME)/share/mimelnk/text/x-lilypond.desktop
+	rm -f $(ICONDIR)/ly.png
+	rm -f $(ICONDIR)/ly.svg
+	rm -f $(MIMELNK)/text/x-lilypond.desktop
+
+install-syntax:
+	@echo Installing LilyPond syntax highlighting:
+	@mkdir -p $(KATEPARTDIR)/syntax
+	cp lilypond.xml $(KATEPARTDIR)/syntax
 
 uninstall-syntax:
 	@echo Uninstalling LilyPond syntax highlighting:
-	rm -f $(KDEHOME)/share/apps/katepart/syntax/lilypond.xml
+	rm -f $(KATEPARTDIR)/syntax/lilypond.xml
+
+install-textedit:
+	@echo Installing textedit protocol:
+	@mkdir -p $(SERVICEDIR)
+	sed 's!LILYKDEDIR!$(LILYKDE)!' textedit.protocol.in > $(SERVICEDIR)/textedit.protocol
+	@mkdir -p $(LILYKDE)
+	cp ktexteditservice.py $(LILYKDE)/
 
 uninstall-textedit: textedit.protocol
 	@echo Uninstalling textedit integration:
-	rm -f $(KDEHOME)/share/services/textedit.protocol
+	rm -f $(SERVICEDIR)/textedit.protocol
 	rm -f $(LILYKDE)/ktexteditservice.py
 
-uninstall-i18n:
-	@make -C po uninstall
+install-plugin:
+	@echo Installing plugin:
+	@mkdir -p $(PYPLUGINS)
+	cp lilypond.py $(PYPLUGINS)/
+	@cd $(PYPLUGINS) && $(PYCOMPILE) lilypond.py
+	@echo Installing Python package lilykde:
+	@mkdir -p $(LILYKDE)/lilykde
+	cp lilykde/*.py $(LILYKDE)/lilykde/
+	@cd $(LILYKDE)/lilykde && $(PYCOMPILE) *.py
+	@echo Installing lilypond stuff for expand Pate plugin:
+	@mkdir -p $(PYPLUGINS)/expand
+	-cp x-lilypond.conf $(PYPLUGINS)/expand/
 
 uninstall-plugin:
-	@echo Uninstalling plugin:
-	rm -f $(KDEHOME)/share/apps/kate/pyplugins/lilypond.py*
+	@echo Uninstalling plugin and lilykde package:
+	rm -f $(PYPLUGINS)/lilypond.py*
 	rm -rf $(LILYKDE)/lilykde
-	#rm -f $(KDEHOME)/share/apps/kate/pyplugins/expand/x-lilypond.conf # might be changed by user
+	rm -f $(PYPLUGINS)/expand/x-lilypond.conf
+
+install-katefiletype:
+	@echo Adding LilyKDE to katefiletyperc:
+	@mkdir -p $(CONFIGDIR)
+	@if test -r $(CONFIGDIR)/katefiletyperc; then \
+		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc; fi
+	cat katefiletyperc >> $(CONFIGDIR)/katefiletyperc
 
 uninstall-katefiletype:
 	@echo Removing LilyKDE from katefiletyperc:
-	@if test -r $(KDEHOME)/share/config/katefiletyperc; then \
-		sed -i '/\[LilyKDE\]/,/^$$/d' $(KDEHOME)/share/config/katefiletyperc; fi
+	@if test -r $(CONFIGDIR)/katefiletyperc; then \
+		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc; fi
+
+install-i18n:
+	@make -C po install
+
+uninstall-i18n:
+	@make -C po uninstall

@@ -1,14 +1,17 @@
 .PHONY: all install uninstall clean
 
-XGETTEXT ?= xgettext
-MSGMERGE ?= msgmerge
-MSGFMT ?= msgfmt
+XGETTEXT = xgettext
+MSGMERGE = msgmerge
+MSGFMT = msgfmt
 
-KDEHOME ?= $(HOME)/.kde
-LILYKDE ?= $(KDEHOME)/share/apps/lilykde
+DESTDIR =
+PREFIX = $(HOME)/.kde
+DATADIR = $(DESTDIR)$(PREFIX)/share
+
+LILYKDE = $(DATADIR)/apps/lilykde
 
 # Todo: add possibility to place message catalogs in system-wide locale dirs
-LOCALE = $(LILYKDE)/mo
+MODIR = $(LILYKDE)/mo
 
 translate = \
 	../lilypond.py \
@@ -32,16 +35,16 @@ $(pofiles): lilykde.pot
 	$(MSGMERGE) -U $@ $< && touch $@
 
 $(mofiles): %.mo: %.po
-	$(MSGFMT) $<
+	$(MSGFMT) -o $@ $<
 
 install: all
 	@echo Installing message catalogs...
-	@mkdir -p $(LOCALE)
-	for m in $(mofiles); do cp $$m "$(LOCALE)/" ; done
+	@mkdir -p $(MODIR)
+	for m in $(mofiles); do cp $$m "$(MODIR)/" ; done
 
 uninstall:
 	@echo Uninstalling message catalogs...
-	@rm -rf "$(LOCALE)"
+	@rm -rf "$(MODIR)"
 
 clean:
 	rm $(mofiles)

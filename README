@@ -44,19 +44,24 @@ same prefix as KDE, e.g. ./configure --prefix=$(kde-config --prefix)
 Installation
 ============
 
-make && make install
+To install in your local ~/.kde directory, type:
 
-This currently installs LilyKDE to your home directory. (Systemwide
-installation is possible with export KDEHOME=/usr/path/to/kde where
-kdelibs and Pate are installed to.  Your mileage may vary.)
+	make install
+
+To install system-wide:
+
+	make
+	su
+	make PREFIX=$(kde-config --prefix) install
 
 Then launch Kate and enable Pate in Settings->Configure Kate->Plugins.
-Then select Settings->Configure Python Plugins and enable LilyPond.
+As Pate starts, LilyKDE will start as well.  You can enable or disable
+Pate plugins using Settings->Configure Python Plugins.
 
-You may associate Kate with LilyPond files. Right-click a LilyPond file,
-select Properties, and click on the small configure icon. Then, under
-Applications for this filetype, click Add and select Kate or enter the
-command:
+You may want to associate Kate with LilyPond files. Right-click a
+LilyPond file, select Properties, and click on the small configure icon.
+Then, under Applications for this filetype, click Add and select Kate or
+enter the command:
 
 	kate -u %U
 
