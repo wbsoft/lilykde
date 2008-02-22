@@ -153,7 +153,9 @@ class LyJob(Job):
     def _run(self, args, mode=None):
         self.p.setArguments(args)
         if mode:
-            self.log.ok(_("LilyPond [%s] starting (%s)...") % (self.f.ly, mode))
+            self.log.ok(
+                _("LilyPond [%(filename)s] starting (%(mode)s)...") % dict(
+                filename = self.f.ly, mode = mode))
         else:
             self.log.ok(_("LilyPond [%s] starting...") % self.f.ly)
         if not self.p.start(KProcess.NotifyOnExit, KProcess.AllOutput):

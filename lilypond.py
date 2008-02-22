@@ -17,17 +17,20 @@ sys.path[0:0]=map(str, KStandardDirs().findDirs("data", "lilykde"))
 from lilykde.i18n import _
 
 __doc__ = _("A LilyPond Kate/Pate plugin.\n"
-"\n"
-"This is LilyKDE, a plugin to make it easy to run the LilyPond music "
-"typesetter from within Kate.\n"
-"\n"
-"If you also enable the Expand plugin, you get some nice shorthands for often "
-"used LilyPond constructs. To view those, look at the x-lilypond MIME-Type "
-"in the Expand configuration dialog.\n"
-"\n"
-"Version: %s\n"
-"Homepage: %s\n"
-) % (__version__, "http://lilykde.googlecode.com/")
+    "\n"
+    "This is LilyKDE, a plugin to make it easy to run the LilyPond music "
+    "typesetter from within Kate.\n"
+    "\n"
+    "If you also enable the Expand plugin, you get some nice shorthands for often "
+    "used LilyPond constructs. To view those, look at the x-lilypond MIME-Type "
+    "in the Expand configuration dialog.\n"
+    "\n"
+    "Version: %(version)s\n"
+    "Homepage: %(homepage)s\n"
+) % dict(
+    version = __version__,
+    homepage = "http://lilykde.googlecode.com/"
+)
 
 @kate.onWindowShown
 def initLilyPond():
@@ -55,12 +58,9 @@ def documentChanged(doc):
         else:
             # Hide the toolviews (if they exist) when a probably non-lilypond
             # document is selected.
-            if 'lilykde.pdf' in sys.modules:
-                from lilykde import pdf
-                pdf.hide()
-            if 'lilykde.log' in sys.modules:
-                from lilykde import log
-                log.hide()
+            for m in 'log', 'pdf':
+                if hasattr(sys.modules['lilykde'], m):
+                    getattr(sys.modules['lilykde'], m).hide()
 
 
 # kate: indent-width 4;

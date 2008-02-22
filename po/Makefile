@@ -1,8 +1,8 @@
 .PHONY: all install uninstall clean
 
-PYGETTEXT ?= pygettext.py
+XGETTEXT ?= xgettext
 MSGMERGE ?= msgmerge
-MSGFMT ?= msgfmt.py
+MSGFMT ?= msgfmt
 
 KDEHOME ?= $(HOME)/.kde
 LILYKDE ?= $(KDEHOME)/share/apps/lilykde
@@ -26,7 +26,7 @@ mofiles = $(patsubst %.po,%.mo,$(pofiles))
 all: $(mofiles)
 
 lilykde.pot: $(translate)
-	$(PYGETTEXT) -o lilykde.pot $(translate)
+	$(XGETTEXT) -o lilykde.pot $(translate)
 
 $(pofiles): lilykde.pot
 	$(MSGMERGE) -U $@ $< && touch $@

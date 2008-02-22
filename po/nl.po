@@ -5,8 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
-"POT-Creation-Date: 2008-02-22 08:30+CET\n"
-"PO-Revision-Date: 2008-02-22 08:30+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-02-22 13:31+0100\n"
+"PO-Revision-Date: 2008-02-22 13:18+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -14,21 +15,115 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../lilykde/log.py:20
-msgid "LilyPond Log"
-msgstr "LilyPond-uitvoer"
-
-#: ../lilykde/log.py:70
+#: ../lilypond.py:19
+#, python-format
 msgid ""
-"This PDF has been created with point-and-click urls (preview mode), which "
-"increases the file size dramatically. It's better to email documents without "
-"point-and-click urls (publish mode), because they are much smaller. Continue "
-"anyway?"
+"A LilyPond Kate/Pate plugin.\n"
+"\n"
+"This is LilyKDE, a plugin to make it easy to run the LilyPond music "
+"typesetter from within Kate.\n"
+"\n"
+"If you also enable the Expand plugin, you get some nice shorthands for often "
+"used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in "
+"the Expand configuration dialog.\n"
+"\n"
+"Version: %(version)s\n"
+"Homepage: %(homepage)s\n"
 msgstr ""
-"Dit PDF-bestand is aangemaakt met \"point-and-click\" URLs (vooruitblik), "
-"waardoor het bestand veel groter dan noodzakelijk is. Het is beter om "
-"documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
-"kleiner zijn. Toch doorgaan?"
+"Een Kate/Pate-plugin voor LilyPond.\n"
+"\n"
+"Dit is LilyKDE, een plugin waarmee het eenvoudig is om het LilyPond "
+"muziekgraveer-programma vanuit Kate te gebruiken.\n"
+"\n"
+"Als u ook de Expand-plugin inschakelt, kunt u veelgebruikte LilyPond-"
+"constructies sneller typen. Om deze te bekijken raadpleegt u het x-lilypond "
+"mime-type in het instelscherm van de Expand-plugin.\n"
+"\n"
+"Versie: %(version)s\n"
+"Homepage: %(homepage)s\n"
+
+#: ../lilykde/runlily.py:157
+#, python-format
+msgid "LilyPond [%(filename)s] starting (%(mode)s)..."
+msgstr "LilyPond [%(filename)s] wordt gestart (%(mode)s)..."
+
+#: ../lilykde/runlily.py:160
+#, python-format
+msgid "LilyPond [%s] starting..."
+msgstr "LilyPond [%s] wordt gestart..."
+
+#: ../lilykde/runlily.py:162
+msgid "Could not start LilyPond."
+msgstr "Kan LilyPond niet starten."
+
+#: ../lilykde/runlily.py:170
+#, python-format
+msgid "LilyPond was terminated by signal %d."
+msgstr "LilyPond werd beëindigd door signaal %d."
+
+#: ../lilykde/runlily.py:174
+#, python-format
+msgid "LilyPond exited with return code %d."
+msgstr "LilyPond stopte met foutcode %d."
+
+#: ../lilykde/runlily.py:176
+#, python-format
+msgid "LilyPond [%s] finished."
+msgstr "LilyPond [%s] voltooid."
+
+#: ../lilykde/runlily.py:179
+msgid "LilyPond exited abnormally."
+msgstr "Het LilyPond-proces werd afgebroken."
+
+#: ../lilykde/runlily.py:191
+msgid "preview mode"
+msgstr "vooruitblik"
+
+#: ../lilykde/runlily.py:193
+msgid "publish mode"
+msgstr "publiceren"
+
+#: ../lilykde/runlily.py:200
+msgid "Open folder"
+msgstr "Map openen"
+
+#: ../lilykde/runlily.py:203
+msgid "Open PDF"
+msgstr "PDF weergeven"
+
+#: ../lilykde/runlily.py:209
+msgid "Email PDF (preview)"
+msgstr "PDF e-mailen (vooruitblik)"
+
+#: ../lilykde/runlily.py:212
+msgid "Email PDF"
+msgstr "PDF e-mailen"
+
+#: ../lilykde/runlily.py:214
+msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
+msgstr ""
+"LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
+"\\layout</b> vergeten?"
+
+#: ../lilykde/runlily.py:218
+msgid "Play MIDI"
+msgstr "MIDI afspelen"
+
+#: ../lilykde/runlily.py:232
+msgid "Your document currently has no filename, please save first."
+msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
+
+#: ../lilykde/runlily.py:236
+msgid "Your document has been modified, please save first."
+msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
+
+#: ../lilykde/runlily.py:242
+msgid ""
+"Sorry, support for remote files is not yet implemented.\n"
+"Please save your document to a local file."
+msgstr ""
+"Helaas, netwerkbestanden worden nog niet ondersteund.\n"
+"Gelieve uw document naar een locaal bestand op te slaan."
 
 #: ../lilykde/menu.py:30
 msgid "LilyPond"
@@ -47,6 +142,7 @@ msgid "Clear LilyPond Log"
 msgstr "LilyPond uitvoer wissen"
 
 #: ../lilykde/menu.py:52
+#, python-format
 msgid "Insert LilyPond version (%s)"
 msgstr "LilyPond-versie (%s) invoegen"
 
@@ -54,89 +150,8 @@ msgstr "LilyPond-versie (%s) invoegen"
 msgid "Update with convert-ly"
 msgstr "Bijwerken met convert-ly"
 
-#: ../lilykde/pdf.py:13
-msgid "PDF"
-msgstr "PDF"
-
-#: ../lilykde/runlily.py:156
-msgid "LilyPond [%s] starting (%s)..."
-msgstr "LilyPond [%s] wordt gestart (%s)..."
-
-#: ../lilykde/runlily.py:158
-msgid "LilyPond [%s] starting..."
-msgstr "LilyPond [%s] wordt gestart..."
-
-#: ../lilykde/runlily.py:160
-msgid "Could not start LilyPond."
-msgstr "Kan LilyPond niet starten."
-
-#: ../lilykde/runlily.py:168
-msgid "LilyPond was terminated by signal %d."
-msgstr "LilyPond werd beëindigd door signaal %d."
-
-#: ../lilykde/runlily.py:172
-msgid "LilyPond exited with return code %d."
-msgstr "LilyPond stopte met foutcode %d."
-
-#: ../lilykde/runlily.py:174
-msgid "LilyPond [%s] finished."
-msgstr "LilyPond [%s] voltooid."
-
-#: ../lilykde/runlily.py:177
-msgid "LilyPond exited abnormally."
-msgstr "Het LilyPond-proces werd afgebroken."
-
-#: ../lilykde/runlily.py:189
-msgid "preview mode"
-msgstr "vooruitblik"
-
-#: ../lilykde/runlily.py:191
-msgid "publish mode"
-msgstr "publiceren"
-
-#: ../lilykde/runlily.py:198
-msgid "Open folder"
-msgstr "Map openen"
-
-#: ../lilykde/runlily.py:201
-msgid "Open PDF"
-msgstr "PDF weergeven"
-
-#: ../lilykde/runlily.py:207
-msgid "Email PDF (preview)"
-msgstr "PDF e-mailen (vooruitblik)"
-
-#: ../lilykde/runlily.py:210
-msgid "Email PDF"
-msgstr "PDF e-mailen"
-
-#: ../lilykde/runlily.py:212
-msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
-msgstr ""
-"LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
-"\\layout</b> vergeten?"
-
-#: ../lilykde/runlily.py:216
-msgid "Play MIDI"
-msgstr "MIDI afspelen"
-
-#: ../lilykde/runlily.py:230
-msgid "Your document currently has no filename, please save first."
-msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
-
-#: ../lilykde/runlily.py:234
-msgid "Your document has been modified, please save first."
-msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
-
-#: ../lilykde/runlily.py:240
-msgid ""
-"Sorry, support for remote files is not yet implemented.\n"
-"Please save your document to a local file."
-msgstr ""
-"Helaas, netwerkbestanden worden nog niet ondersteund.\n"
-"Gelieve uw document naar een locaal bestand op te slaan."
-
 #: ../lilykde/version.py:27
+#, python-format
 msgid "Could not start LilyPond: %s"
 msgstr "Kan LilyPond niet starten: %s"
 
@@ -160,13 +175,14 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
+msgstr ""
+"Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
 #: ../lilykde/version.py:68
 msgid "This LilyPond document is already up-to-date."
 msgstr "Dit LilyPond-document is reeds bijgewerkt."
 
-#: ../lilykde/version.py:90
+#: ../lilykde/version.py:91
 msgid ""
 "The document has been processed with convert-ly. You'll find the messages of "
 "convert-ly in a comment block at the end. You still may have to edit some "
@@ -176,7 +192,8 @@ msgstr ""
 "u aan het eind in een commentaarblok. Het kan zijn dat u bepaalde "
 "wijzigingen nog handmatig dient door te voeren."
 
-#: ../lilykde/version.py:96
+#: ../lilykde/version.py:97
+#, python-format
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
 "This is the message given by convert-ly: %s"
@@ -185,32 +202,26 @@ msgstr ""
 "melding die convert-ly gaf: %s"
 
 #: ../lilykde/version.py:101
+#, python-format
 msgid "Could not start convert-ly: %s"
 msgstr "Kan convert-ly niet starten: %s"
 
-#: ../lilypond.py:18
-msgid ""
-"A LilyPond Kate/Pate plugin.\n"
-"\n"
-"This is LilyKDE, a plugin to make it easy to run the LilyPond music "
-"typesetter from within Kate.\n"
-"\n"
-"If you also enable the Expand plugin, you get some nice shorthands for often "
-"used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in "
-"the Expand configuration dialog.\n"
-"\n"
-"Version: %s\n"
-"Homepage: %s\n"
-msgstr ""
-"Een Kate/Pate-plugin voor LilyPond.\n"
-"\n"
-"Dit is LilyKDE, een plugin waarmee het eenvoudig is om het LilyPond "
-"muziekgraveer-programma vanuit Kate te gebruiken.\n"
-"\n"
-"Als u ook de Expand-plugin inschakelt, kunt u veelgebruikte LilyPond-"
-"constructies sneller typen. Om deze te bekijken raadpleegt u het x-lilypond "
-"mime-type in het instelscherm van de Expand-plugin.\n"
-"\n"
-"Versie: %s\n"
-"Homepage: %s\n"
+#: ../lilykde/log.py:20
+msgid "LilyPond Log"
+msgstr "LilyPond-uitvoer"
 
+#: ../lilykde/log.py:71
+msgid ""
+"This PDF has been created with point-and-click urls (preview mode), which "
+"increases the file size dramatically. It's better to email documents without "
+"point-and-click urls (publish mode), because they are much smaller. Continue "
+"anyway?"
+msgstr ""
+"Dit PDF-bestand is aangemaakt met \"point-and-click\" URLs (vooruitblik), "
+"waardoor het bestand veel groter dan noodzakelijk is. Het is beter om "
+"documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
+"kleiner zijn. Toch doorgaan?"
+
+#: ../lilykde/pdf.py:13
+msgid "PDF"
+msgstr "PDF"
