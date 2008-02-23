@@ -154,7 +154,8 @@ class LyJob(Job):
                 _("LilyPond [$filename] starting ($mode)...").args(
                 filename = self.f.ly, mode = mode))
         else:
-            self.log.ok(_("LilyPond [%s] starting...") % self.f.ly)
+            self.log.ok(_("LilyPond [$filename] starting...").args(
+                filename = self.f.ly))
         if not self.p.start(KProcess.NotifyOnExit, KProcess.AllOutput):
             self.log.fail(_("Could not start LilyPond."))
 
@@ -170,7 +171,8 @@ class LyJob(Job):
                 self.log.fail(
                 _("LilyPond exited with return code %d.") % self.p.exitStatus())
             else:
-                self.log.ok(_("LilyPond [%s] finished.") % self.f.ly)
+                self.log.ok(_("LilyPond [$filename] finished.").args(
+                    filename = self.f.ly))
                 success = True
         else:
             self.log.fail(_("LilyPond exited abnormally."))

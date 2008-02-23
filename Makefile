@@ -44,7 +44,7 @@ install: $(install)
 
 clean:
 	rm $(all)
-	@make -C po clean
+	@$(MAKE) -C po clean
 
 uninstall: $(uninstall)
 	rm -rf $(LILYKDE)
@@ -115,7 +115,7 @@ uninstall-katefiletype:
 		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc; fi
 
 install-i18n:
-	@make -C po install
+	@$(MAKE) -C po install
 
 uninstall-i18n:
-	@make -C po uninstall
+	@$(MAKE) -C po uninstall
