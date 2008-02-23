@@ -52,7 +52,7 @@ lilykde/__init__.py: VERSION
 install: $(install)
 
 clean:
-	rm $(all)
+	rm -f $(all)
 	@$(MAKE) -C po clean
 
 uninstall: $(uninstall)

@@ -54,4 +54,4 @@ uninstall:
 	@rm -rf "$(MODIR)"
 
 clean:
-	rm $(mofiles)
+	rm -f $(mofiles)
