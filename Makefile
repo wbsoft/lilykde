@@ -91,11 +91,12 @@ uninstall-syntax:
 install-textedit:
 	@echo Installing textedit protocol:
 	@mkdir -p $(SERVICEDIR)
-	sed 's!LILYKDEDIR!$(LILYKDE)!' textedit.protocol.in > $(SERVICEDIR)/textedit.protocol
+	sed 's!LILYKDEDIR!$(LILYKDE)!' textedit.protocol.in \
+		> $(SERVICEDIR)/textedit.protocol
 	@mkdir -p $(LILYKDE)
 	cp ktexteditservice.py $(LILYKDE)/
 
-uninstall-textedit: textedit.protocol
+uninstall-textedit:
 	@echo Uninstalling textedit integration:
 	rm -f $(SERVICEDIR)/textedit.protocol
 	rm -f $(LILYKDE)/ktexteditservice.py
@@ -122,14 +123,14 @@ uninstall-plugin:
 install-katefiletype:
 	@echo Adding LilyKDE to katefiletyperc:
 	@mkdir -p $(CONFIGDIR)
-	@if test -r $(CONFIGDIR)/katefiletyperc; then \
-		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc; fi
+	@test -r $(CONFIGDIR)/katefiletyperc && \
+		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc
 	cat katefiletyperc >> $(CONFIGDIR)/katefiletyperc
 
 uninstall-katefiletype:
 	@echo Removing LilyKDE from katefiletyperc:
-	@if test -r $(CONFIGDIR)/katefiletyperc; then \
-		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc; fi
+	@test -r $(CONFIGDIR)/katefiletyperc && \
+		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc
 
 install-i18n:
 	@$(MAKE) -C po install
