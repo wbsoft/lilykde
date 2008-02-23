@@ -30,11 +30,7 @@ class Translatable(str):
         return str.__new__(cls, _i18n(value))
 
     def args(self, *args, **kwargs):
-        if not args:
-            return Template(self).substitute(kwargs)
-        else:
-            return Template(self).substitute(args[0])
-
+        return Template(self).substitute(*args, **kwargs)
 
 _ = Translatable
 
