@@ -26,6 +26,11 @@ except ValueError:
 
 
 class Translatable(str):
+    """
+    Subclass of str. The value is translated immediately. A method args()
+    is added that substitutes dollarsign-prefixed keywords using the
+    string.Template class.
+    """
     def __new__(cls, value):
         return str.__new__(cls, _i18n(value))
 
