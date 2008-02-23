@@ -99,3 +99,6 @@ def convertLy():
                  "convert-ly: %s") % "<br><br>%s" % msg, timeout=10)
         except OSError, e:
             error(_("Could not start convert-ly: %s") % e)
+
+
+# kate: indent-width 4;

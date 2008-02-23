@@ -34,4 +34,5 @@ class Translatable(str):
 
 _ = Translatable
 
+
 # kate: indent-width 4;

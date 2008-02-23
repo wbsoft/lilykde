@@ -10,6 +10,9 @@ DATADIR = $(DESTDIR)$(PREFIX)/share
 
 LILYKDE = $(DATADIR)/apps/lilykde
 
+# get VERSION, PACKAGE and EMAIL
+include ../VERSION
+
 # Todo: add possibility to place message catalogs in system-wide locale dirs
 MODIR = $(LILYKDE)/mo
 
@@ -28,8 +31,12 @@ mofiles = $(patsubst %.po,%.mo,$(pofiles))
 
 all: $(mofiles)
 
-lilykde.pot: $(translate)
-	$(XGETTEXT) -o lilykde.pot $(translate)
+lilykde.pot: $(translate) ../VERSION
+	$(XGETTEXT) -o lilykde.pot \
+		--package-name=$(PACKAGE) \
+		--package-version=$(VERSION) \
+		--msgid-bugs-address=$(EMAIL) \
+		$(translate)
 
 $(pofiles): lilykde.pot
 	$(MSGMERGE) -U $@ $< && touch $@

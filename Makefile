@@ -31,7 +31,7 @@ CONFIGDIR = $(DATADIR)/config
 PYCOMPILE = python -m py_compile
 
 
-all = ly.png
+all = ly.png lilykde/__init__.py
 
 all: $(all)
 	@$(MAKE) -C po
@@ -39,6 +39,9 @@ all: $(all)
 ly.png: ly.svg
 	@echo Creating ly.png from ly.svg...
 	@ksvgtopng 128 128 "`pwd`/ly.svg" "`pwd`/ly.png"
+
+lilykde/__init__.py: VERSION
+	@cp $< $@
 
 install: $(install)
 

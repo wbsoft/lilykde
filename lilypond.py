@@ -1,9 +1,4 @@
-__title__ = "LilyPond"
-__author__ = "Wilbert Berendsen <info@wilbertberendsen.nl>"
-__license__ = "LGPL"
-
-__version__ = "0.4.3"
-
+#! python
 import sys
 import os
 import kate
@@ -14,6 +9,14 @@ import kate
 from kdecore import KStandardDirs
 sys.path.extend(map(str, KStandardDirs().findDirs("data", "lilykde")))
 
+# Get the LilyKDE version, homepage etc.
+from lilykde import *
+
+__title__ = "LilyPond"
+__author__ = "%s <%s>" % (AUTHOR, EMAIL)
+__license__ = LICENSE
+
+# Translate the messages
 from lilykde.i18n import _
 
 __doc__ = _(
@@ -29,8 +32,8 @@ __doc__ = _(
     "Version: $version\n"
     "Homepage: $homepage\n"
 ).args(
-    version = __version__,
-    homepage = "http://lilykde.googlecode.com/"
+    version = VERSION,
+    homepage = HOMEPAGE
 )
 
 @kate.onWindowShown

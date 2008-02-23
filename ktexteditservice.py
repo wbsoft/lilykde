@@ -17,3 +17,6 @@ if m:
 else:
     sys.stderr.write("Not a valid textedit URL: %s\n" % url)
     sys.exit(1)
+
+
+# kate: indent-width 4;
