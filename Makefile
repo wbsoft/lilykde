@@ -16,6 +16,8 @@ uninstall = \
 
 .PHONY: all install clean uninstall $(install) $(uninstall)
 
+include VERSION
+
 DESTDIR =
 PREFIX = $(HOME)/.kde
 DATADIR = $(DESTDIR)$(PREFIX)/share
@@ -30,6 +32,8 @@ CONFIGDIR = $(DATADIR)/config
 
 PYCOMPILE = python -m py_compile
 
+# for making zip files
+DIST = $(PACKAGE)-$(VERSION)
 
 all = ly.png lilykde/__init__.py
 
@@ -51,6 +55,13 @@ clean:
 
 uninstall: $(uninstall)
 	rm -rf $(LILYKDE)
+
+dist:
+	@echo Creating $(DIST).zip...
+	@svn export . $(DIST)
+	@cd $(DIST) && $(MAKE) -C po
+	zip -r $(DIST).zip $(DIST)
+	@rm -rf $(DIST)/
 
 install-mimetype: ly.png
 	@echo Installing LilyPond icon and mimetype:
