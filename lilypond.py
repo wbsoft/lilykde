@@ -26,9 +26,9 @@ __doc__ = _(
     "often used LilyPond constructs. To view those, look at the x-lilypond "
     "MIME-Type in the Expand configuration dialog.\n"
     "\n"
-    "Version: %(version)s\n"
-    "Homepage: %(homepage)s\n"
-) % dict(
+    "Version: $version\n"
+    "Homepage: $homepage\n"
+).args(
     version = __version__,
     homepage = "http://lilykde.googlecode.com/"
 )

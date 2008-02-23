@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-22 23:00+0100\n"
+"POT-Creation-Date: 2008-02-23 08:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../lilypond.py:20
-#, python-format
 msgid ""
 "A LilyPond Kate/Pate plugin.\n"
 "\n"
@@ -28,13 +27,12 @@ msgid ""
 "used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in "
 "the Expand configuration dialog.\n"
 "\n"
-"Version: %(version)s\n"
-"Homepage: %(homepage)s\n"
+"Version: $version\n"
+"Homepage: $homepage\n"
 msgstr ""
 
 #: ../lilykde/runlily.py:154
-#, python-format
-msgid "LilyPond [%(filename)s] starting (%(mode)s)..."
+msgid "LilyPond [$filename] starting ($mode)..."
 msgstr ""
 
 #: ../lilykde/runlily.py:157

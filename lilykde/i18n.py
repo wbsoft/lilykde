@@ -1,3 +1,4 @@
+from string import Template
 from os.path import join, dirname
 from locale import getdefaultlocale
 
@@ -7,7 +8,7 @@ from locale import getdefaultlocale
 # Find sibling dir mo/ in parent of current script dir
 modir = join(dirname(dirname(__file__)), "mo")
 
-_ = lambda s: s
+_i18n = lambda s: s
 
 try:
     lang, encoding = getdefaultlocale()
@@ -16,9 +17,25 @@ try:
             try:
                 fp = open(join(modir, mofile + ".mo"))
                 import gettext
-                _ = gettext.GNUTranslations(fp).ugettext
+                _i18n = gettext.GNUTranslations(fp).ugettext
                 break
             except IOError:
                 continue
 except ValueError:
     pass
+
+
+class Translatable(str):
+    def __new__(cls, value):
+        return str.__new__(cls, _i18n(value))
+
+    def args(self, *args, **kwargs):
+        if not args:
+            return Template(self).substitute(kwargs)
+        else:
+            return Template(self).substitute(args[0])
+
+
+_ = Translatable
+
+# kate: indent-width 4;

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-22 23:00+0100\n"
-"PO-Revision-Date: 2008-02-22 13:18+0100\n"
+"POT-Creation-Date: 2008-02-23 08:43+0100\n"
+"PO-Revision-Date: 2008-02-23 08:45+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,6 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 
 #: ../lilypond.py:20
-#, python-format
 msgid ""
 "A LilyPond Kate/Pate plugin.\n"
 "\n"
@@ -27,8 +26,8 @@ msgid ""
 "used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in "
 "the Expand configuration dialog.\n"
 "\n"
-"Version: %(version)s\n"
-"Homepage: %(homepage)s\n"
+"Version: $version\n"
+"Homepage: $homepage\n"
 msgstr ""
 "Een Kate/Pate-plugin voor LilyPond.\n"
 "\n"
@@ -39,13 +38,12 @@ msgstr ""
 "constructies sneller typen. Om deze te bekijken raadpleegt u het x-lilypond "
 "mime-type in het instelscherm van de Expand-plugin.\n"
 "\n"
-"Versie: %(version)s\n"
-"Homepage: %(homepage)s\n"
+"Versie: $version\n"
+"Homepage: $homepage\n"
 
 #: ../lilykde/runlily.py:154
-#, python-format
-msgid "LilyPond [%(filename)s] starting (%(mode)s)..."
-msgstr "LilyPond [%(filename)s] wordt gestart (%(mode)s)..."
+msgid "LilyPond [$filename] starting ($mode)..."
+msgstr "LilyPond [$filename] wordt gestart ($mode)..."
 
 #: ../lilykde/runlily.py:157
 #, python-format
@@ -175,8 +173,7 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr ""
-"Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
+msgstr "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
 #: ../lilykde/version.py:68
 msgid "This LilyPond document is already up-to-date."
@@ -225,3 +222,4 @@ msgstr ""
 #: ../lilykde/pdf.py:13
 msgid "PDF"
 msgstr "PDF"
+

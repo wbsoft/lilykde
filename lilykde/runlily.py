@@ -151,7 +151,7 @@ class LyJob(Job):
         self.p.setArguments(args)
         if mode:
             self.log.ok(
-                _("LilyPond [%(filename)s] starting (%(mode)s)...") % dict(
+                _("LilyPond [$filename] starting ($mode)...").args(
                 filename = self.f.ly, mode = mode))
         else:
             self.log.ok(_("LilyPond [%s] starting...") % self.f.ly)
