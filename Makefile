@@ -59,6 +59,7 @@ uninstall: $(uninstall)
 dist:
 	@echo Creating $(DIST).zip...
 	@svn export . $(DIST)
+	@svn log -r BASE > $(DIST)/svn.log
 	@cd $(DIST) && $(MAKE) -C po
 	zip -r $(DIST).zip $(DIST)
 	@rm -rf $(DIST)/
