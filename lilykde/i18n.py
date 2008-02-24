@@ -1,3 +1,4 @@
+import gettext
 from string import Template
 from os.path import join, dirname
 from locale import getdefaultlocale
@@ -5,25 +6,30 @@ from locale import getdefaultlocale
 # TODO: in system-wide installation use standard locale dirs and lilykde
 # textdomain
 
-# Find sibling dir mo/ in parent of current script dir
-modir = join(dirname(dirname(__file__)), "mo")
+def getTranslations():
+    # Find sibling dir mo/ in parent of current script dir
+    modir = join(dirname(dirname(__file__)), "mo")
+    try:
+        lang, encoding = getdefaultlocale()
+        if lang:
+            for mofile in lang, lang.split("_")[0]:
+                try:
+                    fp = open(join(modir, mofile + ".mo"))
+                    return gettext.GNUTranslations(fp)
+                except IOError:
+                    pass
+    except ValueError:
+        pass
+    return gettext.NullTranslations()
 
-_i18n = lambda s: s
+#translations = gettext.translation('lilykde', fallback=True)
+translations = getTranslations()
 
-try:
-    lang, encoding = getdefaultlocale()
-    if lang:
-        for mofile in lang, lang.split("_")[0]:
-            try:
-                fp = open(join(modir, mofile + ".mo"))
-                import gettext
-                _i18n = gettext.GNUTranslations(fp).ugettext
-                break
-            except IOError:
-                continue
-except ValueError:
-    pass
-
+def _i18n(msgid1, msgid2=None, n=None):
+    if n is None:
+        return translations.ugettext(msgid1)
+    else:
+        return translations.ungettext(msgid1, msgid2, n)
 
 class Translatable(str):
     """
@@ -31,8 +37,8 @@ class Translatable(str):
     is added that substitutes dollarsign-prefixed keywords using the
     string.Template class.
     """
-    def __new__(cls, value):
-        return str.__new__(cls, _i18n(value))
+    def __new__(cls, *args):
+        return str.__new__(cls, _i18n(*args))
 
     def args(self, *args, **kwargs):
         return Template(self).substitute(*args, **kwargs)
