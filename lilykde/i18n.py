@@ -33,7 +33,7 @@ def _i18n(msgid1, msgid2=None, n=None):
 
 class Translatable(unicode):
     """
-    Subclass of str. The value is translated immediately. A method args()
+    Subclass of unicode. The value is translated immediately. A method args()
     is added that substitutes dollarsign-prefixed keywords using the
     string.Template class.
     """
