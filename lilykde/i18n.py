@@ -31,14 +31,14 @@ def _i18n(msgid1, msgid2=None, n=None):
     else:
         return translations.ungettext(msgid1, msgid2, n)
 
-class Translatable(str):
+class Translatable(unicode):
     """
     Subclass of str. The value is translated immediately. A method args()
     is added that substitutes dollarsign-prefixed keywords using the
     string.Template class.
     """
     def __new__(cls, *args):
-        return str.__new__(cls, _i18n(*args))
+        return unicode.__new__(cls, _i18n(*args))
 
     def args(self, *args, **kwargs):
         return Template(self).substitute(*args, **kwargs)
