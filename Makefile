@@ -34,8 +34,6 @@ PYCOMPILE = python -m py_compile
 
 # for making zip files
 DIST = $(PACKAGE)-$(VERSION)
-DISTURL = .
-DISTREV = HEAD
 
 all = ly.png lilykde/__init__.py
 
@@ -60,9 +58,8 @@ uninstall: $(uninstall)
 
 dist:
 	@echo -n Creating $(DIST).zip ...
-	@svn export -q -r $(DISTREV) $(DISTURL) $(DIST)
-	@svn log -r $(DISTREV) $(DISTURL) > $(DIST)/svn.log
-	@-cd $(DIST) && $(MAKE) -s -C po
+	@svn export -q . $(DIST)
+	@-cd $(DIST) && make -s -C po
 	@zip -q -r $(DIST).zip $(DIST)
 	@rm -rf $(DIST)/
 	@echo done.
