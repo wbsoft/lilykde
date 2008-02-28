@@ -121,14 +121,14 @@ uninstall-plugin:
 install-katefiletype:
 	@echo Adding LilyKDE to katefiletyperc:
 	@mkdir -p $(CONFIGDIR)
-	@test -r $(CONFIGDIR)/katefiletyperc && \
-		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc
+	@if test -r $(CONFIGDIR)/katefiletyperc ; then \
+		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc ; fi
 	cat katefiletyperc >> $(CONFIGDIR)/katefiletyperc
 
 uninstall-katefiletype:
 	@echo Removing LilyKDE from katefiletyperc:
-	@test -r $(CONFIGDIR)/katefiletyperc && \
-		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc
+	@if test -r $(CONFIGDIR)/katefiletyperc ; then \
+		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc ; fi
 
 install-i18n:
 	@$(MAKE) -C po install
