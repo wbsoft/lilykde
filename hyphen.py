@@ -19,15 +19,15 @@ import sys
 import re
 
 
+# precompile some stuff
+_re_hex = re.compile(r'\^{2}([0-9a-f]{2})').sub
+_re_parse = re.compile(r'(\d?)(\D?)').findall
+
+def _hexrepl(matchObj):
+    return unichr(int(matchObj.group(1), 16))
+
+
 class Hyphenator(object):
-
-    _comments_re    = re.compile(r'%.*$')
-    _hex_re         = re.compile(r'\^{2}([0-9a-f]{2})')
-    _zero_start_re  = re.compile(r'^(?=\D)')
-    _zero_insert_re = re.compile(r'(\D)(?=\D)')
-
-    def _hexrepl(self, matchObj):
-        return unichr(int(matchObj.group(1), 16))
 
     def __init__(self, files, left=2, right=2):
         self.left = left
@@ -39,28 +39,19 @@ class Hyphenator(object):
         for f in files: self._readfile(f)
 
     def _readfile(self, filename):
-
         f = open(filename)
-
         charset = f.readline().strip()
         if charset.startswith('charset '):
             charset = charset[7:].strip()
 
         for line in f:
-            line = line.decode(charset)
-
-            # remove comments and whitespace
-            line = self._comments_re.sub('', line.strip())
-
+            if line[0] == '%': continue
             # replace ^^hh with the real character
-            line = self._hex_re.sub(self._hexrepl, line)
+            pat = _re_hex(_hexrepl, line.decode(charset).strip())
 
-            for pat in re.split(r'\s+', line):
-                pat = self._zero_insert_re.sub(r'\g<1>0', pat)
-                pat = self._zero_start_re.sub('0', pat)
-                tag   = pat[1::2]
-                value = tuple(map(int, pat[0::2]))
-                self.patterns[tag] = value
+            tag, value = zip(*[(s or "", int(i or "0"))
+                for i,s in _re_parse(pat)][:-1])
+            self.patterns[''.join(tag)] = value
         f.close()
 
     def hyphenate(self, word):
@@ -69,15 +60,15 @@ class Hyphenator(object):
             points = self.cache[word]
         else:
             prepWord = '.%s.' % word
-            result = [0] * (len(prepWord) + 1)
+            res = [0] * (len(prepWord) + 1)
             for i in range(len(prepWord)):
-                for j in range(i, len(prepWord)):
-                    s = prepWord[i:j+1]
+                for j in range(i+1, len(prepWord)):
+                    s = prepWord[i:j]
                     if s in self.patterns:
                         v = self.patterns[s]
-                        result[i:i+len(v)] = map(max, zip(v, result[i:i+len(v)]))
+                        res[i:i+len(v)] = map(max, zip(v, res[i:i+len(v)]))
 
-            points = [i - 1 for i,r in enumerate(result) if r % 2]
+            points = [i - 1 for i,r in enumerate(res) if r % 2]
             self.cache[word] = points
 
         # correct for left and right
@@ -86,9 +77,11 @@ class Hyphenator(object):
 
     def visualise(self, word, hyphen='-'):
         l = list(word)
-        for p in sorted(self.hyphenate(word), reverse=True):
+        for p in reversed(self.hyphenate(word)):
             l[p:p] = hyphen
         return u''.join(l)
+
+    visualize = visualise
 
 p = Hyphenator("hyph_nl.dic", left=1, right=1)
 #print repr(p.patterns)
