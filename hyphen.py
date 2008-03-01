@@ -62,8 +62,8 @@ class Hyphenator(object):
             prepWord = '.%s.' % word
             res = [0] * (len(prepWord) + 1)
             for i in range(len(prepWord)):
-                for j in range(i+1, len(prepWord)):
-                    s = prepWord[i:j]
+                for j in range(i, len(prepWord)):
+                    s = prepWord[i:j+1]
                     if s in self.patterns:
                         v = self.patterns[s]
                         res[i:i+len(v)] = map(max, zip(v, res[i:i+len(v)]))
