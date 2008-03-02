@@ -46,9 +46,12 @@ class Hyphenator(object):
 
         for line in f:
             if line[0] == '%': continue
+            line = line.decode(charset).strip()
             # replace ^^hh with the real character
-            pat = _re_hex(_hexrepl, line.decode(charset).strip())
-
+            pat = _re_hex(_hexrepl, line)
+            # read nonstandard hyphen alternatives, but discard for now.
+            if '/' in pat:
+                pat, alt = pat.split('/')
             tag, value = zip(*[(s or "", int(i or "0"))
                 for i,s in _re_parse(pat)][:-1])
             self.patterns[''.join(tag)] = value
