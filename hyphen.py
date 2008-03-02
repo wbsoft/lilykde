@@ -28,6 +28,17 @@ def _hexrepl(matchObj):
 
 
 class Hyphenator(object):
+    """
+    Reads a hyph_*.dic file and stores the hyphenation patterns.
+    parameters:
+    -files : a single filename or a tuple of filenames to read
+    -left: make the first syllabe not shorter than this
+    -right: make the last syllabe not shorter than this
+
+    left and right may also later be changed:
+      h = Hyphenator(file)
+      h.left = 1
+    """
 
     def __init__(self, files, left=2, right=2):
         self.left = left
@@ -58,6 +69,11 @@ class Hyphenator(object):
         f.close()
 
     def hyphenate(self, word):
+        """
+        Returns a list of positions where the word can be hyphenated.
+        E.g. for the dutch word 'lettergrepen' this method returns
+        the list [3, 6, 9].
+        """
         word = word.lower()
         if word in self.cache:
             points = self.cache[word]
@@ -78,6 +94,13 @@ class Hyphenator(object):
         return [i for i in points if self.left <= i <= right]
 
     def visualise(self, word, hyphen='-'):
+        """
+        Returns the word as a string with al the possible hyphens inserted.
+        E.g. for the dutch word 'lettergrepen' this method returns
+        the string 'let-ter-gre-pen'.
+
+        This method can also be called as visualize().
+        """
         l = list(word)
         for p in reversed(self.hyphenate(word)):
             l[p:p] = hyphen
