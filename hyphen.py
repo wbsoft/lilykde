@@ -51,7 +51,7 @@ class Hyphenator(object):
             pat = _re_hex(_hexrepl, line)
             # read nonstandard hyphen alternatives, but discard for now.
             if '/' in pat:
-                pat, alt = pat.split('/')
+                pat, alt = pat.split('/', 1)
             tag, value = zip(*[(s or "", int(i or "0"))
                 for i,s in _re_parse(pat)][:-1])
             self.patterns[''.join(tag)] = value
