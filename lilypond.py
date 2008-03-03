@@ -10,7 +10,7 @@ from kdecore import KStandardDirs
 sys.path.extend(map(str, KStandardDirs().findDirs("data", "lilykde")))
 
 # Get the LilyKDE version, homepage etc.
-from lilykde import *
+from lilykde.about import *
 
 __title__ = "LilyPond"
 __author__ = "%s <%s>" % (AUTHOR, EMAIL)
