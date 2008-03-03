@@ -19,7 +19,7 @@ import sys
 import re
 
 
-# global cache of hyph_*.dic file per-file patterns
+# cache of hyph_*.dic file per-file patterns
 _hdcache = {}
 
 # precompile some stuff
@@ -37,6 +37,7 @@ class Hyphenator(object):
     -filename : filename of hyph_*.dic to read
     -left: make the first syllabe not shorter than this
     -right: make the last syllabe not shorter than this
+    -cache: if true, use a cached copy of the dic file, if possible
 
     left and right may also later be changed:
       h = Hyphenator(file)
@@ -79,9 +80,8 @@ class Hyphenator(object):
         the list [3, 6, 9].
         """
         word = word.lower()
-        if word in self.cache:
-            points = self.cache[word]
-        else:
+        points = self.cache.get(word)
+        if not points:
             prepWord = '.%s.' % word
             res = [0] * (len(prepWord) + 1)
             for i in range(len(prepWord)-1):
