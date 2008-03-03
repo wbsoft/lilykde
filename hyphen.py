@@ -19,6 +19,9 @@ import sys
 import re
 
 
+# global cache of hyph_*.dic file per-file patterns
+_hdcache = {}
+
 # precompile some stuff
 _re_hex = re.compile(r'\^{2}([0-9a-f]{2})').sub
 _re_parse = re.compile(r'(\d?)(\D?)').findall
@@ -31,7 +34,7 @@ class Hyphenator(object):
     """
     Reads a hyph_*.dic file and stores the hyphenation patterns.
     parameters:
-    -files : a single filename or a tuple of filenames to read
+    -filename : filename of hyph_*.dic to read
     -left: make the first syllabe not shorter than this
     -right: make the last syllabe not shorter than this
 
@@ -40,20 +43,21 @@ class Hyphenator(object):
       h.left = 1
     """
 
-    def __init__(self, files, left=2, right=2):
+    def __init__(self, filename, left=2, right=2, cache=True):
         self.left = left
         self.right = right
-        self.patterns = {}
-        self.cache = {}
-        if type(files) not in (tuple, list):
-            files = (files,)
-        for f in files: self._readfile(f)
+        if cache and filename in _hdcache:
+            self.patterns, self.cache = _hdcache[filename]
+        else:
+            self.patterns, self.cache = ({}, {})
+            self._readfile(filename)
+            _hdcache[filename] = (self.patterns, self.cache)
 
     def _readfile(self, filename):
         f = open(filename)
         charset = f.readline().strip()
         if charset.startswith('charset '):
-            charset = charset[7:].strip()
+            charset = charset[8:].strip()
 
         for line in f:
             if line[0] == '%': continue
@@ -97,7 +101,8 @@ class Hyphenator(object):
         """
         Returns the word as a string with al the possible hyphens inserted.
         E.g. for the dutch word 'lettergrepen' this method returns
-        the string 'let-ter-gre-pen'.
+        the string 'let-ter-gre-pen'. The hyphen string to use can be
+        given as the second parameter, that defaults to '-'.
 
         This method can also be called as visualize().
         """
