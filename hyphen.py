@@ -70,7 +70,11 @@ class Hyphenator(object):
                 pat, alt = pat.split('/', 1)
             tag, value = zip(*[(s or "", int(i or "0"))
                 for i,s in _re_parse(pat)][:-1])
-            self.patterns[''.join(tag)] = value
+            # chop zero's from beginning and end, and store start offset.
+            start, end = 0, -1
+            while value[start] == 0: start += 1
+            while value[end] == 0:   end -= 1
+            self.patterns[''.join(tag)] = start, value[start:(end+1 or None)]
         f.close()
 
     def hyphenate(self, word):
@@ -84,11 +88,13 @@ class Hyphenator(object):
         if not points:
             prepWord = '.%s.' % word
             res = [0] * (len(prepWord) + 1)
-            for i in range(len(prepWord)-1):
+            for i in range(len(prepWord) - 1):
                 for j in range(i, len(prepWord)):
-                    v = self.patterns.get(prepWord[i:j+1])
-                    if v:
-                        res[i:i+len(v)] = map(max, zip(v, res[i:i+len(v)]))
+                    p = self.patterns.get(prepWord[i:j+1])
+                    if p:
+                        offset, value = p
+                        start, end = i + offset, i + offset + len(value)
+                        res[start:end] = map(max, value, res[start:end])
 
             points = [i - 1 for i,r in enumerate(res) if r % 2]
             self.cache[word] = points
