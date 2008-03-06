@@ -30,6 +30,19 @@ def _hexrepl(matchObj):
     return unichr(int(matchObj.group(1), 16))
 
 
+def int_alt(alt):
+    """
+    return a factory that instantiates ints with alt attached as
+    the .alt attribute.
+    """
+    class Point(int):
+        def __new__(cls, value):
+            obj = int.__new__(cls, value)
+            obj.alt = alt
+            return obj
+    return Point
+
+
 class Hyphenator(object):
     """
     Reads a hyph_*.dic file and stores the hyphenation patterns.
@@ -65,10 +78,13 @@ class Hyphenator(object):
             line = line.decode(charset).strip()
             # replace ^^hh with the real character
             pat = _re_hex(_hexrepl, line)
-            # read nonstandard hyphen alternatives, but discard for now.
+            # read nonstandard hyphen alternatives
             if '/' in pat:
                 pat, alt = pat.split('/', 1)
-            tag, value = zip(*[(s or "", int(i or "0"))
+                factory = int_alt(alt)
+            else:
+                factory = int
+            tag, value = zip(*[(s or "", factory(i or "0"))
                 for i,s in _re_parse(pat)][:-1])
             # chop zero's from beginning and end, and store start offset.
             start, end = 0, -1
