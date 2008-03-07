@@ -40,16 +40,17 @@ class parse_alt(object):
         alt = alt.split(',')
         self.change = alt[0]
         if len(alt) > 2:
-            self.index = -int(alt[1]) - 2
+            self.index = int(alt[1])
+            print "index=",self.index, pat
             self.cut = int(alt[2]) + 1
         else:
             self.index = 0
             self.cut = len(re.sub(r'[\d\.]', '', pat)) + 1
         if pat.startswith('.'):
-            self.index -= 1
+            self.index += 1
 
     def __call__(self, val):
-        self.index += 1
+        self.index -= 1
         val = int(val)
         if val & 1:
             return dint(val, (self.change, self.index, self.cut))
@@ -159,6 +160,7 @@ class Hyphenator(object):
         for p in reversed(self.hyphenate(word)):
             if p.data:
                 change, index, cut = p.data
+                print p+index
                 l[p + index: p + index + cut] = change.replace('=', hyphen)
             else:
                 l[p:p] = hyphen
