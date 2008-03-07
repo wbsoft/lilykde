@@ -113,12 +113,12 @@ class Hyphenator(object):
                 factory = parse_alt(pat, alt)
             else:
                 factory = int
-            tag, value = zip(*[(s, factory(i or "0")) for i,s in parse(pat)])
+            tag, value = zip(*[(s, factory(i or "0")) for i, s in parse(pat)])
             # chop zeros from beginning and end, and store start offset.
-            start, end = 0, 0
+            start, end = 0, len(value)
             while not value[start]: start += 1
             while not value[end-1]: end -= 1
-            self.patterns[''.join(tag)] = start, value[start:(end or None)]
+            self.patterns[''.join(tag)] = start, value[start:end]
         f.close()
 
     def hyphenate(self, word):
@@ -173,6 +173,8 @@ class Hyphenator(object):
         for p in reversed(self.hyphenate(word)):
             if p.data:
                 change, index, cut = p.data
+                if word.isupper():
+                    change = change.upper()
                 l[p + index: p + index + cut] = change.replace('=', hyphen)
             else:
                 l.insert(p, hyphen)
