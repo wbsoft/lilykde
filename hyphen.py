@@ -20,7 +20,7 @@ import re
 
 __all__ = ("Hyphenator")
 
-# cache of hyph_*.dic file per-file patterns
+# cache of per-file Hyph_dict objects
 hdcache = {}
 
 # precompile some stuff
@@ -72,31 +72,14 @@ class dint(int):
         return obj
 
 
-class Hyphenator(object):
+class Hyph_dict(object):
     """
     Reads a hyph_*.dic file and stores the hyphenation patterns.
-    parameters:
+    Parameters:
     -filename : filename of hyph_*.dic to read
-    -left: make the first syllabe not shorter than this
-    -right: make the last syllabe not shorter than this
-    -cache: if true, use a cached copy of the dic file, if possible
-
-    left and right may also later be changed:
-      h = Hyphenator(file)
-      h.left = 1
     """
-
-    def __init__(self, filename, left=2, right=2, cache=True):
-        self.left = left
-        self.right = right
-        if cache and filename in hdcache:
-            self.patterns, self.cache = hdcache[filename]
-        else:
-            self.patterns, self.cache = {}, {}
-            self._readfile(filename)
-            hdcache[filename] = self.patterns, self.cache
-
-    def _readfile(self, filename):
+    def __init__(self, filename):
+        self.patterns = {}
         f = open(filename)
         charset = f.readline().strip()
         if charset.startswith('charset '):
@@ -121,6 +104,31 @@ class Hyphenator(object):
             self.patterns[''.join(tag)] = start, value[start:end]
         f.close()
 
+
+class Hyphenator(object):
+    """
+    Reads a hyph_*.dic file and stores the hyphenation patterns.
+    Provides methods to hyphenate strings in various ways.
+    Parameters:
+    -filename : filename of hyph_*.dic to read
+    -left: make the first syllabe not shorter than this
+    -right: make the last syllabe not shorter than this
+    -cache: if true (default), use a cached copy of the dic file, if possible
+
+    left and right may also later be changed:
+      h = Hyphenator(file)
+      h.left = 1
+    """
+    def __init__(self, filename, left=2, right=2, cache=True):
+        self.left  = left
+        self.right = right
+        if cache and filename in hdcache:
+            self.hd = hdcache[filename]
+        else:
+            self.hd = Hyph_dict(filename)
+            self.hd.cache = {}
+            hdcache[filename] = self.hd
+
     def hyphenate(self, word):
         """
         Returns a list of positions where the word can be hyphenated.
@@ -138,23 +146,22 @@ class Hyphenator(object):
             point
         cut: how many characters to remove while substituting the nonstandard
             hyphenation
-
         """
         word = word.lower()
-        points = self.cache.get(word)
+        points = self.hd.cache.get(word)
         if not points:
             prepWord = '.%s.' % word
             res = [0] * (len(prepWord) + 1)
             for i in range(len(prepWord) - 1):
                 for j in range(i, len(prepWord)):
-                    p = self.patterns.get(prepWord[i:j+1])
+                    p = self.hd.patterns.get(prepWord[i:j+1])
                     if p:
                         offset, value = p
                         s = slice(i + offset, i + offset + len(value))
                         res[s] = map(max, value, res[s])
 
             points = [dint(i - 1, ref=r) for i,r in enumerate(res) if r % 2]
-            self.cache[word] = points
+            self.hd.cache[word] = points
 
         # correct for left and right
         right = len(word) - self.right
@@ -172,6 +179,7 @@ class Hyphenator(object):
         l = list(word)
         for p in reversed(self.hyphenate(word)):
             if p.data:
+                # get the nonstandard hyphenation data
                 change, index, cut = p.data
                 if word.isupper():
                     change = change.upper()
@@ -181,6 +189,7 @@ class Hyphenator(object):
         return u''.join(l)
 
     visualize = visualise
+
 
 p = Hyphenator("hyph_nl.dic", left=1, right=1)
 #print repr(p.patterns)
