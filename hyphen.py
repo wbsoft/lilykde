@@ -18,6 +18,7 @@ License: LGPL.
 import sys
 import re
 
+__all__ = ("Hyphenator")
 
 # cache of hyph_*.dic file per-file patterns
 hdcache = {}
@@ -41,7 +42,6 @@ class parse_alt(object):
         self.change = alt[0]
         if len(alt) > 2:
             self.index = int(alt[1])
-            print "index=",self.index, pat
             self.cut = int(alt[2]) + 1
         else:
             self.index = 0
@@ -126,6 +126,19 @@ class Hyphenator(object):
         Returns a list of positions where the word can be hyphenated.
         E.g. for the dutch word 'lettergrepen' this method returns
         the list [3, 6, 9].
+
+        Each position is a 'data int' (dint) with a data attribute.
+        If the data attribute is not None, it contains a tuple with
+        information about nonstandard hyphenation at that point:
+        (change, index, cut)
+
+        change: is a string like 'ff=f', that describes how hyphenation
+            should take place.
+        index: where to substitute the change, counting from the current
+            point
+        cut: how many characters to remove while substituting the nonstandard
+            hyphenation
+
         """
         word = word.lower()
         points = self.cache.get(word)
@@ -160,10 +173,9 @@ class Hyphenator(object):
         for p in reversed(self.hyphenate(word)):
             if p.data:
                 change, index, cut = p.data
-                print p+index
                 l[p + index: p + index + cut] = change.replace('=', hyphen)
             else:
-                l[p:p] = hyphen
+                l.insert(p, hyphen)
         return u''.join(l)
 
     visualize = visualise
