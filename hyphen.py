@@ -1,6 +1,6 @@
 """
 
-This is a Python module to hyphenate text.
+This is a Pure Python module to hyphenate text.
 
 It is inspired by Ruby's Text::Hyphen, but currently reads standard *.dic files,
 that must be installed separately.
@@ -61,7 +61,7 @@ class parse_alt(object):
 class dint(int):
     """
     Just an int some other data can be stuck to in a data attribute.
-    call with ref=other to use the data from the other dint.
+    Call with ref=other to use the data from the other dint.
     """
     def __new__(cls, value, data=None, ref=None):
         obj = int.__new__(cls, value)
@@ -160,7 +160,7 @@ class Hyphenator(object):
                         s = slice(i + offset, i + offset + len(value))
                         res[s] = map(max, value, res[s])
 
-            points = [dint(i - 1, ref=r) for i,r in enumerate(res) if r % 2]
+            points = [dint(i - 1, ref=r) for i, r in enumerate(res) if r % 2]
             self.hd.cache[word] = points
 
         # correct for left and right
@@ -191,8 +191,11 @@ class Hyphenator(object):
     visualize = visualise
 
 
-p = Hyphenator("hyph_nl.dic", left=1, right=1)
-#print repr(p.patterns)
 
-print (p.visualise(unicode(sys.argv[1].decode('iso-8859-1'))))
+if __name__ == "__main__":
+
+    p = Hyphenator("hyph_nl.dic", left=1, right=1)
+    #print repr(p.patterns)
+
+    print (p.visualise(unicode(sys.argv[1].decode('iso-8859-1'))))
 
