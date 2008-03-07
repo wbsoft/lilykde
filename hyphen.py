@@ -92,9 +92,9 @@ class Hyphenator(object):
         if cache and filename in hdcache:
             self.patterns, self.cache = hdcache[filename]
         else:
-            self.patterns, self.cache = ({}, {})
+            self.patterns, self.cache = {}, {}
             self._readfile(filename)
-            hdcache[filename] = (self.patterns, self.cache)
+            hdcache[filename] = self.patterns, self.cache
 
     def _readfile(self, filename):
         f = open(filename)
@@ -102,11 +102,11 @@ class Hyphenator(object):
         if charset.startswith('charset '):
             charset = charset[8:].strip()
 
-        for line in f:
-            if line[0] == '%': continue
-            line = line.decode(charset).strip()
+        for pat in f:
+            if pat[0] == '%': continue
+            pat = pat.decode(charset).strip()
             # replace ^^hh with the real character
-            pat = parse_hex(hexrepl, line)
+            pat = parse_hex(hexrepl, pat)
             # read nonstandard hyphen alternatives
             if '/' in pat:
                 pat, alt = pat.split('/', 1)
@@ -114,7 +114,7 @@ class Hyphenator(object):
             else:
                 factory = int
             tag, value = zip(*[(s, factory(i or "0")) for i,s in parse(pat)])
-            # chop zero's from beginning and end, and store start offset.
+            # chop zeros from beginning and end, and store start offset.
             start, end = 0, 0
             while not value[start]: start += 1
             while not value[end-1]: end -= 1
