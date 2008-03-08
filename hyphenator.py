@@ -181,25 +181,24 @@ class Hyphenator(object):
             else:
                 yield word[:p], word[p:]
 
-    def wrap(self, word, length, hyphen='-'):
+    def wrap(self, word, width, hyphen='-'):
         """
         Return the longest possible first part and the last part of the
-        hyphenated word. Returns None, if there is no hyphenation point before
-        length.
+        hyphenated word. The first part has the hyphen already attached.
+        Returns None, if there is no hyphenation point before width, or
+        if the word could not be hyphenated.
         """
-        length -= len(hyphen)
-        for pair in self.iterate(word):
-            if len(pair[0]) <= length:
-                return pair
+        width -= len(hyphen)
+        for w1, w2 in self.iterate(word):
+            if len(w1) <= width:
+                return w1 + hyphen, w2
 
-    def visualise(self, word, hyphen='-'):
+    def inserted(self, word, hyphen='-'):
         """
         Returns the word as a string with all the possible hyphens inserted.
         E.g. for the dutch word 'lettergrepen' this method returns
         the string 'let-ter-gre-pen'. The hyphen string to use can be
         given as the second parameter, that defaults to '-'.
-
-        This method can also be called as visualize().
         """
         l = list(word)
         for p in reversed(self.positions(word)):
@@ -213,7 +212,6 @@ class Hyphenator(object):
                 l.insert(p, hyphen)
         return u''.join(l)
 
-    visualize = visualise
     __call__ = iterate
 
 
@@ -221,5 +219,6 @@ if __name__ == "__main__":
 
     h = Hyphenator(sys.argv[1], left=1, right=1)
 
-    print list(h(unicode(sys.argv[2].decode('iso-8859-1'))))
+    for i in h(sys.argv[2].decode('iso-8859-1')):
+        print i
 
