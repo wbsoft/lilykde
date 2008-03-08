@@ -176,6 +176,8 @@ class Hyphenator(object):
         """
         Iterate over all hyphenation possibilities, the longest first.
         """
+        if isinstance(word, str):
+            word = word.decode('latin1')
         for p in reversed(self.positions(word)):
             if p.data:
                 # get the nonstandard hyphenation data
@@ -206,6 +208,8 @@ class Hyphenator(object):
         the string 'let-ter-gre-pen'. The hyphen string to use can be
         given as the second parameter, that defaults to '-'.
         """
+        if isinstance(word, str):
+            word = word.decode('latin1')
         l = list(word)
         for p in reversed(self.positions(word)):
             if p.data:
@@ -216,7 +220,7 @@ class Hyphenator(object):
                 l[p + index : p + index + cut] = change.replace('=', hyphen)
             else:
                 l.insert(p, hyphen)
-        return u''.join(l)
+        return ''.join(l)
 
     __call__ = iterate
 
