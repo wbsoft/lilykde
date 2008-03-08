@@ -44,7 +44,7 @@ class parse_alt(object):
             self.index = int(alt[1])
             self.cut = int(alt[2]) + 1
         else:
-            self.index = 0
+            self.index = 1
             self.cut = len(re.sub(r'[\d\.]', '', pat)) + 1
         if pat.startswith('.'):
             self.index += 1
@@ -129,7 +129,7 @@ class Hyphenator(object):
             self.hd.cache = {}
             hdcache[filename] = self.hd
 
-    def hyphenate(self, word):
+    def positions(self, word):
         """
         Returns a list of positions where the word can be hyphenated.
         E.g. for the dutch word 'lettergrepen' this method returns
@@ -153,8 +153,8 @@ class Hyphenator(object):
             prepWord = '.%s.' % word
             res = [0] * (len(prepWord) + 1)
             for i in range(len(prepWord) - 1):
-                for j in range(i, len(prepWord)):
-                    p = self.hd.patterns.get(prepWord[i:j+1])
+                for j in range(i + 1, len(prepWord) + 1):
+                    p = self.hd.patterns.get(prepWord[i:j])
                     if p:
                         offset, value = p
                         s = slice(i + offset, i + offset + len(value))
@@ -167,9 +167,34 @@ class Hyphenator(object):
         right = len(word) - self.right
         return [i for i in points if self.left <= i <= right]
 
+    def iterate(self, word):
+        """
+        Iterate over all hyphenation possibilities, the longest first.
+        """
+        for p in reversed(self.positions(word)):
+            if p.data:
+                change, index, cut = p.data
+                if word.isupper():
+                    change = change.upper()
+                c1, c2 = change.split('=')
+                yield word[:p+index] + c1, c2 + word[p+index+cut:]
+            else:
+                yield word[:p], word[p:]
+
+    def wrap(self, word, length, hyphen='-'):
+        """
+        Return the longest possible first part and the last part of the
+        hyphenated word. Returns None, if there is no hyphenation point before
+        length.
+        """
+        length -= len(hyphen)
+        for pair in self.iterate(word):
+            if len(pair[0]) <= length:
+                return pair
+
     def visualise(self, word, hyphen='-'):
         """
-        Returns the word as a string with al the possible hyphens inserted.
+        Returns the word as a string with all the possible hyphens inserted.
         E.g. for the dutch word 'lettergrepen' this method returns
         the string 'let-ter-gre-pen'. The hyphen string to use can be
         given as the second parameter, that defaults to '-'.
@@ -177,7 +202,7 @@ class Hyphenator(object):
         This method can also be called as visualize().
         """
         l = list(word)
-        for p in reversed(self.hyphenate(word)):
+        for p in reversed(self.positions(word)):
             if p.data:
                 # get the nonstandard hyphenation data
                 change, index, cut = p.data
@@ -189,13 +214,12 @@ class Hyphenator(object):
         return u''.join(l)
 
     visualize = visualise
-
+    __call__ = iterate
 
 
 if __name__ == "__main__":
 
-    p = Hyphenator(sys.argv[1], left=1, right=1)
-    #print repr(p.patterns)
+    h = Hyphenator(sys.argv[1], left=1, right=1)
 
-    print (p.visualise(unicode(sys.argv[2].decode('iso-8859-1'))))
+    print list(h(unicode(sys.argv[2].decode('iso-8859-1'))))
 
