@@ -86,8 +86,8 @@ class Hyph_dict(object):
             charset = charset[8:].strip()
 
         for pat in f:
-            if pat[0] == '%': continue
             pat = pat.decode(charset).strip()
+            if not pat or pat[0] == '%': continue
             # replace ^^hh with the real character
             pat = parse_hex(hexrepl, pat)
             # read nonstandard hyphen alternatives
@@ -194,8 +194,8 @@ class Hyphenator(object):
 
 if __name__ == "__main__":
 
-    p = Hyphenator("hyph_nl.dic", left=1, right=1)
+    p = Hyphenator(sys.argv[1], left=1, right=1)
     #print repr(p.patterns)
 
-    print (p.visualise(unicode(sys.argv[1].decode('iso-8859-1'))))
+    print (p.visualise(unicode(sys.argv[2].decode('iso-8859-1'))))
 
