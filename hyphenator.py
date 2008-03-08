@@ -107,6 +107,23 @@ class Hyph_dict(object):
         self.maxlen = max(map(len, self.patterns.keys()))
 
     def positions(self, word):
+        """
+        Returns a list of positions where the word can be hyphenated.
+        E.g. for the dutch word 'lettergrepen' this method returns
+        the list [3, 6, 9].
+
+        Each position is a 'data int' (dint) with a data attribute.
+        If the data attribute is not None, it contains a tuple with
+        information about nonstandard hyphenation at that point:
+        (change, index, cut)
+
+        change: is a string like 'ff=f', that describes how hyphenation
+            should take place.
+        index: where to substitute the change, counting from the current
+            point
+        cut: how many characters to remove while substituting the nonstandard
+            hyphenation
+        """
         word = word.lower()
         points = self.cache.get(word)
         if points is None:
@@ -149,22 +166,9 @@ class Hyphenator(object):
     def positions(self, word):
         """
         Returns a list of positions where the word can be hyphenated.
-        E.g. for the dutch word 'lettergrepen' this method returns
-        the list [3, 6, 9].
-
-        Each position is a 'data int' (dint) with a data attribute.
-        If the data attribute is not None, it contains a tuple with
-        information about nonstandard hyphenation at that point:
-        (change, index, cut)
-
-        change: is a string like 'ff=f', that describes how hyphenation
-            should take place.
-        index: where to substitute the change, counting from the current
-            point
-        cut: how many characters to remove while substituting the nonstandard
-            hyphenation
+        See also Hyph_dict.positions. The points that are too far to
+        the left or right are removed.
         """
-        # correct for left and right
         right = len(word) - self.right
         return [i for i in self.hd.positions(word) if self.left <= i <= right]
 
@@ -174,6 +178,7 @@ class Hyphenator(object):
         """
         for p in reversed(self.positions(word)):
             if p.data:
+                # get the nonstandard hyphenation data
                 change, index, cut = p.data
                 if word.isupper():
                     change = change.upper()
