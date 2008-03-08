@@ -103,7 +103,8 @@ class Hyph_dict(object):
             while not value[end-1]: end -= 1
             self.patterns[''.join(tag)] = start, value[start:end]
         f.close()
-
+        self.cache = {}
+        self.maxlen = max(map(len, self.patterns.keys()))
 
 class Hyphenator(object):
     """
@@ -122,12 +123,9 @@ class Hyphenator(object):
     def __init__(self, filename, left=2, right=2, cache=True):
         self.left  = left
         self.right = right
-        if cache and filename in hdcache:
-            self.hd = hdcache[filename]
-        else:
-            self.hd = Hyph_dict(filename)
-            self.hd.cache = {}
-            hdcache[filename] = self.hd
+        if not cache or filename not in hdcache:
+            hdcache[filename] = Hyph_dict(filename)
+        self.hd = hdcache[filename]
 
     def positions(self, word):
         """
@@ -153,7 +151,7 @@ class Hyphenator(object):
             prepWord = '.%s.' % word
             res = [0] * (len(prepWord) + 1)
             for i in range(len(prepWord) - 1):
-                for j in range(i + 1, len(prepWord) + 1):
+                for j in range(i+1, min(i+self.hd.maxlen, len(prepWord))+1):
                     p = self.hd.patterns.get(prepWord[i:j])
                     if p:
                         offset, value = p
@@ -207,7 +205,7 @@ class Hyphenator(object):
                 change, index, cut = p.data
                 if word.isupper():
                     change = change.upper()
-                l[p + index: p + index + cut] = change.replace('=', hyphen)
+                l[p + index : p + index + cut] = change.replace('=', hyphen)
             else:
                 l.insert(p, hyphen)
         return u''.join(l)
