@@ -106,6 +106,25 @@ class Hyph_dict(object):
         self.cache = {}
         self.maxlen = max(map(len, self.patterns.keys()))
 
+    def positions(self, word):
+        word = word.lower()
+        points = self.cache.get(word)
+        if points is None:
+            prepWord = '.%s.' % word
+            res = [0] * (len(prepWord) + 1)
+            for i in range(len(prepWord) - 1):
+                for j in range(i + 1, min(i + self.maxlen, len(prepWord)) + 1):
+                    p = self.patterns.get(prepWord[i:j])
+                    if p:
+                        offset, value = p
+                        s = slice(i + offset, i + offset + len(value))
+                        res[s] = map(max, value, res[s])
+
+            points = [dint(i - 1, ref=r) for i, r in enumerate(res) if r % 2]
+            self.cache[word] = points
+        return points
+
+
 class Hyphenator(object):
     """
     Reads a hyph_*.dic file and stores the hyphenation patterns.
@@ -145,25 +164,9 @@ class Hyphenator(object):
         cut: how many characters to remove while substituting the nonstandard
             hyphenation
         """
-        word = word.lower()
-        points = self.hd.cache.get(word)
-        if not points:
-            prepWord = '.%s.' % word
-            res = [0] * (len(prepWord) + 1)
-            for i in range(len(prepWord) - 1):
-                for j in range(i+1, min(i+self.hd.maxlen, len(prepWord))+1):
-                    p = self.hd.patterns.get(prepWord[i:j])
-                    if p:
-                        offset, value = p
-                        s = slice(i + offset, i + offset + len(value))
-                        res[s] = map(max, value, res[s])
-
-            points = [dint(i - 1, ref=r) for i, r in enumerate(res) if r % 2]
-            self.hd.cache[word] = points
-
         # correct for left and right
         right = len(word) - self.right
-        return [i for i in points if self.left <= i <= right]
+        return [i for i in self.hd.positions(word) if self.left <= i <= right]
 
     def iterate(self, word):
         """
