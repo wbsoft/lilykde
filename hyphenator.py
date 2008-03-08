@@ -217,8 +217,11 @@ class Hyphenator(object):
 
 if __name__ == "__main__":
 
-    h = Hyphenator(sys.argv[1], left=1, right=1)
+    dict_file = sys.argv[1]
+    word = sys.argv[2].decode('iso-8859-1')
 
-    for i in h(sys.argv[2].decode('iso-8859-1')):
+    h = Hyphenator(dict_file, left=1, right=1)
+
+    for i in h(word):
         print i
 
