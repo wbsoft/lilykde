@@ -108,6 +108,9 @@ install-plugin:
 	@mkdir -p $(LILYKDE)/lilykde
 	cp lilykde/*.py $(LILYKDE)/lilykde/
 	@cd $(LILYKDE)/lilykde && $(PYCOMPILE) *.py
+	@echo Installing Python module hyphenator:
+	cp hyphenator.py $(LILYKDE)/
+	@cd $(LILYKDE) && $(PYCOMPILE) hyphenator.py
 	@echo Installing lilypond stuff for expand Pate plugin:
 	@mkdir -p $(PYPLUGINS)/expand
 	-cp x-lilypond.conf $(PYPLUGINS)/expand/
@@ -116,6 +119,7 @@ uninstall-plugin:
 	@echo Uninstalling plugin and lilykde package:
 	rm -f $(PYPLUGINS)/lilypond.py*
 	rm -rf $(LILYKDE)/lilykde
+	rm -f $(LILYKDE)/hyphenator.py
 	rm -f $(PYPLUGINS)/expand/x-lilypond.conf
 
 install-katefiletype:
