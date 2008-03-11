@@ -52,7 +52,8 @@ hyphdicts = searchDicts()
 
 def askLanguage():
     """
-    Ask the user which language to use
+    Ask the user which language to use.
+    Returns None if the user cancels the dialog.
     """
     lang = config.readEntry("lastused") or ""
     langs = list(sorted(hyphdicts.keys()))
@@ -76,7 +77,7 @@ def hyphenateText(text):
     lang = askLanguage()
     if not lang: return None
     from hyphenator import Hyphenator
-    h = Hyphenator(hyphdicts[lang])
+    h = Hyphenator(hyphdicts[lang], 1, 1)
     def hyphrepl(matchObj):
         return h.inserted(matchObj.group(), ' -- ')
     return re.compile(r'\w+', re.U).sub(hyphrepl, text)
