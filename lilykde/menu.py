@@ -62,7 +62,7 @@ def convertLy():
 
 menu.insert(KActionSeparator())
 
-@menu.add(_("Hyphenate text"), "Ctrl+Shift+H")
+@menu.add(_("Hyphenate Lyrics Text"), "Ctrl+Shift+H")
 def hyphenateText():
     from lilykde import hyphen
     hyphen.hyphenateText()

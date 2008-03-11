@@ -7,10 +7,12 @@ import re
 import os, os.path
 from glob import glob
 
+from kdeui import KInputDialog
+
 import kate
 
 from lilykde.i18n import _
-from lilykde.util import py2qstringlist, qstringlist2py, sorry
+from lilykde.util import py2qstringlist, qstringlist2py, runOnSelection
 
 from lilykde import config
 config = config.group("hyphenation")
@@ -43,19 +45,46 @@ def searchDicts():
         for g in glob(os.path.join(p, 'hyph_*.dic')):
             if os.path.isfile(g):
                 name = re.sub(r'hyph_(.*).dic', r'\1', os.path.basename(g))
-                hyphdicts[name] = g
+                hyphdicts[unicode(name)] = g
     return hyphdicts
 
+hyphdicts = searchDicts()
 
-def deHyphenateText():
-    """remove hyphenation from selected text"""
-    sel = kate.view().selection
-    if not sel.exists:
-        sorry(_("Please select some text first."))
-        return
-    d, v, text = kate.document(), kate.view(), sel.text
-    d.editingSequence.begin()
-    sel.removeSelectedText()
-    v.insertText(text.replace(' -- ', ''))
-    d.editingSequence.end()
+def askLanguage():
+    """
+    Ask the user which language to use
+    """
+    lang = config.readEntry("lastused") or ""
+    langs = list(sorted(hyphdicts.keys()))
+    index = lang in langs and langs.index(lang) or 0
+    lang, ok = KInputDialog.getItem(
+        _("Language selection"),
+        _("Please select a language:"),
+        py2qstringlist(langs), index, False,
+        kate.mainWidget().topLevelWidget()
+    )
+    if ok:
+        lang = unicode(lang)
+        config.writeEntry("lastused", lang)
+        return lang
+
+@runOnSelection
+def hyphenateText(text):
+    """
+    Add hyphenation to the selected text
+    """
+    lang = askLanguage()
+    if not lang: return None
+    from hyphenator import Hyphenator
+    h = Hyphenator(hyphdicts[lang])
+    def hyphrepl(matchObj):
+        return h.inserted(matchObj.group(), ' -- ')
+    return re.compile(r'\w+', re.U).sub(hyphrepl, text)
+
+@runOnSelection
+def deHyphenateText(text):
+    """
+    Remove lyrics hyphenation from selected text
+    """
+    return text.replace(' -- ', '')
 

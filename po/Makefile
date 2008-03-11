@@ -23,6 +23,8 @@ translate = \
 	../lilykde/version.py \
 	../lilykde/log.py \
 	../lilykde/pdf.py \
+	../lilykde/util.py \
+	../lilykde/hyphen.py \
 
 
 

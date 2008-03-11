@@ -2,13 +2,13 @@
 
 import re
 
-from qt import SIGNAL, Qt, QApplication, QCursor, QTimer
+from qt import SIGNAL, Qt, QApplication, QCursor, QTimer, QStringList
 from kdeui import KMessageBox
 
 import kate
 import kate.gui
 
-# No translatable messages in this file!
+from lilykde.i18n import _
 
 def popup(message, timeout=5, **a):
     a.setdefault('parent', kate.mainWidget().topLevelWidget())
@@ -87,7 +87,7 @@ def py2qstringlist(l):
     """
     convert a list of strings to a QStringList
     """
-    r.QStringList()
+    r = QStringList()
     for i in l:
         r.append(i)
     return r
@@ -98,6 +98,24 @@ def qstringlist2py(ql):
     """
     return map(unicode, ql)
 
+def runOnSelection(func):
+    """
+    Decorator that makes a function run on the selection,
+    and replaces the selection with its output if not None
+    """
+    def selFunc():
+        sel = kate.view().selection
+        if not sel.exists:
+            sorry(_("Please select some text first."))
+            return
+        d, v, text = kate.document(), kate.view(), sel.text
+        text = func(text)
+        if text is not None:
+            d.editingSequence.begin()
+            sel.removeSelectedText()
+            v.insertText(text)
+            d.editingSequence.end()
+    return selFunc
 
 
 
