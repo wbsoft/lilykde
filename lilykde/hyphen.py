@@ -51,7 +51,7 @@ def searchDicts():
                     all_languages.setGroup(i)
                     name = unicode(all_languages.readEntry("Name"))
                     if name:
-                        lang = '%s (%s)' %(lang, name)
+                        lang = '%s  (%s)' % (name, lang)
                         break
                 hyphdicts[unicode(lang)] = g
     return hyphdicts
