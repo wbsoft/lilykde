@@ -7,6 +7,7 @@ import re
 import os, os.path
 from glob import glob
 
+from kdecore import KConfig
 from kdeui import KInputDialog
 
 import kate
@@ -40,12 +41,19 @@ def searchDicts():
                 res.append(os.path.join(pref, path))
     paths = [p for p in res if os.path.isdir(p)]
     # now find the hyph_xx_XX.dic files
+    all_languages = KConfig("all_languages", True, False, "locale")
     hyphdicts = {}
     for p in paths:
         for g in glob(os.path.join(p, 'hyph_*.dic')):
             if os.path.isfile(g):
-                name = re.sub(r'hyph_(.*).dic', r'\1', os.path.basename(g))
-                hyphdicts[unicode(name)] = g
+                lang = re.sub(r'hyph_(.*).dic', r'\1', os.path.basename(g))
+                for i in lang, lang.split('_')[0]:
+                    all_languages.setGroup(i)
+                    name = unicode(all_languages.readEntry("Name"))
+                    if name:
+                        lang = '%s (%s)' %(lang, name)
+                        break
+                hyphdicts[unicode(lang)] = g
     return hyphdicts
 
 hyphdicts = searchDicts()
