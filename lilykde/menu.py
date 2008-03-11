@@ -60,5 +60,18 @@ def convertLy():
     from lilykde import version
     version.convertLy()
 
+menu.insert(KActionSeparator())
+
+@menu.add(_("Hyphenate text"), "Ctrl+Shift+H")
+def hyphenateText():
+    from lilykde import hyphen
+    hyphen.hyphenateText()
+
+@menu.add(_("Remove hyphenation"))
+def deHyphenateText():
+    from lilykde import hyphen
+    hyphen.deHyphenateText()
+
+
 
 # kate: indent-width 4;

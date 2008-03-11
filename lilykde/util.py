@@ -83,6 +83,21 @@ def keepspaces(s):
     s = s.replace("  ","&nbsp; ")
     return re.sub("^ ", "&nbsp;", s)
 
+def py2qstringlist(l):
+    """
+    convert a list of strings to a QStringList
+    """
+    r.QStringList()
+    for i in l:
+        r.append(i)
+    return r
+
+def qstringlist2py(ql):
+    """
+    convert a QStringList to a python list of unicode strings
+    """
+    return map(unicode, ql)
+
 
 
 
