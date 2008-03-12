@@ -19,3 +19,6 @@ class group(KConfigGroup):
     def readPathListEntry(self, *args, **kargs):
         return qstringlist2py(KConfigGroup.readPathListEntry(self, *args, **kargs))
 
+
+
+# kate: indent-width 4;

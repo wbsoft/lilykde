@@ -117,3 +117,6 @@ def deHyphenateText(text):
     """
     return text.replace(' -- ', '')
 
+
+
+# kate: indent-width 4;

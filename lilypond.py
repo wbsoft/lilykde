@@ -66,5 +66,10 @@ def documentChanged(doc):
                 if hasattr(sys.modules['lilykde'], m):
                     getattr(sys.modules['lilykde'], m).hide()
 
+@kate.onConfigure
+def configure(parent):
+    # show the configuration dialog
+    from lilykde.settings import Dialog
+    Dialog(parent).show()
 
 # kate: indent-width 4;
