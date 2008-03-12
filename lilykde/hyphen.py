@@ -16,8 +16,8 @@ import kate
 from lilykde.i18n import _
 from lilykde.util import py2qstringlist, qstringlist2py, runOnSelection
 
-import lilykde.config
-config = lilykde.config.group("hyphenation")
+from lilykde import config
+config = config.group("hyphenation")
 
 defaultpaths = (
     '/opt/OpenOffice.org/share/dict/ooo',
@@ -29,7 +29,7 @@ defaultpaths = (
 )
 
 def searchDicts():
-    paths = config.readPathListEntry("paths") or defaultpaths
+    paths = config.readEntry("paths").splitlines() or defaultpaths
     # build a list of existing paths.
     # is the path is not absolute, try with all known prefixes.
     res = []

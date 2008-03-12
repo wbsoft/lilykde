@@ -15,6 +15,10 @@ from kdecore import KURL, KProcess
 # Some utility functions
 from lilykde.util import *
 
+# config settings
+from lilykde import config
+config = config.group("commands")
+
 # translate the messages
 from lilykde.i18n import _
 
@@ -136,7 +140,8 @@ class LyJob(Job):
     def __init__(self, f, log):
         super(LyJob, self).__init__()
         self.f = f
-        self.p.setExecutable("lilypond")
+        lilypond = config.readEntry("lilypond") or "lilypond"
+        self.p.setExecutable(lilypond)
         self.p.setWorkingDirectory(f.directory)
         self.log = log
         self.stdout = Outputter(log, f)

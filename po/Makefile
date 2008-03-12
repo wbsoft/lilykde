@@ -25,6 +25,7 @@ translate = \
 	../lilykde/pdf.py \
 	../lilykde/util.py \
 	../lilykde/hyphen.py \
+	../lilykde/settings.py \
 
 
 

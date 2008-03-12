@@ -4,12 +4,13 @@ from qt import QString, QStringList
 from kdecore import KConfig, KConfigGroup
 from lilykde.util import py2qstringlist, qstringlist2py
 
-main = KConfig("lilykderc", False, False)
+_main = KConfig("lilykderc", False, False)
 
+# all settings are saved in some group, master is not used.
 
 class group(KConfigGroup):
     def __init__(self, groupname):
-        KConfigGroup.__init__(self, main, groupname)
+        KConfigGroup.__init__(self, _main, groupname)
 
     def writePathEntry(self, key, path, *args, **kargs):
         if type(path) not in (str, unicode, QString, QStringList):
@@ -19,6 +20,8 @@ class group(KConfigGroup):
     def readPathListEntry(self, *args, **kargs):
         return qstringlist2py(KConfigGroup.readPathListEntry(self, *args, **kargs))
 
+    def readEntry(self, *args, **kargs):
+        return unicode(KConfigGroup.readEntry(self, *args, **kargs))
 
 
 # kate: indent-width 4;

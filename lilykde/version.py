@@ -7,8 +7,12 @@ import re
 from subprocess import Popen, PIPE
 import kate
 
-# Some popups
+# Some popups, utils
 from lilykde.util import timer, info, sorry, error
+
+# config backend
+from lilykde import config
+config = config.group("commands")
 
 # Translate the messages
 from lilykde.i18n import _
@@ -19,8 +23,9 @@ version = None
 @timer(1000)
 def init():
     global version
+    lilypond = config.readEntry("lilypond") or "lilypond"
     try:
-        match = re.search(r"(\d+)\.(\d+)(?:\.(\d+))?", Popen(("lilypond","-v"),
+        match = re.search(r"(\d+)\.(\d+)(?:\.(\d+))?", Popen((lilypond, "-v"),
             stdout=PIPE).communicate()[0].splitlines()[0])
     except OSError, e:
         match = None
@@ -71,8 +76,9 @@ def convertLy():
         # Ok, let's run convert-ly.
         # We add the from-version. Only in that case convert-ly wants to
         # read from stdin.
+        convert_ly = config.readEntry("convert-ly") or "convert-ly"
         try:
-            out, err = Popen(("convert-ly", "-f", "%d.%d.%d" % docVersion, "-"),
+            out, err = Popen((convert_ly, "-f", "%d.%d.%d" % docVersion, "-"),
                             stdin=PIPE, stdout=PIPE, stderr=PIPE
                             ).communicate(d.text.encode('utf8'))
             if out:

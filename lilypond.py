@@ -69,7 +69,7 @@ def documentChanged(doc):
 @kate.onConfigure
 def configure(parent):
     # show the configuration dialog
-    from lilykde.settings import Dialog
-    Dialog(parent).show()
+    from lilykde.settings import Settings
+    Settings(parent).show()
 
 # kate: indent-width 4;

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-12 07:46+0100\n"
-"PO-Revision-Date: 2008-03-11 15:02+0100\n"
+"POT-Creation-Date: 2008-03-12 16:06+0100\n"
+"PO-Revision-Date: 2008-03-12 16:08+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -41,79 +41,79 @@ msgstr ""
 "Versie: $version\n"
 "Homepage: $homepage\n"
 
-#: ../lilykde/runlily.py:154
+#: ../lilykde/runlily.py:159
 msgid "LilyPond [$filename] starting ($mode)..."
 msgstr "LilyPond [$filename] wordt gestart ($mode)..."
 
-#: ../lilykde/runlily.py:157
+#: ../lilykde/runlily.py:162
 msgid "LilyPond [$filename] starting..."
 msgstr "LilyPond [$filename] wordt gestart..."
 
-#: ../lilykde/runlily.py:160
+#: ../lilykde/runlily.py:165
 msgid "Could not start LilyPond."
 msgstr "Kan LilyPond niet starten."
 
-#: ../lilykde/runlily.py:168
+#: ../lilykde/runlily.py:173
 #, python-format
 msgid "LilyPond was terminated by signal %d."
 msgstr "LilyPond werd beëindigd door signaal %d."
 
-#: ../lilykde/runlily.py:172
+#: ../lilykde/runlily.py:177
 #, python-format
 msgid "LilyPond exited with return code %d."
 msgstr "LilyPond stopte met foutcode %d."
 
-#: ../lilykde/runlily.py:174
+#: ../lilykde/runlily.py:179
 msgid "LilyPond [$filename] finished."
 msgstr "LilyPond [$filename] voltooid."
 
-#: ../lilykde/runlily.py:178
+#: ../lilykde/runlily.py:183
 msgid "LilyPond exited abnormally."
 msgstr "Het LilyPond-proces werd afgebroken."
 
-#: ../lilykde/runlily.py:190
+#: ../lilykde/runlily.py:195
 msgid "preview mode"
 msgstr "vooruitblik"
 
-#: ../lilykde/runlily.py:192
+#: ../lilykde/runlily.py:197
 msgid "publish mode"
 msgstr "publiceren"
 
-#: ../lilykde/runlily.py:199
+#: ../lilykde/runlily.py:204
 msgid "Open folder"
 msgstr "Map openen"
 
-#: ../lilykde/runlily.py:202
+#: ../lilykde/runlily.py:207
 msgid "Open PDF"
 msgstr "PDF weergeven"
 
-#: ../lilykde/runlily.py:208
+#: ../lilykde/runlily.py:213
 msgid "Email PDF (preview)"
 msgstr "PDF e-mailen (vooruitblik)"
 
-#: ../lilykde/runlily.py:211
+#: ../lilykde/runlily.py:216
 msgid "Email PDF"
 msgstr "PDF e-mailen"
 
-#: ../lilykde/runlily.py:213
+#: ../lilykde/runlily.py:218
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
 "\\layout</b> vergeten?"
 
-#: ../lilykde/runlily.py:217
+#: ../lilykde/runlily.py:222
 msgid "Play MIDI"
 msgstr "MIDI afspelen"
 
-#: ../lilykde/runlily.py:231
+#: ../lilykde/runlily.py:236
 msgid "Your document currently has no filename, please save first."
 msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:235
+#: ../lilykde/runlily.py:240
 msgid "Your document has been modified, please save first."
 msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:241
+#: ../lilykde/runlily.py:246
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -154,20 +154,20 @@ msgstr "Liedteksten afbreken"
 msgid "Remove hyphenation"
 msgstr "Liedtekst-afbreking verwijderen"
 
-#: ../lilykde/version.py:27
+#: ../lilykde/version.py:32
 #, python-format
 msgid "Could not start LilyPond: %s"
 msgstr "Kan LilyPond niet starten: %s"
 
-#: ../lilykde/version.py:34
+#: ../lilykde/version.py:39
 msgid "unknown"
 msgstr "onbekend"
 
-#: ../lilykde/version.py:42
+#: ../lilykde/version.py:47
 msgid "Your document has already a LilyPond version statement."
 msgstr "Uw document heeft reeds een LilyPond versie-commando."
 
-#: ../lilykde/version.py:62
+#: ../lilykde/version.py:67
 msgid ""
 "Can't determine the LilyPond version of the current document. Please add a "
 "\\version statement with the correct version."
@@ -175,18 +175,17 @@ msgstr ""
 "Kan de LilyPond-versie van het huidige document niet bepalen. Voeg een "
 "\\version commando toe met de correcte versie van het document."
 
-#: ../lilykde/version.py:65
+#: ../lilykde/version.py:70
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr ""
-"Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
+msgstr "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
-#: ../lilykde/version.py:68
+#: ../lilykde/version.py:73
 msgid "This LilyPond document is already up-to-date."
 msgstr "Dit LilyPond-document is reeds bijgewerkt."
 
-#: ../lilykde/version.py:91
+#: ../lilykde/version.py:97
 msgid ""
 "The document has been processed with convert-ly. You'll find the messages of "
 "convert-ly in a comment block at the end. You still may have to edit some "
@@ -196,7 +195,7 @@ msgstr ""
 "u aan het eind in een commentaarblok. Het kan zijn dat u bepaalde "
 "wijzigingen nog handmatig dient door te voeren."
 
-#: ../lilykde/version.py:97
+#: ../lilykde/version.py:103
 #, python-format
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
@@ -205,7 +204,7 @@ msgstr ""
 "Het document is verwerkt door convert-ly, maar bleef ongewijzigd. Dit is de "
 "melding die convert-ly gaf: %s"
 
-#: ../lilykde/version.py:101
+#: ../lilykde/version.py:107
 #, python-format
 msgid "Could not start convert-ly: %s"
 msgstr "Kan convert-ly niet starten: %s"
@@ -241,3 +240,30 @@ msgstr "Taalkeuze"
 #: ../lilykde/hyphen.py:91
 msgid "Please select a language:"
 msgstr "Selecteer een taal:"
+
+#: ../lilykde/settings.py:65
+msgid "Commands"
+msgstr "Commando's"
+
+#: ../lilykde/settings.py:69
+msgid "Lilypond:"
+msgstr "LilyPond:"
+
+#: ../lilykde/settings.py:70
+msgid "Convert-ly:"
+msgstr "Convert-ly:"
+
+#: ../lilykde/settings.py:93
+msgid "Hyphenation"
+msgstr "Afbreking"
+
+#: ../lilykde/settings.py:98
+msgid ""
+"Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
+"KOffice, etc, one per line. If you leave out the starting slash, the "
+"prefixes from the KDEDIRS environment variable are prepended."
+msgstr ""
+"Paden om bestanden met afbreekpatronen te vinden van bijv. OpenOffice.org, "
+"Scribus of KOffice, één per regel.  Als u de beginslash weglaat, wordt het "
+"pad gekoppeld aan alle paden in de KDEDIRS-omgevingsvariable."
+
