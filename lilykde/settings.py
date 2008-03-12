@@ -45,7 +45,7 @@ class Settings(QFrame):
         self.connect(self.resetButton, SIGNAL("clicked()"), self.loadSettings)
         self.loadSettings()
         self.setMinimumHeight(240)
-        self.setMinimumWidth(450)
+        self.setMinimumWidth(400)
 
     def loadSettings(self):
         for m in self.modules:
