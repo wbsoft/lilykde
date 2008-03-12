@@ -28,7 +28,9 @@ defaultpaths = (
     'share/hunspell',
 )
 
-def searchDicts():
+hyphdicts = {}
+
+def findDicts():
     paths = config.readEntry("paths").splitlines() or defaultpaths
     # build a list of existing paths.
     # is the path is not absolute, try with all known prefixes.
@@ -53,6 +55,9 @@ def searchDicts():
     defaultlang = None
 
     # now find the hyph_xx_XX.dic files
+    global hyphdicts
+    # empty it again, because we might be called again when the user changes
+    # the settings.
     hyphdicts = {}
     for p in paths:
         for g in glob(os.path.join(p, 'hyph_*.dic')):
@@ -74,9 +79,8 @@ def searchDicts():
     # if not used before, write the current locale (if existing) as default
     if defaultlang and not config.readEntry("lastused") in hyphdicts:
         config.writeEntry("lastused", defaultlang)
-    return hyphdicts
 
-hyphdicts = searchDicts()
+findDicts()
 
 def askLanguage():
     """

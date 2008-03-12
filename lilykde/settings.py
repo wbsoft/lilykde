@@ -110,3 +110,5 @@ class HyphenSettings(QFrame):
 
     def save(self):
         self.conf.writeEntry("paths", self.pathList.text())
+        import lilykde.hyphen
+        lilykde.hyphen.findDicts()
