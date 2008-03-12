@@ -23,10 +23,12 @@ class Settings(QFrame):
         self.layout.setMargin(4)
         self.tab = QTabWidget(self)
         self.tab.setMargin(4)
+        self.defaultsButton = KPushButton(KStdGuiItem.defaults(), self)
         self.applyButton = KPushButton(KStdGuiItem.apply(), self)
         self.resetButton = KPushButton(KStdGuiItem.reset(), self)
         self.layout.addWidget(self.tab)
         hbox = QHBoxLayout()
+        hbox.addWidget(self.defaultsButton)
         hbox.addStretch(1)
         hbox.addWidget(self.applyButton)
         hbox.addWidget(self.resetButton)
@@ -41,6 +43,7 @@ class Settings(QFrame):
             self.tab.addTab(module, module.title)
             self.modules.append(module)
 
+        self.connect(self.defaultsButton, SIGNAL("clicked()"), self.defaults)
         self.connect(self.applyButton, SIGNAL("clicked()"), self.saveSettings)
         self.connect(self.resetButton, SIGNAL("clicked()"), self.loadSettings)
         self.loadSettings()
@@ -55,6 +58,9 @@ class Settings(QFrame):
         for m in self.modules:
             m.save()
 
+    def defaults(self):
+        for m in self.modules:
+            m.defaults()
 
 class CommandSettings(QFrame):
     """
@@ -72,6 +78,10 @@ class CommandSettings(QFrame):
         self.convCmd = QLineEdit(self)
         self.layout.addWidget(self.lilyCmd, 0, 1)
         self.layout.addWidget(self.convCmd, 1, 1)
+
+    def defaults(self):
+        self.lilyCmd.setText("lilypond")
+        self.convCmd.setText("convert-ly")
 
     def load(self):
         self.lilyCmd.setText(self.conf.readEntry("lilypond") or "lilypond")
@@ -102,6 +112,10 @@ class HyphenSettings(QFrame):
         self.pathList = QTextEdit(self)
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.pathList)
+
+    def defaults(self):
+        from lilykde.hyphen import defaultpaths
+        self.pathList.setText('\n'.join(defaultpaths))
 
     def load(self):
         from lilykde.hyphen import defaultpaths
