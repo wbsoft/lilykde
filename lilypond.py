@@ -7,7 +7,7 @@ import kate
 # python package named lilykde.
 # TODO: install lilykde as site package if system-wide install
 from kdecore import KStandardDirs
-sys.path.extend(map(str, KStandardDirs().findDirs("data", "lilykde")))
+sys.path[0:0] = map(unicode, KStandardDirs().findDirs("data", "lilykde"))
 
 # Get the LilyKDE version, homepage etc.
 from lilykde.about import *
