@@ -8,13 +8,12 @@ import os, os.path
 from glob import glob
 from locale import getdefaultlocale
 
-from kdecore import KConfig
 from kdeui import KInputDialog
 
 import kate
 
 from lilykde.i18n import _
-from lilykde.util import py2qstringlist, qstringlist2py, runOnSelection
+from lilykde.util import py2qstringlist, qstringlist2py, runOnSelection, kconfig
 
 from lilykde import config
 config = config.group("hyphenation")
@@ -45,7 +44,7 @@ def findDicts():
     paths = (p for p in res if os.path.isdir(p))
 
     # present the user with human readable language names
-    all_languages = KConfig("all_languages", True, False, "locale")
+    all_languages = kconfig("all_languages", True, False, "locale")
 
     # default to the users current locale if not used before
     try:
@@ -65,8 +64,7 @@ def findDicts():
                 lang = re.sub(r'hyph_(.*).dic', r'\1', os.path.basename(g))
                 # find a human readable name belonging to the language code
                 for i in lang, lang.split('_')[0]:
-                    all_languages.setGroup(i)
-                    name = unicode(all_languages.readEntry("Name"))
+                    name = all_languages.group(i).get("Name")
                     if name:
                         name = '%s  (%s)' % (name, lang)
                         hyphdicts[name] = g

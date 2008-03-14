@@ -3,6 +3,7 @@
 import re
 
 from qt import SIGNAL, Qt, QApplication, QCursor, QTimer, QStringList
+from kdecore import KConfig, KConfigGroup
 from kdeui import KMessageBox
 
 import kate
@@ -118,7 +119,52 @@ def runOnSelection(func):
     return selFunc
 
 
+class _kconfigbase(object):
+    """
+    A wrapper around KConfigBase-like objects, to access them like a dictionary.
+    """
+    def get(self, key, default=''):
+        return unicode(self.kc.readEntry(key, default))
 
+    def __getitem__(self, key):
+        return unicode(self.kc.readEntry(key))
+
+    def __setitem__(self, key, value):
+        self.kc.writeEntry(key, value)
+
+    def __contains__(self, key):
+        return self.kc.hasKey(key)
+
+
+class kconfig(_kconfigbase):
+    """
+    A wrapped KConfig object, that can be accessed like a dictionary
+    """
+    def __init__(self, *args):
+        self.kc = KConfig(*args)
+
+    def setGroup(self, groupname):
+        self.kc.setGroup(groupname)
+
+    def group(self, groupname):
+        """ return an object for this group """
+        return kconfiggroup(self, groupname)
+
+
+class kconfiggroup(_kconfigbase):
+    """
+    A wrapped KConfigGroup object, that can be accessed like a dictionary
+    """
+    def __init__(self, master, groupname):
+        self.kc = WrappedKConfigGroup(master.kc, groupname)
+
+
+class WrappedKConfigGroup(KConfigGroup):
+    """
+    Somehow PyKDE won't let me instantiate KConfigGroup objects directly,
+    saying that KConfigGroup represents a c++ abstract class.
+    """
+    pass
 
 
 #kate: indent-width 4;
