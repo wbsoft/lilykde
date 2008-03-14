@@ -10,7 +10,7 @@ it will be updated after this script has been run.
 from lilykde.util import kconfig
 
 from lilykde import config
-conf = config.group("install")
+conf = config.master
 
 
 def install_katefiletyperc():

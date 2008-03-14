@@ -3,7 +3,6 @@ install = \
 	install-syntax \
 	install-textedit \
 	install-plugin \
-	install-katefiletype \
 	install-i18n
 
 uninstall = \
@@ -11,8 +10,7 @@ uninstall = \
 	uninstall-syntax \
 	uninstall-textedit \
 	uninstall-i18n \
-	uninstall-plugin \
-	uninstall-katefiletype
+	uninstall-plugin
 
 .PHONY: all install clean uninstall $(install) $(uninstall)
 
@@ -121,18 +119,6 @@ uninstall-plugin:
 	rm -rf $(LILYKDE)/lilykde
 	rm -f $(LILYKDE)/hyphenator.py
 	rm -f $(PYPLUGINS)/expand/x-lilypond.conf
-
-install-katefiletype:
-	@echo Adding LilyKDE to katefiletyperc:
-	@mkdir -p $(CONFIGDIR)
-	@if test -r $(CONFIGDIR)/katefiletyperc ; then \
-		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc ; fi
-	cat katefiletyperc >> $(CONFIGDIR)/katefiletyperc
-
-uninstall-katefiletype:
-	@echo Removing LilyKDE from katefiletyperc:
-	@if test -r $(CONFIGDIR)/katefiletyperc ; then \
-		sed -i '/\[LilyKDE\]/,/^$$/d' $(CONFIGDIR)/katefiletyperc ; fi
 
 install-i18n:
 	@$(MAKE) -C po install

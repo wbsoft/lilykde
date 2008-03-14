@@ -16,6 +16,9 @@ __title__ = "LilyPond"
 __author__ = "%s <%s>" % (AUTHOR, EMAIL)
 __license__ = LICENSE
 
+# Load the KConfig backend for 'lilykderc'
+from lilykde import config
+
 # Translate the messages
 from lilykde.i18n import _
 
@@ -38,6 +41,11 @@ __doc__ = _(
 
 @kate.onWindowShown
 def initLilyPond():
+    # run a script if this is the first run or an upgrade
+    conf = config.master
+    if "version" not in conf or conf["version"] != VERSION:
+        import lilykde.install
+        conf["version"] = VERSION
     # Setup the LilyPond main menu
     from lilykde.menu import menu
     menu.plug(kate.mainWidget().topLevelWidget().menuBar(), 5)
