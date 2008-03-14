@@ -9,19 +9,22 @@ _main = KConfig("lilykderc", False, False)
 # all settings are saved in some group, master is not used.
 
 class group(KConfigGroup):
+    """
+    Handles a KConfigGroup like a Python dictionary
+    """
     def __init__(self, groupname):
         KConfigGroup.__init__(self, _main, groupname)
 
-    def writePathEntry(self, key, path, *args, **kargs):
-        if type(path) not in (str, unicode, QString, QStringList):
-            path = py2qstringlist(path)
-        KConfigGroup.writePathEntry(self, key, path, *args, **kargs)
+    def get(self, key, default=''):
+        return unicode(KConfigGroup.readEntry(self, key, default))
 
-    def readPathListEntry(self, *args, **kargs):
-        return qstringlist2py(KConfigGroup.readPathListEntry(self, *args, **kargs))
+    def __getitem__(self, key):
+        return unicode(KConfigGroup.readEntry(self, key))
 
-    def readEntry(self, *args, **kargs):
-        return unicode(KConfigGroup.readEntry(self, *args, **kargs))
+    def __setitem__(self, key, value):
+        KConfigGroup.writeEntry(self, key, value)
 
+    def __contains__(self, key):
+        return KConfigGroup.hasKey(self, key)
 
 # kate: indent-width 4;

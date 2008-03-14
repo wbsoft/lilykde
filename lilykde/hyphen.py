@@ -31,7 +31,7 @@ defaultpaths = (
 hyphdicts = {}
 
 def findDicts():
-    paths = config.readEntry("paths").splitlines() or defaultpaths
+    paths = config["paths"].splitlines() or defaultpaths
     # build a list of existing paths.
     # is the path is not absolute, try with all known prefixes.
     res = []
@@ -77,8 +77,8 @@ def findDicts():
                     hyphdicts[lang] = g
 
     # if not used before, write the current locale (if existing) as default
-    if defaultlang and config.readEntry("lastused") not in hyphdicts:
-        config.writeEntry("lastused", defaultlang)
+    if defaultlang and config["lastused"] not in hyphdicts:
+        config["lastused"] = defaultlang
 
 findDicts()
 
@@ -87,7 +87,7 @@ def askLanguage():
     Ask the user which language to use.
     Returns None if the user cancels the dialog.
     """
-    lang = config.readEntry("lastused", "")
+    lang = config["lastused"] or ""
     langs = list(sorted(hyphdicts.keys()))
     index = lang in langs and langs.index(lang) or 0
     lang, ok = KInputDialog.getItem(
@@ -98,7 +98,7 @@ def askLanguage():
     )
     if ok:
         lang = unicode(lang)
-        config.writeEntry("lastused", lang)
+        config["lastused"] = lang
         return lang
 
 @runOnSelection

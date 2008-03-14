@@ -84,14 +84,14 @@ class CommandSettings(QFrame):
         self.convCmd.setText("convert-ly")
 
     def load(self):
-        self.lilyCmd.setText(self.conf.readEntry("lilypond", "lilypond"))
-        self.convCmd.setText(self.conf.readEntry("convert-ly", "convert-ly"))
+        self.lilyCmd.setText(self.conf.get("lilypond", "lilypond"))
+        self.convCmd.setText(self.conf.get("convert-ly", "convert-ly"))
 
     def save(self):
         lily = self.lilyCmd.text()
-        if lily: self.conf.writeEntry("lilypond", lily)
+        if lily: self.conf["lilypond"] = lily
         conv = self.convCmd.text()
-        if conv: self.conf.writeEntry("convert-ly", conv)
+        if conv: self.conf["convert-ly"] = conv
 
 
 class HyphenSettings(QFrame):
@@ -119,10 +119,10 @@ class HyphenSettings(QFrame):
 
     def load(self):
         from lilykde.hyphen import defaultpaths
-        paths = self.conf.readEntry("paths") or '\n'.join(defaultpaths)
+        paths = self.conf["paths"] or '\n'.join(defaultpaths)
         self.pathList.setText(paths)
 
     def save(self):
-        self.conf.writeEntry("paths", self.pathList.text())
+        self.conf["paths"] = self.pathList.text()
         import lilykde.hyphen
         lilykde.hyphen.findDicts()
