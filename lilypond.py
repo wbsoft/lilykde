@@ -19,9 +19,6 @@ __license__ = LICENSE
 # Translate the messages
 from lilykde.i18n import _
 
-# Load the KConfig backend for 'lilykderc'
-from lilykde import config
-
 __doc__ = _(
     "A LilyPond Kate/Pate plugin.\n"
     "\n"
@@ -38,14 +35,6 @@ __doc__ = _(
     version = VERSION,
     homepage = HOMEPAGE
 )
-
-@kate.onInit
-def init():
-    # run a script if this is the first run or an upgrade
-    conf = config.group("install")
-    if "version" not in conf or conf["version"] != VERSION:
-        import lilykde.install
-        conf["version"] = VERSION
 
 @kate.onWindowShown
 def initLilyPond():
