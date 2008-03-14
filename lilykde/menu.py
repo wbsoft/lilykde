@@ -31,13 +31,13 @@ menu = Menu(_("LilyPond"))
 
 @menu.add(_("Run LilyPond (preview)"), "Ctrl+Shift+M", "ly")
 def preview():
-    from lilykde.runlily import runLilyPond
-    runLilyPond(kate.document(), preview=True)
+    from lilykde import runlily
+    runlily.runLilyPond(kate.document(), preview=True)
 
 @menu.add(_("Run LilyPond (publish)"), "Ctrl+Shift+P", "ly")
 def publish():
-    from lilykde.runlily import runLilyPond
-    runLilyPond(kate.document())
+    from lilykde import runlily
+    runlily.runLilyPond(kate.document())
 
 menu.insert(KActionSeparator())
 

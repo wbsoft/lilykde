@@ -84,8 +84,8 @@ class CommandSettings(QFrame):
         self.convCmd.setText("convert-ly")
 
     def load(self):
-        self.lilyCmd.setText(self.conf.readEntry("lilypond") or "lilypond")
-        self.convCmd.setText(self.conf.readEntry("convert-ly") or "convert-ly")
+        self.lilyCmd.setText(self.conf.readEntry("lilypond", "lilypond"))
+        self.convCmd.setText(self.conf.readEntry("convert-ly", "convert-ly"))
 
     def save(self):
         lily = self.lilyCmd.text()

@@ -140,7 +140,7 @@ class LyJob(Job):
     def __init__(self, f, log):
         super(LyJob, self).__init__()
         self.f = f
-        lilypond = config.readEntry("lilypond") or "lilypond"
+        lilypond = config.readEntry("lilypond", "lilypond")
         self.p.setExecutable(lilypond)
         self.p.setWorkingDirectory(f.directory)
         self.log = log

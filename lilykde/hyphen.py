@@ -77,7 +77,7 @@ def findDicts():
                     hyphdicts[lang] = g
 
     # if not used before, write the current locale (if existing) as default
-    if defaultlang and not config.readEntry("lastused") in hyphdicts:
+    if defaultlang and config.readEntry("lastused") not in hyphdicts:
         config.writeEntry("lastused", defaultlang)
 
 findDicts()
@@ -87,7 +87,7 @@ def askLanguage():
     Ask the user which language to use.
     Returns None if the user cancels the dialog.
     """
-    lang = config.readEntry("lastused") or ""
+    lang = config.readEntry("lastused", "")
     langs = list(sorted(hyphdicts.keys()))
     index = lang in langs and langs.index(lang) or 0
     lang, ok = KInputDialog.getItem(
