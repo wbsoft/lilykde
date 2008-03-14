@@ -156,12 +156,12 @@ class kconfiggroup(_kconfigbase):
     A wrapped KConfigGroup object, that can be accessed like a dictionary
     """
     def __init__(self, master, groupname):
-        self.kc = WrappedKConfigGroup(master.kc, groupname)
+        self.kc = _WrappedKConfigGroup(master.kc, groupname)
         # keep a pointer to master, because Kate crashes if it goes out of scope
         self.master = master
 
 
-class WrappedKConfigGroup(KConfigGroup):
+class _WrappedKConfigGroup(KConfigGroup):
     """
     Somehow PyKDE won't let me instantiate KConfigGroup objects directly,
     saying that KConfigGroup represents a c++ abstract class.

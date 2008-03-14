@@ -126,3 +126,6 @@ class HyphenSettings(QFrame):
         self.conf["paths"] = self.pathList.text()
         import lilykde.hyphen
         lilykde.hyphen.findDicts()
+
+
+# kate: indent-width 4;

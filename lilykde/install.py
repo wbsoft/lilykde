@@ -14,6 +14,10 @@ conf = config.master
 
 
 def install_katefiletyperc():
+    """
+    Installs a LilyKDE group into katefiletyperc with settings
+    for LilyPond files.
+    """
     rc = kconfig("katefiletyperc", False, False).group("LilyKDE")
     rc["Mimetypes"] = "text/x-lilypond"
     rc["Priority"] = 10
@@ -40,3 +44,5 @@ def install_katefiletyperc():
 if "version" not in conf:
     install_katefiletyperc()
 
+
+# kate: indent-width 4;
