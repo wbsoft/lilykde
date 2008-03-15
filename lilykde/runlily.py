@@ -120,7 +120,7 @@ class Job(object):
     def __init__(self):
         self.p = KProcess()
         busy()
-        @onSignal(self.p, "processExited(KProcess*)")
+        @onSignal(self.p, "processExited(KProcess*)", self)
         def finish():
             busy(False)
             self.p.wait()

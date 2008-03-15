@@ -40,7 +40,7 @@ class OpenURL(object):
         self.p = KRun(KURL(url))
         self.p.setAutoDelete(False)
         # save our instance in this inner function
-        @onSignal(self.p, "finished()")
+        @onSignal(self.p, "finished()", self)
         def finish():
             # delete p, so the signal is also disconnected and we get garbage
             # collected.

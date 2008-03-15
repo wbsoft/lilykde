@@ -43,12 +43,25 @@ def busy(b=True, cursor=QCursor(Qt.BusyCursor)):
     else:
         QApplication.restoreOverrideCursor()
 
-def onSignal(sender, signal):
+# storage too keep pointers to KRun or KProcess objects to prevent them from
+# going out of scope
+_savedObjects = []
+
+def onSignal(sender, signal, saveObj=None):
     """ a decorator that connects a function to a Qt signal """
-    def sig(func):
-        sender.connect(sender, SIGNAL(signal), func)
-        return func
-    return sig
+    if saveObj is None:
+        def sig(func):
+            sender.connect(sender, SIGNAL(signal), func)
+        return sig
+    else:
+        _savedObjects.append(saveObj)
+        def sig(func):
+            def cleanup(*args):
+                # don't call func with arguments it doesn't want
+                func(*args[0:func.func_code.co_argcount])
+                _savedObjects.remove(saveObj)
+            sender.connect(sender, SIGNAL(signal), cleanup)
+        return sig
 
 # Small html functions
 def encodeurl(s):
