@@ -48,7 +48,12 @@ def busy(b=True, cursor=QCursor(Qt.BusyCursor)):
 _savedObjects = []
 
 def onSignal(sender, signal, saveObj=None):
-    """ a decorator that connects a function to a Qt signal """
+    """
+    A decorator that connects a function to a Qt signal.
+    If a third argument is given, it is saved in a list and released
+    after the signal func has been called. This is useful for objects
+    that contain KRun or KProcess instances.
+    """
     if saveObj is None:
         def sig(func):
             sender.connect(sender, SIGNAL(signal), func)

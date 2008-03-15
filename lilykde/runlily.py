@@ -125,7 +125,6 @@ class Job(object):
             busy(False)
             self.p.wait()
             self._finish()
-            del self.p
 
     def _finish(self):
         pass
