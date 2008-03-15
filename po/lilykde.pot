@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lilykde 0.4.5\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-15 08:27+0100\n"
+"POT-Creation-Date: 2008-03-15 14:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,77 +31,77 @@ msgid ""
 "Homepage: $homepage\n"
 msgstr ""
 
-#: ../lilykde/runlily.py:158
+#: ../lilykde/runlily.py:136
 msgid "LilyPond [$filename] starting ($mode)..."
 msgstr ""
 
-#: ../lilykde/runlily.py:161
+#: ../lilykde/runlily.py:139
 msgid "LilyPond [$filename] starting..."
 msgstr ""
 
-#: ../lilykde/runlily.py:164
+#: ../lilykde/runlily.py:142
 msgid "Could not start LilyPond."
 msgstr ""
 
-#: ../lilykde/runlily.py:172
+#: ../lilykde/runlily.py:150
 #, python-format
 msgid "LilyPond was terminated by signal %d."
 msgstr ""
 
-#: ../lilykde/runlily.py:176
+#: ../lilykde/runlily.py:154
 #, python-format
 msgid "LilyPond exited with return code %d."
 msgstr ""
 
-#: ../lilykde/runlily.py:178
+#: ../lilykde/runlily.py:156
 msgid "LilyPond [$filename] finished."
 msgstr ""
 
-#: ../lilykde/runlily.py:182
+#: ../lilykde/runlily.py:160
 msgid "LilyPond exited abnormally."
 msgstr ""
 
-#: ../lilykde/runlily.py:194
+#: ../lilykde/runlily.py:172
 msgid "preview mode"
 msgstr ""
 
-#: ../lilykde/runlily.py:196
+#: ../lilykde/runlily.py:174
 msgid "publish mode"
 msgstr ""
 
-#: ../lilykde/runlily.py:203
+#: ../lilykde/runlily.py:181
 msgid "Open folder"
 msgstr ""
 
-#: ../lilykde/runlily.py:206
+#: ../lilykde/runlily.py:184
 msgid "Open PDF"
 msgstr ""
 
-#: ../lilykde/runlily.py:212
+#: ../lilykde/runlily.py:190
 msgid "Email PDF (preview)"
 msgstr ""
 
-#: ../lilykde/runlily.py:215
+#: ../lilykde/runlily.py:193
 msgid "Email PDF"
 msgstr ""
 
-#: ../lilykde/runlily.py:217
+#: ../lilykde/runlily.py:195
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 
-#: ../lilykde/runlily.py:221
+#: ../lilykde/runlily.py:199
 msgid "Play MIDI"
 msgstr ""
 
-#: ../lilykde/runlily.py:235
+#: ../lilykde/runlily.py:213
 msgid "Your document currently has no filename, please save first."
 msgstr ""
 
-#: ../lilykde/runlily.py:239
+#: ../lilykde/runlily.py:217
 msgid "Your document has been modified, please save first."
 msgstr ""
 
-#: ../lilykde/runlily.py:245
+#: ../lilykde/runlily.py:223
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -188,11 +188,11 @@ msgstr ""
 msgid "Could not start convert-ly: %s"
 msgstr ""
 
-#: ../lilykde/log.py:20
+#: ../lilykde/log.py:19
 msgid "LilyPond Log"
 msgstr ""
 
-#: ../lilykde/log.py:87
+#: ../lilykde/log.py:72
 msgid ""
 "This PDF has been created with point-and-click urls (preview mode), which "
 "increases the file size dramatically. It's better to email documents without "
@@ -204,7 +204,7 @@ msgstr ""
 msgid "PDF"
 msgstr ""
 
-#: ../lilykde/util.py:128
+#: ../lilykde/util.py:113
 msgid "Please select some text first."
 msgstr ""
 

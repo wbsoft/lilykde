@@ -109,28 +109,7 @@ class Outputter:
             self.log.append(s, self.color)
 
 
-class Job(object):
-    """
-    To be subclassed. To instatiate a job, and keep a pointer so the instance
-    will not go out of scope. You must call our __init__() if you reimplement
-    it.
-
-    Child classes should implement a _finish() method.
-    """
-    def __init__(self):
-        self.p = KProcess()
-        busy()
-        @onSignal(self.p, "processExited(KProcess*)", self)
-        def finish():
-            busy(False)
-            self.p.wait()
-            self._finish()
-
-    def _finish(self):
-        pass
-
-
-class LyJob(Job):
+class LyJob(kprocess):
     """
     To be subclassed.
     Class to run a lilypond job. Expects a LyFile object with all the data, and
@@ -139,20 +118,19 @@ class LyJob(Job):
     def __init__(self, f, log):
         super(LyJob, self).__init__()
         self.f = f
-        lilypond = config.get("lilypond", "lilypond")
-        self.p.setExecutable(lilypond)
-        self.p.setWorkingDirectory(f.directory)
+        self.setExecutable(config.get("lilypond", "lilypond"))
+        self.setWorkingDirectory(f.directory)
         self.log = log
         self.stdout = Outputter(log, f)
         self.stderr = Outputter(log, f)
 
-        QObject.connect(self.p, SIGNAL("receivedStdout(KProcess*, char*, int)"),
+        QObject.connect(self, SIGNAL("receivedStdout(KProcess*, char*, int)"),
             self.stdout.receive)
-        QObject.connect(self.p, SIGNAL("receivedStderr(KProcess*, char*, int)"),
+        QObject.connect(self, SIGNAL("receivedStderr(KProcess*, char*, int)"),
             self.stderr.receive)
 
     def _run(self, args, mode=None):
-        self.p.setArguments(args)
+        self.setArguments(args)
         if mode:
             self.log.ok(
                 _("LilyPond [$filename] starting ($mode)...").args(
@@ -160,20 +138,20 @@ class LyJob(Job):
         else:
             self.log.ok(_("LilyPond [$filename] starting...").args(
                 filename = self.f.ly))
-        if not self.p.start(KProcess.NotifyOnExit, KProcess.AllOutput):
+        if not self.start(KProcess.NotifyOnExit, KProcess.AllOutput):
             self.log.fail(_("Could not start LilyPond."))
 
     def _finish(self):
         self.stdout.close()
         self.stderr.close()
         success = False
-        if self.p.signalled():
+        if self.signalled():
             self.log.fail(
-              _("LilyPond was terminated by signal %d.") % self.p.exitSignal())
-        elif self.p.normalExit():
-            if self.p.exitStatus() != 0:
+              _("LilyPond was terminated by signal %d.") % self.exitSignal())
+        elif self.normalExit():
+            if self.exitStatus() != 0:
                 self.log.fail(
-                _("LilyPond exited with return code %d.") % self.p.exitStatus())
+                _("LilyPond exited with return code %d.") % self.exitStatus())
             else:
                 self.log.ok(_("LilyPond [$filename] finished.").args(
                     filename = self.f.ly))

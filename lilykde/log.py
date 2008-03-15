@@ -10,7 +10,6 @@ import kate.gui
 from qt import QFont, Qt, QWidget
 from kdecore import KApplication, KURL
 from kdeui import KTextBrowser
-from kio import KRun
 
 from lilykde.util import *
 
@@ -29,20 +28,6 @@ tool.show()
 show = tool.show
 hide = tool.hide
 clear = log.clear
-
-
-class OpenURL(object):
-    """
-    Runs an URL with KRun, but keeps a pointer so the instance will not go
-    out of scope, causing the process to terminate.
-    """
-    def __init__(self, url):
-        self.p = KRun(KURL(url))
-        self.p.setAutoDelete(False)
-        # save our instance (third argument)
-        @onSignal(self.p, "finished()", self)
-        def finish():
-            pass
 
 
 def append(text, color=None, bold=False):
@@ -69,7 +54,7 @@ def actions(actions, color="blue", bold=True):
                 for u, m in actions]), color, bold)
 
 @onSignal(log, "urlClick(const QString&)")
-def _runURL(url):
+def runURL(url):
     """
     Runs an URL with KRun. If url starts with "email=" or "emailpreview=",
     it is converted to a mailto: link with the url attached, and opened in
@@ -80,7 +65,7 @@ def _runURL(url):
     url = unicode(url)        # url could be a QString
     m = re.match("([a-z]+)=(.*)", url)
     if not m:
-        return OpenURL(url)
+        return krun(url)
     command, url = m.groups()
     if command in ('email', 'emailpreview'):
         if command == "email" or warncontinue(_(

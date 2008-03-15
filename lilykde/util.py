@@ -2,8 +2,9 @@
 
 import re
 
-from qt import SIGNAL, Qt, QApplication, QCursor, QTimer, QStringList
-from kdecore import KConfig, KConfigGroup
+from qt import SIGNAL, Qt, QApplication, QCursor, QObject, QTimer, QStringList
+from kdecore import KConfig, KConfigGroup, KProcess, KURL
+from kio import KRun
 from kdeui import KMessageBox
 
 import kate
@@ -42,31 +43,6 @@ def busy(b=True, cursor=QCursor(Qt.BusyCursor)):
         QApplication.setOverrideCursor(cursor)
     else:
         QApplication.restoreOverrideCursor()
-
-# storage too keep pointers to KRun or KProcess objects to prevent them from
-# going out of scope
-_savedObjects = []
-
-def onSignal(sender, signal, saveObj=None):
-    """
-    A decorator that connects a function to a Qt signal.
-    If a third argument is given, it is saved in a list and released
-    after the signal func has been called. This is useful for objects
-    that contain KRun or KProcess instances.
-    """
-    if saveObj is None:
-        def sig(func):
-            sender.connect(sender, SIGNAL(signal), func)
-        return sig
-    else:
-        _savedObjects.append(saveObj)
-        def sig(func):
-            def cleanup(*args):
-                # don't call func with arguments it doesn't want
-                func(*args[0:func.func_code.co_argcount])
-                _savedObjects.remove(saveObj)
-            sender.connect(sender, SIGNAL(signal), cleanup)
-        return sig
 
 # Small html functions
 def encodeurl(s):
@@ -116,6 +92,15 @@ def qstringlist2py(ql):
     convert a QStringList to a python list of unicode strings
     """
     return map(unicode, ql)
+
+def onSignal(sender, signal, saveObj=None):
+    """
+    A decorator that connects a function to a Qt signal.
+    """
+    def sig(func):
+        QObject.connect(sender, SIGNAL(signal), func)
+        return func
+    return sig
 
 def runOnSelection(func):
     """
@@ -185,6 +170,48 @@ class _WrappedKConfigGroup(KConfigGroup):
     saying that KConfigGroup represents a c++ abstract class.
     """
     pass
+
+
+class kprocess(KProcess):
+    """
+    A wrapper around KProcess that keeps a pointer to itself until
+    a processExited() signal has been received
+    """
+    __savedInstances = []
+
+    def __init__(self):
+        KProcess.__init__(self)
+        kprocess.__savedInstances.append(self)
+        QObject.connect(self,
+            SIGNAL("processExited(KProcess*)"), self._slotExit)
+        busy()
+
+    def _slotExit(self, p):
+        busy(False)
+        self.wait()
+        self._finish()
+        kprocess.__savedInstances.remove(self)
+
+    def _finish(self):
+        pass
+
+
+class krun(KRun):
+    """
+    A wrapper around KRun that keeps a pointer to itself until
+    a finished() signal has been received
+    """
+
+    __savedInstances = []
+
+    def __init__(self, url):
+        KRun.__init__(self, KURL(url))
+        self.setAutoDelete(False)
+        krun.__savedInstances.append(self)
+        QObject.connect(self, SIGNAL("finished()"), self._slotExit)
+
+    def _slotExit(self):
+        krun.__savedInstances.remove(self)
 
 
 #kate: indent-width 4;
