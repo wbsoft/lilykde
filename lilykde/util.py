@@ -29,16 +29,10 @@ def warncontinue(message):
     return KMessageBox.warningContinueCancel(kate.mainWidget(),message) == \
         KMessageBox.Continue
 
-def timer(msec):
-    """ decorator that executes a function after the given time interval
-    in milliseconds """
-    def action(func):
-        QTimer.singleShot(msec, func)
-        return func
-    return action
-
 def busy(b=True, cursor=QCursor(Qt.BusyCursor)):
-    """ if True, set a busy mouse cursor for the whole app, otherwise unset. """
+    """
+    if True, set a busy mouse cursor for the whole app, otherwise unset.
+    """
     if b:
         QApplication.setOverrideCursor(cursor)
     else:
@@ -93,6 +87,17 @@ def qstringlist2py(ql):
     """
     return map(unicode, ql)
 
+# Some decorators
+def timer(msec):
+    """
+    A decorator that executes a function after the given time interval
+    in milliseconds
+    """
+    def action(func):
+        QTimer.singleShot(msec, func)
+        return func
+    return action
+
 def onSignal(sender, signal, saveObj=None):
     """
     A decorator that connects a function to a Qt signal.
@@ -121,7 +126,7 @@ def runOnSelection(func):
             d.editingSequence.end()
     return selFunc
 
-
+# Some helper or wrapper classes
 class _kconfigbase(object):
     """
     A wrapper around KConfigBase-like objects, to access them like a dictionary.
@@ -201,7 +206,6 @@ class krun(KRun):
     A wrapper around KRun that keeps a pointer to itself until
     a finished() signal has been received
     """
-
     __savedInstances = []
 
     def __init__(self, url):
