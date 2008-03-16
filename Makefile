@@ -45,7 +45,7 @@ ly.png: ly.svg
 lilykde/about.py: VERSION
 	@cp $< $@
 
-install: $(install)
+install: all $(install)
 
 clean:
 	rm -f $(all)
@@ -97,7 +97,7 @@ uninstall-textedit:
 	rm -f $(SERVICEDIR)/textedit.protocol
 	rm -f $(LILYKDE)/ktexteditservice.py
 
-install-plugin:
+install-plugin: lilykde/about.py
 	@echo Installing plugin:
 	@mkdir -p $(PYPLUGINS)
 	cp lilypond.py $(PYPLUGINS)/
