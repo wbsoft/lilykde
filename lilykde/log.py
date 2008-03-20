@@ -3,14 +3,16 @@ On first import a tool view is created.
 """
 
 import re
+import shlex
+from subprocess import Popen, PIPE
 
 import kate
-import kate.gui
 
 from qt import QFont, Qt, QWidget
 from kdecore import KApplication, KURL
 from kdeui import KTextBrowser
 
+from lilykde import config
 from lilykde.util import *
 
 # translate the messages
@@ -59,6 +61,7 @@ def runURL(url):
     Runs an URL with KRun. If url starts with "email=" or "emailpreview=",
     it is converted to a mailto: link with the url attached, and opened in
     the default KDE mailer.
+    If url starts with "print=", the file is directly printed with lpr.
     """
     # hack: prevent QTextView recognizing mailto: urls cos it can't handle
     # query string
@@ -67,7 +70,14 @@ def runURL(url):
     if not m:
         return krun(url)
     command, url = m.groups()
-    if command in ('email', 'emailpreview'):
+    if command == 'print':
+        path = unicode(KURL(url).path())
+        cmd = shlex.split(str(config.group("commands").get("lpr", "lpr")))
+        cmd.append(path)
+        p = Popen(cmd, stderr=PIPE)
+        if p.wait() != 0:
+            error(_("Printing failed: %s") % p.stderr.read())
+    elif command in ('email', 'emailpreview'):
         if command == "email" or warncontinue(_(
             "This PDF has been created with point-and-click urls (preview "
             "mode), which increases the file size dramatically. It's better "

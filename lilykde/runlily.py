@@ -182,6 +182,7 @@ class Ly2PDF(LyJob):
             if self.f.hasUpdatedPDF():
                 self.f.previewPDF()
                 actions.append(("file://%s" % self.f.pdf, _("Open PDF")))
+                actions.append(("print=file://%s" % self.f.pdf, _("Print")))
                 # hack: prevent QTextView from recognizing mailto urls, as
                 # it then uses the mailClick signal, which does not give us
                 # the query string. Later on, we prepend the "mailto:?" :)

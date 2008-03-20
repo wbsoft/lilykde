@@ -74,24 +74,31 @@ class CommandSettings(QFrame):
         self.layout = QGridLayout(self, 2, 2)
         self.layout.addWidget(QLabel(_("Lilypond:"), self), 0, 0)
         self.layout.addWidget(QLabel(_("Convert-ly:"), self), 1, 0)
+        self.layout.addWidget(QLabel(_("Printcommand:"), self), 2, 0)
         self.lilyCmd = QLineEdit(self)
         self.convCmd = QLineEdit(self)
+        self.lprCmd = QLineEdit(self)
         self.layout.addWidget(self.lilyCmd, 0, 1)
         self.layout.addWidget(self.convCmd, 1, 1)
+        self.layout.addWidget(self.lprCmd, 2, 1)
 
     def defaults(self):
         self.lilyCmd.setText("lilypond")
         self.convCmd.setText("convert-ly")
+        self.lprCmd.setText("lpr")
 
     def load(self):
         self.lilyCmd.setText(self.conf.get("lilypond", "lilypond"))
         self.convCmd.setText(self.conf.get("convert-ly", "convert-ly"))
+        self.lprCmd.setText(self.conf.get("lpr", "lpr"))
 
     def save(self):
         lily = self.lilyCmd.text()
         if lily: self.conf["lilypond"] = lily
         conv = self.convCmd.text()
         if conv: self.conf["convert-ly"] = conv
+        lpr = self.lprCmd.text()
+        if lpr: self.conf["lpr"] = lpr
 
 
 class HyphenSettings(QFrame):
