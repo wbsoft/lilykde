@@ -143,7 +143,7 @@ class ActionSettings(QFrame):
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(QLabel('<p>%s</p>' % htmlescape (_(
             "Check the actions you want to display (if applicable) after "
-            "LilyPond has succesfully compiled your document.")), self))
+            "LilyPond has successfully compiled your document.")), self))
 
         def action(name, title):
             widget = QCheckBox(title, self)

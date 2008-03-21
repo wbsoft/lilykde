@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-21 08:21+0100\n"
-"PO-Revision-Date: 2008-03-21 07:13+0100\n"
+"POT-Creation-Date: 2008-03-21 10:58+0100\n"
+"PO-Revision-Date: 2008-03-21 11:00+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -183,8 +183,7 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr ""
-"Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
+msgstr "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
 #: ../lilykde/version.py:73
 msgid "This LilyPond document is already up-to-date."
@@ -223,7 +222,11 @@ msgstr "LilyPond-uitvoer"
 msgid "Printing failed: %s"
 msgstr "Het afdrukken is mislukt: %s"
 
-#: ../lilykde/log.py:82
+#: ../lilykde/log.py:81
+msgid "The document has been sent to the printer."
+msgstr "Het document is naar de printer gestuurd."
+
+#: ../lilykde/log.py:84
 msgid ""
 "This PDF has been created with point-and-click urls (preview mode), which "
 "increases the file size dramatically. It's better to email documents without "
@@ -288,7 +291,8 @@ msgstr "Acties"
 #: ../lilykde/settings.py:145
 msgid ""
 "Check the actions you want to display (if applicable) after LilyPond has "
-"succesfully compiled your document."
+"successfully compiled your document."
 msgstr ""
 "Selecteer de acties die u wilt laten weergeven (indien van toepassing) nadat "
 "LilyPond uw document succesvol heeft verwerkt."
+

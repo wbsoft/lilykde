@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lilykde 0.4.7\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-21 10:25+0100\n"
+"POT-Creation-Date: 2008-03-21 10:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -201,7 +201,11 @@ msgstr ""
 msgid "Printing failed: %s"
 msgstr ""
 
-#: ../lilykde/log.py:82
+#: ../lilykde/log.py:81
+msgid "The document has been sent to the printer."
+msgstr ""
+
+#: ../lilykde/log.py:84
 msgid ""
 "This PDF has been created with point-and-click urls (preview mode), which "
 "increases the file size dramatically. It's better to email documents without "
@@ -259,5 +263,5 @@ msgstr ""
 #: ../lilykde/settings.py:145
 msgid ""
 "Check the actions you want to display (if applicable) after LilyPond has "
-"succesfully compiled your document."
+"successfully compiled your document."
 msgstr ""
