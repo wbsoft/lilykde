@@ -77,6 +77,8 @@ def runURL(url):
         p = Popen(cmd, stderr=PIPE)
         if p.wait() != 0:
             error(_("Printing failed: %s") % p.stderr.read())
+        else:
+            info(_("The document has been sent to the printer."))
     elif command in ('email', 'emailpreview'):
         if command == "email" or warncontinue(_(
             "This PDF has been created with point-and-click urls (preview "
