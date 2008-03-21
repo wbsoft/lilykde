@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lilykde 0.4.6\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-20 16:01+0100\n"
+"POT-Creation-Date: 2008-03-21 07:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,81 +31,81 @@ msgid ""
 "Homepage: $homepage\n"
 msgstr ""
 
-#: ../lilykde/runlily.py:136
+#: ../lilykde/runlily.py:135
 msgid "LilyPond [$filename] starting ($mode)..."
 msgstr ""
 
-#: ../lilykde/runlily.py:139
+#: ../lilykde/runlily.py:138
 msgid "LilyPond [$filename] starting..."
 msgstr ""
 
-#: ../lilykde/runlily.py:142
+#: ../lilykde/runlily.py:141
 msgid "Could not start LilyPond."
 msgstr ""
 
-#: ../lilykde/runlily.py:150
+#: ../lilykde/runlily.py:149
 #, python-format
 msgid "LilyPond was terminated by signal %d."
 msgstr ""
 
-#: ../lilykde/runlily.py:154
+#: ../lilykde/runlily.py:153
 #, python-format
 msgid "LilyPond exited with return code %d."
 msgstr ""
 
-#: ../lilykde/runlily.py:156
+#: ../lilykde/runlily.py:155
 msgid "LilyPond [$filename] finished."
 msgstr ""
 
-#: ../lilykde/runlily.py:160
+#: ../lilykde/runlily.py:159
 msgid "LilyPond exited abnormally."
 msgstr ""
 
-#: ../lilykde/runlily.py:172
+#: ../lilykde/runlily.py:171
 msgid "preview mode"
 msgstr ""
 
-#: ../lilykde/runlily.py:174
+#: ../lilykde/runlily.py:173
 msgid "publish mode"
 msgstr ""
 
-#: ../lilykde/runlily.py:181
+#: ../lilykde/runlily.py:185 ../lilykde/settings.py:160
 msgid "Open folder"
 msgstr ""
 
-#: ../lilykde/runlily.py:184
+#: ../lilykde/runlily.py:189 ../lilykde/settings.py:161
 msgid "Open PDF"
 msgstr ""
 
-#: ../lilykde/runlily.py:185
+#: ../lilykde/runlily.py:191 ../lilykde/settings.py:162
 msgid "Print"
 msgstr ""
 
-#: ../lilykde/runlily.py:191
+#: ../lilykde/runlily.py:198
 msgid "Email PDF (preview)"
 msgstr ""
 
-#: ../lilykde/runlily.py:194
+#: ../lilykde/runlily.py:201 ../lilykde/settings.py:163
 msgid "Email PDF"
 msgstr ""
 
-#: ../lilykde/runlily.py:196
+#: ../lilykde/runlily.py:203
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 
-#: ../lilykde/runlily.py:200
+#: ../lilykde/runlily.py:207 ../lilykde/settings.py:164
 msgid "Play MIDI"
 msgstr ""
 
-#: ../lilykde/runlily.py:214
+#: ../lilykde/runlily.py:221
 msgid "Your document currently has no filename, please save first."
 msgstr ""
 
-#: ../lilykde/runlily.py:218
+#: ../lilykde/runlily.py:225
 msgid "Your document has been modified, please save first."
 msgstr ""
 
-#: ../lilykde/runlily.py:224
+#: ../lilykde/runlily.py:231
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -225,29 +225,39 @@ msgstr ""
 msgid "Please select a language:"
 msgstr ""
 
-#: ../lilykde/settings.py:71
+#: ../lilykde/settings.py:72
 msgid "Commands"
 msgstr ""
 
-#: ../lilykde/settings.py:75
+#: ../lilykde/settings.py:76
 msgid "Lilypond:"
 msgstr ""
 
-#: ../lilykde/settings.py:76
+#: ../lilykde/settings.py:77
 msgid "Convert-ly:"
 msgstr ""
 
-#: ../lilykde/settings.py:77
+#: ../lilykde/settings.py:78
 msgid "Printcommand:"
 msgstr ""
 
-#: ../lilykde/settings.py:110
+#: ../lilykde/settings.py:111
 msgid "Hyphenation"
 msgstr ""
 
-#: ../lilykde/settings.py:115
+#: ../lilykde/settings.py:116
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
 "prefixes from the KDEDIRS environment variable are prepended."
+msgstr ""
+
+#: ../lilykde/settings.py:145
+msgid "Actions"
+msgstr ""
+
+#: ../lilykde/settings.py:150
+msgid ""
+"Check the actions you want to display (if applicable) after LilyPond has "
+"succesfully compiled your document."
 msgstr ""

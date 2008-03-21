@@ -37,6 +37,7 @@ class Settings(QFrame):
         # instantiate all modules
         for moduleclass in (
                 CommandSettings,
+                ActionSettings,
                 HyphenSettings,
             ):
             module = moduleclass(self.tab)
@@ -133,6 +134,48 @@ class HyphenSettings(QFrame):
         self.conf["paths"] = self.pathList.text()
         import lilykde.hyphen
         lilykde.hyphen.findDicts()
+
+
+class ActionSettings(QFrame):
+    """
+    Which actions to display at the end of a succesful LilyPond run
+    """
+    def __init__(self, parent):
+        QFrame.__init__(self, parent)
+        self.title = _("Actions")
+        self.conf = config.group("actions")
+
+        self.layout = QVBoxLayout(self)
+        self.label = QLabel('<p>%s</p>' % htmlescape (_(
+            "Check the actions you want to display (if applicable) after "
+            "LilyPond has succesfully compiled your document.")), self)
+        self.layout.addWidget(self.label)
+
+        def a(name, title):
+            w = QCheckBox(title, self)
+            self.layout.addWidget(w)
+            return name, w
+
+        self.actions = (
+            a('open_folder', _("Open folder")),
+            a('open_pdf', _("Open PDF")),
+            a('print_pdf', _("Print")),
+            a('email_pdf', _("Email PDF")),
+            a('play_midi', _("Play MIDI")),
+        )
+
+    def defaults(self):
+        for a, w in self.actions:
+            w.setChecked(True)
+
+    def load(self):
+        for a, w in self.actions:
+            check = bool(self.conf[a] != '0')
+            w.setChecked(check)
+
+    def save(self):
+        for a, w in self.actions:
+            self.conf[a] = 1 and w.isChecked() or 0
 
 
 # kate: indent-width 4;

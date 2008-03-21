@@ -17,7 +17,6 @@ from lilykde.util import *
 
 # config settings
 from lilykde import config
-config = config.group("commands")
 
 # translate the messages
 from lilykde.i18n import _
@@ -118,7 +117,7 @@ class LyJob(kprocess):
     def __init__(self, f, log):
         super(LyJob, self).__init__()
         self.f = f
-        self.setExecutable(config.get("lilypond", "lilypond"))
+        self.setExecutable(config.group("commands").get("lilypond", "lilypond"))
         self.setWorkingDirectory(f.directory)
         self.log = log
         self.stdout = Outputter(log, f)
@@ -178,25 +177,33 @@ class Ly2PDF(LyJob):
 
     def completed(self, success):
         if success and self.f.pdf:
-            actions = [("file://%s" % self.f.directory, _("Open folder"))]
+            def act(action):
+                return int(config.group("actions").get(action, 1))
+            actions = []
+            if act("open_folder"):
+                actions.append(("file://%s" % self.f.directory,
+                    _("Open folder")))
             if self.f.hasUpdatedPDF():
                 self.f.previewPDF()
-                actions.append(("file://%s" % self.f.pdf, _("Open PDF")))
-                actions.append(("print=file://%s" % self.f.pdf, _("Print")))
-                # hack: prevent QTextView from recognizing mailto urls, as
-                # it then uses the mailClick signal, which does not give us
-                # the query string. Later on, we prepend the "mailto:?" :)
-                if self.preview:
-                    actions.append(("emailpreview=file://%s" % self.f.pdf,
-                        _("Email PDF (preview)")))
-                else:
-                    actions.append(("email=file://%s" % self.f.pdf,
-                        _("Email PDF")))
+                if act("open_pdf"):
+                    actions.append(("file://%s" % self.f.pdf, _("Open PDF")))
+                if act("print_pdf"):
+                    actions.append(("print=file://%s" % self.f.pdf, _("Print")))
+                if act("email_pdf"):
+                    # hack: prevent QTextView from recognizing mailto urls, as
+                    # it then uses the mailClick signal, which does not give us
+                    # the query string. Later on, we prepend the "mailto:?" :)
+                    if self.preview:
+                        actions.append(("emailpreview=file://%s" % self.f.pdf,
+                            _("Email PDF (preview)")))
+                    else:
+                        actions.append(("email=file://%s" % self.f.pdf,
+                            _("Email PDF")))
             else:
                 self.log.msg(_("LilyPond did not write a PDF. "
                                "You probably forgot <b>\layout</b>?"))
             midis = self.f.getUpdated(".midi")
-            if midis:
+            if act("play_midi") and midis:
                 actions.append(("file://%s" % midis[0], _("Play MIDI")))
                 actions.extend([("file://%s" % m, str(n+1))
                     for n, m in enumerate(midis[1:])])

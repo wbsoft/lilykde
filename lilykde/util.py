@@ -132,7 +132,7 @@ class _kconfigbase(object):
     A wrapper around KConfigBase-like objects, to access them like a dictionary.
     """
     def get(self, key, default=''):
-        return unicode(self.kc.readEntry(key, default))
+        return unicode(self.kc.readEntry(key)) or default
 
     def __getitem__(self, key):
         return unicode(self.kc.readEntry(key))
@@ -150,6 +150,7 @@ class kconfig(_kconfigbase):
     """
     def __init__(self, *args):
         self.kc = KConfig(*args)
+        self._groups = {}
 
     def setGroup(self, groupname):
         self.kc.setGroup(groupname)

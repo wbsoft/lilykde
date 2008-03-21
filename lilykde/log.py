@@ -41,7 +41,7 @@ def append(text, color=None, bold=False):
     log.append(text)
 
 def msg(text, color=None, bold=False):
-    append(u"*** %s" % text, color, bold)
+    append(u"* %s" % text, color, bold)
 
 def ok(text, color="darkgreen", bold=True):
     msg(text, color, bold)
