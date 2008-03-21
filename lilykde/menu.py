@@ -41,6 +41,11 @@ def publish():
 
 menu.insert(KActionSeparator())
 
+@menu.add(_("Interrupt LilyPond Job"), "Shift+Esc", "stop")
+def interrupt():
+    from lilykde import runlily
+    runlily.interrupt(kate.document())
+
 @menu.add(_("Clear LilyPond Log"), "", "eraser")
 def clearLog():
     if 'lilykde.log' in sys.modules:

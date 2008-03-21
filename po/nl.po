@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-21 10:58+0100\n"
-"PO-Revision-Date: 2008-03-21 11:00+0100\n"
+"POT-Creation-Date: 2008-03-21 23:39+0100\n"
+"PO-Revision-Date: 2008-03-21 23:55+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -138,23 +138,27 @@ msgid "Run LilyPond (publish)"
 msgstr "LilyPond starten (publiceren)"
 
 #: ../lilykde/menu.py:44
+msgid "Interrupt LilyPond Job"
+msgstr "LilyPond-taak afbreken"
+
+#: ../lilykde/menu.py:49
 msgid "Clear LilyPond Log"
 msgstr "LilyPond uitvoer wissen"
 
-#: ../lilykde/menu.py:51
+#: ../lilykde/menu.py:56
 #, python-format
 msgid "Insert LilyPond version (%s)"
 msgstr "LilyPond-versie (%s) invoegen"
 
-#: ../lilykde/menu.py:58
+#: ../lilykde/menu.py:63
 msgid "Update with convert-ly"
 msgstr "Bijwerken met convert-ly"
 
-#: ../lilykde/menu.py:65
+#: ../lilykde/menu.py:70
 msgid "Hyphenate Lyrics Text"
 msgstr "Liedteksten afbreken"
 
-#: ../lilykde/menu.py:70
+#: ../lilykde/menu.py:75
 msgid "Remove hyphenation"
 msgstr "Liedtekst-afbreking verwijderen"
 

@@ -200,6 +200,10 @@ class kprocess(KProcess):
     def _finish(self):
         pass
 
+    @staticmethod
+    def instances():
+        return kprocess.__savedInstances
+
 
 class krun(KRun):
     """

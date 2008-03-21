@@ -235,4 +235,17 @@ def runLilyPond(doc, preview=False):
     from lilykde import log
     Ly2PDF(f, log).run(preview)
 
+
+def interrupt(doc):
+    """
+    Interrupt a LilyPond task if there is one running on the specified document.
+    """
+    if doc.url:
+        f = LyFile(doc)
+        for i in LyJob.instances():
+            if i.f.ly == f.ly:
+                i.kill(2)
+                break
+
+
 # kate: indent-width 4;
