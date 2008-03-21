@@ -72,34 +72,30 @@ class CommandSettings(QFrame):
         self.title = _("Commands")
         self.conf = config.group("commands")
 
-        self.layout = QGridLayout(self, 2, 2)
-        self.layout.addWidget(QLabel(_("Lilypond:"), self), 0, 0)
-        self.layout.addWidget(QLabel(_("Convert-ly:"), self), 1, 0)
-        self.layout.addWidget(QLabel(_("Printcommand:"), self), 2, 0)
-        self.lilyCmd = QLineEdit(self)
-        self.convCmd = QLineEdit(self)
-        self.lprCmd = QLineEdit(self)
-        self.layout.addWidget(self.lilyCmd, 0, 1)
-        self.layout.addWidget(self.convCmd, 1, 1)
-        self.layout.addWidget(self.lprCmd, 2, 1)
+        self.layout = QGridLayout(self)
+        self.commands = []
+        for name, title, default in (
+            ('lilypond', _("Lilypond:"), 'lilypond'),
+            ('convert-ly', _("Convert-ly:"), 'convert-ly'),
+            ('lpr', _("Printcommand:"), 'lpr'),
+        ):
+            self.layout.addWidget(QLabel(title, self), len(self.commands), 0)
+            widget = QLineEdit(self)
+            self.layout.addWidget(widget, len(self.commands), 1)
+            self.commands.append((name, widget, default))
 
     def defaults(self):
-        self.lilyCmd.setText("lilypond")
-        self.convCmd.setText("convert-ly")
-        self.lprCmd.setText("lpr")
+        for n, w, d in self.commands:
+            w.setText(d)
 
     def load(self):
-        self.lilyCmd.setText(self.conf.get("lilypond", "lilypond"))
-        self.convCmd.setText(self.conf.get("convert-ly", "convert-ly"))
-        self.lprCmd.setText(self.conf.get("lpr", "lpr"))
+        for n, w, d in self.commands:
+            w.setText(self.conf.get(n, d))
 
     def save(self):
-        lily = self.lilyCmd.text()
-        if lily: self.conf["lilypond"] = lily
-        conv = self.convCmd.text()
-        if conv: self.conf["convert-ly"] = conv
-        lpr = self.lprCmd.text()
-        if lpr: self.conf["lpr"] = lpr
+        for n, w, d in self.commands:
+            if w.text():
+                self.conf[n] = w.text()
 
 
 class HyphenSettings(QFrame):
@@ -112,13 +108,12 @@ class HyphenSettings(QFrame):
         self.conf = config.group("hyphenation")
 
         self.layout = QVBoxLayout(self)
-        self.label = QLabel('<p>%s</p>' % htmlescape (_(
+        self.layout.addWidget(QLabel('<p>%s</p>' % htmlescape (_(
             "Paths to search for hyphenation dictionaries of OpenOffice.org, "
             "Scribus, KOffice, etc, one per line. "
             "If you leave out the starting slash, the prefixes from the "
-            "KDEDIRS environment variable are prepended.")), self)
+            "KDEDIRS environment variable are prepended.")), self))
         self.pathList = QTextEdit(self)
-        self.layout.addWidget(self.label)
         self.layout.addWidget(self.pathList)
 
     def defaults(self):
@@ -146,22 +141,21 @@ class ActionSettings(QFrame):
         self.conf = config.group("actions")
 
         self.layout = QVBoxLayout(self)
-        self.label = QLabel('<p>%s</p>' % htmlescape (_(
+        self.layout.addWidget(QLabel('<p>%s</p>' % htmlescape (_(
             "Check the actions you want to display (if applicable) after "
-            "LilyPond has succesfully compiled your document.")), self)
-        self.layout.addWidget(self.label)
+            "LilyPond has succesfully compiled your document.")), self))
 
-        def a(name, title):
-            w = QCheckBox(title, self)
-            self.layout.addWidget(w)
-            return name, w
+        def action(name, title):
+            widget = QCheckBox(title, self)
+            self.layout.addWidget(widget)
+            return name, widget
 
         self.actions = (
-            a('open_folder', _("Open folder")),
-            a('open_pdf', _("Open PDF")),
-            a('print_pdf', _("Print")),
-            a('email_pdf', _("Email PDF")),
-            a('play_midi', _("Play MIDI")),
+            action('open_folder', _("Open folder")),
+            action('open_pdf', _("Open PDF")),
+            action('print_pdf', _("Print")),
+            action('email_pdf', _("Email PDF")),
+            action('play_midi', _("Play MIDI")),
         )
 
     def defaults(self):

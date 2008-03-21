@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-21 07:13+0100\n"
+"POT-Creation-Date: 2008-03-21 07:46+0100\n"
 "PO-Revision-Date: 2008-03-21 07:13+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -79,15 +79,15 @@ msgstr "vooruitblik"
 msgid "publish mode"
 msgstr "publiceren"
 
-#: ../lilykde/runlily.py:185 ../lilykde/settings.py:160
+#: ../lilykde/runlily.py:185 ../lilykde/settings.py:154
 msgid "Open folder"
 msgstr "Map openen"
 
-#: ../lilykde/runlily.py:189 ../lilykde/settings.py:161
+#: ../lilykde/runlily.py:189 ../lilykde/settings.py:155
 msgid "Open PDF"
 msgstr "PDF weergeven"
 
-#: ../lilykde/runlily.py:191 ../lilykde/settings.py:162
+#: ../lilykde/runlily.py:191 ../lilykde/settings.py:156
 msgid "Print"
 msgstr "Afdrukken"
 
@@ -95,7 +95,7 @@ msgstr "Afdrukken"
 msgid "Email PDF (preview)"
 msgstr "PDF e-mailen (vooruitblik)"
 
-#: ../lilykde/runlily.py:201 ../lilykde/settings.py:163
+#: ../lilykde/runlily.py:201 ../lilykde/settings.py:157
 msgid "Email PDF"
 msgstr "PDF e-mailen"
 
@@ -105,7 +105,7 @@ msgstr ""
 "LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
 "\\layout</b> vergeten?"
 
-#: ../lilykde/runlily.py:207 ../lilykde/settings.py:164
+#: ../lilykde/runlily.py:207 ../lilykde/settings.py:158
 msgid "Play MIDI"
 msgstr "MIDI afspelen"
 
@@ -183,7 +183,8 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
+msgstr ""
+"Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
 #: ../lilykde/version.py:73
 msgid "This LilyPond document is already up-to-date."
@@ -254,23 +255,23 @@ msgstr "Selecteer een taal:"
 msgid "Commands"
 msgstr "Commando's"
 
-#: ../lilykde/settings.py:76
+#: ../lilykde/settings.py:78
 msgid "Lilypond:"
 msgstr "LilyPond:"
 
-#: ../lilykde/settings.py:77
+#: ../lilykde/settings.py:79
 msgid "Convert-ly:"
 msgstr "Convert-ly:"
 
-#: ../lilykde/settings.py:78
+#: ../lilykde/settings.py:80
 msgid "Printcommand:"
 msgstr "Printcommando:"
 
-#: ../lilykde/settings.py:111
+#: ../lilykde/settings.py:107
 msgid "Hyphenation"
 msgstr "Afbreking"
 
-#: ../lilykde/settings.py:116
+#: ../lilykde/settings.py:112
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
@@ -280,15 +281,14 @@ msgstr ""
 "Scribus of KOffice, één per regel.  Als u de beginslash weglaat, wordt het "
 "pad gekoppeld aan alle paden in de KDEDIRS-omgevingsvariable."
 
-#: ../lilykde/settings.py:145
+#: ../lilykde/settings.py:140
 msgid "Actions"
 msgstr "Acties"
 
-#: ../lilykde/settings.py:150
+#: ../lilykde/settings.py:145
 msgid ""
 "Check the actions you want to display (if applicable) after LilyPond has "
 "succesfully compiled your document."
 msgstr ""
 "Selecteer de acties die u wilt laten weergeven (indien van toepassing) nadat "
 "LilyPond uw document succesvol heeft verwerkt."
-
