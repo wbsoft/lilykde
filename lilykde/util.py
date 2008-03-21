@@ -150,7 +150,6 @@ class kconfig(_kconfigbase):
     """
     def __init__(self, *args):
         self.kc = KConfig(*args)
-        self._groups = {}
 
     def setGroup(self, groupname):
         self.kc.setGroup(groupname)
