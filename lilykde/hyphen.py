@@ -16,7 +16,6 @@ from lilykde.i18n import _
 from lilykde.util import py2qstringlist, qstringlist2py, runOnSelection, kconfig
 
 from lilykde import config
-config = config.group("hyphenation")
 
 defaultpaths = (
     '/opt/OpenOffice.org/share/dict/ooo',
@@ -30,7 +29,8 @@ defaultpaths = (
 hyphdicts = {}
 
 def findDicts():
-    paths = config["paths"].splitlines() or defaultpaths
+    conf = config.group("hyphenation")
+    paths = conf["paths"].splitlines() or defaultpaths
     # build a list of existing paths.
     # is the path is not absolute, try with all known prefixes.
     res = []
@@ -75,8 +75,8 @@ def findDicts():
                     hyphdicts[lang] = g
 
     # if not used before, write the current locale (if existing) as default
-    if defaultlang and config["lastused"] not in hyphdicts:
-        config["lastused"] = defaultlang
+    if defaultlang and conf["lastused"] not in hyphdicts:
+        conf["lastused"] = defaultlang
 
 findDicts()
 
@@ -85,7 +85,8 @@ def askLanguage():
     Ask the user which language to use.
     Returns None if the user cancels the dialog.
     """
-    lang = config["lastused"] or ""
+    conf = config.group("hyphenation")
+    lang = conf["lastused"] or ""
     langs = list(sorted(hyphdicts.keys()))
     index = lang in langs and langs.index(lang) or 0
     lang, ok = KInputDialog.getItem(
@@ -96,7 +97,7 @@ def askLanguage():
     )
     if ok:
         lang = unicode(lang)
-        config["lastused"] = lang
+        conf["lastused"] = lang
         return lang
 
 @runOnSelection

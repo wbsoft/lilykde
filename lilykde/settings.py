@@ -33,6 +33,7 @@ class Settings(QFrame):
         hbox.addWidget(self.applyButton)
         hbox.addWidget(self.resetButton)
         self.layout.addLayout(hbox)
+        self.conf = config.master()
         self.modules = []
         # instantiate all modules
         for moduleclass in (
@@ -40,7 +41,7 @@ class Settings(QFrame):
                 ActionSettings,
                 HyphenSettings,
             ):
-            module = moduleclass(self.tab)
+            module = moduleclass(self.tab, self.conf)
             self.tab.addTab(module, module.title)
             self.modules.append(module)
 
@@ -58,19 +59,21 @@ class Settings(QFrame):
     def saveSettings(self):
         for m in self.modules:
             m.save()
+        self.conf.sync()
 
     def defaults(self):
         for m in self.modules:
             m.defaults()
 
+
 class CommandSettings(QFrame):
     """
     Settings regarding commands of lilypond's associated programs
     """
-    def __init__(self, parent):
+    def __init__(self, parent, conf):
         QFrame.__init__(self, parent)
         self.title = _("Commands")
-        self.conf = config.group("commands")
+        self.conf = conf.group("commands")
 
         self.layout = QGridLayout(self)
         self.commands = []
@@ -102,10 +105,10 @@ class HyphenSettings(QFrame):
     """
     Settings regarding the hyphenation of Lyrics
     """
-    def __init__(self, parent):
+    def __init__(self, parent, conf):
         QFrame.__init__(self, parent)
         self.title = _("Hyphenation")
-        self.conf = config.group("hyphenation")
+        self.conf = conf.group("hyphenation")
 
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(QLabel('<p>%s</p>' % htmlescape (_(
@@ -135,10 +138,10 @@ class ActionSettings(QFrame):
     """
     Which actions to display at the end of a succesful LilyPond run
     """
-    def __init__(self, parent):
+    def __init__(self, parent, conf):
         QFrame.__init__(self, parent)
         self.title = _("Actions")
-        self.conf = config.group("actions")
+        self.conf = conf.group("actions")
 
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(QLabel('<p>%s</p>' % htmlescape (_(

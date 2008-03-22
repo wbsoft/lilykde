@@ -43,7 +43,7 @@ __doc__ = _(
 @kate.onWindowShown
 def initLilyPond():
     # run the install script if this is the first run or an upgrade
-    conf = config.master
+    conf = config.master()
     if "version" not in conf or conf["version"] != VERSION:
         import lilykde.install
         conf["version"] = VERSION

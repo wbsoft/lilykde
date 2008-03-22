@@ -10,8 +10,6 @@ it will be updated after this script has been run.
 from lilykde.util import kconfig
 
 from lilykde import config
-conf = config.master
-
 
 def install_katefiletyperc():
     """
@@ -40,9 +38,16 @@ def install_katefiletyperc():
 
 
 
+def install():
+    """
+    Main install functions, called always if this file is imported
+    """
+    conf = config.master()
+    if "version" not in conf:
+        install_katefiletyperc()
 
-if "version" not in conf:
-    install_katefiletyperc()
+
+install()
 
 
 # kate: indent-width 4;

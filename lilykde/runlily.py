@@ -139,6 +139,7 @@ class LyJob(kprocess):
                 filename = self.f.ly))
         if not self.start(KProcess.NotifyOnExit, KProcess.AllOutput):
             self.log.fail(_("Could not start LilyPond."))
+            busy(False) # remove the busy cursor (TODO: fix this in kprocess)
 
     def _finish(self):
         self.stdout.close()

@@ -143,6 +143,9 @@ class _kconfigbase(object):
     def __contains__(self, key):
         return self.kc.hasKey(key)
 
+    def sync(self):
+        self.kc.sync()
+
 
 class kconfig(_kconfigbase):
     """
