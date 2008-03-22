@@ -10,7 +10,7 @@ import re
 import os.path
 
 from qt import SIGNAL, QString, QObject
-from kdecore import KURL, KProcess
+from kdecore import KURL
 
 # Some utility functions
 from lilykde.util import *
@@ -137,9 +137,7 @@ class LyJob(kprocess):
         else:
             self.log.ok(_("LilyPond [$filename] starting...").args(
                 filename = self.f.ly))
-        if not self.start(KProcess.NotifyOnExit, KProcess.AllOutput):
-            self.log.fail(_("Could not start LilyPond."))
-            busy(False) # remove the busy cursor (TODO: fix this in kprocess)
+        self.start() or self.log.fail(_("Could not start LilyPond."))
 
     def _finish(self):
         self.stdout.close()
@@ -239,7 +237,6 @@ def runLilyPond(doc, preview=False):
 
     from lilykde import log
     Ly2PDF(f, log).run(preview)
-
 
 def interrupt(doc):
     """

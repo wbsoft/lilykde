@@ -189,10 +189,15 @@ class kprocess(KProcess):
 
     def __init__(self):
         KProcess.__init__(self)
-        kprocess.__savedInstances.append(self)
         QObject.connect(self,
             SIGNAL("processExited(KProcess*)"), self._slotExit)
-        busy()
+
+    def start(self, runmode=KProcess.NotifyOnExit, comm=KProcess.AllOutput):
+        res = KProcess.start(self, runmode, comm)
+        if res:
+            kprocess.__savedInstances.append(self)
+            busy()
+        return res
 
     def _slotExit(self, p):
         busy(False)
