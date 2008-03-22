@@ -33,7 +33,6 @@ class Settings(QFrame):
         hbox.addWidget(self.applyButton)
         hbox.addWidget(self.resetButton)
         self.layout.addLayout(hbox)
-        self.conf = config.master()
         self.modules = []
         # instantiate all modules
         for moduleclass in (
@@ -41,7 +40,7 @@ class Settings(QFrame):
                 ActionSettings,
                 HyphenSettings,
             ):
-            module = moduleclass(self.tab, self.conf)
+            module = moduleclass(self.tab)
             self.tab.addTab(module, module.title)
             self.modules.append(module)
 
@@ -59,7 +58,6 @@ class Settings(QFrame):
     def saveSettings(self):
         for m in self.modules:
             m.save()
-        self.conf.sync()
 
     def defaults(self):
         for m in self.modules:
@@ -70,11 +68,9 @@ class CommandSettings(QFrame):
     """
     Settings regarding commands of lilypond's associated programs
     """
-    def __init__(self, parent, conf):
+    def __init__(self, parent):
         QFrame.__init__(self, parent)
         self.title = _("Commands")
-        self.conf = conf.group("commands")
-
         self.layout = QGridLayout(self)
         self.commands = []
         for name, title, default in (
@@ -92,24 +88,24 @@ class CommandSettings(QFrame):
             w.setText(d)
 
     def load(self):
+        conf = config.group("commands")
         for n, w, d in self.commands:
-            w.setText(self.conf.get(n, d))
+            w.setText(conf.get(n, d))
 
     def save(self):
+        conf = config.group("commands")
         for n, w, d in self.commands:
             if w.text():
-                self.conf[n] = w.text()
+                conf[n] = w.text()
 
 
 class HyphenSettings(QFrame):
     """
     Settings regarding the hyphenation of Lyrics
     """
-    def __init__(self, parent, conf):
+    def __init__(self, parent):
         QFrame.__init__(self, parent)
         self.title = _("Hyphenation")
-        self.conf = conf.group("hyphenation")
-
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(QLabel('<p>%s</p>' % htmlescape (_(
             "Paths to search for hyphenation dictionaries of OpenOffice.org, "
@@ -124,12 +120,14 @@ class HyphenSettings(QFrame):
         self.pathList.setText('\n'.join(defaultpaths))
 
     def load(self):
+        conf = config.group("hyphenation")
         from lilykde.hyphen import defaultpaths
-        paths = self.conf["paths"] or '\n'.join(defaultpaths)
+        paths = conf["paths"] or '\n'.join(defaultpaths)
         self.pathList.setText(paths)
 
     def save(self):
-        self.conf["paths"] = self.pathList.text()
+        conf = config.group("hyphenation")
+        conf["paths"] = self.pathList.text()
         import lilykde.hyphen
         lilykde.hyphen.findDicts()
 
@@ -138,11 +136,9 @@ class ActionSettings(QFrame):
     """
     Which actions to display at the end of a succesful LilyPond run
     """
-    def __init__(self, parent, conf):
+    def __init__(self, parent):
         QFrame.__init__(self, parent)
         self.title = _("Actions")
-        self.conf = conf.group("actions")
-
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(QLabel('<p>%s</p>' % htmlescape (_(
             "Check the actions you want to display (if applicable) after "
@@ -166,13 +162,15 @@ class ActionSettings(QFrame):
             w.setChecked(True)
 
     def load(self):
+        conf = config.group("actions")
         for a, w in self.actions:
-            check = bool(self.conf[a] != '0')
+            check = bool(conf[a] != '0')
             w.setChecked(check)
 
     def save(self):
+        conf = config.group("actions")
         for a, w in self.actions:
-            self.conf[a] = 1 and w.isChecked() or 0
+            conf[a] = 1 and w.isChecked() or 0
 
 
 # kate: indent-width 4;
