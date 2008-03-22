@@ -159,6 +159,10 @@ class LyJob(kprocess):
             self.log.fail(_("LilyPond exited abnormally."))
         self.completed(success)
 
+    @staticmethod
+    def instances():
+        return [i for i in kprocess.instances() if isinstance(i, LyJob)]
+
 
 class Ly2PDF(LyJob):
     """
