@@ -2,13 +2,14 @@ import gettext
 from string import Template
 from os.path import join, dirname
 from locale import getdefaultlocale
+import lilykde
 
 # TODO: in system-wide installation use standard locale dirs and lilykde
 # textdomain
 
 def getTranslations():
     # Find sibling dir mo/ in parent of current script dir
-    modir = join(dirname(dirname(__file__)), "mo")
+    modir = join(dirname(lilykde.__path__[0]), "mo")
     try:
         lang, encoding = getdefaultlocale()
         if lang:

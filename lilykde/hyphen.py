@@ -4,7 +4,7 @@ using the hyphenator module.
 """
 
 import re
-import os, os.path
+import os
 from glob import glob
 from locale import getdefaultlocale
 
@@ -13,7 +13,7 @@ from kdeui import KInputDialog
 import kate
 
 from lilykde.i18n import _
-from lilykde.util import py2qstringlist, qstringlist2py, runOnSelection, kconfig
+from lilykde.util import py2qstringlist, runOnSelection, kconfig
 
 from lilykde import config
 

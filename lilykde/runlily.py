@@ -7,7 +7,7 @@ This part is loaded when the LilyPond is first called.
 """
 
 import re
-import os.path
+import os
 
 from qt import SIGNAL, QString, QObject
 from kdecore import KURL
