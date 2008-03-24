@@ -2,6 +2,7 @@ install = \
 	install-mimetype \
 	install-syntax \
 	install-textedit \
+	install-servicemenu \
 	install-plugin \
 	install-i18n
 
@@ -9,6 +10,7 @@ uninstall = \
 	uninstall-mimetype \
 	uninstall-syntax \
 	uninstall-textedit \
+	uninstall-servicemenu \
 	uninstall-i18n \
 	uninstall-plugin
 
@@ -23,6 +25,7 @@ DATADIR = $(DESTDIR)$(PREFIX)/share
 LILYKDE = $(DATADIR)/apps/lilykde
 ICONDIR = $(DATADIR)/icons
 SERVICEDIR = $(DATADIR)/services
+SERVICEMENUDIR = $(DATADIR)/apps/konqueror/servicemenus
 KATEPARTDIR = $(DATADIR)/apps/katepart
 PYPLUGINS = $(DATADIR)/apps/kate/pyplugins
 MIMELNK = $(DATADIR)/mimelnk
@@ -125,3 +128,16 @@ install-i18n:
 
 uninstall-i18n:
 	@$(MAKE) -C po uninstall
+
+install-servicemenu:
+	@echo Installing Konqueror servicemenu
+	@mkdir -p $(LILYKDE)
+	cp lilypond-servicemenu-helper.py $(LILYKDE)/
+	@mkdir -p $(SERVICEMENUDIR)
+	sed 's!LILYKDEDIR!$(LILYKDE)!' lilypond-servicemenu.desktop.in \
+		> $(SERVICEMENUDIR)/lilypond-servicemenu.desktop
+
+uninstall-servicemenu:
+	@echo Uninstalling Konqueror servicemenu
+	rm -f $(SERVICEMENUDIR)/lilypond-servicemenu.desktop
+	rm -f $(LILYKDE)/lilypond-servicemenu-helper.py
