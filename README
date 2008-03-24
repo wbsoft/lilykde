@@ -11,17 +11,19 @@ It currently consists of:
 
 * a Kate plugin (using Pate, written in Python) that can run LilyPond
   for you, embedding a PDF preview right into Kate and other nice
-  things,
+  things
 
 * A textedit service so you can click on the notes in the preview (or
-  any other PDF viewer) and have Kate jump to the correct position,
+  any other PDF viewer) and have Kate jump to the correct position
 
 * Powerful LilyPond syntax highlighting (already part of KDE)
 
 * An icon and mimetype for *.ly files. The icon was taken from LilyPond.
 
 * Some settings in katefiletyperc, to indent LilyPond files nicely and
-  always use utf8 encoding by default.
+  always use utf8 encoding by default. These are installed on first run.
+
+* A Konqueror service menu to convert LilyPond files to PDF.
 
 
 Requirements
