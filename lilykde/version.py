@@ -9,7 +9,7 @@ import kate
 
 # Some utils, popups
 from lilykde.util import timer
-from lilykde.uiutil import info, sorry, error
+from lilykde.widgets import info, sorry, error
 
 # config backend
 from lilykde import config

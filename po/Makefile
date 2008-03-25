@@ -22,10 +22,10 @@ translate = \
 	../lilykde/menu.py \
 	../lilykde/version.py \
 	../lilykde/log.py \
-	../lilykde/logwidget.py \
 	../lilykde/pdf.py \
 	../lilykde/util.py \
 	../lilykde/kateutil.py \
+	../lilykde/widgets.py \
 	../lilykde/hyphen.py \
 	../lilykde/settings.py \
 

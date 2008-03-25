@@ -1,21 +1,62 @@
 """
-A LogWidget that displays LilyPond output
+Widgets used in LilyKDE
 """
 
-import re
-import shlex
+import re, shlex
 from subprocess import Popen, PIPE
 
 from qt import Qt, QFont, QObject, SIGNAL
 from kdecore import KApplication, KURL
-from kdeui import KTextBrowser
+from kdeui import KMessageBox, KTextBrowser
 
 from lilykde import config
 from lilykde.util import keepspaces, htmlescapeurl, htmlescape, krun
-from lilykde.uiutil import warncontinue
 
-# translate the messages
+# Translate the messages
 from lilykde.i18n import _
+
+
+try:
+    # if this fails, don't define following functions, because
+    # they depend on Kate and Pate present:
+    import kate
+
+    def _popup(message, timeout=5, **a):
+        a.setdefault('parent', kate.mainWidget().topLevelWidget())
+        kate.gui.showPassivePopup(message, timeout, **a)
+
+    def error(message, **a):
+        _popup(message, icon="error", **a)
+
+    def sorry(message, **a):
+        _popup(message, icon="messagebox_warning", **a)
+
+    def info(message, **a):
+        _popup(message, icon="messagebox_info", **a)
+
+    def warncontinue(message):
+        return KMessageBox.warningContinueCancel(
+            kate.mainWidget(), message) == KMessageBox.Continue
+
+
+except ImportError:
+
+    # These are defined when LilyKDE runs outside of Kate
+    def error(message, **a):
+        KMessageBox.error(KApplication.kApplication().mainWidget(), message)
+
+    def sorry(message, **a):
+        KMessageBox.sorry(KApplication.kApplication().mainWidget(), message)
+
+    def info(message, **a):
+        KMessageBox.information(
+            KApplication.kApplication().mainWidget(), message)
+
+    def warncontinue(message):
+        return KMessageBox.warningContinueCancel(
+            KApplication.kApplication().mainWidget(), message
+            ) == KMessageBox.Continue
+
 
 class LogWidget(KTextBrowser):
     """

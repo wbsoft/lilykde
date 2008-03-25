@@ -13,8 +13,8 @@ from qt import SIGNAL, QString, QObject
 from kdecore import KURL
 
 # Some utility functions
-from lilykde.util import *
-from lilykde.uiutil import *
+from lilykde.util import htmlescape, encodeurl, kprocess
+from lilykde.widgets import sorry
 
 # config settings
 from lilykde import config

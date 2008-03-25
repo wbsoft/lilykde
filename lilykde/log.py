@@ -6,7 +6,7 @@ import kate
 
 from qt import QWidget
 
-from lilykde.logwidget import LogWidget
+from lilykde.widgets import LogWidget
 
 # translate the messages
 from lilykde.i18n import _

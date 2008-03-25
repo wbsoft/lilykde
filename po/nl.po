@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-25 12:23+0100\n"
+"POT-Creation-Date: 2008-03-25 14:01+0100\n"
 "PO-Revision-Date: 2008-03-21 23:55+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -222,16 +222,24 @@ msgstr "Kan convert-ly niet starten: %s"
 msgid "LilyPond Log"
 msgstr "LilyPond-uitvoer"
 
-#: ../lilykde/logwidget.py:74
+#: ../lilykde/pdf.py:13
+msgid "PDF"
+msgstr "PDF"
+
+#: ../lilykde/kateutil.py:18
+msgid "Please select some text first."
+msgstr "Selecteer eerst de tekst waarop u de functie wilt toepassen."
+
+#: ../lilykde/widgets.py:115
 #, python-format
 msgid "Printing failed: %s"
 msgstr "Het afdrukken is mislukt: %s"
 
-#: ../lilykde/logwidget.py:76
+#: ../lilykde/widgets.py:117
 msgid "The document has been sent to the printer."
 msgstr "Het document is naar de printer gestuurd."
 
-#: ../lilykde/logwidget.py:79
+#: ../lilykde/widgets.py:120
 msgid ""
 "This PDF has been created with point-and-click urls (preview mode), which "
 "increases the file size dramatically. It's better to email documents without "
@@ -242,14 +250,6 @@ msgstr ""
 "waardoor het bestand veel groter dan noodzakelijk is. Het is beter om "
 "documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
 "kleiner zijn. Toch doorgaan?"
-
-#: ../lilykde/pdf.py:13
-msgid "PDF"
-msgstr "PDF"
-
-#: ../lilykde/kateutil.py:18
-msgid "Please select some text first."
-msgstr "Selecteer eerst de tekst waarop u de functie wilt toepassen."
 
 #: ../lilykde/hyphen.py:94
 msgid "Language selection"
