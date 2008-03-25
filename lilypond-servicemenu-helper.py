@@ -1,52 +1,66 @@
-#!/python
+#! python
 
 import sys, os
-from subprocess import Popen, PIPE, STDOUT
 
-from qt import *
-from kdecore import *
-from kdeui import *
+from kdecore import KApplication, KURL, KStandardDirs, KCmdLineArgs
 
-def runLilyPond(paths, log):
-    global app
-    """
-    Run Lilypond on a list of paths.
-    If some paths are in the same directory, lilypond is run once.
-    """
-    # collect the directories
-    dirs = {}
-    for p in paths:
-        path, file = os.path.split(os.path.abspath(p))
-        dirs.setdefault(path,[]).append(file)
+# Find LilyKDE
+sys.path[0:0] = map(os.path.normpath, map(str,
+    KStandardDirs().findDirs("data", "lilykde")))
 
-    retcode = 0
-    cmd = ["lilypond", "--pdf"]
-    for path in dirs:
-        p = Popen(cmd + dirs[path], cwd=path, stdout=PIPE, stderr=STDOUT)
-        for line in p.stdout:
-            log.append(line.strip())
-            log.repaint()
-            app.processEvents()
-        retcode = max(retcode, p.wait())
-    return retcode
+
+from lilykde.runlily import LyFile, LyJob
+from lilykde.widgets import LogWidget
+
+class File(LyFile):
+
+    def __init__(self, path):
+        self.kurl = KURL(os.path.abspath(path))
+        self.path = unicode(self.kurl.path()) # the full path to the ly file
+        self.ly = os.path.basename(self.path)
+        self.directory = os.path.dirname(self.path)
+        self.basename, self.extension = os.path.splitext(self.ly)
+        self.pdf = self.ly and os.path.join(
+            self.directory, self.basename + ".pdf") or None
+
+    def isLyFile(self):
+        return self.extension in ('.ly', '.ily', 'lyi')
+
+
+class Job(LyJob):
+
+    def __init__(self, files, log):
+        if files:
+            self.f = File(files[0])
+            self.files = files[1:]
+            LyJob.__init__(self, self.f, log)
+            self._run(['--pdf', self.f.ly])
+
+    def completed(self, success):
+        if success:
+            Job(self.files, self.log)
 
 def main():
-    global app, log
     KCmdLineArgs.init (sys.argv, "lilypond-servicemenu-helper", "", "1.0")
     KCmdLineArgs.addCmdLineOptions([("+files", "LilyPond files to convert")])
     app = KApplication()
-    log = KTextBrowser()
+    log = LogWidget()
     app.setMainWidget(log)
-    #log.setMinimumHeight(240)
-    #log.setMinimumWidth(400)
+    log.setMinimumHeight(240)
+    log.setMinimumWidth(400)
     log.show()
-    QTimer.singleShot(1000, run)
+
+    # get the files to convert
+    pa = KCmdLineArgs.parsedArgs()
+    files = map(os.path.abspath, map(pa.arg, range(pa.count())))
+
+    # start the first job. Itself takes care of running the rest.
+    Job(files, log)
     app.exec_loop()
 
-def run():
-    global app, log
-    pa = KCmdLineArgs.parsedArgs()
-    files = map(pa.arg, range(pa.count()))
-    runLilyPond(files, log)
 
 main()
+
+
+
+# kate: indent-width 4;

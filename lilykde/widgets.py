@@ -62,7 +62,7 @@ class LogWidget(KTextBrowser):
     """
     A LogWidget that displays LilyPond output
     """
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         KTextBrowser.__init__(self, parent, None, True)
         self.setTextFormat(Qt.RichText)
         self.setFont(QFont("Sans", 9))

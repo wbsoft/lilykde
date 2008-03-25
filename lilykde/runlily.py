@@ -113,7 +113,7 @@ class LyJob(kprocess):
     """
     To be subclassed.
     Class to run a lilypond job. Expects a LyFile object with all the data, and
-    a LogWindow to write stdout and stderr to.
+    a LogWidget to write stdout and stderr to.
     """
     def __init__(self, f, log):
         super(LyJob, self).__init__()
