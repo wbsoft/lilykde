@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-22 19:12+0100\n"
+"POT-Creation-Date: 2008-03-25 11:03+0100\n"
 "PO-Revision-Date: 2008-03-21 23:55+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -218,20 +218,20 @@ msgstr ""
 msgid "Could not start convert-ly: %s"
 msgstr "Kan convert-ly niet starten: %s"
 
-#: ../lilykde/log.py:21
+#: ../lilykde/log.py:14
 msgid "LilyPond Log"
 msgstr "LilyPond-uitvoer"
 
-#: ../lilykde/log.py:79
+#: ../lilykde/logwidget.py:73
 #, python-format
 msgid "Printing failed: %s"
 msgstr "Het afdrukken is mislukt: %s"
 
-#: ../lilykde/log.py:81
+#: ../lilykde/logwidget.py:75
 msgid "The document has been sent to the printer."
 msgstr "Het document is naar de printer gestuurd."
 
-#: ../lilykde/log.py:84
+#: ../lilykde/logwidget.py:78
 msgid ""
 "This PDF has been created with point-and-click urls (preview mode), which "
 "increases the file size dramatically. It's better to email documents without "

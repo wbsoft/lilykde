@@ -3,7 +3,7 @@
 import re
 
 from qt import SIGNAL, Qt, QApplication, QCursor, QObject, QTimer, QStringList
-from kdecore import KConfig, KConfigGroup, KProcess, KURL
+from kdecore import KApplication, KConfig, KConfigGroup, KProcess, KURL
 from kio import KRun
 from kdeui import KMessageBox
 
@@ -13,7 +13,7 @@ import kate.gui
 from lilykde.i18n import _
 
 def popup(message, timeout=5, **a):
-    a.setdefault('parent', kate.mainWidget().topLevelWidget())
+    a.setdefault('parent', KApplication.mainWidget().topLevelWidget())
     kate.gui.showPassivePopup(message, timeout, **a)
 
 def error(message, **a):
@@ -26,7 +26,7 @@ def info(message, **a):
     popup(message, icon="messagebox_info", **a)
 
 def warncontinue(message):
-    return KMessageBox.warningContinueCancel(kate.mainWidget(),message) == \
+    return KMessageBox.warningContinueCancel(KApplication.mainWidget(),message) == \
         KMessageBox.Continue
 
 def busy(b=True, cursor=QCursor(Qt.BusyCursor)):
