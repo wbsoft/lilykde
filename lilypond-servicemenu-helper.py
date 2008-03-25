@@ -13,6 +13,10 @@ from lilykde.about import *
 from lilykde.runlily import LyFile, LyJob
 from lilykde.widgets import LogWidget
 
+# Translate the messages
+from lilykde.i18n import _
+
+
 class File(LyFile):
 
     def __init__(self, path):
@@ -30,16 +34,23 @@ class File(LyFile):
 
 class Job(LyJob):
 
-    def __init__(self, files, log):
+    def __init__(self, files, log, numFailed=0):
         if files:
+            self.numFailed = numFailed
             self.f = File(files[0])
             self.files = files[1:]
             LyJob.__init__(self, self.f, log)
             self._run(['--pdf', self.f.ly])
+        else:
+            if numFailed:
+                log.fail(_("Failed documents: %d") % numFailed)
+            else:
+                log.ok(_("All documents successfully converted."))
 
     def completed(self, success):
-        if success:
-            Job(self.files, self.log)
+        if not success:
+            self.numFailed += 1
+        Job(self.files, self.log, self.numFailed)
 
 
 def main():

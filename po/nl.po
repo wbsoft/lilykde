@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-25 14:35+0100\n"
-"PO-Revision-Date: 2008-03-21 23:55+0100\n"
+"POT-Creation-Date: 2008-03-25 19:16+0100\n"
+"PO-Revision-Date: 2008-03-25 19:12+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -300,3 +300,15 @@ msgid ""
 msgstr ""
 "Selecteer de acties die u wilt laten weergeven (indien van toepassing) nadat "
 "LilyPond uw document succesvol heeft verwerkt."
+
+#: ../lilypond-servicemenu-helper.py:46
+#, python-format
+msgid "Failed documents: %d"
+msgstr "Aantal gefaalde documenten: %d"
+
+#: ../lilypond-servicemenu-helper.py:48
+msgid "All documents successfully converted."
+msgstr "Alle documenten zijn succesvol geconverteerd."
+
+#~ msgid "LilyPond files to convert"
+#~ msgstr "Te converteren LilyPond-bestanden"

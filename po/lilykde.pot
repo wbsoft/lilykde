@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lilykde 0.4.9\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-25 16:04+0100\n"
+"POT-Creation-Date: 2008-03-25 19:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -268,4 +268,13 @@ msgstr ""
 msgid ""
 "Check the actions you want to display (if applicable) after LilyPond has "
 "successfully compiled your document."
+msgstr ""
+
+#: ../lilypond-servicemenu-helper.py:46
+#, python-format
+msgid "Failed documents: %d"
+msgstr ""
+
+#: ../lilypond-servicemenu-helper.py:48
+msgid "All documents successfully converted."
 msgstr ""
