@@ -21,9 +21,5 @@ tool.show()
 show = tool.show
 hide = tool.hide
 
-clear   = log.clear
-append  = log.append
-msg     = log.msg
-ok      = log.ok
-fail    = log.fail
-actions = log.actions
+def logWidget():
+    return log

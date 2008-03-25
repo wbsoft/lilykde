@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-25 11:03+0100\n"
+"POT-Creation-Date: 2008-03-25 12:23+0100\n"
 "PO-Revision-Date: 2008-03-21 23:55+0100\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -41,83 +41,83 @@ msgstr ""
 "Versie: $version\n"
 "Homepage: $homepage\n"
 
-#: ../lilykde/runlily.py:135
+#: ../lilykde/runlily.py:136
 msgid "LilyPond [$filename] starting ($mode)..."
 msgstr "LilyPond [$filename] wordt gestart ($mode)..."
 
-#: ../lilykde/runlily.py:138
+#: ../lilykde/runlily.py:139
 msgid "LilyPond [$filename] starting..."
 msgstr "LilyPond [$filename] wordt gestart..."
 
-#: ../lilykde/runlily.py:140
+#: ../lilykde/runlily.py:141
 msgid "Could not start LilyPond."
 msgstr "Kan LilyPond niet starten."
 
-#: ../lilykde/runlily.py:148
+#: ../lilykde/runlily.py:149
 #, python-format
 msgid "LilyPond was terminated by signal %d."
 msgstr "LilyPond werd beëindigd door signaal %d."
 
-#: ../lilykde/runlily.py:152
+#: ../lilykde/runlily.py:153
 #, python-format
 msgid "LilyPond exited with return code %d."
 msgstr "LilyPond stopte met foutcode %d."
 
-#: ../lilykde/runlily.py:154
+#: ../lilykde/runlily.py:155
 msgid "LilyPond [$filename] finished."
 msgstr "LilyPond [$filename] voltooid."
 
-#: ../lilykde/runlily.py:158
+#: ../lilykde/runlily.py:159
 msgid "LilyPond exited abnormally."
 msgstr "Het LilyPond-proces werd afgebroken."
 
-#: ../lilykde/runlily.py:174
+#: ../lilykde/runlily.py:175
 msgid "preview mode"
 msgstr "vooruitblik"
 
-#: ../lilykde/runlily.py:176
+#: ../lilykde/runlily.py:177
 msgid "publish mode"
 msgstr "publiceren"
 
-#: ../lilykde/runlily.py:188 ../lilykde/settings.py:153
+#: ../lilykde/runlily.py:189 ../lilykde/settings.py:153
 msgid "Open folder"
 msgstr "Map openen"
 
-#: ../lilykde/runlily.py:192 ../lilykde/settings.py:154
+#: ../lilykde/runlily.py:193 ../lilykde/settings.py:154
 msgid "Open PDF"
 msgstr "PDF weergeven"
 
-#: ../lilykde/runlily.py:194 ../lilykde/settings.py:155
+#: ../lilykde/runlily.py:195 ../lilykde/settings.py:155
 msgid "Print"
 msgstr "Afdrukken"
 
-#: ../lilykde/runlily.py:201
+#: ../lilykde/runlily.py:202
 msgid "Email PDF (preview)"
 msgstr "PDF e-mailen (vooruitblik)"
 
-#: ../lilykde/runlily.py:204 ../lilykde/settings.py:156
+#: ../lilykde/runlily.py:205 ../lilykde/settings.py:156
 msgid "Email PDF"
 msgstr "PDF e-mailen"
 
-#: ../lilykde/runlily.py:206
+#: ../lilykde/runlily.py:207
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
 "\\layout</b> vergeten?"
 
-#: ../lilykde/runlily.py:210 ../lilykde/settings.py:157
+#: ../lilykde/runlily.py:211 ../lilykde/settings.py:157
 msgid "Play MIDI"
 msgstr "MIDI afspelen"
 
-#: ../lilykde/runlily.py:224
+#: ../lilykde/runlily.py:225
 msgid "Your document currently has no filename, please save first."
 msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:228
+#: ../lilykde/runlily.py:229
 msgid "Your document has been modified, please save first."
 msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:234
+#: ../lilykde/runlily.py:235
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -162,20 +162,20 @@ msgstr "Liedteksten afbreken"
 msgid "Remove hyphenation"
 msgstr "Liedtekst-afbreking verwijderen"
 
-#: ../lilykde/version.py:31
+#: ../lilykde/version.py:32
 #, python-format
 msgid "Could not start LilyPond: %s"
 msgstr "Kan LilyPond niet starten: %s"
 
-#: ../lilykde/version.py:38
+#: ../lilykde/version.py:39
 msgid "unknown"
 msgstr "onbekend"
 
-#: ../lilykde/version.py:46
+#: ../lilykde/version.py:47
 msgid "Your document has already a LilyPond version statement."
 msgstr "Uw document heeft reeds een LilyPond versie-commando."
 
-#: ../lilykde/version.py:66
+#: ../lilykde/version.py:67
 msgid ""
 "Can't determine the LilyPond version of the current document. Please add a "
 "\\version statement with the correct version."
@@ -183,18 +183,18 @@ msgstr ""
 "Kan de LilyPond-versie van het huidige document niet bepalen. Voeg een "
 "\\version commando toe met de correcte versie van het document."
 
-#: ../lilykde/version.py:69
+#: ../lilykde/version.py:70
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
 msgstr ""
 "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
-#: ../lilykde/version.py:72
+#: ../lilykde/version.py:73
 msgid "This LilyPond document is already up-to-date."
 msgstr "Dit LilyPond-document is reeds bijgewerkt."
 
-#: ../lilykde/version.py:96
+#: ../lilykde/version.py:97
 msgid ""
 "The document has been processed with convert-ly. You'll find the messages of "
 "convert-ly in a comment block at the end. You still may have to edit some "
@@ -204,7 +204,7 @@ msgstr ""
 "u aan het eind in een commentaarblok. Het kan zijn dat u bepaalde "
 "wijzigingen nog handmatig dient door te voeren."
 
-#: ../lilykde/version.py:102
+#: ../lilykde/version.py:103
 #, python-format
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
@@ -213,7 +213,7 @@ msgstr ""
 "Het document is verwerkt door convert-ly, maar bleef ongewijzigd. Dit is de "
 "melding die convert-ly gaf: %s"
 
-#: ../lilykde/version.py:106
+#: ../lilykde/version.py:107
 #, python-format
 msgid "Could not start convert-ly: %s"
 msgstr "Kan convert-ly niet starten: %s"
@@ -222,16 +222,16 @@ msgstr "Kan convert-ly niet starten: %s"
 msgid "LilyPond Log"
 msgstr "LilyPond-uitvoer"
 
-#: ../lilykde/logwidget.py:73
+#: ../lilykde/logwidget.py:74
 #, python-format
 msgid "Printing failed: %s"
 msgstr "Het afdrukken is mislukt: %s"
 
-#: ../lilykde/logwidget.py:75
+#: ../lilykde/logwidget.py:76
 msgid "The document has been sent to the printer."
 msgstr "Het document is naar de printer gestuurd."
 
-#: ../lilykde/logwidget.py:78
+#: ../lilykde/logwidget.py:79
 msgid ""
 "This PDF has been created with point-and-click urls (preview mode), which "
 "increases the file size dramatically. It's better to email documents without "
@@ -247,15 +247,15 @@ msgstr ""
 msgid "PDF"
 msgstr "PDF"
 
-#: ../lilykde/util.py:118
+#: ../lilykde/kateutil.py:18
 msgid "Please select some text first."
 msgstr "Selecteer eerst de tekst waarop u de functie wilt toepassen."
 
-#: ../lilykde/hyphen.py:93
+#: ../lilykde/hyphen.py:94
 msgid "Language selection"
 msgstr "Taalkeuze"
 
-#: ../lilykde/hyphen.py:94
+#: ../lilykde/hyphen.py:95
 msgid "Please select a language:"
 msgstr "Selecteer een taal:"
 

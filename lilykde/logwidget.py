@@ -12,6 +12,7 @@ from kdeui import KTextBrowser
 
 from lilykde import config
 from lilykde.util import keepspaces, htmlescapeurl, htmlescape, krun
+from lilykde.uiutil import warncontinue
 
 # translate the messages
 from lilykde.i18n import _

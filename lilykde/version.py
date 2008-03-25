@@ -7,8 +7,9 @@ import re
 from subprocess import Popen, PIPE
 import kate
 
-# Some popups, utils
-from lilykde.util import timer, info, sorry, error
+# Some utils, popups
+from lilykde.util import timer
+from lilykde.uiutil import info, sorry, error
 
 # config backend
 from lilykde import config

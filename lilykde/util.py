@@ -3,31 +3,11 @@
 import re
 
 from qt import SIGNAL, Qt, QApplication, QCursor, QObject, QTimer, QStringList
-from kdecore import KApplication, KConfig, KConfigGroup, KProcess, KURL
+from kdecore import KConfig, KConfigGroup, KProcess, KURL
 from kio import KRun
-from kdeui import KMessageBox
 
-import kate
-import kate.gui
-
+# translate the messages
 from lilykde.i18n import _
-
-def popup(message, timeout=5, **a):
-    a.setdefault('parent', KApplication.mainWidget().topLevelWidget())
-    kate.gui.showPassivePopup(message, timeout, **a)
-
-def error(message, **a):
-    popup(message, icon="error", **a)
-
-def sorry(message, **a):
-    popup(message, icon="messagebox_warning", **a)
-
-def info(message, **a):
-    popup(message, icon="messagebox_info", **a)
-
-def warncontinue(message):
-    return KMessageBox.warningContinueCancel(KApplication.mainWidget(),message) == \
-        KMessageBox.Continue
 
 def busy(b=True, cursor=QCursor(Qt.BusyCursor)):
     """
@@ -100,31 +80,12 @@ def timer(msec):
 
 def onSignal(sender, signal, saveObj=None):
     """
-    A decorator that connects a function to a Qt signal.
+    A decorator that connects its function to a Qt signal.
     """
     def sig(func):
         QObject.connect(sender, SIGNAL(signal), func)
         return func
     return sig
-
-def runOnSelection(func):
-    """
-    Decorator that makes a function run on the selection,
-    and replaces the selection with its output if not None
-    """
-    def selFunc():
-        sel = kate.view().selection
-        if not sel.exists:
-            sorry(_("Please select some text first."))
-            return
-        d, v, text = kate.document(), kate.view(), sel.text
-        text = func(text)
-        if text is not None:
-            d.editingSequence.begin()
-            sel.removeSelectedText()
-            v.insertText(text)
-            d.editingSequence.end()
-    return selFunc
 
 # Some helper or wrapper classes
 class _kconfigbase(object):

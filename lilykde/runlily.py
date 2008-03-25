@@ -14,6 +14,7 @@ from kdecore import KURL
 
 # Some utility functions
 from lilykde.util import *
+from lilykde.uiutil import *
 
 # config settings
 from lilykde import config
@@ -236,7 +237,7 @@ def runLilyPond(doc, preview=False):
         return
 
     from lilykde import log
-    Ly2PDF(f, log).run(preview)
+    Ly2PDF(f, log.logWidget()).run(preview)
 
 def interrupt(doc):
     """

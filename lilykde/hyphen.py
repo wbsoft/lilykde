@@ -13,7 +13,8 @@ from kdeui import KInputDialog
 import kate
 
 from lilykde.i18n import _
-from lilykde.util import py2qstringlist, runOnSelection, kconfig
+from lilykde.util import py2qstringlist, kconfig
+from lilykde.kateutil import runOnSelection
 
 from lilykde import config
 
