@@ -131,32 +131,34 @@ class LyJob(kprocess):
 
     def _run(self, args, mode=None):
         self.setArguments(args)
+        a = dict(filename = self.f.ly, mode = mode)
         if mode:
-            self.log.ok(
-                _("LilyPond [$filename] starting ($mode)...").args(
-                filename = self.f.ly, mode = mode))
+            self.log.ok(_("LilyPond [$filename] starting ($mode)...").args(a))
         else:
-            self.log.ok(_("LilyPond [$filename] starting...").args(
-                filename = self.f.ly))
+            self.log.ok(_("LilyPond [$filename] starting...").args(a))
         self.start() or self.log.fail(_("Could not start LilyPond."))
 
     def _finish(self):
         self.stdout.close()
         self.stderr.close()
         success = False
+        a = dict(filename = self.f.ly,
+                 signal   = self.exitSignal(),
+                 retcode  = self.exitStatus())
         if self.signalled():
-            self.log.fail(
-              _("LilyPond was terminated by signal %d.") % self.exitSignal())
+            self.log.fail(_(
+                "LilyPond [$filename] was terminated by signal $signal."
+                ).args(a))
         elif self.normalExit():
             if self.exitStatus() != 0:
-                self.log.fail(
-                _("LilyPond exited with return code %d.") % self.exitStatus())
+                self.log.fail(_(
+                    "LilyPond [$filename] exited with return code $retcode."
+                    ).args(a))
             else:
-                self.log.ok(_("LilyPond [$filename] finished.").args(
-                    filename = self.f.ly))
+                self.log.ok(_("LilyPond [$filename] finished.").args(a))
                 success = True
         else:
-            self.log.fail(_("LilyPond exited abnormally."))
+            self.log.fail(_("LilyPond [$filename] exited abnormally.").args(a))
         self.completed(success)
 
     @staticmethod

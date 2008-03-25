@@ -53,11 +53,11 @@ class Settings(QFrame):
 
     def loadSettings(self):
         for m in self.modules:
-            m.load(config())
+            m.load()
 
     def saveSettings(self):
         for m in self.modules:
-            m.save(config())
+            m.save()
 
     def defaults(self):
         for m in self.modules:
@@ -87,13 +87,13 @@ class CommandSettings(QFrame):
         for n, w, d in self.commands:
             w.setText(d)
 
-    def load(self, c):
-        conf = c.group("commands")
+    def load(self):
+        conf = config("commands")
         for n, w, d in self.commands:
             w.setText(conf.get(n, d))
 
-    def save(self, c):
-        conf = c.group("commands")
+    def save(self):
+        conf = config("commands")
         for n, w, d in self.commands:
             if w.text():
                 conf[n] = w.text()
@@ -119,14 +119,14 @@ class HyphenSettings(QFrame):
         from lilykde.hyphen import defaultpaths
         self.pathList.setText('\n'.join(defaultpaths))
 
-    def load(self, c):
-        conf = c.group("hyphenation")
+    def load(self):
+        conf = config("hyphenation")
         from lilykde.hyphen import defaultpaths
         paths = conf["paths"] or '\n'.join(defaultpaths)
         self.pathList.setText(paths)
 
-    def save(self, c):
-        conf = c.group("hyphenation")
+    def save(self):
+        conf = config("hyphenation")
         conf["paths"] = self.pathList.text()
         import lilykde.hyphen
         lilykde.hyphen.findDicts()
@@ -161,16 +161,16 @@ class ActionSettings(QFrame):
         for a, w in self.actions:
             w.setChecked(True)
 
-    def load(self, c):
-        conf = c.group("actions")
+    def load(self):
+        conf = config("actions")
         for a, w in self.actions:
             check = bool(conf[a] != '0')
             w.setChecked(check)
 
-    def save(self, c):
-        conf = c.group("actions")
+    def save(self):
+        conf = config("actions")
         for a, w in self.actions:
-            conf[a] = 1 and w.isChecked() or 0
+            conf[a] = w.isChecked() and 1 or 0
 
 
 # kate: indent-width 4;

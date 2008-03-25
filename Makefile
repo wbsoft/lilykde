@@ -107,6 +107,7 @@ install-plugin: lilykde/about.py
 	@cd $(PYPLUGINS) && $(PYCOMPILE) lilypond.py
 	@echo Installing Python package lilykde:
 	@mkdir -p $(LILYKDE)/lilykde
+	@cd $(LILYKDE)/lilykde && rm -f *.py*
 	cp lilykde/*.py $(LILYKDE)/lilykde/
 	@cd $(LILYKDE)/lilykde && $(PYCOMPILE) *.py
 	@echo Installing Python module hyphenator:
