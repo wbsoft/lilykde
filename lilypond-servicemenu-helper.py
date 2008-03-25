@@ -2,13 +2,14 @@
 
 import sys, os
 
-from kdecore import KApplication, KURL, KStandardDirs, KCmdLineArgs
+from kdecore import KAboutData, KApplication, KURL, KStandardDirs, KCmdLineArgs
 
 # Find LilyKDE
 sys.path[0:0] = map(os.path.normpath, map(str,
     KStandardDirs().findDirs("data", "lilykde")))
 
 
+from lilykde.about import *
 from lilykde.runlily import LyFile, LyJob
 from lilykde.widgets import LogWidget
 
@@ -40,14 +41,21 @@ class Job(LyJob):
         if success:
             Job(self.files, self.log)
 
+
 def main():
-    KCmdLineArgs.init (sys.argv, "lilypond-servicemenu-helper", "", "1.0")
+    aboutData = KAboutData(
+        "LilyKDE", "LilyKDE", VERSION,
+        "LilyKDE servicemenu helper", KAboutData.License_LGPL,
+        "Copyright (c) 2008, " + AUTHOR,
+        "", HOMEPAGE)
+    KCmdLineArgs.init (sys.argv, aboutData)
     KCmdLineArgs.addCmdLineOptions([("+files", "LilyPond files to convert")])
     app = KApplication()
     log = LogWidget()
     app.setMainWidget(log)
     log.setMinimumHeight(240)
     log.setMinimumWidth(400)
+    log.setCaption("LilyKDE")
     log.show()
 
     # get the files to convert
@@ -60,7 +68,6 @@ def main():
 
 
 main()
-
 
 
 # kate: indent-width 4;
