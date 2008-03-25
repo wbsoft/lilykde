@@ -9,7 +9,7 @@ You can call actions by calling e.g. lymenu.publish.activate()
 import sys
 import kate
 
-# translate the messages
+# Translate the messages
 from lilykde.i18n import _
 
 # setup LilyPond menu. Somehow it seems not to be possible to use pate's
@@ -17,6 +17,7 @@ from lilykde.i18n import _
 # The menu is not yet created, etc. Just setup our own.
 from kdecore import KShortcut
 from kdeui import KAction, KActionMenu, KActionSeparator
+
 
 class Menu(KActionMenu):
     def add(self, text, key="", icon=""):

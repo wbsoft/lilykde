@@ -8,8 +8,9 @@ from qt import QWidget
 
 from lilykde.widgets import LogWidget
 
-# translate the messages
+# Translate the messages
 from lilykde.i18n import _
+
 
 tool = kate.gui.Tool(_("LilyPond Log"), "log", kate.gui.Tool.bottom)
 log = LogWidget(tool.widget)

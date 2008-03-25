@@ -108,7 +108,7 @@ def runAction(url):
     command, url = m.groups()
     if command == 'print':
         path = unicode(KURL(url).path())
-        cmd = shlex.split(str(config.group("commands").get("lpr", "lpr")))
+        cmd = shlex.split(str(config("commands").get("lpr", "lpr")))
         cmd.append(path)
         p = Popen(cmd, stderr=PIPE)
         if p.wait() != 0:
@@ -124,3 +124,5 @@ def runAction(url):
             KApplication.kApplication().invokeMailer(
                 KURL(u"mailto:?attach=%s" % url), "", True)
 
+
+# kate: indent-width 4;

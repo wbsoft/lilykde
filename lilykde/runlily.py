@@ -6,8 +6,7 @@ This part is loaded when the LilyPond is first called.
 
 """
 
-import re
-import os
+import re, os
 
 from qt import SIGNAL, QString, QObject
 from kdecore import KURL
@@ -19,8 +18,9 @@ from lilykde.widgets import sorry
 # config settings
 from lilykde import config
 
-# translate the messages
+# Translate the messages
 from lilykde.i18n import _
+
 
 # Classes
 
@@ -118,7 +118,7 @@ class LyJob(kprocess):
     def __init__(self, f, log):
         super(LyJob, self).__init__()
         self.f = f
-        self.setExecutable(config.group("commands").get("lilypond", "lilypond"))
+        self.setExecutable(config("commands").get("lilypond", "lilypond"))
         self.setWorkingDirectory(f.directory)
         self.log = log
         self.stdout = Outputter(log, f)
@@ -182,7 +182,7 @@ class Ly2PDF(LyJob):
     def completed(self, success):
         if success and self.f.pdf:
             def act(action):
-                return int(config.group("actions").get(action, 1))
+                return int(config("actions").get(action, 1))
             actions = []
             if act("open_folder"):
                 actions.append(("file://%s" % self.f.directory,

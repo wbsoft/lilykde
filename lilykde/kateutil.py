@@ -7,6 +7,7 @@ import kate
 # Translate the messages
 from lilykde.i18n import _
 
+
 def runOnSelection(func):
     """
     A decorator that makes a function run on the selection,

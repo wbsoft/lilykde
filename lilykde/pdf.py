@@ -7,8 +7,9 @@ from qt import QWidget
 from kdecore import KURL
 from kparts import createReadOnlyPart
 
-# translate the messages
+# Translate the messages
 from lilykde.i18n import _
+
 
 tool = kate.gui.Tool(_("PDF"), "pdf", kate.gui.Tool.right)
 pdfpart = createReadOnlyPart("libkpdfpart", tool.widget)

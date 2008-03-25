@@ -23,6 +23,7 @@ from lilykde import config
 # Translate the messages
 from lilykde.i18n import _
 
+
 __doc__ = _(
     "A LilyPond Kate/Pate plugin.\n"
     "\n"
@@ -43,7 +44,7 @@ __doc__ = _(
 @kate.onWindowShown
 def initLilyPond():
     # run the install script if this is the first run or an upgrade
-    conf = config.master()
+    conf = config()
     if "version" not in conf or conf["version"] != VERSION:
         import lilykde.install
         conf["version"] = VERSION

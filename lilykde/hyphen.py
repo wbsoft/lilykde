@@ -12,11 +12,14 @@ from kdeui import KInputDialog
 
 import kate
 
-from lilykde.i18n import _
 from lilykde.util import py2qstringlist, kconfig
 from lilykde.kateutil import runOnSelection
 
 from lilykde import config
+
+# Translate the messages
+from lilykde.i18n import _
+
 
 defaultpaths = (
     '/opt/OpenOffice.org/share/dict/ooo',
@@ -30,7 +33,7 @@ defaultpaths = (
 hyphdicts = {}
 
 def findDicts():
-    conf = config.group("hyphenation")
+    conf = config("hyphenation")
     paths = conf["paths"].splitlines() or defaultpaths
     # build a list of existing paths.
     # is the path is not absolute, try with all known prefixes.
@@ -86,7 +89,7 @@ def askLanguage():
     Ask the user which language to use.
     Returns None if the user cancels the dialog.
     """
-    conf = config.group("hyphenation")
+    conf = config("hyphenation")
     lang = conf["lastused"] or ""
     langs = list(sorted(hyphdicts.keys()))
     index = lang in langs and langs.index(lang) or 0

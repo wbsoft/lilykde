@@ -6,8 +6,9 @@ from qt import SIGNAL, Qt, QApplication, QCursor, QObject, QTimer, QStringList
 from kdecore import KConfig, KConfigGroup, KProcess, KURL
 from kio import KRun
 
-# translate the messages
+# Translate the messages
 from lilykde.i18n import _
+
 
 def busy(b=True, cursor=QCursor(Qt.BusyCursor)):
     """

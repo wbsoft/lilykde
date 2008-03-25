@@ -42,7 +42,7 @@ def install():
     """
     Main install functions, called always if this file is imported
     """
-    conf = config.master()
+    conf = config()
     if "version" not in conf:
         install_katefiletyperc()
 
