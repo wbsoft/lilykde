@@ -5,8 +5,11 @@ MSGMERGE = msgmerge
 MSGFMT = msgfmt
 
 DESTDIR =
-PREFIX = $(HOME)/.kde
-DATADIR = $(DESTDIR)$(PREFIX)/share
+PREFIX  := $(shell kde-config --localprefix | sed 's,/$$,,')
+ifeq ($(PREFIX),)
+PREFIX  := $(HOME)/.kde
+endif
+DATADIR := $(DESTDIR)$(PREFIX)/share
 
 LILYKDE = $(DATADIR)/apps/lilykde
 

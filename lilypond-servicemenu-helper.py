@@ -73,7 +73,7 @@ def main():
 
     # get the files to convert
     pa = KCmdLineArgs.parsedArgs()
-    files = map(os.path.abspath, map(pa.arg, range(pa.count())))
+    files = map(pa.arg, range(pa.count()))
 
     # start the first job. Itself takes care of running the rest.
     Job(files, log)
