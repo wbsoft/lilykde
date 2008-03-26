@@ -38,7 +38,8 @@ mofiles = $(patsubst %.po,%.mo,$(pofiles))
 all: $(mofiles)
 
 lilykde.pot: $(translate) ../VERSION
-	$(XGETTEXT) -o lilykde.pot \
+	$(XGETTEXT) --output=lilykde.pot --keyword= \
+		--keyword=_:1,2,3t --keyword=_:1,1t\
 		--package-name=$(PACKAGE) \
 		--package-version=$(VERSION) \
 		--msgid-bugs-address=$(EMAIL) \

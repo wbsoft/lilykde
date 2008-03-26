@@ -133,9 +133,9 @@ class LyJob(kprocess):
         self.setArguments(args)
         a = dict(filename = self.f.ly, mode = mode)
         if mode:
-            self.log.ok(_("LilyPond [$filename] starting ($mode)...").args(a))
+            self.log.msg(_("LilyPond [$filename] starting ($mode)...").args(a))
         else:
-            self.log.ok(_("LilyPond [$filename] starting...").args(a))
+            self.log.msg(_("LilyPond [$filename] starting...").args(a))
         self.start() or self.log.fail(_("Could not start LilyPond."))
 
     def _finish(self):

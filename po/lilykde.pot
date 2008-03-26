@@ -8,13 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lilykde 0.4.9\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-03-25 23:27+0100\n"
+"POT-Creation-Date: 2008-03-26 06:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: ../lilypond.py:28
 msgid ""
@@ -269,10 +270,11 @@ msgid ""
 msgstr ""
 
 #: ../lilypond-servicemenu-helper.py:46
-#, python-format
-msgid "Failed documents: %d"
-msgstr ""
+msgid "One document failed."
+msgid_plural "$count documents failed."
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../lilypond-servicemenu-helper.py:48
+#: ../lilypond-servicemenu-helper.py:50
 msgid "All documents successfully converted."
 msgstr ""

@@ -76,7 +76,7 @@ class LogWidget(KTextBrowser):
             text = "<font color=%s>%s</font>" % (color, text)
         KTextBrowser.append(self, text)
 
-    def msg(self, text, color=None, bold=False):
+    def msg(self, text, color=None, bold=True):
         self.append(u"* %s" % text, color, bold)
 
     def ok(self, text, color="darkgreen", bold=True):

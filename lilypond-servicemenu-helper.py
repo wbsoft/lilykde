@@ -43,7 +43,9 @@ class Job(LyJob):
             self._run(['--pdf', self.f.ly])
         else:
             if numFailed:
-                log.fail(_("Failed documents: %d") % numFailed)
+                log.fail(_("One document failed.",
+                           "$count documents failed.",
+                           numFailed).args(count = numFailed))
             else:
                 log.ok(_("All documents successfully converted."))
 
@@ -55,8 +57,8 @@ class Job(LyJob):
 
 def main():
     aboutData = KAboutData(
-        "LilyKDE", "LilyKDE", VERSION,
-        "LilyKDE servicemenu helper", KAboutData.License_LGPL,
+        PACKAGE, PROGRAMNAME, VERSION,
+        "LilyKDE servicemenu helper", KAboutData.License_GPL,
         "Copyright (c) 2008, " + AUTHOR,
         "", HOMEPAGE)
     KCmdLineArgs.init (sys.argv, aboutData)
@@ -66,7 +68,7 @@ def main():
     app.setMainWidget(log)
     log.setMinimumHeight(240)
     log.setMinimumWidth(400)
-    log.setCaption("LilyKDE")
+    log.setCaption(PROGRAMNAME)
     log.show()
 
     # get the files to convert
