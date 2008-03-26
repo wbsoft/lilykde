@@ -21,6 +21,7 @@ tool.show()
 # make these easily available
 show = tool.show
 hide = tool.hide
+clear = log.clear
 
 def logWidget():
     return log
