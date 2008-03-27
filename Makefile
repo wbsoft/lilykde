@@ -61,12 +61,11 @@ uninstall: $(uninstall)
 	rm -rf $(LILYKDE)
 
 dist:
-	@echo -n Creating $(DIST).zip ...
+	@echo -n Creating $(DIST).tar.gz ...
 	@svn export -q . $(DIST)
 	@-cd $(DIST) && make -s -C po
-	@zip -q -r $(DIST).zip $(DIST)
+	@tar zcf $(DIST).tar.gz $(DIST)
 	@rm -rf $(DIST)/
-	@echo done.
 
 install-mimetype: ly.png
 	@echo Installing LilyPond icon and mimetype:
