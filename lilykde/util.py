@@ -10,11 +10,13 @@ from kio import KRun
 from lilykde.i18n import _
 
 
-def busy(b=True, cursor=QCursor(Qt.BusyCursor)):
+def busy(b=True, cursor=None):
     """
     if True, set a busy mouse cursor for the whole app, otherwise unset.
     """
     if b:
+        if cursor is None:
+            cursor = QCursor(Qt.BusyCursor)
         QApplication.setOverrideCursor(cursor)
     else:
         QApplication.restoreOverrideCursor()
