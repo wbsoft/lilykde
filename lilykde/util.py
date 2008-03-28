@@ -87,7 +87,7 @@ def findexe(filename):
     """
     if os.path.isabs(os.path.expanduser(filename)):
         return isexe(os.path.expanduser(filename))
-    for p in (os.environ["PATH"] or os.defpath).split(os.pathsep):
+    for p in os.environ.get("PATH", os.defpath).split(os.pathsep):
         if isexe(os.path.join(p, filename)):
             return os.path.join(p, filename)
     return False
