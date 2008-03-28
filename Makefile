@@ -36,7 +36,7 @@ CONFIGDIR = $(DATADIR)/config
 
 PYCOMPILE = python -m py_compile
 
-# for making zip files
+# for making tarballs
 DIST = $(PACKAGE)-$(VERSION)
 
 all = ly.png lilykde/about.py
@@ -61,7 +61,7 @@ uninstall: $(uninstall)
 	rm -rf $(LILYKDE)
 
 dist:
-	@echo -n Creating $(DIST).tar.gz ...
+	@echo Creating $(DIST).tar.gz ...
 	@svn export -q . $(DIST)
 	@-cd $(DIST) && make -s -C po
 	@tar zcf $(DIST).tar.gz $(DIST)

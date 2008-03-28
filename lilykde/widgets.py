@@ -5,12 +5,12 @@ Widgets used in LilyKDE
 import re, shlex
 from subprocess import Popen, PIPE
 
-from qt import Qt, QFont, QObject, SIGNAL
+from qt import *
 from kdecore import KApplication, KURL
 from kdeui import KMessageBox, KTextBrowser
 
 from lilykde import config
-from lilykde.util import keepspaces, htmlescapeurl, htmlescape, krun
+from lilykde.util import findexe, keepspaces, htmlescapeurl, htmlescape, krun
 
 # Translate the messages
 from lilykde.i18n import _
@@ -123,6 +123,25 @@ def runAction(url):
             "because they are much smaller. Continue anyway?")):
             KApplication.kApplication().invokeMailer(
                 KURL(u"mailto:?attach=%s" % url), "", True)
+
+
+class ExecLineEdit(QLineEdit):
+    """
+    A QLineEdit to enter a filename or path.
+    The background changes to red if the entered path is not an
+    executable command.
+    """
+    def __init__(self, *args):
+        QLineEdit.__init__(self, *args)
+        self.connect(self, SIGNAL("textChanged(const QString&)"),
+            self._checkexec)
+
+    def _checkexec(self, filename):
+        if not findexe(str(filename)):
+            self.setPaletteBackgroundColor(QColor("#FAA"))
+        else:
+            self.unsetPalette()
+
 
 
 # kate: indent-width 4;

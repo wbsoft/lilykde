@@ -6,6 +6,7 @@ from qt import *
 from kdeui import KPushButton, KStdGuiItem
 
 from lilykde.util import htmlescape
+from lilykde.widgets import ExecLineEdit
 from lilykde import config
 
 # Translate the messages
@@ -79,7 +80,7 @@ class CommandSettings(QFrame):
             ('lpr', _("Printcommand:"), 'lpr'),
         ):
             self.layout.addWidget(QLabel(title, self), len(self.commands), 0)
-            widget = QLineEdit(self)
+            widget = ExecLineEdit(self)
             self.layout.addWidget(widget, len(self.commands), 1)
             self.commands.append((name, widget, default))
 

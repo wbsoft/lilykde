@@ -1,6 +1,7 @@
 """ Contains small often used utility functions """
 
 import re
+import os, stat
 
 from qt import SIGNAL, Qt, QApplication, QCursor, QObject, QTimer, QStringList
 from kdecore import KConfig, KConfigGroup, KProcess, KURL
@@ -70,6 +71,27 @@ def qstringlist2py(ql):
     """
     return map(unicode, ql)
 
+def isexe(path):
+    """
+    Return path if it is an executable file, otherwise False
+    """
+    if os.path.isfile(path) and os.stat(path).st_mode & stat.S_IEXEC:
+        return path
+    return False
+
+def findexe(filename):
+    """
+    Look up a filename in the system PATH, and return the full
+    path if it can be found. If the path is absolute, return it
+    unless it is not an executable file.
+    """
+    if os.path.isabs(os.path.expanduser(filename)):
+        return isexe(os.path.expanduser(filename))
+    for p in (os.environ["PATH"] or os.defpath).split(os.pathsep):
+        if isexe(os.path.join(p, filename)):
+            return os.path.join(p, filename)
+    return False
+
 # Some decorators
 def timer(msec):
     """
@@ -81,7 +103,7 @@ def timer(msec):
         return func
     return action
 
-def onSignal(sender, signal, saveObj=None):
+def onSignal(sender, signal):
     """
     A decorator that connects its function to a Qt signal.
     """
