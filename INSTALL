@@ -1,0 +1,46 @@
+LilyKDE Installation instructions
+=================================
+
+LilyKDE depends one some packages, that need to be installed first:
+
+package  tested   website
+         with:
+-------------------------
+KDE      3.5.8    http://www.kde.org/ (esp. Kate and KPDF)
+PyKDE    3.17.4   http://www.riverbankcomputing.co.uk/pykde/
+PyQt     3.16     http://www.riverbankcomputing.co.uk/pyqt/
+Python   2.4, 2.5 http://www.python.org/
+Pate     0.5.1    http://paul.giannaros.org/pate/
+
+Please use the tools of your operating system to install these
+prerequisites.  If you need to build Pate from source, install it to the
+same prefix as KDE, e.g. ./configure --prefix=$(kde-config --prefix)
+
+Then unpack the LilyKDE tarball (you obviously did :-) and cd into the
+extracted package:
+
+	tar zxf lilykde-x.x.tar.gz
+	cd lilykde-x.x/
+
+To install in your local ~/.kde directory, just type:
+
+	make install
+
+To install system-wide:
+
+	make
+	su
+	make PREFIX=$(kde-config --prefix) install
+
+Then launch Kate and enable Pate in Settings->Configure Kate->Plugins.
+As Pate starts, LilyKDE will start as well.  You can enable or disable
+Pate plugins using Settings->Configure Python Plugins.
+
+You may want to associate Kate with LilyPond files. Right-click a
+LilyPond file, select Properties, and click on the small configure icon.
+Then, under Applications for this filetype, click Add and select Kate or
+enter the command:
+
+	kate -u %U
+
+Close the dialogs by clicking OK.

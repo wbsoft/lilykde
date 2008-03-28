@@ -1,8 +1,5 @@
-LilyPond KDE Integration
-========================
-
-http://lilykde.googlecode.com/
-
+LilyKDE: LilyPond KDE Integration
+=================================
 
 This is a set of tools to integrate the very fine LilyPond music
 typesetter into KDE 3.x.
@@ -11,80 +8,46 @@ It currently consists of:
 
 * a Kate plugin (using Pate, written in Python) that can run LilyPond
   for you, embedding a PDF preview right into Kate and other nice
-  things
-
+  things.
 * A textedit service so you can click on the notes in the preview (or
-  any other PDF viewer) and have Kate jump to the correct position
-
-* Powerful LilyPond syntax highlighting (already part of KDE)
-
+  any other PDF viewer) and have Kate jump to the correct position.
+* Powerful LilyPond syntax highlighting (already part of KDE).
 * An icon and mimetype for *.ly files. The icon was taken from LilyPond.
-
 * Some settings in katefiletyperc, to indent LilyPond files nicely and
   always use utf8 encoding by default. These are installed on first run.
-
 * A Konqueror service menu to convert LilyPond files to PDF.
 
-
-Requirements
-============
-
-package  tested   website
-         with:
--------------------------
-KDE      3.5      http://www.kde.org/
-PyKDE    3.17.4   http://www.riverbankcomputing.co.uk/pykde/
-PyQt     3.16     http://www.riverbankcomputing.co.uk/pyqt/
-Python   2.4      http://www.python.org/
-Pate     0.5.1    http://paul.giannaros.org/pate/
-
-Please use the tools of your operating system to install these
-prerequisites.  If you need to build Pate from source, install it to the
-same prefix as KDE, e.g. ./configure --prefix=$(kde-config --prefix)
+See INSTALL for information about how to install LilyKDE.
 
 
-Installation
-============
+More information
+================
 
-To install in your local ~/.kde directory, type:
-
-	make install
-
-To install system-wide:
-
-	make
-	su
-	make PREFIX=$(kde-config --prefix) install
-
-Then launch Kate and enable Pate in Settings->Configure Kate->Plugins.
-As Pate starts, LilyKDE will start as well.  You can enable or disable
-Pate plugins using Settings->Configure Python Plugins.
-
-You may want to associate Kate with LilyPond files. Right-click a
-LilyPond file, select Properties, and click on the small configure icon.
-Then, under Applications for this filetype, click Add and select Kate or
-enter the command:
-
-	kate -u %U
-
-Close the dialogs by clicking OK.
+Homepage:        http://lilykde.googlecode.com/
+KDE-Apps.org:    http://www.kde-apps.org/content/show.php/LilyKDE?content=75241
+Mailing list:    http://groups.google.com/group/lilykde
+Bugs and wishes: http://code.google.com/p/lilykde/issues/list
 
 
 License and Disclaimer
 ======================
 
-This program is free software: you can redistribute it and/or modify it
-under the terms of the Library GNU General Public License as published
-by the Free Software Foundation, either version 2 of the License, or (at
-your option) any later version.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along
-with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-Contact: Wilbert Berendsen <info@wilbertberendsen.nl>
+
+Author
+======
+
+Wilbert Berendsen <lilykde@xs4all.nl>
 http://www.wilbertberendsen.nl/
