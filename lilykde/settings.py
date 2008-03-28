@@ -74,13 +74,21 @@ class CommandSettings(QFrame):
         self.title = _("Commands")
         self.layout = QGridLayout(self)
         self.commands = []
-        for name, title, default in (
-            ('lilypond', _("Lilypond:"), 'lilypond'),
-            ('convert-ly', _("Convert-ly:"), 'convert-ly'),
-            ('lpr', _("Printcommand:"), 'lpr'),
+        for name, default, title, tooltip in (
+            ('lilypond', 'lilypond', _("Lilypond:"),
+                _("Name or full path of the LilyPond program.")),
+            ('convert-ly', 'convert-ly', _("Convert-ly:"),
+                _("Name or full path of the convert-ly program.")),
+            ('lpr', 'lpr', _("Printcommand:"),
+                _("Command to print a PDF file, for example lpr or "
+                  "kprinter. You may add some arguments, e.g. "
+                  "lpr -P myprinter.")),
         ):
-            self.layout.addWidget(QLabel(title, self), len(self.commands), 0)
+            label = QLabel(title, self)
             widget = ExecLineEdit(self)
+            QToolTip.add(label, tooltip)
+            QToolTip.add(widget, tooltip)
+            self.layout.addWidget(label, len(self.commands), 0)
             self.layout.addWidget(widget, len(self.commands), 1)
             self.commands.append((name, widget, default))
 
@@ -145,17 +153,25 @@ class ActionSettings(QFrame):
             "Check the actions you want to display (if applicable) after "
             "LilyPond has successfully compiled your document.")), self))
 
-        def action(name, title):
+        def action(name, title, tooltip):
             widget = QCheckBox(title, self)
+            QToolTip.add(widget, tooltip)
             self.layout.addWidget(widget)
             return name, widget
 
         self.actions = (
-            action('open_folder', _("Open folder")),
-            action('open_pdf', _("Open PDF")),
-            action('print_pdf', _("Print")),
-            action('email_pdf', _("Email PDF")),
-            action('play_midi', _("Play MIDI")),
+            action('open_folder', _("Open folder"), _(
+                "Open the folder containing the LilyPond and PDF documents.")),
+            action('open_pdf', _("Open PDF"), _(
+                "Open the generated PDF file with the default PDF viewer.")),
+            action('print_pdf', _("Print"), _(
+                "Print the PDF using the print command set in the Commands "
+                "settings page.")),
+            action('email_pdf', _("Email PDF"), _(
+                "Attach the PDF to an email message.")),
+            action('play_midi', _("Play MIDI"), _(
+                "Play the generated MIDI files using the default MIDI player "
+                "(Timidity++ is recommended).")),
         )
 
     def defaults(self):
