@@ -1,8 +1,8 @@
 .PHONY: all install uninstall clean
 
 XGETTEXT = xgettext
-MSGMERGE = msgmerge
-MSGFMT = msgfmt
+MSGMERGE = msgmerge -v
+MSGFMT = msgfmt -v
 
 DESTDIR =
 PREFIX  := $(shell kde-config --localprefix | sed 's,/$$,,')
