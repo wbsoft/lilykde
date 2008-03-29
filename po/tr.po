@@ -1,0 +1,291 @@
+# translation of tr.po to Türkçe
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Server Acim <sacim@kde.org.tr>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: tr\n"
+"Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
+"POT-Creation-Date: 2008-03-27 08:43+0100\n"
+"PO-Revision-Date: 2008-03-29 21:59+0200\n"
+"Last-Translator: Server Acim <sacim@kde.org.tr>\n"
+"Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=1; plural=0;\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: ../lilypond.py:28
+msgid ""
+"A LilyPond Kate/Pate plugin.\n"
+"\n"
+"This is LilyKDE, a plugin to make it easy to run the LilyPond music "
+"typesetter from within Kate.\n"
+"\n"
+"If you also enable the Expand plugin, you get some nice shorthands for often "
+"used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in "
+"the Expand configuration dialog.\n"
+"\n"
+"Version: $version\n"
+"Homepage: $homepage\n"
+msgstr ""
+"Bir LilyPond Kate/Pate eklentisi.\n"
+"\n"
+"Bu bir Kate uygulamasından LilyPond nota yazma işlemlerini yapabilmenizi sağlayan bir eklentidir.\n"
+"\n"
+"Eğer, Expand eklentisini etkinleştirebiliseniz, daha çok LilyPond yapılarında kullanılan kolaylıklara sahip olabilirsiniz. Bunları görmek için, Expand yapılandırma penceresindeki x-lilypond MIME-Type özelliğine bakabilirsiniz..\n"
+"\n"
+"Version: $version\n"
+"Homepage: $homepage\n"
+
+#: ../lilykde/runlily.py:136
+msgid "LilyPond [$filename] starting ($mode)..."
+msgstr "LilyPond [$filename] başlıyor ($mode)..."
+
+#: ../lilykde/runlily.py:138
+msgid "LilyPond [$filename] starting..."
+msgstr "LilyPond [$filename] başlıyor..."
+
+#: ../lilykde/runlily.py:139
+msgid "Could not start LilyPond."
+msgstr "Lilypond başlatılamadı."
+
+#: ../lilykde/runlily.py:150
+msgid "LilyPond [$filename] was terminated by signal $signal."
+msgstr "LilyPond [$filename] sinyal tarafından durduruldu $signal."
+
+#: ../lilykde/runlily.py:155
+msgid "LilyPond [$filename] exited with return code $retcode."
+msgstr "LilyPond [$filename] dönüş koduyla çıktı $retcode."
+
+#: ../lilykde/runlily.py:158
+msgid "LilyPond [$filename] finished."
+msgstr "LilyPond [$filename] tamamlandı."
+
+#: ../lilykde/runlily.py:161
+msgid "LilyPond [$filename] exited abnormally."
+msgstr "LilyPond [$filename] anormal bir şekilde çıktı."
+
+#: ../lilykde/runlily.py:177
+msgid "preview mode"
+msgstr "önizleme kipi"
+
+#: ../lilykde/runlily.py:179
+msgid "publish mode"
+msgstr "yayınlama kipi"
+
+#: ../lilykde/runlily.py:191 ../lilykde/settings.py:153
+msgid "Open folder"
+msgstr "Dizin aç"
+
+#: ../lilykde/runlily.py:195 ../lilykde/settings.py:154
+msgid "Open PDF"
+msgstr "PDF aç"
+
+#: ../lilykde/runlily.py:197 ../lilykde/settings.py:155
+msgid "Print"
+msgstr "Yazdır"
+
+#: ../lilykde/runlily.py:204
+msgid "Email PDF (preview)"
+msgstr "PDF'yi e-posta ile gönder (önizleme)"
+
+#: ../lilykde/runlily.py:207 ../lilykde/settings.py:156
+msgid "Email PDF"
+msgstr "PDF'yi e-posta ile gönder"
+
+#: ../lilykde/runlily.py:209
+msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
+msgstr "LilyPond bir PDF. Büyük ihtimalle şunu eklemeyi unuttunuz <b>\\layout</b>?"
+
+#: ../lilykde/runlily.py:213 ../lilykde/settings.py:157
+msgid "Play MIDI"
+msgstr "MIDI çal"
+
+#: ../lilykde/runlily.py:227
+msgid "Your document currently has no filename, please save first."
+msgstr "Belgenize bir dosya adı vermediniz, lütfen önce kaydediniz."
+
+#: ../lilykde/runlily.py:231
+msgid "Your document has been modified, please save first."
+msgstr "Belgeniz değiştirildi, lütfen önce kaydediniz."
+
+#: ../lilykde/runlily.py:237
+msgid ""
+"Sorry, support for remote files is not yet implemented.\n"
+"Please save your document to a local file."
+msgstr ""
+"Üzgünüm, uzak dosya desteği henüz verilmiyor.\n"
+"Lütfen belgenizi yerel bir dosyaya kaydediniz."
+
+#: ../lilykde/menu.py:31
+msgid "LilyPond"
+msgstr "LilyPond"
+
+#: ../lilykde/menu.py:33
+msgid "Run LilyPond (preview)"
+msgstr "LilyPond'u çalıştır (önizleme)"
+
+#: ../lilykde/menu.py:38
+msgid "Run LilyPond (publish)"
+msgstr "LilyPond'u çalıştır (yayınla)"
+
+#: ../lilykde/menu.py:45
+msgid "Interrupt LilyPond Job"
+msgstr "Lilypond Görevini Durdur"
+
+#: ../lilykde/menu.py:50
+msgid "Clear LilyPond Log"
+msgstr "Lilypond Günlüğünü Temizle"
+
+#: ../lilykde/menu.py:57
+#, python-format
+msgid "Insert LilyPond version (%s)"
+msgstr "LilyPond Sürümünü ekle (%s)"
+
+#: ../lilykde/menu.py:64
+msgid "Update with convert-ly"
+msgstr "convert-ly ile Güncelle"
+
+#: ../lilykde/menu.py:71
+msgid "Hyphenate Lyrics Text"
+msgstr "Şarkı Sözleri Metnini Tirele"
+
+#: ../lilykde/menu.py:76
+msgid "Remove hyphenation"
+msgstr "Tirelemeyi kaldır"
+
+#: ../lilykde/version.py:32
+#, python-format
+msgid "Could not start LilyPond: %s"
+msgstr "LilyPond başlatılamadı: %s"
+
+#: ../lilykde/version.py:39
+msgid "unknown"
+msgstr "bilinmiyor"
+
+#: ../lilykde/version.py:47
+msgid "Your document has already a LilyPond version statement."
+msgstr "Belgenizde zaten Lilypond sürüm bildirimi var."
+
+#: ../lilykde/version.py:67
+msgid ""
+"Can't determine the LilyPond version of the current document. Please add a "
+"\\version statement with the correct version."
+msgstr "Bu dosyada Lilypond sürüm belirteci bulunmuyor. Lütfen, \\version belirtecini doğru sürüm numarasını kullanarak ekleyiniz."
+
+#: ../lilykde/version.py:70
+msgid ""
+"Can't determine the version of LilyPond. Please check your LilyPond "
+"installation."
+msgstr "Lilypond sürümü belirli değil. Lütfen, Lilypond kurulumunuzu denetleyin."
+
+#: ../lilykde/version.py:73
+msgid "This LilyPond document is already up-to-date."
+msgstr "Bu Lilypond belgesi zaten güncel."
+
+#: ../lilykde/version.py:97
+msgid ""
+"The document has been processed with convert-ly. You'll find the messages of "
+"convert-ly in a comment block at the end. You still may have to edit some "
+"parts manually."
+msgstr "Bu belge convert-ly ile işlenmiş. Convert-ly mesajlarını sondaki yorum bloğunda bulacaksınız. Bazı kısımları yine de elle düzenlemeniz gerekebilir."
+
+#: ../lilykde/version.py:103
+#, python-format
+msgid ""
+"The document has been processed with convert-ly, but remained unchanged. "
+"This is the message given by convert-ly: %s"
+msgstr "Belge, convert-ly ile işlenmiş, ancak değiştirlmeden kalmış. Bu ileti convert-ly tarafından hazırlanmıştır:%s"
+
+#: ../lilykde/version.py:107
+#, python-format
+msgid "Could not start convert-ly: %s"
+msgstr "convert-ly başlatılamadı: %s"
+
+#: ../lilykde/log.py:15
+msgid "LilyPond Log"
+msgstr "LilyPond Günlüğü"
+
+#: ../lilykde/pdf.py:14
+msgid "PDF"
+msgstr "PDF"
+
+#: ../lilykde/kateutil.py:19
+msgid "Please select some text first."
+msgstr "Lütfen önce bir metin seçiniz."
+
+#: ../lilykde/widgets.py:115
+#, python-format
+msgid "Printing failed: %s"
+msgstr "Yazdırma başarılamadı: %s"
+
+#: ../lilykde/widgets.py:117
+msgid "The document has been sent to the printer."
+msgstr "Belge yazıcıya gönderildi."
+
+#: ../lilykde/widgets.py:120
+msgid ""
+"This PDF has been created with point-and-click urls (preview mode), which "
+"increases the file size dramatically. It's better to email documents without "
+"point-and-click urls (publish mode), because they are much smaller. Continue "
+"anyway?"
+msgstr "Bu PDF dosya boyutunu önemli derecede arttıran işaretle-ve-tıkla bağlantısıyla yaratılmıştır. (önizleme kipi) Belgeleri işaretle-ve-tıkla bağlantısı olmadan e-mail ile göndermek önerilir (baskı kipi), çünkü bu dosyaların boyutu daha küçüktür. Yine de devam edilsin mi?"
+
+#: ../lilykde/hyphen.py:97
+msgid "Language selection"
+msgstr "Dil Seçimi"
+
+#: ../lilykde/hyphen.py:98
+msgid "Please select a language:"
+msgstr "Lütfen bir dil seçiniz:"
+
+#: ../lilykde/settings.py:73
+msgid "Commands"
+msgstr "Komutlar"
+
+#: ../lilykde/settings.py:77
+msgid "Lilypond:"
+msgstr "Lilypond:"
+
+#: ../lilykde/settings.py:78
+msgid "Convert-ly:"
+msgstr "Convert-ly:"
+
+#: ../lilykde/settings.py:79
+msgid "Printcommand:"
+msgstr "Yazdırma komutu:"
+
+#: ../lilykde/settings.py:108
+msgid "Hyphenation"
+msgstr "Tireleme"
+
+#: ../lilykde/settings.py:111
+msgid ""
+"Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
+"KOffice, etc, one per line. If you leave out the starting slash, the "
+"prefixes from the KDEDIRS environment variable are prepended."
+msgstr "Her satır için OpenOffice.org, Scribus, KOffice vb, uygulamalarında tireleme sözlüklerini arama yolları. Eğer başlangıç eğri çizgisini çıkarırsanız, KDEDIRS ortam değişkenlerinin önekleri kendiliğinde eklenir."
+
+#: ../lilykde/settings.py:141
+msgid "Actions"
+msgstr "İşlemler"
+
+#: ../lilykde/settings.py:144
+msgid ""
+"Check the actions you want to display (if applicable) after LilyPond has "
+"successfully compiled your document."
+msgstr "Lilypond belgenizi başarıyla derledikten sonra görüntülenmesini istediğiniz işlemleri denetleyiniz. (Eğer mümkünse)"
+
+#: ../lilypond-servicemenu-helper.py:46
+msgid "One document failed."
+msgid_plural "$count documents failed."
+msgstr[0] "One document failed."
+msgstr[1] ""
+
+#: ../lilypond-servicemenu-helper.py:50
+msgid "All documents successfully converted."
+msgstr "Tüm belgeler başarıyla dönüştürüldü."
+
