@@ -26,6 +26,8 @@ endif
 DATADIR := $(DESTDIR)$(PREFIX)/share
 
 LILYKDE = $(DATADIR)/apps/lilykde
+# next one is LILYKDE without DESTDIR prepended
+REAL_LILYKDE = $(PREFIX)/share/apps/lilykde
 ICONDIR = $(DATADIR)/icons
 SERVICEDIR = $(DATADIR)/services
 SERVICEMENUDIR = $(DATADIR)/apps/konqueror/servicemenus
@@ -92,7 +94,7 @@ uninstall-syntax:
 install-textedit:
 	@echo Installing textedit protocol:
 	@mkdir -p $(SERVICEDIR)
-	sed 's!LILYKDEDIR!$(LILYKDE)!' textedit.protocol.in \
+	sed 's!LILYKDEDIR!$(REAL_LILYKDE)!' textedit.protocol.in \
 		> $(SERVICEDIR)/textedit.protocol
 	@mkdir -p $(LILYKDE)
 	cp ktexteditservice.py $(LILYKDE)/
@@ -137,7 +139,7 @@ install-servicemenu:
 	@mkdir -p $(LILYKDE)
 	cp lilypond-servicemenu-helper.py $(LILYKDE)/
 	@mkdir -p $(SERVICEMENUDIR)
-	sed 's!LILYKDEDIR!$(LILYKDE)!' lilypond-servicemenu.desktop.in \
+	sed 's!LILYKDEDIR!$(REAL_LILYKDE)!' lilypond-servicemenu.desktop.in \
 		> $(SERVICEMENUDIR)/lilypond-servicemenu.desktop
 
 uninstall-servicemenu:
