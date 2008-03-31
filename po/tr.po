@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
 "POT-Creation-Date: 2008-03-29 07:12+0100\n"
-"PO-Revision-Date: 2008-03-29 21:59+0200\n"
+"PO-Revision-Date: 2008-03-30 22:54+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
 "MIME-Version: 1.0\n"
@@ -102,8 +102,7 @@ msgstr "PDF'yi e-posta ile gönder"
 
 #: ../lilykde/runlily.py:209
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
-msgstr ""
-"LilyPond bir PDF. Büyük ihtimalle şunu eklemeyi unuttunuz <b>\\layout</b>?"
+msgstr "LilyPond bir PDF. Büyük ihtimalle şunu eklemeyi unuttunuz <b>\\layout</b>?"
 
 #: ../lilykde/runlily.py:213 ../lilykde/settings.py:172
 msgid "Play MIDI"
@@ -187,8 +186,7 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr ""
-"Lilypond sürümü belirli değil. Lütfen, Lilypond kurulumunuzu denetleyin."
+msgstr "Lilypond sürümü belirli değil. Lütfen, Lilypond kurulumunuzu denetleyin."
 
 #: ../lilykde/version.py:73
 msgid "This LilyPond document is already up-to-date."
@@ -268,7 +266,7 @@ msgstr "Lilypond:"
 
 #: ../lilykde/settings.py:79
 msgid "Name or full path of the LilyPond program."
-msgstr ""
+msgstr "Lilypond programının tam yolunun adı."
 
 #: ../lilykde/settings.py:80
 msgid "Convert-ly:"
@@ -276,7 +274,7 @@ msgstr "Convert-ly:"
 
 #: ../lilykde/settings.py:81
 msgid "Name or full path of the convert-ly program."
-msgstr ""
+msgstr "Convert-ly programının tam yolunun adı."
 
 #: ../lilykde/settings.py:82
 msgid "Printcommand:"
@@ -286,7 +284,7 @@ msgstr "Yazdırma komutu:"
 msgid ""
 "Command to print a PDF file, for example lpr or kprinter. You may add some "
 "arguments, e.g. lpr -P myprinter."
-msgstr ""
+msgstr "Bir PDF dosyasını yazdırma komutu, örneğin lpr veya kprinter. Bu komutlara lpr -P yazıcım gibi değerler eklemek de mümkündür."
 
 #: ../lilykde/settings.py:117
 msgid "Hyphenation"
@@ -316,26 +314,25 @@ msgstr ""
 
 #: ../lilykde/settings.py:164
 msgid "Open the folder containing the LilyPond and PDF documents."
-msgstr ""
+msgstr "Lilypond ve PDF belgelerini içeren dizini aç."
 
 #: ../lilykde/settings.py:166
 msgid "Open the generated PDF file with the default PDF viewer."
-msgstr ""
+msgstr "İşlenmiş PDF dosyasını varsayılan PDF okuyucu ile aç."
 
 #: ../lilykde/settings.py:168
-msgid ""
-"Print the PDF using the print command set in the Commands settings page."
-msgstr ""
+msgid "Print the PDF using the print command set in the Commands settings page."
+msgstr "Komut ayarları sayfasındaki ayarları kullanarak PDF dosyasını yazdır."
 
 #: ../lilykde/settings.py:171
 msgid "Attach the PDF to an email message."
-msgstr ""
+msgstr "PDF dosyasını bir e-posta iletisine ekle."
 
 #: ../lilykde/settings.py:173
 msgid ""
 "Play the generated MIDI files using the default MIDI player (Timidity++ is "
 "recommended)."
-msgstr ""
+msgstr "Varsayılan MIDI çalıcıyı kullanarak işlenmiş MIDI dosyalarını çal."
 
 #: ../lilypond-servicemenu-helper.py:46
 msgid "One document failed."
@@ -346,3 +343,4 @@ msgstr[1] ""
 #: ../lilypond-servicemenu-helper.py:50
 msgid "All documents successfully converted."
 msgstr "Tüm belgeler başarıyla dönüştürüldü."
+
