@@ -3,8 +3,8 @@ import sys
 import os
 import kate
 
-# The rest of the plugin is located in KDE/share/apps/lilykde/, as a python
-# python package named lilykde.
+# The rest of the plugin is located in KDE/share/apps/lilykde/,
+# as a python package named lilykde.
 # TODO: install lilykde as site package if system-wide install
 from kdecore import KStandardDirs
 sys.path[0:0] = map(os.path.normpath, map(str,

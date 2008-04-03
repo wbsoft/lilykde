@@ -75,10 +75,12 @@ class CommandSettings(QFrame):
         self.layout = QGridLayout(self)
         self.commands = []
         for name, default, title, tooltip in (
-            ('lilypond', 'lilypond', _("Lilypond:"),
+            ('lilypond', 'lilypond', "Lilypond:",
                 _("Name or full path of the LilyPond program.")),
-            ('convert-ly', 'convert-ly', _("Convert-ly:"),
+            ('convert-ly', 'convert-ly', "Convert-ly:",
                 _("Name or full path of the convert-ly program.")),
+            ('rumor', 'rumor', "Rumor:",
+                _("Name or full path of the Rumor program.")),
             ('lpr', 'lpr', _("Printcommand:"),
                 _("Command to print a PDF file, for example lpr or "
                   "kprinter. You may add some arguments, e.g. "
