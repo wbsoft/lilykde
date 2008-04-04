@@ -112,11 +112,11 @@ class Rumor(QFrame):
         Start or stop Rumor.
         """
         if start:
-            self.startRumor()
+            self._startRumor()
         else:
-            self.stopRumor()
+            self._stopRumor()
 
-    def startRumor(self):
+    def _startRumor(self):
         """ Start Rumor """
         # wrap in pty if keyboard used and grab keyboard
         rumor = config("commands").get("rumor", "rumor")
@@ -137,22 +137,29 @@ class Rumor(QFrame):
             comm = KProcess.AllOutput
         p.setExecutable(cmd[0])
         p.setArguments(cmd[1:])
-        p.connect(p, SIGNAL("processExited(KProcess*)"), self.stopped)
+        p.connect(p, SIGNAL("processExited(KProcess*)"), self._stopped)
         p.connect(p, SIGNAL("receivedStdout(KProcess*, char*, int)"),
             self.receive)
         if p.start(KProcess.NotifyOnExit, comm):
             self.p = p
+            # Rumor keyboard emulation handling
+            self.lastKey = None # last played key
+            self.restKey = " "  # the key that generates a rest event
         else:
             self.p = None
             self.recButton.setState(QButton.Off)
 
-    def stopRumor(self):
+    def _stopRumor(self):
         """ Stop Rumor """
         # just send rumor a kill(2) signal (SIGINT)
         if self.isRunning():
-            self.p.kill(2)
+            self.send(self.restKey)
+            QTimer.singleShot(100, self._kill)
 
-    def stopped(self):
+    def _kill(self):
+        self.p.kill(2)
+
+    def _stopped(self):
         """ Called when Rumor exits """
         # set REC button to off, because Rumor might have exited by itself
         self.recButton.setState(QButton.Off)
@@ -184,14 +191,19 @@ class Rumor(QFrame):
 
     def keyPressEvent(self, e):
         """ Called when the user presses a key. """
-        if e.key() == Qt.Key_Escape:
-            self.stopRumor()
-        elif self.mode != "keyboard" and e.key() == Qt.Key_Space:
+        if (self.isRunning and e.key() == Qt.Key_Escape) or \
+           (self.mode != "keyboard" and e.key() == Qt.Key_Space):
             self.recButton.toggle()
-        elif self.mode == "keyboard" and self.isRunning():
+        elif self.mode == "keyboard" and self.isRunning() and \
+                not e.isAutoRepeat() and not e.text().isEmpty():
             # pass key to Rumor, TODO: make repeats possible
             key = str(e.text())
-            self.send(key)
+            if key == self.restKey or key != self.lastKey:
+                self.send(key)
+                self.lastKey = key
+            else:
+                self.send(self.restKey + key)
+
 
 
 # Main stuff
