@@ -44,6 +44,22 @@ def parseAconnectOutput(channel):
             res.append(("%s:%s" % (client, port), name.strip()))
     return res
 
+def getOSSnrMIDIs():
+    """
+    Get the number of MIDI devices when OSS is used
+    """
+    try:
+        import struct, fcntl, ossaudiodev
+        return struct.unpack('i', fcntl.ioctl(
+            open("/dev/sequencer"),
+            ossaudiodev.SNDCTL_SEQ_NRMIDIS,
+            struct.pack('i', 0)))[0]
+    except:
+        return 0
+
+
+
+
 
 class Rumor(QFrame):
     """
@@ -52,8 +68,8 @@ class Rumor(QFrame):
     def __init__(self, *args):
         QFrame.__init__(self, *args)
 
-        self.p = None               # placeholder for Rumor KProcess
-        self.pending = []           # stack for pending data to write
+        self.p = None       # placeholder for Rumor KProcess
+        self.pending = []   # stack for pending data to write
 
         self.mode = "keyboard"      # Temporary
 
@@ -108,6 +124,7 @@ class Rumor(QFrame):
         cmd.append("--oss=1") # FIXME
         p = KProcess()
         if self.mode == "keyboard":
+            self.setFocus()
             cmd.append("--kbd")
             # wrap in pty
             cmd[0:0] = ["python", '-c',
@@ -132,15 +149,16 @@ class Rumor(QFrame):
     def stopRumor(self):
         """ Stop Rumor """
         # just send rumor a kill(2) signal (SIGINT)
-        self.p.kill(2)
+        if self.isRunning():
+            self.p.kill(2)
 
     def stopped(self):
         """ Called when Rumor exits """
         # set REC button to off, because Rumor might have exited by itself
         self.recButton.setState(QButton.Off)
-        # release the grab, if keyboard is used
-
         self.p = None
+        if self.mode == "keyboard":
+            self.clearFocus()
 
     def isRunning(self):
         return self.p is not None
@@ -152,7 +170,7 @@ class Rumor(QFrame):
 
     def send(self, text):
         """ Send keyboard input to the Rumor process """
-        self.pending.append(text)
+        self.pending.append(text + '\n')
         if len(self.pending) == 1:
             text = self.pending[0]
             self.p.writeStdin(text, len(text))
@@ -164,7 +182,19 @@ class Rumor(QFrame):
             text = self.pending[0]
             self.p.writeStdin(text, len(text))
 
+    def keyPressEvent(self, e):
+        """ Called when the user presses a key. """
+        if e.key() == Qt.Key_Escape:
+            self.stopRumor()
+        elif self.mode != "keyboard" and e.key() == Qt.Key_Space:
+            self.recButton.toggle()
+        elif self.mode == "keyboard" and self.isRunning():
+            # pass key to Rumor, TODO: make repeats possible
+            key = str(e.text())
+            self.send(key)
 
+
+# Main stuff
 tool = kate.gui.Tool(_("Rumor"), "ly", kate.gui.Tool.bottom)
 rumor = Rumor(tool.widget)
 show = tool.show
