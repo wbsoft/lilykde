@@ -72,14 +72,15 @@ def documentChanged(doc):
         else:
             # Hide the toolviews (if they exist) when a probably non-lilypond
             # document is selected.
-            for m in 'log', 'pdf':
+            for m in 'log', 'pdf', 'rumor':
                 if hasattr(sys.modules['lilykde'], m):
                     getattr(sys.modules['lilykde'], m).hide()
 
 @kate.onConfigure
 def configure(parent):
     # show the configuration dialog
-    from lilykde.settings import Settings
-    Settings(parent).show()
+    from lilykde.settings import settings
+    settings(parent)
+
 
 # kate: indent-width 4;

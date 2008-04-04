@@ -78,6 +78,12 @@ def deHyphenateText():
     from lilykde import hyphen
     hyphen.deHyphenateText()
 
+menu.insert(KActionSeparator())
+
+@menu.add(_("Record MIDI with Rumor"), "Ctrl+Shift+R")
+def rumor():
+    import lilykde.rumor
+    lilykde.rumor.show()
 
 
 # kate: indent-width 4;

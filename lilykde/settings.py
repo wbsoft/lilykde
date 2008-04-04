@@ -12,13 +12,20 @@ from lilykde import config
 # Translate the messages
 from lilykde.i18n import _
 
+def settings(parent):
+    Settings(parent,
+        CommandSettings,
+        ActionSettings,
+        HyphenSettings,
+    ).show()
+
 
 class Settings(QFrame):
     """
     Create a settings dialog widget for LilyKDE.
     Currently using a tab widget, ugly because of the nesting but simple.
     """
-    def __init__(self, parent):
+    def __init__(self, parent, *moduleClasses):
         QFrame.__init__(self, parent)
         self.layout = QVBoxLayout(self)
         self.layout.setMargin(4)
@@ -34,23 +41,21 @@ class Settings(QFrame):
         hbox.addWidget(self.applyButton)
         hbox.addWidget(self.resetButton)
         self.layout.addLayout(hbox)
-        self.modules = []
-        # instantiate all modules
-        for moduleclass in (
-                CommandSettings,
-                ActionSettings,
-                HyphenSettings,
-            ):
-            module = moduleclass(self.tab)
-            self.tab.addTab(module, module.title)
-            self.modules.append(module)
-
+        self.setMinimumHeight(240)
+        self.setMinimumWidth(400)
         self.connect(self.defaultsButton, SIGNAL("clicked()"), self.defaults)
         self.connect(self.applyButton, SIGNAL("clicked()"), self.saveSettings)
         self.connect(self.resetButton, SIGNAL("clicked()"), self.loadSettings)
-        self.loadSettings()
-        self.setMinimumHeight(240)
-        self.setMinimumWidth(400)
+        self.modules = []
+        # instantiate all modules
+        for mc in moduleClasses:
+            self.addModule(mc)
+
+    def addModule(self, moduleClass):
+        m = moduleClass(self.tab)
+        self.tab.addTab(m, m.title)
+        self.modules.append(m)
+        m.load()
 
     def loadSettings(self):
         for m in self.modules:
@@ -75,16 +80,19 @@ class CommandSettings(QFrame):
         self.layout = QGridLayout(self)
         self.commands = []
         for name, default, title, tooltip in (
-            ('lilypond', 'lilypond', "Lilypond:",
+            ('lilypond', 'lilypond', "LilyPond:",
                 _("Name or full path of the LilyPond program.")),
             ('convert-ly', 'convert-ly', "Convert-ly:",
                 _("Name or full path of the convert-ly program.")),
-            ('rumor', 'rumor', "Rumor:",
-                _("Name or full path of the Rumor program.")),
             ('lpr', 'lpr', _("Printcommand:"),
                 _("Command to print a PDF file, for example lpr or "
                   "kprinter. You may add some arguments, e.g. "
                   "lpr -P myprinter.")),
+            ('rumor', 'rumor', "Rumor:",
+                _("Name or full path of the Rumor program.")),
+            ('aconnect', 'aconnect', "Aconnect:",
+                _("Name or full path of the aconnect program (part of ALSA, "
+                  "for MIDI input and playback using Rumor).")),
         ):
             label = QLabel(title, self)
             widget = ExecLineEdit(self)
