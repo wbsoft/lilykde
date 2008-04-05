@@ -137,7 +137,7 @@ class Rumor(QFrame):
             comm = KProcess.AllOutput
         p.setExecutable(cmd[0])
         p.setArguments(cmd[1:])
-        p.connect(p, SIGNAL("processExited(KProcess*)"), self._stopped)
+        p.connect(p, SIGNAL("processExited(KProcess*)"), self.processExited)
         p.connect(p, SIGNAL("receivedStdout(KProcess*, char*, int)"),
             self.receive)
         if p.start(KProcess.NotifyOnExit, comm):
@@ -159,7 +159,7 @@ class Rumor(QFrame):
     def _kill(self):
         self.p.kill(2)
 
-    def _stopped(self):
+    def processExited(self):
         """ Called when Rumor exits """
         # set REC button to off, because Rumor might have exited by itself
         self.recButton.setState(QButton.Off)
