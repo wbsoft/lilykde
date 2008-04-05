@@ -118,6 +118,8 @@ class Rumor(QFrame):
 
     def _startRumor(self):
         """ Start Rumor """
+        # first collect some data: indent of current line
+        self.indent = re.match(' *', kate.view().currentLine).group()
         # wrap in pty if keyboard used and grab keyboard
         rumor = config("commands").get("rumor", "rumor")
         cmd = [rumor]
@@ -173,6 +175,7 @@ class Rumor(QFrame):
     def receive(self, proc, buf, length):
         """ Writes the received text from Rumor into the Kate buffer """
         text = unicode(QString.fromUtf8(buf, length))
+        text = text.replace('\n', '\n' + self.indent)
         kate.view().insertText(text)
 
     def send(self, text):
