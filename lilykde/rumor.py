@@ -118,11 +118,44 @@ class Rumor(QFrame):
 
     def _startRumor(self):
         """ Start Rumor """
-        # first collect some data: indent of current line
+        # first collect some data:
+        # - indent of current line
         self.indent = re.match(r'\s*', kate.view().currentLine).group()
+
+        # Here we should check the user settings (meter, lang, key etc.)
+        # if "Default" is selected, try to determine in a really unintelligent
+        # way!
+        meter = "4/4"   # FIXME
+
+        # - text from start to cursor
+        text = kate.document().fragment((0, 0), kate.view().cursor.position)
+        # - find the latest \time command:
+        m = re.compile(r'.*\\time\s*(\d+/(1|2|4|8|16|32|64|128))(?!\d)',
+            re.DOTALL).match(text)
+        if m:
+            meter = m.group(1)
+        # - determine lily language
+        m = re.compile(r'.*\\include\s*"('
+            "nederlands|english|deutsch|norsk|svenska|suomi|"
+            "italiano|catalan|espanol|portuges|vlaams"
+            r')\.ly"', re.DOTALL).match(text)
+        if m:
+            lang = m.group(1)[:2]
+            if lang == "po": lang = "es"
+            elif lang == "su": lang = "de"
+            elif lang == "en" and not re.match(r'\b[a-g](flat|sharp)\b', text):
+                lang == "en-short"
+            elif lang == "vl":
+                # "vlaams" is not supported by Rumor
+                # TODO: rewrite the pitches output by Rumor
+                lang == "it"
+        else:
+            lang = "ne" # the default
+
         # wrap in pty if keyboard used and grab keyboard
-        rumor = config("commands").get("rumor", "rumor")
-        cmd = [rumor]
+        cmd = [config("commands").get("rumor", "rumor")]
+        cmd.append("--meter=" + meter)
+        cmd.append("--lang=" + lang)
         cmd.append("--oss=1") # FIXME
         p = KProcess()
         if self.mode == "keyboard":
