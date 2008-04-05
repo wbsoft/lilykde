@@ -162,10 +162,10 @@ class Rumor(QFrame):
     def processExited(self):
         """ Called when Rumor exits """
         # set REC button to off, because Rumor might have exited by itself
-        self.recButton.setState(QButton.Off)
         self.p = None
+        self.recButton.setState(QButton.Off)
         if self.mode == "keyboard":
-            self.clearFocus()
+            kate.mainWidget().setFocus()
 
     def isRunning(self):
         return self.p is not None
@@ -191,7 +191,7 @@ class Rumor(QFrame):
 
     def keyPressEvent(self, e):
         """ Called when the user presses a key. """
-        if (self.isRunning and e.key() == Qt.Key_Escape) or \
+        if (self.isRunning() and e.key() == Qt.Key_Escape) or \
            (self.mode != "keyboard" and e.key() == Qt.Key_Space):
             self.recButton.toggle()
         elif self.mode == "keyboard" and self.isRunning() and \
