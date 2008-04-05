@@ -119,7 +119,7 @@ class Rumor(QFrame):
     def _startRumor(self):
         """ Start Rumor """
         # first collect some data: indent of current line
-        self.indent = re.match(' *', kate.view().currentLine).group()
+        self.indent = re.match(r'\s*', kate.view().currentLine).group()
         # wrap in pty if keyboard used and grab keyboard
         rumor = config("commands").get("rumor", "rumor")
         cmd = [rumor]
