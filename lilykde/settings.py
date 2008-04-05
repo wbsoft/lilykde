@@ -6,7 +6,7 @@ from qt import *
 from kdeui import KPushButton, KStdGuiItem
 
 from lilykde.util import htmlescape
-from lilykde.widgets import ExecLineEdit
+from lilykde.widgets import ExecLineEdit, ExecArgsLineEdit
 from lilykde import config
 
 # Translate the messages
@@ -79,23 +79,27 @@ class CommandSettings(QFrame):
         self.title = _("Commands")
         self.layout = QGridLayout(self)
         self.commands = []
-        for name, default, title, tooltip in (
-            ('lilypond', 'lilypond', "LilyPond:",
+        for name, default, title, lineedit, tooltip in (
+            ('lilypond', 'lilypond', "LilyPond:", ExecLineEdit,
                 _("Name or full path of the LilyPond program.")),
-            ('convert-ly', 'convert-ly', "Convert-ly:",
+            ('convert-ly', 'convert-ly', "Convert-ly:", ExecLineEdit,
                 _("Name or full path of the convert-ly program.")),
-            ('lpr', 'lpr', _("Printcommand:"),
+            ('lpr', 'lpr', _("Printcommand:"), ExecArgsLineEdit,
                 _("Command to print a PDF file, for example lpr or "
                   "kprinter. You may add some arguments, e.g. "
                   "lpr -P myprinter.")),
-            ('rumor', 'rumor', "Rumor:",
+            ('rumor', 'rumor', "Rumor:", ExecLineEdit,
                 _("Name or full path of the Rumor program.")),
-            ('aconnect', 'aconnect', "Aconnect:",
+            ('aconnect', 'aconnect', "Aconnect:", ExecLineEdit,
                 _("Name or full path of the aconnect program (part of ALSA, "
                   "for MIDI input and playback using Rumor).")),
+            ('timidity', 'timidity -iA -B2,8 -Os -EFreverb=0', "Timidity:",
+                ExecArgsLineEdit,
+                _("Full command to start Timidity (or any other program) "
+                  "as an ALSA MIDI client.")),
         ):
             label = QLabel(title, self)
-            widget = ExecLineEdit(self)
+            widget = lineedit(self)
             QToolTip.add(label, tooltip)
             QToolTip.add(widget, tooltip)
             self.layout.addWidget(label, len(self.commands), 0)

@@ -136,12 +136,22 @@ class ExecLineEdit(QLineEdit):
         self.connect(self, SIGNAL("textChanged(const QString&)"),
             self._checkexec)
 
+    def _get(self, filename):
+        return str(filename)
+
     def _checkexec(self, filename):
-        if not findexe(str(filename)):
+        if not findexe(self._get(filename)):
             self.setPaletteBackgroundColor(QColor("#FAA"))
         else:
             self.unsetPalette()
 
+
+class ExecArgsLineEdit(ExecLineEdit):
+    """
+    An ExecLineEdit that allows arguments in the command string.
+    """
+    def _get(self, filename):
+        return str(filename).split()[0]
 
 
 # kate: indent-width 4;

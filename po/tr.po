@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-04 08:55+0200\n"
+"POT-Creation-Date: 2008-04-05 20:37+0200\n"
 "PO-Revision-Date: 2008-03-30 22:54+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
@@ -80,15 +80,15 @@ msgstr "önizleme kipi"
 msgid "publish mode"
 msgstr "yayınlama kipi"
 
-#: ../lilykde/runlily.py:191 ../lilykde/settings.py:173
+#: ../lilykde/runlily.py:191 ../lilykde/settings.py:177
 msgid "Open folder"
 msgstr "Dizin aç"
 
-#: ../lilykde/runlily.py:195 ../lilykde/settings.py:175
+#: ../lilykde/runlily.py:195 ../lilykde/settings.py:179
 msgid "Open PDF"
 msgstr "PDF aç"
 
-#: ../lilykde/runlily.py:197 ../lilykde/settings.py:177
+#: ../lilykde/runlily.py:197 ../lilykde/settings.py:181
 msgid "Print"
 msgstr "Yazdır"
 
@@ -96,7 +96,7 @@ msgstr "Yazdır"
 msgid "Email PDF (preview)"
 msgstr "PDF'yi e-posta ile gönder (önizleme)"
 
-#: ../lilykde/runlily.py:207 ../lilykde/settings.py:180
+#: ../lilykde/runlily.py:207 ../lilykde/settings.py:184
 msgid "Email PDF"
 msgstr "PDF'yi e-posta ile gönder"
 
@@ -105,7 +105,7 @@ msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond bir PDF. Büyük ihtimalle şunu eklemeyi unuttunuz <b>\\layout</b>?"
 
-#: ../lilykde/runlily.py:213 ../lilykde/settings.py:182
+#: ../lilykde/runlily.py:213 ../lilykde/settings.py:186
 msgid "Play MIDI"
 msgstr "MIDI çal"
 
@@ -296,11 +296,16 @@ msgid ""
 "playback using Rumor)."
 msgstr ""
 
-#: ../lilykde/settings.py:127
+#: ../lilykde/settings.py:98
+msgid ""
+"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgstr ""
+
+#: ../lilykde/settings.py:131
 msgid "Hyphenation"
 msgstr "Tireleme"
 
-#: ../lilykde/settings.py:130
+#: ../lilykde/settings.py:134
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
@@ -310,11 +315,11 @@ msgstr ""
 "sözlüklerini arama yolları. Eğer başlangıç eğri çizgisini çıkarırsanız, "
 "KDEDIRS ortam değişkenlerinin önekleri kendiliğinde eklenir."
 
-#: ../lilykde/settings.py:160
+#: ../lilykde/settings.py:164
 msgid "Actions"
 msgstr "İşlemler"
 
-#: ../lilykde/settings.py:163
+#: ../lilykde/settings.py:167
 msgid ""
 "Check the actions you want to display (if applicable) after LilyPond has "
 "successfully compiled your document."
@@ -322,24 +327,24 @@ msgstr ""
 "Lilypond belgenizi başarıyla derledikten sonra görüntülenmesini istediğiniz "
 "işlemleri denetleyiniz. (Eğer mümkünse)"
 
-#: ../lilykde/settings.py:174
+#: ../lilykde/settings.py:178
 msgid "Open the folder containing the LilyPond and PDF documents."
 msgstr "Lilypond ve PDF belgelerini içeren dizini aç."
 
-#: ../lilykde/settings.py:176
+#: ../lilykde/settings.py:180
 msgid "Open the generated PDF file with the default PDF viewer."
 msgstr "İşlenmiş PDF dosyasını varsayılan PDF okuyucu ile aç."
 
-#: ../lilykde/settings.py:178
+#: ../lilykde/settings.py:182
 msgid ""
 "Print the PDF using the print command set in the Commands settings page."
 msgstr "Komut ayarları sayfasındaki ayarları kullanarak PDF dosyasını yazdır."
 
-#: ../lilykde/settings.py:181
+#: ../lilykde/settings.py:185
 msgid "Attach the PDF to an email message."
 msgstr "PDF dosyasını bir e-posta iletisine ekle."
 
-#: ../lilykde/settings.py:183
+#: ../lilykde/settings.py:187
 msgid ""
 "Play the generated MIDI files using the default MIDI player (Timidity++ is "
 "recommended)."
