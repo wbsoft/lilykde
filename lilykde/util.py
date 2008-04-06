@@ -75,14 +75,13 @@ def splitcommandline(s):
     """ Splits a commandline like the shell, keeping quoted parts together """
     return _splitcommandline_re.sub(_splitcommandline, s.strip()).split('\0')
 
-_splitcommandline_re = re.compile("([\"'])((\\\\.|[^\\1])*)\\1|\\s+")
+_splitcommandline_re = re.compile("(\")((\\\\.|[^\"])*)\"|(')([^']*)'|\\s+")
 
 def _splitcommandline(m):
     if m.group(1):
-        if m.group(1) == "'":
-            return m.group(2)
-        else:
-            return re.sub(r"\\(.)", r"\1", m.group(2))
+        return re.sub(r"\\(.)", r"\1", m.group(2))
+    elif m.group(4):
+        return m.group(5)
     else:
         return '\0'
 
