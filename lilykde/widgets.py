@@ -6,7 +6,7 @@ import re, shlex
 from subprocess import Popen, PIPE
 
 from qt import *
-from kdecore import KApplication, KURL
+from kdecore import KApplication, KProcess, KURL
 from kdeui import KMessageBox, KTextBrowser
 
 from lilykde import config
@@ -152,6 +152,124 @@ class ExecArgsLineEdit(ExecLineEdit):
     """
     def _get(self, filename):
         return str(filename).split()[0]
+
+
+class ProcessToggleButton(QPushButton):
+    """
+    A Pushbutton that starts a process when clicked, and stops it when
+    clicked again.
+    """
+
+    # these can be shadowed away by instance variables:
+    command = "kdialog --sorry 'Not Implemented'"
+    pty     = False
+    comm    = KProcess.NoCommunication
+
+    def __init__(self, *args):
+        QPushButton.__init__(self, *args)
+        self.connect(self, SIGNAL("clicked()"), self.clicked)
+        self._p = None      # placeholder for KProcess
+
+    def onStart(self):
+        """
+        Implement this to set:
+        - the command(line) to execute.
+        - which in/out streams to connect
+        - other parameters
+
+        This function is called right before start.
+        """
+        pass
+
+    def started(self):
+        """ Called after a succesful start """
+        pass
+
+    def failed(self):
+        """ Called after an unsuccessful start """
+        pass
+
+    def stopped(self, proc):
+        """ Called on exit. The process can be queried for exit info. """
+        pass
+
+    def clicked(self):
+        """ called when the button is clicked """
+        if self.isRunning():
+            self.stop()
+        else:
+            self.start()
+
+    def isRunning(self):
+        return self._p is not None and self._p.isRunning()
+
+    def start(self):
+        """
+        Starts the process. If successful, show the button pressed.
+        """
+        # Call this to perform setup right before start
+        self.onStart()
+        # Now start...
+        p = KProcess()
+        cmd = self.command
+        if isinstance(cmd, basestring):
+            cmd = shlex.split(cmd)
+        if self.pty:
+            # p.setUsePty does currently not work on Gentoo
+            # Hack to let a process think it reads from a terminal
+            cmd[0:0] = ["python", '-c',
+                "import sys,pty,signal;"
+                "signal.signal(2,lambda i,j:1);"
+                "pty.spawn(sys.argv[1:])"]
+        p.setExecutable(cmd[0])
+        p.setArguments(cmd[1:])
+        # Setup the signals
+        if self.comm & KProcess.Stdin:
+            self.pending = []
+            p.connect(p, SIGNAL("wroteStdin(KProcess*)"), self.wroteStdin)
+        if self.comm & KProcess.Stdout:
+            p.connect(p, SIGNAL("receivedStdout(KProcess*, char*, int)"),
+                self.receivedStdout)
+        if self.comm & KProcess.Stderr:
+            p.connect(p, SIGNAL("receivedStderr(KProcess*, char*, int)"),
+                self.receivedStderr)
+        p.connect(p, SIGNAL("processExited(KProcess*)"), self.processExited)
+        if p.start(KProcess.NotifyOnExit, self.comm):
+            self._p = p
+            self.setDown(True)
+            self.started()
+        else:
+            self._p = None
+            self.failed()
+
+    def stop(self):
+        """ Stop the process """
+        self._p.kill(15)
+
+    def processExited(self):
+        self.stopped(self._p)
+        self._p = None
+        self.setDown(False)
+
+    def receivedStdout(self, proc, buf, length):
+        pass
+
+    def receivedStderr(self, proc, buf, length):
+        pass
+
+    def wroteStdin(self):
+        """ Called by the KProcess when ready for new stdin data """
+        del self.pending[0]
+        if self.pending:
+            text = self.pending[0]
+            self._p.writeStdin(text, len(text))
+
+    def send(self, text):
+        """ Send input to the process """
+        self.pending.append(text)
+        if len(self.pending) == 1:
+            text = self.pending[0]
+            self._p.writeStdin(text, len(text))
 
 
 # kate: indent-width 4;

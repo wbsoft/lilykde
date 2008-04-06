@@ -12,6 +12,7 @@ import kate
 import kate.gui
 
 from lilykde.util import kprocess, qstringlist2py
+from lilykde.widgets import ProcessToggleButton
 from lilykde import config
 
 # Translate the messages
@@ -58,69 +59,12 @@ def getOSSnrMIDIs():
         return 0
 
 
-
-
-
-class Rumor(QFrame):
-    """
-    A Rumor (tool) widget.
-    """
-    def __init__(self, *args):
-        QFrame.__init__(self, *args)
-
-        self.p = None       # placeholder for Rumor KProcess
-        self.pending = []   # stack for pending data to write
-
-        self.mode = "keyboard"      # Temporary
-
-        # Accept keyboard focus
-        self.setFocusPolicy(QWidget.ClickFocus)
-
-        # Big Start/stop toggle button
-        r = QPushButton("REC", self)
-        r.setToggleButton(True)
-        r.setMinimumHeight(100)
-        r.setMinimumWidth(100)
-        r.setFont(QFont("Sans", 20, 75))
-        r.connect(r, SIGNAL("toggled(bool)"), self.rec)
-        self.recButton = r
-
-
-
-        # Meter select (editable qcombobox defaulting to document)
-        # Tempo adjustment (spinbox + long slider, 10 - 500, defaulting to doc)
-        # Quantize (1,2,4,8,16,32,64 or 128, default to 16)
-        # Step recording: (checkbox, disables the three controls above)
-        # Key signature select (any lilypond pitch, defaulting to document)
-
-        # Input Select (button with popup menu)
-        # Output select (button with popup menu)
-
-        # Smaller options:
-        # - language (any of the lily languages, defaulting to document)
-        # - no-chords (Mono: checkbox)
-        # - explicit-durations (checkbox)
-        # - absolute-ptiches (checkbox)
-
-        # in Settings page:
-        # - Metronome settings (creating a scm script that rumor loads)
-
-
-    def rec(self, start):
-        """
-        start = bool: True or False
-        Start or stop Rumor.
-        """
-        if start:
-            self._startRumor()
-        else:
-            self._stopRumor()
-
-    def _startRumor(self):
-        """ Start Rumor """
-        # first collect some data:
+class RumorData(object):
+    """ Collects all data before starting Rumor """
+    def __init__(self):
         # - indent of current line
-        self.indent = re.match(r'\s*', kate.view().currentLine).group()
+        self.indent = re.match(r'\s*',
+            kate.view().currentLine[:kate.view().cursor.position[1]]).group()
 
         # Here we should check the user settings (meter, lang, key etc.)
         # if "Default" is selected, try to determine in a really unintelligent
@@ -157,88 +101,114 @@ class Rumor(QFrame):
         cmd.append("--meter=" + meter)
         cmd.append("--lang=" + lang)
         cmd.append("--oss=1") # FIXME
-        p = KProcess()
-        if self.mode == "keyboard":
-            self.setFocus()
+        self.keyboardEmu = True # FIXME
+        if self.keyboardEmu:
             cmd.append("--kbd")
-            # wrap in pty
-            cmd[0:0] = ["python", '-c',
-                "import sys,pty,signal;"
-                "signal.signal(2,lambda i,j:1);"
-                "pty.spawn(sys.argv[1:])"]
-            comm = KProcess.All
-            p.connect(p, SIGNAL("wroteStdin(KProcess*)"), self.wroteStdin)
+
+        self.command = cmd
+
+
+class RumorButton(ProcessToggleButton):
+    """
+    The button that starts and stops Rumor.
+    The parent is the widget object that holds the button
+    and other controls.
+    """
+
+    restKey = " "
+
+    def __init__(self, parent):
+        ProcessToggleButton.__init__(self, "REC", parent)
+        self.setMinimumHeight(100)
+        self.setMinimumWidth(100)
+        self.setFont(QFont("Sans", 20, 75))
+
+    def onStart(self):
+        """ Here we construct the command etc. """
+        self.d = RumorData()
+        self.command = self.d.command
+        if self.d.keyboardEmu:
+            self.parent().setFocus()
+            self.comm = KProcess.All
+            self.pty = True
         else:
-            comm = KProcess.AllOutput
-        p.setExecutable(cmd[0])
-        p.setArguments(cmd[1:])
-        p.connect(p, SIGNAL("processExited(KProcess*)"), self.processExited)
-        p.connect(p, SIGNAL("receivedStdout(KProcess*, char*, int)"),
-            self.receive)
-        if p.start(KProcess.NotifyOnExit, comm):
-            self.p = p
-            # Rumor keyboard emulation handling
-            self.lastKey = None # last played key
-            self.restKey = " "  # the key that generates a rest event
-        else:
-            self.p = None
-            self.recButton.setState(QButton.Off)
+            self.comm = KProcess.AllOutput
+            self.pty = False
 
-    def _stopRumor(self):
-        """ Stop Rumor """
-        # just send rumor a kill(2) signal (SIGINT)
-        if self.isRunning():
-            self.send(self.restKey)
-            QTimer.singleShot(100, self._kill)
-
-    def _kill(self):
-        self.p.kill(2)
-
-    def processExited(self):
-        """ Called when Rumor exits """
-        # set REC button to off, because Rumor might have exited by itself
-        self.p = None
-        self.recButton.setState(QButton.Off)
-        if self.mode == "keyboard":
-            kate.mainWidget().setFocus()
-
-    def isRunning(self):
-        return self.p is not None
-
-    def receive(self, proc, buf, length):
+    def receivedStdout(self, proc, buf, length):
         """ Writes the received text from Rumor into the Kate buffer """
         text = unicode(QString.fromUtf8(buf, length))
-        text = text.replace('\n', '\n' + self.indent)
+        text = text.replace('\n', '\n' + self.d.indent)
         kate.view().insertText(text)
 
-    def send(self, text):
-        """ Send keyboard input to the Rumor process """
-        self.pending.append(text + '\n')
-        if len(self.pending) == 1:
-            text = self.pending[0]
-            self.p.writeStdin(text, len(text))
+    def started(self):
+        self.lastKey = None
 
-    def wroteStdin(self):
-        """ Called by the KProcess when ready for new stdin data """
-        del self.pending[0]
-        if self.pending:
-            text = self.pending[0]
-            self.p.writeStdin(text, len(text))
+    def stop(self):
+        """ Stop the process """
+        if self.d.keyboardEmu:
+            self.send(self.restKey)
+            QTimer.singleShot(100, self._kill)
+        else:
+            self._kill()
+
+    def _kill(self):
+        self._p.kill(2)
+
+    def stopped(self):
+        if self.d.keyboardEmu:
+            kate.mainWidget().setFocus()
+
+    def sendkey(self, key):
+        # pass key to Rumor, TODO: make repeats possible
+        if key == self.restKey or key != self.lastKey:
+            self.send(key)
+            self.lastKey = key
+        else:
+            self.send(self.restKey + key)
+
+
+
+class Rumor(QFrame):
+    """
+    A Rumor (tool) widget.
+    """
+    def __init__(self, *args):
+        QFrame.__init__(self, *args)
+        # Accept keyboard focus
+        self.setFocusPolicy(QWidget.ClickFocus)
+
+        # Big Start/stop toggle button
+        self.r = RumorButton(self)
+
+
+        # Meter select (editable qcombobox defaulting to document)
+        # Tempo adjustment (spinbox + long slider, 10 - 500, defaulting to doc)
+        # Quantize (1,2,4,8,16,32,64 or 128, default to 16)
+        # Step recording: (checkbox, disables the three controls above)
+        # Key signature select (any lilypond pitch, defaulting to document)
+
+        # Input Select (button with popup menu)
+        # Output select (button with popup menu)
+
+        # Smaller options:
+        # - language (any of the lily languages, defaulting to document)
+        # - no-chords (Mono: checkbox)
+        # - explicit-durations (checkbox)
+        # - absolute-ptiches (checkbox)
+
+        # in Settings page:
+        # - Metronome settings (creating a scm script that rumor loads)
 
     def keyPressEvent(self, e):
         """ Called when the user presses a key. """
-        if (self.isRunning() and e.key() == Qt.Key_Escape) or \
-           (self.mode != "keyboard" and e.key() == Qt.Key_Space):
-            self.recButton.toggle()
-        elif self.mode == "keyboard" and self.isRunning() and \
+        if (self.r.isRunning() and e.key() == Qt.Key_Escape) or \
+           (not self.r.d.keyboardEmu and e.key() == Qt.Key_Space):
+            self.r.animateClick()
+        elif self.r.d.keyboardEmu and self.r.isRunning() and \
                 not e.isAutoRepeat() and not e.text().isEmpty():
-            # pass key to Rumor, TODO: make repeats possible
-            key = str(e.text())
-            if key == self.restKey or key != self.lastKey:
-                self.send(key)
-                self.lastKey = key
-            else:
-                self.send(self.restKey + key)
+            # pass key to Rumor
+            self.r.sendkey(str(e.text()))
 
 
 
