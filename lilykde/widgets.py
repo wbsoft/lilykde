@@ -2,7 +2,7 @@
 Widgets used in LilyKDE
 """
 
-import re, shlex
+import re
 from subprocess import Popen, PIPE
 
 from qt import *
@@ -10,7 +10,8 @@ from kdecore import KApplication, KProcess, KURL
 from kdeui import KMessageBox, KTextBrowser
 
 from lilykde import config
-from lilykde.util import findexe, keepspaces, htmlescapeurl, htmlescape, krun
+from lilykde.util import \
+    findexe, keepspaces, htmlescapeurl, htmlescape, krun, splitcommandline
 
 # Translate the messages
 from lilykde.i18n import _
@@ -108,7 +109,7 @@ def runAction(url):
     command, url = m.groups()
     if command == 'print':
         path = unicode(KURL(url).path())
-        cmd = shlex.split(str(config("commands").get("lpr", "lpr")))
+        cmd = splitcommandline(config("commands").get("lpr", "lpr"))
         cmd.append(path)
         p = Popen(cmd, stderr=PIPE)
         if p.wait() != 0:
@@ -213,7 +214,7 @@ class ProcessToggleButton(QPushButton):
         p = KProcess()
         cmd = self.command
         if isinstance(cmd, basestring):
-            cmd = shlex.split(cmd)
+            cmd = splitcommandline(cmd)
         if self.pty:
             # p.setUsePty does currently not work on Gentoo
             # Hack to let a process think it reads from a terminal
@@ -244,7 +245,10 @@ class ProcessToggleButton(QPushButton):
 
     def stop(self):
         """ Stop the process """
-        self._p.kill(15)
+        self.kill()
+
+    def kill(self, signal=15):
+        self._p.kill(signal)
 
     def processExited(self):
         if self.stopped.func_code.co_argcount == 2:

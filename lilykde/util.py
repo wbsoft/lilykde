@@ -71,6 +71,24 @@ def qstringlist2py(ql):
     """
     return map(unicode, ql)
 
+def splitcommandline(s):
+    """
+    Splits a commandline into pieces like the shell
+    """
+    s = _splitcommandline_re.sub(_splitcommandline, s.strip())
+    return s.split("\0")
+
+_splitcommandline_re = re.compile("([\"'])((\\\\.|[^\\1])*)\\1|\\s+")
+
+def _splitcommandline(m):
+    if m.group(2):
+        if m.group(1) == "'":
+            return m.group(2)
+        else:
+            return re.sub(r"\\(.)", r"\1", m.group(2))
+    else:
+        return '\0'
+
 def isexe(path):
     """
     Return path if it is an executable file, otherwise False
