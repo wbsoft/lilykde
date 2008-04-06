@@ -247,7 +247,7 @@ class ProcessToggleButton(QPushButton):
         self._p.kill(15)
 
     def processExited(self):
-        if self.stopped.func_code.co_argcount:
+        if self.stopped.func_code.co_argcount == 2:
             self.stopped(self._p)
         else:
             self.stopped()
