@@ -148,12 +148,10 @@ class RumorButton(ProcessToggleButton):
         """ Stop the process """
         if self.d.keyboardEmu:
             self.send(self.restKey)
-            QTimer.singleShot(100, self.stop2)
+            QTimer.singleShot(100, lambda:
+                ProcessToggleButton.stop(self, 2))
         else:
-            self.stop2()
-
-    def stop2(self):
-        ProcessToggleButton.stop(self, 2)
+            ProcessToggleButton.stop(self, 2)
 
     def stopped(self):
         if self.d.keyboardEmu:
