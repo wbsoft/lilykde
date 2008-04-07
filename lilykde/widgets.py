@@ -171,6 +171,10 @@ class ProcessToggleButton(QPushButton):
         self.connect(self, SIGNAL("clicked()"), self.clicked)
         self._p = None      # placeholder for KProcess
 
+    def kProcess(self):
+        """ Returns the associated KProcess instance or None """
+        return self._p
+
     def onStart(self):
         """
         Implement this to set:
@@ -183,7 +187,7 @@ class ProcessToggleButton(QPushButton):
         pass
 
     def started(self):
-        """ Called after a succesful start """
+        """ Called after a successful start """
         pass
 
     def failed(self):
@@ -243,18 +247,12 @@ class ProcessToggleButton(QPushButton):
             self._p = None
             self.failed()
 
-    def stop(self):
+    def stop(self, signal=15):
         """ Stop the process """
-        self.kill()
-
-    def kill(self, signal=15):
         self._p.kill(signal)
 
     def processExited(self):
-        if self.stopped.func_code.co_argcount == 2:
-            self.stopped(self._p)
-        else:
-            self.stopped()
+        self.stopped()
         self._p = None
         self.setDown(False)
 
