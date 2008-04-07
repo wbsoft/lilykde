@@ -155,7 +155,7 @@ class ExecArgsLineEdit(ExecLineEdit):
         return str(filename).split()[0]
 
 
-class ProcessToggleButton(QPushButton):
+class ProcessButton(QPushButton):
     """
     A Pushbutton that starts a process when clicked, and stops it when
     clicked again.

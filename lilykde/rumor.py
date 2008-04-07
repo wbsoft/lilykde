@@ -12,7 +12,7 @@ import kate
 import kate.gui
 
 from lilykde.util import kprocess, qstringlist2py
-from lilykde.widgets import ProcessToggleButton
+from lilykde.widgets import ProcessButton
 from lilykde import config
 
 # Translate the messages
@@ -108,7 +108,7 @@ class RumorData(object):
         self.command = cmd
 
 
-class RumorButton(ProcessToggleButton):
+class RumorButton(ProcessButton):
     """
     The button that starts and stops Rumor.
     The parent is the widget object that holds the button
@@ -118,7 +118,7 @@ class RumorButton(ProcessToggleButton):
     restKey = " "
 
     def __init__(self, parent):
-        ProcessToggleButton.__init__(self, "REC", parent)
+        ProcessButton.__init__(self, "REC", parent)
         self.setMinimumHeight(100)
         self.setMinimumWidth(100)
         self.setFont(QFont("Sans", 20, 75))
@@ -149,9 +149,9 @@ class RumorButton(ProcessToggleButton):
         if self.d.keyboardEmu:
             self.send(self.restKey)
             QTimer.singleShot(100, lambda:
-                ProcessToggleButton.stop(self, 2))
+                ProcessButton.stop(self, 2))
         else:
-            ProcessToggleButton.stop(self, 2)
+            ProcessButton.stop(self, 2)
 
     def stopped(self):
         if self.d.keyboardEmu:
