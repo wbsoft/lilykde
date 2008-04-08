@@ -218,14 +218,27 @@ class Rumor(QFrame):
         hb.addStretch(1)
 
         # Meter select (editable qcombobox defaulting to document)
-        self.meter = MeterControl(self)
+        self.meter = QComboBox(self)
+        self.meter.setEditable(True)
+        self.meter.insertStringList(py2qstringlist([
+            AUTO,
+            '1/4', '2/4', '3/4', '4/4', '5/4', '6/4',
+            '2/2', '3/2',
+            '3/8', '6/8', '9/8', '12/8',
+            '3/16',
+            ]))
+        self.meter.setValidator(QRegExpValidator(QRegExp(
+            re.escape(AUTO) + "|[1-9][0-9]*/(1|2|4|8|16|32|64|128)"),
+            self.meter))
         layout.addWidget(self.meter, 1, 2)
 
         # Quantize (1,2,4,8,16,32,64 or 128, default to 16)
         hb = QHBoxLayout()
         layout.addLayout(hb, 1, 3)
         hb.addWidget(QLabel(_("Quantize:"), self))
-        self.quantize = QuantizeControl(self)
+        self.quantize = QComboBox(self)
+        self.quantize.insertStringList(py2qstringlist(
+            str(2**i) for i in range(8)))
         hb.addWidget(self.quantize)
 
         # Step recording: (checkbox, disables the three controls above)
@@ -318,33 +331,6 @@ class TempoControl(object):
         bpm = int(60.0 / (self.time - t))
         if self.minBPM <= bpm <= self.maxBPM:
             self.setTempo(bpm)
-
-
-class QuantizeControl(QComboBox):
-    """
-    A populated QComboBox with values that are a power of two
-    """
-    def __init__(self, *args):
-        QComboBox.__init__(self, *args)
-        self.insertStringList(py2qstringlist(str(2**i) for i in range(8)))
-
-
-class MeterControl(QComboBox):
-    """
-    A QComboBox to set the current meter
-    """
-    def __init__(self, *args):
-        QComboBox.__init__(self, *args)
-        self.setEditable(True)
-        self.insertStringList(py2qstringlist([
-            AUTO,
-            '1/4', '2/4', '3/4', '4/4', '5/4', '6/4',
-            '2/2', '3/2',
-            '3/8', '6/8', '9/8', '12/8',
-            '3/16',
-            ]))
-        self.setValidator(QRegExpValidator(QRegExp(
-            re.escape(AUTO) + "|[1-9][0-9]*/(1|2|4|8|16|32|64|128)"), self))
 
 
 
