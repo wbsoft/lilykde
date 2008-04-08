@@ -119,6 +119,10 @@ class RumorData(object):
                     meter = '4/4'
             cmd.append("--meter=%s" % meter)
 
+        # Monophonic input?
+        if int(conf.get("mono", "0")):
+            cmd.append("--no-chords")
+
         cmd.append("--oss=1") # FIXME
         self.keyboardEmu = True # FIXME
         if self.keyboardEmu:
@@ -141,6 +145,7 @@ class RumorButton(ProcessButton):
         self.setMinimumHeight(100)
         self.setMinimumWidth(100)
         self.setMaximumHeight(200)
+        QToolTip.add(self, _("Start or stop Rumor"))
 
     def heightForWidth(self, w):
         return min(max(w, 100), 200)
@@ -247,7 +252,15 @@ class Rumor(QFrame):
 
         # Step recording: (checkbox, disables the three controls above)
         self.step = QCheckBox(_("Step"), self)
+        QToolTip.add(self.step, _(
+            "Record LilyPond input note by note, without durations."))
         hb.addWidget(self.step)
+
+        # Monophonic input (no chords)
+        self.mono = QCheckBox(_("Mono"), self)
+        QToolTip.add(self.mono, _(
+            "Record monophonic input, without chords."))
+        hb.addWidget(self.mono)
         hb.addStretch(1)
 
         # Key signature select (any lilypond pitch, defaulting to document)
@@ -283,6 +296,7 @@ class Rumor(QFrame):
         conf["tempo"] = self.tempo.tempo()
         conf["quantize"] = self.quantize.currentText()
         conf["step"] = self.step.isChecked() and "1" or "0"
+        conf["mono"] = self.mono.isChecked() and "1" or "0"
         meter = self.meter.currentText()
         if meter == AUTO:
             meter = "auto"
@@ -295,6 +309,7 @@ class Rumor(QFrame):
         self.tempo.setTempo(int(conf.get("tempo", 100)))
         self.quantize.setCurrentText(conf.get("quantize", "16"))
         self.step.setChecked(bool(int(conf.get("step", "0"))))
+        self.mono.setChecked(bool(int(conf.get("mono", "0"))))
         meter = conf.get("meter", "auto")
         if meter == "auto":
             meter = AUTO
@@ -320,6 +335,8 @@ class TempoControl(object):
         QObject.connect(self.spinbox, SIGNAL("valueChanged(int)"),
             self.slider.setValue)
         self.slider.setMinimumWidth(200)
+        QToolTip.add(self.tapButton, _(
+            "Click this button a few times to set the tempo."))
         # init tap time
         self.time = 0.0
 
