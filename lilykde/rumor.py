@@ -170,6 +170,8 @@ class RumorButton(ProcessButton):
         kate.view().insertText(text)
 
     def started(self):
+        self.parent().status.message(_(
+            "Rumor is recording, press ESC to stop."))
         self.lastKey = None
 
     def stop(self):
@@ -182,6 +184,7 @@ class RumorButton(ProcessButton):
             ProcessButton.stop(self, 2)
 
     def stopped(self):
+        self.parent().status.clear()
         if self.d.keyboardEmu:
             kate.mainWidget().setFocus()
 
@@ -203,19 +206,24 @@ class Rumor(QFrame):
         QFrame.__init__(self, *args)
         # Accept keyboard focus
         self.setFocusPolicy(QWidget.ClickFocus)
-        layout = QGridLayout(self, 3, 4, 4)
-        layout.setColStretch(3, 1)
+        layout = QGridLayout(self, 4, 5, 4)
+        layout.setColStretch(4, 1)
         self.setMinimumHeight(120)
         self.setMaximumHeight(200)
 
         # Big Start/stop toggle button
         self.r = RumorButton(self)
-        layout.addMultiCellWidget(self.r, 0, 2, 0, 0)
+        layout.addMultiCellWidget(self.r, 0, 3, 0, 0)
 
         # labels for other controls:
         layout.addWidget(QLabel(_("Tempo:"), self), 0, 1)
         layout.addWidget(QLabel(_("Meter:"), self), 1, 1)
         layout.addWidget(QLabel(_("Key:"), self), 2, 1)
+
+        # Status line
+        self.status = QStatusBar(self)
+        self.status.setSizeGripEnabled(False)
+        layout.addMultiCellWidget(self.status, 3, 3, 1, 4)
 
         # Tempo adjustment (spinbox + long slider)
         self.tempo = TempoControl(self)
@@ -224,7 +232,7 @@ class Rumor(QFrame):
         layout.addLayout(hb, 0, 3)
         hb.addWidget(self.tempo.slider)
         hb.addWidget(self.tempo.tapButton)
-        hb.addStretch(1)
+#        hb.addStretch(1)
 
         # Meter select (editable qcombobox defaulting to document)
         self.meter = QComboBox(self)
@@ -239,6 +247,9 @@ class Rumor(QFrame):
         self.meter.setValidator(QRegExpValidator(QRegExp(
             re.escape(AUTO) + "|[1-9][0-9]*/(1|2|4|8|16|32|64|128)"),
             self.meter))
+        QToolTip.add(self.meter, _(
+            "The meter to use. Leave 'Auto' to let LilyKDE determine "
+            "the meter from the LilyPond document."))
         layout.addWidget(self.meter, 1, 2)
 
         # Quantize (1,2,4,8,16,32,64 or 128, default to 16)
@@ -248,6 +259,8 @@ class Rumor(QFrame):
         self.quantize = QComboBox(self)
         self.quantize.insertStringList(py2qstringlist(
             str(2**i) for i in range(8)))
+        QToolTip.add(self.quantize, _(
+            "The shortest note duration to use."))
         hb.addWidget(self.quantize)
 
         # Step recording: (checkbox, disables the three controls above)
@@ -261,7 +274,7 @@ class Rumor(QFrame):
         QToolTip.add(self.mono, _(
             "Record monophonic input, without chords."))
         hb.addWidget(self.mono)
-        hb.addStretch(1)
+#        hb.addStretch(1)
 
         # Key signature select (any lilypond pitch, defaulting to document)
 
@@ -335,6 +348,8 @@ class TempoControl(object):
         QObject.connect(self.spinbox, SIGNAL("valueChanged(int)"),
             self.slider.setValue)
         self.slider.setMinimumWidth(200)
+        QToolTip.add(self.spinbox, _(
+            "The tempo in beats per minute."))
         QToolTip.add(self.tapButton, _(
             "Click this button a few times to set the tempo."))
         # init tap time
