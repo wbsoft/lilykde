@@ -3,6 +3,7 @@ LilyKDE module to run Rumor
 """
 
 import os, re
+from time import time
 from subprocess import Popen, PIPE
 
 from qt import *
@@ -11,13 +12,15 @@ from kdecore import KStandardDirs, KProcess
 import kate
 import kate.gui
 
-from lilykde.util import kprocess, qstringlist2py
+from lilykde.util import kprocess, qstringlist2py, py2qstringlist
 from lilykde.widgets import ProcessButton
 from lilykde import config
 
 # Translate the messages
 from lilykde.i18n import _
 
+
+AUTO = _("Auto")
 
 # find Rumor support files
 def getRumorFiles(pattern = "*"):
@@ -62,6 +65,7 @@ def getOSSnrMIDIs():
 class RumorData(object):
     """ Collects all data before starting Rumor """
     def __init__(self):
+        conf = config("rumor")
         # - indent of current line
         self.indent = re.match(r'\s*',
             kate.view().currentLine[:kate.view().cursor.position[1]]).group()
@@ -69,15 +73,10 @@ class RumorData(object):
         # Here we should check the user settings (meter, lang, key etc.)
         # if "Default" is selected, try to determine in a really unintelligent
         # way!
-        meter = "4/4"   # FIXME
 
         # - text from start to cursor
         text = kate.document().fragment((0, 0), kate.view().cursor.position)
-        # - find the latest \time command:
-        m = re.compile(r'.*\\time\s*(\d+/(1|2|4|8|16|32|64|128))(?!\d)',
-            re.DOTALL).match(text)
-        if m:
-            meter = m.group(1)
+
         # - determine lily language
         m = re.compile(r'.*\\include\s*"('
             "nederlands|english|deutsch|norsk|svenska|suomi|"
@@ -96,15 +95,30 @@ class RumorData(object):
         else:
             lang = "ne" # the default
 
-        # wrap in pty if keyboard used and grab keyboard
         cmd = [config("commands").get("rumor", "rumor")]
-        cmd.append("--meter=" + meter)
         cmd.append("--lang=" + lang)
+        # Step recording?
+        if int(conf.get("step", "0")):
+            cmd.append("--flat")
+        else:
+            # No, set tempo, quantization and meter
+            cmd.append("--tempo=%s" % conf.get("tempo", "100"))
+            cmd.append("--grain=%s" % conf.get("quantize", "16"))
+            meter = conf.get("meter", "auto")
+            if meter == "auto":
+                # determine from document - find the latest \time command:
+                m = re.compile(r'.*\\time\s*(\d+/(1|2|4|8|16|32|64|128))(?!\d)',
+                    re.DOTALL).match(text)
+                if m:
+                    meter = m.group(1)
+                else:
+                    meter = '4/4'
+            cmd.append("--meter=%s" % meter)
+
         cmd.append("--oss=1") # FIXME
         self.keyboardEmu = True # FIXME
         if self.keyboardEmu:
             cmd.append("--kbd")
-
         self.command = cmd
 
 
@@ -118,13 +132,18 @@ class RumorButton(ProcessButton):
     restKey = " "
 
     def __init__(self, parent):
-        ProcessButton.__init__(self, "REC", parent)
+        ProcessButton.__init__(self, _("REC"), parent)
+        self.setFont(QFont("Sans", 20, 75))
         self.setMinimumHeight(100)
         self.setMinimumWidth(100)
-        self.setFont(QFont("Sans", 20, 75))
+        self.setMaximumHeight(200)
+
+    def heightForWidth(self, w):
+        return min(max(w, 100), 200)
 
     def onStart(self):
         """ Here we construct the command etc. """
+        self.parent().saveSettings()
         self.d = RumorData()
         self.command = self.d.command
         if self.d.keyboardEmu:
@@ -158,7 +177,7 @@ class RumorButton(ProcessButton):
             kate.mainWidget().setFocus()
 
     def sendkey(self, key):
-        # pass key to Rumor, TODO: make repeats possible
+        # pass key to Rumor
         if key == self.restKey or key != self.lastKey:
             self.send(key)
             self.lastKey = key
@@ -175,15 +194,45 @@ class Rumor(QFrame):
         QFrame.__init__(self, *args)
         # Accept keyboard focus
         self.setFocusPolicy(QWidget.ClickFocus)
+        layout = QGridLayout(self, 3, 4, 4)
+        layout.setColStretch(3, 1)
+        self.setMinimumHeight(120)
+        self.setMaximumHeight(200)
 
         # Big Start/stop toggle button
         self.r = RumorButton(self)
+        layout.addMultiCellWidget(self.r, 0, 2, 0, 0)
 
+        # labels for other controls:
+        layout.addWidget(QLabel(_("Tempo:"), self), 0, 1)
+        layout.addWidget(QLabel(_("Meter:"), self), 1, 1)
+        layout.addWidget(QLabel(_("Key:"), self), 2, 1)
+
+        # Tempo adjustment (spinbox + long slider)
+        self.tempo = TempoControl(self)
+        layout.addWidget(self.tempo.spinbox, 0, 2)
+        hb = QHBoxLayout()
+        layout.addLayout(hb, 0, 3)
+        hb.addWidget(self.tempo.slider)
+        hb.addWidget(self.tempo.tapButton)
+        hb.addStretch(1)
 
         # Meter select (editable qcombobox defaulting to document)
-        # Tempo adjustment (spinbox + long slider, 10 - 500, defaulting to doc)
+        self.meter = MeterControl(self)
+        layout.addWidget(self.meter, 1, 2)
+
         # Quantize (1,2,4,8,16,32,64 or 128, default to 16)
+        hb = QHBoxLayout()
+        layout.addLayout(hb, 1, 3)
+        hb.addWidget(QLabel(_("Quantize:"), self))
+        self.quantize = QuantizeControl(self)
+        hb.addWidget(self.quantize)
+
         # Step recording: (checkbox, disables the three controls above)
+        self.step = QCheckBox(_("Step"), self)
+        hb.addWidget(self.step)
+        hb.addStretch(1)
+
         # Key signature select (any lilypond pitch, defaulting to document)
 
         # Input Select (button with popup menu)
@@ -198,6 +247,9 @@ class Rumor(QFrame):
         # in Settings page:
         # - Metronome settings (creating a scm script that rumor loads)
 
+        self.loadSettings()
+
+
     def keyPressEvent(self, e):
         """ Called when the user presses a key. """
         if (self.r.isRunning() and e.key() == Qt.Key_Escape) or \
@@ -207,6 +259,92 @@ class Rumor(QFrame):
                 not e.isAutoRepeat() and not e.text().isEmpty():
             # pass key to Rumor
             self.r.sendkey(str(e.text()))
+
+    def saveSettings(self):
+        """ Saves the settings to lilykderc """
+        conf = config("rumor")
+        conf["tempo"] = self.tempo.tempo()
+        conf["quantize"] = self.quantize.currentText()
+        conf["step"] = self.step.isChecked() and "1" or "0"
+        meter = self.meter.currentText()
+        if meter == AUTO:
+            meter = "auto"
+        conf["meter"] = meter
+
+
+    def loadSettings(self):
+        """ Loads the settings from lilykderc """
+        conf = config("rumor")
+        self.tempo.setTempo(int(conf.get("tempo", 100)))
+        self.quantize.setCurrentText(conf.get("quantize", "16"))
+        self.step.setChecked(bool(int(conf.get("step", "0"))))
+        meter = conf.get("meter", "auto")
+        if meter == "auto":
+            meter = AUTO
+        self.meter.setCurrentText(meter)
+
+
+class TempoControl(object):
+    """
+    A combination of a spinbox, slider, and tap button to set the tempo.
+    """
+    minBPM = 30
+    maxBPM = 400
+
+    def __init__(self, parent):
+        self.spinbox = QSpinBox(self.minBPM, self.maxBPM, 1, parent)
+        self.slider = QSlider(
+            self.minBPM, self.maxBPM, 1, 100, Qt.Horizontal, parent)
+        self.tapButton = QPushButton(_("Tap"), parent)
+        # setup signals
+        QObject.connect(self.tapButton, SIGNAL("pressed()"), self.tap)
+        QObject.connect(self.slider, SIGNAL("valueChanged(int)"),
+            self.spinbox.setValue)
+        QObject.connect(self.spinbox, SIGNAL("valueChanged(int)"),
+            self.slider.setValue)
+        self.slider.setMinimumWidth(200)
+        # init tap time
+        self.time = 0.0
+
+    def tempo(self):
+        return self.spinbox.value()
+
+    def setTempo(self, value):
+        self.spinbox.setValue(value)
+
+    def tap(self):
+        """ Tap the tempo """
+        self.time, t = time(), self.time
+        bpm = int(60.0 / (self.time - t))
+        if self.minBPM <= bpm <= self.maxBPM:
+            self.setTempo(bpm)
+
+
+class QuantizeControl(QComboBox):
+    """
+    A populated QComboBox with values that are a power of two
+    """
+    def __init__(self, *args):
+        QComboBox.__init__(self, *args)
+        self.insertStringList(py2qstringlist(str(2**i) for i in range(8)))
+
+
+class MeterControl(QComboBox):
+    """
+    A QComboBox to set the current meter
+    """
+    def __init__(self, *args):
+        QComboBox.__init__(self, *args)
+        self.setEditable(True)
+        self.insertStringList(py2qstringlist([
+            AUTO,
+            '1/4', '2/4', '3/4', '4/4', '5/4', '6/4',
+            '2/2', '3/2',
+            '3/8', '6/8', '9/8', '12/8',
+            '3/16',
+            ]))
+        self.setValidator(QRegExpValidator(QRegExp(
+            re.escape(AUTO) + "|[1-9][0-9]*/(1|2|4|8|16|32|64|128)"), self))
 
 
 

@@ -31,6 +31,7 @@ translate = \
 	../lilykde/widgets.py \
 	../lilykde/hyphen.py \
 	../lilykde/settings.py \
+	../lilykde/rumor.py \
 	../lilypond-servicemenu-helper.py \
 
 

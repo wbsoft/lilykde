@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-06 23:46+0200\n"
-"PO-Revision-Date: 2008-04-04 09:01+0200\n"
+"POT-Creation-Date: 2008-04-08 16:02+0200\n"
+"PO-Revision-Date: 2008-04-08 16:04+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -190,8 +190,7 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr ""
-"Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
+msgstr "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
 #: ../lilykde/version.py:73
 msgid "This LilyPond document is already up-to-date."
@@ -299,9 +298,8 @@ msgstr ""
 "uitvoer via Rumor)."
 
 #: ../lilykde/settings.py:98
-msgid ""
-"Full command to start Timidity (or any other program) as an ALSA MIDI client."
-msgstr ""
+msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgstr "Commandoregel om Timidity (of een ander programma) te starten als ALSA MIDI-client."
 
 #: ../lilykde/settings.py:131
 msgid "Hyphenation"
@@ -335,14 +333,11 @@ msgstr "Map met de LilyPond- en PDF-documenten openen."
 
 #: ../lilykde/settings.py:180
 msgid "Open the generated PDF file with the default PDF viewer."
-msgstr ""
-"Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
+msgstr "Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
 
 #: ../lilykde/settings.py:182
-msgid ""
-"Print the PDF using the print command set in the Commands settings page."
-msgstr ""
-"De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
+msgid "Print the PDF using the print command set in the Commands settings page."
+msgstr "De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
 
 #: ../lilykde/settings.py:185
 msgid "Attach the PDF to an email message."
@@ -356,6 +351,42 @@ msgstr ""
 "De aangemaakte MIDI-bestanden afspelen met de standaard MIDI-speler (Timidity"
 "++ is aanbevolen)."
 
+#: ../lilykde/rumor.py:23
+msgid "Auto"
+msgstr "Auto"
+
+#: ../lilykde/rumor.py:135
+msgid "REC"
+msgstr "REC"
+
+#: ../lilykde/rumor.py:207
+msgid "Tempo:"
+msgstr "Tempo:"
+
+#: ../lilykde/rumor.py:208
+msgid "Meter:"
+msgstr "Maatsoort:"
+
+#: ../lilykde/rumor.py:209
+msgid "Key:"
+msgstr "Toonsoort:"
+
+#: ../lilykde/rumor.py:227
+msgid "Quantize:"
+msgstr "Quantiseren:"
+
+#: ../lilykde/rumor.py:232
+msgid "Step"
+msgstr "Stap"
+
+#: ../lilykde/rumor.py:298
+msgid "Tap"
+msgstr "Tik"
+
+#: ../lilykde/rumor.py:352
+msgid "Rumor"
+msgstr "Rumor"
+
 #: ../lilypond-servicemenu-helper.py:46
 msgid "One document failed."
 msgid_plural "$count documents failed."
@@ -365,3 +396,4 @@ msgstr[1] "$count documenten gefaald."
 #: ../lilypond-servicemenu-helper.py:50
 msgid "All documents successfully converted."
 msgstr "Alle documenten zijn succesvol geconverteerd."
+
