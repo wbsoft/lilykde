@@ -76,27 +76,31 @@ class RumorData(object):
 
         # - text from start to cursor
         text = kate.document().fragment((0, 0), kate.view().cursor.position)
-
-        # - determine lily language
-        m = re.compile(r'.*\\include\s*"('
-            "nederlands|english|deutsch|norsk|svenska|suomi|"
-            "italiano|catalan|espanol|portuges|vlaams"
-            r')\.ly"', re.DOTALL).match(text)
-        if m:
-            lang = m.group(1)[:2]
-            if lang == "po": lang = "es"
-            elif lang == "su": lang = "de"
-            elif lang == "en" and not re.match(r'\b[a-g](flat|sharp)\b', text):
-                lang == "en-short"
-            elif lang == "vl":
-                # "vlaams" is not supported by Rumor
-                # TODO: rewrite the pitches output by Rumor
-                lang == "it"
-        else:
-            lang = "ne" # the default
-
         cmd = [config("commands").get("rumor", "rumor")]
-        cmd.append("--lang=" + lang)
+        # Language
+        lang = conf.get("language", "auto")
+        if lang not in (
+                'ne', 'en', 'en-short', 'de', 'no', 'sv', 'it', 'ca', 'es'):
+            # determine lily language from document
+            m = re.compile(r'.*\\include\s*"('
+                "nederlands|english|deutsch|norsk|svenska|suomi|"
+                "italiano|catalan|espanol|portuges|vlaams"
+                r')\.ly"', re.DOTALL).match(text)
+            if m:
+                lang = m.group(1)[:2]
+                if lang == "po": lang = "es"
+                elif lang == "su": lang = "de"
+                elif lang == "en" and not re.match(
+                        r'\b[a-g](flat|sharp)\b', text):
+                    lang == "en-short"
+                elif lang == "vl":
+                    # "vlaams" is not supported by Rumor
+                    # TODO: rewrite the pitches output by Rumor :-)
+                    lang == "it"
+            else:
+                lang = "ne" # the default
+        cmd.append("--lang=%s" % lang)
+
         # Step recording?
         if int(conf.get("step", "0")):
             cmd.append("--flat")
