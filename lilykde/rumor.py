@@ -110,7 +110,7 @@ def parseAconnect(channel):
         m = re.match(r"client\s*(\d+)|\s*(\d+)\s+'([^']+)'", line)
         if m.group(1):
             client = m.group(1)
-        else:
+        elif client != "0":
             port, name = m.group(2,3)
             res.append(("%s:%s" % (client, port), name.strip()))
     return res
@@ -227,8 +227,16 @@ class RumorButton(ProcessButton):
         if p.mono.isChecked():
             cmd.append("--no-chords")
 
-        cmd.append("--oss=1") # FIXME
-        self.keyboardEmu = True # FIXME
+        # input/output
+        i = conf.get("midiIn", "oss:1")
+        o = conf.get("midiOut", "oss:1")
+        if o.startswith('oss:'):
+            cmd.append("--oss=%s" % o.split(":")[1])
+        elif re.match(r"\d", o) and re.match(r"\d", i):
+            cmd.append("--alsa=%s,%s" % (i, o))
+        elif re.match(r"\d", o):
+            cmd.append("--alsa=%s" % o)
+        self.keyboardEmu = i == "keyboard"
 
         if self.keyboardEmu:
             cmd.append("--kbd")
@@ -411,7 +419,7 @@ class Rumor(QFrame):
         if e.key() == Qt.Key_Escape:
             self.r.animateClick()
         elif self.r.keyboardEmu:
-            if e.key() == Qt.Key_Enter:
+            if e.key() in (Qt.Key_Enter, Qt.Key_Return):
                 kate.view().insertText('\n' + self.r.indent)
             elif not e.isAutoRepeat() and not e.text().isEmpty():
                 # pass key to Rumor
@@ -487,29 +495,40 @@ class RumorSettings(QDialog):
 
     def __init__(self, parent):
         QDialog.__init__(self, parent)
+        self.setCaption(_("Rumor Settings"))
         layout = QGridLayout(self, 5, 2, 8, 4)
         # MIDI input and output.
         # Get the list of available OSS devices
         oslist = [('oss:%d' % i, _("OSS device %d") % i )
             for i in range(getOSSnrMIDIs())]
-        i = oslist + parseAconnect('i') + [("kbd", _("Keyboard"))]
+        i = oslist + parseAconnect('i') + [("keyboard", _("Keyboard"))]
         o = oslist + parseAconnect('o')
-        self.ilist, ititles = (list(j) for j in zip(*i))
-        self.olist, otitles = (list(j) for j in zip(*o))
+        self.ilist, ititles = map(list, zip(*i))
+        self.olist, otitles = map(list, zip(*o))
 
         # input
         layout.addWidget(QLabel(_("MIDI input:"), self), 1, 0)
         self.ibut = QComboBox(self)
         self.ibut.insertStringList(py2qstringlist(ititles))
+        QToolTip.add(self.ibut, _("MIDI input to use. Choose 'Keyboard' if "
+            "you want to play on the keyboard of your computer."))
         layout.addWidget(self.ibut, 1, 1)
 
         # output
         layout.addWidget(QLabel(_("MIDI output:"), self), 2, 0)
         self.obut = QComboBox(self)
         self.obut.insertStringList(py2qstringlist(otitles))
+        QToolTip.add(self.obut, _("MIDI output to use."))
         layout.addWidget(self.obut, 2, 1)
 
         # Language
+        layout.addWidget(QLabel(_("Language:"), self), 3, 0)
+        self.lang = QComboBox(self)
+        self.lang.insertStringList(py2qstringlist((
+            AUTO, 'ne', 'en', 'en-short', 'de', 'no', 'sv', 'it', 'ca', 'es')))
+        QToolTip.add(self.lang, _("The LilyPond language you want Rumor to "
+            "output the pitches in."))
+        layout.addWidget(self.lang, 3, 1)
 
         # explicit durations
 
@@ -543,12 +562,15 @@ class RumorSettings(QDialog):
             self.ibut.setCurrentItem(self.ilist.index(i))
         if o in self.olist:
             self.obut.setCurrentItem(self.olist.index(o))
+        self.lang.setCurrentText(unautofy(conf.get("language", "auto")))
 
     def saveSettings(self):
         """ Save the settings """
         conf = config("rumor")
         conf["midiIn"] = self.ilist[self.ibut.currentItem()]
         conf["midiOut"] = self.olist[self.obut.currentItem()]
+        conf["language"] = autofy(self.lang.currentText())
+
 
     def accept(self):
         self.saveSettings()
