@@ -284,7 +284,6 @@ class RumorButton(ProcessButton):
             self.comm = KProcess.AllOutput
             self.pty = False
         self.command = cmd
-        print cmd
 
     def receivedStdout(self, proc, buf, length):
         """ Writes the received text from Rumor into the Kate buffer """
