@@ -8,6 +8,7 @@ from subprocess import Popen, PIPE
 
 from qt import *
 from kdecore import KStandardDirs, KProcess
+from kdeui import KPushButton, KStdGuiItem
 
 import kate
 import kate.gui
@@ -493,20 +494,20 @@ class RumorSettings(QDialog):
             for i in range(getOSSnrMIDIs())]
         i = oslist + parseAconnect('i') + [("kbd", _("Keyboard"))]
         o = oslist + parseAconnect('o')
-        self.ilist, ititles = zip(*i)
-        self.olist, otitles = zip(*o)
+        self.ilist, ititles = (list(j) for j in zip(*i))
+        self.olist, otitles = (list(j) for j in zip(*o))
 
         # input
         layout.addWidget(QLabel(_("MIDI input:"), self), 1, 0)
-        self.inbut = QComboBox(self)
-        self.inbut.insertStringList(py2qstringlist(ititles))
-        layout.addWidget(self.inbut, 1, 1)
+        self.ibut = QComboBox(self)
+        self.ibut.insertStringList(py2qstringlist(ititles))
+        layout.addWidget(self.ibut, 1, 1)
 
         # output
         layout.addWidget(QLabel(_("MIDI output:"), self), 2, 0)
-        self.outbut = QComboBox(self)
-        self.outbut.insertStringList(py2qstringlist(otitles))
-        layout.addWidget(self.outbut, 2, 1)
+        self.obut = QComboBox(self)
+        self.obut.insertStringList(py2qstringlist(otitles))
+        layout.addWidget(self.obut, 2, 1)
 
         # Language
 
@@ -514,11 +515,22 @@ class RumorSettings(QDialog):
 
         # absolute pitches
 
+        # Ok, Cancel
+        hb = QHBoxLayout()
+        layout.addLayout(hb, 5,1)
+        ok = KPushButton(KStdGuiItem.ok(), self)
+        can = KPushButton(KStdGuiItem.cancel(), self)
+        QObject.connect(ok, SIGNAL("clicked()"), self.accept)
+        QObject.connect(can, SIGNAL("clicked()"), self.reject)
+        hb.addWidget(ok)
+        hb.addWidget(can)
 
-
+        self.loadSettings()
         self.exec_loop()
 
     def loadSettings(self):
+        """ Load the settings """
+        conf = config("rumor")
         if 'oss:1' in self.ilist:
             idefault = 'oss:1'
             odefault = 'oss:1'
@@ -527,15 +539,20 @@ class RumorSettings(QDialog):
             odefault = self.olist[max(1, len(self.outlist)-1)]
         i = conf.get("midiIn", idefault)
         o = conf.get("midiOut", odefault)
-
+        if i in self.ilist:
+            self.ibut.setCurrentItem(self.ilist.index(i))
+        if o in self.olist:
+            self.obut.setCurrentItem(self.olist.index(o))
 
     def saveSettings(self):
         """ Save the settings """
         conf = config("rumor")
-        conf["midiIn"] = self.ilist[self.inbut.currentItem()]
-        conf["midiOut"] = self.olist[self.outbut.currentItem()]
+        conf["midiIn"] = self.ilist[self.ibut.currentItem()]
+        conf["midiOut"] = self.olist[self.obut.currentItem()]
 
-
+    def accept(self):
+        self.saveSettings()
+        self.done(QDialog.Accepted)
 
 
 
