@@ -163,7 +163,6 @@ class RumorButton(ProcessButton):
     def __init__(self, parent):
         ProcessButton.__init__(self, _("REC"), parent)
         self.setFont(QFont("Sans", 20, 75))
-        self.setMinimumHeight(100)
         self.setMinimumWidth(100)
         self.setMaximumHeight(200)
         QToolTip.add(self, _("Start or stop Rumor"))
@@ -174,17 +173,11 @@ class RumorButton(ProcessButton):
     def onStart(self):
         """ Here we construct the command etc. """
         p = self.parent()
-        p.saveSettings()
         conf = config("rumor")
-        # - indent of current line
+        # indent of current line
         self.indent = re.match(r'\s*',
             kate.view().currentLine[:kate.view().cursor.position[1]]).group()
-
-        # Here we should check the user settings (meter, lang, key etc.)
-        # if "Default" is selected, try to determine in a really unintelligent
-        # way!
-
-        # - text from start to cursor
+        # text from start to cursor
         text = kate.document().fragment((0, 0), kate.view().cursor.position)
         cmd = [config("commands").get("rumor", "rumor")]
         # Language
@@ -212,13 +205,13 @@ class RumorButton(ProcessButton):
         cmd.append("--lang=%s" % lang)
 
         # Step recording?
-        if int(conf.get("step", "0")):
+        if p.step.isChecked():
             cmd.append("--flat")
         else:
             # No, set tempo, quantization and meter
-            cmd.append("--tempo=%s" % conf.get("tempo", "100"))
-            cmd.append("--grain=%s" % conf.get("quantize", "16"))
-            meter = conf.get("meter", "auto")
+            cmd.append("--tempo=%d" % p.tempo.tempo())
+            cmd.append("--grain=%s" % p.quantize.currentText())
+            meter = autofy(p.meter.currentText())
             if meter == "auto":
                 # determine from document - find the latest \time command:
                 m = re.compile(r'.*\\time\s*(\d+/(1|2|4|8|16|32|64|128))(?!\d)',
@@ -230,7 +223,7 @@ class RumorButton(ProcessButton):
             cmd.append("--meter=%s" % meter)
 
         # Monophonic input?
-        if int(conf.get("mono", "0")):
+        if p.mono.isChecked():
             cmd.append("--no-chords")
 
         cmd.append("--oss=1") # FIXME
@@ -291,8 +284,6 @@ class Rumor(QFrame):
         self.setFocusPolicy(QWidget.ClickFocus)
         layout = QGridLayout(self, 4, 5, 4)
         layout.setColStretch(4, 1)
-        self.setMinimumHeight(120)
-        self.setMaximumHeight(200)
 
         # Big Start/stop toggle button
         self.r = RumorButton(self)
@@ -315,7 +306,6 @@ class Rumor(QFrame):
         layout.addLayout(hb, 0, 3)
         hb.addWidget(self.tempo.slider)
         hb.addWidget(self.tempo.tapButton)
-#        hb.addStretch(1)
 
         # Meter select (editable qcombobox defaulting to document)
         self.meter = QComboBox(self)
@@ -357,7 +347,6 @@ class Rumor(QFrame):
         QToolTip.add(self.mono, _(
             "Record monophonic input, without chords."))
         hb.addWidget(self.mono)
-#        hb.addStretch(1)
 
         # Key signature select (any lilypond pitch, defaulting to document)
         self.keysig = QComboBox(self)
@@ -372,17 +361,24 @@ class Rumor(QFrame):
             "the LilyPond document."))
         layout.addWidget(self.keysig, 2, 2)
 
-        # Button 'More Settings'
         hb = QHBoxLayout()
         layout.addLayout(hb, 2, 3)
+
+        # Timidity button
+        self.timidity = TimidityButton(self)
+        hb.addWidget(self.timidity)
+
+        # Button 'More Settings'
         self.settingsButton = QPushButton(_("More Settings"), self)
         QToolTip.add(self.settingsButton, _(
             "Adjust more settings, like MIDI input and output."))
         hb.addWidget(self.settingsButton)
 
-        # Timidity button
-        self.timidity = TimidityButton(self)
-        hb.addWidget(self.timidity)
+        # Save Button
+        sb = QPushButton(_("Save"), self)
+        QToolTip.add(sb, _("Set these settings as default"))
+        QObject.connect(sb, SIGNAL("clicked()"), self.saveSettings)
+        hb.addWidget(sb)
 
         # Input Select (button with popup menu)
         # Output select (button with popup menu)
@@ -398,6 +394,14 @@ class Rumor(QFrame):
 
         self.loadSettings()
 
+        # display Rumor version on first start.
+        cmd = config("commands").get("rumor", "rumor")
+        try:
+            v = Popen([cmd, '--version'], stdout=PIPE).communicate()[0].strip()
+            self.status.message(_("Found rumor version $version.").args(
+                version = v), 5000)
+        except OSError, e:
+            self.status.message(_("Could not find Rumor: %s") % e)
 
     def keyPressEvent(self, e):
         """ Called when the user presses a key. """
@@ -422,6 +426,7 @@ class Rumor(QFrame):
         conf["meter"] = autofy(self.meter.currentText())
         conf["keysig"] = autofy(self.keysig.currentText())
         conf["timidity"] = self.timidity.isRunning() and "1" or "0"
+        self.status.message(_("Settings have been saved."), 2000)
 
     def loadSettings(self):
         """ Loads the settings from lilykderc """
