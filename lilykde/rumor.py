@@ -415,14 +415,14 @@ class Rumor(QFrame):
         hb.addWidget(self.timidity)
 
         # Button 'More Settings'
-        sb = QPushButton(_("More Settings"), self)
+        sb = QPushButton(_("More Settings..."), self)
         QToolTip.add(sb, _("Adjust more settings, like MIDI input and output."))
         QObject.connect(sb, SIGNAL("clicked()"), lambda: RumorSettings(self))
         hb.addWidget(sb)
 
         # Save Button
         sb = QPushButton(_("Save"), self)
-        QToolTip.add(sb, _("Set these settings as default"))
+        QToolTip.add(sb, _("Set these settings as default."))
         QObject.connect(sb, SIGNAL("clicked()"), self.saveSettings)
         hb.addWidget(sb)
 
