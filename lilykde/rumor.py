@@ -30,55 +30,66 @@ pitches = {
         'aes':-4, 'es':-3, 'ees':-3, 'bes':-2, 'f':-1,
         'c':0, 'g':1, 'd':2, 'a':3, 'e':4, 'b':5, 'fis':6, 'cis':7,
         'gis':8, 'dis':9, 'ais':10, 'eis':11, 'bis':12
-        },
+    },
     'en-short': {
         'ff':-8, 'cf':-7, 'gf':-6, 'df':-5,
         'af':-4, 'ef':-3, 'bf':-2, 'f':-1,
         'c':0, 'g':1, 'd':2, 'a':3, 'e':4, 'b':5, 'fs':6, 'cs':7,
         'gs':8, 'ds':9, 'as':10, 'es':11, 'bs':12
-        },
+    },
     'en': {
         'fflat':-8, 'cflat':-7, 'gflat':-6, 'dflat':-5,
         'aflat':-4, 'eflat':-3, 'bflat':-2, 'f':-1,
         'c':0, 'g':1, 'd':2, 'a':3, 'e':4, 'b':5, 'fsharp':6, 'csharp':7,
         'gsharp':8, 'dsharp':9, 'asharp':10, 'esharp':11, 'bsharp':12
-        },
+    },
     'de': {
         'fes':-8, 'ces':-7, 'ges':-6, 'des':-5, 'as':-4,
         'aes':-4, 'es':-3, 'ees':-3, 'b':-2, 'f':-1,
         'c':0, 'g':1, 'd':2, 'a':3, 'e':4, 'h':5, 'fis':6, 'cis':7,
         'gis':8, 'dis':9, 'ais':10, 'eis':11, 'his':12
-        },
+    },
     'sv': {
         'fess':-8, 'cess':-7, 'gess':-6, 'dess':-5, 'ass':-4,
         'aess':-4, 'ess':-3, 'eess':-3, 'b':-2, 'f':-1,
         'c':0, 'g':1, 'd':2, 'a':3, 'e':4, 'h':5, 'fiss':6, 'ciss':7,
         'giss':8, 'diss':9, 'aiss':10, 'eiss':11, 'hiss':12
-        },
+    },
     # no = (de|sv), su = de
     'it': {
         'fab':-8, 'dob':-7, 'solb':-6, 'reb':-5, 'lab':-4,
         'mib':-3, 'sib':-2, 'fa':-1,
         'do':0, 'sol':1, 're':2, 'la':3, 'mi':4, 'si':5, 'fad':6, 'dod':7,
         'sold':8, 'red':9, 'lad':10, 'mid':11, 'sid':12
-        },
+    },
     'es': {
         'fab':-8, 'dob':-7, 'solb':-6, 'reb':-5, 'lab':-4,
         'mib':-3, 'sib':-2, 'fa':-1,
         'do':0, 'sol':1, 're':2, 'la':3, 'mi':4, 'si':5, 'fas':6, 'dos':7,
         'sols':8, 'res':9, 'las':10, 'mis':11, 'sis':12
-        },
+    },
     # ca = (it|es), po = es
     'vl': {
         'fab':-8, 'dob':-7, 'solb':-6, 'reb':-5, 'lab':-4,
         'mib':-3, 'sib':-2, 'fa':-1,
         'do':0, 'sol':1, 're':2, 'la':3, 'mi':4, 'si':5, 'fak':6, 'dok':7,
         'solk':8, 'rek':9, 'lak':10, 'mik':11, 'sik':12
-        },
+    },
 }
 
 revpitches = dict((lang, rdict(p)) for lang,p in pitches.iteritems())
 
+modes = {
+    'major': 0,
+    'minor': -3,
+    'ionian': 0,
+    'dorian': -2,
+    'phrygian': -4,
+    'lydian': 1,
+    'mixolydian': -1,
+    'aeolian': -3,
+    'locrian': -5,
+}
 
 # Handling of translated text in comboboxes
 AUTO = _("Auto")
@@ -223,13 +234,39 @@ class RumorButton(ProcessButton):
                     meter = '4/4'
             cmd.append("--meter=%s" % meter)
 
+        # Key signature
+        acc = autofy(p.keysig.currentText())
+        if acc == "auto":
+            # Determine key signature from document.
+            m = re.compile(
+                r'.*\\key\s+(' + '|'.join(pitches[lang].keys()) + r')\s*\\'
+                r'(major|minor|(ion|dor|phryg|(mixo)?lyd|aeol|locr)ian)\b',
+                re.DOTALL).match(text)
+            if m:
+                pitch, mode = m.group(1,2)
+                acc = pitches[lang][pitch] + modes[mode]
+            else:
+                acc = 0
+        else:
+            acc == int(acc)
+        if acc in revpitches[lang]:
+            cmd.append("--key=%s" % revpitches[lang][acc])
+
         # Monophonic input?
         if p.mono.isChecked():
             cmd.append("--no-chords")
 
+        # Absolute pitches?
+        if int(conf.get("absolute pitches", "0")):
+            cmd.append("--absolute-pitches")
+
+        # Explicit durations?
+        if int(conf.get("explicit durations", "0")):
+            cmd.append("--explicit-durations")
+
         # input/output
-        i = conf.get("midiIn", "oss:1")
-        o = conf.get("midiOut", "oss:1")
+        i = conf.get("midi in", "oss:1")
+        o = conf.get("midi out", "oss:1")
         if o.startswith('oss:'):
             cmd.append("--oss=%s" % o.split(":")[1])
         elif re.match(r"\d", o) and re.match(r"\d", i):
@@ -247,6 +284,7 @@ class RumorButton(ProcessButton):
             self.comm = KProcess.AllOutput
             self.pty = False
         self.command = cmd
+        print cmd
 
     def receivedStdout(self, proc, buf, length):
         """ Writes the received text from Rumor into the Kate buffer """
@@ -410,7 +448,7 @@ class Rumor(QFrame):
             self.status.message(_("Found rumor version $version.").args(
                 version = v), 5000)
         except OSError, e:
-            self.status.message(_("Could not find Rumor: %s") % e)
+            self.status.message(_("Could not find Rumor: %s") % e, 10000)
 
     def keyPressEvent(self, e):
         """ Called when the user presses a key. """
@@ -498,7 +536,7 @@ class RumorSettings(QDialog):
         self.setCaption(_("Rumor Settings"))
         layout = QGridLayout(self, 5, 2, 8, 4)
         # MIDI input and output.
-        # Get the list of available OSS devices
+        # Get the list of available OSS and ALSA devices
         oslist = [('oss:%d' % i, _("OSS device %d") % i )
             for i in range(getOSSnrMIDIs())]
         i = oslist + parseAconnect('i') + [("keyboard", _("Keyboard"))]
@@ -530,9 +568,20 @@ class RumorSettings(QDialog):
             "output the pitches in."))
         layout.addWidget(self.lang, 3, 1)
 
+        hb = QHBoxLayout()
+        layout.addMultiCellLayout(hb, 4, 4, 0, 1)
         # explicit durations
+        self.explDur = QCheckBox(_("Explicit durations"), self)
+        QToolTip.add(self.explDur, _(
+            "Add a duration after every note, even if it is the same as the "
+            "preceding note."))
+        hb.addWidget(self.explDur)
 
         # absolute pitches
+        self.absPitches = QCheckBox(_("Absolute pitch"), self)
+        QToolTip.add(self.absPitches, _(
+            "Use absolute pitches instead of relative."))
+        hb.addWidget(self.absPitches)
 
         # Ok, Cancel
         hb = QHBoxLayout()
@@ -551,25 +600,28 @@ class RumorSettings(QDialog):
         """ Load the settings """
         conf = config("rumor")
         if 'oss:1' in self.ilist:
-            idefault = 'oss:1'
-            odefault = 'oss:1'
+            idefault = odefault = 'oss:1'
         else:
             idefault = 'kbd'
             odefault = self.olist[max(1, len(self.outlist)-1)]
-        i = conf.get("midiIn", idefault)
-        o = conf.get("midiOut", odefault)
+        i = conf.get("midi in", idefault)
+        o = conf.get("midi out", odefault)
         if i in self.ilist:
             self.ibut.setCurrentItem(self.ilist.index(i))
         if o in self.olist:
             self.obut.setCurrentItem(self.olist.index(o))
         self.lang.setCurrentText(unautofy(conf.get("language", "auto")))
+        self.absPitches.setChecked(bool(int(conf.get("absolute pitches", "0"))))
+        self.explDur.setChecked(bool(int(conf.get("explicit durations", "0"))))
 
     def saveSettings(self):
         """ Save the settings """
         conf = config("rumor")
-        conf["midiIn"] = self.ilist[self.ibut.currentItem()]
-        conf["midiOut"] = self.olist[self.obut.currentItem()]
+        conf["midi in"] = self.ilist[self.ibut.currentItem()]
+        conf["midi out"] = self.olist[self.obut.currentItem()]
         conf["language"] = autofy(self.lang.currentText())
+        conf["absolute pitches"] = self.absPitches.isChecked() and "1" or "0"
+        conf["explicit durations"] = self.explDur.isChecked() and "1" or "0"
 
 
     def accept(self):
