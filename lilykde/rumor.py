@@ -13,14 +13,79 @@ import kate
 import kate.gui
 
 from lilykde.util import kprocess, qstringlist2py, py2qstringlist
-from lilykde.widgets import ProcessButton
+from lilykde.widgets import error, ProcessButton
 from lilykde import config
 
 # Translate the messages
 from lilykde.i18n import _
 
-
 AUTO = _("Auto")
+
+def rdict(d):
+    """ reverse a dict """
+    return dict((v,k) for k,v in d.iteritems())
+
+pitches = {
+    'ne': {
+        'fes':-8, 'ces':-7, 'ges':-6, 'des':-5, 'as':-4,
+        'aes':-4, 'es':-3, 'ees':-3, 'bes':-2, 'f':-1,
+        'c':0, 'g':1, 'd':2, 'a':3, 'e':4, 'b':5, 'fis':6, 'cis':7,
+        'gis':8, 'dis':9, 'ais':10, 'eis':11, 'bis':12
+        },
+    'en-short': {
+        'ff':-8, 'cf':-7, 'gf':-6, 'df':-5,
+        'af':-4, 'ef':-3, 'bf':-2, 'f':-1,
+        'c':0, 'g':1, 'd':2, 'a':3, 'e':4, 'b':5, 'fs':6, 'cs':7,
+        'gs':8, 'ds':9, 'as':10, 'es':11, 'bs':12
+        },
+    'en': {
+        'fflat':-8, 'cflat':-7, 'gflat':-6, 'dflat':-5,
+        'aflat':-4, 'eflat':-3, 'bflat':-2, 'f':-1,
+        'c':0, 'g':1, 'd':2, 'a':3, 'e':4, 'b':5, 'fsharp':6, 'csharp':7,
+        'gsharp':8, 'dsharp':9, 'asharp':10, 'esharp':11, 'bsharp':12
+        },
+    'de': {
+        'fes':-8, 'ces':-7, 'ges':-6, 'des':-5, 'as':-4,
+        'aes':-4, 'es':-3, 'ees':-3, 'b':-2, 'f':-1,
+        'c':0, 'g':1, 'd':2, 'a':3, 'e':4, 'h':5, 'fis':6, 'cis':7,
+        'gis':8, 'dis':9, 'ais':10, 'eis':11, 'his':12
+        },
+    'sv': {
+        'fess':-8, 'cess':-7, 'gess':-6, 'dess':-5, 'ass':-4,
+        'aess':-4, 'ess':-3, 'eess':-3, 'b':-2, 'f':-1,
+        'c':0, 'g':1, 'd':2, 'a':3, 'e':4, 'h':5, 'fiss':6, 'ciss':7,
+        'giss':8, 'diss':9, 'aiss':10, 'eiss':11, 'hiss':12
+        },
+    # no = (de|sv), su = de
+    'it': {
+        'fab':-8, 'dob':-7, 'solb':-6, 'reb':-5, 'lab':-4,
+        'mib':-3, 'sib':-2, 'fa':-1,
+        'do':0, 'sol':1, 're':2, 'la':3, 'mi':4, 'si':5, 'fad':6, 'dod':7,
+        'sold':8, 'red':9, 'lad':10, 'mid':11, 'sid':12
+        },
+    'es': {
+        'fab':-8, 'dob':-7, 'solb':-6, 'reb':-5, 'lab':-4,
+        'mib':-3, 'sib':-2, 'fa':-1,
+        'do':0, 'sol':1, 're':2, 'la':3, 'mi':4, 'si':5, 'fas':6, 'dos':7,
+        'sols':8, 'res':9, 'las':10, 'mis':11, 'sis':12
+        },
+    # ca = (it|es), po = es
+    'vl': {
+        'fab':-8, 'dob':-7, 'solb':-6, 'reb':-5, 'lab':-4,
+        'mib':-3, 'sib':-2, 'fa':-1,
+        'do':0, 'sol':1, 're':2, 'la':3, 'mi':4, 'si':5, 'fak':6, 'dok':7,
+        'solk':8, 'rek':9, 'lak':10, 'mik':11, 'sik':12
+        },
+}
+
+revpitches = dict((lang, rdict(p)) for lang,p in pitches.iteritems())
+
+
+def autofy(s):
+    return s == AUTO and "auto" or s
+
+def unautofy(s):
+    return s == "auto" and AUTO or s
 
 # find Rumor support files
 def getRumorFiles(pattern = "*"):
@@ -61,6 +126,28 @@ def getOSSnrMIDIs():
     except:
         return 0
 
+
+class TimidityButton(ProcessButton):
+    """ A Button to start or stop Timidity as an ALSA client """
+    def __init__(self, parent):
+        ProcessButton.__init__(self, _("TiMidity"), parent)
+        QToolTip.add(self, _("Start or stop the TiMidity ALSA MIDI client."))
+
+    def onStart(self):
+        self.command = config("commands").get("timidity",
+            'timidity -iA -B2,8 -Os -EFreverb=0')
+
+    def started(self):
+        self.parent().status.message(_("TiMidity successfully started."), 2000)
+
+    def stopped(self):
+        self.parent().status.message(_("TiMidity stopped."), 2000)
+
+    def failed(self):
+        error(_(
+            "Could not start TiMidity. Please try the command\n%s\nin a "
+            "terminal to find out what went wrong.") % self.command,
+            timeout = 10)
 
 class RumorData(object):
     """ Collects all data before starting Rumor """
@@ -277,6 +364,29 @@ class Rumor(QFrame):
 #        hb.addStretch(1)
 
         # Key signature select (any lilypond pitch, defaulting to document)
+        self.keysig = QComboBox(self)
+        self.keysig.insertItem(AUTO)
+        self.keysig.insertStringList(py2qstringlist(
+            "%d" % i for i in range(-7, 1)))
+        self.keysig.insertStringList(py2qstringlist(
+            "%+d" % i for i in range(1, 8)))
+        QToolTip.add(self.keysig, _(
+            "The number of accidentals. A negative number designates flats. "
+            "Leave 'Auto' to let LilyKDE determine the key signature from "
+            "the LilyPond document."))
+        layout.addWidget(self.keysig, 2, 2)
+
+        # Button 'More Settings'
+        hb = QHBoxLayout()
+        layout.addLayout(hb, 2, 3)
+        self.settingsButton = QPushButton(_("More Settings"), self)
+        QToolTip.add(self.settingsButton, _(
+            "Adjust more settings, like MIDI input and output."))
+        hb.addWidget(self.settingsButton)
+
+        # Timidity button
+        self.timidity = TimidityButton(self)
+        hb.addWidget(self.timidity)
 
         # Input Select (button with popup menu)
         # Output select (button with popup menu)
@@ -295,13 +405,16 @@ class Rumor(QFrame):
 
     def keyPressEvent(self, e):
         """ Called when the user presses a key. """
-        if (self.r.isRunning() and e.key() == Qt.Key_Escape) or \
-           (not self.r.d.keyboardEmu and e.key() == Qt.Key_Space):
+        if not self.r.isRunning():
+            return
+        if e.key() == Qt.Key_Escape:
             self.r.animateClick()
-        elif self.r.d.keyboardEmu and self.r.isRunning() and \
-                not e.isAutoRepeat() and not e.text().isEmpty():
-            # pass key to Rumor
-            self.r.sendkey(str(e.text()))
+        elif self.r.d.keyboardEmu:
+            if e.key() == Qt.Key_Enter:
+                kate.view().insertText('\n' + self.r.d.indent)
+            elif not e.isAutoRepeat() and not e.text().isEmpty():
+                # pass key to Rumor
+                self.r.sendkey(str(e.text()))
 
     def saveSettings(self):
         """ Saves the settings to lilykderc """
@@ -310,11 +423,9 @@ class Rumor(QFrame):
         conf["quantize"] = self.quantize.currentText()
         conf["step"] = self.step.isChecked() and "1" or "0"
         conf["mono"] = self.mono.isChecked() and "1" or "0"
-        meter = self.meter.currentText()
-        if meter == AUTO:
-            meter = "auto"
-        conf["meter"] = meter
-
+        conf["meter"] = autofy(self.meter.currentText())
+        conf["keysig"] = autofy(self.keysig.currentText())
+        conf["timidity"] = self.timidity.isRunning() and "1" or "0"
 
     def loadSettings(self):
         """ Loads the settings from lilykderc """
@@ -323,10 +434,10 @@ class Rumor(QFrame):
         self.quantize.setCurrentText(conf.get("quantize", "16"))
         self.step.setChecked(bool(int(conf.get("step", "0"))))
         self.mono.setChecked(bool(int(conf.get("mono", "0"))))
-        meter = conf.get("meter", "auto")
-        if meter == "auto":
-            meter = AUTO
-        self.meter.setCurrentText(meter)
+        self.meter.setCurrentText(unautofy(conf.get("meter", "auto")))
+        self.keysig.setCurrentText(unautofy(conf.get("meter", "auto")))
+        if int(conf.get("timidity", "0")):
+            self.timidity.start()
 
 
 class TempoControl(object):
