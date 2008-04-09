@@ -96,7 +96,7 @@ def getRumorFiles(pattern = "*"):
     return qstringlist2py(KStandardDirs.findAllResources("data",
         os.path.join("lilykde", "rumor", pattern)))
 
-def parseAconnectOutput(channel):
+def parseAconnect(channel):
     """
     Returns a list of tuples ('0:0', 'Port name') of the
     available MIDI ports for either reading (channel = 'i')
@@ -369,10 +369,10 @@ class Rumor(QFrame):
         hb.addWidget(self.timidity)
 
         # Button 'More Settings'
-        self.settingsButton = QPushButton(_("More Settings"), self)
-        QToolTip.add(self.settingsButton, _(
-            "Adjust more settings, like MIDI input and output."))
-        hb.addWidget(self.settingsButton)
+        sb = QPushButton(_("More Settings"), self)
+        QToolTip.add(sb, _("Adjust more settings, like MIDI input and output."))
+        QObject.connect(sb, SIGNAL("clicked()"), lambda: RumorSettings(self))
+        hb.addWidget(sb)
 
         # Save Button
         sb = QPushButton(_("Save"), self)
@@ -479,6 +479,63 @@ class TempoControl(object):
         bpm = int(60.0 / (self.time - t))
         if self.minBPM <= bpm <= self.maxBPM:
             self.setTempo(bpm)
+
+
+class RumorSettings(QDialog):
+    """ A modal settings dialog """
+
+    def __init__(self, parent):
+        QDialog.__init__(self, parent)
+        layout = QGridLayout(self, 5, 2, 8, 4)
+        # MIDI input and output.
+        # Get the list of available OSS devices
+        oslist = [('oss:%d' % i, _("OSS device %d") % i )
+            for i in range(getOSSnrMIDIs())]
+        i = oslist + parseAconnect('i') + [("kbd", _("Keyboard"))]
+        o = oslist + parseAconnect('o')
+        self.ilist, ititles = zip(*i)
+        self.olist, otitles = zip(*o)
+
+        # input
+        layout.addWidget(QLabel(_("MIDI input:"), self), 1, 0)
+        self.inbut = QComboBox(self)
+        self.inbut.insertStringList(py2qstringlist(ititles))
+        layout.addWidget(self.inbut, 1, 1)
+
+        # output
+        layout.addWidget(QLabel(_("MIDI output:"), self), 2, 0)
+        self.outbut = QComboBox(self)
+        self.outbut.insertStringList(py2qstringlist(otitles))
+        layout.addWidget(self.outbut, 2, 1)
+
+        # Language
+
+        # explicit durations
+
+        # absolute pitches
+
+
+
+        self.exec_loop()
+
+    def loadSettings(self):
+        if 'oss:1' in self.ilist:
+            idefault = 'oss:1'
+            odefault = 'oss:1'
+        else:
+            idefault = 'kbd'
+            odefault = self.olist[max(1, len(self.outlist)-1)]
+        i = conf.get("midiIn", idefault)
+        o = conf.get("midiOut", odefault)
+
+
+    def saveSettings(self):
+        """ Save the settings """
+        conf = config("rumor")
+        conf["midiIn"] = self.ilist[self.inbut.currentItem()]
+        conf["midiOut"] = self.olist[self.outbut.currentItem()]
+
+
 
 
 
