@@ -179,9 +179,6 @@ class RumorButton(ProcessButton):
         self.setMaximumHeight(200)
         QToolTip.add(self, _("Start or stop Rumor"))
 
-    def heightForWidth(self, w):
-        return min(max(w, 100), 200)
-
     def onStart(self):
         """ Here we construct the command etc. """
         p = self.parent()
@@ -245,8 +242,6 @@ class RumorButton(ProcessButton):
             if m:
                 pitch, mode = m.group(1,2)
                 acc = pitches[lang][pitch] + modes[mode]
-            else:
-                acc = 0
         else:
             acc == int(acc)
         if acc in revpitches[lang]:
@@ -317,7 +312,6 @@ class RumorButton(ProcessButton):
             self.lastKey = key
         else:
             self.send(self.restKey + key)
-
 
 
 class Rumor(QFrame):
@@ -497,7 +491,7 @@ class TempoControl(object):
     def __init__(self, parent):
         self.spinbox = QSpinBox(self.minBPM, self.maxBPM, 1, parent)
         self.slider = QSlider(
-            self.minBPM, self.maxBPM, 1, 100, Qt.Horizontal, parent)
+            self.minBPM, self.maxBPM, 4, 100, Qt.Horizontal, parent)
         self.tapButton = QPushButton(_("Tap"), parent)
         # setup signals
         QObject.connect(self.tapButton, SIGNAL("pressed()"), self.tap)
@@ -621,7 +615,6 @@ class RumorSettings(QDialog):
         conf["language"] = autofy(self.lang.currentText())
         conf["absolute pitches"] = self.absPitches.isChecked() and "1" or "0"
         conf["explicit durations"] = self.explDur.isChecked() and "1" or "0"
-
 
     def accept(self):
         self.saveSettings()
