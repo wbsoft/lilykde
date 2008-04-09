@@ -151,9 +151,30 @@ class TimidityButton(ProcessButton):
             timeout = 10)
 
 
-class RumorData(object):
-    """ Collects all data before starting Rumor """
-    def __init__(self):
+class RumorButton(ProcessButton):
+    """
+    The button that starts and stops Rumor.
+    The parent is the widget object that holds the button
+    and other controls.
+    """
+
+    restKey = " "
+
+    def __init__(self, parent):
+        ProcessButton.__init__(self, _("REC"), parent)
+        self.setFont(QFont("Sans", 20, 75))
+        self.setMinimumHeight(100)
+        self.setMinimumWidth(100)
+        self.setMaximumHeight(200)
+        QToolTip.add(self, _("Start or stop Rumor"))
+
+    def heightForWidth(self, w):
+        return min(max(w, 100), 200)
+
+    def onStart(self):
+        """ Here we construct the command etc. """
+        p = self.parent()
+        p.saveSettings()
         conf = config("rumor")
         # - indent of current line
         self.indent = re.match(r'\s*',
@@ -214,48 +235,21 @@ class RumorData(object):
 
         cmd.append("--oss=1") # FIXME
         self.keyboardEmu = True # FIXME
+
         if self.keyboardEmu:
             cmd.append("--kbd")
-        self.command = cmd
-
-
-class RumorButton(ProcessButton):
-    """
-    The button that starts and stops Rumor.
-    The parent is the widget object that holds the button
-    and other controls.
-    """
-
-    restKey = " "
-
-    def __init__(self, parent):
-        ProcessButton.__init__(self, _("REC"), parent)
-        self.setFont(QFont("Sans", 20, 75))
-        self.setMinimumHeight(100)
-        self.setMinimumWidth(100)
-        self.setMaximumHeight(200)
-        QToolTip.add(self, _("Start or stop Rumor"))
-
-    def heightForWidth(self, w):
-        return min(max(w, 100), 200)
-
-    def onStart(self):
-        """ Here we construct the command etc. """
-        self.parent().saveSettings()
-        self.d = RumorData()
-        self.command = self.d.command
-        if self.d.keyboardEmu:
-            self.parent().setFocus()
+            p.setFocus()
             self.comm = KProcess.All
             self.pty = True
         else:
             self.comm = KProcess.AllOutput
             self.pty = False
+        self.command = cmd
 
     def receivedStdout(self, proc, buf, length):
         """ Writes the received text from Rumor into the Kate buffer """
         text = unicode(QString.fromUtf8(buf, length))
-        text = text.replace('\n', '\n' + self.d.indent)
+        text = text.replace('\n', '\n' + self.indent)
         kate.view().insertText(text)
 
     def started(self):
@@ -265,7 +259,7 @@ class RumorButton(ProcessButton):
 
     def stop(self):
         """ Stop the process """
-        if self.d.keyboardEmu:
+        if self.keyboardEmu:
             self.send(self.restKey)
             QTimer.singleShot(100, lambda:
                 ProcessButton.stop(self, 2))
@@ -274,7 +268,7 @@ class RumorButton(ProcessButton):
 
     def stopped(self):
         self.parent().status.clear()
-        if self.d.keyboardEmu:
+        if self.keyboardEmu:
             kate.mainWidget().setFocus()
 
     def sendkey(self, key):
@@ -411,9 +405,9 @@ class Rumor(QFrame):
             return
         if e.key() == Qt.Key_Escape:
             self.r.animateClick()
-        elif self.r.d.keyboardEmu:
+        elif self.r.keyboardEmu:
             if e.key() == Qt.Key_Enter:
-                kate.view().insertText('\n' + self.r.d.indent)
+                kate.view().insertText('\n' + self.r.indent)
             elif not e.isAutoRepeat() and not e.text().isEmpty():
                 # pass key to Rumor
                 self.r.sendkey(str(e.text()))
