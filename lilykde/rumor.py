@@ -19,8 +19,6 @@ from lilykde import config
 # Translate the messages
 from lilykde.i18n import _
 
-AUTO = _("Auto")
-
 def rdict(d):
     """ reverse a dict """
     return dict((v,k) for k,v in d.iteritems())
@@ -80,6 +78,9 @@ pitches = {
 
 revpitches = dict((lang, rdict(p)) for lang,p in pitches.iteritems())
 
+
+# Handling of translated text in comboboxes
+AUTO = _("Auto")
 
 def autofy(s):
     return s == AUTO and "auto" or s
@@ -148,6 +149,7 @@ class TimidityButton(ProcessButton):
             "Could not start TiMidity. Please try the command\n%s\nin a "
             "terminal to find out what went wrong.") % self.command,
             timeout = 10)
+
 
 class RumorData(object):
     """ Collects all data before starting Rumor """
