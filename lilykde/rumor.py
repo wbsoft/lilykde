@@ -13,16 +13,12 @@ from kdeui import KPushButton, KStdGuiItem
 import kate
 import kate.gui
 
-from lilykde.util import kprocess, qstringlist2py, py2qstringlist
+from lilykde.util import kprocess, qstringlist2py, py2qstringlist, bound, rdict
 from lilykde.widgets import error, ProcessButton
 from lilykde import config
 
 # Translate the messages
 from lilykde.i18n import _
-
-def rdict(d):
-    """ reverse a dict """
-    return dict((v,k) for k,v in d.iteritems())
 
 pitches = {
     'ne': {
@@ -81,13 +77,13 @@ revpitches = dict((lang, rdict(p)) for lang,p in pitches.iteritems())
 
 modes = {
     'major': 0,
-    'minor': -3,
+    'minor': -2,    # should be -3, but we want a sharp below the fifth
     'ionian': 0,
     'dorian': -2,
-    'phrygian': -4,
+    'phrygian': -3, # should be -4, but we want a sharp below the octave
     'lydian': 1,
     'mixolydian': -1,
-    'aeolian': -3,
+    'aeolian': -2,  # should be -3, but we want a sharp below the fifth
     'locrian': -5,
 }
 
@@ -242,10 +238,12 @@ class RumorButton(ProcessButton):
             if m:
                 pitch, mode = m.group(1,2)
                 acc = pitches[lang][pitch] + modes[mode]
+            else:
+                acc = 0
         else:
             acc == int(acc)
-        if acc in revpitches[lang]:
-            cmd.append("--key=%s" % revpitches[lang][acc])
+        acc += 2    # use sharps for half tones leading to second, fifth, sixth
+        cmd.append("--key=%s" % revpitches[lang][bound(acc, -8, 12)])
 
         # Monophonic input?
         if p.mono.isChecked():
