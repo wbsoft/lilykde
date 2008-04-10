@@ -71,6 +71,14 @@ def qstringlist2py(ql):
     """
     return map(unicode, ql)
 
+def bound(x, minValue, maxValue):
+    """ Clips x according to the boundaries minValue and maxValue """
+    return max(minValue, min(maxValue, x))
+
+def rdict(d):
+    """ reverse a dict """
+    return dict((v,k) for k,v in d.iteritems())
+
 def splitcommandline(s):
     """ Splits a commandline like the shell, keeping quoted parts together """
     return _splitcommandline_re.sub(_splitcommandline, s.strip()).split('\0')
