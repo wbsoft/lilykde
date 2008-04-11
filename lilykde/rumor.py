@@ -257,6 +257,21 @@ class RumorButton(ProcessButton):
         if int(conf.get("explicit durations", "0")):
             cmd.append("--explicit-durations")
 
+        # No barlines?
+        self.noBarlines = int(conf.get("no barlines", "0"))
+
+        # No dots?
+        if int(conf.get("no dots", "0")):
+            cmd.append("--no-dots")
+
+        # Legato?
+        if int(conf.get("legato", "0")):
+            cmd.append("--legato")
+
+        # Strip rests?
+        if int(conf.get("strip rests", "0")):
+            cmd.append("--strip")
+
         # input/output
         i = conf.get("midi in", "oss:1")
         o = conf.get("midi out", "oss:1")
@@ -281,6 +296,8 @@ class RumorButton(ProcessButton):
     def receivedStdout(self, proc, buf, length):
         """ Writes the received text from Rumor into the Kate buffer """
         text = unicode(QString.fromUtf8(buf, length))
+        if self.noBarlines:
+            text = text.replace('|', '')
         text = text.replace('\n', '\n' + self.indent)
         kate.view().insertText(text)
 
@@ -525,7 +542,7 @@ class RumorSettings(QDialog):
     def __init__(self, parent):
         QDialog.__init__(self, parent)
         self.setCaption(_("Rumor Settings"))
-        layout = QGridLayout(self, 5, 2, 8, 4)
+        layout = QGridLayout(self, 8, 2, 8, 4)
         # MIDI input and output.
         # Get the list of available OSS and ALSA devices
         oslist = [('oss:%d' % i, _("OSS device %d") % i )
@@ -574,9 +591,35 @@ class RumorSettings(QDialog):
             "Use absolute pitches instead of relative."))
         hb.addWidget(self.absPitches)
 
+        hb = QHBoxLayout()
+        layout.addMultiCellLayout(hb, 5, 5, 0, 1)
+        # No Barlines
+        self.noBar = QCheckBox(_("No barlines"), self)
+        QToolTip.add(self.noBar, _(
+            "Filter the barlines out of Rumor's output."))
+        hb.addWidget(self.noBar)
+
+        # No dots
+        self.noDots = QCheckBox(_("No dots"), self)
+        QToolTip.add(self.noDots, _(
+            "Do not use dotted notes, but ties instead."))
+        hb.addWidget(self.noDots)
+
+        # Legato
+        self.legato = QCheckBox(_("Legato"), self)
+        QToolTip.add(self.legato, _("Do not use rests, but give all notes "
+            "the maximum length."))
+        hb.addWidget(self.legato)
+
+        # Strip rests
+        self.stripRests = QCheckBox(_("Strip rests"), self)
+        QToolTip.add(self.stripRests, _(
+            "Strip leading and trialing rests from output."))
+        hb.addWidget(self.stripRests)
+
         # Ok, Cancel
         hb = QHBoxLayout()
-        layout.addLayout(hb, 5,1)
+        layout.addLayout(hb, 7,1)
         ok = KPushButton(KStdGuiItem.ok(), self)
         can = KPushButton(KStdGuiItem.cancel(), self)
         QObject.connect(ok, SIGNAL("clicked()"), self.accept)
@@ -604,6 +647,10 @@ class RumorSettings(QDialog):
         self.lang.setCurrentText(unautofy(conf.get("language", "auto")))
         self.absPitches.setChecked(bool(int(conf.get("absolute pitches", "0"))))
         self.explDur.setChecked(bool(int(conf.get("explicit durations", "0"))))
+        self.noBar.setChecked(bool(int(conf.get("no barlines", "0"))))
+        self.noDots.setChecked(bool(int(conf.get("no dots", "0"))))
+        self.legato.setChecked(bool(int(conf.get("legato", "0"))))
+        self.stripRests.setChecked(bool(int(conf.get("strip rests", "0"))))
 
     def saveSettings(self):
         """ Save the settings """
@@ -613,6 +660,10 @@ class RumorSettings(QDialog):
         conf["language"] = autofy(self.lang.currentText())
         conf["absolute pitches"] = self.absPitches.isChecked() and "1" or "0"
         conf["explicit durations"] = self.explDur.isChecked() and "1" or "0"
+        conf["no barlines"] = self.noBar.isChecked() and "1" or "0"
+        conf["no dots"] = self.noDots.isChecked() and "1" or "0"
+        conf["legato"] = self.legato.isChecked() and "1" or "0"
+        conf["strip rests"] = self.stripRests.isChecked() and "1" or "0"
 
     def accept(self):
         self.saveSettings()
