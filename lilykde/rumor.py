@@ -645,7 +645,7 @@ class RumorSettings(QDialog):
             idefault = odefault = 'oss:1'
         else:
             idefault = 'kbd'
-            odefault = self.olist[max(1, len(self.outlist)-1)]
+            odefault = self.olist[max(1, len(self.olist)-1)]
         i = conf.get("midi in", idefault)
         o = conf.get("midi out", odefault)
         if i in self.ilist:
