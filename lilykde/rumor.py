@@ -2,7 +2,7 @@
 LilyKDE module to run Rumor
 """
 
-import os, re
+import sys, os, re
 from time import time
 from subprocess import Popen, PIPE
 
@@ -319,6 +319,13 @@ class RumorButton(ProcessButton):
         text = text.replace('\n\n', '\n')   # avoid empty lines
         text = text.replace('\n', '\n' + self.indent)
         kate.view().insertText(text)
+
+    def receivedStderr(self, proc, buf, length):
+        """
+        Write error messages to the console, because currently we can't
+        start() KProcess with OR-red Communication values.
+        """
+        sys.stderr.write(unicode(QString.fromUtf8(buf, length)))
 
     def started(self):
         self.parent().status.message(_(

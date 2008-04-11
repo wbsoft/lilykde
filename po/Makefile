@@ -1,7 +1,7 @@
 .PHONY: all install uninstall clean
 
 XGETTEXT = xgettext
-MSGMERGE = msgmerge -v
+MSGMERGE = msgmerge
 MSGFMT = msgfmt -v
 
 DESTDIR =
