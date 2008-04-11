@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-09 23:37+0200\n"
+"POT-Creation-Date: 2008-04-11 07:19+0200\n"
 "PO-Revision-Date: 2008-03-30 22:54+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
@@ -350,28 +350,28 @@ msgid ""
 "recommended)."
 msgstr "Varsayılan MIDI çalıcıyı kullanarak işlenmiş MIDI dosyalarını çal."
 
-#: ../lilykde/rumor.py:95
+#: ../lilykde/rumor.py:91
 msgid "Auto"
 msgstr ""
 
-#: ../lilykde/rumor.py:146
+#: ../lilykde/rumor.py:142
 msgid "TiMidity"
 msgstr ""
 
-#: ../lilykde/rumor.py:147
+#: ../lilykde/rumor.py:143
 msgid "Start or stop the TiMidity ALSA MIDI client."
 msgstr ""
 
-#: ../lilykde/rumor.py:154
+#: ../lilykde/rumor.py:150
 #, fuzzy
 msgid "TiMidity successfully started."
 msgstr "Tüm belgeler başarıyla dönüştürüldü."
 
-#: ../lilykde/rumor.py:157
+#: ../lilykde/rumor.py:153
 msgid "TiMidity stopped."
 msgstr ""
 
-#: ../lilykde/rumor.py:161
+#: ../lilykde/rumor.py:157
 #, python-format
 msgid ""
 "Could not start TiMidity. Please try the command\n"
@@ -379,165 +379,197 @@ msgid ""
 "in a terminal to find out what went wrong."
 msgstr ""
 
-#: ../lilykde/rumor.py:176
+#: ../lilykde/rumor.py:172
 msgid "REC"
 msgstr ""
 
-#: ../lilykde/rumor.py:180
+#: ../lilykde/rumor.py:176
 msgid "Start or stop Rumor"
 msgstr ""
 
-#: ../lilykde/rumor.py:296
+#: ../lilykde/rumor.py:306
 msgid "Rumor is recording, press ESC to stop."
 msgstr ""
 
-#: ../lilykde/rumor.py:339
+#: ../lilykde/rumor.py:348
 msgid "Tempo:"
 msgstr ""
 
-#: ../lilykde/rumor.py:340
+#: ../lilykde/rumor.py:349
 msgid "Meter:"
 msgstr ""
 
-#: ../lilykde/rumor.py:341
+#: ../lilykde/rumor.py:350
 msgid "Key:"
 msgstr ""
 
-#: ../lilykde/rumor.py:370
+#: ../lilykde/rumor.py:379
 msgid ""
 "The meter to use. Leave 'Auto' to let LilyKDE determine the meter from the "
 "LilyPond document."
 msgstr ""
 
-#: ../lilykde/rumor.py:377
+#: ../lilykde/rumor.py:386
 msgid "Quantize:"
 msgstr ""
 
-#: ../lilykde/rumor.py:382
+#: ../lilykde/rumor.py:391
 msgid "The shortest note duration to use."
 msgstr ""
 
-#: ../lilykde/rumor.py:386
+#: ../lilykde/rumor.py:395
 msgid "Step"
 msgstr ""
 
-#: ../lilykde/rumor.py:388
+#: ../lilykde/rumor.py:397
 msgid "Record LilyPond input note by note, without durations."
 msgstr ""
 
-#: ../lilykde/rumor.py:392
+#: ../lilykde/rumor.py:401
 msgid "Mono"
 msgstr ""
 
-#: ../lilykde/rumor.py:394
+#: ../lilykde/rumor.py:403
 msgid "Record monophonic input, without chords."
 msgstr ""
 
-#: ../lilykde/rumor.py:405
+#: ../lilykde/rumor.py:414
 msgid ""
 "The number of accidentals. A negative number designates flats. Leave 'Auto' "
 "to let LilyKDE determine the key signature from the LilyPond document."
 msgstr ""
 
-#: ../lilykde/rumor.py:418
+#: ../lilykde/rumor.py:427
 msgid "More Settings..."
 msgstr ""
 
-#: ../lilykde/rumor.py:419
+#: ../lilykde/rumor.py:428
 msgid "Adjust more settings, like MIDI input and output."
 msgstr ""
 
-#: ../lilykde/rumor.py:424
+#: ../lilykde/rumor.py:433
 msgid "Save"
 msgstr ""
 
-#: ../lilykde/rumor.py:425
+#: ../lilykde/rumor.py:434
 msgid "Set these settings as default."
 msgstr ""
 
-#: ../lilykde/rumor.py:447
+#: ../lilykde/rumor.py:456
 msgid "Found rumor version $version."
 msgstr ""
 
-#: ../lilykde/rumor.py:450
+#: ../lilykde/rumor.py:459
 #, fuzzy, python-format
 msgid "Could not find Rumor: %s"
 msgstr "LilyPond başlatılamadı: %s"
 
-#: ../lilykde/rumor.py:475
+#: ../lilykde/rumor.py:484
 msgid "Settings have been saved."
 msgstr ""
 
-#: ../lilykde/rumor.py:501
+#: ../lilykde/rumor.py:510
 msgid "Tap"
 msgstr ""
 
-#: ../lilykde/rumor.py:510
+#: ../lilykde/rumor.py:519
 msgid "The tempo in beats per minute."
 msgstr ""
 
-#: ../lilykde/rumor.py:512
+#: ../lilykde/rumor.py:521
 msgid "Click this button a few times to set the tempo."
 msgstr ""
 
-#: ../lilykde/rumor.py:535
+#: ../lilykde/rumor.py:544
 msgid "Rumor Settings"
 msgstr ""
 
-#: ../lilykde/rumor.py:539
+#: ../lilykde/rumor.py:548
 #, python-format
 msgid "OSS device %d"
 msgstr ""
 
-#: ../lilykde/rumor.py:541
+#: ../lilykde/rumor.py:550
 msgid "Keyboard"
 msgstr ""
 
-#: ../lilykde/rumor.py:547
+#: ../lilykde/rumor.py:556
 msgid "MIDI input:"
 msgstr ""
 
-#: ../lilykde/rumor.py:550
+#: ../lilykde/rumor.py:559
 msgid ""
 "MIDI input to use. Choose 'Keyboard' if you want to play on the keyboard of "
 "your computer."
 msgstr ""
 
-#: ../lilykde/rumor.py:555
+#: ../lilykde/rumor.py:564
 msgid "MIDI output:"
 msgstr ""
 
-#: ../lilykde/rumor.py:558
+#: ../lilykde/rumor.py:567
 msgid "MIDI output to use."
 msgstr ""
 
-#: ../lilykde/rumor.py:562
+#: ../lilykde/rumor.py:571
 msgid "Language:"
 msgstr ""
 
-#: ../lilykde/rumor.py:566
+#: ../lilykde/rumor.py:575
 msgid "The LilyPond language you want Rumor to output the pitches in."
 msgstr ""
 
-#: ../lilykde/rumor.py:573
+#: ../lilykde/rumor.py:582
 msgid "Explicit durations"
 msgstr ""
 
-#: ../lilykde/rumor.py:575
+#: ../lilykde/rumor.py:584
 msgid ""
 "Add a duration after every note, even if it is the same as the preceding "
 "note."
 msgstr ""
 
-#: ../lilykde/rumor.py:580
+#: ../lilykde/rumor.py:589
 msgid "Absolute pitch"
 msgstr ""
 
-#: ../lilykde/rumor.py:582
+#: ../lilykde/rumor.py:591
 msgid "Use absolute pitches instead of relative."
 msgstr ""
 
-#: ../lilykde/rumor.py:633
+#: ../lilykde/rumor.py:597
+msgid "No barlines"
+msgstr ""
+
+#: ../lilykde/rumor.py:599
+msgid "Filter the barlines out of Rumor's output."
+msgstr ""
+
+#: ../lilykde/rumor.py:603
+msgid "No dots"
+msgstr ""
+
+#: ../lilykde/rumor.py:605
+msgid "Do not use dotted notes, but ties instead."
+msgstr ""
+
+#: ../lilykde/rumor.py:609
+msgid "Legato"
+msgstr ""
+
+#: ../lilykde/rumor.py:610
+msgid "Do not use rests, but give all notes the maximum length."
+msgstr ""
+
+#: ../lilykde/rumor.py:615
+msgid "Strip rests"
+msgstr ""
+
+#: ../lilykde/rumor.py:617
+msgid "Strip leading and trialing rests from output."
+msgstr ""
+
+#: ../lilykde/rumor.py:675
 msgid "Rumor"
 msgstr ""
 
