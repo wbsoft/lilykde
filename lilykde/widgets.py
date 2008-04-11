@@ -222,7 +222,7 @@ class ProcessButton(QPushButton):
         if self.pty:
             # p.setUsePty does currently not work on Gentoo
             if hasattr(p, "setUsePty"):
-                p.setUsePty(KProcess.Stdin)
+                p.setUsePty(KProcess.Stdin, False)
             else:
                 # Hack to let a process think it reads from a terminal
                 cmd[0:0] = ["python", '-c',
