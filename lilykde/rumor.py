@@ -304,8 +304,11 @@ class RumorButton(ProcessButton):
     def receivedStdout(self, proc, buf, length):
         """ Writes the received text from Rumor into the Kate buffer """
         text = unicode(QString.fromUtf8(buf, length))
+        if text == '\n':
+            return  # discard single newline, typically output on exit.
         if self.noBarlines:
             text = text.replace('|', '')
+        text = text.replace('\n\n', '\n')   # avoid empty lines
         text = text.replace('\n', '\n' + self.indent)
         kate.view().insertText(text)
 
