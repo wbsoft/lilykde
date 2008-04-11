@@ -96,13 +96,21 @@ def autofy(s):
 def unautofy(s):
     return s == "auto" and AUTO or s
 
+RUMORDIR = "lilykde/rumor/"
+
 # find Rumor support files
 def getRumorFiles(pattern = "*"):
     """
-    Returns a list of all files matching pattern in lilykde/rumor/
+    Returns a dict of all files matching pattern in lilykde/rumor/
+    the filename is the key, the full path the value.
     """
-    return qstringlist2py(KStandardDirs.findAllResources("data",
-        os.path.join("lilykde", "rumor", pattern)))
+    names = QStringList()
+    paths = KStandardDirs().findAllResources("data",
+        RUMORDIR + pattern, True, True, names)
+
+    return dict(
+        (unicode(n)[len(RUMORDIR):], unicode(p))
+            for n,p in zip(names, paths))
 
 def parseAconnect(channel):
     """
@@ -154,9 +162,9 @@ class TimidityButton(ProcessButton):
 
     def failed(self):
         error(_(
-            "Could not start TiMidity. Please try the command\n%s\nin a "
-            "terminal to find out what went wrong.") % self.command,
-            timeout = 10)
+            "Could not start TiMidity. Please try the command %s in a "
+            "terminal to find out what went wrong.") %
+            "<br>%s<br>" % self.command, timeout = 10)
 
 
 class RumorButton(ProcessButton):
