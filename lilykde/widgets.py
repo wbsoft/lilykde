@@ -221,11 +221,14 @@ class ProcessButton(QPushButton):
             cmd = splitcommandline(cmd)
         if self.pty:
             # p.setUsePty does currently not work on Gentoo
-            # Hack to let a process think it reads from a terminal
-            cmd[0:0] = ["python", '-c',
-                "import sys,pty,signal;"
-                "signal.signal(2,lambda i,j:1);"
-                "pty.spawn(sys.argv[1:])"]
+            if hasattr(p, "setUsePty"):
+                p.setUsePty(KProcess.Stdin)
+            else:
+                # Hack to let a process think it reads from a terminal
+                cmd[0:0] = ["python", '-c',
+                    "import sys,pty,signal;"
+                    "signal.signal(2,lambda i,j:1);"
+                    "pty.spawn(sys.argv[1:])"]
         p.setExecutable(cmd[0])
         p.setArguments(cmd[1:])
         # Setup the signals
