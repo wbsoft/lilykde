@@ -280,6 +280,14 @@ class RumorButton(ProcessButton):
         if int(conf.get("strip rests", "0")):
             cmd.append("--strip")
 
+        # Guile scripts?
+        scripts = conf.get("scripts", "").splitlines()
+        if scripts:
+            paths = getRumorFiles()
+            for s in scripts:
+                if s in paths:
+                    cmd.append("--script=%s" % paths[s])
+
         # input/output
         i = conf.get("midi in", "oss:1")
         o = conf.get("midi out", "oss:1")
@@ -445,18 +453,6 @@ class Rumor(QFrame):
         QToolTip.add(sb, _("Set these settings as default."))
         QObject.connect(sb, SIGNAL("clicked()"), self.saveSettings)
         hb.addWidget(sb)
-
-        # Input Select (button with popup menu)
-        # Output select (button with popup menu)
-
-        # Smaller options:
-        # - language (any of the lily languages, defaulting to document)
-        # - no-chords (Mono: checkbox)
-        # - explicit-durations (checkbox)
-        # - absolute-ptiches (checkbox)
-
-        # in Settings page:
-        # - Metronome settings (creating a scm script that rumor loads)
 
         self.loadSettings()
 
@@ -628,9 +624,27 @@ class RumorSettings(QDialog):
             "Strip leading and trialing rests from output."))
         hb.addWidget(self.stripRests)
 
+        layout.addMultiCellWidget(QLabel(_(
+            "Guile scripts to load:"), self), 6, 6, 0, 1)
+
+        # Guile scripts listview
+        self.scripts = QListView(self)
+        self.scripts.addColumn(_("Name"))
+        self.scripts.addColumn(_("Description"))
+        QToolTip.add(self.scripts, _(
+            "Here you can select which Guile scripts you want Rumor to load. "
+            "Check \"What's this\" for more information."))
+        QWhatsThis.add(self.scripts, _(
+            "Here you can select which Guile scripts you want Rumor to load. "
+            "You can add your own scripts by putting them in %s. "
+            "If the first line of your script starts with a semicolon (;) "
+            "that line will be shown as description.") %
+                "~/.kde/share/apps/lilykde/rumor/")
+        layout.addMultiCellWidget(self.scripts, 7, 7, 0, 1)
+
         # Ok, Cancel
         hb = QHBoxLayout()
-        layout.addLayout(hb, 7,1)
+        layout.addLayout(hb, 8,1)
         ok = KPushButton(KStdGuiItem.ok(), self)
         can = KPushButton(KStdGuiItem.cancel(), self)
         QObject.connect(ok, SIGNAL("clicked()"), self.accept)
@@ -662,6 +676,18 @@ class RumorSettings(QDialog):
         self.noDots.setChecked(conf["no dots"] == "1")
         self.legato.setChecked(conf["legato"] == "1")
         self.stripRests.setChecked(conf["strip rests"] == "1")
+        # Guile scripts
+        self.scripts.clear()
+        scripts = conf.get("scripts", "").splitlines()
+        for name, path in getRumorFiles().iteritems():
+            try:
+                d = open(path).readline().strip()
+                c = QCheckListItem(self.scripts, name, QCheckListItem.CheckBox)
+                c.setOn(name in scripts)
+                if d.startswith(';'):
+                    c.setText(1, d.strip(";"))
+            except IOError:
+                pass
 
     def saveSettings(self):
         """ Save the settings """
@@ -675,6 +701,14 @@ class RumorSettings(QDialog):
         conf["no dots"] = self.noDots.isChecked() and "1" or "0"
         conf["legato"] = self.legato.isChecked() and "1" or "0"
         conf["strip rests"] = self.stripRests.isChecked() and "1" or "0"
+        # Read script listview
+        c = self.scripts.firstChild()
+        names = []
+        while c is not None:
+            if c.isOn():
+                names.append(unicode(c.text()))
+            c = c.nextSibling()
+        conf["scripts"] = '\n'.join(names)
 
     def accept(self):
         self.saveSettings()

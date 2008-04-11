@@ -4,7 +4,8 @@ install = \
 	install-textedit \
 	install-servicemenu \
 	install-plugin \
-	install-i18n
+	install-i18n \
+	install-rumorscripts
 
 uninstall = \
 	uninstall-mimetype \
@@ -12,7 +13,8 @@ uninstall = \
 	uninstall-textedit \
 	uninstall-servicemenu \
 	uninstall-i18n \
-	uninstall-plugin
+	uninstall-plugin \
+	uninstall-rumorscripts
 
 .PHONY: all install clean uninstall $(install) $(uninstall)
 
@@ -146,3 +148,12 @@ uninstall-servicemenu:
 	@echo Uninstalling Konqueror servicemenu
 	rm -f $(SERVICEMENUDIR)/lilypond-servicemenu.desktop
 	rm -f $(LILYKDE)/lilypond-servicemenu-helper.py
+
+install-rumorscripts:
+	@echo Installing Rumor scripts
+	@mkdir -p $(LILYKDE)/rumor
+	cp rumor/*.scm $(LILYKDE)/rumor/
+
+uninstall-rumorscripts:
+	@echo Uninstalling Rumor scripts
+	rm -fr $(LILYKDE)/rumor
