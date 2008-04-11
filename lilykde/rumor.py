@@ -435,7 +435,7 @@ class Rumor(QFrame):
         hb.addWidget(self.timidity)
 
         # Button 'More Settings'
-        sb = QPushButton(_("More Settings..."), self)
+        sb = QPushButton(_("Configure..."), self)
         QToolTip.add(sb, _("Adjust more settings, like MIDI input and output."))
         QObject.connect(sb, SIGNAL("clicked()"), lambda: RumorSettings(self))
         hb.addWidget(sb)
@@ -499,11 +499,11 @@ class Rumor(QFrame):
         conf = config("rumor")
         self.tempo.setTempo(int(conf.get("tempo", 100)))
         self.quantize.setCurrentText(conf.get("quantize", "16"))
-        self.step.setChecked(bool(int(conf.get("step", "0"))))
-        self.mono.setChecked(bool(int(conf.get("mono", "0"))))
+        self.step.setChecked(conf["step"] == "1")
+        self.mono.setChecked(conf["mono"] == "1")
         self.meter.setCurrentText(unautofy(conf.get("meter", "auto")))
         self.keysig.setCurrentText(unautofy(conf.get("meter", "auto")))
-        if int(conf.get("timidity", "0")):
+        if conf["timidity"] == "1":
             self.timidity.start()
 
 
@@ -656,12 +656,12 @@ class RumorSettings(QDialog):
         if o in self.olist:
             self.obut.setCurrentItem(self.olist.index(o))
         self.lang.setCurrentText(unautofy(conf.get("language", "auto")))
-        self.absPitches.setChecked(bool(int(conf.get("absolute pitches", "0"))))
-        self.explDur.setChecked(bool(int(conf.get("explicit durations", "0"))))
-        self.noBar.setChecked(bool(int(conf.get("no barlines", "0"))))
-        self.noDots.setChecked(bool(int(conf.get("no dots", "0"))))
-        self.legato.setChecked(bool(int(conf.get("legato", "0"))))
-        self.stripRests.setChecked(bool(int(conf.get("strip rests", "0"))))
+        self.absPitches.setChecked(conf["absolute pitches"] == "1")
+        self.explDur.setChecked(conf["explicit durations"] == "1")
+        self.noBar.setChecked(conf["no barlines"] == "1")
+        self.noDots.setChecked(conf["no dots"] == "1")
+        self.legato.setChecked(conf["legato"] == "1")
+        self.stripRests.setChecked(conf["strip rests"] == "1")
 
     def saveSettings(self):
         """ Save the settings """

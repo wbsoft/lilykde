@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-11 08:04+0200\n"
-"PO-Revision-Date: 2008-04-11 07:41+0200\n"
+"POT-Creation-Date: 2008-04-11 14:31+0200\n"
+"PO-Revision-Date: 2008-04-11 14:32+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -190,8 +190,7 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr ""
-"Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
+msgstr "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
 #: ../lilykde/version.py:73
 msgid "This LilyPond document is already up-to-date."
@@ -299,8 +298,7 @@ msgstr ""
 "uitvoer via Rumor)."
 
 #: ../lilykde/settings.py:98
-msgid ""
-"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Commandoregel om Timidity (of een ander programma) te starten als ALSA MIDI-"
 "client."
@@ -337,14 +335,11 @@ msgstr "Map met de LilyPond- en PDF-documenten openen."
 
 #: ../lilykde/settings.py:180
 msgid "Open the generated PDF file with the default PDF viewer."
-msgstr ""
-"Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
+msgstr "Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
 
 #: ../lilykde/settings.py:182
-msgid ""
-"Print the PDF using the print command set in the Commands settings page."
-msgstr ""
-"De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
+msgid "Print the PDF using the print command set in the Commands settings page."
+msgstr "De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
 
 #: ../lilykde/settings.py:185
 msgid "Attach the PDF to an email message."
@@ -395,23 +390,23 @@ msgstr "REC"
 msgid "Start or stop Rumor"
 msgstr "Rumor starten of stoppen"
 
-#: ../lilykde/rumor.py:314
+#: ../lilykde/rumor.py:317
 msgid "Rumor is recording, press ESC to stop."
 msgstr "Rumor neemt op, druk op ESC om te stoppen."
 
-#: ../lilykde/rumor.py:356
+#: ../lilykde/rumor.py:359
 msgid "Tempo:"
 msgstr "Tempo:"
 
-#: ../lilykde/rumor.py:357
+#: ../lilykde/rumor.py:360
 msgid "Meter:"
 msgstr "Maatsoort:"
 
-#: ../lilykde/rumor.py:358
+#: ../lilykde/rumor.py:361
 msgid "Key:"
 msgstr "Toonsoort:"
 
-#: ../lilykde/rumor.py:387
+#: ../lilykde/rumor.py:390
 msgid ""
 "The meter to use. Leave 'Auto' to let LilyKDE determine the meter from the "
 "LilyPond document."
@@ -419,31 +414,31 @@ msgstr ""
 "De te gebruiken maatsoort. Indien 'Auto', bepaalt LilyKDE de maatsoort uit "
 "het huidige document."
 
-#: ../lilykde/rumor.py:394
+#: ../lilykde/rumor.py:397
 msgid "Quantize:"
 msgstr "Quantiseren:"
 
-#: ../lilykde/rumor.py:399
+#: ../lilykde/rumor.py:402
 msgid "The shortest note duration to use."
 msgstr "De kortste toegestane toonduur."
 
-#: ../lilykde/rumor.py:403
+#: ../lilykde/rumor.py:406
 msgid "Step"
 msgstr "Stap"
 
-#: ../lilykde/rumor.py:405
+#: ../lilykde/rumor.py:408
 msgid "Record LilyPond input note by note, without durations."
 msgstr "Neem noot voor noot op, zonder toonduur te registreren."
 
-#: ../lilykde/rumor.py:409
+#: ../lilykde/rumor.py:412
 msgid "Mono"
 msgstr "Mono"
 
-#: ../lilykde/rumor.py:411
+#: ../lilykde/rumor.py:414
 msgid "Record monophonic input, without chords."
 msgstr "Monofoon opnemen, zonder akkoorden."
 
-#: ../lilykde/rumor.py:422
+#: ../lilykde/rumor.py:425
 msgid ""
 "The number of accidentals. A negative number designates flats. Leave 'Auto' "
 "to let LilyKDE determine the key signature from the LilyPond document."
@@ -451,65 +446,65 @@ msgstr ""
 "Het aantal voortekens. Een negatieve waarde duidt mollen aan. Indien 'Auto', "
 "bepaalt LilyKDE de toonsoort uit het huidige document."
 
-#: ../lilykde/rumor.py:435
-msgid "More Settings..."
-msgstr "Meer instellingen..."
+#: ../lilykde/rumor.py:438
+msgid "Configure..."
+msgstr "Instellen..."
 
-#: ../lilykde/rumor.py:436
+#: ../lilykde/rumor.py:439
 msgid "Adjust more settings, like MIDI input and output."
 msgstr "Meer instellingen, zoals MIDI in- en uitvoer."
 
-#: ../lilykde/rumor.py:441
+#: ../lilykde/rumor.py:444
 msgid "Save"
 msgstr "Opslaan"
 
-#: ../lilykde/rumor.py:442
+#: ../lilykde/rumor.py:445
 msgid "Set these settings as default."
 msgstr "Deze instelling opslaan en standaard gebruiken."
 
-#: ../lilykde/rumor.py:464
+#: ../lilykde/rumor.py:467
 msgid "Found rumor version $version."
 msgstr "Rumor versie $version gevonden."
 
-#: ../lilykde/rumor.py:467
+#: ../lilykde/rumor.py:470
 #, python-format
 msgid "Could not find Rumor: %s"
 msgstr "Kon Rumor niet vinden: %s"
 
-#: ../lilykde/rumor.py:492
+#: ../lilykde/rumor.py:495
 msgid "Settings have been saved."
 msgstr "De instellingen zijn opgeslagen."
 
-#: ../lilykde/rumor.py:518
+#: ../lilykde/rumor.py:521
 msgid "Tap"
 msgstr "Tik"
 
-#: ../lilykde/rumor.py:527
+#: ../lilykde/rumor.py:530
 msgid "The tempo in beats per minute."
 msgstr "Het tempo in tellen per minuut."
 
-#: ../lilykde/rumor.py:529
+#: ../lilykde/rumor.py:532
 msgid "Click this button a few times to set the tempo."
 msgstr "Klik een paar keer op deze knop om het tempo in te stellen."
 
-#: ../lilykde/rumor.py:552
+#: ../lilykde/rumor.py:555
 msgid "Rumor Settings"
 msgstr "Rumor instellingen"
 
-#: ../lilykde/rumor.py:556
+#: ../lilykde/rumor.py:559
 #, python-format
 msgid "OSS device %d"
 msgstr "OSS apparaat %d"
 
-#: ../lilykde/rumor.py:558
+#: ../lilykde/rumor.py:561
 msgid "Keyboard"
 msgstr "Toetsenbord"
 
-#: ../lilykde/rumor.py:564
+#: ../lilykde/rumor.py:567
 msgid "MIDI input:"
 msgstr "MIDI invoer:"
 
-#: ../lilykde/rumor.py:567
+#: ../lilykde/rumor.py:570
 msgid ""
 "MIDI input to use. Choose 'Keyboard' if you want to play on the keyboard of "
 "your computer."
@@ -517,27 +512,27 @@ msgstr ""
 "Het te gebruiken MIDI-invoerapparaat. Kies 'Toetsenbord' om op het "
 "toetsenbord van uw computer te spelen."
 
-#: ../lilykde/rumor.py:572
+#: ../lilykde/rumor.py:575
 msgid "MIDI output:"
 msgstr "MIDI uitvoer:"
 
-#: ../lilykde/rumor.py:575
+#: ../lilykde/rumor.py:578
 msgid "MIDI output to use."
 msgstr "Het te gebruiken MIDI-uitvoerapparaat."
 
-#: ../lilykde/rumor.py:579
+#: ../lilykde/rumor.py:582
 msgid "Language:"
 msgstr "Taal:"
 
-#: ../lilykde/rumor.py:583
+#: ../lilykde/rumor.py:586
 msgid "The LilyPond language you want Rumor to output the pitches in."
 msgstr "De LilyPond-taal die u wilt gebruiken voor de toonhoogtes."
 
-#: ../lilykde/rumor.py:590
+#: ../lilykde/rumor.py:593
 msgid "Explicit durations"
 msgstr "Expliciete toonduur"
 
-#: ../lilykde/rumor.py:592
+#: ../lilykde/rumor.py:595
 msgid ""
 "Add a duration after every note, even if it is the same as the preceding "
 "note."
@@ -545,47 +540,47 @@ msgstr ""
 "De toonduur na elke noot weergeven, ook als deze hetzelfde is als de vorige "
 "noot."
 
-#: ../lilykde/rumor.py:597
+#: ../lilykde/rumor.py:600
 msgid "Absolute pitch"
 msgstr "Absolute toonhoogte"
 
-#: ../lilykde/rumor.py:599
+#: ../lilykde/rumor.py:602
 msgid "Use absolute pitches instead of relative."
 msgstr "Gebruik absolute octaafhoogte in plaats van relatieve."
 
-#: ../lilykde/rumor.py:605
+#: ../lilykde/rumor.py:608
 msgid "No barlines"
 msgstr "Geen maatstrepen"
 
-#: ../lilykde/rumor.py:607
+#: ../lilykde/rumor.py:610
 msgid "Filter the barlines out of Rumor's output."
 msgstr "Verwijder de maatstrepen uit Rumor's uitvoer."
 
-#: ../lilykde/rumor.py:611
+#: ../lilykde/rumor.py:614
 msgid "No dots"
 msgstr "Geen punten"
 
-#: ../lilykde/rumor.py:613
+#: ../lilykde/rumor.py:616
 msgid "Do not use dotted notes, but ties instead."
 msgstr "Plaats geen punt achter de noot, maar een overbindingsboogje."
 
-#: ../lilykde/rumor.py:617
+#: ../lilykde/rumor.py:620
 msgid "Legato"
 msgstr "Legato"
 
-#: ../lilykde/rumor.py:618
+#: ../lilykde/rumor.py:621
 msgid "Do not use rests, but give all notes the maximum length."
 msgstr "Gebruik geen rusten maar geef alle noten de maximale lengte."
 
-#: ../lilykde/rumor.py:623
+#: ../lilykde/rumor.py:626
 msgid "Strip rests"
 msgstr "Rusten verwijderen"
 
-#: ../lilykde/rumor.py:625
+#: ../lilykde/rumor.py:628
 msgid "Strip leading and trialing rests from output."
 msgstr "Verwijder rusten aan het begin en het einde."
 
-#: ../lilykde/rumor.py:683
+#: ../lilykde/rumor.py:686
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -598,3 +593,4 @@ msgstr[1] "$count documenten gefaald."
 #: ../lilypond-servicemenu-helper.py:50
 msgid "All documents successfully converted."
 msgstr "Alle documenten zijn succesvol geconverteerd."
+
