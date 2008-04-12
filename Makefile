@@ -119,6 +119,8 @@ install-plugin: lilykde/about.py
 	@echo Installing Python module hyphenator:
 	cp hyphenator.py $(LILYKDE)/
 	@cd $(LILYKDE) && $(PYCOMPILE) hyphenator.py
+	@echo Installing runpty.py helper script:
+	cp runpty.py $(LILYKDE)/
 	@echo Installing lilypond stuff for expand Pate plugin:
 	@mkdir -p $(PYPLUGINS)/expand
 	-cp x-lilypond.conf $(PYPLUGINS)/expand/
@@ -128,6 +130,7 @@ uninstall-plugin:
 	rm -f $(PYPLUGINS)/lilypond.py*
 	rm -rf $(LILYKDE)/lilykde
 	rm -f $(LILYKDE)/hyphenator.py
+	rm -f $(LILYKDE)/runpty.py
 	rm -f $(PYPLUGINS)/expand/x-lilypond.conf
 
 install-i18n:

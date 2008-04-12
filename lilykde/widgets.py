@@ -2,14 +2,14 @@
 Widgets used in LilyKDE
 """
 
-import re
+import os, re
 from subprocess import Popen, PIPE
 
 from qt import *
 from kdecore import KApplication, KProcess, KURL
 from kdeui import KMessageBox, KTextBrowser
 
-from lilykde import config
+from lilykde import config, appdir
 from lilykde.util import \
     findexe, keepspaces, htmlescapeurl, htmlescape, krun, splitcommandline
 
@@ -225,10 +225,7 @@ class ProcessButton(QPushButton):
                 p.setUsePty(KProcess.Stdin, False)
             else:
                 # Hack to let a process think it reads from a terminal
-                cmd[0:0] = ["python", '-c',
-                    "import sys,pty,signal;"
-                    "signal.signal(2,lambda i,j:1);"
-                    "pty.spawn(sys.argv[1:])"]
+                cmd[0:0] = ["python", os.path.join(appdir, "runpty.py")]
         p.setExecutable(cmd[0])
         p.setArguments(cmd[1:])
         # Setup the signals

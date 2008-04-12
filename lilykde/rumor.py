@@ -302,16 +302,17 @@ class RumorButton(ProcessButton):
         if self.keyboardEmu:
             cmd.append("--kbd")
             p.setFocus()
-            self.comm = KProcess.All
+            self.comm = KProcess.Communication(KProcess.Stdin | KProcess.Stdout)
             self.pty = True
         else:
-            self.comm = KProcess.AllOutput
+            self.comm = KProcess.Stdout
             self.pty = False
         self.command = cmd
 
     def receivedStdout(self, proc, buf, length):
         """ Writes the received text from Rumor into the Kate buffer """
         text = unicode(QString.fromUtf8(buf, length))
+        text = text.replace('\r', '')       # remove carriage returns
         if text == '\n':
             return  # discard single newline, typically output on exit.
         if self.noBarlines:
@@ -319,13 +320,6 @@ class RumorButton(ProcessButton):
         text = text.replace('\n\n', '\n')   # avoid empty lines
         text = text.replace('\n', '\n' + self.indent)
         kate.view().insertText(text)
-
-    def receivedStderr(self, proc, buf, length):
-        """
-        Write error messages to the console, because currently we can't
-        start() KProcess with OR-red Communication values.
-        """
-        sys.stderr.write(unicode(QString.fromUtf8(buf, length)))
 
     def started(self):
         self.parent().status.message(_(
