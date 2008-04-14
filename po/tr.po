@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
 "POT-Creation-Date: 2008-04-14 08:09+0200\n"
-"PO-Revision-Date: 2008-03-30 22:54+0300\n"
+"PO-Revision-Date: 2008-04-14 19:46+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
 "MIME-Version: 1.0\n"
@@ -102,8 +102,7 @@ msgstr "PDF'yi e-posta ile gönder"
 
 #: ../lilykde/runlily.py:209
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
-msgstr ""
-"LilyPond bir PDF. Büyük ihtimalle şunu eklemeyi unuttunuz <b>\\layout</b>?"
+msgstr "LilyPond bir PDF. Büyük ihtimalle şunu eklemeyi unuttunuz <b>\\layout</b>?"
 
 #: ../lilykde/runlily.py:213 ../lilykde/settings.py:186
 msgid "Play MIDI"
@@ -164,7 +163,7 @@ msgstr "Tirelemeyi kaldır"
 
 #: ../lilykde/menu.py:83
 msgid "Record MIDI with Rumor"
-msgstr ""
+msgstr "MIDI dosyasını Tumor ile kaydedin"
 
 #: ../lilykde/version.py:32
 #, python-format
@@ -191,8 +190,7 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr ""
-"Lilypond sürümü belirli değil. Lütfen, Lilypond kurulumunuzu denetleyin."
+msgstr "Lilypond sürümü belirli değil. Lütfen, Lilypond kurulumunuzu denetleyin."
 
 #: ../lilykde/version.py:74
 msgid "This LilyPond document is already up-to-date."
@@ -294,12 +292,11 @@ msgstr "Rumor programının tam yolunun adı."
 msgid ""
 "Name or full path of the aconnect program (part of ALSA, for MIDI input and "
 "playback using Rumor)."
-msgstr ""
+msgstr "Programa bağlanmanın adı veya tam yolu (ALSA'nın bir parçası, MIDI girişi ve Rumor'u kullanarak çalmak için)"
 
 #: ../lilykde/settings.py:98
-msgid ""
-"Full command to start Timidity (or any other program) as an ALSA MIDI client."
-msgstr ""
+msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgstr "ALSA MIDI istemcisi olarak Timidity (veya bir diğer başka programı) başlatmanın tam komutu."
 
 #: ../lilykde/settings.py:131
 msgid "Hyphenation"
@@ -336,8 +333,7 @@ msgid "Open the generated PDF file with the default PDF viewer."
 msgstr "İşlenmiş PDF dosyasını varsayılan PDF okuyucu ile aç."
 
 #: ../lilykde/settings.py:182
-msgid ""
-"Print the PDF using the print command set in the Commands settings page."
+msgid "Print the PDF using the print command set in the Commands settings page."
 msgstr "Komut ayarları sayfasındaki ayarları kullanarak PDF dosyasını yazdır."
 
 #: ../lilykde/settings.py:185
@@ -352,239 +348,238 @@ msgstr "Varsayılan MIDI çalıcıyı kullanarak işlenmiş MIDI dosyalarını �
 
 #: ../lilykde/rumor.py:91
 msgid "Auto"
-msgstr ""
+msgstr "Otomatik"
 
 #: ../lilykde/rumor.py:150
 msgid "TiMidity"
-msgstr ""
+msgstr "TiMidity"
 
 #: ../lilykde/rumor.py:151
 msgid "Start or stop the TiMidity ALSA MIDI client."
-msgstr ""
+msgstr "TiMidity ALSA MIDI istemcisini başlat veya durdur."
 
 #: ../lilykde/rumor.py:158
-#, fuzzy
 msgid "TiMidity successfully started."
-msgstr "Tüm belgeler başarıyla dönüştürüldü."
+msgstr "TiMidity başarıyla başlatıldı."
 
 #: ../lilykde/rumor.py:161
 msgid "TiMidity stopped."
-msgstr ""
+msgstr "TiMidity durduruldu."
 
 #: ../lilykde/rumor.py:165
 #, python-format
 msgid ""
 "Could not start TiMidity. Please try the command %s in a terminal to find "
 "out what went wrong."
-msgstr ""
+msgstr "Timidity'i başlatamıyor. Neyin yanlış gittiğini bulmak için lütfen terminalde %s komutunu deneyin."
 
 #: ../lilykde/rumor.py:180
 msgid "REC"
-msgstr ""
+msgstr "KAYIT"
 
 #: ../lilykde/rumor.py:184
 msgid "Start or stop Rumor"
-msgstr ""
+msgstr "Rumor'u başlat veya durdur"
 
 #: ../lilykde/rumor.py:326
 msgid "Rumor is recording, press ESC to stop."
-msgstr ""
+msgstr "Rumor kaydediyor, durdurmak için ESC tuşuna basınız."
 
 #: ../lilykde/rumor.py:368
 msgid "Tempo:"
-msgstr ""
+msgstr "Hız:"
 
 #: ../lilykde/rumor.py:369
 msgid "Meter:"
-msgstr ""
+msgstr "Ölçü:"
 
 #: ../lilykde/rumor.py:370
 msgid "Key:"
-msgstr ""
+msgstr "Tonalite:"
 
 #: ../lilykde/rumor.py:399
 msgid ""
 "The meter to use. Leave 'Auto' to let LilyKDE determine the meter from the "
 "LilyPond document."
-msgstr ""
+msgstr "Kullanılacak ölçü. LilyKDE'nin Liypond belgesinden yola çıkarak ölçüyü belirlemesi için Otomatik ayarını olduğu gibi bırakın."
 
 #: ../lilykde/rumor.py:406
 msgid "Quantize:"
-msgstr ""
+msgstr "Quantize:"
 
 #: ../lilykde/rumor.py:411
 msgid "The shortest note duration to use."
-msgstr ""
+msgstr "Kullanılacak en kısa nota."
 
 #: ../lilykde/rumor.py:415
 msgid "Step"
-msgstr ""
+msgstr "Adım"
 
 #: ../lilykde/rumor.py:417
 msgid "Record LilyPond input note by note, without durations."
-msgstr ""
+msgstr "Lilypond girişini süreler olmadan nota nota kaydet,"
 
 #: ../lilykde/rumor.py:421
 msgid "Mono"
-msgstr ""
+msgstr "Mono"
 
 #: ../lilykde/rumor.py:423
 msgid "Record monophonic input, without chords."
-msgstr ""
+msgstr "Akorlar olmadan tek sesli girişi kaydet."
 
 #: ../lilykde/rumor.py:434
 msgid ""
 "The number of accidentals. A negative number designates flats. Leave 'Auto' "
 "to let LilyKDE determine the key signature from the LilyPond document."
-msgstr ""
+msgstr "Arızaların sayısı. Eksi numara bemolleri nitelendirir. LilyKDE'nin Lilypond belgesinden yola çıkarak tonu ayarlaması için Otomatik seçeneğini olduğu gibi bırakın."
 
 #: ../lilykde/rumor.py:447
 msgid "Configure..."
-msgstr ""
+msgstr "Yapılandır..."
 
 #: ../lilykde/rumor.py:448
 msgid "Adjust more settings, like MIDI input and output."
-msgstr ""
+msgstr "MIDI giriş ve çıkış gibi daha çok ayarı yapılandırın."
 
 #: ../lilykde/rumor.py:453
 msgid "Save"
-msgstr ""
+msgstr "Kaydet"
 
 #: ../lilykde/rumor.py:454
 msgid "Set these settings as default."
-msgstr ""
+msgstr "Bu ayarları varsayılan olarak ayarlayın."
 
 #: ../lilykde/rumor.py:464
 msgid "Found rumor version $version."
-msgstr ""
+msgstr "Rumor sürümü bulundu $version."
 
 #: ../lilykde/rumor.py:467
-#, fuzzy, python-format
+#, python-format
 msgid "Could not find Rumor: %s"
-msgstr "LilyPond başlatılamadı: %s"
+msgstr "Rumor bulunamadı: %s"
 
 #: ../lilykde/rumor.py:492
 msgid "Settings have been saved."
-msgstr ""
+msgstr "Ayarlar kaydedildi."
 
 #: ../lilykde/rumor.py:518
 msgid "Tap"
-msgstr ""
+msgstr "Tık"
 
 #: ../lilykde/rumor.py:527
 msgid "The tempo in beats per minute."
-msgstr ""
+msgstr "Dakika başında vuruşların hızı."
 
 #: ../lilykde/rumor.py:529
 msgid "Click this button a few times to set the tempo."
-msgstr ""
+msgstr "Hızı ayarlamak için bu düşmeye bir kaç kez tıklayınız."
 
 #: ../lilykde/rumor.py:552
 msgid "Rumor Settings"
-msgstr ""
+msgstr "Rumor Ayarları"
 
 #: ../lilykde/rumor.py:556
 #, python-format
 msgid "OSS device %d"
-msgstr ""
+msgstr "OSS aygıtı %d"
 
 #: ../lilykde/rumor.py:558
 msgid "Keyboard"
-msgstr ""
+msgstr "Klavye"
 
 #: ../lilykde/rumor.py:564
 msgid "MIDI input:"
-msgstr ""
+msgstr "MIDI girişi:"
 
 #: ../lilykde/rumor.py:567
 msgid ""
 "MIDI input to use. Choose 'Keyboard' if you want to play on the keyboard of "
 "your computer."
-msgstr ""
+msgstr "Kullanılacak MIDI girişi. Eğer bilgisayarınızın klavyesinden çalmak istiyorsanız Klavye'yi seçin."
 
 #: ../lilykde/rumor.py:572
 msgid "MIDI output:"
-msgstr ""
+msgstr "MIDI çıkışı:"
 
 #: ../lilykde/rumor.py:575
 msgid "MIDI output to use."
-msgstr ""
+msgstr "Kullanılacak olan MIDI çıkışı."
 
 #: ../lilykde/rumor.py:579
 msgid "Language:"
-msgstr ""
+msgstr "Dil:"
 
 #: ../lilykde/rumor.py:583
 msgid "The LilyPond language you want Rumor to output the pitches in."
-msgstr ""
+msgstr "Rumor'un içindeki sesleri dışa aktaracağı Lilypond dili."
 
 #: ../lilykde/rumor.py:590
 msgid "Explicit durations"
-msgstr ""
+msgstr "Süreleri netleştir"
 
 #: ../lilykde/rumor.py:592
 msgid ""
 "Add a duration after every note, even if it is the same as the preceding "
 "note."
-msgstr ""
+msgstr "Bir öncekinin aynısı olsa bile her notadan sonra bir süre ekle."
 
 #: ../lilykde/rumor.py:597
 msgid "Absolute pitch"
-msgstr ""
+msgstr "Mutlak ses"
 
 #: ../lilykde/rumor.py:599
 msgid "Use absolute pitches instead of relative."
-msgstr ""
+msgstr "İlgili ses yerine mutlak sesleri kullan."
 
 #: ../lilykde/rumor.py:605
 msgid "No barlines"
-msgstr ""
+msgstr "Ölçü çizgisi yok"
 
 #: ../lilykde/rumor.py:607
 msgid "Filter the barlines out of Rumor's output."
-msgstr ""
+msgstr "Rumor'un çıkışından ölçü çizgisi çıktılarını filtrele."
 
 #: ../lilykde/rumor.py:611
 msgid "No dots"
-msgstr ""
+msgstr "Nokta yok"
 
 #: ../lilykde/rumor.py:613
 msgid "Do not use dotted notes, but ties instead."
-msgstr ""
+msgstr "Noktaları kullanmayıp onun yerine uzatma bağlarını kullanın."
 
 #: ../lilykde/rumor.py:617
 msgid "Legato"
-msgstr ""
+msgstr "Bağlı"
 
 #: ../lilykde/rumor.py:618
 msgid "Do not use rests, but give all notes the maximum length."
-msgstr ""
+msgstr "Susları kullanmayın, fakat tüm notalara maksimum uzunluk verin."
 
 #: ../lilykde/rumor.py:623
 msgid "Strip rests"
-msgstr ""
+msgstr "Susları çıkar"
 
 #: ../lilykde/rumor.py:625
 msgid "Strip leading and trialing rests from output."
-msgstr ""
+msgstr "Çıktıdan ilk ve son susları çıkar."
 
 #: ../lilykde/rumor.py:629
 msgid "Guile scripts to load:"
-msgstr ""
+msgstr "Yüklenecek Guile betikleri:"
 
 #: ../lilykde/rumor.py:633
 msgid "Name"
-msgstr ""
+msgstr "İsim"
 
 #: ../lilykde/rumor.py:634
 msgid "Description"
-msgstr ""
+msgstr "Tanımlama"
 
 #: ../lilykde/rumor.py:636
 msgid ""
 "Here you can select which Guile scripts you want Rumor to load. Check "
 "\"What's this\" for more information."
-msgstr ""
+msgstr "Buradan Rumor'un yüklemesini istediğiniz Guile betiklerini seçebilirsiniz. Daha fazla bilgi için \"Bu Nedir\"i seçiniz."
 
 #: ../lilykde/rumor.py:639
 #, python-format
@@ -592,24 +587,19 @@ msgid ""
 "Here you can select which Guile scripts you want Rumor to load. You can add "
 "your own scripts by putting them in %s. If the first line of your script "
 "starts with a semicolon (;) that line will be shown as description."
-msgstr ""
+msgstr "Buradan Rumor'un yüklemesini istediğiniz Guile betiklerini seçebilirsiniz. Kendi betiklerinizi onlara %s işaretini koyarak ekleyebilirsiniz. Eğer betiğinizin ilk satırı bir noktalı virgül ile (;) başlarsa, bu satır tanımlama olarak gösterilecektir."
 
 #: ../lilykde/rumor.py:721
 msgid "Rumor"
-msgstr ""
+msgstr "Rumor"
 
 #: ../lilypond-servicemenu-helper.py:46
 msgid "One document failed."
 msgid_plural "$count documents failed."
-msgstr[0] "One document failed."
+msgstr[0] "One document failed. "
 msgstr[1] ""
 
 #: ../lilypond-servicemenu-helper.py:50
 msgid "All documents successfully converted."
 msgstr "Tüm belgeler başarıyla dönüştürüldü."
 
-#~ msgid "Lilypond:"
-#~ msgstr "Lilypond:"
-
-#~ msgid "Convert-ly:"
-#~ msgstr "Convert-ly:"
