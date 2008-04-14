@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-12 20:47+0200\n"
+"POT-Creation-Date: 2008-04-14 08:09+0200\n"
 "PO-Revision-Date: 2008-04-11 16:36+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -170,15 +170,15 @@ msgstr "MIDI opnemen met Rumor"
 msgid "Could not start LilyPond: %s"
 msgstr "Kan LilyPond niet starten: %s"
 
-#: ../lilykde/version.py:39
+#: ../lilykde/version.py:40
 msgid "unknown"
 msgstr "onbekend"
 
-#: ../lilykde/version.py:47
+#: ../lilykde/version.py:48
 msgid "Your document has already a LilyPond version statement."
 msgstr "Uw document heeft reeds een LilyPond versie-commando."
 
-#: ../lilykde/version.py:67
+#: ../lilykde/version.py:68
 msgid ""
 "Can't determine the LilyPond version of the current document. Please add a "
 "\\version statement with the correct version."
@@ -186,18 +186,18 @@ msgstr ""
 "Kan de LilyPond-versie van het huidige document niet bepalen. Voeg een "
 "\\version commando toe met de correcte versie van het document."
 
-#: ../lilykde/version.py:70
+#: ../lilykde/version.py:71
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
 msgstr ""
 "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
-#: ../lilykde/version.py:73
+#: ../lilykde/version.py:74
 msgid "This LilyPond document is already up-to-date."
 msgstr "Dit LilyPond-document is reeds bijgewerkt."
 
-#: ../lilykde/version.py:97
+#: ../lilykde/version.py:98
 msgid ""
 "The document has been processed with convert-ly. You'll find the messages of "
 "convert-ly in a comment block at the end. You still may have to edit some "
@@ -207,7 +207,7 @@ msgstr ""
 "u aan het eind in een commentaarblok. Het kan zijn dat u bepaalde "
 "wijzigingen nog handmatig dient door te voeren."
 
-#: ../lilykde/version.py:103
+#: ../lilykde/version.py:104
 #, python-format
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
@@ -216,7 +216,7 @@ msgstr ""
 "Het document is verwerkt door convert-ly, maar bleef ongewijzigd. Dit is de "
 "melding die convert-ly gaf: %s"
 
-#: ../lilykde/version.py:107
+#: ../lilykde/version.py:108
 #, python-format
 msgid "Could not start convert-ly: %s"
 msgstr "Kan convert-ly niet starten: %s"

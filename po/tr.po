@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-12 20:47+0200\n"
+"POT-Creation-Date: 2008-04-14 08:09+0200\n"
 "PO-Revision-Date: 2008-03-30 22:54+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
@@ -171,15 +171,15 @@ msgstr ""
 msgid "Could not start LilyPond: %s"
 msgstr "LilyPond başlatılamadı: %s"
 
-#: ../lilykde/version.py:39
+#: ../lilykde/version.py:40
 msgid "unknown"
 msgstr "bilinmiyor"
 
-#: ../lilykde/version.py:47
+#: ../lilykde/version.py:48
 msgid "Your document has already a LilyPond version statement."
 msgstr "Belgenizde zaten Lilypond sürüm bildirimi var."
 
-#: ../lilykde/version.py:67
+#: ../lilykde/version.py:68
 msgid ""
 "Can't determine the LilyPond version of the current document. Please add a "
 "\\version statement with the correct version."
@@ -187,18 +187,18 @@ msgstr ""
 "Bu dosyada Lilypond sürüm belirteci bulunmuyor. Lütfen, \\version "
 "belirtecini doğru sürüm numarasını kullanarak ekleyiniz."
 
-#: ../lilykde/version.py:70
+#: ../lilykde/version.py:71
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
 msgstr ""
 "Lilypond sürümü belirli değil. Lütfen, Lilypond kurulumunuzu denetleyin."
 
-#: ../lilykde/version.py:73
+#: ../lilykde/version.py:74
 msgid "This LilyPond document is already up-to-date."
 msgstr "Bu Lilypond belgesi zaten güncel."
 
-#: ../lilykde/version.py:97
+#: ../lilykde/version.py:98
 msgid ""
 "The document has been processed with convert-ly. You'll find the messages of "
 "convert-ly in a comment block at the end. You still may have to edit some "
@@ -207,7 +207,7 @@ msgstr ""
 "Bu belge convert-ly ile işlenmiş. Convert-ly mesajlarını sondaki yorum "
 "bloğunda bulacaksınız. Bazı kısımları yine de elle düzenlemeniz gerekebilir."
 
-#: ../lilykde/version.py:103
+#: ../lilykde/version.py:104
 #, python-format
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
@@ -216,7 +216,7 @@ msgstr ""
 "Belge, convert-ly ile işlenmiş, ancak değiştirlmeden kalmış. Bu ileti "
 "convert-ly tarafından hazırlanmıştır:%s"
 
-#: ../lilykde/version.py:107
+#: ../lilykde/version.py:108
 #, python-format
 msgid "Could not start convert-ly: %s"
 msgstr "convert-ly başlatılamadı: %s"

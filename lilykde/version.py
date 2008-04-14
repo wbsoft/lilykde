@@ -30,7 +30,8 @@ def init():
     except OSError, e:
         match = None
         error(_("Could not start LilyPond: %s") % e)
-    from lilykde.menu import insertVersion as v
+    from lilykde.menu import menu
+    v = menu.child("insertVersion")
     if match:
         version = tuple(int(s or "0") for s in match.groups())
         v.setText(unicode(v.text()) % "%d.%d.%d" % version)

@@ -1,10 +1,12 @@
 """
 This is the LilyPond Kate main menu.
 
-You can disable actions by calling lymenu.action.setEnabled(false), e.g.
-lymenu.preview.setEnabled(False)
+You can disable actions by calling menu.child("name").setEnabled(false), e.g.
+menu.child("preview").setEnabled(False)
 
-You can call actions by calling e.g. lymenu.publish.activate()
+You can call actions by calling e.g. menu.child("publish").activate().
+
+The name of each action is set to the function name.
 """
 import sys
 import kate
@@ -18,69 +20,67 @@ from lilykde.i18n import _
 from kdecore import KShortcut
 from kdeui import KAction, KActionMenu, KActionSeparator
 
+def add(menu, text, key="", icon=""):
+    """ Returns a function that when called returns a KAction. """
+    def action(f):
+        # Give the KAction the name of the function it calls
+        menu.insert(KAction(text, icon, KShortcut(key), f, menu, f.func_name))
+        return f
+    return action
 
-class Menu(KActionMenu):
-    def add(self, text, key="", icon=""):
-        """ Returns a function that when called returns a KAction. """
-        def action(func):
-            a = KAction(text, icon, KShortcut(key), func, self, "")
-            self.insert(a)
-            return a
-        return action
+menu = KActionMenu(_("LilyPond"))
 
-menu = Menu(_("LilyPond"))
-
-@menu.add(_("Run LilyPond (preview)"), "Ctrl+Shift+M", "ly")
+@add(menu, _("Run LilyPond (preview)"), "Ctrl+Shift+M", "ly")
 def preview():
     from lilykde import runlily
     runlily.runLilyPond(kate.document(), preview=True)
 
-@menu.add(_("Run LilyPond (publish)"), "Ctrl+Shift+P", "ly")
+@add(menu, _("Run LilyPond (publish)"), "Ctrl+Shift+P", "ly")
 def publish():
     from lilykde import runlily
     runlily.runLilyPond(kate.document())
 
 menu.insert(KActionSeparator())
 
-@menu.add(_("Interrupt LilyPond Job"), "Shift+Esc", "stop")
+@add(menu, _("Interrupt LilyPond Job"), "Shift+Esc", "stop")
 def interrupt():
     from lilykde import runlily
     runlily.interrupt(kate.document())
 
-@menu.add(_("Clear LilyPond Log"), "", "eraser")
+@add(menu, _("Clear LilyPond Log"), "", "eraser")
 def clearLog():
     if 'lilykde.log' in sys.modules:
         sys.modules['lilykde.log'].clear()
 
 menu.insert(KActionSeparator())
 
-@menu.add(_("Insert LilyPond version (%s)"), "Ctrl+Shift+V", "ok")
+@add(menu, _("Insert LilyPond version (%s)"), "Ctrl+Shift+V", "ok")
 def insertVersion():
     from lilykde import version
     version.insertVersion()
 
-insertVersion.setEnabled(False)
+menu.child("insertVersion").setEnabled(False)
 
-@menu.add(_("Update with convert-ly"), "", "add")
+@add(menu, _("Update with convert-ly"), "", "add")
 def convertLy():
     from lilykde import version
     version.convertLy()
 
 menu.insert(KActionSeparator())
 
-@menu.add(_("Hyphenate Lyrics Text"), "Ctrl+Shift+H")
+@add(menu, _("Hyphenate Lyrics Text"), "Ctrl+Shift+H")
 def hyphenateText():
     from lilykde import hyphen
     hyphen.hyphenateText()
 
-@menu.add(_("Remove hyphenation"))
+@add(menu, _("Remove hyphenation"))
 def deHyphenateText():
     from lilykde import hyphen
     hyphen.deHyphenateText()
 
 menu.insert(KActionSeparator())
 
-@menu.add(_("Record MIDI with Rumor"), "Ctrl+Shift+R")
+@add(menu, _("Record MIDI with Rumor"), "Ctrl+Shift+R")
 def rumor():
     import lilykde.rumor
     lilykde.rumor.show()

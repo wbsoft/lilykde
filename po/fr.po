@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-11 22:43+0200\n"
+"POT-Creation-Date: 2008-04-14 08:09+0200\n"
 "PO-Revision-Date: 2008-04-11 16:36+0200\n"
 "Last-Translator: Valentin Villenave <v.villenave@gmail.com>\n"
 "Language-Team: France <kde-i18n-fr@kde.org>\n"
@@ -35,8 +35,8 @@ msgid ""
 msgstr ""
 "Un Plugin Kate/Pate pour LilyPond.\n"
 "\n"
-"LilyKDE est un plugin destiné à faciliter la saisie de partitions "
-"de musique au moyen de Kate et de LilyPond.\n"
+"LilyKDE est un plugin destiné à faciliter la saisie de partitions de musique "
+"au moyen de Kate et de LilyPond.\n"
 "\n"
 "En activant le plugin Expand, vous disposerez de raccourcis utiles pour les "
 "structures courantes de LilyPond. Vous pouvez en voir la liste dans le type "
@@ -104,8 +104,8 @@ msgstr "Envoyer PDF"
 #: ../lilykde/runlily.py:209
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
-"LilyPond n'a pas écrit de fichier de sortie PDF. Avez-vous pensé à indiquer"
-"un bloc <b>\\layout</b> ?"
+"LilyPond n'a pas écrit de fichier de sortie PDF. Avez-vous pensé à "
+"indiquerun bloc <b>\\layout</b> ?"
 
 #: ../lilykde/runlily.py:213 ../lilykde/settings.py:186
 msgid "Play MIDI"
@@ -113,7 +113,8 @@ msgstr "Jouer MIDI"
 
 #: ../lilykde/runlily.py:227
 msgid "Your document currently has no filename, please save first."
-msgstr "Ce document n'est pas enregistré dans un fichier. Veuillez l'enregistrer."
+msgstr ""
+"Ce document n'est pas enregistré dans un fichier. Veuillez l'enregistrer."
 
 #: ../lilykde/runlily.py:231
 msgid "Your document has been modified, please save first."
@@ -173,34 +174,34 @@ msgstr "Enregistrer MIDI avec Rumor"
 msgid "Could not start LilyPond: %s"
 msgstr "LilyPond n'a pu être lancé : %s"
 
-#: ../lilykde/version.py:39
+#: ../lilykde/version.py:40
 msgid "unknown"
 msgstr "inconnu"
 
-#: ../lilykde/version.py:47
+#: ../lilykde/version.py:48
 msgid "Your document has already a LilyPond version statement."
 msgstr "Ce document comprend déjà une indication de version."
 
-#: ../lilykde/version.py:67
+#: ../lilykde/version.py:68
 msgid ""
 "Can't determine the LilyPond version of the current document. Please add a "
 "\\version statement with the correct version."
 msgstr ""
-"Impossible de déterminer la version de LilyPond utilisée dans ce document. "
-" Ajoutez une indication de \\version correcte."
+"Impossible de déterminer la version de LilyPond utilisée dans ce document.  "
+"Ajoutez une indication de \\version correcte."
 
-#: ../lilykde/version.py:70
+#: ../lilykde/version.py:71
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
 msgstr ""
 "Impossible de déterminer la version de LilyPond. Vérifiez votre installation."
 
-#: ../lilykde/version.py:73
+#: ../lilykde/version.py:74
 msgid "This LilyPond document is already up-to-date."
 msgstr "Ce document est déjà à jour."
 
-#: ../lilykde/version.py:97
+#: ../lilykde/version.py:98
 msgid ""
 "The document has been processed with convert-ly. You'll find the messages of "
 "convert-ly in a comment block at the end. You still may have to edit some "
@@ -210,7 +211,7 @@ msgstr ""
 "messages de convert-ly, en commentaire. Certains endroits peuvent nécessiter "
 "des modifications manuelles."
 
-#: ../lilykde/version.py:103
+#: ../lilykde/version.py:104
 #, python-format
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
@@ -219,7 +220,7 @@ msgstr ""
 "Ce document a été traité par convert-ly, mais n'a subi aucun changement. "
 "Voici le message rapporté par convert-ly : %s"
 
-#: ../lilykde/version.py:107
+#: ../lilykde/version.py:108
 #, python-format
 msgid "Could not start convert-ly: %s"
 msgstr "Impossible de lancer convert-ly : %s"
@@ -320,7 +321,8 @@ msgid ""
 msgstr ""
 "Chemins à parcourirs pour les dictionnaires de césure d'OpenOffice.org, "
 "Scribus, Koffice,... (un seul par ligne).  Tout chemin ne commençant pas par "
-"une barre oblique sera parcouru à partir de la variable d'environnement KDEDIRS."
+"une barre oblique sera parcouru à partir de la variable d'environnement "
+"KDEDIRS."
 
 #: ../lilykde/settings.py:164
 msgid "Actions"
@@ -340,14 +342,14 @@ msgstr "Ouvrir le répertoire contenant les fichiers source et PDF."
 
 #: ../lilykde/settings.py:180
 msgid "Open the generated PDF file with the default PDF viewer."
-msgstr ""
-"Ouvrir le PDF produit dans la visionneuse PDF par défaut."
+msgstr "Ouvrir le PDF produit dans la visionneuse PDF par défaut."
 
 #: ../lilykde/settings.py:182
 msgid ""
 "Print the PDF using the print command set in the Commands settings page."
 msgstr ""
-"Imprimer le fichier PDF (au moyen de la commande spécifiée dans \"Commandes\")."
+"Imprimer le fichier PDF (au moyen de la commande spécifiée dans \"Commandes"
+"\")."
 
 #: ../lilykde/settings.py:185
 msgid "Attach the PDF to an email message."
@@ -358,8 +360,8 @@ msgid ""
 "Play the generated MIDI files using the default MIDI player (Timidity++ is "
 "recommended)."
 msgstr ""
-"Jouer le fichier MIDI produit, au moyen du lecteur MIDI par défaut (Timidity++ "
-"est recommandé)."
+"Jouer le fichier MIDI produit, au moyen du lecteur MIDI par défaut (Timidity+"
+"+ est recommandé)."
 
 #: ../lilykde/rumor.py:91
 msgid "Auto"
@@ -398,23 +400,23 @@ msgstr "REC"
 msgid "Start or stop Rumor"
 msgstr "Lancer ou arrêter Rumor."
 
-#: ../lilykde/rumor.py:332
+#: ../lilykde/rumor.py:326
 msgid "Rumor is recording, press ESC to stop."
 msgstr "Rumor enregistre ; appuyez sur ESC pour l'arrêter."
 
-#: ../lilykde/rumor.py:374
+#: ../lilykde/rumor.py:368
 msgid "Tempo:"
 msgstr "Tempo :"
 
-#: ../lilykde/rumor.py:375
+#: ../lilykde/rumor.py:369
 msgid "Meter:"
 msgstr "Chiffre de mesure :"
 
-#: ../lilykde/rumor.py:376
+#: ../lilykde/rumor.py:370
 msgid "Key:"
 msgstr "Tonalité :"
 
-#: ../lilykde/rumor.py:405
+#: ../lilykde/rumor.py:399
 msgid ""
 "The meter to use. Leave 'Auto' to let LilyKDE determine the meter from the "
 "LilyPond document."
@@ -422,97 +424,97 @@ msgstr ""
 "Chiffre de mesure. Laissez \"Auto\" pour que LilyKDE le détermine à partir "
 "du document LilyPond."
 
-#: ../lilykde/rumor.py:412
+#: ../lilykde/rumor.py:406
 msgid "Quantize:"
 msgstr "Quantiser :"
 
-#: ../lilykde/rumor.py:417
+#: ../lilykde/rumor.py:411
 msgid "The shortest note duration to use."
 msgstr "La plus courte valeur à autoriser."
 
-#: ../lilykde/rumor.py:421
+#: ../lilykde/rumor.py:415
 msgid "Step"
 msgstr "Pas"
 
-#: ../lilykde/rumor.py:423
+#: ../lilykde/rumor.py:417
 msgid "Record LilyPond input note by note, without durations."
 msgstr "Enregistrer le code LilyPond note à note, sans durées."
 
-#: ../lilykde/rumor.py:427
+#: ../lilykde/rumor.py:421
 msgid "Mono"
 msgstr "Mono"
 
-#: ../lilykde/rumor.py:429
+#: ../lilykde/rumor.py:423
 msgid "Record monophonic input, without chords."
 msgstr "Enregistrer du code LilyPond monophonique, sans accords."
 
-#: ../lilykde/rumor.py:440
+#: ../lilykde/rumor.py:434
 msgid ""
 "The number of accidentals. A negative number designates flats. Leave 'Auto' "
 "to let LilyKDE determine the key signature from the LilyPond document."
 msgstr ""
-"Nombre d'altérations (un nombre négatif désigne des bémols). Laissez \"Auto\", "
-"pour que LilyKDE le détermine à partir du document."
+"Nombre d'altérations (un nombre négatif désigne des bémols). Laissez \"Auto"
+"\", pour que LilyKDE le détermine à partir du document."
 
-#: ../lilykde/rumor.py:453
+#: ../lilykde/rumor.py:447
 msgid "Configure..."
 msgstr "Réglages..."
 
-#: ../lilykde/rumor.py:454
+#: ../lilykde/rumor.py:448
 msgid "Adjust more settings, like MIDI input and output."
 msgstr "Réglages avancés, tels que l'entrée et sortie MIDI."
 
-#: ../lilykde/rumor.py:459
+#: ../lilykde/rumor.py:453
 msgid "Save"
 msgstr "Enregistrer"
 
-#: ../lilykde/rumor.py:460
+#: ../lilykde/rumor.py:454
 msgid "Set these settings as default."
 msgstr "Enregistrer ces réglages en tant que défaut."
 
-#: ../lilykde/rumor.py:470
+#: ../lilykde/rumor.py:464
 msgid "Found rumor version $version."
 msgstr "Trouvé Rumor $version."
 
-#: ../lilykde/rumor.py:473
+#: ../lilykde/rumor.py:467
 #, python-format
 msgid "Could not find Rumor: %s"
 msgstr "Impossible de trouver Rumor: %s"
 
-#: ../lilykde/rumor.py:498
+#: ../lilykde/rumor.py:492
 msgid "Settings have been saved."
 msgstr "Les réglages ont été enregistrés."
 
-#: ../lilykde/rumor.py:524
+#: ../lilykde/rumor.py:518
 msgid "Tap"
 msgstr "Pulsation"
 
-#: ../lilykde/rumor.py:533
+#: ../lilykde/rumor.py:527
 msgid "The tempo in beats per minute."
 msgstr "Tempo, en pulsations par minute."
 
-#: ../lilykde/rumor.py:535
+#: ../lilykde/rumor.py:529
 msgid "Click this button a few times to set the tempo."
 msgstr "Cliquez plusieurs fois sur ce bouton pour régler le tempo."
 
-#: ../lilykde/rumor.py:558
+#: ../lilykde/rumor.py:552
 msgid "Rumor Settings"
 msgstr "Réglages de Rumor"
 
-#: ../lilykde/rumor.py:562
+#: ../lilykde/rumor.py:556
 #, python-format
 msgid "OSS device %d"
 msgstr "Périphérique OSS %d"
 
-#: ../lilykde/rumor.py:564
+#: ../lilykde/rumor.py:558
 msgid "Keyboard"
 msgstr "Clavier"
 
-#: ../lilykde/rumor.py:570
+#: ../lilykde/rumor.py:564
 msgid "MIDI input:"
 msgstr "Entrée MIDI :"
 
-#: ../lilykde/rumor.py:573
+#: ../lilykde/rumor.py:567
 msgid ""
 "MIDI input to use. Choose 'Keyboard' if you want to play on the keyboard of "
 "your computer."
@@ -520,87 +522,86 @@ msgstr ""
 "Entrée MIDI à utiliser. Choisissez \"Clavier\" pour jouer sur le clavier de "
 "votre ordinateur."
 
-#: ../lilykde/rumor.py:578
+#: ../lilykde/rumor.py:572
 msgid "MIDI output:"
 msgstr "Sortie MIDI :"
 
-#: ../lilykde/rumor.py:581
+#: ../lilykde/rumor.py:575
 msgid "MIDI output to use."
 msgstr "Sortie MIDI à utiliser."
 
-#: ../lilykde/rumor.py:585
+#: ../lilykde/rumor.py:579
 msgid "Language:"
 msgstr "Langue :"
 
-#: ../lilykde/rumor.py:589
+#: ../lilykde/rumor.py:583
 msgid "The LilyPond language you want Rumor to output the pitches in."
 msgstr "Langue du nom des notes pour la saisie par Rumor."
 
-#: ../lilykde/rumor.py:596
+#: ../lilykde/rumor.py:590
 msgid "Explicit durations"
 msgstr "Durées explicites"
 
-#: ../lilykde/rumor.py:598
+#: ../lilykde/rumor.py:592
 msgid ""
 "Add a duration after every note, even if it is the same as the preceding "
 "note."
 msgstr ""
-"Ajouter une durée à chaque note, même si une valeur identique est "
-"répétée."
+"Ajouter une durée à chaque note, même si une valeur identique est répétée."
 
-#: ../lilykde/rumor.py:603
+#: ../lilykde/rumor.py:597
 msgid "Absolute pitch"
 msgstr "Hauteurs absolues"
 
-#: ../lilykde/rumor.py:605
+#: ../lilykde/rumor.py:599
 msgid "Use absolute pitches instead of relative."
 msgstr "Utiliser des hauteurs absolues, et non relatives."
 
-#: ../lilykde/rumor.py:611
+#: ../lilykde/rumor.py:605
 msgid "No barlines"
 msgstr "Pas de barres de mesures"
 
-#: ../lilykde/rumor.py:613
+#: ../lilykde/rumor.py:607
 msgid "Filter the barlines out of Rumor's output."
 msgstr "Enlever les barres de mesures de la saisie par Rumor."
 
-#: ../lilykde/rumor.py:617
+#: ../lilykde/rumor.py:611
 msgid "No dots"
 msgstr "Pas de points"
 
-#: ../lilykde/rumor.py:619
+#: ../lilykde/rumor.py:613
 msgid "Do not use dotted notes, but ties instead."
 msgstr "Utiliser des notes liées et non pointées."
 
-#: ../lilykde/rumor.py:623
+#: ../lilykde/rumor.py:617
 msgid "Legato"
 msgstr "Legato"
 
-#: ../lilykde/rumor.py:624
+#: ../lilykde/rumor.py:618
 msgid "Do not use rests, but give all notes the maximum length."
 msgstr "Donner à chaque note sa durée maximale (supprimer les silences)."
 
-#: ../lilykde/rumor.py:629
+#: ../lilykde/rumor.py:623
 msgid "Strip rests"
 msgstr "Enlever silences"
 
-#: ../lilykde/rumor.py:631
+#: ../lilykde/rumor.py:625
 msgid "Strip leading and trialing rests from output."
 msgstr "Enlever les silence d'introduction ou d'hésitation."
 
-#: ../lilykde/rumor.py:635
+#: ../lilykde/rumor.py:629
 msgid "Guile scripts to load:"
 msgstr "Scripts Guile à charger :"
 
-#: ../lilykde/rumor.py:639
+#: ../lilykde/rumor.py:633
 msgid "Name"
 msgstr "Nom"
 
-#: ../lilykde/rumor.py:640
+#: ../lilykde/rumor.py:634
 msgid "Description"
 msgstr "Description"
 
-#: ../lilykde/rumor.py:642
+#: ../lilykde/rumor.py:636
 msgid ""
 "Here you can select which Guile scripts you want Rumor to load. Check "
 "\"What's this\" for more information."
@@ -608,19 +609,19 @@ msgstr ""
 "Sélectionnez ici des scripts Guile que vous voulez charger dans Rumor. "
 "Regarder \"Qu'est-ce que c'est\" pour plus d'informations."
 
-#: ../lilykde/rumor.py:645
+#: ../lilykde/rumor.py:639
 #, python-format
 msgid ""
 "Here you can select which Guile scripts you want Rumor to load. You can add "
 "your own scripts by putting them in %s. If the first line of your script "
 "starts with a semicolon (;) that line will be shown as description."
 msgstr ""
-"Sélectionnez ici des scripts Guile que vous voulez charger dans Rumor. "
-"Vous pouvez ajouter vos propres scripts dans %s. Si la première ligne de votre "
+"Sélectionnez ici des scripts Guile que vous voulez charger dans Rumor. Vous "
+"pouvez ajouter vos propres scripts dans %s. Si la première ligne de votre "
 "script commence par un point-virgule (;), cette ligne sera affichée comme "
 "description."
 
-#: ../lilykde/rumor.py:727
+#: ../lilykde/rumor.py:721
 msgid "Rumor"
 msgstr "Rumor"
 
