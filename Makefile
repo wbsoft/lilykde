@@ -67,7 +67,7 @@ uninstall: $(uninstall)
 dist:
 	@echo Creating $(DIST).tar.gz ...
 	@svn export -q . $(DIST)
-	@-cd $(DIST) && make -s -C po
+	@-cd $(DIST) && make -s ly.png && make -s -C po
 	@tar zcf $(DIST).tar.gz $(DIST)
 	@rm -rf $(DIST)/
 
