@@ -379,8 +379,8 @@ class Rumor(QFrame):
         layout.addWidget(self.tempo.spinbox, 0, 2)
         hb = QHBoxLayout()
         layout.addLayout(hb, 0, 3)
-        hb.addWidget(self.tempo.slider)
         hb.addWidget(self.tempo.tapButton)
+        hb.addWidget(self.tempo.slider)
 
         # Meter select (editable qcombobox defaulting to document)
         self.meter = QComboBox(self)
