@@ -3,8 +3,12 @@ LilyKDE
 """
 
 import os
+from qt import QMimeSourceFactory
 
 appdir = os.path.dirname(__path__[0])
+
+QMimeSourceFactory.defaultFactory().addFilePath(
+    os.path.join(appdir, "pics"))
 
 def config(group=None):
     """
