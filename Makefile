@@ -4,7 +4,6 @@ install = \
 	install-textedit \
 	install-servicemenu \
 	install-plugin \
-	install-i18n \
 	install-rumorscripts
 
 uninstall = \
@@ -12,11 +11,12 @@ uninstall = \
 	uninstall-syntax \
 	uninstall-textedit \
 	uninstall-servicemenu \
-	uninstall-i18n \
 	uninstall-plugin \
 	uninstall-rumorscripts
 
-.PHONY: all install clean uninstall $(install) $(uninstall)
+subdirs = po
+
+.PHONY: all install clean uninstall $(install) $(uninstall) $(subdirs)
 
 include VERSION
 
@@ -45,8 +45,7 @@ DIST = $(PACKAGE)-$(VERSION)
 
 all = ly.png lilykde/about.py
 
-all: $(all)
-	@$(MAKE) -C po
+all: $(all) $(subdirs)
 
 ly.png: ly.svg
 	@echo Creating ly.png from ly.svg...
@@ -55,13 +54,15 @@ ly.png: ly.svg
 lilykde/about.py: VERSION
 	@cp $< $@
 
-install: all $(install)
+$(subdirs):
+	@cd $@; $(MAKE) $(MAKECMDGOALS)
 
-clean:
+install: $(all) $(install) $(subdirs)
+
+clean: $(subdirs)
 	rm -f $(all)
-	@$(MAKE) -C po clean
 
-uninstall: $(uninstall)
+uninstall: $(uninstall) $(subdirs)
 	rm -rf $(LILYKDE)
 
 dist:
@@ -133,14 +134,8 @@ uninstall-plugin:
 	rm -f $(LILYKDE)/runpty.py
 	rm -f $(PYPLUGINS)/expand/x-lilypond.conf
 
-install-i18n:
-	@$(MAKE) -C po install
-
-uninstall-i18n:
-	@$(MAKE) -C po uninstall
-
 install-servicemenu:
-	@echo Installing Konqueror servicemenu
+	@echo Installing Konqueror servicemenu:
 	@mkdir -p $(LILYKDE)
 	cp lilypond-servicemenu-helper.py $(LILYKDE)/
 	@mkdir -p $(SERVICEMENUDIR)
@@ -148,15 +143,15 @@ install-servicemenu:
 		> $(SERVICEMENUDIR)/lilypond-servicemenu.desktop
 
 uninstall-servicemenu:
-	@echo Uninstalling Konqueror servicemenu
+	@echo Uninstalling Konqueror servicemenu:
 	rm -f $(SERVICEMENUDIR)/lilypond-servicemenu.desktop
 	rm -f $(LILYKDE)/lilypond-servicemenu-helper.py
 
 install-rumorscripts:
-	@echo Installing Rumor scripts
+	@echo Installing Rumor scripts:
 	@mkdir -p $(LILYKDE)/rumor
 	cp rumor/*.scm $(LILYKDE)/rumor/
 
 uninstall-rumorscripts:
-	@echo Uninstalling Rumor scripts
+	@echo Uninstalling Rumor scripts:
 	rm -fr $(LILYKDE)/rumor
