@@ -46,3 +46,14 @@ enter the command:
 	kate -u %U
 
 Close the dialogs by clicking OK.
+
+
+For distributors:
+=================
+
+Use:
+	make &&
+	make DESTDIR=/some/path PREFIX=$(kde-config --prefix) install
+
+to install LilyKDE to some temporary image directory, from which a
+package can be created.
