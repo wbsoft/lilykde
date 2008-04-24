@@ -3,12 +3,16 @@ LilyKDE
 """
 
 import os
-from qt import QMimeSourceFactory
+from locale import getdefaultlocale
+
+__all__ = ['appdir', 'language', 'encoding', 'config']
 
 appdir = os.path.dirname(__path__[0])
 
-QMimeSourceFactory.defaultFactory().addFilePath(
-    os.path.join(appdir, "pics"))
+try:
+    language, encoding = getdefaultlocale()
+except ValueError:
+    language, encoding = None, None
 
 def config(group=None):
     """
@@ -18,6 +22,8 @@ def config(group=None):
     from lilykde.util import kconfig
     k = kconfig("lilykderc", False, False)
     return group and k.group(group) or k
+
+
 
 
 # kate: indent-width 4;
