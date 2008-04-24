@@ -56,4 +56,4 @@ Use:
 	make DESTDIR=/some/path PREFIX=$(kde-config --prefix) install
 
 to install LilyKDE to some temporary image directory, from which a
-package can be created.
+package can be created. DESTDIR should be an absolute path.
