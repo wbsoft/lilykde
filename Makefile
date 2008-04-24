@@ -19,26 +19,7 @@ subdirs = po
 .PHONY: all install clean uninstall $(install) $(uninstall) $(subdirs)
 
 include VERSION
-
-DESTDIR =
-PREFIX  := $(shell kde-config --localprefix | sed 's,/$$,,')
-ifeq ($(PREFIX),)
-PREFIX  := $(HOME)/.kde
-endif
-DATADIR := $(DESTDIR)$(PREFIX)/share
-
-LILYKDE = $(DATADIR)/apps/lilykde
-# next one is LILYKDE without DESTDIR prepended
-REAL_LILYKDE = $(PREFIX)/share/apps/lilykde
-ICONDIR = $(DATADIR)/icons
-SERVICEDIR = $(DATADIR)/services
-SERVICEMENUDIR = $(DATADIR)/apps/konqueror/servicemenus
-KATEPARTDIR = $(DATADIR)/apps/katepart
-PYPLUGINS = $(DATADIR)/apps/kate/pyplugins
-MIMELNK = $(DATADIR)/mimelnk
-CONFIGDIR = $(DATADIR)/config
-
-PYCOMPILE = python -m py_compile
+include config.mk
 
 # for making tarballs
 DIST = $(PACKAGE)-$(VERSION)

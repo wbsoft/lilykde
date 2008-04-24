@@ -1,18 +1,6 @@
 .PHONY: all install uninstall clean
 
-XGETTEXT = xgettext
-MSGMERGE = msgmerge
-MSGFMT = msgfmt -v
-
-DESTDIR =
-PREFIX  := $(shell kde-config --localprefix | sed 's,/$$,,')
-ifeq ($(PREFIX),)
-PREFIX  := $(HOME)/.kde
-endif
-DATADIR := $(DESTDIR)$(PREFIX)/share
-
-LILYKDE = $(DATADIR)/apps/lilykde
-
+include ../config.mk
 # get VERSION, PACKAGE and EMAIL
 include ../VERSION
 
