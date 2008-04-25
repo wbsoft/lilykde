@@ -6,7 +6,6 @@ using the hyphenator module.
 import re
 import os
 from glob import glob
-from locale import getdefaultlocale
 
 from kdeui import KInputDialog
 
@@ -15,7 +14,7 @@ import kate
 from lilykde.util import py2qstringlist, kconfig
 from lilykde.kateutil import runOnSelection
 
-from lilykde import config
+from lilykde import config, language
 
 # Translate the messages
 from lilykde.i18n import _
@@ -51,10 +50,6 @@ def findDicts():
     all_languages = kconfig("all_languages", True, False, "locale")
 
     # default to the users current locale if not used before
-    try:
-        currentlang = getdefaultlocale()[0]
-    except ValueError:
-        currentlang = ""
     defaultlang = None
 
     # now find the hyph_xx_XX.dic files
@@ -73,7 +68,8 @@ def findDicts():
                         name = '%s  (%s)' % (name, lang)
                         hyphdicts[name] = g
                         # set current locale as default
-                        if lang == currentlang: defaultlang = name
+                        if lang == language:
+                            defaultlang = name
                         break
                 else:
                     hyphdicts[lang] = g

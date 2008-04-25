@@ -36,7 +36,7 @@ lilykde/about.py: VERSION
 	@cp $< $@
 
 $(subdirs):
-	@cd $@; $(MAKE) $(MAKECMDGOALS)
+	@$(MAKE) -C $@ $(MAKECMDGOALS)
 
 install: $(all) $(install) $(subdirs)
 

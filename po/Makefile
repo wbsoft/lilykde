@@ -44,12 +44,12 @@ $(mofiles): %.mo: %.po
 	$(MSGFMT) -o $@ $<
 
 install: all
-	@echo Installing message catalogs...
-	@mkdir -p $(MODIR)
-	for m in $(mofiles); do cp $$m "$(MODIR)/" ; done
+	@echo Installing message catalogs:
+	@mkdir -p "$(MODIR)"
+	cp $(mofiles) "$(MODIR)/"
 
 uninstall:
-	@echo Uninstalling message catalogs...
+	@echo Uninstalling message catalogs:
 	@rm -rf "$(MODIR)"
 
 clean:
