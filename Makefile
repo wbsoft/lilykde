@@ -14,7 +14,7 @@ uninstall = \
 	uninstall-plugin \
 	uninstall-rumorscripts
 
-subdirs = po
+subdirs = po pics
 
 .PHONY: all install clean uninstall $(install) $(uninstall) $(subdirs)
 

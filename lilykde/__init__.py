@@ -4,6 +4,7 @@ LilyKDE
 
 import os
 from locale import getdefaultlocale
+from qt import QMimeSourceFactory
 
 __all__ = ['appdir', 'language', 'encoding', 'config']
 
@@ -23,6 +24,9 @@ def config(group=None):
     k = kconfig("lilykderc", False, False)
     return group and k.group(group) or k
 
+
+QMimeSourceFactory.defaultFactory().addFilePath(
+    os.path.join(appdir, "pics"))
 
 
 
