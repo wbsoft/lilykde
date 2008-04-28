@@ -241,6 +241,14 @@ def runLilyPond(doc, preview=False):
                    "Please save your document to a local file."))
         return
 
+    # the document may contain specially formatted variables to specify e.g.
+    # another lilypond file to build instead of the current document.
+    lvars = variables(doc)
+    ly = lvars.get(
+        preview and 'master-preview' or 'master-publish') or lvars.get('master')
+    if ly:
+        f.setPath(os.path.join(f.directory, ly))
+
     from lilykde import log
     Ly2PDF(f, log.logWidget()).run(preview)
 
@@ -254,6 +262,19 @@ def interrupt(doc):
             if i.f.ly == f.ly:
                 i.kill(2)
                 break
+
+_re_variables = re.compile(r'^%%([a-z]+(?:-[a-z]+)*):[ \t]*(.+?)[ \t]*$', re.M)
+
+def variables(doc):
+    """
+    Returns a dictionary with variables put in specially formatted LilyPond
+    comments, like:
+    %%varname: value
+    (double percent at start of line, varname, colon and value)
+    Varname should consist of lowercase letters, and may contain (but not
+    end or start with) single hyphens.
+    """
+    return dict(_re_variables.findall(doc.text))
 
 
 # kate: indent-width 4;
