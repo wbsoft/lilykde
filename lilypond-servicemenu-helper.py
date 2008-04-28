@@ -21,12 +21,7 @@ class File(LyFile):
 
     def __init__(self, path):
         self.kurl = KURL(os.path.abspath(path))
-        self.path = unicode(self.kurl.path()) # the full path to the ly file
-        self.ly = os.path.basename(self.path)
-        self.directory = os.path.dirname(self.path)
-        self.basename, self.extension = os.path.splitext(self.ly)
-        self.pdf = self.ly and os.path.join(
-            self.directory, self.basename + ".pdf") or None
+        self.setPath(unicode(self.kurl.path())) # the full path to the ly file
 
     def isLyFile(self):
         return self.extension in ('.ly', '.ily', 'lyi')

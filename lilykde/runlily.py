@@ -32,13 +32,16 @@ class LyFile(object):
     def __init__(self, doc):
         self.doc = doc
         self.kurl = KURL(doc.url)
-        self.path = unicode(self.kurl.path()) # the full path to the ly file
+        self.setPath(unicode(self.kurl.path())) # the full path to the ly file
+        self.preview = False    # run with point-and-click?
+
+    def setPath(self, path):
+        self.path = path
         self.ly = os.path.basename(self.path)
         self.directory = os.path.dirname(self.path)
         self.basename, self.extension = os.path.splitext(self.ly)
         self.pdf = self.ly and os.path.join(
             self.directory, self.basename + ".pdf") or None
-        self.preview = False    # run with point-and-click?
 
     def isLocalFile(self):
             return self.kurl.isLocalFile()
