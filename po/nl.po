@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-25 07:59+0200\n"
+"POT-Creation-Date: 2008-04-28 22:25+0200\n"
 "PO-Revision-Date: 2008-04-11 16:36+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -42,81 +42,81 @@ msgstr ""
 "Versie: $version\n"
 "Homepage: $homepage\n"
 
-#: ../lilykde/runlily.py:136
+#: ../lilykde/runlily.py:139
 msgid "LilyPond [$filename] starting ($mode)..."
 msgstr "LilyPond [$filename] wordt gestart ($mode)..."
 
-#: ../lilykde/runlily.py:138
+#: ../lilykde/runlily.py:141
 msgid "LilyPond [$filename] starting..."
 msgstr "LilyPond [$filename] wordt gestart..."
 
-#: ../lilykde/runlily.py:139
+#: ../lilykde/runlily.py:142
 msgid "Could not start LilyPond."
 msgstr "Kan LilyPond niet starten."
 
-#: ../lilykde/runlily.py:150
+#: ../lilykde/runlily.py:153
 msgid "LilyPond [$filename] was terminated by signal $signal."
 msgstr "LilyPond [$filename] werd beëindigd door signaal $signal."
 
-#: ../lilykde/runlily.py:155
+#: ../lilykde/runlily.py:158
 msgid "LilyPond [$filename] exited with return code $retcode."
 msgstr "LilyPond [$filename] stopte met foutcode $retcode."
 
-#: ../lilykde/runlily.py:158
+#: ../lilykde/runlily.py:161
 msgid "LilyPond [$filename] finished."
 msgstr "LilyPond [$filename] voltooid."
 
-#: ../lilykde/runlily.py:161
+#: ../lilykde/runlily.py:164
 msgid "LilyPond [$filename] exited abnormally."
 msgstr "LilyPond [$filename] werd afgebroken."
 
-#: ../lilykde/runlily.py:177
+#: ../lilykde/runlily.py:180
 msgid "preview mode"
 msgstr "vooruitblik"
 
-#: ../lilykde/runlily.py:179
+#: ../lilykde/runlily.py:182
 msgid "publish mode"
 msgstr "publiceren"
 
-#: ../lilykde/runlily.py:191 ../lilykde/settings.py:177
+#: ../lilykde/runlily.py:194 ../lilykde/settings.py:177
 msgid "Open folder"
 msgstr "Map openen"
 
-#: ../lilykde/runlily.py:195 ../lilykde/settings.py:179
+#: ../lilykde/runlily.py:198 ../lilykde/settings.py:179
 msgid "Open PDF"
 msgstr "PDF weergeven"
 
-#: ../lilykde/runlily.py:197 ../lilykde/settings.py:181
+#: ../lilykde/runlily.py:200 ../lilykde/settings.py:181
 msgid "Print"
 msgstr "Afdrukken"
 
-#: ../lilykde/runlily.py:204
+#: ../lilykde/runlily.py:207
 msgid "Email PDF (preview)"
 msgstr "PDF e-mailen (vooruitblik)"
 
-#: ../lilykde/runlily.py:207 ../lilykde/settings.py:184
+#: ../lilykde/runlily.py:210 ../lilykde/settings.py:184
 msgid "Email PDF"
 msgstr "PDF e-mailen"
 
-#: ../lilykde/runlily.py:209
+#: ../lilykde/runlily.py:212
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
 "\\layout</b> vergeten?"
 
-#: ../lilykde/runlily.py:213 ../lilykde/settings.py:186
+#: ../lilykde/runlily.py:216 ../lilykde/settings.py:186
 msgid "Play MIDI"
 msgstr "MIDI afspelen"
 
-#: ../lilykde/runlily.py:227
+#: ../lilykde/runlily.py:230
 msgid "Your document currently has no filename, please save first."
 msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:231
+#: ../lilykde/runlily.py:234
 msgid "Your document has been modified, please save first."
 msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:237
+#: ../lilykde/runlily.py:240
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -621,12 +621,12 @@ msgstr ""
 msgid "Rumor"
 msgstr "Rumor"
 
-#: ../lilypond-servicemenu-helper.py:46
+#: ../lilypond-servicemenu-helper.py:41
 msgid "One document failed."
 msgid_plural "$count documents failed."
 msgstr[0] "Eén document gefaald."
 msgstr[1] "$count documenten gefaald."
 
-#: ../lilypond-servicemenu-helper.py:50
+#: ../lilypond-servicemenu-helper.py:45
 msgid "All documents successfully converted."
 msgstr "Alle documenten zijn succesvol geconverteerd."

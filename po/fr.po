@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-25 07:59+0200\n"
+"POT-Creation-Date: 2008-04-28 22:25+0200\n"
 "PO-Revision-Date: 2008-04-11 16:36+0200\n"
 "Last-Translator: Valentin Villenave <v.villenave@gmail.com>\n"
 "Language-Team: France <kde-i18n-fr@kde.org>\n"
@@ -45,82 +45,82 @@ msgstr ""
 "Version : $version\n"
 "Site web : $homepage\n"
 
-#: ../lilykde/runlily.py:136
+#: ../lilykde/runlily.py:139
 msgid "LilyPond [$filename] starting ($mode)..."
 msgstr "LilyPond [$filename] : lancement ($mode)..."
 
-#: ../lilykde/runlily.py:138
+#: ../lilykde/runlily.py:141
 msgid "LilyPond [$filename] starting..."
 msgstr "LilyPond [$filename] : lancement..."
 
-#: ../lilykde/runlily.py:139
+#: ../lilykde/runlily.py:142
 msgid "Could not start LilyPond."
 msgstr "LilyPond n'a pas pu être lancé."
 
-#: ../lilykde/runlily.py:150
+#: ../lilykde/runlily.py:153
 msgid "LilyPond [$filename] was terminated by signal $signal."
 msgstr "LilyPond [$filename] : terminé par le signal $signal."
 
-#: ../lilykde/runlily.py:155
+#: ../lilykde/runlily.py:158
 msgid "LilyPond [$filename] exited with return code $retcode."
 msgstr "LilyPond [$filename] : interruption avec le code $retcode."
 
-#: ../lilykde/runlily.py:158
+#: ../lilykde/runlily.py:161
 msgid "LilyPond [$filename] finished."
 msgstr "LilyPond [$filename] : traitement achevé."
 
-#: ../lilykde/runlily.py:161
+#: ../lilykde/runlily.py:164
 msgid "LilyPond [$filename] exited abnormally."
 msgstr "LilyPond [$filename] : terminé de façon anormale."
 
-#: ../lilykde/runlily.py:177
+#: ../lilykde/runlily.py:180
 msgid "preview mode"
 msgstr "aperçu"
 
-#: ../lilykde/runlily.py:179
+#: ../lilykde/runlily.py:182
 msgid "publish mode"
 msgstr "publication"
 
-#: ../lilykde/runlily.py:191 ../lilykde/settings.py:177
+#: ../lilykde/runlily.py:194 ../lilykde/settings.py:177
 msgid "Open folder"
 msgstr "Ouvrir dossier"
 
-#: ../lilykde/runlily.py:195 ../lilykde/settings.py:179
+#: ../lilykde/runlily.py:198 ../lilykde/settings.py:179
 msgid "Open PDF"
 msgstr "Ouvrir PDF"
 
-#: ../lilykde/runlily.py:197 ../lilykde/settings.py:181
+#: ../lilykde/runlily.py:200 ../lilykde/settings.py:181
 msgid "Print"
 msgstr "Imprimer"
 
-#: ../lilykde/runlily.py:204
+#: ../lilykde/runlily.py:207
 msgid "Email PDF (preview)"
 msgstr "Envoyer PDF (aperçu)"
 
-#: ../lilykde/runlily.py:207 ../lilykde/settings.py:184
+#: ../lilykde/runlily.py:210 ../lilykde/settings.py:184
 msgid "Email PDF"
 msgstr "Envoyer PDF"
 
-#: ../lilykde/runlily.py:209
+#: ../lilykde/runlily.py:212
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond n'a pas écrit de fichier de sortie PDF. Avez-vous pensé à "
 "indiquerun bloc <b>\\layout</b> ?"
 
-#: ../lilykde/runlily.py:213 ../lilykde/settings.py:186
+#: ../lilykde/runlily.py:216 ../lilykde/settings.py:186
 msgid "Play MIDI"
 msgstr "Jouer MIDI"
 
-#: ../lilykde/runlily.py:227
+#: ../lilykde/runlily.py:230
 msgid "Your document currently has no filename, please save first."
 msgstr ""
 "Ce document n'est pas enregistré dans un fichier. Veuillez l'enregistrer."
 
-#: ../lilykde/runlily.py:231
+#: ../lilykde/runlily.py:234
 msgid "Your document has been modified, please save first."
 msgstr "Ce document a été modifié. Veuillez l'enregistrer."
 
-#: ../lilykde/runlily.py:237
+#: ../lilykde/runlily.py:240
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -625,12 +625,12 @@ msgstr ""
 msgid "Rumor"
 msgstr "Rumor"
 
-#: ../lilypond-servicemenu-helper.py:46
+#: ../lilypond-servicemenu-helper.py:41
 msgid "One document failed."
 msgid_plural "$count documents failed."
 msgstr[0] "Un document a échoué."
 msgstr[1] "$count documents ont échoué."
 
-#: ../lilypond-servicemenu-helper.py:50
+#: ../lilypond-servicemenu-helper.py:45
 msgid "All documents successfully converted."
 msgstr "Tous les documents ont été convertis avec succès."

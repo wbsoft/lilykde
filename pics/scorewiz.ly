@@ -3,8 +3,8 @@
 \paper {
   indent = 3\mm
   line-width = 3.6\in
-  oddFooterMarkup=##f
-  oddHeaderMarkup=##f
+  oddFooterMarkup = ##f
+  oddHeaderMarkup = ##f
   bookTitleMarkup = ##f
   scoreTitleMarkup = ##f
 }
