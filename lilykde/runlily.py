@@ -257,9 +257,8 @@ def interrupt(doc):
     Interrupt a LilyPond task if there is one running on the specified document.
     """
     if doc.url:
-        f = LyFile(doc)
         for i in LyJob.instances():
-            if i.f.ly == f.ly:
+            if i.f.doc.url == doc.url:
                 i.kill(2)
                 break
 
