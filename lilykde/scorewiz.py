@@ -42,7 +42,7 @@ Wizard:
 from string import Template
 
 from qt import *
-from kdeui import KTextBrowser
+from kdeui import *
 
 # Translate messages
 from lilykde.i18n import _
@@ -92,30 +92,58 @@ html = Template(r"""<table width=360 style='font-family: serif;'>
         _("bottom of last page"))
 
 
-class Titles(QFrame):
+class Titles(object):
     """
     A widget where users can fill in all the titles that are put
     in the \header block.
     """
-    def __init__(self, *args):
-        QFrame.__init__(self, *args)
 
-        l = QHBoxLayout(self)
-        t = KTextBrowser(self, None, True)
-        t.setMinimumWidth(380)
+    title = _("Titles and Headers")
+
+    def __init__(self, qframe):
+        self.f = qframe
+
+        l = QHBoxLayout(self.f)
+        t = KTextBrowser(self.f, None, True)
+        t.setMinimumWidth(390)
         t.setMinimumHeight(360)
         t.setLinkUnderline(False)
         t.setText(html)
         l.addWidget(t)
         QObject.connect(t, SIGNAL("urlClick(const QString &)"), self.focus)
 
-        g = QGridLayout(len(headers), 2, 2)
+        l.addSpacing(2)
+
+        g = QGridLayout(len(headers), 2, 0)
         l.addLayout(g)
 
         for c, h in enumerate(headers):
             name, title = h
-            g.addWidget(QLabel(title, self), c, 0)
-            g.addWidget(QLineEdit(self, name), c, 1)
+            g.addWidget(QLabel(title + ":", self.f), c, 0)
+            g.addWidget(QLineEdit(self.f, name), c, 1)
 
     def focus(self, link):
-        self.child(str(link)).setFocus()
+        self.f.child(str(link)).setFocus()
+
+
+
+
+
+class ScoreWizard(KDialogBase):
+    def __init__(self, parent):
+        KDialogBase.__init__(self,
+            KDialogBase.Tabbed,
+            "LilyKDE " + _("Score Setup Wizard"),
+            KDialogBase.Ok|KDialogBase.Cancel,
+            KDialogBase.Ok,
+            parent)
+
+        self.tabs = [
+            w(self.addPage(w.title)) for w in (
+                Titles,
+            )]
+
+
+
+
+# kate: indent-width 4;

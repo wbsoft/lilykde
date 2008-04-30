@@ -4,6 +4,7 @@ Utility functions for interacting with Kate
 
 import kate
 
+from lilykde.widgets import sorry
 # Translate the messages
 from lilykde.i18n import _
 

@@ -30,6 +30,11 @@ def add(menu, text, key="", icon=""):
 
 menu = KActionMenu(_("LilyPond"))
 
+@add(menu, _("Setup New Score..."), "", "filenew")
+def scoreWizard():
+    from lilykde import scorewiz
+    scorewiz.ScoreWizard(kate.mainWidget()).exec_loop()
+
 @add(menu, _("Run LilyPond (preview)"), "Ctrl+Shift+M", "ly")
 def preview():
     from lilykde import runlily

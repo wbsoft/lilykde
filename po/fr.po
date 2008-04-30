@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-28 22:25+0200\n"
+"POT-Creation-Date: 2008-04-30 21:35+0200\n"
 "PO-Revision-Date: 2008-04-11 16:36+0200\n"
 "Last-Translator: Valentin Villenave <v.villenave@gmail.com>\n"
 "Language-Team: France <kde-i18n-fr@kde.org>\n"
@@ -133,39 +133,43 @@ msgid "LilyPond"
 msgstr "LilyPond"
 
 #: ../lilykde/menu.py:33
+msgid "Setup New Score..."
+msgstr ""
+
+#: ../lilykde/menu.py:38
 msgid "Run LilyPond (preview)"
 msgstr "Lancer LilyPond (aperçu)"
 
-#: ../lilykde/menu.py:38
+#: ../lilykde/menu.py:43
 msgid "Run LilyPond (publish)"
 msgstr "Lancer LilyPond (publication)"
 
-#: ../lilykde/menu.py:45
+#: ../lilykde/menu.py:50
 msgid "Interrupt LilyPond Job"
 msgstr "Interrompre le traitement"
 
-#: ../lilykde/menu.py:50
+#: ../lilykde/menu.py:55
 msgid "Clear LilyPond Log"
 msgstr "Effacer les messages de LilyPond"
 
-#: ../lilykde/menu.py:57
+#: ../lilykde/menu.py:62
 #, python-format
 msgid "Insert LilyPond version (%s)"
 msgstr "Employez la version (%s) de LilyPond"
 
-#: ../lilykde/menu.py:64
+#: ../lilykde/menu.py:69
 msgid "Update with convert-ly"
 msgstr "Mettre à jour par convert-ly"
 
-#: ../lilykde/menu.py:71
+#: ../lilykde/menu.py:76
 msgid "Hyphenate Lyrics Text"
 msgstr "Séparer les syllabes des paroles"
 
-#: ../lilykde/menu.py:76
+#: ../lilykde/menu.py:81
 msgid "Remove hyphenation"
 msgstr "Réunir les syllabes des paroles"
 
-#: ../lilykde/menu.py:83
+#: ../lilykde/menu.py:88
 msgid "Record MIDI with Rumor"
 msgstr "Enregistrer MIDI avec Rumor"
 
@@ -233,7 +237,7 @@ msgstr "Messages de LilyPond"
 msgid "PDF"
 msgstr "PDF"
 
-#: ../lilykde/kateutil.py:19
+#: ../lilykde/kateutil.py:20
 msgid "Please select some text first."
 msgstr "Sélectionnez d'abord du texte."
 
