@@ -41,6 +41,9 @@ Wizard:
 
 from string import Template
 
+from qt import *
+from kdeui import KTextBrowser
+
 # Translate messages
 from lilykde.i18n import _
 
@@ -84,7 +87,35 @@ html = Template(r"""<table width=360 style='font-family: serif;'>
 <tr><td colspan=3 align=center>$copyright <i>(%s)</i></td></tr>
 <tr><td colspan=3 align=center>$tagline <i>(%s)</i></td></tr>
 </table>""").substitute(
-    dict((k, "<a href='#%s'>%s</a>" % (k, v)) for k, v in headers)) % (
+    dict((k, "<a href='%s'>%s</a>" % (k, v)) for k, v in headers)) % (
         _("bottom of first page"),
         _("bottom of last page"))
 
+
+class Titles(QFrame):
+    """
+    A widget where users can fill in all the titles that are put
+    in the \header block.
+    """
+    def __init__(self, *args):
+        QFrame.__init__(self, *args)
+
+        l = QHBoxLayout(self)
+        t = KTextBrowser(self, None, True)
+        t.setMinimumWidth(380)
+        t.setMinimumHeight(360)
+        t.setLinkUnderline(False)
+        t.setText(html)
+        l.addWidget(t)
+        QObject.connect(t, SIGNAL("urlClick(const QString &)"), self.focus)
+
+        g = QGridLayout(len(headers), 2, 2)
+        l.addLayout(g)
+
+        for c, h in enumerate(headers):
+            name, title = h
+            g.addWidget(QLabel(title, self), c, 0)
+            g.addWidget(QLineEdit(self, name), c, 1)
+
+    def focus(self, link):
+        self.child(str(link)).setFocus()
