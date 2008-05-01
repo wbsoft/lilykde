@@ -140,10 +140,17 @@ class Titles(object):
                 py2qstringlist(completion.get(name, '').splitlines()))
             compObj.setOrder(KCompletion.Sorted)
 
-    def focus(self, link):
-        self.p.child(str(link)).setFocus()
+    def focus(self, name):
+        """
+        Give the text entry for the clicked header name keyboard focus.
+        """
+        self.p.child(str(name)).setFocus()
 
     def read(self):
+        """
+        Return a dictionary with header names mapped to
+        unicode values for all the text entries.
+        """
         return dict((h, unicode(self.p.child(h).text())) for h in headerNames)
 
     def saveState(self):
@@ -160,6 +167,9 @@ class Titles(object):
 
 
 class ScoreWizard(KDialogBase):
+    """
+    The main score wizard dialog.
+    """
     def __init__(self, parent):
         KDialogBase.__init__(self,
             KDialogBase.Tabbed,
@@ -189,8 +199,8 @@ class ScoreWizard(KDialogBase):
         head = self.titles.read()
         if max(head.values()) or not tagline:
             out('\n\\header {\n')
-            for h in headers:
-                val = head[h[0]]
+            for h in headerNames:
+                val = head[h]
                 if val:
                     # replace quotes
                     if typographical:
@@ -199,8 +209,8 @@ class ScoreWizard(KDialogBase):
                         val = val.replace("'", u'\u2018')
                     # escape regular double quotes
                     val = val.replace('"', '\\"')
-                    out('  %s = "%s"\n' % (h[0], val))
-                elif h[0] == 'tagline' and not tagline:
+                    out('  %s = "%s"\n' % (h, val))
+                elif h == 'tagline' and not tagline:
                     out('  tagline = ##f\n')
             out('}\n\n')
 
