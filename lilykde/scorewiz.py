@@ -39,12 +39,17 @@ Wizard:
 
 """
 
+import re
 from string import Template
 
 from qt import *
+from kdecore import KCompletion
 from kdeui import *
 
 import kate
+
+from lilykde import config
+from lilykde.util import py2qstringlist
 
 # Translate messages
 from lilykde.i18n import _
@@ -65,7 +70,9 @@ headers = (
     ('tagline',     _("Tagline")),
 )
 
-html = Template(r"""<table width=360 style='font-family: serif;'>
+headerNames = zip(*headers)[0]
+
+html = Template(r"""<table style='font-family:serif;'>
 <tr><td colspan=3 align=center>$dedication</td><tr>
 <tr><td colspan=3 align=center style='font-size:20pt;'><b>$title</b></td><tr>
 <tr><td colspan=3 align=center style='font-size:12pt;'><b>$subtitle</b></td><tr>
@@ -107,30 +114,49 @@ class Titles(object):
 
         l = QHBoxLayout(self.p)
         t = KTextBrowser(self.p, None, True)
-        t.setMinimumWidth(390)
-        t.setMinimumHeight(360)
         t.setLinkUnderline(False)
         t.setText(html)
+        t.setMinimumWidth(t.contentsWidth() + 10)
+        t.setMinimumHeight(t.contentsHeight() + 5)
         l.addWidget(t)
         QObject.connect(t, SIGNAL("urlClick(const QString &)"), self.focus)
 
         l.addSpacing(6)
 
         g = QGridLayout(len(headers), 2, 0)
+        g.setColSpacing(1, 200)
         l.addLayout(g)
+
+        completion = config("scorewiz completion")
 
         for c, h in enumerate(headers):
             name, title = h
             g.addWidget(QLabel(title + ":", self.p), c, 0)
-            g.addWidget(QLineEdit(self.p, name), c, 1)
+            e = KLineEdit(self.p, name)
+            g.addWidget(e, c, 1)
+            # set completion items
+            compObj = e.completionObject()
+            compObj.setItems(
+                py2qstringlist(completion.get(name, '').splitlines()))
+            compObj.setOrder(KCompletion.Sorted)
 
     def focus(self, link):
         self.p.child(str(link)).setFocus()
 
     def read(self):
-        return dict((h[0], unicode(self.p.child(h[0]).text())) for h in headers)
+        return dict((h, unicode(self.p.child(h).text())) for h in headerNames)
 
-
+    def saveState(self):
+        """
+        Saves completion items for all lineedits.
+        """
+        completion = config("scorewiz completion")
+        for name in headerNames:
+            items = completion.get(name, '').splitlines()
+            text = unicode(self.p.child(name).text())
+            if text and text not in items:
+                items.append(text)
+                completion[name] = '\n'.join(items)
 
 
 class ScoreWizard(KDialogBase):
@@ -159,13 +185,19 @@ class ScoreWizard(KDialogBase):
 
         # header:
         tagline = False     # TODO: make this configurable
+        typographical = True    # TODO: make this configurable
         head = self.titles.read()
         if max(head.values()) or not tagline:
             out('\n\\header {\n')
             for h in headers:
                 val = head[h[0]]
                 if val:
-                    # replace quotes, TODO: typographical
+                    # replace quotes
+                    if typographical:
+                        val = re.sub(r'"(.*?)"', u'\u201C\\1\u201D', val)
+                        val = re.sub(r"'(.*?)'", u'\u2018\\1\u2019', val)
+                        val = val.replace("'", u'\u2018')
+                    # escape regular double quotes
                     val = val.replace('"', '\\"')
                     out('  %s = "%s"\n' % (h[0], val))
                 elif h[0] == 'tagline' and not tagline:
@@ -176,9 +208,15 @@ class ScoreWizard(KDialogBase):
         # and finally print out:
         kate.view().insertText(''.join(output))
 
-    def accept(self):
-        self.printout()
-        self.done(KDialogBase.Accepted)
+    def done(self, result):
+        """
+        Close the dialog and create the score if Ok was clicked.
+        """
+        self.titles.saveState()
+        if result == KDialogBase.Accepted:
+            self.printout()
+        KDialogBase.done(self, result)
+
 
 
 # kate: indent-width 4;
