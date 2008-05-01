@@ -44,6 +44,8 @@ from string import Template
 from qt import *
 from kdeui import *
 
+import kate
+
 # Translate messages
 from lilykde.i18n import _
 
@@ -100,11 +102,11 @@ class Titles(object):
 
     title = _("Titles and Headers")
 
-    def __init__(self, qframe):
-        self.f = qframe
+    def __init__(self, parent):
+        self.p = parent
 
-        l = QHBoxLayout(self.f)
-        t = KTextBrowser(self.f, None, True)
+        l = QHBoxLayout(self.p)
+        t = KTextBrowser(self.p, None, True)
         t.setMinimumWidth(390)
         t.setMinimumHeight(360)
         t.setLinkUnderline(False)
@@ -112,19 +114,21 @@ class Titles(object):
         l.addWidget(t)
         QObject.connect(t, SIGNAL("urlClick(const QString &)"), self.focus)
 
-        l.addSpacing(2)
+        l.addSpacing(6)
 
         g = QGridLayout(len(headers), 2, 0)
         l.addLayout(g)
 
         for c, h in enumerate(headers):
             name, title = h
-            g.addWidget(QLabel(title + ":", self.f), c, 0)
-            g.addWidget(QLineEdit(self.f, name), c, 1)
+            g.addWidget(QLabel(title + ":", self.p), c, 0)
+            g.addWidget(QLineEdit(self.p, name), c, 1)
 
     def focus(self, link):
-        self.f.child(str(link)).setFocus()
+        self.p.child(str(link)).setFocus()
 
+    def read(self):
+        return dict((h[0], unicode(self.p.child(h[0]).text())) for h in headers)
 
 
 
@@ -138,12 +142,43 @@ class ScoreWizard(KDialogBase):
             KDialogBase.Ok,
             parent)
 
-        self.tabs = [
-            w(self.addPage(w.title)) for w in (
-                Titles,
-            )]
+        def tab(tabClass):
+            return tabClass(self.addPage(tabClass.title))
+
+        self.titles = tab(Titles)
 
 
+    def printout(self):
+        """
+        Creates the score output and writes it to the current document.
+        """
+        output = []
+        out = output.append
+
+        # version: TODO
+
+        # header:
+        tagline = False     # TODO: make this configurable
+        head = self.titles.read()
+        if max(head.values()) or not tagline:
+            out('\n\\header {\n')
+            for h in headers:
+                val = head[h[0]]
+                if val:
+                    # replace quotes, TODO: typographical
+                    val = val.replace('"', '\\"')
+                    out('  %s = "%s"\n' % (h[0], val))
+                elif h[0] == 'tagline' and not tagline:
+                    out('  tagline = ##f\n')
+            out('}\n\n')
+
+
+        # and finally print out:
+        kate.view().insertText(''.join(output))
+
+    def accept(self):
+        self.printout()
+        self.done(KDialogBase.Accepted)
 
 
 # kate: indent-width 4;
