@@ -54,6 +54,9 @@ from lilykde.util import py2qstringlist
 # Translate messages
 from lilykde.i18n import _
 
+lylangs = ('nederlands', 'english', 'deutsch', 'norsk', 'svenska', 'suomi',
+    'italiano', 'catalan', 'espanol', 'portuges', 'vlaams')
+
 headers = (
     ('dedication',  _("Dedication")),
     ('title',       _("Title")),
@@ -113,6 +116,7 @@ class Titles(object):
         self.p = parent
 
         l = QHBoxLayout(self.p)
+        # The html view with the score layout example
         t = KTextBrowser(self.p, None, True)
         t.setLinkUnderline(False)
         t.setText(html)
@@ -127,8 +131,9 @@ class Titles(object):
         g.setColSpacing(1, 200)
         l.addLayout(g)
 
+        # The text entries for all headers, with completion for easy
+        # reuse of information.
         completion = config("scorewiz completion")
-
         for c, h in enumerate(headers):
             name, title = h
             g.addWidget(QLabel(title + ":", self.p), c, 0)
@@ -158,12 +163,53 @@ class Titles(object):
         Saves completion items for all lineedits.
         """
         completion = config("scorewiz completion")
-        for name in headerNames:
+        for name, text in self.read().iteritems():
             items = completion.get(name, '').splitlines()
-            text = unicode(self.p.child(name).text())
             if text and text not in items:
                 items.append(text)
                 completion[name] = '\n'.join(items)
+
+
+class Parts(object):
+    """
+    The widget where users can select parts and adjust their settings.
+    """
+    title = _("Parts")
+
+    def __init__(self, parent):
+        self.p = parent
+
+
+class Settings(object):
+    """
+    The widget where users can set other preferences.
+    """
+    title = _("Score settings")
+
+    def __init__(self, parent):
+        self.p = parent
+        l = QHBoxLayout(self.p)
+        self.score = QGroupBox(1, Qt.Horizontal, _("Score settings"), self.p)
+        self.prefs = QGroupBox(1, Qt.Horizontal, _("General preferences"), self.p)
+        l.addWidget(self.score)
+        l.addSpacing(8)
+        l.addWidget(self.prefs)
+
+        # General preferences
+        h = QHBox(self.prefs)
+        QLabel(_("Language:"), h)
+        self.lylang = QComboBox(False, h)
+        self.lylang.insertStringList(py2qstringlist(lylangs))
+        QToolTip.add(self.lylang, _(
+            "Select the LilyPond pitchnames language you want to use."))
+
+        self.typq = QCheckBox(_("Use typographical quotes"), self.prefs)
+        QToolTip.add(self.typq, _(
+            "Replace normal quotes in titles with nice typographical quotes."))
+
+        self.tagl = QCheckBox(_("Remove default tagline"), self.prefs)
+        QToolTip.add(self.tagl, _(
+            "Suppress the default tagline output by LilyPond."))
 
 
 class ScoreWizard(KDialogBase):
@@ -182,6 +228,8 @@ class ScoreWizard(KDialogBase):
             return tabClass(self.addPage(tabClass.title))
 
         self.titles = tab(Titles)
+        self.parts = tab(Parts)
+        self.settings = tab(Settings)
 
 
     def printout(self):
@@ -193,11 +241,16 @@ class ScoreWizard(KDialogBase):
 
         # version: TODO
 
+        # language:
+        lang = str(self.settings.lylang.currentText())
+        if lang != 'nederlands':
+            out('\n\n\\include "%s.ly"\n' % lang)
+
         # header:
-        tagline = False     # TODO: make this configurable
-        typographical = True    # TODO: make this configurable
+        noTagline = self.settings.tagl.isChecked()
+        typographical = self.settings.typq.isChecked()
         head = self.titles.read()
-        if max(head.values()) or not tagline:
+        if max(head.values()) or noTagline:
             out('\n\\header {\n')
             for h in headerNames:
                 val = head[h]
@@ -210,7 +263,7 @@ class ScoreWizard(KDialogBase):
                     # escape regular double quotes
                     val = val.replace('"', '\\"')
                     out('  %s = "%s"\n' % (h, val))
-                elif h == 'tagline' and not tagline:
+                elif h == 'tagline' and noTagline:
                     out('  tagline = ##f\n')
             out('}\n\n')
 
