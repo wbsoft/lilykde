@@ -7,10 +7,11 @@ pngs = $(patsubst %.ly,%.png,$(lys))
 all: $(pngs)
 
 $(pngs): %.png: %.ly
-	lilypond -dbackend=eps --png $<
+	lilypond --png $<
+	mogrify +repage -trim -bordercolor white -border 2x2 $@
 
 clean:
-	rm -f *.png *.tex* *.count *.eps
+	rm -f *.png *.ps
 
 install: all
 	@echo Installing generated LilyPond PNGs:

@@ -348,6 +348,17 @@ class Settings(object):
         self.mode = QComboBox(False, h)
         self.mode.insertStringList(py2qstringlist(t for n, t in modes))
 
+        h = QHBox(self.score)
+        QLabel(_("Time signature:"), h)
+        self.time = QComboBox(True, h)
+        self.time.insertItem(QPixmap.fromMimeSource('c22.png'), '(2/2)')
+        self.time.insertItem(QPixmap.fromMimeSource('c44.png'), '(4/4)')
+        self.time.insertStringList(py2qstringlist((
+            '4/4', '3/4', '2/4', '5/4', '6/4',
+            '2/2', '3/2', '4/2',
+            '3/8', '6/8', '8/8', '9/8', '12/8',
+            '3/16', '6/16', '12/16')))
+
         # General preferences
         h = QHBox(self.prefs)
         QLabel(_("Language:"), h)
