@@ -399,6 +399,16 @@ class Settings(object):
         self.key.insertStringList(py2qstringlist(keyNames[lang]))
         self.key.setCurrentItem(index)
 
+    def getLanguage(self):
+        lang = unicode(self.lylang.currentText()).lower()
+        return lang in keys and lang or None
+
+    def getKeySig(self):
+        lang = self.getLanguage() or "nederlands"
+        key = keyNames[lang][self.key.currentItem()][0]
+        mode = modes[self.mode.currentItem()][0]
+        return key, mode
+
 
 class ScoreWizard(KDialogBase):
     """
@@ -425,13 +435,13 @@ class ScoreWizard(KDialogBase):
         out = output.append
 
         # version:
-        out('\n\n\\version "%s"\n' %
+        out('\\version "%s"\n' %
             unicode(self.settings.lyversion.currentText()))
 
         # language:
-        lang = unicode(self.settings.lylang.currentText()).lower()
-        if lang in keys:
-            out('\n\n\\include "%s.ly"\n' % lang)
+        lang = self.settings.getLanguage()
+        if lang:
+            out('\n\\include "%s.ly"\n' % lang)
 
         # header:
         noTagline = self.settings.tagl.isChecked()
@@ -453,6 +463,9 @@ class ScoreWizard(KDialogBase):
                 elif h == 'tagline' and noTagline:
                     out('  tagline = ##f\n')
             out('}\n\n')
+
+
+
 
 
         # and finally print out:
