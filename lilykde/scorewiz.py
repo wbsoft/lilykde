@@ -194,7 +194,7 @@ class Settings(object):
         QLabel(_("Language:"), h)
         self.lylang = QComboBox(False, h)
         self.lylang.insertItem(_("Default"))
-        self.lylang.insertStringList(py2qstringlist(lylangs))
+        self.lylang.insertStringList(py2qstringlist(l.title() for l in lylangs))
         QToolTip.add(self.lylang, _(
             "Select the LilyPond pitchnames language you want to use."))
 
@@ -234,9 +234,9 @@ class ScoreWizard(KDialogBase):
         # version: TODO
 
         # language:
-        lang = str(self.settings.lylang.currentText())
+        lang = unicode(self.settings.lylang.currentText())
         if lang != _("Default"):
-            out('\n\n\\include "%s.ly"\n' % lang)
+            out('\n\n\\include "%s.ly"\n' % lang.lower())
 
         # header:
         noTagline = self.settings.tagl.isChecked()
