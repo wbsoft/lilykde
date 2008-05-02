@@ -54,9 +54,6 @@ from lilykde.util import py2qstringlist
 # Translate messages
 from lilykde.i18n import _
 
-lylangs = ('nederlands', 'english', 'deutsch', 'norsk', 'svenska', 'suomi',
-    'italiano', 'catalan', 'espanol', 'portuges', 'vlaams')
-
 headers = (
     ('dedication',  _("Dedication")),
     ('title',       _("Title")),
@@ -74,6 +71,161 @@ headers = (
 )
 
 headerNames = zip(*headers)[0]
+
+modes = (
+    ('major',       _("Major")),
+    ('minor',       _("Minor")),
+    ('ionian',      _("Ionian")),
+    ('dorian',      _("Dorian")),
+    ('phrygian',    _("Phrygian")),
+    ('lydian',      _("Lydian")),
+    ('mixolydian',  _("Mixolydian")),
+    ('aeolian',     _("Aeolian")),
+    ('locrian',     _("Locrian")),
+)
+
+keys = {
+    'nederlands': (
+        ('c', 'C'),
+        ('cis', 'Cis'),
+        ('des', 'Des'),
+        ('d', 'D'),
+        ('dis', 'Dis'),
+        ('es', 'Es'),
+        ('e', 'E'),
+        ('f', 'F'),
+        ('fis', 'Fis'),
+        ('ges', 'Ges'),
+        ('g', 'G'),
+        ('gis', 'Gis'),
+        ('as', 'As'),
+        ('a', 'A'),
+        ('ais', 'Ais'),
+        ('bes', 'Bes'),
+        ('b', 'B'),
+    ),
+    'english': (
+        ('c', 'C'),
+        ('cs', 'C#'),
+        ('df', 'Db'),
+        ('d', 'Ab'),
+        ('ds', 'D#'),
+        ('ef', 'Eb'),
+        ('e', 'E'),
+        ('f', 'F'),
+        ('fs', 'F#'),
+        ('gf', 'Gb'),
+        ('g', 'G'),
+        ('gs', 'G#'),
+        ('af', 'Ab'),
+        ('a', 'A'),
+        ('as', 'A#'),
+        ('bf', 'Bb'),
+        ('b', 'B'),
+    ),
+    'deutsch': (
+        ('c', 'C'),
+        ('cis', 'Cis'),
+        ('des', 'Des'),
+        ('d', 'D'),
+        ('dis', 'Dis'),
+        ('es', 'Es'),
+        ('e', 'E'),
+        ('f', 'F'),
+        ('fis', 'Fis'),
+        ('ges', 'Ges'),
+        ('g', 'G'),
+        ('gis', 'Gis'),
+        ('as', 'As'),
+        ('a', 'A'),
+        ('ais', 'Ais'),
+        ('b', 'B'),
+        ('h', 'H'),
+    ),
+    'norsk': (
+        ('c', 'C'),
+        ('cis', 'Ciss'),
+        ('des', 'Dess'),
+        ('d', 'D'),
+        ('dis', 'Diss'),
+        ('es', 'Ess'),
+        ('e', 'E'),
+        ('f', 'F'),
+        ('fis', 'Fiss'),
+        ('ges', 'Gess'),
+        ('g', 'G'),
+        ('gis', 'Giss'),
+        ('as', 'Ass'),
+        ('a', 'A'),
+        ('ais', 'Aiss'),
+        ('b', 'B'),
+        ('h', 'H'),
+    ),
+    'italiano': (
+        ('do', 'Do'),
+        ('dod', 'Do diesis'),
+        ('reb', 'Re bemolle'),
+        ('re', 'Re'),
+        ('red', 'Re diesis'),
+        ('mib', 'Mi bemolle'),
+        ('mi', 'Mi'),
+        ('fa', 'Fa'),
+        ('fad', 'Fa diesis'),
+        ('solb', 'Sol bemolle'),
+        ('sol', 'Sol'),
+        ('sold', 'Sol diesis'),
+        ('lab', 'La bemolle'),
+        ('la', 'La'),
+        ('lad', 'La diesis'),
+        ('sib', 'Si bemolle'),
+        ('si', 'Si'),
+    ),
+    'espanol': (
+        ('do', 'Do'),
+        ('dos', 'Do sostenido'),
+        ('reb', 'Re bemol'),
+        ('re', 'Re'),
+        ('res', 'Re sostenido'),
+        ('mib', 'Mi bemol'),
+        ('mi', 'Mi'),
+        ('fa', 'Fa'),
+        ('fas', 'Fa sostenido'),
+        ('solb', 'Sol bemol'),
+        ('sol', 'Sol'),
+        ('sols', 'Sol sostenido'),
+        ('lab', 'La bemol'),
+        ('la', 'La'),
+        ('las', 'La sostenido'),
+        ('sib', 'Si bemol'),
+        ('si', 'Si'),
+    ),
+    'vlaams': (
+        ('do', 'Do'),
+        ('dok', 'Do kruis'),
+        ('reb', 'Re mol'),
+        ('re', 'Re'),
+        ('rek', 'Re kruis'),
+        ('mib', 'Mi mol'),
+        ('mi', 'Mi'),
+        ('fa', 'Fa'),
+        ('fak', 'Fa kruis'),
+        ('solb', 'Sol mol'),
+        ('sol', 'Sol'),
+        ('solk', 'Sol kruis'),
+        ('lab', 'La mol'),
+        ('la', 'La'),
+        ('lak', 'La kruis'),
+        ('sib', 'Si mol'),
+        ('si', 'Si'),
+    ),
+}
+
+keys['svenska'] = keys['norsk']
+keys['suomi'] = keys['deutsch']
+keys['catalan'] = keys['italiano']
+keys['portuges'] = keys['espanol']
+
+keyNames = dict((n, tuple(t for p, t in v)) for n, v in keys.iteritems())
 
 html = Template(r"""<table style='font-family:serif;'>
 <tr><td colspan=3 align=center>$dedication</td><tr>
@@ -189,14 +341,35 @@ class Settings(object):
         l.addSpacing(8)
         l.addWidget(self.prefs)
 
+        # Score settings
+        h = QHBox(self.score)
+        QLabel(_("Key:"), h)
+        self.key = QComboBox(False, h) # the key names are filled in later
+        self.mode = QComboBox(False, h)
+        self.mode.insertStringList(py2qstringlist(t for n, t in modes))
+
         # General preferences
         h = QHBox(self.prefs)
         QLabel(_("Language:"), h)
         self.lylang = QComboBox(False, h)
         self.lylang.insertItem(_("Default"))
-        self.lylang.insertStringList(py2qstringlist(l.title() for l in lylangs))
+        self.lylang.insertStringList(py2qstringlist(
+            l.title() for l in sorted(keys)))
         QToolTip.add(self.lylang, _(
-            "Select the LilyPond pitchnames language you want to use."))
+            "The LilyPond language you want to use for the pitch names."))
+        QObject.connect(self.lylang, SIGNAL("activated(const QString&)"),
+            self.setLanguage)
+        self.setLanguage('nederlands')  # TODO: set to saved default
+
+        h = QHBox(self.prefs)
+        QLabel(_("Version:"), h)
+        self.lyversion = QComboBox(True, h)
+        from lilykde.version import version
+        try: self.lyversion.insertItem("%d.%d.%d" % version)
+        except: pass
+        self.lyversion.insertStringList(py2qstringlist(('2.10.0', '2.11.0')))
+        QToolTip.add(self.lyversion, _(
+            "The LilyPond version you will be using for this document."))
 
         self.typq = QCheckBox(_("Use typographical quotes"), self.prefs)
         QToolTip.add(self.typq, _(
@@ -205,6 +378,15 @@ class Settings(object):
         self.tagl = QCheckBox(_("Remove default tagline"), self.prefs)
         QToolTip.add(self.tagl, _(
             "Suppress the default tagline output by LilyPond."))
+
+    def setLanguage(self, lang):
+        lang = unicode(lang).lower()    # can be QString
+        if lang not in keyNames:
+            lang = 'nederlands'
+        index = self.key.currentItem()
+        self.key.clear()
+        self.key.insertStringList(py2qstringlist(keyNames[lang]))
+        self.key.setCurrentItem(index)
 
 
 class ScoreWizard(KDialogBase):
@@ -231,11 +413,13 @@ class ScoreWizard(KDialogBase):
         output = []
         out = output.append
 
-        # version: TODO
+        # version:
+        out('\n\n\\version "%s"\n' %
+            unicode(self.settings.lyversion.currentText()))
 
         # language:
         lang = unicode(self.settings.lylang.currentText()).lower()
-        if lang in lylangs:
+        if lang in keys:
             out('\n\n\\include "%s.ly"\n' % lang)
 
         # header:
