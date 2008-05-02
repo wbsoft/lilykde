@@ -234,9 +234,9 @@ class ScoreWizard(KDialogBase):
         # version: TODO
 
         # language:
-        lang = unicode(self.settings.lylang.currentText())
-        if lang != _("Default"):
-            out('\n\n\\include "%s.ly"\n' % lang.lower())
+        lang = unicode(self.settings.lylang.currentText()).lower()
+        if lang in lylangs:
+            out('\n\n\\include "%s.ly"\n' % lang)
 
         # header:
         noTagline = self.settings.tagl.isChecked()
