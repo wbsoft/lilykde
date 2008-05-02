@@ -351,8 +351,8 @@ class Settings(object):
         h = QHBox(self.score)
         QLabel(_("Time signature:"), h)
         self.time = QComboBox(True, h)
-        self.time.insertItem(QPixmap.fromMimeSource('c22.png'), '(2/2)')
         self.time.insertItem(QPixmap.fromMimeSource('c44.png'), '(4/4)')
+        self.time.insertItem(QPixmap.fromMimeSource('c22.png'), '(2/2)')
         self.time.insertStringList(py2qstringlist((
             '2/4', '3/4', '4/4', '5/4', '6/4', '7/4',
             '2/2', '3/2', '4/2',
