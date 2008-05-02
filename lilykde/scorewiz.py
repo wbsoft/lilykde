@@ -110,10 +110,8 @@ class Titles(object):
     in the \header block.
     """
 
-    title = _("Titles and Headers")
-
     def __init__(self, parent):
-        self.p = parent
+        self.p = parent.addPage(_("Titles and Headers"))
 
         l = QHBoxLayout(self.p)
         # The html view with the score layout example
@@ -174,20 +172,16 @@ class Parts(object):
     """
     The widget where users can select parts and adjust their settings.
     """
-    title = _("Parts")
-
     def __init__(self, parent):
-        self.p = parent
+        self.p = parent.addPage(_("Parts"))
 
 
 class Settings(object):
     """
     The widget where users can set other preferences.
     """
-    title = _("Score settings")
-
     def __init__(self, parent):
-        self.p = parent
+        self.p = parent.addPage(_("Score settings"))
         l = QHBoxLayout(self.p)
         self.score = QGroupBox(1, Qt.Horizontal, _("Score settings"), self.p)
         self.prefs = QGroupBox(1, Qt.Horizontal, _("General preferences"), self.p)
@@ -199,6 +193,7 @@ class Settings(object):
         h = QHBox(self.prefs)
         QLabel(_("Language:"), h)
         self.lylang = QComboBox(False, h)
+        self.lylang.insertItem(_("Default"))
         self.lylang.insertStringList(py2qstringlist(lylangs))
         QToolTip.add(self.lylang, _(
             "Select the LilyPond pitchnames language you want to use."))
@@ -224,12 +219,9 @@ class ScoreWizard(KDialogBase):
             KDialogBase.Ok,
             parent)
 
-        def tab(tabClass):
-            return tabClass(self.addPage(tabClass.title))
-
-        self.titles = tab(Titles)
-        self.parts = tab(Parts)
-        self.settings = tab(Settings)
+        self.titles = Titles(self)
+        self.parts = Parts(self)
+        self.settings = Settings(self)
 
 
     def printout(self):
@@ -243,7 +235,7 @@ class ScoreWizard(KDialogBase):
 
         # language:
         lang = str(self.settings.lylang.currentText())
-        if lang != 'nederlands':
+        if lang != _("Default"):
             out('\n\n\\include "%s.ly"\n' % lang)
 
         # header:
