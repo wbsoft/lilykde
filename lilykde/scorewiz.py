@@ -41,6 +41,7 @@ Wizard:
 
 import re
 from string import Template
+from time import time
 
 from qt import *
 from kdecore import KCompletion
@@ -334,21 +335,26 @@ class Settings(object):
     """
     def __init__(self, parent):
         self.p = parent.addPage(_("Score settings"))
-        l = QHBoxLayout(self.p)
-        self.score = QGroupBox(1, Qt.Horizontal, _("Score settings"), self.p)
-        self.prefs = QGroupBox(1, Qt.Horizontal, _("General preferences"), self.p)
-        l.addWidget(self.score)
-        l.addSpacing(8)
-        l.addWidget(self.prefs)
+        score = QGroupBox(1, Qt.Horizontal, _("Score settings"), self.p)
+        lily =  QGroupBox(1, Qt.Horizontal, _("LilyPond"), self.p)
+        prefs = QGroupBox(1, Qt.Horizontal, _("General preferences"), self.p)
+        h = QHBoxLayout(self.p)
+        v = QVBoxLayout()
+        h.addLayout(v)
+        v.addWidget(score)
+        v.addSpacing(4)
+        v.addWidget(lily)
+        h.addSpacing(8)
+        h.addWidget(prefs)
 
         # Score settings
-        h = QHBox(self.score)
+        h = QHBox(score)
         QLabel(_("Key:"), h)
         self.key = QComboBox(False, h) # the key names are filled in later
         self.mode = QComboBox(False, h)
         self.mode.insertStringList(py2qstringlist(t for n, t in modes))
 
-        h = QHBox(self.score)
+        h = QHBox(score)
         QLabel(_("Time signature:"), h)
         self.time = QComboBox(True, h)
         self.time.insertItem(QPixmap.fromMimeSource('c44.png'), '(4/4)')
@@ -359,7 +365,7 @@ class Settings(object):
             '3/8', '6/8', '7/8', '8/8', '9/8', '12/8',
             '3/16', '6/16', '12/16')))
 
-        h = QHBox(self.score)
+        h = QHBox(score)
         h.setSpacing(2)
         QLabel(_("Tempo:"), h)
         self.tempoDur = QComboBox(False, h)
@@ -370,18 +376,20 @@ class Settings(object):
         l = QLabel('=', h)
         l.setMaximumWidth(16)
         self.tempoVal = QComboBox(True, h)
-        tempos, start = [], 40
+        self.tempos, start = [], 40
         for end, step in (60, 2), (72, 3), (120, 4), (144, 6), (210, 8):
-            tempos.extend(map(str, range(start, end, step)))
+            self.tempos.extend(range(start, end, step))
             start = end
-        self.tempoVal.insertStringList(py2qstringlist(tempos))
+        self.tempoVal.insertStringList(py2qstringlist(map(str, self.tempos)))
         self.tempoVal.setCurrentText('100')
-        self.tempoShow = QCheckBox(_("Visible"), h)
-        QToolTip.add(self.tempoShow, _(
-            "If checked, the tempo indication will be visible in the score."))
+        tap = QPushButton(_("Tap"), h)
+        QObject.connect(tap, SIGNAL("pressed()"), self.tap)
+        self.tapTime = 0.0 # init tap time
+        QToolTip.add(tap, _(
+            "Click this button a few times to set the tempo."))
 
-        # General preferences
-        h = QHBox(self.prefs)
+        # LilyPond settings
+        h = QHBox(lily)
         QLabel(_("Language:"), h)
         self.lylang = QComboBox(False, h)
         self.lylang.insertItem(_("Default"))
@@ -393,7 +401,7 @@ class Settings(object):
             self.setLanguage)
         self.setLanguage('nederlands')  # TODO: set to saved default
 
-        h = QHBox(self.prefs)
+        h = QHBox(lily)
         QLabel(_("Version:"), h)
         self.lyversion = QComboBox(True, h)
         from lilykde.version import version
@@ -403,13 +411,25 @@ class Settings(object):
         QToolTip.add(self.lyversion, _(
             "The LilyPond version you will be using for this document."))
 
-        self.typq = QCheckBox(_("Use typographical quotes"), self.prefs)
+
+        # General preferences
+        self.typq = QCheckBox(_("Use typographical quotes"), prefs)
         QToolTip.add(self.typq, _(
             "Replace normal quotes in titles with nice typographical quotes."))
 
-        self.tagl = QCheckBox(_("Remove default tagline"), self.prefs)
+        self.tagl = QCheckBox(_("Remove default tagline"), prefs)
         QToolTip.add(self.tagl, _(
             "Suppress the default tagline output by LilyPond."))
+
+    def tap(self):
+        """ Tap the tempo tap button """
+        self.tapTime, t = time(), self.tapTime
+        bpm = int(60.0 / (self.tapTime - t))
+        l = [abs(t - bpm) for t in self.tempos]
+        m = min(l)
+        if m < 6:
+            self.tempoVal.setCurrentItem(l.index(m))
+
 
     def setLanguage(self, lang):
         lang = unicode(lang).lower()    # can be QString
