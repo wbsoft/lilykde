@@ -359,6 +359,27 @@ class Settings(object):
             '3/8', '6/8', '7/8', '8/8', '9/8', '12/8',
             '3/16', '6/16', '12/16')))
 
+        h = QHBox(self.score)
+        h.setSpacing(2)
+        QLabel(_("Tempo:"), h)
+        self.tempoDur = QComboBox(False, h)
+        self.tempoDur.setMinimumHeight(30)
+        for d in '1d', '1', '2d', '2', '4d', '4', '8d', '8', '16d', '16':
+            self.tempoDur.insertItem(QPixmap.fromMimeSource('note_%s.png' % d))
+        self.tempoDur.setCurrentItem(5)
+        l = QLabel('=', h)
+        l.setMaximumWidth(16)
+        self.tempoVal = QComboBox(True, h)
+        tempos, start = [], 40
+        for end, step in (60, 2), (72, 3), (120, 4), (144, 6), (210, 8):
+            tempos.extend(map(str, range(start, end, step)))
+            start = end
+        self.tempoVal.insertStringList(py2qstringlist(tempos))
+        self.tempoVal.setCurrentText('100')
+        self.tempoShow = QCheckBox(_("Visible"), h)
+        QToolTip.add(self.tempoShow, _(
+            "If checked, the tempo indication will be visible in the score."))
+
         # General preferences
         h = QHBox(self.prefs)
         QLabel(_("Language:"), h)
