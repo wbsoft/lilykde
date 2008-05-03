@@ -228,6 +228,8 @@ keys['portuges'] = keys['espanol']
 
 keyNames = dict((n, tuple(t for p, t in v)) for n, v in keys.iteritems())
 
+durations = ['16', '16.', '8', '8.', '4', '4.', '2', '2.', '1', '1.']
+
 html = Template(r"""<table style='font-family:serif;'>
 <tr><td colspan=3 align=center>$dedication</td><tr>
 <tr><td colspan=3 align=center style='font-size:20pt;'><b>$title</b></td><tr>
@@ -287,8 +289,10 @@ class Titles(object):
         completion = config("scorewiz completion")
         for c, h in enumerate(headers):
             name, title = h
-            g.addWidget(QLabel(title + ":", self.p), c, 0)
+            l = QLabel(title + ":", self.p)
             e = KLineEdit(self.p, name)
+            l.setBuddy(e)
+            g.addWidget(l, c, 0)
             g.addWidget(e, c, 1)
             # set completion items
             compObj = e.completionObject()
@@ -349,49 +353,76 @@ class Settings(object):
 
         # Score settings
         h = QHBox(score)
-        QLabel(_("Key:"), h)
+        h.setSpacing(2)
+        l = QLabel(_("Key signature:"), h)
         self.key = QComboBox(False, h) # the key names are filled in later
         self.mode = QComboBox(False, h)
         self.mode.insertStringList(py2qstringlist(t for n, t in modes))
+        l.setBuddy(self.key)
 
         h = QHBox(score)
-        QLabel(_("Time signature:"), h)
+        h.setSpacing(2)
+        l = QLabel(_("Time signature:"), h)
         self.time = QComboBox(True, h)
         self.time.insertItem(QPixmap.fromMimeSource('c44.png'), '(4/4)')
         self.time.insertItem(QPixmap.fromMimeSource('c22.png'), '(2/2)')
         self.time.insertStringList(py2qstringlist((
             '2/4', '3/4', '4/4', '5/4', '6/4', '7/4',
             '2/2', '3/2', '4/2',
-            '3/8', '6/8', '7/8', '8/8', '9/8', '12/8',
+            '3/8', '5/8', '6/8', '7/8', '8/8', '9/8', '12/8',
             '3/16', '6/16', '12/16')))
+        l.setBuddy(self.time)
 
         h = QHBox(score)
         h.setSpacing(2)
-        QLabel(_("Tempo:"), h)
-        self.tempoDur = QComboBox(False, h)
-        self.tempoDur.setMinimumHeight(30)
-        for d in '1d', '1', '2d', '2', '4d', '4', '8d', '8', '16d', '16':
-            self.tempoDur.insertItem(QPixmap.fromMimeSource('note_%s.png' % d))
-        self.tempoDur.setCurrentItem(5)
+        l = QLabel(_("Pickup measure:"), h)
+        self.pickup = QComboBox(False, h)
+        self.pickup.setMinimumHeight(30)
+        self.pickup.insertItem(_("None"))
+        pix = [QPixmap.fromMimeSource('note_%s.png' % d.replace('.', 'd'))
+            for d in durations]
+        for p in pix:
+            self.pickup.insertItem(p)
+        l.setBuddy(self.pickup)
+
+        h = QHBox(score)
+        h.setSpacing(2)
+        l = QLabel(_("Metronome mark:"), h)
+        self.metroDur = QComboBox(False, h)
+        self.metroDur.setMinimumHeight(30)
+        l.setBuddy(self.metroDur)
+        for d in pix:
+            self.metroDur.insertItem(d)
+        self.metroDur.setCurrentItem(durations.index('4'))
         l = QLabel('=', h)
-        l.setMaximumWidth(16)
-        self.tempoVal = QComboBox(True, h)
-        self.tempos, start = [], 40
+        l.setMaximumWidth(12)
+        self.metroVal = QComboBox(True, h)
+        self.metroValues, start = [], 40
         for end, step in (60, 2), (72, 3), (120, 4), (144, 6), (210, 8):
-            self.tempos.extend(range(start, end, step))
+            self.metroValues.extend(range(start, end, step))
             start = end
-        self.tempoVal.insertStringList(py2qstringlist(map(str, self.tempos)))
-        self.tempoVal.setCurrentText('100')
+        self.metroVal.insertStringList(py2qstringlist(map(str, self.metroValues)))
+        self.metroVal.setCurrentText('100')
         tap = QPushButton(_("Tap"), h)
         QObject.connect(tap, SIGNAL("pressed()"), self.tap)
         self.tapTime = 0.0 # init tap time
         QToolTip.add(tap, _(
             "Click this button a few times to set the tempo."))
 
+        h = QHBox(score)
+        h.setSpacing(2)
+        l = QLabel(_("Tempo indication:"), h)
+        self.tempoInd = KLineEdit(h) # TODO: add completion
+        l.setBuddy(self.tempoInd)
+        QToolTip.add(self.tempoInd, _(
+            "A tempo indication, e.g. \"Allegro.\""))
+
         # LilyPond settings
         h = QHBox(lily)
-        QLabel(_("Language:"), h)
+        h.setSpacing(2)
+        l = QLabel(_("Language:"), h)
         self.lylang = QComboBox(False, h)
+        l.setBuddy(self.lylang)
         self.lylang.insertItem(_("Default"))
         self.lylang.insertStringList(py2qstringlist(
             l.title() for l in sorted(keys)))
@@ -402,8 +433,10 @@ class Settings(object):
         self.setLanguage('nederlands')  # TODO: set to saved default
 
         h = QHBox(lily)
-        QLabel(_("Version:"), h)
+        h.setSpacing(2)
+        l = QLabel(_("Version:"), h)
         self.lyversion = QComboBox(True, h)
+        l.setBuddy(self.lyversion)
         from lilykde.version import version
         try: self.lyversion.insertItem("%d.%d.%d" % version)
         except: pass
@@ -425,10 +458,10 @@ class Settings(object):
         """ Tap the tempo tap button """
         self.tapTime, t = time(), self.tapTime
         bpm = int(60.0 / (self.tapTime - t))
-        l = [abs(t - bpm) for t in self.tempos]
+        l = [abs(t - bpm) for t in self.metroValues]
         m = min(l)
         if m < 6:
-            self.tempoVal.setCurrentItem(l.index(m))
+            self.metroVal.setCurrentItem(l.index(m))
 
 
     def setLanguage(self, lang):
@@ -456,17 +489,12 @@ class ScoreWizard(KDialogBase):
     The main score wizard dialog.
     """
     def __init__(self, parent):
-        KDialogBase.__init__(self,
-            KDialogBase.Tabbed,
+        KDialogBase.__init__(self, KDialogBase.Tabbed,
             "LilyKDE " + _("Score Setup Wizard"),
-            KDialogBase.Ok|KDialogBase.Cancel,
-            KDialogBase.Ok,
-            parent)
-
+            KDialogBase.Ok | KDialogBase.Cancel, KDialogBase.Ok, parent)
         self.titles = Titles(self)
         self.parts = Parts(self)
         self.settings = Settings(self)
-
 
     def printout(self):
         """

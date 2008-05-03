@@ -8,7 +8,8 @@ all: $(pngs)
 
 $(pngs): %.png: %.ly
 	lilypond --png $<
-	mogrify +repage -trim -bordercolor white -border 2x2 $@
+	mogrify +repage -trim -bordercolor transparent -border 2x2 \
+		-transparent white $@
 
 clean:
 	rm -f *.png *.ps
