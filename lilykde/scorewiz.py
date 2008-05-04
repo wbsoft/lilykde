@@ -50,7 +50,7 @@ from kdeui import *
 import kate
 
 from lilykde import config
-from lilykde.util import py2qstringlist
+from lilykde.util import py2qstringlist, qstringlist2py
 from lilykde.widgets import TapButton
 
 # Translate messages
@@ -483,19 +483,18 @@ class ScoreWizard(KDialogBase):
         conf = config("scorewiz completion")
         for w in self.completableWidgets:
             compObj, name = w.completionObject(), str(w.name())
-            compObj.setItems(
-                py2qstringlist(conf.get(name, '').splitlines()))
             compObj.setOrder(KCompletion.Sorted)
+            compObj.setItems(py2qstringlist(conf.get(name, '').splitlines()))
 
     def saveCompletions(self):
         """ Saves completion items for all lineedits. """
         conf = config("scorewiz completion")
         for w in self.completableWidgets:
             name, text = str(w.name()), unicode(w.text())
-            items = conf.get(name, '').splitlines()
+            items = qstringlist2py(w.completionObject().items())
             if text and text not in items:
                 items.append(text)
-                conf[name] = '\n'.join(items)
+            conf[name] = '\n'.join(items)
 
     def format(self, text):
         """ Formats a string of text according to preferences """
