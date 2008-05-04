@@ -497,6 +497,18 @@ class ScoreWizard(KDialogBase):
                 items.append(text)
                 conf[name] = '\n'.join(items)
 
+    def format(self, text):
+        """ Formats a string of text according to preferences """
+        # typographical quotes?
+        if self.settings.typq.isChecked():
+            text = re.sub(r'"(.*?)"', u'\u201C\\1\u201D', text)
+            text = re.sub(r"'(.*?)'", u'\u2018\\1\u2019', text)
+            text = text.replace("'", u'\u2018')
+        # escape regular double quotes
+        text = text.replace('"', '\\"')
+        # quote the string
+        return '"%s"' % text
+
     def printout(self):
         """
         Creates the score output and writes it to the current document.
@@ -515,21 +527,12 @@ class ScoreWizard(KDialogBase):
 
         # header:
         noTagline = self.settings.tagl.isChecked()
-        typographical = self.settings.typq.isChecked()
         head = self.titles.read()
         if max(head.values()) or noTagline:
             out('\n\\header {\n')
             for h in headerNames:
-                val = head[h]
-                if val:
-                    # replace quotes
-                    if typographical:
-                        val = re.sub(r'"(.*?)"', u'\u201C\\1\u201D', val)
-                        val = re.sub(r"'(.*?)'", u'\u2018\\1\u2019', val)
-                        val = val.replace("'", u'\u2018')
-                    # escape regular double quotes
-                    val = val.replace('"', '\\"')
-                    out('  %s = "%s"\n' % (h, val))
+                if head[h]:
+                    out('  %s = %s\n' % (h, self.format(head[h])))
                 elif h == 'tagline' and noTagline:
                     out('  tagline = ##f\n')
             out('}\n\n')
