@@ -51,6 +51,7 @@ import kate
 
 from lilykde import config
 from lilykde.util import py2qstringlist
+from lilykde.widgets import TapButton
 
 # Translate messages
 from lilykde.i18n import _
@@ -386,11 +387,7 @@ class Settings(object):
             start = end
         self.metroVal.insertStringList(py2qstringlist(map(str, self.metroValues)))
         self.metroVal.setCurrentText('100')
-        tap = QPushButton(_("Tap"), h)
-        QObject.connect(tap, SIGNAL("pressed()"), self.tap)
-        self.tapTime = 0.0 # init tap time
-        QToolTip.add(tap, _(
-            "Click this button a few times to set the tempo."))
+        tap = TapButton(h, self.tap)
 
         h = QHBox(score)
         h.setSpacing(2)
@@ -438,10 +435,8 @@ class Settings(object):
         QToolTip.add(self.tagl, _(
             "Suppress the default tagline output by LilyPond."))
 
-    def tap(self):
+    def tap(self, bpm):
         """ Tap the tempo tap button """
-        self.tapTime, t = time(), self.tapTime
-        bpm = int(60.0 / (self.tapTime - t))
         l = [abs(t - bpm) for t in self.metroValues]
         m = min(l)
         if m < 6:

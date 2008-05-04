@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-30 21:35+0200\n"
+"POT-Creation-Date: 2008-05-04 06:43+0200\n"
 "PO-Revision-Date: 2008-04-17 21:14+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
@@ -237,16 +237,16 @@ msgstr "PDF"
 msgid "Please select some text first."
 msgstr "Lütfen önce bir metin seçiniz."
 
-#: ../lilykde/widgets.py:116
+#: ../lilykde/widgets.py:117
 #, python-format
 msgid "Printing failed: %s"
 msgstr "Yazdırma başarılamadı: %s"
 
-#: ../lilykde/widgets.py:118
+#: ../lilykde/widgets.py:119
 msgid "The document has been sent to the printer."
 msgstr "Belge yazıcıya gönderildi."
 
-#: ../lilykde/widgets.py:121
+#: ../lilykde/widgets.py:122
 msgid ""
 "This PDF has been created with point-and-click urls (preview mode), which "
 "increases the file size dramatically. It's better to email documents without "
@@ -257,6 +257,14 @@ msgstr ""
 "bağlantısıyla yaratılmıştır. (önizleme kipi) Belgeleri işaretle-ve-tıkla "
 "bağlantısı olmadan e-mail ile göndermek önerilir (baskı kipi), çünkü bu "
 "dosyaların boyutu daha küçüktür. Yine de devam edilsin mi?"
+
+#: ../lilykde/widgets.py:286
+msgid "Tap"
+msgstr "Tık"
+
+#: ../lilykde/widgets.py:290
+msgid "Click this button a few times to set the tempo."
+msgstr "Hızı ayarlamak için bu düşmeye bir kaç kez tıklayınız."
 
 #: ../lilykde/hyphen.py:93
 msgid "Language selection"
@@ -481,36 +489,28 @@ msgstr "Rumor bulunamadı: %s"
 msgid "Settings have been saved."
 msgstr "Ayarlar kaydedildi."
 
-#: ../lilykde/rumor.py:518
-msgid "Tap"
-msgstr "Tık"
-
-#: ../lilykde/rumor.py:527
+#: ../lilykde/rumor.py:526
 msgid "The tempo in beats per minute."
 msgstr "Dakika başında vuruşların hızı."
 
-#: ../lilykde/rumor.py:529
-msgid "Click this button a few times to set the tempo."
-msgstr "Hızı ayarlamak için bu düşmeye bir kaç kez tıklayınız."
-
-#: ../lilykde/rumor.py:552
+#: ../lilykde/rumor.py:545
 msgid "Rumor Settings"
 msgstr "Rumor Ayarları"
 
-#: ../lilykde/rumor.py:556
+#: ../lilykde/rumor.py:549
 #, python-format
 msgid "OSS device %d"
 msgstr "OSS aygıtı %d"
 
-#: ../lilykde/rumor.py:558
+#: ../lilykde/rumor.py:551
 msgid "Keyboard"
 msgstr "Klavye"
 
-#: ../lilykde/rumor.py:564
+#: ../lilykde/rumor.py:557
 msgid "MIDI input:"
 msgstr "MIDI girişi:"
 
-#: ../lilykde/rumor.py:567
+#: ../lilykde/rumor.py:560
 msgid ""
 "MIDI input to use. Choose 'Keyboard' if you want to play on the keyboard of "
 "your computer."
@@ -518,85 +518,85 @@ msgstr ""
 "Kullanılacak MIDI girişi. Eğer bilgisayarınızın klavyesinden çalmak "
 "istiyorsanız Klavye'yi seçin."
 
-#: ../lilykde/rumor.py:572
+#: ../lilykde/rumor.py:565
 msgid "MIDI output:"
 msgstr "MIDI çıkışı:"
 
-#: ../lilykde/rumor.py:575
+#: ../lilykde/rumor.py:568
 msgid "MIDI output to use."
 msgstr "Kullanılacak olan MIDI çıkışı."
 
-#: ../lilykde/rumor.py:579
+#: ../lilykde/rumor.py:572
 msgid "Language:"
 msgstr "Dil:"
 
-#: ../lilykde/rumor.py:583
+#: ../lilykde/rumor.py:576
 msgid "The LilyPond language you want Rumor to output the pitches in."
 msgstr "Rumor'un içindeki sesleri dışa aktaracağı Lilypond dili."
 
-#: ../lilykde/rumor.py:590
+#: ../lilykde/rumor.py:583
 msgid "Explicit durations"
 msgstr "Süreleri netleştir"
 
-#: ../lilykde/rumor.py:592
+#: ../lilykde/rumor.py:585
 msgid ""
 "Add a duration after every note, even if it is the same as the preceding "
 "note."
 msgstr "Bir öncekinin aynısı olsa bile her notadan sonra bir süre ekle."
 
-#: ../lilykde/rumor.py:597
+#: ../lilykde/rumor.py:590
 msgid "Absolute pitch"
 msgstr "Mutlak ses"
 
-#: ../lilykde/rumor.py:599
+#: ../lilykde/rumor.py:592
 msgid "Use absolute pitches instead of relative."
 msgstr "İlgili ses yerine mutlak sesleri kullan."
 
-#: ../lilykde/rumor.py:605
+#: ../lilykde/rumor.py:598
 msgid "No barlines"
 msgstr "Ölçü çizgisi yok"
 
-#: ../lilykde/rumor.py:607
+#: ../lilykde/rumor.py:600
 msgid "Filter the barlines out of Rumor's output."
 msgstr "Rumor'un çıkışından ölçü çizgisi çıktılarını filtrele."
 
-#: ../lilykde/rumor.py:611
+#: ../lilykde/rumor.py:604
 msgid "No dots"
 msgstr "Nokta yok"
 
-#: ../lilykde/rumor.py:613
+#: ../lilykde/rumor.py:606
 msgid "Do not use dotted notes, but ties instead."
 msgstr "Noktaları kullanmayıp onun yerine uzatma bağlarını kullanın."
 
-#: ../lilykde/rumor.py:617
+#: ../lilykde/rumor.py:610
 msgid "Legato"
 msgstr "Bağlı"
 
-#: ../lilykde/rumor.py:618
+#: ../lilykde/rumor.py:611
 msgid "Do not use rests, but give all notes the maximum length."
 msgstr "Susları kullanmayın, fakat tüm notalara maksimum uzunluk verin."
 
-#: ../lilykde/rumor.py:623
+#: ../lilykde/rumor.py:616
 msgid "Strip rests"
 msgstr "Susları çıkar"
 
-#: ../lilykde/rumor.py:625
+#: ../lilykde/rumor.py:618
 msgid "Strip leading and trialing rests from output."
 msgstr "Çıktıdan ilk ve son susları çıkar."
 
-#: ../lilykde/rumor.py:629
+#: ../lilykde/rumor.py:622
 msgid "Guile scripts to load:"
 msgstr "Yüklenecek Guile betikleri:"
 
-#: ../lilykde/rumor.py:633
+#: ../lilykde/rumor.py:626
 msgid "Name"
 msgstr "İsim"
 
-#: ../lilykde/rumor.py:634
+#: ../lilykde/rumor.py:627
 msgid "Description"
 msgstr "Tanımlama"
 
-#: ../lilykde/rumor.py:636
+#: ../lilykde/rumor.py:629
 msgid ""
 "Here you can select which Guile scripts you want Rumor to load. Check "
 "\"What's this\" for more information."
@@ -604,7 +604,7 @@ msgstr ""
 "Buradan Rumor'un yüklemesini istediğiniz Guile betiklerini seçebilirsiniz. "
 "Daha fazla bilgi için \"Bu Nedir\"i seçiniz."
 
-#: ../lilykde/rumor.py:639
+#: ../lilykde/rumor.py:632
 #, python-format
 msgid ""
 "Here you can select which Guile scripts you want Rumor to load. You can add "
@@ -616,7 +616,7 @@ msgstr ""
 "betiğinizin ilk satırı bir noktalı virgül ile (;) başlarsa, bu satır "
 "tanımlama olarak gösterilecektir."
 
-#: ../lilykde/rumor.py:721
+#: ../lilykde/rumor.py:714
 msgid "Rumor"
 msgstr "Rumor"
 

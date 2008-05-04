@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-04-30 21:35+0200\n"
+"POT-Creation-Date: 2008-05-04 06:43+0200\n"
 "PO-Revision-Date: 2008-04-11 16:36+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -237,16 +237,16 @@ msgstr "PDF"
 msgid "Please select some text first."
 msgstr "Selecteer eerst de tekst waarop u de functie wilt toepassen."
 
-#: ../lilykde/widgets.py:116
+#: ../lilykde/widgets.py:117
 #, python-format
 msgid "Printing failed: %s"
 msgstr "Het afdrukken is mislukt: %s"
 
-#: ../lilykde/widgets.py:118
+#: ../lilykde/widgets.py:119
 msgid "The document has been sent to the printer."
 msgstr "Het document is naar de printer gestuurd."
 
-#: ../lilykde/widgets.py:121
+#: ../lilykde/widgets.py:122
 msgid ""
 "This PDF has been created with point-and-click urls (preview mode), which "
 "increases the file size dramatically. It's better to email documents without "
@@ -257,6 +257,14 @@ msgstr ""
 "waardoor het bestand veel groter dan noodzakelijk is. Het is beter om "
 "documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
 "kleiner zijn. Toch doorgaan?"
+
+#: ../lilykde/widgets.py:286
+msgid "Tap"
+msgstr "Tik"
+
+#: ../lilykde/widgets.py:290
+msgid "Click this button a few times to set the tempo."
+msgstr "Klik een paar keer op deze knop om het tempo in te stellen."
 
 #: ../lilykde/hyphen.py:93
 msgid "Language selection"
@@ -484,36 +492,28 @@ msgstr "Kon Rumor niet vinden: %s"
 msgid "Settings have been saved."
 msgstr "De instellingen zijn opgeslagen."
 
-#: ../lilykde/rumor.py:518
-msgid "Tap"
-msgstr "Tik"
-
-#: ../lilykde/rumor.py:527
+#: ../lilykde/rumor.py:526
 msgid "The tempo in beats per minute."
 msgstr "Het tempo in tellen per minuut."
 
-#: ../lilykde/rumor.py:529
-msgid "Click this button a few times to set the tempo."
-msgstr "Klik een paar keer op deze knop om het tempo in te stellen."
-
-#: ../lilykde/rumor.py:552
+#: ../lilykde/rumor.py:545
 msgid "Rumor Settings"
 msgstr "Rumor instellingen"
 
-#: ../lilykde/rumor.py:556
+#: ../lilykde/rumor.py:549
 #, python-format
 msgid "OSS device %d"
 msgstr "OSS apparaat %d"
 
-#: ../lilykde/rumor.py:558
+#: ../lilykde/rumor.py:551
 msgid "Keyboard"
 msgstr "Toetsenbord"
 
-#: ../lilykde/rumor.py:564
+#: ../lilykde/rumor.py:557
 msgid "MIDI input:"
 msgstr "MIDI invoer:"
 
-#: ../lilykde/rumor.py:567
+#: ../lilykde/rumor.py:560
 msgid ""
 "MIDI input to use. Choose 'Keyboard' if you want to play on the keyboard of "
 "your computer."
@@ -521,27 +521,27 @@ msgstr ""
 "Het te gebruiken MIDI-invoerapparaat. Kies 'Toetsenbord' om op het "
 "toetsenbord van uw computer te spelen."
 
-#: ../lilykde/rumor.py:572
+#: ../lilykde/rumor.py:565
 msgid "MIDI output:"
 msgstr "MIDI uitvoer:"
 
-#: ../lilykde/rumor.py:575
+#: ../lilykde/rumor.py:568
 msgid "MIDI output to use."
 msgstr "Het te gebruiken MIDI-uitvoerapparaat."
 
-#: ../lilykde/rumor.py:579
+#: ../lilykde/rumor.py:572
 msgid "Language:"
 msgstr "Taal:"
 
-#: ../lilykde/rumor.py:583
+#: ../lilykde/rumor.py:576
 msgid "The LilyPond language you want Rumor to output the pitches in."
 msgstr "De LilyPond-taal die u wilt gebruiken voor de toonhoogtes."
 
-#: ../lilykde/rumor.py:590
+#: ../lilykde/rumor.py:583
 msgid "Explicit durations"
 msgstr "Expliciete toonduur"
 
-#: ../lilykde/rumor.py:592
+#: ../lilykde/rumor.py:585
 msgid ""
 "Add a duration after every note, even if it is the same as the preceding "
 "note."
@@ -549,59 +549,59 @@ msgstr ""
 "De toonduur na elke noot weergeven, ook als deze hetzelfde is als de vorige "
 "noot."
 
-#: ../lilykde/rumor.py:597
+#: ../lilykde/rumor.py:590
 msgid "Absolute pitch"
 msgstr "Absolute toonhoogte"
 
-#: ../lilykde/rumor.py:599
+#: ../lilykde/rumor.py:592
 msgid "Use absolute pitches instead of relative."
 msgstr "Gebruik absolute octaafhoogte in plaats van relatieve."
 
-#: ../lilykde/rumor.py:605
+#: ../lilykde/rumor.py:598
 msgid "No barlines"
 msgstr "Geen maatstrepen"
 
-#: ../lilykde/rumor.py:607
+#: ../lilykde/rumor.py:600
 msgid "Filter the barlines out of Rumor's output."
 msgstr "Verwijder de maatstrepen uit Rumor's uitvoer."
 
-#: ../lilykde/rumor.py:611
+#: ../lilykde/rumor.py:604
 msgid "No dots"
 msgstr "Geen punten"
 
-#: ../lilykde/rumor.py:613
+#: ../lilykde/rumor.py:606
 msgid "Do not use dotted notes, but ties instead."
 msgstr "Plaats geen punt achter de noot, maar een overbindingsboogje."
 
-#: ../lilykde/rumor.py:617
+#: ../lilykde/rumor.py:610
 msgid "Legato"
 msgstr "Legato"
 
-#: ../lilykde/rumor.py:618
+#: ../lilykde/rumor.py:611
 msgid "Do not use rests, but give all notes the maximum length."
 msgstr "Gebruik geen rusten maar geef alle noten de maximale lengte."
 
-#: ../lilykde/rumor.py:623
+#: ../lilykde/rumor.py:616
 msgid "Strip rests"
 msgstr "Rusten verwijderen"
 
-#: ../lilykde/rumor.py:625
+#: ../lilykde/rumor.py:618
 msgid "Strip leading and trialing rests from output."
 msgstr "Verwijder rusten aan het begin en het einde."
 
-#: ../lilykde/rumor.py:629
+#: ../lilykde/rumor.py:622
 msgid "Guile scripts to load:"
 msgstr "Guile scripts om te laden:"
 
-#: ../lilykde/rumor.py:633
+#: ../lilykde/rumor.py:626
 msgid "Name"
 msgstr "Naam"
 
-#: ../lilykde/rumor.py:634
+#: ../lilykde/rumor.py:627
 msgid "Description"
 msgstr "Omschrijving"
 
-#: ../lilykde/rumor.py:636
+#: ../lilykde/rumor.py:629
 msgid ""
 "Here you can select which Guile scripts you want Rumor to load. Check "
 "\"What's this\" for more information."
@@ -609,7 +609,7 @@ msgstr ""
 "Hier kunt u selecteren welke Guile scripts u met Rumor wilt gebruiken. "
 "Raadpleeg \"Wat is dit\" voor meer informatie."
 
-#: ../lilykde/rumor.py:639
+#: ../lilykde/rumor.py:632
 #, python-format
 msgid ""
 "Here you can select which Guile scripts you want Rumor to load. You can add "
@@ -621,7 +621,7 @@ msgstr ""
 "regel van uw script met een puntkomma (;) begint wordt deze als omschrijving "
 "weergegeven."
 
-#: ../lilykde/rumor.py:721
+#: ../lilykde/rumor.py:714
 msgid "Rumor"
 msgstr "Rumor"
 

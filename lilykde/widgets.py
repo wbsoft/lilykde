@@ -3,6 +3,7 @@ Widgets used in LilyKDE
 """
 
 import os, re
+from time import time
 from subprocess import Popen, PIPE
 
 from qt import *
@@ -275,6 +276,24 @@ class ProcessButton(QPushButton):
         if len(self.pending) == 1:
             text = self.pending[0]
             self._p.writeStdin(text, len(text))
+
+
+class TapButton(QPushButton):
+    """
+    A button the user can tap a tempo on.
+    """
+    def __init__(self, parent, callback):
+        QPushButton.__init__(self, _("Tap"), parent)
+        self.callback = callback
+        self.tapTime = 0.0
+        QObject.connect(self, SIGNAL("pressed()"), self.tap)
+        QToolTip.add(self, _("Click this button a few times to set the tempo."))
+
+    def tap(self):
+        self.tapTime, t = time(), self.tapTime
+        bpm = int(60.0 / (self.tapTime - t))
+        self.callback(bpm)
+
 
 
 # kate: indent-width 4;

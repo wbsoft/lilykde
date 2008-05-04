@@ -14,7 +14,7 @@ import kate
 import kate.gui
 
 from lilykde.util import kprocess, qstringlist2py, py2qstringlist, bound, rdict
-from lilykde.widgets import error, ProcessButton
+from lilykde.widgets import error, ProcessButton, TapButton
 from lilykde import config
 
 # Translate the messages
@@ -515,9 +515,8 @@ class TempoControl(object):
         self.spinbox = QSpinBox(self.minBPM, self.maxBPM, 1, parent)
         self.slider = QSlider(
             self.minBPM, self.maxBPM, 4, 100, Qt.Horizontal, parent)
-        self.tapButton = QPushButton(_("Tap"), parent)
+        self.tapButton = TapButton(parent, self.tap)
         # setup signals
-        QObject.connect(self.tapButton, SIGNAL("pressed()"), self.tap)
         QObject.connect(self.slider, SIGNAL("valueChanged(int)"),
             self.spinbox.setValue)
         QObject.connect(self.spinbox, SIGNAL("valueChanged(int)"),
@@ -525,10 +524,6 @@ class TempoControl(object):
         self.slider.setMinimumWidth(200)
         QToolTip.add(self.spinbox, _(
             "The tempo in beats per minute."))
-        QToolTip.add(self.tapButton, _(
-            "Click this button a few times to set the tempo."))
-        # init tap time
-        self.time = 0.0
 
     def tempo(self):
         return self.spinbox.value()
@@ -536,10 +531,8 @@ class TempoControl(object):
     def setTempo(self, value):
         self.spinbox.setValue(value)
 
-    def tap(self):
+    def tap(self, bpm):
         """ Tap the tempo """
-        self.time, t = time(), self.time
-        bpm = int(60.0 / (self.time - t))
         if self.minBPM <= bpm <= self.maxBPM:
             self.setTempo(bpm)
 
