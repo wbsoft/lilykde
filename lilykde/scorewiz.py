@@ -284,9 +284,6 @@ class Titles(object):
         g.setColSpacing(1, 200)
         l.addLayout(g)
 
-        # The text entries for all headers, with completion for easy
-        # reuse of information.
-        completion = config("scorewiz completion")
         for c, h in enumerate(headers):
             name, title = h
             l = QLabel(title + ":", self.p)
@@ -295,10 +292,7 @@ class Titles(object):
             g.addWidget(l, c, 0)
             g.addWidget(e, c, 1)
             # set completion items
-            compObj = e.completionObject()
-            compObj.setItems(
-                py2qstringlist(completion.get(name, '').splitlines()))
-            compObj.setOrder(KCompletion.Sorted)
+            parent.complete(e)
 
     def focus(self, name):
         """
@@ -312,17 +306,6 @@ class Titles(object):
         unicode values for all the text entries.
         """
         return dict((h, unicode(self.p.child(h).text())) for h in headerNames)
-
-    def saveState(self):
-        """
-        Saves completion items for all lineedits.
-        """
-        completion = config("scorewiz completion")
-        for name, text in self.read().iteritems():
-            items = completion.get(name, '').splitlines()
-            if text and text not in items:
-                items.append(text)
-                completion[name] = '\n'.join(items)
 
 
 class Parts(object):
@@ -412,7 +395,8 @@ class Settings(object):
         h = QHBox(score)
         h.setSpacing(2)
         l = QLabel(_("Tempo indication:"), h)
-        self.tempoInd = KLineEdit(h) # TODO: add completion
+        self.tempoInd = KLineEdit(h, "tempo")
+        parent.complete(self.tempoInd)
         l.setBuddy(self.tempoInd)
         QToolTip.add(self.tempoInd, _(
             "A tempo indication, e.g. \"Allegro.\""))
@@ -463,7 +447,6 @@ class Settings(object):
         if m < 6:
             self.metroVal.setCurrentItem(l.index(m))
 
-
     def setLanguage(self, lang):
         lang = unicode(lang).lower()    # can be QString
         if lang not in keyNames:
@@ -485,16 +468,39 @@ class Settings(object):
 
 
 class ScoreWizard(KDialogBase):
-    """
-    The main score wizard dialog.
-    """
+    """ The main score wizard dialog. """
     def __init__(self, parent):
         KDialogBase.__init__(self, KDialogBase.Tabbed,
             "LilyKDE " + _("Score Setup Wizard"),
             KDialogBase.Ok | KDialogBase.Cancel, KDialogBase.Ok, parent)
+        self.completableWidgets = []
         self.titles = Titles(self)
         self.parts = Parts(self)
         self.settings = Settings(self)
+        self.loadCompletions()
+
+    def complete(self, w):
+        """ Stores the widget and its completion data. """
+        self.completableWidgets.append(w)
+
+    def loadCompletions(self):
+        """ Loads the completion data from the config. """
+        conf = config("scorewiz completion")
+        for w in self.completableWidgets:
+            compObj, name = w.completionObject(), str(w.name())
+            compObj.setItems(
+                py2qstringlist(conf.get(name, '').splitlines()))
+            compObj.setOrder(KCompletion.Sorted)
+
+    def saveCompletions(self):
+        """ Saves completion items for all lineedits. """
+        conf = config("scorewiz completion")
+        for w in self.completableWidgets:
+            name, text = str(w.name()), unicode(w.text())
+            items = conf.get(name, '').splitlines()
+            if text and text not in items:
+                items.append(text)
+                conf[name] = '\n'.join(items)
 
     def printout(self):
         """
@@ -544,7 +550,7 @@ class ScoreWizard(KDialogBase):
         """
         Close the dialog and create the score if Ok was clicked.
         """
-        self.titles.saveState()
+        self.saveCompletions()
         if result == KDialogBase.Accepted:
             self.printout()
         KDialogBase.done(self, result)
