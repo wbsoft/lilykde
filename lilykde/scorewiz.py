@@ -260,6 +260,31 @@ html = Template(r"""<table style='font-family:serif;'>
         _("bottom of last page"))
 
 
+class part(object):
+    """
+    The base class for LilyKDE part types.
+    """
+    def __init__(self, parts):
+        """
+        parts is the Parts instance (the Parts selection widget).
+
+        Create two widgets:
+        - a QListBoxItem for in the score view
+        - a QGroupBox for in the widget stack, with settings
+        The listboxitem should carry a pointer to the settings widget.
+        """
+        pass
+
+
+class PartItem(QListViewItem):
+    """
+    A QListViewItem that remembers it's partType (actually a class).
+    """
+    def __init__(self, parent, partType):
+        self.partType = partType
+        QListViewItem.__init__(self, parent, partType.name)
+
+
 class Titles(object):
     """
     A widget where users can fill in all the titles that are put
@@ -329,6 +354,21 @@ class Parts(object):
         self.all = QListView(w)
         b = KPushButton(KStdGuiItem.add(), w)
         QToolTip.add(b, _("Add selected part to your score."))
+        QObject.connect(self.all, SIGNAL(
+            "doubleClicked(QListViewItem *, const QPoint &, int)"), self.add)
+        QObject.connect(b, SIGNAL("clicked()"), self.add)
+        self.all.setSorting(-1)
+        self.all.setResizeMode(QListView.AllColumns)
+        self.all.setSelectionMode(QListView.Extended)
+        self.all.addColumn(_("Parts"))
+
+        from lilykde.parts import categories
+        for name, partTypes in categories:
+            cat = QListViewItem(self.all, name)
+            cat.setSelectable(False)
+            cat.setOpen(True)
+            for partType in partTypes:
+                PartItem(cat, partType)
 
         # score
         w = QVBox(p)
@@ -344,6 +384,20 @@ class Parts(object):
 
         # part config
         self.part = QWidgetStack(p)
+
+
+
+    def add(self, *args):
+        """
+        Add the selected part types to the score.
+        Discards the args from the doubleClicked signal.
+        """
+        it = QListViewItemIterator(self.all, QListViewItemIterator.Selected)
+        while it.current():
+            it.current().partType(self)
+            it += 1
+
+
 
 
 
