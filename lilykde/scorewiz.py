@@ -269,20 +269,18 @@ class part(object):
         parts is the Parts instance (the Parts selection widget).
 
         Create two widgets:
-        - a QListBoxItem for in the score view
+        - a QListBoxText for in the score view
         - a QGroupBox for in the widget stack, with settings
-        The listboxitem should carry a pointer to the settings widget.
+        The listboxitem carries a pointer to ourselves.
         """
-        pass
+        self.l = QListBoxText(parts.score, self.name)
+        self.w = QVGroupBox(self.name, parts.part)
+        parts.part.addWidget(self.w)
+        self.l.part = self
 
-
-class PartItem(QListViewItem):
-    """
-    A QListViewItem that remembers it's partType (actually a class).
-    """
-    def __init__(self, parent, partType):
-        self.partType = partType
-        QListViewItem.__init__(self, parent, partType.name)
+    def setName(self, name):
+        self.l.setText(name)
+        self.w.setTitle(name)
 
 
 class Titles(object):
@@ -368,37 +366,72 @@ class Parts(object):
             cat.setSelectable(False)
             cat.setOpen(True)
             for partType in partTypes:
-                PartItem(cat, partType)
+                part = QListViewItem(cat, partType.name)
+                part.partType = partType
 
         # score
         w = QVBox(p)
         self.score = QListBox(w)
+        self.score.setSelectionMode(QListBox.Extended)
+        QObject.connect(self.score, SIGNAL("highlighted(QListBoxItem*)"),
+            self.select)
         w = QHBox(w)
         b = KPushButton(KStdGuiItem.remove(), w)
         QToolTip.add(b, _("Remove selected part from your score."))
+        QObject.connect(b, SIGNAL("clicked()"), self.remove)
 
         up = QToolButton(Qt.UpArrow, w)
         down = QToolButton(Qt.DownArrow, w)
         QToolTip.add(up, _("Move selected part up."))
         QToolTip.add(down, _("Move selected part down."))
+        QObject.connect(up, SIGNAL("clicked()"), self.moveUp)
+        QObject.connect(down, SIGNAL("clicked()"), self.moveDown)
 
         # part config
         self.part = QWidgetStack(p)
-
-
 
     def add(self, *args):
         """
         Add the selected part types to the score.
         Discards the args from the doubleClicked signal.
+        Selects the first part if the list was empty.
         """
+        c = self.score.count()
         it = QListViewItemIterator(self.all, QListViewItemIterator.Selected)
         while it.current():
             it.current().partType(self)
             it += 1
+        if c == 0 and self.score.count() > 0:
+            self.score.setCurrentItem(0)
+            self.score.setSelected(0, True)
 
+    def select(self, item):
+        if item:
+            self.part.raiseWidget(item.part.w)
 
+    def remove(self):
+        """ Remove selected parts from the score. """
+        for index in reversed(range(self.score.count())):
+            if self.score.isSelected(index):
+                self.part.removeWidget(self.score.item(index).part.w)
+                self.score.item(index).part.w.hide()
+                self.score.removeItem(index)
 
+    def moveUp(self):
+        """ Move selected parts up. """
+        for index in range(1, self.score.count()):
+            if self.score.isSelected(index):
+                item = self.score.item(index)
+                self.score.takeItem(item)
+                self.score.insertItem(item, index - 1)
+
+    def moveDown(self):
+        """ Move selected parts down. """
+        for index in reversed(range(self.score.count() - 1)):
+            if self.score.isSelected(index):
+                item = self.score.item(index)
+                self.score.takeItem(item)
+                self.score.insertItem(item, index + 1)
 
 
 class Settings(object):
@@ -407,9 +440,9 @@ class Settings(object):
     """
     def __init__(self, parent):
         self.p = parent.addPage(_("Score settings"))
-        score = QGroupBox(1, Qt.Horizontal, _("Score settings"), self.p)
-        lily =  QGroupBox(1, Qt.Horizontal, _("LilyPond"), self.p)
-        prefs = QGroupBox(1, Qt.Horizontal, _("General preferences"), self.p)
+        score = QVGroupBox(_("Score settings"), self.p)
+        lily =  QVGroupBox(_("LilyPond"), self.p)
+        prefs = QVGroupBox(_("General preferences"), self.p)
         h = QHBoxLayout(self.p)
         v = QVBoxLayout()
         h.addLayout(v)
