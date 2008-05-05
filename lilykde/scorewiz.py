@@ -316,6 +316,36 @@ class Parts(object):
     def __init__(self, parent):
         self.p = parent.addPage(_("Parts"))
 
+        # We have three main panes:
+        # all part types (in a treeview),
+        # selected parts (in a list view)
+        # part settings of the selected part.
+
+        p = QSplitter(self.p)
+        QHBoxLayout(self.p).addWidget(p)
+
+        # all parts
+        w = QVBox(p)
+        self.all = QListView(w)
+        b = KPushButton(KStdGuiItem.add(), w)
+        QToolTip.add(b, _("Add selected part to your score."))
+
+        # score
+        w = QVBox(p)
+        self.score = QListBox(w)
+        w = QHBox(w)
+        b = KPushButton(KStdGuiItem.remove(), w)
+        QToolTip.add(b, _("Remove selected part from your score."))
+
+        up = QToolButton(Qt.UpArrow, w)
+        down = QToolButton(Qt.DownArrow, w)
+        QToolTip.add(up, _("Move selected part up."))
+        QToolTip.add(down, _("Move selected part down."))
+
+        # part config
+        self.part = QWidgetStack(p)
+
+
 
 class Settings(object):
     """
