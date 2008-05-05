@@ -6,9 +6,9 @@ pngs = $(patsubst %.ly,%.png,$(lys))
 
 all: $(pngs)
 
-$(pngs): %.png: %.ly
+$(pngs): %.png: %.ly $(wildcard *.ily)
 	lilypond --png $<
-	mogrify +repage -trim -bordercolor transparent -border 2x2 \
+	mogrify +repage -trim -bordercolor transparent -border 3 \
 		-transparent white $@
 
 clean:

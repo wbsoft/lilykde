@@ -1,3 +1,3 @@
 \version "2.10.0"
-\header { tagline = ##f }
-\markup\note #"1" #1
+\include "note_defaults.ily"
+\markup \note #"1" #1

@@ -361,7 +361,7 @@ class Settings(object):
         h.setSpacing(2)
         l = QLabel(_("Pickup measure:"), h)
         self.pickup = QComboBox(False, h)
-        self.pickup.setMinimumHeight(30)
+        self.pickup.setMinimumHeight(24)
         self.pickup.insertItem(_("None"))
         pix = [QPixmap.fromMimeSource('note_%s.png' % d.replace('.', 'd'))
             for d in durations]
@@ -373,7 +373,7 @@ class Settings(object):
         h.setSpacing(2)
         l = QLabel(_("Metronome mark:"), h)
         self.metroDur = QComboBox(False, h)
-        self.metroDur.setMinimumHeight(30)
+        self.metroDur.setMinimumHeight(24)
         l.setBuddy(self.metroDur)
         for d in pix:
             self.metroDur.insertItem(d)
@@ -492,7 +492,7 @@ class ScoreWizard(KDialogBase):
         for w in self.completableWidgets:
             name, text = str(w.name()), unicode(w.text())
             items = qstringlist2py(w.completionObject().items())
-            if text and text not in items:
+            if len(text) > 1 and text not in items:
                 items.append(text)
             conf[name] = '\n'.join(items)
 
