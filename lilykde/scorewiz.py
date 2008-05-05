@@ -390,12 +390,15 @@ class Parts(object):
         # part config
         self.part = QWidgetStack(p)
 
-    def add(self, *args):
+    def add(self, item = None, *args):
         """
         Add the selected part types to the score.
         Discards the args from the doubleClicked signal.
         Selects the first part if the list was empty.
         """
+        # return when a category is doubleclicked.
+        if item and item.depth() == 0:
+            return
         c = self.score.count()
         it = QListViewItemIterator(self.all, QListViewItemIterator.Selected)
         while it.current():
