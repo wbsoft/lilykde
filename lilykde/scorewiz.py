@@ -264,6 +264,8 @@ class part(object):
     """
     The base class for LilyKDE part types.
     """
+    name = 'unnamed' # subclasses should set a real name
+
     def __init__(self, parts):
         """
         parts is the Parts instance (the Parts selection widget).
@@ -274,22 +276,31 @@ class part(object):
         The listboxitem carries a pointer to ourselves.
         """
         self.p = parts
-        self.l = QListBoxText(parts.score, self.name)
-        self.w = QVGroupBox(self.name, parts.part)
-        parts.part.addWidget(self.w)
+        self.l = QListBoxText(parts.score)
         self.l.part = self
+        self.w = QVGroupBox(parts.part)
+        parts.part.addWidget(self.w)
+        self.setName(self.name)
+        self.widgets(self.w)
 
     def setName(self, name):
         self.name = name
         self.l.setText(name)
-        self.w.setTitle(name)
+        self.w.setTitle(_("Configure %s") % self.name)
 
     def select(self):
         self.p.part.raiseWidget(self.w)
 
     def delete(self):
         self.p.part.removeChild(self.w)
-        del self.w
+        del self.w, self.l
+
+    def widgets(self, parent):
+        """
+        Reimplement this method to add widgets with settings.
+        The parent currently is a QVGroupBox.
+        """
+        QLabel(_("(no settings available)"), parent)
 
 
 class Titles(object):
@@ -358,6 +369,7 @@ class Parts(object):
 
         # all parts
         w = QVBox(p)
+        QLabel('<b>%s</b>' % _("Available parts:"), w)
         self.all = QListView(w)
         b = KPushButton(KStdGuiItem.add(), w)
         QToolTip.add(b, _("Add selected part to your score."))
@@ -367,7 +379,8 @@ class Parts(object):
         self.all.setSorting(-1)
         self.all.setResizeMode(QListView.AllColumns)
         self.all.setSelectionMode(QListView.Extended)
-        self.all.addColumn(_("Parts"))
+        self.all.addColumn("")
+        self.all.header().hide()
 
         from lilykde.parts import categories
         # reversed because QListView by default inserts new items at the top.
@@ -381,6 +394,7 @@ class Parts(object):
 
         # score
         w = QVBox(p)
+        QLabel('<b>%s</b>' % _("Score:"), w)
         self.score = QListBox(w)
         self.score.setSelectionMode(QListBox.Extended)
         QObject.connect(self.score, SIGNAL("highlighted(QListBoxItem*)"),
