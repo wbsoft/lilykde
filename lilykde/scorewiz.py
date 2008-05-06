@@ -265,7 +265,6 @@ class part(object):
     The base class for LilyKDE part types.
     """
     name = 'unnamed'    # subclasses should set a real name as class variable
-    num = 0             # used when there are more parts of the same type
 
     @staticmethod
     def numberDoubles(partList):
@@ -298,13 +297,14 @@ class part(object):
         self.l.part = self
         self.w = QVGroupBox(parts.part)
         parts.part.addWidget(self.w)
-        self.setName(self.name)
+        self.setName(self.name) # before init self.name is a class variable
         self.widgets(self.w)
+        self.num = 0  # used when there are more parts of the same type
 
     def setName(self, name):
         self.name = name
         self.l.setText(name)
-        self.w.setTitle(_("Configure %s") % self.name)
+        self.w.setTitle(_("Configure %s") % name)
 
     def identifier(self):
         """
@@ -723,7 +723,11 @@ class ScoreWizard(KDialogBase):
             out('}\n\n')
 
 
-
+        # get the parts...TODO: do something with it!
+        parts = self.parts.parts()
+        #DEBUG!
+        for p in parts:
+            print p.name, p.identifier()
 
 
         # and finally print out:
