@@ -79,6 +79,18 @@ def rdict(d):
     """ reverse a dict """
     return dict((v,k) for k,v in d.iteritems())
 
+# Thanks: http://billmill.org/python_roman.html
+_roman_numerals = (("M", 1000), ("CM", 900), ("D", 500), ("CD", 400),
+("C", 100),("XC", 90),("L", 50),("XL", 40), ("X", 10), ("IX", 9), ("V", 5),
+("IV", 4), ("I", 1))
+
+def romanize(n):
+    roman = []
+    for ltr, num in _roman_numerals:
+        k, n = divmod(n, num)
+        roman.append(ltr * k)
+    return "".join(roman)
+
 def splitcommandline(s):
     """ Splits a commandline like the shell, keeping quoted parts together """
     return _splitcommandline_re.sub(_splitcommandline, s.strip()).split('\0')
