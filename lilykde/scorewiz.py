@@ -268,19 +268,28 @@ class part(object):
         """
         parts is the Parts instance (the Parts selection widget).
 
-        Create two widgets:
+        Creates two widgets:
         - a QListBoxText for in the score view
         - a QGroupBox for in the widget stack, with settings
         The listboxitem carries a pointer to ourselves.
         """
+        self.p = parts
         self.l = QListBoxText(parts.score, self.name)
         self.w = QVGroupBox(self.name, parts.part)
         parts.part.addWidget(self.w)
         self.l.part = self
 
     def setName(self, name):
+        self.name = name
         self.l.setText(name)
         self.w.setTitle(name)
+
+    def select(self):
+        self.p.part.raiseWidget(self.w)
+
+    def delete(self):
+        self.p.part.removeChild(self.w)
+        del self.w
 
 
 class Titles(object):
@@ -361,11 +370,12 @@ class Parts(object):
         self.all.addColumn(_("Parts"))
 
         from lilykde.parts import categories
-        for name, partTypes in categories:
+        # reversed because QListView by default inserts new items at the top.
+        for name, partTypes in reversed(categories):
             cat = QListViewItem(self.all, name)
             cat.setSelectable(False)
             cat.setOpen(True)
-            for partType in partTypes:
+            for partType in reversed(partTypes):
                 part = QListViewItem(cat, partType.name)
                 part.partType = partType
 
@@ -392,7 +402,7 @@ class Parts(object):
 
     def add(self, item = None, *args):
         """
-        Add the selected part types to the score.
+        Add the selected part types to the score (i.e.: instantiate them).
         Discards the args from the doubleClicked signal.
         Selects the first part if the list was empty.
         """
@@ -409,32 +419,46 @@ class Parts(object):
             self.score.setSelected(0, True)
 
     def select(self, item):
+        """ Highlight item and show it's settings widget. """
         if item:
-            self.part.raiseWidget(item.part.w)
+            item.part.select()
 
     def remove(self):
         """ Remove selected parts from the score. """
         for index in reversed(range(self.score.count())):
             if self.score.isSelected(index):
-                self.part.removeWidget(self.score.item(index).part.w)
-                self.score.item(index).part.w.hide()
+                self.score.item(index).part.delete()
                 self.score.removeItem(index)
 
     def moveUp(self):
         """ Move selected parts up. """
+        current = self.score.currentItem()
         for index in range(1, self.score.count()):
             if self.score.isSelected(index):
                 item = self.score.item(index)
                 self.score.takeItem(item)
                 self.score.insertItem(item, index - 1)
+                if index == current:
+                    self.score.setCurrentItem(item)
 
     def moveDown(self):
         """ Move selected parts down. """
+        current = self.score.currentItem()
         for index in reversed(range(self.score.count() - 1)):
             if self.score.isSelected(index):
                 item = self.score.item(index)
                 self.score.takeItem(item)
                 self.score.insertItem(item, index + 1)
+                if index == current:
+                    self.score.setCurrentItem(item)
+
+    def parts(self):
+        """
+        Get the ordered list of part objects (that are attached to the
+        QListBoxText items.
+        """
+        return [self.score.item(index).part
+            for index in range(self.score.count())]
 
 
 class Settings(object):
