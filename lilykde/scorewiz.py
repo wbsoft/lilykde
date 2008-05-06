@@ -50,7 +50,7 @@ from kdeui import *
 import kate
 
 from lilykde import config
-from lilykde.util import py2qstringlist, qstringlist2py
+from lilykde.util import py2qstringlist, qstringlist2py, romanize
 from lilykde.widgets import TapButton
 
 # Translate messages
@@ -264,7 +264,25 @@ class part(object):
     """
     The base class for LilyKDE part types.
     """
-    name = 'unnamed' # subclasses should set a real name
+    name = 'unnamed'    # subclasses should set a real name as class variable
+    num = 0             # used when there are more parts of the same type
+
+    @staticmethod
+    def numberDoubles(partList):
+        """
+        Find out if there are part objects in the list of the same type.
+        If there are more parts of the same subclass, set their
+        num attributes to 1, 2, etc., instead of the default 0.
+        """
+        types = {}
+        for p in partList:
+            types.setdefault(p.__class__, []).append(p)
+
+        for t in types.values():
+            if len(t) > 1:
+                for n, p in enumerate(t):
+                    p.num = n + 1
+        return partList
 
     def __init__(self, parts):
         """
@@ -288,6 +306,14 @@ class part(object):
         self.l.setText(name)
         self.w.setTitle(_("Configure %s") % self.name)
 
+    def identifier(self):
+        """
+        Return a name for this part, suitable for use in a LilyPond
+        identifier.
+        part.numberDoubles must have been run on the part list.
+        """
+        return self.__class__.__name__ + (self.num and romanize(self.num) or '')
+
     def select(self):
         self.p.part.raiseWidget(self.w)
 
@@ -300,7 +326,7 @@ class part(object):
         Reimplement this method to add widgets with settings.
         The parent currently is a QVGroupBox.
         """
-        QLabel(_("(no settings available)"), parent)
+        QLabel('(%s)' % _("No settings available."), parent)
 
 
 class Titles(object):
@@ -470,10 +496,12 @@ class Parts(object):
         """
         Get the ordered list of part objects (that are attached to the
         QListBoxText items.
+        If there are more parts of the same class, their num attributes
+        are set to 1, 2 instead of the default 0, so they don't produce
+        conflicting LilyPond identifiers.
         """
-        return [self.score.item(index).part
-            for index in range(self.score.count())]
-
+        return part.numberDoubles([self.score.item(index).part
+            for index in range(self.score.count())])
 
 class Settings(object):
     """
