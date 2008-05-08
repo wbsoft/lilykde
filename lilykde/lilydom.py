@@ -59,6 +59,30 @@ class Node(object):
     def __iter__(self):
         yield self
 
+    def ancestors(self):
+        """ climb the tree up over the parents """
+        obj = self
+        while obj.parent:
+            obj = obj.parent
+            yield obj
+
+    def findParent(self, cls):
+        """
+        Search for the first parent object of the exact given class, and
+        return it, otherwise returns None.
+        """
+        for obj in self.ancestors():
+            if obj.__class__ is cls:
+                return obj
+
+    def findParentLike(self, cls):
+        """
+        Search for the first parent object that's an instance of the given
+        class or a subclass, and return it, otherwise returns None.
+        """
+        for obj in self.ancestors():
+            if isinstance(obj, cls):
+                return obj
 
 class Text(Node):
     """ Any piece of text """
