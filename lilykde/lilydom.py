@@ -326,9 +326,7 @@ class Score(Section):
         self.music = Simr(self.doc, multiline)
         self.layouts = Container(self.doc, True)
         Section.append(self, self.music)
-
-    def children(self):
-        return self.music, self.layouts
+        Section.append(self, self.layouts)
 
     def whichObj(self, obj):
         """
