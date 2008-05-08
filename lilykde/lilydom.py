@@ -80,13 +80,18 @@ class Node(object):
     def __iter__(self):
         yield self
 
-    def children(self):
-        return ()
-
     def removeFromParent(self):
         """ Removes self from parent """
         if self.parent:
             self.parent.remove(self)
+
+    def reparent(self, newParent):
+        """
+        Don't use this yourself, normally append, insert, replace will
+        handle everything.
+        """
+        self.removeFromParent()
+        self.parent = newParent
 
     def ancestors(self):
         """ climb the tree up over the parents """
@@ -213,15 +218,12 @@ class Container(Node):
 
     def __init__(self, pdoc, multiline=None):
         Node.__init__(self, pdoc)
-        self._children = []
+        self.children = []
         if multiline is not None:
             self.multiline = multiline
 
-    def children(self):
-        return self._children
-
     def append(self, obj):
-        self._children.append(obj)
+        self.children.append(obj)
         if obj.parent:
             obj.parent.remove(obj)
         obj.parent = self
@@ -232,21 +234,38 @@ class Container(Node):
         Default: insert at beginning.
         """
         if isinstance(where, Node):
-           where = self._children.index(where)
-        self._children.insert(where, obj)
-        if obj.parent:
-            obj.parent.remove(obj)
-        obj.parent = self
+           where = self.children.index(where)
+        self.children.insert(where, obj)
+        obj.reparent(self)
 
     def remove(self, obj):
-        self._children.remove(obj)
+        self.children.remove(obj)
         obj.parent = None
 
+    def replace(self, what, repl):
+        """
+        Replace child at index or specified Node with a replacement object.
+        """
+        if isinstance(what, Node):
+            old = what
+            what = self.children.index(what)
+        else:
+            old = self.children[what]
+        self.children[what] = repl
+        repl.reparent(self)
+        old.parent = None
+
+    def clear(self):
+        """ Remove all children """
+        for n in self.children:
+            n.parent = None
+        self.children = []
+
     def childrenStr(self):
-        return (unicode(i) for i in self.children())
+        return (unicode(i) for i in self.children)
 
     def __str__(self):
-        if self.multiline and self.children():
+        if self.multiline and self.children:
             return self.mfmt % self.mjoin.join(self.childrenStr())
         else:
             return self.fmt % self.join.join(self.childrenStr())
@@ -254,7 +273,7 @@ class Container(Node):
     def __iter__(self):
         """ Iterate over all the children """
         yield self
-        for i in self.children():
+        for i in self.children:
             for j in i:
                 yield j
 
@@ -282,8 +301,8 @@ class Seq(Container):
 class _RemoveIfOneChild(Container):
     """ (abstract) removes formatting if exactly one child """
     def __str__(self):
-        if len(self.children()) == 1:
-            return unicode(self.children()[0])
+        if len(self.children) == 1:
+            return unicode(self.children[0])
         else:
             return Container.__str__(self)
 
@@ -320,33 +339,7 @@ class Book(Section):
 
 class Score(Section):
     secName = 'score'
-    mfmt = '{\n%s}'
-    def __init__(self, pdoc, multiline=True):
-        Section.__init__(self, pdoc, True)
-        self.music = Simr(self.doc, multiline)
-        self.layouts = Container(self.doc, True)
-        Section.append(self, self.music)
-        Section.append(self, self.layouts)
-
-    def whichObj(self, obj):
-        """
-        Determines if append, insert and remove should work on the music
-        block or the layouts block.
-        """
-        if obj.__class__ in (Layout, Midi):
-            return self.layouts
-        else:
-            return self.music
-
-    def append(self, obj):
-        self.whichObj(obj).append(obj)
-
-    def insert(self, obj, where = 0):
-        """ Not recommended to use this method but it works """
-        self.whichObj(obj).insert(obj, where)
-
-    def remove(self, obj):
-        self.whichObj(obj).remove(obj)
+    pass
 
 
 class Paper(Section):
@@ -391,4 +384,5 @@ Midi(s)
 v = Text(d, r'\version "2.11.46"')
 b.insert(v, s)
 t = Score(b)
+Header(t)
 Text(t, 'c1')
