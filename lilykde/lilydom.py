@@ -11,17 +11,38 @@ not to fully understand all features LilyPond supports.
 
 import re
 
+
+def indent(text, width=2):
+    """ Indent a LilyPond file """
+    def gen():
+        i = 0
+        for t in text.splitlines():
+            if i and re.match(r'}|>|%}', t):
+                i -= width
+            yield ' '*i + t
+            if re.search(r'(\{|<|%{)$', t):
+                i += width
+    return '\n'.join(gen()) + '\n'
+
+
 class Document(object):
     """ A single LilyPond document """
 
     commentLevel = 8
     typographicalQuotes = True
 
-    pass
+    def __init__(self):
+        self.body = Body(self)
+        self.names = {}
+
+    def __str__(self):
+        return indent(unicode(self.body))
 
 
 class Node(object):
     """ Abstract base class """
+
+    parent = None
 
     def __init__(self, pdoc):
         """
@@ -34,11 +55,13 @@ class Node(object):
             self.doc = pdoc.doc
         else:
             self.doc = pdoc
-            self.parent = None
+
+    def __iter__(self):
+        yield self
 
 
 class Text(Node):
-    """ A piece of text """
+    """ Any piece of text """
     def __init__(self, pdoc, text):
         Node.__init__(self, pdoc)
         self.text = text
@@ -91,12 +114,14 @@ class QuotedString(Text):
 class Container(Node):
     """ (abstract) Contains bundled expressions """
     fmt, join = '%s', ' '
-    mfmt, mjoin = '\n%s\n', '\n'
+    mfmt, mjoin = '%s\n', '\n'
     multiline = False
 
-    def __init__(self, *args):
-        Node.__init__(self, *args)
+    def __init__(self, pdoc, multiline=None):
+        Node.__init__(self, pdoc)
         self.children = []
+        if multiline is not None:
+            self.multiline = multiline
 
     def append(self, obj):
         self.children.append(obj)
@@ -117,6 +142,19 @@ class Container(Node):
         else:
             return self.fmt % self.join.join(self.childrenStr())
 
+    def __iter__(self):
+        """ Iterate over all the children """
+        yield self
+        for i in self.children:
+            for j in i:
+                yield j
+
+
+class Body(Container):
+    """ Just a sequence of lines or other blocks of Lily code """
+    multiline = True
+    pass
+
 
 class Sim(Container):
     """ Simultaneous expressions """
@@ -133,7 +171,7 @@ class Seq(Container):
 
 
 class _RemoveIfOneChild(Container):
-    """ (abstract) removes pre and post if exactly one child """
+    """ (abstract) removes formatting if exactly one child """
     def __str__(self):
         if len(self.children) == 1:
             return unicode(self.children[0])
