@@ -15,7 +15,8 @@ All elements of a LilyPond document inherit Node.
 the main branches of Node are:
     - Text: contains a string, cannot have child Nodes.
     - Container: contains child Node objects and optional pre, join and post
-            text.
+            text. You can find the child nodes in children, but never keep
+            pointers to that list, nor change the values from outside!
 
 The main document is represented by a Document object.
 The contents of the document are in doc.body , which is a Container node,
@@ -33,18 +34,18 @@ a reference to it. You can add a node to another one with append() or insert().
 
 import re
 
+def indentGen(sourceLines, width = 2, start = 0):
+    i = start * width
+    for t in sourceLines:
+        if i and re.match(r'}|>|%}', t):
+            i -= width
+        yield ' '*i + t
+        if re.search(r'(\{|<|%{)$', t):
+            i += width
 
-def indent(text, width=2):
+def indent(text, width=2, start = 0):
     """ Indent a LilyPond file """
-    def gen():
-        i = 0
-        for t in text.splitlines():
-            if i and re.match(r'}|>|%}', t):
-                i -= width
-            yield ' '*i + t
-            if re.search(r'(\{|<|%{)$', t):
-                i += width
-    return '\n'.join(gen()) + '\n'
+    return '\n'.join(indentGen(text.splitlines(), width, start)) + '\n'
 
 
 class Document(object):
@@ -71,11 +72,11 @@ class Node(object):
         if pdoc is a Node, append self to parent, and
         keep a pointer of the parent's doc.
         """
-        if isinstance(pdoc, Node):
+        if isinstance(pdoc, Document):
+            self.doc = pdoc
+        else:
             pdoc.append(self)
             self.doc = pdoc.doc
-        else:
-            self.doc = pdoc
 
     def __iter__(self):
         yield self
@@ -84,6 +85,11 @@ class Node(object):
         """ Removes self from parent """
         if self.parent:
             self.parent.remove(self)
+
+    def replaceWith(self, newObj):
+        """ Replace self in parent with new object """
+        if self.parent:
+            self.parent.replace(self, newObj)
 
     def reparent(self, newParent):
         """
@@ -224,9 +230,7 @@ class Container(Node):
 
     def append(self, obj):
         self.children.append(obj)
-        if obj.parent:
-            obj.parent.remove(obj)
-        obj.parent = self
+        obj.reparent(self)
 
     def insert(self, obj, where = 0):
         """
@@ -235,8 +239,8 @@ class Container(Node):
         """
         if isinstance(where, Node):
            where = self.children.index(where)
-        self.children.insert(where, obj)
         obj.reparent(self)
+        self.children.insert(where, obj)
 
     def remove(self, obj):
         self.children.remove(obj)
@@ -251,8 +255,8 @@ class Container(Node):
             what = self.children.index(what)
         else:
             old = self.children[what]
-        self.children[what] = repl
         repl.reparent(self)
+        self.children[what] = repl
         old.parent = None
 
     def clear(self):
@@ -379,8 +383,8 @@ Seq(s)
 Seq(s)
 p = SimPoly(s, multiline=True)
 Seq(p), Seq(p), Seq(p)
-Layout(s)
-Midi(s)
+l = Layout(s)
+m = Midi(s)
 v = Text(d, r'\version "2.11.46"')
 b.insert(v, s)
 t = Score(b)
