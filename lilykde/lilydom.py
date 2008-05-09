@@ -160,9 +160,9 @@ class Node(object):
             obj = obj.parent
         return obj
 
-    def pretty(self, width=2):
+    def pretty(self, width=2, start=0):
         """ return a pretty indented representation of this node """
-        return indent(unicode(self), width)
+        return indent(unicode(self), width, start)
 
 
 class Text(Node):
@@ -189,8 +189,7 @@ class Comment(Text):
 
     def _outputComment(self):
         result = '\n'.join('%% %s' % i for i in self.text.splitlines())
-        # a trick to always add a newline, even if the parent joins children
-        # using spaces.
+        # only add a newline if the parent joins children using spaces.
         if self.parent \
                 and hasattr(self.parent, 'multiline') \
                 and not self.parent.multiline:
@@ -211,6 +210,7 @@ class SmallComment(Comment):
 
 
 class QuotedString(Text):
+    """ A string that is output inside double quotes. """
     def __str__(self):
         text = self.text
         if self.doc.typographicalQuotes:
@@ -282,7 +282,7 @@ class Container(Node):
             return self.fmt % self.join.join(self.childrenStr())
 
     def __iter__(self):
-        """ Iterate over all the children """
+        """ Iterate over all the children, and their children, etc. """
         yield self
         for i in self.children:
             for j in i:
