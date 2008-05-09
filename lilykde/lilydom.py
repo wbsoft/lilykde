@@ -78,7 +78,7 @@ class Node(object):
             pdoc.append(self)
             self.doc = pdoc.doc
 
-    def __iter__(self):
+    def iterDepthFirst(self):
         yield self
 
     def iterDepthLast(self, depth = -1, ring = 0):
@@ -246,10 +246,9 @@ class Container(Node):
         self.children.append(obj)
         obj.reparent(self)
 
-    def insert(self, obj, where = 0):
+    def insert(self, where, obj):
         """
         Insert at index, or just before another node.
-        Default: insert at beginning.
         """
         if isinstance(where, Node):
            where = self.children.index(where)
@@ -282,20 +281,36 @@ class Container(Node):
     def __len__(self):
         return len(self.children)
 
-    def __getitem__(self, i):
+    def __getitem__(self, k):
         """ also supports slices """
-        return self.children[i]
+        return self.children[k]
 
-    def __setitem__(self, i, obj):
-        """ does not support slices! """
-        self.replace(i, obj)
-
-    def __delitem__(self, i):
-        if isinstance(i, slice):
-            for j in self.children[i]:
-                self.remove(j)
+    def __setitem__(self, k, obj):
+        """ also supports slices """
+        if isinstance(k, slice):
+            if k.step:
+                # extended slice, number of items must be same
+                if len(obj) == len(self[k]):
+                    for new, old in zip(obj, self[k]):
+                        self.replace(old, new)
+                else:
+                    raise ValueError, \
+                        "slice and replacement must have same length"
+            else:
+                del self[k]
+                start = k.start or 0
+                # save the obj iterator results because obj could change ...
+                for d, new in enumerate(tuple(obj)):
+                    self.insert(start + d, new)
         else:
-            self.remove(self.children[i])
+            self.replace(k, obj)
+
+    def __delitem__(self, k):
+        if isinstance(k, slice):
+            for i in self.children[k]:
+                self.remove(i)
+        else:
+            self.remove(self.children[k])
 
     def __contains__(self, obj):
         return obj in self.children
@@ -309,11 +324,11 @@ class Container(Node):
         else:
             return self.fmt % self.join.join(self.childrenStr())
 
-    def __iter__(self):
+    def iterDepthFirst(self):
         """ Iterate over all the children, and their children, etc. """
         yield self
         for i in self.children:
-            for j in i:
+            for j in i.iterDepthFirst():
                 yield j
 
     def iterDepthLast(self, depth = -1, ring = 0):
@@ -531,14 +546,14 @@ Seq(p), Seq(p), Seq(p)
 l = Layout(s)
 m = Midi(s)
 v = Text(d, r'\version "2.11.46"')
-b.insert(v, s)
+b.insert(s, v)
 t = Score(b)
 h = Header(t)
 
 h['title'] = "Preludium in G"
 h['composer'] = "Wilbert Berendsen (*1971)"
 h['title'] = "Preludium in A"
-#h.insert(Comment(h, "Not sure if this is the right name"), h['composer'])
+h.insert(Comment(h, "Not sure if this is the right name"), h['composer'])
 print dict(h.all())
 print h['title'].__class__
 Text(t, 'c1')
