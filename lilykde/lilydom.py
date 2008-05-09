@@ -124,21 +124,21 @@ class Node(object):
             if isinstance(obj, cls):
                 return obj
 
-    def allChildren(self, cls):
+    def allChildren(self, cls, recursive = False):
         """
         iterate over all children of the current node if they are of
         the exact class cls.
         """
-        for obj in self:
+        for obj in recursive and self or self.children:
             if obj.__class__ is cls:
                 yield obj
 
-    def allChildrenLike(self, cls):
+    def allChildrenLike(self, cls, recursive = False):
         """
         iterate over all children of the current node if they are of
         the class cls or a subclass.
         """
-        for obj in self:
+        for obj in recursive and self or self.children:
             if isinstance(obj, cls):
                 yield obj
 
@@ -188,7 +188,14 @@ class Comment(Text):
             return ''
 
     def _outputComment(self):
-        return ''.join('%% %s\n' %i for i in self.text.splitlines())
+        result = '\n'.join('%% %s' % i for i in self.text.splitlines())
+        # a trick to always add a newline, even if the parent joins children
+        # using spaces.
+        if self.parent \
+                and hasattr(self.parent, 'multiline') \
+                and not self.parent.multiline:
+            result += '\n'
+        return result
 
 
 class MultiLineComment(Comment):
@@ -353,7 +360,37 @@ class Paper(Section):
 
 class Header(Section):
     secName = 'header'
-    pass
+    # Convenience methods, that make the handling of HeaderEntry objects
+    # unnecessary:
+    def all(self):
+        """
+        Iterate over name, value pairs. To create a dict:
+        dict(h.all())
+        """
+        for i in self.allChildrenLike(HeaderEntry):
+            yield i.headerName, i.value()
+
+    def __getitem__(self, headerName):
+        for i in self.allChildrenLike(HeaderEntry):
+            if i.headerName == headerName:
+                return i
+
+    def __setitem__(self, headerName, valueObj):
+        h = self[headerName]
+        if isinstance(valueObj, basestring):
+            valueObj = QuotedString(self.doc, valueObj)
+        if h:
+            h.setValue(valueObj)
+        else:
+            HeaderEntry(self, headerName, valueObj)
+
+    def __contains__(self, headerName):
+        return bool(self[headerName])
+
+    def __delitem__(self, headerName):
+        h = self[headerName]
+        if h:
+            self.remove(h)
 
 
 class Layout(Section):
@@ -375,6 +412,32 @@ class With(Section):
     secName = 'with'
     pass
 
+
+class HeaderEntry(Container):
+    """ A header with it's value as its first child """
+    def __init__(self, pdoc, headerName, valueObj = None):
+        Container.__init__(self, pdoc)
+        self.headerName = headerName
+        if valueObj:
+            self.append(valueObj)
+
+    # Convenience methods:
+    def setValue(self, obj):
+        self.clear()
+        self.append(obj)
+
+    def value(self):
+        if self.children:
+            return self.children[0]
+
+    def __str__(self):
+        return '%s = %s' % (self.headerName, unicode(self.value() or '""'))
+
+
+
+
+
+
 ## testing
 d = Document()
 b = d.body
@@ -388,5 +451,11 @@ m = Midi(s)
 v = Text(d, r'\version "2.11.46"')
 b.insert(v, s)
 t = Score(b)
-Header(t)
+h = Header(t)
+
+h['title'] = "Preludium in G"
+h['composer'] = "Wilbert Berendsen (*1971)"
+h['title'] = "Preludium in A"
+h.insert(Comment(h, "Not sure if this is the right name"), h['composer'])
+print dict(h.all())
 Text(t, 'c1')
