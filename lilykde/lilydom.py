@@ -309,8 +309,8 @@ class Seq(Container):
     pass
 
 
-class _RemoveIfOneChild(Container):
-    """ (abstract) removes formatting if exactly one child """
+class _RemoveIfOneChild(object):
+    """ (mixin) removes formatting if exactly one child """
     def __str__(self):
         if len(self.children) == 1:
             return unicode(self.children[0])
@@ -326,6 +326,74 @@ class SimPoly(Sim):
     """ Simultaneous polyphone expressions """
     join, mjoin = r' \\ ', '\n\\\\\n'
     pass
+
+
+class Assignment(Container):
+    """ A varname = value construct with it's value as its first child """
+    nullStr = '""'
+
+    def __init__(self, pdoc, varName, valueObj = None):
+        Container.__init__(self, pdoc)
+        self.varName = varName
+        if valueObj:
+            self.append(valueObj)
+
+    # Convenience methods:
+    def setValue(self, obj):
+        self.clear()
+        self.append(obj)
+
+    def value(self):
+        if self.children:
+            return self.children[0]
+
+    def __str__(self):
+        return '%s = %s' % (self.varName, unicode(self.value() or self.nullStr))
+
+
+class _HandleVars(object):
+    """
+    A powerful mixin class that makes handling unique variable assignments
+    inside a Container more easy.
+    """
+    childClass = Assignment
+
+    def all(self):
+        """
+        Iterate over name, value pairs. To create a dict:
+        dict(h.all())
+        """
+        for i in self.allChildrenLike(self.childClass):
+            yield i.varName, i.value()
+
+    def __getitem__(self, varName):
+        for i in self.allChildrenLike(self.childClass):
+            if i.varName == varName:
+                return i
+
+    def __setitem__(self, varName, valueObj):
+        if not isinstance(valueObj, Node):
+            valueObj = self.importNode(valueObj)
+        h = self[varName]
+        if h:
+            h.setValue(valueObj)
+        else:
+            self.childClass(self, varName, valueObj)
+
+    def __contains__(self, varName):
+        return bool(self[varName])
+
+    def __delitem__(self, varName):
+        h = self[varName]
+        if h:
+            self.remove(h)
+
+    def importNode(self, obj):
+        """
+        Try to interprete the object and transform it into a Node object
+        of the right species.
+        """
+        return QuotedString(self.doc, obj)
 
 
 class Section(Container):
@@ -353,52 +421,28 @@ class Score(Section):
     pass
 
 
-class Paper(Section):
+class Paper(Section, _HandleVars):
     secName = 'paper'
     pass
 
 
-class Header(Section):
+class HeaderEntry(Assignment):
+    """ A header with it's value as its first child """
+    pass
+
+
+class Header(Section, _HandleVars):
     secName = 'header'
-    # Convenience methods, that make the handling of HeaderEntry objects
-    # unnecessary:
-    def all(self):
-        """
-        Iterate over name, value pairs. To create a dict:
-        dict(h.all())
-        """
-        for i in self.allChildrenLike(HeaderEntry):
-            yield i.headerName, i.value()
-
-    def __getitem__(self, headerName):
-        for i in self.allChildrenLike(HeaderEntry):
-            if i.headerName == headerName:
-                return i
-
-    def __setitem__(self, headerName, valueObj):
-        h = self[headerName]
-        if isinstance(valueObj, basestring):
-            valueObj = QuotedString(self.doc, valueObj)
-        if h:
-            h.setValue(valueObj)
-        else:
-            HeaderEntry(self, headerName, valueObj)
-
-    def __contains__(self, headerName):
-        return bool(self[headerName])
-
-    def __delitem__(self, headerName):
-        h = self[headerName]
-        if h:
-            self.remove(h)
+    childClass = HeaderEntry
+    pass
 
 
-class Layout(Section):
+class Layout(Section, _HandleVars):
     secName = 'layout'
     pass
 
 
-class Midi(Section):
+class Midi(Section, _HandleVars):
     secName = 'midi'
     pass
 
@@ -411,30 +455,6 @@ class Context(Section):
 class With(Section):
     secName = 'with'
     pass
-
-
-class HeaderEntry(Container):
-    """ A header with it's value as its first child """
-    def __init__(self, pdoc, headerName, valueObj = None):
-        Container.__init__(self, pdoc)
-        self.headerName = headerName
-        if valueObj:
-            self.append(valueObj)
-
-    # Convenience methods:
-    def setValue(self, obj):
-        self.clear()
-        self.append(obj)
-
-    def value(self):
-        if self.children:
-            return self.children[0]
-
-    def __str__(self):
-        return '%s = %s' % (self.headerName, unicode(self.value() or '""'))
-
-
-
 
 
 
@@ -458,4 +478,5 @@ h['composer'] = "Wilbert Berendsen (*1971)"
 h['title'] = "Preludium in A"
 h.insert(Comment(h, "Not sure if this is the right name"), h['composer'])
 print dict(h.all())
+print h['title'].__class__
 Text(t, 'c1')
