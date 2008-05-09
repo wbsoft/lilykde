@@ -295,7 +295,7 @@ class Container(Node):
                         self.replace(old, new)
                 else:
                     raise ValueError, \
-                        "slice and replacement must have same length"
+                        "extended slice and replacement must have same length"
             else:
                 del self[k]
                 start = k.start or 0
@@ -315,14 +315,12 @@ class Container(Node):
     def __contains__(self, obj):
         return obj in self.children
 
-    def childrenStr(self):
-        return (unicode(i) for i in self.children)
-
     def __str__(self):
         if self.multiline and self.children:
-            return self.mfmt % self.mjoin.join(self.childrenStr())
+            f, j = self.mfmt, self.mjoin
         else:
-            return self.fmt % self.join.join(self.childrenStr())
+            f, j = self.fmt, self.join
+        return f % j.join(unicode(i) for i in self.children)
 
     def iterDepthFirst(self):
         """ Iterate over all the children, and their children, etc. """
