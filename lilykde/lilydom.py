@@ -78,7 +78,11 @@ class Node(object):
             pdoc.append(self)
             self.doc = pdoc.doc
 
-    def iterDepthFirst(self):
+    def iterDepthFirst(self, depth = -1):
+        """
+        Iterate over all the children, and their children, etc.
+        Set depth to restrict the search to a certain depth, -1 is unrestricted.
+        """
         yield self
 
     def iterDepthLast(self, depth = -1, ring = 0):
@@ -133,21 +137,21 @@ class Node(object):
             if isinstance(obj, cls):
                 return obj
 
-    def allChildren(self, cls, recursive = False):
+    def allChildren(self, cls, depth = -1):
         """
         iterate over all children of the current node if they are of
         the exact class cls.
         """
-        for obj in recursive and self or self.children:
+        for obj in self.iterDepthLast(depth):
             if obj.__class__ is cls:
                 yield obj
 
-    def allChildrenLike(self, cls, recursive = False):
+    def allChildrenLike(self, cls, depth = -1):
         """
         iterate over all children of the current node if they are of
         the class cls or a subclass.
         """
-        for obj in recursive and self or self.children:
+        for obj in self.iterDepthLast(depth):
             if isinstance(obj, cls):
                 yield obj
 
@@ -322,12 +326,16 @@ class Container(Node):
             f, j = self.fmt, self.join
         return f % j.join(unicode(i) for i in self.children)
 
-    def iterDepthFirst(self):
-        """ Iterate over all the children, and their children, etc. """
+    def iterDepthFirst(self, depth = -1):
+        """
+        Iterate over all the children, and their children, etc.
+        Set depth to restrict the search to a certain depth, -1 is unrestricted.
+        """
         yield self
-        for i in self.children:
-            for j in i.iterDepthFirst():
-                yield j
+        if depth != 0:
+            for i in self.children:
+                for j in i.iterDepthFirst(depth - 1):
+                    yield j
 
     def iterDepthLast(self, depth = -1, ring = 0):
         """
@@ -434,12 +442,12 @@ class _HandleVars(object):
         Iterate over name, value pairs. To create a dict:
         dict(h.all())
         """
-        for i in self.allChildrenLike(self.childClass):
+        for i in self.allChildrenLike(self.childClass, 1):
             yield i.varName, i.value()
 
     @ifbasestring()
     def __getitem__(self, varName):
-        for i in self.allChildrenLike(self.childClass):
+        for i in self.allChildrenLike(self.childClass, 1):
             if i.varName == varName:
                 return i
 
