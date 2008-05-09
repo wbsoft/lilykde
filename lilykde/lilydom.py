@@ -198,8 +198,8 @@ class Comment(Text):
 
     def _outputComment(self):
         result = '\n'.join('%% %s' % i for i in self.text.splitlines())
-        # only add a newline if the parent joins children using spaces.
-        if self.parent and not self.parent.multiline:
+        # don't add a newline if the parent joins children using newlines.
+        if not self.parent or not self.parent.multiline:
             result += '\n'
         return result
 
@@ -278,6 +278,27 @@ class Container(Node):
         for n in self.children:
             n.parent = None
         self.children = []
+
+    def __len__(self):
+        return len(self.children)
+
+    def __getitem__(self, i):
+        """ also supports slices """
+        return self.children[i]
+
+    def __setitem__(self, i, obj):
+        """ does not support slices! """
+        self.replace(i, obj)
+
+    def __delitem__(self, i):
+        if isinstance(i, slice):
+            for j in self.children[i]:
+                self.remove(j)
+        else:
+            self.remove(self.children[i])
+
+    def __contains__(self, obj):
+        return obj in self.children
 
     def childrenStr(self):
         return (unicode(i) for i in self.children)
@@ -372,10 +393,26 @@ class Assignment(Container):
         return '%s = %s' % (self.varName, unicode(self.value() or self.nullStr))
 
 
+def ifbasestring(cls = Container):
+    """
+    Ensure that the method is only called for basestring objects.
+    Otherwise the same method from (by default) Container is called.
+    """
+    def dec(func):
+        cont = getattr(cls, func.func_name)
+        def newfunc(obj, varName, *args):
+            f = isinstance(varName, basestring) and func or cont
+            return f(obj, varName, *args)
+        return newfunc
+    return dec
+
+
 class _HandleVars(object):
     """
     A powerful mixin class that makes handling unique variable assignments
     inside a Container more easy.
+    Mixin before Container, so you can get to the items by using their
+    string names.
     """
     childClass = Assignment
 
@@ -387,11 +424,13 @@ class _HandleVars(object):
         for i in self.allChildrenLike(self.childClass):
             yield i.varName, i.value()
 
+    @ifbasestring()
     def __getitem__(self, varName):
         for i in self.allChildrenLike(self.childClass):
             if i.varName == varName:
                 return i
 
+    @ifbasestring()
     def __setitem__(self, varName, valueObj):
         if not isinstance(valueObj, Node):
             valueObj = self.importNode(valueObj)
@@ -401,9 +440,11 @@ class _HandleVars(object):
         else:
             self.childClass(self, varName, valueObj)
 
+    @ifbasestring()
     def __contains__(self, varName):
         return bool(self[varName])
 
+    @ifbasestring()
     def __delitem__(self, varName):
         h = self[varName]
         if h:
@@ -442,7 +483,7 @@ class Score(Section):
     pass
 
 
-class Paper(Section, _HandleVars):
+class Paper(_HandleVars, Section):
     secName = 'paper'
     pass
 
@@ -452,18 +493,18 @@ class HeaderEntry(Assignment):
     pass
 
 
-class Header(Section, _HandleVars):
+class Header(_HandleVars, Section):
     secName = 'header'
     childClass = HeaderEntry
     pass
 
 
-class Layout(Section, _HandleVars):
+class Layout(_HandleVars, Section):
     secName = 'layout'
     pass
 
 
-class Midi(Section, _HandleVars):
+class Midi(_HandleVars, Section):
     secName = 'midi'
     pass
 
@@ -497,7 +538,8 @@ h = Header(t)
 h['title'] = "Preludium in G"
 h['composer'] = "Wilbert Berendsen (*1971)"
 h['title'] = "Preludium in A"
-h.insert(Comment(h, "Not sure if this is the right name"), h['composer'])
+#h.insert(Comment(h, "Not sure if this is the right name"), h['composer'])
 print dict(h.all())
 print h['title'].__class__
 Text(t, 'c1')
+
