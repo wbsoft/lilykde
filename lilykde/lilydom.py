@@ -81,6 +81,15 @@ class Node(object):
     def __iter__(self):
         yield self
 
+    def iterDepthLast(self, depth = -1, ring = 0):
+        """
+        Iterate over the children in rings, depth last.
+        Set depth to restrict the search to a certain depth, -1 is unrestricted.
+        Do not set ring in your invocation, it's used internally.
+        """
+        if ring == 0:
+            yield self
+
     def removeFromParent(self):
         """ Removes self from parent """
         if self.parent:
@@ -190,9 +199,7 @@ class Comment(Text):
     def _outputComment(self):
         result = '\n'.join('%% %s' % i for i in self.text.splitlines())
         # only add a newline if the parent joins children using spaces.
-        if self.parent \
-                and hasattr(self.parent, 'multiline') \
-                and not self.parent.multiline:
+        if self.parent and not self.parent.multiline:
             result += '\n'
         return result
 
@@ -288,6 +295,20 @@ class Container(Node):
             for j in i:
                 yield j
 
+    def iterDepthLast(self, depth = -1, ring = 0):
+        """
+        Iterate over the children in rings, depth last.
+        Set depth to restrict the search to a certain depth, -1 is unrestricted.
+        Do not set ring in your invocation, it's used internally.
+        """
+        if ring == 0:
+            yield self
+        if ring != depth:
+            for i in self.children:
+                yield i
+            for i in self.children:
+                for j in i.iterDepthLast(depth, ring + 1):
+                    yield j
 
 class Body(Container):
     """ Just a sequence of lines or other blocks of Lily code """
