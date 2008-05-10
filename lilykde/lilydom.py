@@ -47,6 +47,15 @@ def indent(text, width=2, start = 0):
     """ Indent a LilyPond file """
     return '\n'.join(indentGen(text.splitlines(), width, start)) + '\n'
 
+def tree(obj, depth = -1):
+    """
+    Print a tree of the object and its descendants, for debugging purposes.
+    """
+    level = len(list(obj.ancestors()))
+    for i in obj.iterDepthFirst(depth):
+        indent = len(list(i.ancestors())) - level
+        print '  ' * indent + repr(i)
+
 
 class Document(object):
     """ A single LilyPond document """
@@ -177,6 +186,14 @@ class Node(object):
         """ return a pretty indented representation of this node """
         return indent(unicode(self), width, start)
 
+    def __repr__(self):
+        """ return a representation for debugging purposes """
+        maxlen = 40
+        r = unicode(self).replace('\n', ' ')
+        if len(r) > maxlen + 2:
+            r = r[:maxlen] + '...'
+        return '<%s> %s' % (self.__class__.__name__, r)
+
 
 class Text(Node):
     """ Any piece of text """
@@ -186,7 +203,6 @@ class Text(Node):
 
     def __str__(self):
         return self.text
-
 
 class Comment(Text):
     """ A LilyPond comment line """
