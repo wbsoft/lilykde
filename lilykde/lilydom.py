@@ -71,19 +71,29 @@ class pitchwriter(object):
     def __init__(self, names, accs, special = None):
         self.names = names
         self.accs = accs
-        self.special = special or {}
+        self.special = special or ()
 
-    def __getitem__(p):
-        pass
+    def __call__(note, alter = 0):
+        pitch = self.names[note]
+        if alter:
+            alter = self.accs[alter * 4 + 4]
+            # FIXME: warn if no alter defined
+            pitch += alter
+        for s, r in self.special:
+            pitch = pitch.replace(s, r)
+        return pitch
 
-pitchNames = {
-    'nederlands': pitchwriter(
-        ['c','d','e','f','g','a','b'],
-        ['eses', 'eseh', 'es', '', 'ih','is','isih','isis'],
-        {'ees': 'es', 'aes': 'as'}
+
+pitchInfo = {
+    'nederlands': (
+        ('c','d','e','f','g','a','b'),
+        ('eses', 'eseh', 'es', 'eh', '', 'ih','is','isih','isis'),
+        (('ees', 'es'), ('aes', 'as'))
     ),
 }
 
+pitchNames = dict(
+    (lang, pitchwriter(*data)) for lang, data in pitchInfo.iteritems())
 
 
 def indentGen(sourceLines, width = 2, start = 0):
@@ -635,8 +645,12 @@ class Pitch(Node):
         """
         print the pitch in the preferred language.
         """
-        pass #TODO
-
+        p = pitchNames[doc.language](self.note, self.alter)
+        if octave < -1:
+            p += ',' * (-1 - octave)
+        elif octave > -1:
+            p += "'" * (octave + 1)
+        return p
 
 
 ## testing
