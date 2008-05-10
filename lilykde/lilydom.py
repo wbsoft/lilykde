@@ -260,6 +260,19 @@ class Node(object):
             obj = obj.parent
         return obj
 
+    def copy(self):
+        """
+        Return a deep copy of this object, as a dangling tree belonging
+        to the same document.
+        """
+        n = object.__new__(self.__class__)
+        n.doc = self.doc
+        for i in vars(self):
+            if i not in ('doc', 'children', 'parent'):
+                a = getattr(self, i)
+                setattr(n, i, a.__class__(a))
+        return n
+
     def indent(self, start=0):
         """ return a pretty indented representation of this node """
         for line in indentGen(unicode(self).splitlines(), self.doc.indentStr):
@@ -411,6 +424,17 @@ class Container(Node):
         for n in self.children:
             n.parent = None
         self.children = []
+
+    def copy(self):
+        """
+        Return a deep copy of this object, as a dangling tree belonging
+        to the same document.
+        """
+        n = Node.copy(self)
+        n.children = []
+        for i in self.children:
+            n.append(i.copy())
+        return n
 
     def __len__(self):
         return len(self.children)
