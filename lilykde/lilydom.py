@@ -96,41 +96,56 @@ pitchNames = dict(
     (lang, pitchwriter(*data)) for lang, data in pitchInfo.iteritems())
 
 
-def indentGen(sourceLines, width = 2, start = 0):
-    i = start * width
+def indentGen(sourceLines, indentStr = '  ', d = 0):
+    """
+    A generator that walks on the source lines, and returns
+    properly indented LilyPond code.
+    """
     for t in sourceLines:
-        if i and re.match(r'}|>|%}', t):
-            i -= width
-        yield ' '*i + t
+        if d and re.match(r'}|>|%}', t):
+            d -= 1
+        yield indentStr * d + t
         if re.search(r'(\{|<|%{)$', t):
-            i += width
+            d += 1
 
-def indent(text, width=2, start = 0):
-    """ Indent a LilyPond file """
-    return '\n'.join(indentGen(text.splitlines(), width, start)) + '\n'
 
-def tree(obj, depth = -1):
-    """
-    Print a tree of the object and its descendants, for debugging purposes.
-    """
-    level = len(list(obj.ancestors()))
-    for i in obj.iterDepthFirst(depth):
-        indent = len(list(i.ancestors())) - level
-        print '  ' * indent + repr(i)
+def xmlescape(t):
+    """ Escapes a string so that it can be used in an xml attribute """
+    for s, r in (
+        ('&', '&amp;'),
+        ('<', '&gt;'),
+        ('>', '&lt;'),
+        ('"', '&quot;'),
+        ('\n', '&#10;'),
+    ):
+        t = t.replace(s, r)
+    return t
+
+
+# small helper functions to get strings out of generators
+def xml(obj):
+    """ returns the XML representation of the object as a string """
+    return ''.join(obj.xml())
+
+def indent(obj):
+    """ returns the indented LilyPond representation as a string """
+    return ''.join(obj.indent())
 
 
 class Document(object):
     """ A single LilyPond document """
 
+    indentStr = '  '
     commentLevel = 8
     typographicalQuotes = True
     language = "nederlands"
+    xmlIndentStr = '  '
 
     def __init__(self):
         self.body = Body(self)
 
     def __str__(self):
-        return self.body.pretty()
+        return indent(self.body)
 
 
 class Node(object):
@@ -209,7 +224,7 @@ class Node(object):
             if isinstance(obj, cls):
                 return obj
 
-    def allChildren(self, cls, depth = -1):
+    def allDescendants(self, cls, depth = -1):
         """
         iterate over all children of the current node if they are of
         the exact class cls.
@@ -218,7 +233,7 @@ class Node(object):
             if obj.__class__ is cls:
                 yield obj
 
-    def allChildrenLike(self, cls, depth = -1):
+    def allDescendantsLike(self, cls, depth = -1):
         """
         iterate over all children of the current node if they are of
         the class cls or a subclass.
@@ -227,7 +242,7 @@ class Node(object):
             if isinstance(obj, cls):
                 yield obj
 
-    def isChildOf(self, parentObj):
+    def isDescendantOf(self, parentObj):
         """ find parent in ancestors? """
         for obj in self.ancestors():
             if obj is parentObj:
@@ -236,7 +251,7 @@ class Node(object):
 
     def isDangling(self):
         """ Returns whether the current Node is part of its Document """
-        return not self.isChildOf(self.doc.body)
+        return not self.isDescendantOf(self.doc.body)
 
     def toplevel(self):
         """ returns the toplevel parent Node of this node """
@@ -245,17 +260,35 @@ class Node(object):
             obj = obj.parent
         return obj
 
-    def pretty(self, width=2, start=0):
+    def indent(self, start=0):
         """ return a pretty indented representation of this node """
-        return indent(unicode(self), width, start)
+        for line in indentGen(unicode(self).splitlines(), self.doc.indentStr):
+            yield line + '\n'
 
     def __repr__(self):
         """ return a representation for debugging purposes """
-        maxlen = 40
+        maxlen = 50
         r = unicode(self).replace('\n', ' ')
         if len(r) > maxlen + 2:
             r = r[:maxlen] + '...'
         return '<%s> %s' % (self.__class__.__name__, r)
+
+    def xmlattrs(self):
+        """
+        Returns all relevant instance variables as a XML attribute string
+        """
+        return ''.join(' %s="%s"' % (k, xmlescape(unicode(v)))
+            for k, v in vars(self).iteritems()
+                if k not in ('doc', 'children', 'parent'))
+
+    def xml(self, indent = 0):
+        """
+        Generates XML (line by line / element by element) of the current node.
+        """
+        ind = self.doc.xmlIndentStr * indent
+        tag = self.__class__.__name__
+        attrs = self.xmlattrs()
+        yield '%s<%s%s/>\n' % (ind, tag, attrs)
 
 
 class Text(Node):
@@ -326,6 +359,10 @@ class Container(Node):
             self.multiline = multiline
 
     def append(self, obj):
+        """
+        Appends an object to the current node. It will be reparented, that
+        means it will be removed from it's former parent (if it had one).
+        """
         self.children.append(obj)
         obj.reparent(self)
 
@@ -339,6 +376,10 @@ class Container(Node):
         self.children.insert(where, obj)
 
     def remove(self, obj):
+        """
+        Removes the given child object.
+        See also: removeFromParent()
+        """
         self.children.remove(obj)
         obj.parent = None
 
@@ -430,6 +471,22 @@ class Container(Node):
             for i in self.children:
                 for j in i.iterDepthLast(depth, ring + 1):
                     yield j
+
+    def xml(self, indent = 0):
+        """
+        Generates XML (line by line / element by element) of the current node.
+        """
+        ind = self.doc.xmlIndentStr * indent
+        tag = self.__class__.__name__
+        attrs = self.xmlattrs()
+        if self.children:
+            yield '%s<%s%s>\n' % (ind, tag, attrs)
+            for i in self.children:
+                for x in i.xml(indent + 1):
+                    yield x
+            yield '%s</%s>\n' % (ind, tag)
+        else:
+            yield '%s<%s%s/>\n' % (ind, tag, attrs)
 
 
 class Body(Container):
@@ -528,12 +585,12 @@ class _HandleVars(object):
         Iterate over name, value pairs. To create a dict:
         dict(h.all())
         """
-        for i in self.allChildrenLike(self.childClass, 1):
+        for i in self.allDescendantsLike(self.childClass, 1):
             yield i.varName, i.value()
 
     @ifbasestring()
     def __getitem__(self, varName):
-        for i in self.allChildrenLike(self.childClass, 1):
+        for i in self.allDescendantsLike(self.childClass, 1):
             if i.varName == varName:
                 return i
 
@@ -647,9 +704,9 @@ class Pitch(Node):
         """
         p = pitchNames[doc.language](self.note, self.alter)
         if octave < -1:
-            p += ',' * (-1 - octave)
+            return p + ',' * (-octave - 1)
         elif octave > -1:
-            p += "'" * (octave + 1)
+            return p + "'" * (octave + 1)
         return p
 
 
@@ -672,7 +729,5 @@ h['title'] = "Preludium in G"
 h['composer'] = "Wilbert Berendsen (*1971)"
 h['title'] = "Preludium in A"
 h.insert(Comment(h, "Not sure if this is the right name"), h['composer'])
-print dict(h.all())
-print h['title'].__class__
 Text(t, 'c1')
 
