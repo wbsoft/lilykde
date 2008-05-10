@@ -73,12 +73,12 @@ class pitchwriter(object):
         self.accs = accs
         self.special = special or ()
 
-    def __call__(note, alter = 0):
+    def __call__(self, note, alter = 0):
         pitch = self.names[note]
         if alter:
-            alter = self.accs[alter * 4 + 4]
+            acc = self.accs[int(alter * 4 + 4)]
             # FIXME: warn if no alter defined
-            pitch += alter
+            pitch += acc
         for s, r in self.special:
             pitch = pitch.replace(s, r)
         return pitch
@@ -344,6 +344,16 @@ class QuotedString(Text):
         text = text.replace('"', '\\"')
         # quote the string
         return '"%s"' % text
+
+
+class Version(Node):
+    """ a LilyPond version instruction """
+    def __init__(self, pdoc, version):
+        Node.__init__(self, pdoc)
+        self.version = version
+
+    def __str__(self):
+        return r'\version "%s"' % self.version
 
 
 class Container(Node):
@@ -702,11 +712,11 @@ class Pitch(Node):
         """
         print the pitch in the preferred language.
         """
-        p = pitchNames[doc.language](self.note, self.alter)
-        if octave < -1:
-            return p + ',' * (-octave - 1)
-        elif octave > -1:
-            return p + "'" * (octave + 1)
+        p = pitchNames[self.doc.language](self.note, self.alter)
+        if self.octave < -1:
+            return p + ',' * (-self.octave - 1)
+        elif self.octave > -1:
+            return p + "'" * (self.octave + 1)
         return p
 
 
@@ -720,7 +730,7 @@ p = SimPoly(s, multiline=True)
 Seq(p), Seq(p), Seq(p)
 l = Layout(s)
 m = Midi(s)
-v = Text(d, r'\version "2.11.46"')
+v = Version(d, "2.11.46")
 b.insert(s, v)
 t = Score(b)
 h = Header(t)
