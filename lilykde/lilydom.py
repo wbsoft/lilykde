@@ -121,6 +121,12 @@ def xmlescape(t):
         t = t.replace(s, r)
     return t
 
+def xmlformatattrs(d):
+    """
+    Return dict (or nested sequence of key-value pairs)
+    (of unicode objects) as a XML attribute string
+    """
+    return ''.join(' %s="%s"' % (k, xmlescape(v)) for k, v in d)
 
 # small helper functions to get strings out of generators
 def xml(obj):
@@ -288,11 +294,12 @@ class Node(object):
 
     def xmlattrs(self):
         """
-        Returns all relevant instance variables as a XML attribute string
+        Return all relevant instance variables as a iterable key-value sequence.
+        You can subclass this method if you have attributes that cannot be
+        rendered using unicode.
         """
-        return ''.join(' %s="%s"' % (k, xmlescape(unicode(v)))
-            for k, v in vars(self).iteritems()
-                if k not in ('doc', 'children', 'parent'))
+        return ((k, unicode(v)) for k, v in vars(self).iteritems()
+            if k not in ('doc', 'children', 'parent'))
 
     def xml(self, indent = 0):
         """
@@ -300,7 +307,7 @@ class Node(object):
         """
         ind = self.doc.xmlIndentStr * indent
         tag = self.__class__.__name__
-        attrs = self.xmlattrs()
+        attrs = xmlformatattrs(self.xmlattrs())
         yield '%s<%s%s/>\n' % (ind, tag, attrs)
 
 
@@ -512,7 +519,7 @@ class Container(Node):
         """
         ind = self.doc.xmlIndentStr * indent
         tag = self.__class__.__name__
-        attrs = self.xmlattrs()
+        attrs = xmlformatattrs(self.xmlattrs())
         if self.children:
             yield '%s<%s%s>\n' % (ind, tag, attrs)
             for i in self.children:
