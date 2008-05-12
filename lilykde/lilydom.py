@@ -1,7 +1,10 @@
 """
 LilyPond DOM
 
-a simple Document Object Model for LilyPond documents.
+(c) 2008 Wilbert Berendsen
+License: GPL.
+
+A simple Document Object Model for LilyPond documents.
 
 The purpose is to easily build a LilyPond document with good syntax,
 not to fully understand all features LilyPond supports. (This DOM does
@@ -66,7 +69,6 @@ import re
 from rational import Rational
 
 # pitches
-# nl
 class pitchwriter(object):
     def __init__(self, names, accs, special = None):
         self.names = names
@@ -536,73 +538,6 @@ class Node(object):
         yield '%s<%s%s/>\n' % (ind, tag, attrs)
 
 
-class Text(Node):
-    """ Any piece of text """
-    def __init__(self, pdoc, text):
-        Node.__init__(self, pdoc)
-        self.text = text
-
-    def __str__(self):
-        return self.text
-
-class Comment(Text):
-    """ A LilyPond comment line """
-    level_func = int
-
-    def __init__(self, pdoc, text, level = 2):
-        Text.__init__(self, pdoc, text)
-        self.level = level
-
-    def __str__(self):
-        if self.level <= self.doc.commentLevel:
-            return self._outputComment()
-        else:
-            return ''
-
-    def _outputComment(self):
-        result = '\n'.join('%% %s' % i for i in self.text.splitlines())
-        # don't add a newline if the parent joins children using newlines.
-        if not self.parent or not self.parent.multiline:
-            result += '\n'
-        return result
-
-
-class MultiLineComment(Comment):
-    """ A LilyPond comment block. The block must not contain a %} . """
-    def _outputComment(self):
-        return '%%{\n%s\n%%}' % self.text.strip()
-
-
-class SmallComment(Comment):
-    """ A very small comment in %{ %}. The text should not contain \n . """
-    def _outputComment(self):
-        return '%%{ %s %%}' % self.text.strip()
-
-
-class QuotedString(Text):
-    """ A string that is output inside double quotes. """
-    def __str__(self):
-        text = self.text
-        if self.doc.typographicalQuotes:
-            text = re.sub(r'"(.*?)"', u'\u201C\\1\u201D', text)
-            text = re.sub(r"'(.*?)'", u'\u2018\\1\u2019', text)
-            text = text.replace("'", u'\u2018')
-        # escape regular double quotes
-        text = text.replace('"', '\\"')
-        # quote the string
-        return '"%s"' % text
-
-
-class Version(Node):
-    """ a LilyPond version instruction """
-    def __init__(self, pdoc, version):
-        Node.__init__(self, pdoc)
-        self.version = version
-
-    def __str__(self):
-        return r'\version "%s"' % self.version
-
-
 class Container(Node):
     """ (abstract) Contains bundled expressions """
     fmt, join = '%s', ' '
@@ -779,8 +714,82 @@ class Container(Node):
             yield '%s<%s%s/>\n' % (ind, tag, attrs)
 
 
+class Text(Node):
+    """ Any piece of text """
+    def __init__(self, pdoc, text):
+        Node.__init__(self, pdoc)
+        self.text = text
+
+    def __str__(self):
+        return self.text
+
+class Comment(Text):
+    """ A LilyPond comment line """
+    level_func = int
+
+    def __init__(self, pdoc, text, level = 2):
+        Text.__init__(self, pdoc, text)
+        self.level = level
+
+    def __str__(self):
+        if self.level <= self.doc.commentLevel:
+            return self._outputComment()
+        else:
+            return ''
+
+    def _outputComment(self):
+        result = '\n'.join('%% %s' % i for i in self.text.splitlines())
+        # don't add a newline if the parent joins children using newlines.
+        if not self.parent or not self.parent.multiline:
+            result += '\n'
+        return result
+
+
+class MultiLineComment(Comment):
+    """ A LilyPond comment block. The block must not contain a %} . """
+    def _outputComment(self):
+        return '%%{\n%s\n%%}' % self.text.strip()
+
+
+class SmallComment(Comment):
+    """ A very small comment in %{ %}. The text should not contain \n . """
+    def _outputComment(self):
+        return '%%{ %s %%}' % self.text.strip()
+
+
+class QuotedString(Text):
+    """ A string that is output inside double quotes. """
+    def __str__(self):
+        text = self.text
+        if self.doc.typographicalQuotes:
+            text = re.sub(r'"(.*?)"', u'\u201C\\1\u201D', text)
+            text = re.sub(r"'(.*?)'", u'\u2018\\1\u2019', text)
+            text = text.replace("'", u'\u2018')
+        # escape regular double quotes
+        text = text.replace('"', '\\"')
+        # quote the string
+        return '"%s"' % text
+
+
+class Scheme(Text):
+    """ A Scheme expression, without the extra # prepended """
+    def __str__(self):
+        return '#%s' % self.text
+
+
+class Version(Node):
+    """ a LilyPond version instruction """
+    def __init__(self, pdoc, version):
+        Node.__init__(self, pdoc)
+        self.version = version
+
+    def __str__(self):
+        return r'\version "%s"' % self.version
+
+
 class Body(Container):
     """ Just a sequence of lines or other blocks of Lily code """
+    mjoin = '\n\n'
     multiline = True
     pass
 
@@ -973,6 +982,76 @@ class With(Section):
     pass
 
 
+class Music(Container):
+    pass
+
+
+class Relative(Music):
+    """
+    relative <pitch> music
+
+    You should add a Pitch (optionally) and another music object,
+    e.g. Sim or Seq, etc.
+    """
+    fmt = '\\relative %s'
+    pass
+
+
+class ContextType(Music):
+    """
+    \new or \context Staff = 'bla' < > etc.
+
+    You should optionally add a \with section and (obligate) another
+    music object.
+    """
+    cid = ''
+    new = True
+    new_func = eval
+
+    def __init__(self, pdoc, cid = '', new = None):
+        Music.__init__(self, pdoc)
+        if cid:
+            self.cid = cid # LilyPond context id
+        if new is not None:
+            self.new = new # print \new (True) or \context (False)
+
+    def __str__(self):
+        res = [self.new and '\\new' or '\\context', self.__class__.__name__]
+        if self.cid:
+            res.extend(['=', '"%s"' % self.cid])
+        res.append(Music.__str__(self))
+        return ' '.join(res)
+
+
+class ChoirStaff(ContextType): pass
+class ChordNames(ContextType): pass
+class CueVoice(ContextType): pass
+class Devnull(ContextType): pass
+class DrumStaff(ContextType): pass
+class DrumVoice(ContextType): pass
+class FiguredBass(ContextType): pass
+class FretBoards(ContextType): pass
+class Global(ContextType): pass
+class GrandStaff(ContextType): pass
+class GregorianTranscriptionStaff(ContextType): pass
+class GregorianTranscriptionVoice(ContextType): pass
+class InnerChoirStaff(ContextType): pass
+class InnerStaffGroup(ContextType): pass
+class Lyrics(ContextType): pass
+class MensuralStaff(ContextType): pass
+class MensuralVoice(ContextType): pass
+class NoteNames(ContextType): pass
+class PianoStaff(ContextType): pass
+class RhythmicStaff(ContextType): pass
+class Score(ContextType): pass
+class Staff(ContextType): pass
+class StaffGroup(ContextType): pass
+class TabStaff(ContextType): pass
+class TabVoice(ContextType): pass
+class VaticanaStaff(ContextType): pass
+class VaticanaVoice(ContextType): pass
+class Voice(ContextType): pass
+
 
 class Pitch(Node):
     """
@@ -1003,25 +1082,4 @@ class Pitch(Node):
             return p + "'" * (self.octave + 1)
         return p
 
-
-## testing
-d = Document()
-b = d.body
-s = Score(b)
-Seq(s)
-Seq(s)
-p = SimPoly(s, multiline=True)
-Seq(p), Seq(p), Seq(p)
-l = Layout(s)
-m = Midi(s)
-v = Version(d, "2.11.46")
-b.insert(s, v)
-t = Score(b)
-h = Header(t)
-
-h['title'] = "Preludium in G"
-h['composer'] = "Wilbert Berendsen (*1971)"
-h['title'] = "Preludium in A"
-h.insert(Comment(h, "Not sure if this is the right name"), h['composer'])
-Text(t, 'c1')
 

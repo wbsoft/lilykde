@@ -52,6 +52,7 @@ import kate
 from lilykde import config
 from lilykde.util import py2qstringlist, qstringlist2py, romanize
 from lilykde.widgets import TapButton
+from lilykde.lilydom import *
 
 # Translate messages
 from lilykde.i18n import _
@@ -682,45 +683,33 @@ class ScoreWizard(KDialogBase):
                 items.append(text)
             conf[name] = '\n'.join(items)
 
-    def format(self, text):
-        """ Formats a string of text according to preferences """
-        # typographical quotes?
-        if self.settings.typq.isChecked():
-            text = re.sub(r'"(.*?)"', u'\u201C\\1\u201D', text)
-            text = re.sub(r"'(.*?)'", u'\u2018\\1\u2019', text)
-            text = text.replace("'", u'\u2018')
-        # escape regular double quotes
-        text = text.replace('"', '\\"')
-        # quote the string
-        return '"%s"' % text
-
     def printout(self):
         """
-        Creates the score output and writes it to the current document.
+        Creates the score output using LilyDOM
+        and writes it to the current document.
         """
-        output = []
-        out = output.append
+        d = Document()
+        d.typographicalQuotes = self.settings.typq.isChecked()
 
         # version:
-        out('\\version "%s"\n' %
-            unicode(self.settings.lyversion.currentText()))
+        Version(d.body, unicode(self.settings.lyversion.currentText()))
 
         # language:
         lang = self.settings.getLanguage()
         if lang:
-            out('\n\\include "%s.ly"\n' % lang)
+            d.language = lang
+            Text(d.body, '\\include "%s.ly"' % lang)
 
         # header:
         noTagline = self.settings.tagl.isChecked()
         head = self.titles.read()
         if max(head.values()) or noTagline:
-            out('\n\\header {\n')
-            for h in headerNames:
-                if head[h]:
-                    out('  %s = %s\n' % (h, self.format(head[h])))
-                elif h == 'tagline' and noTagline:
-                    out('  tagline = ##f\n')
-            out('}\n\n')
+            h = Header(d.body)
+            for n in headerNames:
+                if head[n]:
+                    h[n] = head[n]
+                elif n == 'tagline' and noTagline:
+                    h[n] = Scheme(d, '#f')
 
 
         # get the parts...TODO: do something with it!
@@ -731,7 +720,7 @@ class ScoreWizard(KDialogBase):
 
 
         # and finally print out:
-        kate.view().insertText(''.join(output))
+        kate.view().insertText(unicode(d))
 
     def done(self, result):
         """
