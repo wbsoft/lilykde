@@ -227,6 +227,8 @@ class Document(object):
                     e = e.parent
                 else:
                     return e
+        # this is only reached when not all tags are closed properly.
+        return e and e.toplevel()
 
 
 class Node(object):
