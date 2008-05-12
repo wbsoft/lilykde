@@ -162,10 +162,23 @@ def xmltags(s):
         attrs = xmlattrs(m.group(3))
         yield tag, start, end, attrs
 
+def setattrs(obj, attrs):
+    """
+    Sets attributes of the object to values from the attrs iterable.
+    The attrs in the attrs iterable are always of str/unicode type.
 
+    Class attributes of the object's class are consulted to determine
+    if the attr needs to be converted from str/unicode to something else.
 
-
-
+    If a class attribute attrName + '_func' exists, it is called.
+    Otherwise class attribute 'attr_func' is tried. If that also not
+    exists, the attribute remains a str/unicode object.
+    """
+    cls = obj.__class__
+    for attr, value in attrs:
+        f = getattr(cls, attr + '_func', None) or \
+            getattr(cls, 'attr_func', lambda s:s)
+        setattr(obj, attr, f(value))
 
 # small helper functions to get strings out of generators
 def xml(obj):
@@ -207,17 +220,8 @@ class Document(object):
         for tag, start, end, attrs in xmltags(s):
             if start:
                 cls = eval(tag)
-                obj = object.__new__(cls)
-                obj.doc = self
-                if e:
-                    e.append(obj)
-                if issubclass(cls, Container):
-                    obj.children = []
-                for attr, value in attrs:
-                    f = getattr(cls, attr + '_func', None) or \
-                        getattr(cls, 'attr_func', lambda s:s)
-                    setattr(obj, attr, f(value))
-                e = obj
+                e = cls.new(self, e)
+                setattrs(e, attrs)
             if end and e:
                 if e.parent:
                     e = e.parent
@@ -241,6 +245,18 @@ class Node(object):
         else:
             pdoc.append(self)
             self.doc = pdoc.doc
+
+    @classmethod
+    def new(cls, doc, parent = None):
+        """
+        Create new instance without calling __init__.
+        Useful for importing and cloning.
+        """
+        obj = object.__new__(cls)
+        obj.doc = doc
+        if parent:
+            parent.append(obj)
+        return obj
 
     def __nonzero__(self):
         """ We are always true """
@@ -346,8 +362,7 @@ class Node(object):
         Return a deep copy of this object, as a dangling tree belonging
         to the same document.
         """
-        n = object.__new__(self.__class__)
-        n.doc = self.doc
+        n = self.__class__.new(self.doc)
         for i in vars(self):
             if i not in ('doc', 'children', 'parent'):
                 a = getattr(self, i)
@@ -466,6 +481,19 @@ class Container(Node):
         if multiline is not None:
             self.multiline = multiline
 
+    @classmethod
+    def new(cls, doc, parent = None):
+        """
+        Create new instance without calling __init__.
+        Useful for importing and cloning.
+        """
+        obj = object.__new__(cls)
+        obj.doc = doc
+        obj.children = []
+        if parent:
+            parent.append(obj)
+        return obj
+
     def append(self, obj):
         """
         Appends an object to the current node. It will be reparented, that
@@ -516,7 +544,6 @@ class Container(Node):
         to the same document.
         """
         n = Node.copy(self)
-        n.children = []
         for i in self.children:
             n.append(i.copy())
         return n
