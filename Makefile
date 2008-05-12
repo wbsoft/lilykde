@@ -3,18 +3,18 @@ install = \
 	install-syntax \
 	install-textedit \
 	install-servicemenu \
-	install-plugin \
-	install-rumorscripts
+	install-plugin
 
 uninstall = \
 	uninstall-mimetype \
 	uninstall-syntax \
 	uninstall-textedit \
 	uninstall-servicemenu \
-	uninstall-plugin \
-	uninstall-rumorscripts
+	uninstall-plugin
 
-subdirs = po pics
+subdirs = lilykde po rumor pics
+
+modules = hyphenator.py rational.py
 
 .PHONY: all install clean uninstall $(install) $(uninstall) $(subdirs)
 
@@ -24,16 +24,13 @@ include config.mk
 # for making tarballs
 DIST = $(PACKAGE)-$(VERSION)
 
-all = ly.png lilykde/about.py
+all = ly.png
 
 all: $(all) $(subdirs)
 
 ly.png: ly.svg
 	@echo Creating ly.png from ly.svg...
 	@ksvgtopng 128 128 "`pwd`/ly.svg" "`pwd`/ly.png"
-
-lilykde/about.py: VERSION
-	@cp $< $@
 
 $(subdirs):
 	@$(MAKE) -C $@ $(MAKECMDGOALS)
@@ -88,19 +85,15 @@ uninstall-textedit:
 	rm -f $(SERVICEDIR)/textedit.protocol
 	rm -f $(LILYKDE)/ktexteditservice.py
 
-install-plugin: lilykde/about.py
+install-plugin:
 	@echo Installing plugin:
 	@mkdir -p $(PYPLUGINS)
 	cp lilypond.py $(PYPLUGINS)/
 	@cd $(PYPLUGINS) && $(PYCOMPILE) lilypond.py
-	@echo Installing Python package lilykde:
-	@mkdir -p $(LILYKDE)/lilykde
-	@cd $(LILYKDE)/lilykde && rm -f *.py*
-	cp lilykde/*.py $(LILYKDE)/lilykde/
-	@cd $(LILYKDE)/lilykde && $(PYCOMPILE) *.py
-	@echo Installing Python module hyphenator:
-	cp hyphenator.py $(LILYKDE)/
-	@cd $(LILYKDE) && $(PYCOMPILE) hyphenator.py
+	@echo Installing Python modules $(modules):
+	@mkdir -p $(LILYKDE)
+	cp $(modules) $(LILYKDE)/
+	@cd $(LILYKDE) && $(PYCOMPILE) $(modules)
 	@echo Installing runpty.py helper script:
 	cp runpty.py $(LILYKDE)/
 	@echo Installing lilypond stuff for expand Pate plugin:
@@ -110,8 +103,7 @@ install-plugin: lilykde/about.py
 uninstall-plugin:
 	@echo Uninstalling plugin and lilykde package:
 	rm -f $(PYPLUGINS)/lilypond.py*
-	rm -rf $(LILYKDE)/lilykde
-	rm -f $(LILYKDE)/hyphenator.py
+	cd $(LILYKDE)/ && rm -f $(modules) $(addsuffix c,$(modules))
 	rm -f $(LILYKDE)/runpty.py
 	rm -f $(PYPLUGINS)/expand/x-lilypond.conf
 
@@ -127,12 +119,3 @@ uninstall-servicemenu:
 	@echo Uninstalling Konqueror servicemenu:
 	rm -f $(SERVICEMENUDIR)/lilypond-servicemenu.desktop
 	rm -f $(LILYKDE)/lilypond-servicemenu-helper.py
-
-install-rumorscripts:
-	@echo Installing Rumor scripts:
-	@mkdir -p $(LILYKDE)/rumor
-	cp rumor/*.scm $(LILYKDE)/rumor/
-
-uninstall-rumorscripts:
-	@echo Uninstalling Rumor scripts:
-	rm -fr $(LILYKDE)/rumor
