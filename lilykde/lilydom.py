@@ -63,7 +63,7 @@ Example:
 """
 
 import re
-
+from rational import Rational
 
 # pitches
 # nl
@@ -417,6 +417,45 @@ class Node(object):
             if isinstance(obj, cls):
                 return obj
 
+    def previousSibling(self):
+        """
+        Return the object just before this one in the parent's list of children.
+        None if this is the first child, or if we have no parent.
+        """
+        if self.parent:
+            i = self.parent.index(self)
+            if i > 0:
+                return self.parent[i-1]
+
+    def nextSibling(self):
+        """
+        Return the object just after this one in the parent's list of children.
+        None if this is the last child, or if we have no parent.
+        """
+        if self.parent:
+            i = self.parent.index(self)
+            if i < len(self.parent) - 1:
+                return self.parent[i+1]
+
+    def previousSiblings(self):
+        """
+        Iterate (backwards) over the preceding items in our parent's
+        list of children.
+        """
+        obj = self.previousSibling()
+        while obj:
+            yield obj
+            obj = self.previousSibling()
+
+    def nextSiblings(self):
+        """
+        Iterate over the following items in our parent's list of children.
+        """
+        obj = self.nextSibling()
+        while obj:
+            yield obj
+            obj = self.nextSibling()
+
     def allDescendants(self, cls, depth = -1):
         """
         iterate over all children of the current node if they are of
@@ -644,7 +683,16 @@ class Container(Node):
             n.append(i.copy())
         return n
 
+    def index(self, obj):
+        """
+        Return the index of the given object in our list of children.
+        None if obj is not our child.
+        """
+        if obj in self.children:
+            return self.children.index(obj)
+
     def __len__(self):
+        """ Return the number of children """
         return len(self.children)
 
     def __getitem__(self, k):
@@ -932,15 +980,17 @@ class Pitch(Node):
     octave is specified by an integer, zero for the octave containing middle C.
     note is a number from 0 to 6, with 0 corresponding to pitch C and 6
     corresponding to pitch B.
-    alter is the number of whole tones for alteration (can be a Rational)
+    alter is the number of whole tones for alteration (can be int or Rational)
     """
-    attr_func = int
+    octave_func = int
+    note_func = int
+    alter_func = lambda s: Rational(*map(int,s.split('/')))
 
     def __init__(self, pdoc, octave = 0, note = 0, alter = 0):
         Node.__init__(self, pdoc)
         self.octave = octave
         self.note = note
-        self.alter = alter
+        self.alter = Rational(alter)
 
     def __str__(self):
         """
