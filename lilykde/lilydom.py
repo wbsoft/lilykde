@@ -117,6 +117,20 @@ def xmlescape(t):
         ('>', '&lt;'),
         ('"', '&quot;'),
         ('\n', '&#10;'),
+        ('\t', '&#9;'),
+    ):
+        t = t.replace(s, r)
+    return t
+
+def xmlunescape(t):
+    """ Unescape an XML attribute string """
+    t = re.compile(r'\&#(x)?(.*?);').sub(
+        lambda m: unichr(int(m.group(2), m.group(1) and 16 or 10)), t)
+    for s, r in (
+        ('<', '&gt;'),
+        ('>', '&lt;'),
+        ('"', '&quot;'),
+        ('&', '&amp;'),
     ):
         t = t.replace(s, r)
     return t
@@ -127,6 +141,31 @@ def xmlformatattrs(d):
     (of unicode objects) as a XML attribute string
     """
     return ''.join(' %s="%s"' % (k, xmlescape(v)) for k, v in d)
+
+def xmlattrs(s):
+    """
+    Return a interator over key, value pairs
+    of unescaped xml attributes from the string.
+    """
+    for m in re.compile(r'(\w+)\s*=\s*"(.*?)"').finditer(s):
+        yield m.group(1), xmlunescape(m.group(2))
+
+def xmltags(s):
+    """"
+    Returns an iterator that walks over all the XML elements in the
+    string (discarding text between the elements)
+    """
+    for m in re.compile(r'<(/)?(\w+)(.*?)(/)?>', re.DOTALL).finditer(s):
+        tag = m.group(2)
+        start = not m.group(1)
+        end = bool(m.group(1) or m.group(4))
+        attrs = xmlattrs(m.group(3))
+        yield tag, start, end, attrs
+
+
+
+
+
 
 # small helper functions to get strings out of generators
 def xml(obj):
@@ -153,6 +192,38 @@ class Document(object):
     def __str__(self):
         return indent(self.body)
 
+    def parseXml(self, s):
+        """
+        Parse a string of XML and return the object (with possible children).
+
+        All classes can define how their instance attributes should be
+        converted from string to the right type (int, bool, Rational, etc.)
+
+        If a class attribute attrName + '_func' exists, it is called.
+        Otherwise class attribute 'attr_func' is tried. If that also not
+        exists, the attribute remains a str/unicode object.
+        """
+        e = None
+        for tag, start, end, attrs in xmltags(s):
+            if start:
+                cls = eval(tag)
+                obj = object.__new__(cls)
+                obj.doc = self
+                if e:
+                    e.append(obj)
+                if issubclass(cls, Container):
+                    obj.children = []
+                for attr, value in attrs:
+                    f = getattr(cls, attr + '_func', None) or \
+                        getattr(cls, 'attr_func', lambda s:s)
+                    setattr(obj, attr, f(value))
+                e = obj
+            if end and e:
+                if e.parent:
+                    e = e.parent
+                else:
+                    return e
+
 
 class Node(object):
     """ Abstract base class """
@@ -170,6 +241,10 @@ class Node(object):
         else:
             pdoc.append(self)
             self.doc = pdoc.doc
+
+    def __nonzero__(self):
+        """ We are always true """
+        return True
 
     def iterDepthFirst(self, depth = -1):
         """
@@ -322,6 +397,8 @@ class Text(Node):
 
 class Comment(Text):
     """ A LilyPond comment line """
+    level_func = int
+
     def __init__(self, pdoc, text, level = 2):
         Text.__init__(self, pdoc, text)
         self.level = level
@@ -381,6 +458,7 @@ class Container(Node):
     fmt, join = '%s', ' '
     mfmt, mjoin = '%s\n', '\n'
     multiline = False
+    multiline_func = eval
 
     def __init__(self, pdoc, multiline=None):
         Node.__init__(self, pdoc)
@@ -733,6 +811,8 @@ class Pitch(Node):
     corresponding to pitch B.
     alter is the number of whole tones for alteration (can be a Rational)
     """
+    attr_func = int
+
     def __init__(self, pdoc, octave = 0, note = 0, alter = 0):
         Node.__init__(self, pdoc)
         self.octave = octave
