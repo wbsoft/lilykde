@@ -90,7 +90,43 @@ pitchInfo = {
         ('eses', 'eseh', 'es', 'eh', '', 'ih','is','isih','isis'),
         (('ees', 'es'), ('aes', 'as'))
     ),
+    'english': (
+        ('c','d','e','f','g','a','b'),
+        ('ff', 'tqf', 'f', 'qf', '', 'qs', 's', 'tqs', 'ss'),
+        (('flat', 'f'), ('sharp', 's'))
+    ),
+    'deutsch': (
+        ('c','d','e','f','g','a','h'),
+        ('eses', 'eseh', 'es', 'eh', '', 'ih','is','isih','isis'),
+        (('ees', 'es'), ('aes', 'as'), ('hes', 'b'))
+    ),
+    'svenska': (
+        ('c','d','e','f','g','a','h'),
+        ('essess', '', 'ess', '', '', '','iss','','ississ'),
+        (('ees', 'es'), ('aes', 'as'), ('hess', 'b'))
+    ),
+    'italiano': (
+        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
+        ('bb', 'bsb', 'b', 'sb', '', 'sd', 'd', 'dsd', 'dd')
+    ),
+    'espanol': (
+        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
+        ('bb', '', 'b', '', '', '', 's', '', 'ss')
+    ),
+    'portuges': (
+        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
+        ('bb', 'btqt', 'b', 'bqt', '', 'sqt', 's', 'stqt', 'ss')
+    ),
+    'vlaams': (
+        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
+        ('bb', '', 'b', '', '', '', 'k', '', 'kk')
+    ),
 }
+
+pitchInfo['norsk'] = pitchInfo['deutsch']
+pitchInfo['suomi'] = pitchInfo['deutsch']
+pitchInfo['catalan'] = pitchInfo['italiano']
+
 
 pitchNames = dict(
     (lang, pitchwriter(*data)) for lang, data in pitchInfo.iteritems())
@@ -144,8 +180,10 @@ def xmlformatattrs(d):
 
 def xmlattrs(s):
     """
-    Return a interator over key, value pairs
-    of unescaped xml attributes from the string.
+    Return a interator over key, value pairs of unescaped xml attributes
+    from the string.
+
+    This can be easily converted in a dict using dict(xmlattrs(string))
     """
     for m in re.compile(r'(\w+)\s*=\s*"(.*?)"').finditer(s):
         yield m.group(1), xmlunescape(m.group(2))
@@ -153,7 +191,15 @@ def xmlattrs(s):
 def xmltags(s):
     """"
     Returns an iterator that walks over all the XML elements in the
-    string (discarding text between the elements)
+    string (discarding text between the elements).
+
+    Each iteration consists of a four-tuple:
+        tag: the tag name
+        start: is this an opening tag? (bool)
+        end: is this a closing tag? (bool)
+        attrs: iterable over the attributes.
+
+    Both start and end can be true (with an empty <element/>).
     """
     for m in re.compile(r'<(/)?(\w+)(.*?)(/)?>', re.DOTALL).finditer(s):
         tag = m.group(2)
@@ -205,6 +251,18 @@ class Document(object):
     def __str__(self):
         return indent(self.body)
 
+
+    def toXml(self, encoding='UTF-8'):
+        """
+        Returns the document as an UTF-8 (by default) encoded XML string.
+        """
+        attrs = xmlformatattrs(
+            (k, unicode(v)) for k, v in vars(self).iteritems()
+            if k not in ('body',))
+        return '<?xml version="1.0" encoding="%s"?>\n' \
+            '<Document%s>\n%s</Document>\n' % (
+                encoding, attrs, ''.join(self.body.xml(1)))
+
     def parseXml(self, s):
         """
         Parse a string of XML and return the object (with possible children).
@@ -229,6 +287,42 @@ class Document(object):
                     return e
         # this is only reached when not all tags are closed properly.
         return e and e.toplevel()
+
+    @staticmethod
+    def fromXml(s):
+        """
+        Parse the XML string (containing a full Document) and return
+        a Document object.
+
+        If the string starts with an XML declaration with an encoding
+        pseudo attribute, the string is decoded first.
+        """
+        m = re.compile(
+            r'<\?xml.*?encoding\s*=\s*"(.*?)".*?\?>', re.DOTALL).match(s)
+        if m:
+            s = s.decode(m.group(1))
+        m = re.compile(
+            r'<Document\s*(.*?)>(.*?)</Document>', re.DOTALL).search(s)
+        if m:
+            doc = Document()
+            setattrs(doc, xmlattrs(m.group(1)))
+            doc.body = doc.parseXml(m.group(2))
+            return doc
+
+    def toXmlFile(self, filename, encoding='UTF-8'):
+        """
+        Write the document out to an XML file with default encoding UTF-8.
+        """
+        f = open(filename, 'w')
+        f.write(self.toXml(encoding))
+        f.close()
+
+    @staticmethod
+    def fromXmlFile(filename):
+        """
+        Read an XML document from a file and return the document object.
+        """
+        return Document.fromXml(open(filename).read())
 
 
 class Node(object):
