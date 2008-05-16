@@ -896,7 +896,7 @@ class EnclosedBase(Container):
     """
     The abstract base class for enclosed blocks (in << >>, { }, < >, etc.)
     """
-    pre, post = '', ''
+    pre, post = '{', '}'
 
     def __str__(self):
         s = super(EnclosedBase, self).__str__()
@@ -907,7 +907,6 @@ class EnclosedBase(Container):
 
 class Seq(EnclosedBase):
     """ Sequential expressions """
-    pre, post = '{', '}'
     pass
 
 
@@ -1067,7 +1066,6 @@ class Section(_Name, EnclosedBase):
     A section like \header, \score, \paper, \with, etc.
     with the children inside braces { }
     """
-    pre, post = '{', '}'
     multiline = True
     pass
 
@@ -1239,11 +1237,79 @@ class ContextProperty(Node):
 
     def __str__(self):
         if self.context:
-            f = '%s.%s'
-            # TODO: if in \lyricmode or \lyrics, spaces around dot.
+            # In \lyrics or \lyricmode: put spaces around dot.
+            p = self.findParentLike(InputMode)
+            if p and isinstance(p, LyricMode):
+                f = '%s . %s'
+            else:
+                f = '%s.%s'
             return f % (self.context, self.prop)
         else:
             return self.prop
+
+
+class InputMode(_Name, EnclosedBase):
+    """
+    The abstract base class for input modes such as lyricmode/lyrics,
+    chordmode/chords etc.
+    """
+    creates = None  # used in subclasses that create voices by themselves.
+    pass
+
+
+class ChordMode(InputMode):
+    name = 'chordmode'
+    pass
+
+
+class InputChords(ChordMode):
+    name = 'chords'
+    creates = ChordNames
+    pass
+
+
+class LyricMode(InputMode):
+    name = 'lyricmode'
+    pass
+
+
+class InputLyrics(LyricMode):
+    name = 'lyrics'
+    creates = Lyrics
+    pass
+
+
+class NoteMode(InputMode):
+    name = 'notemode'
+    pass
+
+
+class InputNotes(NoteMode):
+    name = 'notes'
+    creates = Voice
+    pass
+
+
+class FigureMode(InputMode):
+    name = 'figuremode'
+    pass
+
+
+class InputFigures(FigureMode):
+    name = 'figures'
+    creates = FiguredBass
+    pass
+
+
+class DrumMode(InputMode):
+    name = 'drummode'
+    pass
+
+
+class InputDrums(DrumMode):
+    name = 'drums'
+    creates = DrumStaff
+    pass
 
 
 class Pitch(Node):

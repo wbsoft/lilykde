@@ -15,7 +15,7 @@ class EDocument(Document):
 
     def make(self, arg):
         """
-        Inteprete python arg and return a suitable Node object.
+        Intepret python arg and return a suitable Node object.
         """
         if isinstance(arg, Node):
             return arg
