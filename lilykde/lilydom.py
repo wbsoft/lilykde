@@ -351,17 +351,25 @@ class Document(object):
                 setattr(d, i, a.__class__(a))
         return d
 
-    def toXml(self, encoding='UTF-8'):
+    def toXml(self):
         """
-        Returns the document as an UTF-8 (by default) encoded XML string.
+        Returns a string with the document as XML.
         """
         attrs = xmlformatattrs((k, unicode(v))
             for k, v in vars(self).iteritems()
             if not k.startswith('_'))
-        return ('<?xml version="1.0" encoding="%s"?>\n'
-                '<Document%s>\n%s</Document>\n' % (
-                    encoding, attrs, ''.join(self.body.xml(1))
-                )).encode(encoding)
+        return '<Document%s>\n%s</Document>\n' % (
+            attrs, ''.join(self.body.xml(1)))
+
+    def toXmlFile(self, filename, encoding='UTF-8'):
+        """
+        Write the document out to an XML file with default encoding UTF-8.
+        """
+        s = '<?xml version="1.0" encoding="%s"?>\n%s' % (
+            encoding, self.toXml())
+        f = open(filename, 'w')
+        f.write(s.encode(encoding))
+        f.close()
 
     def parseXml(self, s):
         """
@@ -411,106 +419,12 @@ class Document(object):
             doc.body = doc.parseXml(m.group(2))
             return doc
 
-    def toXmlFile(self, filename, encoding='UTF-8'):
-        """
-        Write the document out to an XML file with default encoding UTF-8.
-        """
-        f = open(filename, 'w')
-        f.write(self.toXml(encoding))
-        f.close()
-
     @staticmethod
     def fromXmlFile(filename):
         """
         Read an XML document from a file and return the document object.
         """
         return Document.fromXml(open(filename).read())
-
-
-    # helper methods to quickly instantiate certain Node objects:
-    def _smarkup(self, command, *args):
-        r"""
-        Evaluate all the args and create a simple markup command
-        like \italic, etc. enclosing the arguments.
-        """
-        obj = MarkupEncl(self, command)
-        for a in args:
-            if isinstance(a, basestring):
-                Text(obj, a)
-            elif isinstance(a, Node):
-                obj.append(a)
-        return obj
-
-    def smarkup(f):
-        """
-        Decorator that returns a simple markup-creating function, containing
-        a call to _smarkup with a command argument based on the function name.
-        """
-        def _smarkup_func(self, *args):
-            return self._smarkup(f.func_name.replace('_', '-'), *args)
-        _smarkup_func.__doc__ = f.__doc__
-        return _smarkup_func
-
-    #arrow-head axis (integer) direction (direction) filled (boolean)
-    #  Produce an arrow head in specified direction and axis.
-    #  Use the filled head if filled is specified.
-
-    #beam width (number) slope (number) thickness (number)
-    #  Create a beam with the specified parameters.
-
-    @smarkup
-    def bigger():
-        "Increase the font size relative to current setting."
-        pass
-
-    @smarkup
-    def bold():
-        "Switch to bold font-series."
-        pass
-
-    @smarkup
-    def box():
-        "Draw a box round arg."
-        pass
-
-    @smarkup
-    def bracket():
-        "Draw vertical brackets around arg"
-        pass
-
-    @smarkup
-    def caps():
-        "Emit arg as small caps."
-        pass
-
-    @smarkup
-    def center_align():
-        "Put args in a centered column."
-        pass
-
-    #char num
-    #Produce a single character. For example, \char #65 produces the letter A.
-
-    @smarkup
-    def circle():
-        "Draw a circle around arg."
-        pass
-
-    @smarkup
-    def column():
-        "Stack the markups in args vertically."
-        pass
-
-    #combine m1 (markup) m2 (markup)
-
-    @smarkup
-    def concat():
-        "Concatenate args in a horizontal line, without spaces inbetween."
-        pass
-
-
-    #...
-
 
 
 class Node(object):
@@ -970,6 +884,14 @@ class Version(Text):
         return r'\version "%s"' % self.text
 
 
+class Body(Container):
+    """
+    A vertical list of LilyPond lines/statements, joined with newlines.
+    """
+    multiline = True
+    pass
+
+
 class EnclosedBase(Container):
     """
     The abstract base class for enclosed blocks (in << >>, { }, < >, etc.)
@@ -981,15 +903,6 @@ class EnclosedBase(Container):
         join = ('\n' in s or s and self.multiline) and '\n' or ' '
         s = '\0'.join(i for i in (self.pre, s, self.post) if i)
         return s.replace('\n\0', '\n').replace('\0', join)
-
-
-class Body(EnclosedBase):
-    """
-    A vertical list of LilyPond lines/statements, joined with newlines.
-    """
-    pre, post = '', ''
-    multiline = True
-    pass
 
 
 class Seq(EnclosedBase):
