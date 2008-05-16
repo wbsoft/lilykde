@@ -285,6 +285,22 @@ def xmltags(s):
         attrs = xmlattrs(m.group(3))
         yield tag, start, end, attrs
 
+def getfactory(value):
+    """
+    Determines what function to call to instantiate a new object of the same
+    type as the object in value, from a string representation.
+
+    You can also set the class attrs to their type, but then be sure to shadow
+    them away with instance attrs! See e.g. Pitch and Duration classes.
+    """
+    t = type(value)
+    if t is type:
+        t = value
+    return {
+        bool: eval,
+        Rational: str2rat,
+    }.get(t, t)
+
 def setattrs(obj, attrs):
     """
     Sets attributes of the object to values from the attrs iterable.
@@ -293,14 +309,17 @@ def setattrs(obj, attrs):
     Class attributes of the object's class are consulted to determine
     if the attr needs to be converted from str/unicode to something else.
 
+    If a class attribute attrName exists, it's type is used as the
+    the factory for the new attribute.
+
     If a class attribute attrName + '_func' exists, it is called.
     Otherwise class attribute 'attr_func' is tried. If that also not
     exists, the attribute remains a str/unicode object.
     """
     cls = obj.__class__
     for attr, value in attrs:
-        f = getattr(cls, attr + '_func', None) or \
-            getattr(cls, 'attr_func', lambda s:s)
+        f = hasattr(cls, attr) and getfactory(getattr(cls, attr)) or \
+            getattr(cls, 'attr_factory', unicode)
         setattr(obj, attr, f(value))
 
 # small helper functions to get strings out of generators
@@ -646,7 +665,6 @@ class Container(Node):
     """ (abstract) Contains bundled expressions """
 
     multiline = False
-    multiline_func = eval
 
     def __new__(cls, pdoc, *args, **kwargs):
         obj = Node.__new__(cls, pdoc)
@@ -831,11 +849,12 @@ class Newline(Node):
 
 class Comment(Text):
     """ A LilyPond comment line """
-    level_func = int
+    level = 2
 
-    def __init__(self, pdoc, text, level = 2):
+    def __init__(self, pdoc, text, level = None):
         self.text = text
-        self.level = level
+        if level is not None:
+            self.level = level
 
     def __str__(self):
         if self.level <= self.doc.commentLevel:
@@ -1137,7 +1156,6 @@ class ContextType(Container):
     cid = ''
     name = '' # only used in subclasses!
     newcontext = True
-    newcontext_func = eval
 
     def __init__(self, pdoc, cid = '', new = None):
         if cid:
@@ -1320,9 +1338,9 @@ class Pitch(Node):
     corresponding to pitch B.
     alter is the number of whole tones for alteration (can be int or Rational)
     """
-    octave_func = int
-    note_func = int
-    alter_func = staticmethod(str2rat)
+    octave = int
+    note = int
+    alter = Rational
 
     def __init__(self, pdoc, octave = 0, note = 0, alter = 0):
         self.octave = octave
@@ -1348,10 +1366,9 @@ class Duration(Node):
     dots (number of dots),
     factor (Rational giving the scaling of the duration).
     """
-
-    dur_func = int
-    dots_func = int
-    factor_func = staticmethod(str2rat)
+    dur = int
+    dots = int
+    factor = Rational
 
     def __init__(self, pdoc, dur, dots = 0, factor = 1):
         self.dur = dur # log
@@ -1386,8 +1403,8 @@ class KeySignature(Node):
     The pitch should be given in the arguments note and alter and is written
     out in the document's language.
     """
-    note_func = int
-    alter_func = staticmethod(str2rat)
+    note = int
+    alter = Rational
 
     def __init__(self, pdoc, note = 0, alter = 0, mode = "major"):
         self.note = note
@@ -1403,7 +1420,7 @@ class TimeSignature(Node):
     r"""
     A time signature, like: \time 4/4
     """
-    attr_func = int
+    attr_factory = int
 
     def __init__(self, pdoc, num, beat):
         self.num = num
