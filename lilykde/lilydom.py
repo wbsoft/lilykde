@@ -1,4 +1,4 @@
-"""
+r"""
 LilyPond DOM
 
 (c) 2008 Wilbert Berendsen
@@ -15,11 +15,11 @@ All elements of a LilyPond document inherit Node.
 the main branches of Node are:
     - Text: contains a string, cannot have child Nodes.
     - Container: contains child Node objects and optional pre, join and post
-            text. You can find the child nodes in children, but never keep
-            pointers to that list, nor change the values from outside!
+        text. You can access the child nodes using the [] syntax. This also
+        supports slices.
 
 The main document is represented by a Document object.
-The contents of the document are in doc.body , which is a Container node,
+The contents of the document are in doc.body , which is a Body node,
 created by default.
 
 You create nodes by instantiating them.
@@ -36,32 +36,103 @@ Every Node keeps a reference to its parent in .parent, and its doc in .doc.
 Example:
 
 >>> from lilydom import *
->>> d=Document()
->>> d.body
-<Body>
->>> Text(d.body, '\\version "2.11.46"')
-<Text> \version "2.11.46"
->>> print d
-\version "2.11.46"
-
->>> h=Header(d.body)
+>>> d = Document()
+>>> b = d.body
+>>> Version(b, '2.11.46')
+<Version> \version "2.11.46"
+>>> s = Sim(Score(b), multiline=True)
+>>> man = Sim(PianoStaff(s), multiline=True)
+>>> ped = Seq(Staff(s))
+>>> r = Seq(Staff(man, 'right'))
+>>> l = Seq(Staff(man, 'left'))
+>>> h = Header(d)
+>>> b.insert(1, h)
 >>> h['composer'] = "Johann Sebastian Bach" #Header autogenerates some subnodes!
->>> h
-<Header> \header { composer = "Johann Sebastian B...
->>> tree(h)
-<Header> \header { composer = "Johann Sebastian B...
-  <HeaderEntry> composer = "Johann Sebastian Bach"
-    <QuotedString> "Johann Sebastian Bach"
->>> print h.pretty()
-\header {
-  composer = "Johann Sebastian Bach"
-}
+>>> h['title'] = "Prelude and Fuge in C Major"
 >>> print d
 \version "2.11.46"
+
 \header {
   composer = "Johann Sebastian Bach"
+  title = "Prelude and Fuge in C Major"
 }
 
+\score {
+  <<
+    \new PianoStaff <<
+      \new Staff = "right" {  }
+      \new Staff = "left" {  }
+    >>
+    \new Staff {  }
+  >>
+}
+
+You can always get to any element later and edit it:
+>>> man.parent.instrName('Manuals','Man.')
+>>> print d
+\version "2.11.46"
+
+\header {
+  composer = "Johann Sebastian Bach"
+  title = "Prelude and Fuge in C Major"
+}
+
+\score {
+  <<
+    \new PianoStaff \with {
+      instrumentName = "Manuals"
+      shortInstrumentName = "Man."
+    } <<
+      \new Staff = "right" {  }
+      \new Staff = "left" {  }
+    >>
+    \new Staff {  }
+  >>
+}
+
+There is also fairly simple XML support. LilyDOM can save and load
+the XML structure of a Document (and also of any particular node):
+
+>>> print d.toXml()
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+  <Body>
+    <Version text="2.11.46"/>
+    <Header>
+      <HeaderEntry name="composer">
+        <QuotedString text="Johann Sebastian Bach"/>
+      </HeaderEntry>
+      <HeaderEntry name="title">
+        <QuotedString text="Prelude and Fuge in C Major"/>
+      </HeaderEntry>
+    </Header>
+    <Score>
+      <Sim multiline="True">
+        <PianoStaff>
+          <With>
+            <Assignment name="instrumentName">
+              <QuotedString text="Manuals"/>
+            </Assignment>
+            <Assignment name="shortInstrumentName">
+              <QuotedString text="Man."/>
+            </Assignment>
+          </With>
+          <Sim multiline="True">
+            <Staff cid="right">
+              <Seq/>
+            </Staff>
+            <Staff cid="left">
+              <Seq/>
+            </Staff>
+          </Sim>
+        </PianoStaff>
+        <Staff>
+          <Seq/>
+        </Staff>
+      </Sim>
+    </Score>
+  </Body>
+</Document>
 
 """
 
@@ -147,6 +218,8 @@ def indentGen(sourceLines, indentStr = '  ', d = 0):
             d += 1
 
 
+# XML utility functions
+
 def xmlescape(t):
     """ Escapes a string so that it can be used in an xml attribute """
     for s, r in (
@@ -154,6 +227,7 @@ def xmlescape(t):
         ('<', '&gt;'),
         ('>', '&lt;'),
         ('"', '&quot;'),
+        ("'", '&apos;'),
         ('\n', '&#10;'),
         ('\t', '&#9;'),
     ):
@@ -165,10 +239,11 @@ def xmlunescape(t):
     t = re.compile(r'\&#(x)?(.*?);').sub(
         lambda m: unichr(int(m.group(2), m.group(1) and 16 or 10)), t)
     for s, r in (
-        ('<', '&gt;'),
-        ('>', '&lt;'),
-        ('"', '&quot;'),
-        ('&', '&amp;'),
+        ('&gt;', '<'),
+        ('&lt;', '>'),
+        ('&quot;', '"'),
+        ('&apos;', "'"),
+        ('&amp;', '&'),
     ):
         t = t.replace(s, r)
     return t
@@ -238,6 +313,11 @@ def indent(obj):
     return ''.join(obj.indent())
 
 
+def str2rat(s):
+    """Converts a string like '1/2' to a Rational"""
+    return Rational(*map(int,s.split('/')))
+
+
 class Document(object):
     """ A single LilyPond document """
 
@@ -250,24 +330,43 @@ class Document(object):
     def __init__(self):
         self.body = Body(self)
 
-    def __str__(self):
-        return indent(self.body)
+    def _getbody(self):
+        return self._body
+    def _setbody(self, body):
+        assert isinstance(body, Node)
+        self._body = body
+    body = property(_getbody, _setbody)
 
+    def __str__(self):
+        """ Return the LilyPond document, formatted and indented. """
+        return ''.join(self.body.indent())
+
+    def copy(self):
+        """ Return a deep copy of the document. """
+        d = Document()
+        d.body = self.body.copy()
+        for i in vars(self):
+            if not i.startswith('_'):
+                a = getattr(self, i)
+                setattr(d, i, a.__class__(a))
+        return d
 
     def toXml(self, encoding='UTF-8'):
         """
         Returns the document as an UTF-8 (by default) encoded XML string.
         """
-        attrs = xmlformatattrs(
-            (k, unicode(v)) for k, v in vars(self).iteritems()
-            if k not in ('body',))
-        return '<?xml version="1.0" encoding="%s"?>\n' \
-            '<Document%s>\n%s</Document>\n' % (
-                encoding, attrs, ''.join(self.body.xml(1)))
+        attrs = xmlformatattrs((k, unicode(v))
+            for k, v in vars(self).iteritems()
+            if not k.startswith('_'))
+        return ('<?xml version="1.0" encoding="%s"?>\n'
+                '<Document%s>\n%s</Document>\n' % (
+                    encoding, attrs, ''.join(self.body.xml(1))
+                )).encode(encoding)
 
     def parseXml(self, s):
         """
-        Parse a string of XML and return the object (with possible children).
+        Parse a string of XML and return the Node object (with possible
+        children).
 
         All classes can define how their instance attributes should be
         converted from string to the right type (int, bool, Rational, etc.)
@@ -280,7 +379,8 @@ class Document(object):
         for tag, start, end, attrs in xmltags(s):
             if start:
                 cls = eval(tag)
-                e = cls.new(self, e)
+                assert issubclass(cls, Node)
+                e = cls.__new__(cls, e or self)
                 setattrs(e, attrs)
             if end and e:
                 if e.parent:
@@ -327,34 +427,119 @@ class Document(object):
         return Document.fromXml(open(filename).read())
 
 
+    # helper methods to quickly instantiate certain Node objects:
+    def _smarkup(self, command, *args):
+        r"""
+        Evaluate all the args and create a simple markup command
+        like \italic, etc. enclosing the arguments.
+        """
+        obj = MarkupEncl(self, command)
+        for a in args:
+            if isinstance(a, basestring):
+                Text(obj, a)
+            elif isinstance(a, Node):
+                obj.append(a)
+        return obj
+
+    def smarkup(f):
+        """
+        Decorator that returns a simple markup-creating function, containing
+        a call to _smarkup with a command argument based on the function name.
+        """
+        def _smarkup_func(self, *args):
+            return self._smarkup(f.func_name.replace('_', '-'), *args)
+        _smarkup_func.__doc__ = f.__doc__
+        return _smarkup_func
+
+    #arrow-head axis (integer) direction (direction) filled (boolean)
+    #  Produce an arrow head in specified direction and axis.
+    #  Use the filled head if filled is specified.
+
+    #beam width (number) slope (number) thickness (number)
+    #  Create a beam with the specified parameters.
+
+    @smarkup
+    def bigger():
+        "Increase the font size relative to current setting."
+        pass
+
+    @smarkup
+    def bold():
+        "Switch to bold font-series."
+        pass
+
+    @smarkup
+    def box():
+        "Draw a box round arg."
+        pass
+
+    @smarkup
+    def bracket():
+        "Draw vertical brackets around arg"
+        pass
+
+    @smarkup
+    def caps():
+        "Emit arg as small caps."
+        pass
+
+    @smarkup
+    def center_align():
+        "Put args in a centered column."
+        pass
+
+    #char num
+    #Produce a single character. For example, \char #65 produces the letter A.
+
+    @smarkup
+    def circle():
+        "Draw a circle around arg."
+        pass
+
+    @smarkup
+    def column():
+        "Stack the markups in args vertically."
+        pass
+
+    #combine m1 (markup) m2 (markup)
+
+    @smarkup
+    def concat():
+        "Concatenate args in a horizontal line, without spaces inbetween."
+        pass
+
+
+    #...
+
+
+
 class Node(object):
     """ Abstract base class """
 
-    parent = None
-
-    def __init__(self, pdoc):
+    def __new__(cls, pdoc, *args, **kwargs):
         """
         if pdoc is a Document, save a pointer.
         if pdoc is a Node, append self to parent, and
         keep a pointer of the parent's doc.
         """
-        if isinstance(pdoc, Document):
-            self.doc = pdoc
-        else:
-            pdoc.append(self)
-            self.doc = pdoc.doc
-
-    @classmethod
-    def new(cls, doc, parent = None):
-        """
-        Create new instance without calling __init__.
-        Useful for importing and cloning.
-        """
         obj = object.__new__(cls)
-        obj.doc = doc
-        if parent:
-            parent.append(obj)
+        obj._parent = None
+        if isinstance(pdoc, Document):
+            obj._doc = pdoc
+        else:
+            assert isinstance(pdoc, Node)
+            obj._doc = pdoc._doc
+            pdoc.append(obj)
         return obj
+
+    doc = property(lambda self: self._doc)
+
+    def _getparent(self):
+        return self._parent
+    def _setparent(self, value):
+        self._parent = value
+    parent = property(_getparent, _setparent,
+            doc = "The parent Node of this Node.")
 
     def __nonzero__(self):
         """ We are always true """
@@ -388,11 +573,16 @@ class Node(object):
 
     def reparent(self, newParent):
         """
-        Don't use this yourself, normally append, insert, replace will
-        handle everything.
+        Don't use this yourself.
+        Normally append, insert and replace will handle everything.
+        If the new parent belongs to another document, all our descendants
+        will be moved over to the new document.
         """
         self.removeFromParent()
         self.parent = newParent
+        if newParent._doc is not self._doc:
+            for i in self.iterDepthFirst():
+                i._doc = newParent._doc
 
     def ancestors(self):
         """ climb the tree up over the parents """
@@ -458,18 +648,18 @@ class Node(object):
             yield obj
             obj = self.nextSibling()
 
-    def allDescendants(self, cls, depth = -1):
+    def descendants(self, cls, depth = -1):
         """
-        iterate over all children of the current node if they are of
+        iterate over all descendants of the current node if they are of
         the exact class cls.
         """
         for obj in self.iterDepthLast(depth):
             if obj.__class__ is cls:
                 yield obj
 
-    def allDescendantsLike(self, cls, depth = -1):
+    def descendantsLike(self, cls, depth = -1):
         """
-        iterate over all children of the current node if they are of
+        iterate over all descendants of the current node if they are of
         the class cls or a subclass.
         """
         for obj in self.iterDepthLast(depth):
@@ -499,9 +689,9 @@ class Node(object):
         Return a deep copy of this object, as a dangling tree belonging
         to the same document.
         """
-        n = self.__class__.new(self.doc)
+        n = self.__class__.__new__(self.__class__, self.doc)
         for i in vars(self):
-            if i not in ('doc', 'children', 'parent'):
+            if not i.startswith('_'):
                 a = getattr(self, i)
                 setattr(n, i, a.__class__(a))
         return n
@@ -526,7 +716,7 @@ class Node(object):
         rendered using unicode.
         """
         return ((k, unicode(v)) for k, v in vars(self).iteritems()
-            if k not in ('doc', 'children', 'parent'))
+            if not k.startswith('_'))
 
     def xml(self, indent = 0):
         """
@@ -540,99 +730,71 @@ class Node(object):
 
 class Container(Node):
     """ (abstract) Contains bundled expressions """
-    fmt, join = '%s', ' '
-    mfmt, mjoin = '%s\n', '\n'
+
     multiline = False
     multiline_func = eval
 
-    def __init__(self, pdoc, multiline=None):
-        Node.__init__(self, pdoc)
-        self.children = []
-        if multiline is not None:
-            self.multiline = multiline
-
-    @classmethod
-    def new(cls, doc, parent = None):
-        """
-        Create new instance without calling __init__.
-        Useful for importing and cloning.
-        """
-        obj = object.__new__(cls)
-        obj.doc = doc
-        obj.children = []
-        if parent:
-            parent.append(obj)
+    def __new__(cls, pdoc, *args, **kwargs):
+        obj = Node.__new__(cls, pdoc)
+        obj._children = []
+        if 'multiline' in kwargs:
+            obj.multiline = kwargs['multiline']
         return obj
+
+    def index(self, obj):
+        """
+        Return the index of the given object in our list of children.
+        """
+        return self._children.index(obj)
 
     def append(self, obj):
         """
         Appends an object to the current node. It will be reparented, that
         means it will be removed from it's former parent (if it had one).
         """
-        self.children.append(obj)
+        assert isinstance(obj, Node)
+        self._children.append(obj)
         obj.reparent(self)
 
     def insert(self, where, obj):
         """
         Insert at index, or just before another node.
         """
+        assert isinstance(obj, Node)
         if isinstance(where, Node):
-           where = self.children.index(where)
+           where = self.index(where)
         obj.reparent(self)
-        self.children.insert(where, obj)
+        self._children.insert(where, obj)
 
     def remove(self, obj):
         """
         Removes the given child object.
         See also: removeFromParent()
         """
-        self.children.remove(obj)
+        self._children.remove(obj)
         obj.parent = None
 
-    def replace(self, what, repl):
+    def replace(self, what, obj):
         """
         Replace child at index or specified Node with a replacement object.
         """
+        assert isinstance(obj, Node)
         if isinstance(what, Node):
             old = what
-            what = self.children.index(what)
+            what = self.index(what)
         else:
-            old = self.children[what]
-        repl.reparent(self)
-        self.children[what] = repl
+            old = self[what]
+        obj.reparent(self)
+        self._children[what] = obj
         old.parent = None
-
-    def clear(self):
-        """ Remove all children """
-        for n in self.children:
-            n.parent = None
-        self.children = []
-
-    def copy(self):
-        """
-        Return a deep copy of this object, as a dangling tree belonging
-        to the same document.
-        """
-        n = Node.copy(self)
-        for i in self.children:
-            n.append(i.copy())
-        return n
-
-    def index(self, obj):
-        """
-        Return the index of the given object in our list of children.
-        None if obj is not our child.
-        """
-        if obj in self.children:
-            return self.children.index(obj)
 
     def __len__(self):
         """ Return the number of children """
-        return len(self.children)
+        return len(self._children)
 
     def __getitem__(self, k):
         """ also supports slices """
-        return self.children[k]
+        return self._children[k]
 
     def __setitem__(self, k, obj):
         """ also supports slices """
@@ -655,21 +817,36 @@ class Container(Node):
             self.replace(k, obj)
 
     def __delitem__(self, k):
+        """ also supports slices """
         if isinstance(k, slice):
-            for i in self.children[k]:
+            for i in self[k]:
                 self.remove(i)
         else:
-            self.remove(self.children[k])
+            self.remove(self[k])
 
     def __contains__(self, obj):
-        return obj in self.children
+        return obj in self._children
+
+    def clear(self):
+        """ Remove all children """
+        del self[:]
+
+    def copy(self):
+        """
+        Return a deep copy of this object, as a dangling tree belonging
+        to the same document.
+        """
+        n = super(Container, self).copy()
+        for i in self:
+            n.append(i.copy())
+        return n
 
     def __str__(self):
-        if self.multiline and self.children:
-            f, j = self.mfmt, self.mjoin
-        else:
-            f, j = self.fmt, self.join
-        return f % j.join(unicode(i) for i in self.children)
+        join = self.multiline and '\n' or ' '
+        # while joining, remove the join character if the previous
+        # element already ends with a newline (e.g. a comment).
+        s = '\0'.join(i for i in map(unicode, self) if i)
+        return s.replace('\n\0', '\n').replace('\0\n', '\n').replace('\0', join)
 
     def iterDepthFirst(self, depth = -1):
         """
@@ -678,7 +855,7 @@ class Container(Node):
         """
         yield self
         if depth != 0:
-            for i in self.children:
+            for i in self:
                 for j in i.iterDepthFirst(depth - 1):
                     yield j
 
@@ -691,9 +868,9 @@ class Container(Node):
         if ring == 0:
             yield self
         if ring != depth:
-            for i in self.children:
+            for i in self:
                 yield i
-            for i in self.children:
+            for i in self:
                 for j in i.iterDepthLast(depth, ring + 1):
                     yield j
 
@@ -704,9 +881,9 @@ class Container(Node):
         ind = self.doc.xmlIndentStr * indent
         tag = self.__class__.__name__
         attrs = xmlformatattrs(self.xmlattrs())
-        if self.children:
+        if len(self):
             yield '%s<%s%s>\n' % (ind, tag, attrs)
-            for i in self.children:
+            for i in self:
                 for x in i.xml(indent + 1):
                     yield x
             yield '%s</%s>\n' % (ind, tag)
@@ -717,18 +894,33 @@ class Container(Node):
 class Text(Node):
     """ Any piece of text """
     def __init__(self, pdoc, text):
-        Node.__init__(self, pdoc)
         self.text = text
 
     def __str__(self):
         return self.text
+
+
+class Newline(Node):
+    """
+    One or more newlines.
+    Use this to go to a new line or insert blank lines.
+    """
+    count = 1
+
+    def __init__(self, pdoc, count = None):
+        if count is not None:
+            self.count = count
+
+    def __str__(self):
+        return '\n' * self.count
+
 
 class Comment(Text):
     """ A LilyPond comment line """
     level_func = int
 
     def __init__(self, pdoc, text, level = 2):
-        Text.__init__(self, pdoc, text)
+        self.text = text
         self.level = level
 
     def __str__(self):
@@ -738,23 +930,18 @@ class Comment(Text):
             return ''
 
     def _outputComment(self):
-        result = '\n'.join('%% %s' % i for i in self.text.splitlines())
-        # don't add a newline if the parent joins children using newlines.
-        if not self.parent or not self.parent.multiline:
-            result += '\n'
-        return result
+        # comment lines end with a newline.
+        return ''.join('%%%s\n' % i for i in self.text.splitlines())
 
 
-class MultiLineComment(Comment):
+class BlockComment(Comment):
     """ A LilyPond comment block. The block must not contain a %} . """
     def _outputComment(self):
-        return '%%{\n%s\n%%}' % self.text.strip()
-
-
-class SmallComment(Comment):
-    """ A very small comment in %{ %}. The text should not contain \n . """
-    def _outputComment(self):
-        return '%%{ %s %%}' % self.text.strip()
+        t = self.text.replace('%}', '')
+        if '\n' in t:
+            return '%%{\n%s\n%%}' % t.strip()
+        else:
+            return '%%{ %s %%}' % t.strip()
 
 
 class QuotedString(Text):
@@ -777,63 +964,79 @@ class Scheme(Text):
         return '#%s' % self.text
 
 
-class Version(Node):
+class Version(Text):
     """ a LilyPond version instruction """
-    def __init__(self, pdoc, version):
-        Node.__init__(self, pdoc)
-        self.version = version
+    def __str__(self):
+        return r'\version "%s"' % self.text
+
+
+class EnclosedBase(Container):
+    """
+    The abstract base class for enclosed blocks (in << >>, { }, < >, etc.)
+    """
+    pre, post = '', ''
 
     def __str__(self):
-        return r'\version "%s"' % self.version
+        s = super(EnclosedBase, self).__str__()
+        join = ('\n' in s or s and self.multiline) and '\n' or ' '
+        s = '\0'.join(i for i in (self.pre, s, self.post) if i)
+        return s.replace('\n\0', '\n').replace('\0', join)
 
 
-class Body(Container):
-    """ Just a sequence of lines or other blocks of Lily code """
-    mjoin = '\n\n'
+class Body(EnclosedBase):
+    """
+    A vertical list of LilyPond lines/statements, joined with newlines.
+    """
+    pre, post = '', ''
     multiline = True
     pass
 
 
-class Sim(Container):
-    """ Simultaneous expressions """
-    fmt = '<< %s >>'
-    mfmt = '<<\n%s\n>>'
-    pass
-
-
-class Seq(Container):
+class Seq(EnclosedBase):
     """ Sequential expressions """
-    fmt = '{ %s }'
-    mfmt = '{\n%s\n}'
+    pre, post = '{', '}'
     pass
 
 
-class _RemoveIfOneChild(object):
-    """ (mixin) removes formatting if exactly one child """
+class Sim(EnclosedBase):
+    """ Simultaneous expressions """
+    pre, post = '<<', '>>'
+    pass
+
+
+class _RemoveFormattingIfOneChild(object):
+    """
+    (Mixin)
+    Removes formatting if the element has exactly one child, and that child
+    is not a Text node with spaces in it.
+    """
     def __str__(self):
-        if len(self.children) == 1:
-            return unicode(self.children[0])
+        if len(self) != 1 or isinstance(self[0], Text) \
+                and len(self[0].text.split()) != 1:
+            return super(_RemoveFormattingIfOneChild, self).__str__()
         else:
-            return Container.__str__(self)
+            return unicode(self[0])
 
 
-class Simr(_RemoveIfOneChild, Sim): pass
-class Seqr(_RemoveIfOneChild, Seq): pass
+class _RemoveIfEmpty(object):
+    """ (mixin) Do not output anything if we have no children """
+    def __str__(self):
+        if len(self):
+            return super(_RemoveIfEmpty, self).__str__()
+        else:
+            return ''
 
 
-class SimPoly(Sim):
-    """ Simultaneous polyphonic expressions """
-    join, mjoin = r' \\ ', '\n\\\\\n'
-    pass
+class Seqr(_RemoveFormattingIfOneChild, Seq): pass
+class Simr(_RemoveFormattingIfOneChild, Sim): pass
 
 
 class Assignment(Container):
     """ A varname = value construct with it's value as its first child """
     nullStr = '""'
 
-    def __init__(self, pdoc, varName, valueObj = None):
-        Container.__init__(self, pdoc)
-        self.varName = varName
+    def __init__(self, pdoc, name, valueObj=None):
+        self.name = name
         if valueObj:
             self.append(valueObj)
 
@@ -843,25 +1046,25 @@ class Assignment(Container):
         self.append(obj)
 
     def value(self):
-        if self.children:
-            return self.children[0]
+        if len(self):
+            return self[0]
 
     def __str__(self):
-        return '%s = %s' % (self.varName, unicode(self.value() or self.nullStr))
+        return '%s = %s' % (self.name, unicode(self.value() or self.nullStr))
 
 
-def ifbasestring(cls = Container):
+class Identifier(Node):
+    r"""
+    An identifier, prints as \name.
+
+    The name can refer to e.g. Assignments that are in the toplevel,
+    to find the contents of the identifier.
     """
-    Ensure that the method is only called for basestring objects.
-    Otherwise the same method from (by default) Container is called.
-    """
-    def dec(func):
-        cont = getattr(cls, func.func_name)
-        def newfunc(obj, varName, *args):
-            f = isinstance(varName, basestring) and func or cont
-            return f(obj, varName, *args)
-        return newfunc
-    return dec
+    def __init__(self, pdoc, name):
+        self.name = name
+
+    def __str__(self):
+        return '\\%s' % self.name
 
 
 class _HandleVars(object):
@@ -884,32 +1087,45 @@ class _HandleVars(object):
         Iterate over name, value pairs. To create a dict:
         dict(h.all())
         """
-        for i in self.allDescendantsLike(self.childClass, 1):
-            yield i.varName, i.value()
+        for i in self.descendantsLike(self.childClass, 1):
+            yield i.name, i.value()
 
-    @ifbasestring()
-    def __getitem__(self, varName):
-        for i in self.allDescendantsLike(self.childClass, 1):
-            if i.varName == varName:
+    def ifbasestring(func):
+        """
+        Ensure that the method is only called for basestring objects.
+        Otherwise the same method from the super class is called.
+        """
+        def newfunc(obj, name, *args):
+            if isinstance(name, basestring):
+                return func(obj, name, *args)
+            else:
+                f = getattr(super(_HandleVars, obj), func.func_name)
+                return f(name, *args)
+        return newfunc
+
+    @ifbasestring
+    def __getitem__(self, name):
+        for i in self.descendantsLike(self.childClass, 1):
+            if i.name == name:
                 return i
 
-    @ifbasestring()
-    def __setitem__(self, varName, valueObj):
+    @ifbasestring
+    def __setitem__(self, name, valueObj):
         if not isinstance(valueObj, Node):
             valueObj = self.importNode(valueObj)
-        h = self[varName]
+        h = self[name]
         if h:
             h.setValue(valueObj)
         else:
-            self.childClass(self, varName, valueObj)
+            self.childClass(self, name, valueObj)
 
-    @ifbasestring()
-    def __contains__(self, varName):
-        return bool(self[varName])
+    @ifbasestring
+    def __contains__(self, name):
+        return bool(self[name])
 
-    @ifbasestring()
-    def __delitem__(self, varName):
-        h = self[varName]
+    @ifbasestring
+    def __delitem__(self, name):
+        h = self[name]
         if h:
             self.remove(h)
 
@@ -921,106 +1137,132 @@ class _HandleVars(object):
         return QuotedString(self.doc, obj)
 
 
-class Section(Container):
-    """
+class _Name(object):
+    """ (Mixin) prints a prefix, useable for a command """
+    name = ''
+    def __str__(self):
+        s = super(_Name, self).__str__()
+        if s:
+            return '\\%s %s' % (self.name, s)
+        else:
+            return '\\%s' % self.name
+
+
+class Section(_Name, EnclosedBase):
+    r"""
     (abstract)
     A section like \header, \score, \paper, \with, etc.
     with the children inside braces { }
     """
-    fmt = '{ %s }'
-    mfmt = '{\n%s\n}'
+    pre, post = '{', '}'
     multiline = True
-    secName = ''
-    def __str__(self):
-        return '\\%s %s' % (self.secName, Container.__str__(self))
+    pass
 
 
 class Book(Section):
-    """ A \book should only contain \score or \paper blocks """
-    secName = 'book'
+    r""" A \book should only contain \score or \paper blocks """
+    name = 'book'
     pass
 
 
 class Score(Section):
-    secName = 'score'
+    name = 'score'
     pass
 
 
 class Paper(_HandleVars, Section):
-    secName = 'paper'
+    name = 'paper'
     pass
 
 
 class HeaderEntry(Assignment):
-    """ A header with it's value as its first child """
+    """ A header with its value as its first child """
     pass
 
 
 class Header(_HandleVars, Section):
-    secName = 'header'
+    name = 'header'
     childClass = HeaderEntry
     pass
 
 
 class Layout(_HandleVars, Section):
-    secName = 'layout'
+    name = 'layout'
     pass
 
 
 class Midi(_HandleVars, Section):
-    secName = 'midi'
+    name = 'midi'
     pass
 
 
-class Context(Section):
-    secName = 'context'
+class With(_RemoveIfEmpty, _HandleVars, Section):
+    name = 'with'
     pass
 
 
-class With(Section):
-    secName = 'with'
-    pass
+class Context(With):
+    name = 'context'
+
+    def __init__(self, pdoc, name = None, **kwargs):
+        if name is not None:
+            ContextName(self, name)
 
 
-class Music(Container):
-    pass
+class ContextName(Text):
+    def __str__(self):
+        return '\\%s' % self.text
 
 
-class Relative(Music):
-    """
-    relative <pitch> music
+class ContextType(Container):
+    r"""
+    \new or \context Staff = 'bla' \with { } << music >>
 
-    You should add a Pitch (optionally) and another music object,
-    e.g. Sim or Seq, etc.
-    """
-    fmt = '\\relative %s'
-    pass
-
-
-class ContextType(Music):
-    """
-    \new or \context Staff = 'bla' < > etc.
-
-    You should optionally add a \with section and (obligate) another
-    music object.
+    A \with (With) element is added automatically as the first child as soon
+    as you use our convenience methods that manipulate the variables
+    in \with. If the \with element is empty, it does not print anything.
+    You should add one other music object to this.
     """
     cid = ''
-    new = True
-    new_func = eval
+    name = '' # only used in subclasses!
+    newcontext = True
+    newcontext_func = eval
 
     def __init__(self, pdoc, cid = '', new = None):
-        Music.__init__(self, pdoc)
         if cid:
             self.cid = cid # LilyPond context id
         if new is not None:
-            self.new = new # print \new (True) or \context (False)
+            self.newcontext = new # print \new (True) or \context (False)
 
     def __str__(self):
-        res = [self.new and '\\new' or '\\context', self.__class__.__name__]
+        res = [self.newcontext and '\\new' or '\\context',
+            self.name or self.__class__.__name__]
         if self.cid:
-            res.extend(['=', '"%s"' % self.cid])
-        res.append(Music.__str__(self))
+            res.append('= "%s"' % self.cid)
+        res.append(super(ContextType, self).__str__())
         return ' '.join(res)
+
+    def instrName(self, longName = None, shortName = None):
+        """
+        Puts instrumentName assignments in the attached with clause.
+        """
+        w = self.getWith()
+        if longName is None:
+            del w['instrumentName']
+        else:
+            w['instrumentName'] = longName
+        if shortName is None:
+            del w['shortInstrumentName']
+        else:
+            w['shortInstrumentName'] = shortName
+
+    def getWith(self):
+        """
+        Gets the attached with clause. Creates it if not there.
+        """
+        if len(self) == 0 or not isinstance(self[0], With):
+            self.insert(0, With(self.doc))
+        return self[0]
 
 
 class ChoirStaff(ContextType): pass
@@ -1043,7 +1285,16 @@ class MensuralVoice(ContextType): pass
 class NoteNames(ContextType): pass
 class PianoStaff(ContextType): pass
 class RhythmicStaff(ContextType): pass
-class Score(ContextType): pass
+class ScoreContext(ContextType):
+    r"""
+    Represents the Score context in LilyPond, but the name would
+    collide with the Score class that represents \score { } constructs.
+
+    Because the latter is used more often, use ScoreContext to get
+    \new Score etc.
+    """
+    name = 'Score'
+    pass
 class Staff(ContextType): pass
 class StaffGroup(ContextType): pass
 class TabStaff(ContextType): pass
@@ -1051,6 +1302,35 @@ class TabVoice(ContextType): pass
 class VaticanaStaff(ContextType): pass
 class VaticanaVoice(ContextType): pass
 class Voice(ContextType): pass
+
+
+class UserContext(ContextType):
+    r"""
+    Represents a context the user creates.
+    e.g. \new MyStaff = cid << music >>
+    """
+    def __init__(self, pdoc, name, *args):
+        super(UserContext, self).__init__(pdoc, *args)
+        self.name = name
+
+
+class ContextProperty(Node):
+    """
+    A Context.property or Context.layoutObject construct.
+
+    call e.g. ContextProperty(p, 'aDueText', 'Staff') to get 'Staff.aDueText'.
+    """
+    def __init__(self, pdoc, prop, context = ""):
+        self.prop = prop
+        self.context = context
+
+    def __str__(self):
+        if self.context:
+            f = '%s.%s'
+            # TODO: if in \lyricmode or \lyrics, spaces around dot.
+            return f % (self.context, self.prop)
+        else:
+            return self.prop
 
 
 class Pitch(Node):
@@ -1063,10 +1343,9 @@ class Pitch(Node):
     """
     octave_func = int
     note_func = int
-    alter_func = lambda s: Rational(*map(int,s.split('/')))
+    alter_func = staticmethod(str2rat)
 
     def __init__(self, pdoc, octave = 0, note = 0, alter = 0):
-        Node.__init__(self, pdoc)
         self.octave = octave
         self.note = note
         self.alter = Rational(alter)
@@ -1081,5 +1360,108 @@ class Pitch(Node):
         elif self.octave > -1:
             return p + "'" * (self.octave + 1)
         return p
+
+
+class Duration(Node):
+    r"""
+    A duration with duration (in logarithmical form): (-2 ... 8),
+    where -2 = \longa, -1 = \breve, 0 = 1, 1 = 2, 2 = 4, 3 = 8, 4 = 15, etc,
+    dots (number of dots),
+    factor (Rational giving the scaling of the duration).
+    """
+
+    dur_func = int
+    dots_func = int
+    factor_func = staticmethod(str2rat)
+
+    def __init__(self, pdoc, dur, dots = 0, factor = 1):
+        self.dur = dur # log
+        self.dots = dots
+        self.factor = Rational(factor)
+
+    def __str__(self):
+        s = self.dur == -2 and '\\longa' or \
+            self.dur == -1 and '\\breve' or '%i' % (1 << self.dur)
+        s += '.' * self.dots
+        if self.factor != 1:
+            s += '*%s' % str(self.factor)
+        return s
+
+
+class Relative(_Name, Container):
+    r"""
+    relative <pitch> music
+
+    You should add a Pitch (optionally) and another music object,
+    e.g. Sim or Seq, etc.
+    """
+    name = 'relative'
+    pass
+
+
+class KeySignature(Node):
+    r"""
+    A key signature expression, like:
+
+    \key c \major
+    The pitch should be given in the arguments note and alter and is written
+    out in the document's language.
+    """
+    note_func = int
+    alter_func = staticmethod(str2rat)
+
+    def __init__(self, pdoc, note = 0, alter = 0, mode = "major"):
+        self.note = note
+        self.alter = Rational(alter)
+        self.mode = mode
+
+    def __str__(self):
+        pitch = pitchNames[self.doc.language](self.note, self.alter)
+        return '\\key %s \\%s' % (pitch, self.mode)
+
+
+class TimeSignature(Node):
+    r"""
+    A time signature, like: \time 4/4
+    """
+    attr_func = int
+
+    def __init__(self, pdoc, num, beat):
+        self.num = num
+        self.beat = beat
+
+    def __str__(self):
+        return '\\time %i/%i' % (self.num, self.beat)
+
+
+class Markup(_Name, Seqr):
+    r"""
+    The \markup command.
+    You can add many children, in that case Markup automatically prints
+    { and } around them.
+    """
+    name = 'markup'
+    pass
+
+
+class MarkupEncl(_Name, Seqr):
+    """
+    A markup that auto-encloses all its arguments, like 'italic', 'bold'
+    etc.  You must supply the name.
+    """
+    def __init__(self, pdoc, name, *args):
+        self.name = name
+
+
+class MarkupCmd(_Name, Container):
+    """
+    A markup command with more or no arguments, that does not auto-enclose
+    its arguments. Useful for commands like note-by-number or hspace.
+
+    You must supply the name. Its arguments are its children.
+    If one argument can be a markup list, use a Seq(r) construct for that.
+    """
+    def __init__(self, pdoc, name, *args):
+        self.name = name
 
 
