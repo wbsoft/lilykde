@@ -14,24 +14,32 @@ All elements of a LilyPond document inherit Node.
 
 the main branches of Node are:
     - Text: contains a string, cannot have child Nodes.
-    - Container: contains child Node objects and optional pre, join and post
-        text. You can access the child nodes using the [] syntax. This also
-        supports slices.
+    - Container: contains child Node objects. You can access the child
+        nodes using the [] syntax. This also supports slices.
 
 The main document is represented by a Document object.
 The contents of the document are in doc.body , which is a Body node,
 created by default.
 
-You create nodes by instantiating them.
-The first parameter is always a parent Node OR a Document.
+You create nodes by instantiating them. The first parameter is always
+a parent Node OR a Document.  If the first parameter is a Node, the new
+instance will automatically be appended as a child to that node.
 
-In the latter case, the Node is not added to anything, and you should keep
-a reference to it. You can add a node to another one with append() or insert().
+If the first parameter is a Document, the Node is not added to anything,
+and you should keep a reference to it. You can add a Node to another one
+with n.append(), n.insert() or n.replace().
 
-The Document has a root Container object in .body, that's instantiated
-by default.
+A Node can only have one parent Node. If you add a Node to another one,
+it will be removed from it's former parent.
 
 Every Node keeps a reference to its parent in .parent, and its doc in .doc.
+
+If you call str(n) or unicode(n) on a Node n, it will return the (unindented)
+LilyPond output. If you call the n.indent() method on a Node n, it will
+return properly indented LilyPond code.
+
+If you call str(d) or unicode(d) on a Document d, it will return the full
+indented LilyPond output.
 
 Example:
 
@@ -465,7 +473,8 @@ class Node(object):
             pdoc.append(obj)
         return obj
 
-    doc = property(lambda self: self._doc)
+    doc = property(lambda self: self._doc,
+            doc = "The Document associated with this Node.")
 
     def _getparent(self):
         return self._parent
@@ -1430,7 +1439,7 @@ class TimeSignature(Node):
         return '\\time %i/%i' % (self.num, self.beat)
 
 
-class Markup(_Name, Seqr):
+class Markup(_Name, _RemoveFormattingIfOneChild, EnclosedBase):
     r"""
     The \markup command.
     You can add many children, in that case Markup automatically prints
@@ -1440,7 +1449,7 @@ class Markup(_Name, Seqr):
     pass
 
 
-class MarkupEncl(_Name, Seqr):
+class MarkupEncl(_Name, _RemoveFormattingIfOneChild, EnclosedBase):
     """
     A markup that auto-encloses all its arguments, like 'italic', 'bold'
     etc.  You must supply the name.
