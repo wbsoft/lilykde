@@ -65,12 +65,24 @@ class EDocument(Document):
 
 
     # Markup types:
-    #arrow-head axis (integer) direction (direction) filled (boolean)
-    #  Produce an arrow head in specified direction and axis.
-    #  Use the filled head if filled is specified.
+    def arrow_head(self, axis, direction, filled = False):
+        """
+        Produce an arrow head in specified direction and axis.
+        Use the filled head if filled is specified.
+        """
+        m = MarkupCmd(self, 'arrow-head')
+        Scheme(m, str(axis))
+        Scheme(m, str(direction))
+        Scheme(m, filled and '#t' or '#f')
+        return m
 
-    #beam width (number) slope (number) thickness (number)
-    #  Create a beam with the specified parameters.
+    def beam(self, width, slope, thickness):
+        "Create a beam with the specified parameters."
+        m = MarkupCmd(self, 'beam')
+        Scheme(m, str(width))
+        Scheme(m, str(slope))
+        Scheme(m, str(thickness))
+        return m
 
     @smarkup
     def bigger():
@@ -102,8 +114,14 @@ class EDocument(Document):
         "Put args in a centered column."
         pass
 
-    #char num
-    #Produce a single character. For example, \char #65 produces the letter A.
+    def char(self, num):
+        r"""
+        Produce a single character. For example,
+        \char #65 produces the letter A.
+        """
+        m = MarkupCmd(self, 'char')
+        Scheme(m, str(num))
+        return m
 
     @smarkup
     def circle():
@@ -116,6 +134,8 @@ class EDocument(Document):
         pass
 
     #combine m1 (markup) m2 (markup)
+    def combine(self, m1, m2):
+
 
     @smarkup
     def concat():

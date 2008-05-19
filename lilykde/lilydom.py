@@ -787,7 +787,10 @@ class Container(Node):
         # while joining, remove the join character if the previous
         # element already ends with a newline (e.g. a comment).
         s = '\0'.join(i for i in map(unicode, self) if i)
-        return s.replace('\n\0', '\n').replace('\0\n', '\n').replace('\0', join)
+        # Merge newlines at boundaries
+        s = s.replace('\n\0\n', '\n').replace('\n\0', '\n').replace('\0\n', '\n')
+        # Space if there were no newlines.
+        return s.replace('\0', join)
 
     def iterDepthFirst(self, depth = -1):
         """
@@ -881,7 +884,7 @@ class BlockComment(Comment):
     def _outputComment(self):
         t = self.text.replace('%}', '')
         if '\n' in t:
-            return '%%{\n%s\n%%}' % t.strip()
+            return '%%{\n%s\n%%}\n' % t.strip()
         else:
             return '%%{ %s %%}' % t.strip()
 
@@ -930,7 +933,10 @@ class EnclosedBase(Container):
         s = super(EnclosedBase, self).__str__()
         join = ('\n' in s or s and self.multiline) and '\n' or ' '
         s = '\0'.join(i for i in (self.pre, s, self.post) if i)
-        return s.replace('\n\0', '\n').replace('\0', join)
+        # Merge newlines at boundaries
+        s = s.replace('\0\n', '\n').replace('\n\0', '\n')
+        # When no newlines, join using space character.
+        return s.replace('\0', join)
 
 
 class Seq(EnclosedBase):
@@ -982,8 +988,10 @@ class Assignment(Container):
 
     # Convenience methods:
     def setValue(self, obj):
-        self.clear()
-        self.append(obj)
+        if len(self):
+            self[0] = obj
+        else:
+            self.append(obj)
 
     def value(self):
         if len(self):
