@@ -42,6 +42,7 @@ Wizard:
 import re
 from string import Template
 from time import time
+from rational import Rational
 
 from qt import *
 from kdecore import KCompletion
@@ -87,148 +88,86 @@ modes = (
     ('locrian',     _("Locrian")),
 )
 
-keys = {
+keys = (
+    (0, 0), (0, 1),
+    (1, -1), (1, 0), (1, 1),
+    (2, -1), (2, 0),
+    (3, 0), (3, 1),
+    (4, -1), (4, 0), (4, 1),
+    (5, -1), (5, 0), (5, 1),
+    (6, -1), (6, 0),
+)
+
+keyNames = {
     'nederlands': (
-        ('c', 'C'),
-        ('cis', 'Cis'),
-        ('des', 'Des'),
-        ('d', 'D'),
-        ('dis', 'Dis'),
-        ('es', 'Es'),
-        ('e', 'E'),
-        ('f', 'F'),
-        ('fis', 'Fis'),
-        ('ges', 'Ges'),
-        ('g', 'G'),
-        ('gis', 'Gis'),
-        ('as', 'As'),
-        ('a', 'A'),
-        ('ais', 'Ais'),
-        ('bes', 'Bes'),
-        ('b', 'B'),
+        'C', 'Cis',
+        'Des', 'D', 'Dis',
+        'Es', 'E',
+        'F', 'Fis',
+        'Ges', 'G', 'Gis',
+        'As', 'A', 'Ais',
+        'Bes', 'B',
     ),
     'english': (
-        ('c', 'C'),
-        ('cs', 'C#'),
-        ('df', 'Db'),
-        ('d', 'Ab'),
-        ('ds', 'D#'),
-        ('ef', 'Eb'),
-        ('e', 'E'),
-        ('f', 'F'),
-        ('fs', 'F#'),
-        ('gf', 'Gb'),
-        ('g', 'G'),
-        ('gs', 'G#'),
-        ('af', 'Ab'),
-        ('a', 'A'),
-        ('as', 'A#'),
-        ('bf', 'Bb'),
-        ('b', 'B'),
+        'C', 'C#',
+        'Db', 'D', 'D#',
+        'Eb', 'E',
+        'F', 'F#',
+        'Gb', 'G', 'G#',
+        'Ab', 'A', 'A#',
+        'Bb', 'B',
     ),
     'deutsch': (
-        ('c', 'C'),
-        ('cis', 'Cis'),
-        ('des', 'Des'),
-        ('d', 'D'),
-        ('dis', 'Dis'),
-        ('es', 'Es'),
-        ('e', 'E'),
-        ('f', 'F'),
-        ('fis', 'Fis'),
-        ('ges', 'Ges'),
-        ('g', 'G'),
-        ('gis', 'Gis'),
-        ('as', 'As'),
-        ('a', 'A'),
-        ('ais', 'Ais'),
-        ('b', 'B'),
-        ('h', 'H'),
+        'C', 'Cis',
+        'Des', 'D', 'Dis',
+        'Es', 'E',
+        'F', 'Fis',
+        'Ges', 'G', 'Gis',
+        'As', 'A', 'Ais',
+        'B', 'H',
     ),
     'norsk': (
-        ('c', 'C'),
-        ('cis', 'Ciss'),
-        ('des', 'Dess'),
-        ('d', 'D'),
-        ('dis', 'Diss'),
-        ('es', 'Ess'),
-        ('e', 'E'),
-        ('f', 'F'),
-        ('fis', 'Fiss'),
-        ('ges', 'Gess'),
-        ('g', 'G'),
-        ('gis', 'Giss'),
-        ('as', 'Ass'),
-        ('a', 'A'),
-        ('ais', 'Aiss'),
-        ('b', 'B'),
-        ('h', 'H'),
+        'C', 'Ciss',
+        'Dess', 'D', 'Diss',
+        'Ess', 'E',
+        'F', 'Fiss',
+        'Gess', 'G', 'Giss',
+        'Ass', 'A', 'Aiss',
+        'B', 'H',
     ),
     'italiano': (
-        ('do', 'Do'),
-        ('dod', 'Do diesis'),
-        ('reb', 'Re bemolle'),
-        ('re', 'Re'),
-        ('red', 'Re diesis'),
-        ('mib', 'Mi bemolle'),
-        ('mi', 'Mi'),
-        ('fa', 'Fa'),
-        ('fad', 'Fa diesis'),
-        ('solb', 'Sol bemolle'),
-        ('sol', 'Sol'),
-        ('sold', 'Sol diesis'),
-        ('lab', 'La bemolle'),
-        ('la', 'La'),
-        ('lad', 'La diesis'),
-        ('sib', 'Si bemolle'),
-        ('si', 'Si'),
+        'Do', 'Do diesis',
+        'Re bemolle', 'Re', 'Re diesis',
+        'Mi bemolle', 'Mi',
+        'Fa', 'Fa diesis',
+        'Sol bemolle', 'Sol', 'Sol diesis',
+        'La bemolle', 'La', 'La diesis',
+        'Si bemolle', 'Si',
     ),
     'espanol': (
-        ('do', 'Do'),
-        ('dos', 'Do sostenido'),
-        ('reb', 'Re bemol'),
-        ('re', 'Re'),
-        ('res', 'Re sostenido'),
-        ('mib', 'Mi bemol'),
-        ('mi', 'Mi'),
-        ('fa', 'Fa'),
-        ('fas', 'Fa sostenido'),
-        ('solb', 'Sol bemol'),
-        ('sol', 'Sol'),
-        ('sols', 'Sol sostenido'),
-        ('lab', 'La bemol'),
-        ('la', 'La'),
-        ('las', 'La sostenido'),
-        ('sib', 'Si bemol'),
-        ('si', 'Si'),
+        'Do', 'Do sostenido',
+        'Re bemol', 'Re', 'Re sostenido',
+        'Mi bemol', 'Mi',
+        'Fa', 'Fa sostenido',
+        'Sol bemol', 'Sol', 'Sol sostenido',
+        'La bemol', 'La', 'La sostenido',
+        'Si bemol', 'Si',
     ),
     'vlaams': (
-        ('do', 'Do'),
-        ('dok', 'Do kruis'),
-        ('reb', 'Re mol'),
-        ('re', 'Re'),
-        ('rek', 'Re kruis'),
-        ('mib', 'Mi mol'),
-        ('mi', 'Mi'),
-        ('fa', 'Fa'),
-        ('fak', 'Fa kruis'),
-        ('solb', 'Sol mol'),
-        ('sol', 'Sol'),
-        ('solk', 'Sol kruis'),
-        ('lab', 'La mol'),
-        ('la', 'La'),
-        ('lak', 'La kruis'),
-        ('sib', 'Si mol'),
-        ('si', 'Si'),
+        'Do', 'Do kruis',
+        'Re mol', 'Re', 'Re kruis',
+        'Mi mol', 'Mi',
+        'Fa', 'Fa kruis',
+        'Sol mol', 'Sol', 'Sol kruis',
+        'La mol', 'La', 'La kruis',
+        'Si mol', 'Si',
     ),
 }
 
-keys['svenska'] = keys['norsk']
-keys['suomi'] = keys['deutsch']
-keys['catalan'] = keys['italiano']
-keys['portuges'] = keys['espanol']
-
-keyNames = dict((n, tuple(t for p, t in v)) for n, v in keys.iteritems())
+keyNames['svenska'] = keyNames['norsk']
+keyNames['suomi'] = keyNames['deutsch']
+keyNames['catalan'] = keyNames['italiano']
+keyNames['portuges'] = keyNames['espanol']
 
 durations = ['16', '16.', '8', '8.', '4', '4.', '2', '2.', '1', '1.']
 
@@ -593,7 +532,7 @@ class Settings(object):
         l.setBuddy(self.lylang)
         self.lylang.insertItem(_("Default"))
         self.lylang.insertStringList(py2qstringlist(
-            l.title() for l in sorted(keys)))
+            l.title() for l in sorted(keyNames)))
         QToolTip.add(self.lylang, _(
             "The LilyPond language you want to use for the pitch names."))
         QObject.connect(self.lylang, SIGNAL("activated(const QString&)"),
@@ -640,13 +579,7 @@ class Settings(object):
 
     def getLanguage(self):
         lang = unicode(self.lylang.currentText()).lower()
-        return lang in keys and lang or None
-
-    def getKeySig(self):
-        lang = self.getLanguage() or "nederlands"
-        key = keyNames[lang][self.key.currentItem()][0]
-        mode = modes[self.mode.currentItem()][0]
-        return key, mode
+        return lang in keyNames and lang or None
 
 
 class ScoreWizard(KDialogBase):
@@ -693,12 +626,14 @@ class ScoreWizard(KDialogBase):
 
         # version:
         Version(d.body, unicode(self.settings.lyversion.currentText()))
+        Newline(d.body)
 
         # language:
         lang = self.settings.getLanguage()
         if lang:
             d.language = lang
-            Text(d.body, '\\include "%s.ly"' % lang)
+            Text(d.body, r'\include "%s.ly"' % lang)
+            Newline(d.body)
 
         # header:
         noTagline = self.settings.tagl.isChecked()
@@ -710,6 +645,28 @@ class ScoreWizard(KDialogBase):
                     h[n] = head[n]
                 elif n == 'tagline' and noTagline:
                     h[n] = Scheme(d, '#f')
+            Newline(d.body)
+
+        # global music expression that all voices include
+        g = Seq(Assignment(d.body, 'global'), multiline=True)
+        # key signature
+        note, alter = keys[self.settings.key.currentItem()]
+        alter = Rational(alter, 2)
+        mode = modes[self.settings.mode.currentItem()][0]
+        KeySignature(g, note, alter, mode)
+        # time signature
+        if self.settings.time.currentItem() < 2:
+            Text(g, r"\override Staff.TimeSignature #'style = #'()")
+        num, beat = map(int, re.findall('\\d+',
+            str(self.settings.time.currentText())))
+        TimeSignature(g, num, beat)
+        # partial
+        if self.settings.pickup.currentItem() > 0:
+            Text(g, r"\partial %s" %
+                durations[self.settings.pickup.currentItem() - 1])
+        Newline(d.body)
+
+
 
 
         # get the parts...TODO: do something with it!

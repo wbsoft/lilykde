@@ -7,7 +7,7 @@ from lilydom import *
 
 
 
-class EDocument(Document):
+class ExtDocument(Document):
     """
     Extends lilydom.Document with many methods to quickly
     instantiate all kinds of LilyDOM objects.
@@ -135,7 +135,7 @@ class EDocument(Document):
 
     #combine m1 (markup) m2 (markup)
     def combine(self, m1, m2):
-
+        pass
 
     @smarkup
     def concat():
