@@ -788,7 +788,8 @@ class Container(Node):
         # element already ends with a newline (e.g. a comment).
         s = '\0'.join(i for i in map(unicode, self) if i)
         # Merge newlines at boundaries
-        s = s.replace('\n\0\n', '\n').replace('\n\0', '\n').replace('\0\n', '\n')
+        #s = s.replace('\n\0\n', '\n').replace('\n\0', '\n').replace('\0\n', '\n')
+        s = s.replace('\n\0', '\n')
         # Space if there were no newlines.
         return s.replace('\0', join)
 

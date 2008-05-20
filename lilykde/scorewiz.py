@@ -221,7 +221,6 @@ class part(object):
             if len(t) > 1:
                 for n, p in enumerate(t):
                     p.num = n + 1
-        return partList
 
     def __init__(self, parts):
         """
@@ -267,6 +266,86 @@ class part(object):
         The parent currently is a QVGroupBox.
         """
         QLabel('(%s)' % _("No settings available."), parent)
+
+    def run(self, d):
+        """
+        Create our parts (i.e. call our build() method)
+        """
+        self.doc = d
+        self._partObjs = []
+        self._assignments = []
+        self.build()
+
+    def assignments(self):
+        """
+        Return the names of all assignments this part should create.
+        """
+        return (i.name for i, v in self._assignments)
+
+    def renameAssignment(self, name, newname):
+        """
+        Rename the named assignment in our part to newname.
+        """
+        for i, v in self._assignments:
+            if i.name == name:
+                i.name = newname
+                return
+
+    def appendAssignments(self, node):
+        """
+        Append the LilyDOM assignment nodes to the given node.
+        """
+        for i, v in self._assignments:
+            Assignment(node, i.name).append(v)
+            Newline(node)
+
+    def namedContexts(self):
+        """
+        Return the names of the named contexts in our part.
+        """
+        return () # FIXME!!!
+
+    def renameNamedContext(self, name, newname):
+        """
+        Rename the named context to newname.
+        """
+        pass
+
+    def appendParts(self, node):
+        """
+        Append the part objects (Staffs etc.) to the given node.
+        """
+        for i in self._partObjs:
+            node.append(i)
+
+    def aftermath(self):
+        """
+        Add stuff below the main \score.
+        """
+        d = self.doc
+        pass
+
+    def addPart(self, cls, name = None):
+        """
+        Create and return a new part object (e.g. a PianoStaff)
+        """
+        p = cls(self.doc, name)
+        self._partObjs.append(p)
+        return p
+
+    def assignMusic(self, name, addId, octave = 0):
+        """
+        Creates a stub for music (\relative pitch { \global .... })
+        and adds an Identifier to refer to it, to the object
+        given in addId.
+        """
+        i = Identifier(addId, name)
+        r = Relative(self.doc)
+        Pitch(r, octave, 0, 0)
+        s = Seq(r)
+        Identifier(s, 'global')
+        Newline(s)
+        self._assignments.append((i, r))
 
 
 class Titles(object):
@@ -440,8 +519,11 @@ class Parts(object):
         are set to 1, 2 instead of the default 0, so they don't produce
         conflicting LilyPond identifiers.
         """
-        return part.numberDoubles([self.score.item(index).part
-            for index in range(self.score.count())])
+        parts = [
+            self.score.item(index).part for index in range(self.score.count())]
+        part.numberDoubles(parts)
+        return parts
+
 
 class Settings(object):
     """
@@ -561,6 +643,10 @@ class Settings(object):
         QToolTip.add(self.tagl, _(
             "Suppress the default tagline output by LilyPond."))
 
+        self.midi = QCheckBox(_("Create MIDI output"), prefs)
+        QToolTip.add(self.midi, _(
+            "Create a MIDI file in addition to the PDF file."))
+
     def tap(self, bpm):
         """ Tap the tempo tap button """
         l = [abs(t - bpm) for t in self.metroValues]
@@ -632,22 +718,33 @@ class ScoreWizard(KDialogBase):
         lang = self.settings.getLanguage()
         if lang:
             d.language = lang
-            Text(d.body, r'\include "%s.ly"' % lang)
-            Newline(d.body)
+            Text(d.body, '\\include "%s.ly"\n' % lang)
 
         # header:
-        noTagline = self.settings.tagl.isChecked()
-        head = self.titles.read()
-        if max(head.values()) or noTagline:
-            h = Header(d.body)
-            for n in headerNames:
-                if head[n]:
-                    h[n] = head[n]
-                elif n == 'tagline' and noTagline:
-                    h[n] = Scheme(d, '#f')
+        h, head = Header(d), self.titles.read()
+        for n in headerNames:
+            if head[n]:
+                h[n] = head[n]
+        # Remove default LilyPond tagline?
+        if self.settings.tagl.isChecked() and not h['tagline']:
+            Comment(h, " %s" % _("Remove default LilyPond tagline"))
+            h['tagline'] = Scheme(d, '#f')
+        if len(h):
+            d.body.append(h)
             Newline(d.body)
 
-        # global music expression that all voices include
+        parts = self.parts.parts()
+        if parts:
+            self.printoutParts(d, parts)
+
+        # and finally print out:
+        kate.view().insertText(unicode(d))
+
+    def printoutParts(self, d, parts):
+        """
+        Write the parts to the LilyDOM document in d
+        """
+        # First write a global = {  } construct setting key and time sig
         g = Seq(Assignment(d.body, 'global'), multiline=True)
         # key signature
         note, alter = keys[self.settings.key.currentItem()]
@@ -666,18 +763,58 @@ class ScoreWizard(KDialogBase):
                 durations[self.settings.pickup.currentItem() - 1])
         Newline(d.body)
 
+        # Now, on to the parts.
+        # First we check the names of all the assignments. If there are some
+        # with the same name, append their part name. Same for context ids.
 
-
-
-        # get the parts...TODO: do something with it!
-        parts = self.parts.parts()
-        #DEBUG!
+        # Build all the parts:
         for p in parts:
-            print p.name, p.identifier()
+            p.run(d)      # This build the LilyDOM parts for the part.
 
+        # Now check if there are name collisions in identifiers:
+        names = {}
+        for p in parts:
+            for i in p.assignments():
+                names.setdefault(i, []).append(p)
+        for name, plist in names.iteritems():
+            if len(plist) > 1:
+                # Name occurs more than one time.
+                # Then append part name.
+                for p in plist:
+                    p.renameAssignment(name, name + p.identifier())
+        # Same for collisions in named contexts:
+        names = {}
+        for p in parts:
+            for i in p.namedContexts():
+                names.setdefault(i, []).append(p)
+        for name, plist in names.iteritems():
+            if len(plist) > 1:
+                # Named contexts occur more than once,
+                # Rename them.
+                for p in plist:
+                    p.renameNamedContext(name, name + p.identifier())
 
-        # and finally print out:
-        kate.view().insertText(unicode(d))
+        # Now build the full LilyDOM document.
+        # Get all the assignments
+        for p in parts:
+            p.appendAssignments(d.body)
+        Newline(d.body)
+
+        # Main \score
+        s = Score(d.body)
+        Newline(d.body)
+        s1 = Simr(s)
+        for p in parts:
+            p.appendParts(s1)
+
+        Layout(s)
+        if self.settings.midi.isChecked():
+            Midi(s)
+
+        # Aftermath
+        for p in parts:
+            p.aftermath()
+
 
     def done(self, result):
         """
