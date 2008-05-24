@@ -557,6 +557,8 @@ class Settings(object):
         h.addSpacing(8)
         h.addWidget(prefs)
 
+        conf = config("scorewiz")
+
         # Score settings
         h = QHBox(score)
         h.setSpacing(2)
@@ -633,7 +635,7 @@ class Settings(object):
             "The LilyPond language you want to use for the pitch names."))
         QObject.connect(self.lylang, SIGNAL("activated(const QString&)"),
             self.setLanguage)
-        lang = config("scorewiz").get('language', 'default')
+        lang = conf.get('language')
         if lang in keyNames:
             self.lylang.setCurrentText(lang.title())
         self.setLanguage(lang)
@@ -655,14 +657,17 @@ class Settings(object):
         self.typq = QCheckBox(_("Use typographical quotes"), prefs)
         QToolTip.add(self.typq, _(
             "Replace normal quotes in titles with nice typographical quotes."))
+        self.typq.setChecked(conf['typographical'] == '1')
 
         self.tagl = QCheckBox(_("Remove default tagline"), prefs)
         QToolTip.add(self.tagl, _(
             "Suppress the default tagline output by LilyPond."))
+        self.tagl.setChecked(conf['remove tagline'] == '1')
 
         self.midi = QCheckBox(_("Create MIDI output"), prefs)
         QToolTip.add(self.midi, _(
             "Create a MIDI file in addition to the PDF file."))
+        self.midi.setChecked(conf['midi'] == '1')
 
     def tap(self, bpm):
         """ Tap the tempo tap button """
@@ -674,10 +679,7 @@ class Settings(object):
     def setLanguage(self, lang):
         lang = unicode(lang).lower()    # can be QString
         if lang not in keyNames:
-            config("scorewiz")['language'] = 'default'
             lang = 'nederlands'
-        else:
-            config("scorewiz")['language'] = lang
         index = self.key.currentItem()
         self.key.clear()
         self.key.insertStringList(py2qstringlist(keyNames[lang]))
@@ -858,11 +860,17 @@ class ScoreWizard(KDialogBase):
         Close the dialog and create the score if Ok was clicked.
         """
         self.saveCompletions()
+        conf = config("scorewiz")
+        conf['language'] = self.settings.getLanguage() or 'default'
+        conf['typographical'] = self.settings.typq.isChecked() and '1' or '0'
+        conf['remove tagline'] = self.settings.tagl.isChecked() and '1' or '0'
+        conf['midi'] = self.settings.midi.isChecked() and '1' or '0'
         if result == KDialogBase.Accepted:
             self.printout()
         KDialogBase.done(self, result)
 
 
+# Instantiate one!
 scorewiz = ScoreWizard(kate.mainWidget())
 
 # kate: indent-width 4;
