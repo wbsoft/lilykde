@@ -3,7 +3,6 @@ LilyKDE module to run Rumor
 """
 
 import sys, os, re
-from time import time
 from subprocess import Popen, PIPE
 
 from qt import *

@@ -41,7 +41,6 @@ Wizard:
 
 import re
 from string import Template
-from time import time
 from rational import Rational
 
 from qt import *
@@ -335,9 +334,8 @@ class part(object):
 
     def assignMusic(self, name, addId, octave = 0):
         """
-        Creates a stub for music (\relative pitch { \global .... })
-        and adds an Identifier to refer to it, to the object
-        given in addId.
+        Creates a stub for music (\relative pitch { \global .... }) and adds
+        an Identifier (referring to it) to the object given in addId.
         """
         i = Identifier(addId, name)
         r = Relative(self.doc)
@@ -395,6 +393,13 @@ class Titles(object):
         unicode values for all the text entries.
         """
         return dict((h, unicode(self.p.child(h).text())) for h in headerNames)
+
+    def defaults(self):
+        """
+        Reset all widgets to their default state.
+        """
+        for h in headerNames:
+            self.p.child(h).clear()
 
 
 class Parts(object):
@@ -524,6 +529,15 @@ class Parts(object):
         part.numberDoubles(parts)
         return parts
 
+    def defaults(self):
+        """
+        Reset all widgets to their default state.
+        (I.e. remove all parts)
+        """
+        while self.score.count():
+            self.score.item(0).part.delete()
+            self.score.removeItem(0)
+
 
 class Settings(object):
     """
@@ -619,7 +633,10 @@ class Settings(object):
             "The LilyPond language you want to use for the pitch names."))
         QObject.connect(self.lylang, SIGNAL("activated(const QString&)"),
             self.setLanguage)
-        self.setLanguage('nederlands')  # TODO: set to saved default
+        lang = config("scorewiz").get('language', 'default')
+        if lang in keyNames:
+            self.lylang.setCurrentText(lang.title())
+        self.setLanguage(lang)
 
         h = QHBox(lily)
         h.setSpacing(2)
@@ -657,7 +674,10 @@ class Settings(object):
     def setLanguage(self, lang):
         lang = unicode(lang).lower()    # can be QString
         if lang not in keyNames:
+            config("scorewiz")['language'] = 'default'
             lang = 'nederlands'
+        else:
+            config("scorewiz")['language'] = lang
         index = self.key.currentItem()
         self.key.clear()
         self.key.insertStringList(py2qstringlist(keyNames[lang]))
@@ -666,6 +686,16 @@ class Settings(object):
     def getLanguage(self):
         lang = unicode(self.lylang.currentText()).lower()
         return lang in keyNames and lang or None
+
+    def defaults(self):
+        """
+        Reset all widgets to their default state.
+        """
+        for w in self.key, self.mode, self.time, self.pickup:
+            w.setCurrentItem(0)
+        self.tempoInd.clear()
+        self.metroDur.setCurrentItem(durations.index('4'))
+        self.metroVal.setCurrentText('100')
 
 
 class ScoreWizard(KDialogBase):
@@ -815,6 +845,13 @@ class ScoreWizard(KDialogBase):
         for p in parts:
             p.aftermath()
 
+    def slotDefault(self):
+        """
+        Called when Defaults button clicked.
+        """
+        self.titles.defaults()
+        self.parts.defaults()
+        self.settings.defaults()
 
     def done(self, result):
         """
