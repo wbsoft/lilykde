@@ -673,7 +673,8 @@ class ScoreWizard(KDialogBase):
     def __init__(self, parent):
         KDialogBase.__init__(self, KDialogBase.Tabbed,
             "LilyKDE " + _("Score Setup Wizard"),
-            KDialogBase.Ok | KDialogBase.Cancel, KDialogBase.Ok, parent)
+            KDialogBase.Ok | KDialogBase.Cancel | KDialogBase.Default,
+            KDialogBase.Ok, parent)
         self.completableWidgets = []
         self.titles = Titles(self)
         self.parts = Parts(self)
@@ -752,7 +753,7 @@ class ScoreWizard(KDialogBase):
         mode = modes[self.settings.mode.currentItem()][0]
         KeySignature(g, note, alter, mode)
         # time signature
-        if self.settings.time.currentItem() < 2:
+        if self.settings.time.currentText() in ('2/2', '4/4'):
             Text(g, r"\override Staff.TimeSignature #'style = #'()")
         num, beat = map(int, re.findall('\\d+',
             str(self.settings.time.currentText())))
@@ -798,7 +799,6 @@ class ScoreWizard(KDialogBase):
         # Get all the assignments
         for p in parts:
             p.appendAssignments(d.body)
-        Newline(d.body)
 
         # Main \score
         s = Score(d.body)
@@ -826,5 +826,6 @@ class ScoreWizard(KDialogBase):
         KDialogBase.done(self, result)
 
 
+scorewiz = ScoreWizard(kate.mainWidget())
 
 # kate: indent-width 4;
