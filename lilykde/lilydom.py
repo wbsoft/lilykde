@@ -1448,6 +1448,26 @@ class TimeSignature(Node):
         return '\\time %i/%i' % (self.num, self.beat)
 
 
+class Clef(Node):
+    """
+    A clef.
+    """
+    def __init__(self, pdoc, clef):
+        self.clef = clef
+
+    def __str__(self):
+        f = self.clef.isalpha() and '%s' or '"%s"'
+        return '\\clef %s\n' % f % self.clef
+
+
+class VoiceSeparator(Node):
+    r"""
+    A Voice Separator: \\
+    """
+    def __str__(self):
+        return r'\\'
+
+
 class Markup(_Name, _RemoveFormattingIfOneChild, EnclosedBase):
     r"""
     The \markup command.

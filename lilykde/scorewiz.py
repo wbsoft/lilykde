@@ -266,13 +266,18 @@ class part(object):
         """
         QLabel('(%s)' % _("No settings available."), parent)
 
-    def run(self, d):
+    def run(self, d, settingsWidget):
         """
         Create our parts (i.e. call our build() method)
         """
         self.doc = d
         self._partObjs = []
         self._assignments = []
+
+        self._instr = settingsWidget.instr.isChecked() # instrument names?
+        self._instrItalian = settingsWidget.instrIt.isChecked() # Italian ?
+        self._instrShort = settingsWidget.instrSh.isChecked() # Short?
+
         self.build()
 
     def assignments(self):
@@ -324,13 +329,17 @@ class part(object):
         d = self.doc
         pass
 
-    def addPart(self, cls, name = None):
+    def addPart(self, node):
         """
-        Create and return a new part object (e.g. a PianoStaff)
+        store the part object (e.g. a PianoStaff)
         """
-        p = cls(self.doc, name)
-        self._partObjs.append(p)
-        return p
+        self._partObjs.append(node)
+
+    def part(self, index):
+        """
+        Retrieve the stored part object (e.g. to alter some settings)
+        """
+        return self._partObjs[index]
 
     def assignMusic(self, name, addId, octave = 0):
         """
@@ -342,8 +351,27 @@ class part(object):
         Pitch(r, octave, 0, 0)
         s = Seq(r)
         Identifier(s, 'global')
-        Newline(s)
+        Newline(s, 2)
         self._assignments.append((i, r))
+
+    def setInstrumentNames(self, node, translated, italian):
+        """
+        Sets the instrumentnames of the node, obeying user preferences
+        """
+        if not self._instr:
+            return
+        if self._instrItalian:
+            names = italian
+        else:
+            names = translated
+        longName, shortName = names.split('|')
+        if self.num:
+            suffix = " %s" % romanize(self.num)
+            longName += suffix
+            shortName += suffix
+        if not self._instrShort:
+            shortName = None
+        node.instrName(longName, shortName)
 
 
 class Titles(object):
@@ -429,6 +457,7 @@ class Parts(object):
         self.all.setSorting(-1)
         self.all.setResizeMode(QListView.AllColumns)
         self.all.setSelectionMode(QListView.Extended)
+        self.all.setRootIsDecorated(True)
         self.all.addColumn("")
         self.all.header().hide()
 
@@ -669,6 +698,22 @@ class Settings(object):
             "Create a MIDI file in addition to the PDF file."))
         self.midi.setChecked(conf['midi'] == '1')
 
+        self.instr = QCheckBox(_("Print instrument names"), prefs)
+        QToolTip.add(self.instr, _(
+            "Print instrument names before the staffs."))
+        self.instr.setChecked(conf['instrument names'] == '1')
+
+        self.instrIt = QCheckBox(_("Prefer Italian instrument names"), prefs)
+        QToolTip.add(self.instrIt, _(
+            "Choose standard Italian instrument names, like '%s' "
+            "instead of 'Organ.'") % 'Organo')
+        self.instrIt.setChecked(conf['italian instrument names'] == '1')
+
+        self.instrSh = QCheckBox(_("Print short instrument names"), prefs)
+        QToolTip.add(self.instrSh, _(
+            "Print short instrument names in front of all systems."))
+        self.instrSh.setChecked(conf['short instrument names'] == '1')
+
     def tap(self, bpm):
         """ Tap the tempo tap button """
         l = [abs(t - bpm) for t in self.metroValues]
@@ -688,6 +733,19 @@ class Settings(object):
     def getLanguage(self):
         lang = unicode(self.lylang.currentText()).lower()
         return lang in keyNames and lang or None
+
+    def saveConfig(self):
+        """
+        Save some preferences.
+        """
+        conf = config("scorewiz")
+        conf['language'] = self.getLanguage() or 'default'
+        conf['typographical'] = self.typq.isChecked() and '1' or '0'
+        conf['remove tagline'] = self.tagl.isChecked() and '1' or '0'
+        conf['midi'] = self.midi.isChecked() and '1' or '0'
+        conf['instrument names'] = self.instr.isChecked() and '1' or '0'
+        conf['italian instrument names'] = self.instrIt.isChecked() and '1' or '0'
+        conf['short instrument names'] = self.instrSh.isChecked() and '1' or '0'
 
     def defaults(self):
         """
@@ -734,6 +792,12 @@ class ScoreWizard(KDialogBase):
             if len(text) > 1 and text not in items:
                 items.append(text)
             conf[name] = '\n'.join(items)
+
+    def saveConfig(self):
+        """
+        Save some preferences.
+        """
+        self.settings.saveConfig()
 
     def printout(self):
         """
@@ -802,7 +866,7 @@ class ScoreWizard(KDialogBase):
 
         # Build all the parts:
         for p in parts:
-            p.run(d)      # This build the LilyDOM parts for the part.
+            p.run(d, self.settings) # This build the LilyDOM parts for the part.
 
         # Now check if there are name collisions in identifiers:
         names = {}
@@ -835,7 +899,7 @@ class ScoreWizard(KDialogBase):
         # Main \score
         s = Score(d.body)
         Newline(d.body)
-        s1 = Simr(s)
+        s1 = Simr(s, multiline=True)
         for p in parts:
             p.appendParts(s1)
 
@@ -860,11 +924,7 @@ class ScoreWizard(KDialogBase):
         Close the dialog and create the score if Ok was clicked.
         """
         self.saveCompletions()
-        conf = config("scorewiz")
-        conf['language'] = self.settings.getLanguage() or 'default'
-        conf['typographical'] = self.settings.typq.isChecked() and '1' or '0'
-        conf['remove tagline'] = self.settings.tagl.isChecked() and '1' or '0'
-        conf['midi'] = self.settings.midi.isChecked() and '1' or '0'
+        self.saveConfig()
         if result == KDialogBase.Accepted:
             self.printout()
         KDialogBase.done(self, result)
