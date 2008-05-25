@@ -359,6 +359,14 @@ class part(object):
         Newline(s)
         self._assignments.append((i, r))
 
+    def assignTransposedMusic(self, name, addId, octave, note, alter):
+        t = Transposition(self.doc)
+        Pitch(t, octave, note, Rational(alter, 2))
+        self.assignMusic(name, addId, octave + 1)
+        s = self._assignments[-1][1][1]
+        s.insert(2, t)
+        s.insert(3, Newline(s))
+
     def newStaff(self, node = None, name = None, midiInstrument = None):
         """
         Create a new Staff object and set it's MIDI instrument if desired.

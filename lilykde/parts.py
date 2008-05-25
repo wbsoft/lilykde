@@ -151,7 +151,7 @@ class _SaxBase(part):
 
     def build(self):
         s = self.newStaff()
-        self.assignMusic('sax', s, self.transpose[0] + 1)
+        self.assignTransposedMusic('sax', s, *self.transpose)
         self.addPart(s)
 
 
@@ -159,7 +159,7 @@ class SopraninoSax(_SaxBase):
     name = _("Sopranino Sax")
     instrumentNames = _("Sopranino Sax|SiSx."), "Sopranino-Sax|Si-Sx."
     midiInstrument = 'soprano sax'
-    transpose = (0, 3, -1)    # es'
+    transpose = (0, 2, -1)    # es'
     pass
 
 
@@ -175,7 +175,7 @@ class AltoSax(_SaxBase):
     name = _("Alto Sax")
     instrumentNames = _("Alto Sax|ASx."), "Alto-Sax|A-Sx."
     midiInstrument = 'alto sax'
-    transpose = (-1, 3, -1)   # es
+    transpose = (-1, 2, -1)   # es
     pass
 
 
@@ -191,7 +191,7 @@ class BaritoneSax(_SaxBase):
     name = _("Baritone Sax")
     instrumentNames = _("Baritone Sax|BSx."), "Bariton-Sax|B-Sx."
     midiInstrument = 'baritone sax'
-    transpose = (-2, 3, -1)   # es,
+    transpose = (-2, 2, -1)   # es,
     pass
 
 

@@ -1404,12 +1404,21 @@ class Duration(Node):
 
 class Relative(_Name, Container):
     r"""
-    relative <pitch> music
+    \relative <pitch> music
 
     You should add a Pitch (optionally) and another music object,
     e.g. Sim or Seq, etc.
     """
     name = 'relative'
+    pass
+
+
+class Transposition(_Name, Container):
+    r"""
+    \transposition <pitch>
+    You should add a Pitch.
+    """
+    name = 'transposition'
     pass
 
 
