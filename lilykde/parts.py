@@ -55,7 +55,7 @@ class _KeyboardBase(part):
         """
         Build a staff with the given number of voices and name.
         """
-        staff = Staff(pdoc, name)
+        staff = self.newStaff(pdoc, name)
         c = Seq(staff)
         Clef(c, clef)
         if numVoices == 1:
@@ -78,7 +78,7 @@ class _KeyboardBase(part):
         self.buildStaff('right', 'treble', 1, s, self.rightVoices.value())
         self.buildStaff('left', 'bass', 0, s, self.leftVoices.value())
 
-    def widgets(self, p):
+    def widgetsStaffVoice(self, p):
         l = QLabel('<p>%s <i>(%s)</i></p>' % (
             _("Adjust how many separate voices you want on each staff:"),
             _("This is primarily useful when you write polyphonic music "
@@ -90,14 +90,17 @@ class _KeyboardBase(part):
         QLabel(_("Left hand:"), h)
         self.leftVoices = QSpinBox(1, 4, 1, h)
 
+    def widgets(self, p):
+        self.widgetsStaffVoice(p)
+
 
 class Organ(_KeyboardBase):
     name = _("Organ")
-
     instrumentNames = _("Organ|Org."), "Organo|Org."
+    midiInstrument = 'church organ'
 
-    def widgets(self, p):
-        super(Organ, self).widgets(p)
+    def widgetsStaffVoice(self, p):
+        super(Organ, self).widgetsStaffVoice(p)
         h = QHBox(p)
         QLabel(_("Pedal:"), h)
         self.pedalVoices = QSpinBox(0, 4, 1, h)
@@ -114,24 +117,30 @@ class Organ(_KeyboardBase):
 
 class Piano(_KeyboardBase):
     name = _("Piano")
-
     instrumentNames = _("Piano|Pno."), "Pianoforte|Pf."
+    midiInstrument = 'acoustic grand'
     pass
 
 
 class Harpsichord(_KeyboardBase):
     name = _("Harpsichord")
-
     instrumentNames = _("Harpsichord|Hs."), "Cembalo|Cemb."
+    midiInstrument = 'harpsichord'
     pass
 
 
 class Clavichord(_KeyboardBase):
     name = _("Clavichord")
-
     instrumentNames = _("Clavichord|Clv."), "Clavichord|Clv."
+    midiInstrument = 'clav'
     pass
 
+
+class Celesta(_KeyboardBase):
+    name = _("Celesta")
+    instrumentNames = _("Celesta|Cel."), "Celesta|Cel."
+    midiInstrument = 'celesta'
+    pass
 
 
 # The structure of the overview
@@ -139,7 +148,7 @@ categories = (
     (_("Strings"),
         (Violin,)),
     (_("Keyboards"),
-        (Piano, Harpsichord, Clavichord, Organ)),
+        (Piano, Harpsichord, Clavichord, Organ, Celesta)),
 )
 
 

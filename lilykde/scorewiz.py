@@ -274,6 +274,7 @@ class part(object):
         self._partObjs = []
         self._assignments = []
 
+        self._midi = settingsWidget.midi.isChecked() # output MIDI?
         self._instr = settingsWidget.instr.isChecked() # instrument names?
         self._instrItalian = settingsWidget.instrIt.isChecked() # Italian ?
         self._instrShort = settingsWidget.instrSh.isChecked() # Short?
@@ -351,8 +352,21 @@ class part(object):
         Pitch(r, octave, 0, 0)
         s = Seq(r)
         Identifier(s, 'global')
-        Newline(s, 2)
+        Newline(s)
+        Comment(s, ' '+_("Music follows here."))
+        Newline(s)
         self._assignments.append((i, r))
+
+    def newStaff(self, node = None, name = None, midiInstrument = None):
+        """
+        Create a new Staff object and set it's MIDI instrument if desired.
+        """
+        s = Staff(node or self.doc, name)
+        if self._midi:
+            midi = midiInstrument or self.midiInstrument
+            if midi:
+                s.getWith()['midiInstrument'] = midi
+        return s
 
     def setInstrumentNames(self, node, translated, italian):
         """
