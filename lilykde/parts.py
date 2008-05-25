@@ -143,12 +143,102 @@ class Celesta(_KeyboardBase):
     pass
 
 
+class _SaxBase(part):
+    """
+    All saxophones.
+    """
+    name = _("Sax")
+
+    def build(self):
+        s = self.newStaff()
+        self.assignMusic('sax', s, self.transpose[0] + 1)
+        self.addPart(s)
+
+
+class SopraninoSax(_SaxBase):
+    name = _("Sopranino Sax")
+    instrumentNames = _("Sopranino Sax|SiSx."), "Sopranino-Sax|Si-Sx."
+    midiInstrument = 'soprano sax'
+    transpose = (0, 3, -1)    # es'
+    pass
+
+
+class SopranoSax(_SaxBase):
+    name = _("Soprano Sax")
+    instrumentNames = _("Soprano Sax|SoSx."), "Soprano-Sax|So-Sx."
+    midiInstrument = 'soprano sax'
+    transpose = (-1, 6, -1)   # bes
+    pass
+
+
+class AltoSax(_SaxBase):
+    name = _("Alto Sax")
+    instrumentNames = _("Alto Sax|ASx."), "Alto-Sax|A-Sx."
+    midiInstrument = 'alto sax'
+    transpose = (-1, 3, -1)   # es
+    pass
+
+
+class TenorSax(_SaxBase):
+    name = _("Tenor Sax")
+    instrumentNames = _("Tenor Sax|TSx."), "Tenor-Sax|T-Sx."
+    midiInstrument = 'tenor sax'
+    transpose = (-2, 6, -1)   # bes,
+    pass
+
+
+class BaritoneSax(_SaxBase):
+    name = _("Baritone Sax")
+    instrumentNames = _("Baritone Sax|BSx."), "Bariton-Sax|B-Sx."
+    midiInstrument = 'baritone sax'
+    transpose = (-2, 3, -1)   # es,
+    pass
+
+
+class BassSax(_SaxBase):
+    name = _("Bass Sax")
+    instrumentNames = _("Bass Sax|BsSx."), "Basso-Sax|Bs-Sx."
+    midiInstrument = 'baritone sax'
+    transpose = (-3, 6, -1)   # bes,,
+    pass
+
+
+
+
 # The structure of the overview
 categories = (
-    (_("Strings"),
-        (Violin,)),
-    (_("Keyboards"),
-        (Piano, Harpsichord, Clavichord, Organ, Celesta)),
+    (_("Strings"), (
+            Violin,
+        )),
+    (_("Plucked strings"),
+        ()),
+    (_("Woodwinds"), (
+            SopraninoSax,
+            SopranoSax,
+            AltoSax,
+            TenorSax,
+            BaritoneSax,
+            BassSax,
+        )),
+    (_("Brass"), (
+
+        )),
+    (_("Vocal"), (
+
+        )),
+    (_("Keyboard instruments"), (
+            Piano,
+            Harpsichord,
+            Clavichord,
+            Organ,
+            Celesta
+        )),
+    (_("Percussion"), (
+
+        )),
+    (_("Special"), (
+
+        )),
 )
 
 

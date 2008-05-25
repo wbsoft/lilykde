@@ -242,6 +242,7 @@ class part(object):
     def setName(self, name):
         self.name = name
         self.l.setText(name)
+        self.l.listBox().updateItem(self.l) # seems necessary
         self.w.setTitle(_("Configure %s") % name)
 
     def identifier(self):
@@ -276,8 +277,9 @@ class part(object):
 
         self._midi = settingsWidget.midi.isChecked() # output MIDI?
         self._instr = settingsWidget.instr.isChecked() # instrument names?
+        self._instrFirst = settingsWidget.instrFirst.currentItem() #Short,Long
+        self._instrOther = settingsWidget.instrOther.currentItem() #None,Short,Long
         self._instrItalian = settingsWidget.instrIt.isChecked() # Italian ?
-        self._instrShort = settingsWidget.instrSh.isChecked() # Short?
 
         self.build()
 
@@ -383,9 +385,10 @@ class part(object):
             suffix = " %s" % romanize(self.num)
             longName += suffix
             shortName += suffix
-        if not self._instrShort:
-            shortName = None
-        node.instrName(longName, shortName)
+
+        l = (shortName, longName)[self._instrFirst]
+        s = (None, shortName, longName)[self._instrOther]
+        node.instrName(l, s)
 
 
 class Titles(object):
@@ -480,7 +483,7 @@ class Parts(object):
         for name, partTypes in reversed(categories):
             cat = QListViewItem(self.all, name)
             cat.setSelectable(False)
-            cat.setOpen(True)
+            #cat.setOpen(True)
             for partType in reversed(partTypes):
                 part = QListViewItem(cat, partType.name)
                 part.partType = partType
@@ -591,14 +594,21 @@ class Settings(object):
         score = QVGroupBox(_("Score settings"), self.p)
         lily =  QVGroupBox(_("LilyPond"), self.p)
         prefs = QVGroupBox(_("General preferences"), self.p)
+        instr = QVGroupBox(_("Instrument names"), self.p)
         h = QHBoxLayout(self.p)
+        # first column of group boxes:
         v = QVBoxLayout()
         h.addLayout(v)
         v.addWidget(score)
         v.addSpacing(4)
         v.addWidget(lily)
         h.addSpacing(8)
-        h.addWidget(prefs)
+        # second column of group boxes:
+        v = QVBoxLayout()
+        h.addLayout(v)
+        v.addWidget(prefs)
+        v.addSpacing(2)
+        v.addWidget(instr)
 
         conf = config("scorewiz")
 
@@ -662,8 +672,7 @@ class Settings(object):
         self.tempoInd = KLineEdit(h, "tempo")
         parent.complete(self.tempoInd)
         l.setBuddy(self.tempoInd)
-        QToolTip.add(self.tempoInd, _(
-            "A tempo indication, e.g. \"Allegro.\""))
+        QToolTip.add(h, _("A tempo indication, e.g. \"Allegro.\""))
 
         # LilyPond settings
         h = QHBox(lily)
@@ -674,7 +683,7 @@ class Settings(object):
         self.lylang.insertItem(_("Default"))
         self.lylang.insertStringList(py2qstringlist(
             l.title() for l in sorted(keyNames)))
-        QToolTip.add(self.lylang, _(
+        QToolTip.add(h, _(
             "The LilyPond language you want to use for the pitch names."))
         QObject.connect(self.lylang, SIGNAL("activated(const QString&)"),
             self.setLanguage)
@@ -692,7 +701,7 @@ class Settings(object):
         try: self.lyversion.insertItem("%d.%d.%d" % version)
         except: pass
         self.lyversion.insertStringList(py2qstringlist(('2.10.0', '2.11.0')))
-        QToolTip.add(self.lyversion, _(
+        QToolTip.add(h, _(
             "The LilyPond version you will be using for this document."))
 
 
@@ -712,21 +721,47 @@ class Settings(object):
             "Create a MIDI file in addition to the PDF file."))
         self.midi.setChecked(conf['midi'] == '1')
 
-        self.instr = QCheckBox(_("Print instrument names"), prefs)
-        QToolTip.add(self.instr, _(
-            "Print instrument names before the staffs."))
-        self.instr.setChecked(conf['instrument names'] == '1')
 
-        self.instrIt = QCheckBox(_("Prefer Italian instrument names"), prefs)
+        # Instrument names
+        instr.setCheckable(True)
+        self.instr = instr
+
+        h = QHBox(instr)
+        h.setSpacing(2)
+        QLabel(_("First system:"), h)
+        self.instrFirst = QComboBox(False, h)
+        for i in _("Short"), _("Long"):
+            self.instrFirst.insertItem(i)
+        QToolTip.add(h, _(
+            "Use long or short instrument names before the first system."))
+
+        h = QHBox(instr)
+        h.setSpacing(2)
+        QLabel(_("Other systems:"), h)
+        self.instrOther = QComboBox(False, h)
+        for i in _("None"), _("Short"), _("Long"):
+            self.instrOther.insertItem(i)
+        QToolTip.add(h, _(
+            "Use no, short or long instrument names before the next systems."))
+
+        self.instrIt = QCheckBox(_("Italian names"), instr)
         QToolTip.add(self.instrIt, _(
             "Choose standard Italian instrument names, like '%s' "
             "instead of 'Organ.'") % 'Organo')
-        self.instrIt.setChecked(conf['italian instrument names'] == '1')
 
-        self.instrSh = QCheckBox(_("Print short instrument names"), prefs)
-        QToolTip.add(self.instrSh, _(
-            "Print short instrument names in front of all systems."))
-        self.instrSh.setChecked(conf['short instrument names'] == '1')
+        try:
+            self.instrFirst.setCurrentItem(
+                ['short', 'long'].index(conf.get(
+                    'instrument names first system', 'short')))
+        except: pass
+        try:
+            self.instrOther.setCurrentItem(
+                ['none', 'short', 'long'].index(conf.get(
+                    'instrument names other systems', 'none')))
+        except: pass
+        self.instrIt.setChecked(conf['italian instrument names'] == '1')
+        self.instr.setChecked(conf['instrument names'] == '1')
+
 
     def tap(self, bpm):
         """ Tap the tempo tap button """
@@ -759,7 +794,10 @@ class Settings(object):
         conf['midi'] = self.midi.isChecked() and '1' or '0'
         conf['instrument names'] = self.instr.isChecked() and '1' or '0'
         conf['italian instrument names'] = self.instrIt.isChecked() and '1' or '0'
-        conf['short instrument names'] = self.instrSh.isChecked() and '1' or '0'
+        conf['instrument names first system'] = \
+            ('short', 'long')[self.instrFirst.currentItem()]
+        conf['instrument names other systems'] = \
+            ('none', 'short', 'long')[self.instrOther.currentItem()]
 
     def defaults(self):
         """
