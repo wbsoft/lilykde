@@ -348,7 +348,14 @@ class part(object):
         """
         Creates a stub for music (\relative pitch { \global .... }) and adds
         an Identifier (referring to it) to the object given in addId.
+
+        If the name is empty or None, the identifier() will be used,
+        with the first letter lowered.
         """
+        if not name:
+            name = self.identifier()
+            name = name[0].lower() + name[1:]
+
         i = Identifier(addId, name)
         r = Relative(self.doc)
         Pitch(r, octave, 0, 0)

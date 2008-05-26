@@ -147,11 +147,10 @@ class _SaxBase(part):
     """
     All saxophones.
     """
-    name = _("Sax")
-
     def build(self):
         s = self.newStaff()
-        self.assignTransposedMusic('sax', s, 1, self.transpose)
+        self.setInstrumentNames(s, *self.instrumentNames)
+        self.assignTransposedMusic('', s, 1, self.transpose)
         self.addPart(s)
 
 
