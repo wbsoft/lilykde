@@ -359,10 +359,11 @@ class part(object):
         Newline(s)
         self._assignments.append((i, r))
 
-    def assignTransposedMusic(self, name, addId, octave, note, alter):
+    def assignTransposedMusic(self, name, addId, octave = 0, transp = (0,0,0)):
+        toct, tnote, talter = transp
         t = Transposition(self.doc)
-        Pitch(t, octave, note, Rational(alter, 2))
-        self.assignMusic(name, addId, octave + 1)
+        Pitch(t, toct, tnote, Rational(talter, 2))
+        self.assignMusic(name, addId, octave)
         s = self._assignments[-1][1][1]
         s.insert(2, t)
         s.insert(3, Newline(s))

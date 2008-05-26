@@ -151,7 +151,7 @@ class _SaxBase(part):
 
     def build(self):
         s = self.newStaff()
-        self.assignTransposedMusic('sax', s, *self.transpose)
+        self.assignTransposedMusic('sax', s, 1, self.transpose)
         self.addPart(s)
 
 
