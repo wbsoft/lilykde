@@ -404,11 +404,13 @@ class BassTuba(_BrassBase):
     octave = -1
 
 
-class _TabulatureBase(_SingleVoice):
+class _TablatureBase(_SingleVoice):
     """
     A class for instruments that support TabStaffs.
     """
     octave = 0
+    tunings = ()    # may contain a list of tunings.
+    tabFormat = ''  # can contain a tablatureFormat value.
 
     def widgets(self, p):
         h = QHBox(p)
@@ -416,11 +418,30 @@ class _TabulatureBase(_SingleVoice):
         self.staffType = QComboBox(False, h)
         for i in (
                 _("Normal staff"),
-                _("Tabulature"),
+                _("Tablature"),
                 _("Both"),
             ):
             self.staffType.insertItem(i)
-        # TODO tunings
+        if self.tunings:
+            QObject.connect(self.staffType, SIGNAL("activated(int)"),
+                self.slotTabEnable)
+            self.widgetsTuning(p)
+            self.slotTabEnable(0)
+
+    def widgetsTuning(self, p):
+        """ Implement widgets related to tuning """
+        h = QHBox(p)
+        QLabel(_("Tuning:"), h)
+        self.tuningSel = QComboBox(False, h)
+        for t in self.tunings:
+            self.tuningSel.insertItem(t[0])
+
+    def slotTabEnable(self, enable):
+        """
+        Called when the user changes the staff type.
+        Non-zero if the user wants a TabStaff.
+        """
+        self.tuningSel.setEnabled(bool(enable))
 
     def newTabStaff(self, node = None, name = None, midiInstrument = None):
         """
@@ -431,21 +452,23 @@ class _TabulatureBase(_SingleVoice):
             midi = midiInstrument or self.midiInstrument
             if midi:
                 s.getWith()['midiInstrument'] = midi
+        if self.tabFormat:
+            Scheme(Assignment(s.getWith(), 'tablatureFormat'), self.tabFormat)
         return s
 
     def build(self):
         t = self.staffType.currentItem()
         if t == 0:
             # normal staff
-            super(_TabulatureBase, self).build()
+            super(_TablatureBase, self).build()
             return
 
         # make a tabstaff
         tab = self.newTabStaff()
         s = Seqr(tab)
         self.assignMusic('', s)
-        # TODO tunings
-
+        # Tunings?
+        self.setTunings(tab)
         # both?
         p = tab
         if t == 2:
@@ -461,27 +484,56 @@ class _TabulatureBase(_SingleVoice):
         self.setInstrumentNames(p, *self.instrumentNames)
         self.addPart(p)
 
+    def setTunings(self, tab):
+        """ set tunings """
+        if self.tunings:
+            tuning = self.tunings[self.tuningSel.currentItem()][1]
+            Scheme(Assignment(tab.getWith(), 'stringTunings'), tuning)
 
-class Mandolin(_TabulatureBase):
+
+
+class Mandolin(_TablatureBase):
     name = _("Mandolin")
     instrumentNames = _("Mandolin|Mdl."), "Mandolino|Mdl."
     midiInstrument = 'acoustic guitar (steel)'
 
 
-class Banjo(_TabulatureBase):
+class Banjo(_TablatureBase):
     name = _("Banjo")
     instrumentNames = _("Banjo|Bj."), "Banjo|Bj."
     midiInstrument = 'banjo'
+    tabFormat = 'fret-number-tablature-format-banjo'
+    tunings = (
+        ('Open G-tuning (aDGBD)', 'banjo-open-g-tuning'),
+        ('C-tuning (gCGBD)', 'banjo-c-tuning'),
+        ('Modal tuning (gDGCD)', 'banjo-modal-tuning'),
+        ('Open D-tuning (aDF#AD)', 'banjo-open-d-tuning'),
+        ('Open Dm-tuning (aDFAD)', 'banjo-open-dm-tuning'),
+    )
+    def widgetsTuning(self, p):
+        super(Banjo, self).widgetsTuning(p)
+        self.fourStrings = QCheckBox(_("Four strings (instead of five)"), p)
 
+    def slotTabEnable(self, enable):
+        super(Banjo, self).slotTabEnable(enable)
+        self.fourStrings.setEnabled(bool(enable))
 
-class ClassicalGuitar(_TabulatureBase):
+    def setTunings(self, tab):
+        if not self.fourStrings.isChecked():
+            super(Banjo, self).setTunings(tab)
+        else:
+            Scheme(Assignment(tab.getWith(), 'stringTunings'),
+                '(four-string-banjo %s)' %
+                self.tunings[self.tuningSel.currentItem()][1])
+
+class ClassicalGuitar(_TablatureBase):
     name = _("Classical guitar")
     instrumentNames = _("Guitar|Gt."), "Chitarra|Chit."
     midiInstrument = 'acoustic guitar (nylon)'
     transpose = (-1, 0, 0)
 
 
-class JazzGuitar(_TabulatureBase):
+class JazzGuitar(_TablatureBase):
     name = _("Jazz guitar")
     instrumentNames = _("Jazz guitar|J.Gt."), "Jazz Chitarra|J.Chit." #FIXME
     midiInstrument = 'electric guitar (jazz)'
