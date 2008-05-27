@@ -358,6 +358,13 @@ class _BrassBase(_SingleVoice):
     pass
 
 
+class HornF(_BrassBase):
+    name = "Horn in F"
+    instrumentNames = ("Horn in F|Hn.F."), "Corno|Cor."
+    midiInstrument = 'french horn'
+    transpose = (-1, 3, 0)
+
+
 class TrumpetC(_BrassBase):
     name = _("Trumpet in C")
     instrumentNames = _("Trumpet in C|Tr.C"), "Tromba Do|Tr.Do"
@@ -394,28 +401,47 @@ class BassTuba(_BrassBase):
     octave = -1
 
 
-class Mandolin(_SingleVoice):
+class _TabulatureBase(_SingleVoice):
+    """
+    A class for instruments that support TabStaffs.
+    """
+    def widgets(self, p):
+        h = QHBox(p)
+        QLabel(_("Staff type:"), h)
+        self.staffType = QComboBox(False, h)
+        for i in (
+                _("Normal staff"),
+                _("Tabulature"),
+                _("Both"),
+            ):
+            self.staffType.insertItem(i)
+
+    #TODO: build the staffs
+
+
+
+class Mandolin(_TabulatureBase):
     name = _("Mandolin")
     instrumentNames = _("Mandolin|Mdl."), "Mandolino|Mdl."
     midiInstrument = 'acoustic guitar (steel)'
 
 
-class Banjo(_SingleVoice):
+class Banjo(_TabulatureBase):
     name = _("Banjo")
     instrumentNames = _("Banjo|Bj."), "Banjo|Bj."
     midiInstrument = 'banjo'
 
 
-class ClassicalGuitar(_SingleVoice):
+class ClassicalGuitar(_TabulatureBase):
     name = _("Classical guitar")
     instrumentNames = _("Guitar|Gt."), "Chitarra|Chit."
     midiInstrument = 'acoustic guitar (nylon)'
     transpose = (-1, 0, 0)
 
 
-class JazzGuitar(_SingleVoice):
+class JazzGuitar(_TabulatureBase):
     name = _("Jazz guitar")
-    instrumentNames = _("Jazz guitar|J.Gt."), "Jazz Chitarra|J.Chit."
+    instrumentNames = _("Jazz guitar|J.Gt."), "Jazz Chitarra|J.Chit." #FIXME
     midiInstrument = 'electric guitar (jazz)'
     transpose = (-1, 0, 0)
 
@@ -495,6 +521,7 @@ categories = (
             BassRecorder,
         )),
     (_("Brass"), (
+            HornF,
             TrumpetC,
             TrumpetBb,
             Trombone,

@@ -486,6 +486,8 @@ class Parts(object):
         QToolTip.add(b, _("Add selected part to your score."))
         QObject.connect(self.all, SIGNAL(
             "doubleClicked(QListViewItem *, const QPoint &, int)"), self.add)
+        QObject.connect(self.all, SIGNAL("clicked(QListViewItem *)"),
+            lambda item: item and item.setOpen(not item.isOpen()))
         QObject.connect(b, SIGNAL("clicked()"), self.add)
         self.all.setSorting(-1)
         self.all.setResizeMode(QListView.AllColumns)
