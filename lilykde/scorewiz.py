@@ -260,6 +260,7 @@ class part(object):
 
     def delete(self):
         self.p.part.removeChild(self.w)
+        del self.l.part
         del self.w, self.l
 
     def widgets(self, parent):
