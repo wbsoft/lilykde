@@ -220,6 +220,8 @@ class part(object):
             if len(t) > 1:
                 for n, p in enumerate(t):
                     p.num = n + 1
+            else:
+                t[0].num = 0
 
     def __init__(self, parts):
         """
@@ -296,6 +298,10 @@ class part(object):
         for i, v in self._assignments:
             if i.name == name:
                 i.name = newname
+                # are there more references to the same identifier?
+                # (the assignment stub lives in [0])
+                for j in v[1:]:
+                    j.name = newname
                 return
 
     def appendAssignments(self, node):
@@ -303,7 +309,7 @@ class part(object):
         Append the LilyDOM assignment nodes to the given node.
         """
         for i, v in self._assignments:
-            Assignment(node, i.name).append(v)
+            Assignment(node, i.name).append(v[0])
             Newline(node)
 
     def namedContexts(self):
@@ -357,6 +363,12 @@ class part(object):
             name = name[0].lower() + name[1:]
 
         i = Identifier(addId, name)
+        # handle multiple references to the same identifier.
+        for j, r in self._assignments:
+            if j.name == name:
+                r.append(i)
+                return
+        # create new assignment.
         r = Relative(self.doc)
         Pitch(r, octave, 0, 0)
         s = Seq(r)
@@ -364,14 +376,17 @@ class part(object):
         Newline(s)
         Comment(s, ' '+_("Music follows here."))
         Newline(s)
-        self._assignments.append((i, r))
+        # the assignment is stored as the first item of a list,
+        # if there are multiple references to it, those are stored
+        # as the next elements of this list.
+        self._assignments.append((i, [r]))
 
     def assignTransposedMusic(self, name, addId, octave = 0, transp = (0,0,0)):
         toct, tnote, talter = transp
         t = Transposition(self.doc)
         Pitch(t, toct, tnote, Rational(talter, 2))
         self.assignMusic(name, addId, octave)
-        s = self._assignments[-1][1][1]
+        s = self._assignments[-1][1][0][1]
         s.insert(2, t)
         s.insert(3, Newline(s))
 

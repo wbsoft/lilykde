@@ -69,11 +69,14 @@ class _SingleVoice(part):
         s = Seqr(s)
         if self.clef:
             Clef(s, self.clef)
-        if self.transpose:
-            self.assignTransposedMusic('', s, self.octave, self.transpose)
-        else:
-            self.assignMusic('', s, self.octave)
+        self.assignMusic('', s)
 
+    def assignMusic(self, name, node):
+        """ automatically handles transposing instruments """
+        if self.transpose is None:
+            super(_SingleVoice, self).assignMusic(name, node, self.octave)
+        else:
+            self.assignTransposedMusic(name, node, self.octave, self.transpose)
 
 
 class _KeyboardBase(part):
@@ -405,6 +408,8 @@ class _TabulatureBase(_SingleVoice):
     """
     A class for instruments that support TabStaffs.
     """
+    octave = 0
+
     def widgets(self, p):
         h = QHBox(p)
         QLabel(_("Staff type:"), h)
@@ -415,9 +420,46 @@ class _TabulatureBase(_SingleVoice):
                 _("Both"),
             ):
             self.staffType.insertItem(i)
+        # TODO tunings
 
-    #TODO: build the staffs
+    def newTabStaff(self, node = None, name = None, midiInstrument = None):
+        """
+        Create a new TabStaff object and set it's MIDI instrument if desired.
+        """
+        s = TabStaff(node or self.doc, name)
+        if self._midi:
+            midi = midiInstrument or self.midiInstrument
+            if midi:
+                s.getWith()['midiInstrument'] = midi
+        return s
 
+    def build(self):
+        t = self.staffType.currentItem()
+        if t == 0:
+            # normal staff
+            super(_TabulatureBase, self).build()
+            return
+
+        # make a tabstaff
+        tab = self.newTabStaff()
+        s = Seqr(tab)
+        self.assignMusic('', s)
+        # TODO tunings
+
+        # both?
+        p = tab
+        if t == 2:
+            s = StaffGroup(self.doc)
+            Text(s.getWith(), '\\consists "Instrument_name_engraver"\n')
+            s1 = Sim(s, multiline=True)
+            s1.append(tab)
+            p = s
+            s = Seqr(self.newStaff(s1))
+            if self.clef:
+                Clef(s, self.clef)
+            self.assignMusic('', s)
+        self.setInstrumentNames(p, *self.instrumentNames)
+        self.addPart(p)
 
 
 class Mandolin(_TabulatureBase):
