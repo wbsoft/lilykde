@@ -149,28 +149,24 @@ class Piano(_KeyboardBase):
     name = _("Piano")
     instrumentNames = _("Piano|Pno."), "Pianoforte|Pf."
     midiInstrument = 'acoustic grand'
-    pass
 
 
 class Harpsichord(_KeyboardBase):
     name = _("Harpsichord")
     instrumentNames = _("Harpsichord|Hs."), "Cembalo|Cemb."
     midiInstrument = 'harpsichord'
-    pass
 
 
 class Clavichord(_KeyboardBase):
     name = _("Clavichord")
     instrumentNames = _("Clavichord|Clv."), "Clavichord|Clv."
     midiInstrument = 'clav'
-    pass
 
 
 class Celesta(_KeyboardBase):
     name = _("Celesta")
     instrumentNames = _("Celesta|Cel."), "Celesta|Cel."
     midiInstrument = 'celesta'
-    pass
 
 
 class _SaxBase(_SingleVoice):
@@ -179,13 +175,11 @@ class _SaxBase(_SingleVoice):
     """
     pass
 
-
 class SopraninoSax(_SaxBase):
     name = _("Sopranino Sax")
     instrumentNames = _("Sopranino Sax|SiSx."), "Sopranino-Sax|Si-Sx."
     midiInstrument = 'soprano sax'
     transpose = (0, 2, -1)    # es'
-    pass
 
 
 class SopranoSax(_SaxBase):
@@ -193,7 +187,6 @@ class SopranoSax(_SaxBase):
     instrumentNames = _("Soprano Sax|SoSx."), "Soprano-Sax|So-Sx."
     midiInstrument = 'soprano sax'
     transpose = (-1, 6, -1)   # bes
-    pass
 
 
 class AltoSax(_SaxBase):
@@ -201,7 +194,6 @@ class AltoSax(_SaxBase):
     instrumentNames = _("Alto Sax|ASx."), "Alto-Sax|A-Sx."
     midiInstrument = 'alto sax'
     transpose = (-1, 2, -1)   # es
-    pass
 
 
 class TenorSax(_SaxBase):
@@ -209,7 +201,6 @@ class TenorSax(_SaxBase):
     instrumentNames = _("Tenor Sax|TSx."), "Tenor-Sax|T-Sx."
     midiInstrument = 'tenor sax'
     transpose = (-2, 6, -1)   # bes,
-    pass
 
 
 class BaritoneSax(_SaxBase):
@@ -217,7 +208,6 @@ class BaritoneSax(_SaxBase):
     instrumentNames = _("Baritone Sax|BSx."), "Bariton-Sax|B-Sx."
     midiInstrument = 'baritone sax'
     transpose = (-2, 2, -1)   # es,
-    pass
 
 
 class BassSax(_SaxBase):
@@ -225,7 +215,6 @@ class BassSax(_SaxBase):
     instrumentNames = _("Bass Sax|BsSx."), "Basso-Sax|Bs-Sx."
     midiInstrument = 'baritone sax'
     transpose = (-3, 6, -1)   # bes,,
-    pass
 
 
 class _StringBase(_SingleVoice):
@@ -239,7 +228,6 @@ class Violin(_StringBase):
     name = _("Violin")
     instrumentNames = _("Violin|Vl."), "Violino|Vl."
     midiInstrument = 'violin'
-    pass
 
 
 class Viola(_StringBase):
@@ -248,7 +236,6 @@ class Viola(_StringBase):
     midiInstrument = 'viola'
     clef = 'alto'
     octave = 0
-    pass
 
 
 class Cello(_StringBase):
@@ -257,7 +244,6 @@ class Cello(_StringBase):
     midiInstrument = 'cello'
     clef = 'bass'
     octave = 0
-    pass
 
 
 class Contrabass(_StringBase):
@@ -266,7 +252,6 @@ class Contrabass(_StringBase):
     midiInstrument = 'contrabass'
     clef = 'bass'
     octave = -1
-    pass
 
 
 class _WoodWindBase(_SingleVoice):
@@ -278,14 +263,13 @@ class Flute(_WoodWindBase):
     name = _("Flute")
     instrumentNames = _("Flute|Fl."), "Flauto|Fl."
     midiInstrument = 'flute'
-    pass
 
 
 class Piccolo(_WoodWindBase):
     name = _("Piccolo")
     instrumentNames = _("Piccolo|Pic."), "Flauto piccolo|Fl.pic."
     midiInstrument = 'piccolo'
-    pass
+    transpose = (1, 0, 0)
 
 
 class BassFlute(_WoodWindBase):
@@ -293,14 +277,19 @@ class BassFlute(_WoodWindBase):
     instrumentNames = _("Bass flute|Bfl."), "Flautone|Fln."
     midiInstrument = 'flute'
     transpose = (-1, 4, 0)
-    pass
 
 
 class Oboe(_WoodWindBase):
     name = _("Oboe")
     instrumentNames = _("Oboe|Ob."), "Oboe|Ob."
     midiInstrument = 'oboe'
-    pass
+
+
+class OboeDAmore(_WoodWindBase):
+    name = _("Oboe d'Amore")
+    instrumentNames = _("Oboe d'amore|Ob.d'am."), "Oboe d'amore|Ob.d'am."
+    midiInstrument = 'oboe'
+    transpose = (-1, 5, 0)
 
 
 class EnglishHorn(_WoodWindBase):
@@ -308,7 +297,6 @@ class EnglishHorn(_WoodWindBase):
     instrumentNames = _("English horn|Eng.h."), "Corno Inglese|C.Ingl."
     midiInstrument = 'english horn'
     transpose = (-1, 3, 0)
-    pass
 
 
 class Bassoon(_WoodWindBase):
@@ -317,7 +305,15 @@ class Bassoon(_WoodWindBase):
     midiInstrument = 'bassoon'
     clef = 'bass'
     octave = -1
-    pass
+
+
+class ContraBassoon(_WoodWindBase):
+    name = _("Contrabassoon")
+    instrumentNames = _("Contrabassoon|C.Bn."), "Contra fagotto|C.Fg."
+    midiInstrument = 'bassoon'
+    transpose = (-1, 0, 0)
+    clef = 'bass'
+    octave = -1
 
 
 class Clarinet(_WoodWindBase):
@@ -325,9 +321,139 @@ class Clarinet(_WoodWindBase):
     instrumentNames = _("Clarinet|Cl."), "Clarinetto|Cl."
     midiInstrument = 'clarinet'
     transpose = (-1, 6, -1)
+
+
+class SopranoRecorder(_WoodWindBase):
+    name = _("Soprano recorder")
+    instrumentNames = _("Soprano recorder|S.rec."), "Flauto dolce soprano|Fl.d.s."
+    midiInstrument = 'recorder'
+    transpose = (1, 0, 0)
+
+
+class AltoRecorder(_WoodWindBase):
+    name = _("Alto recorder")
+    instrumentNames = _("Alto recorder|A.rec."), "Flauto dolce alto|Fl.d.a."
+    midiInstrument = 'recorder'
+
+
+class TenorRecorder(_WoodWindBase):
+    name = _("Tenor recorder")
+    instrumentNames = _("Tenor recorder|T.rec."), "Flauto dolce tenore|Fl.d.t."
+    midiInstrument = 'recorder'
+
+
+class BassRecorder(_WoodWindBase):
+    name = _("Bass recorder")
+    instrumentNames = _("Bass recorder|B.rec."), "Flauto dolce basso|Fl.d.b."
+    midiInstrument = 'recorder'
+    clef = 'bass'
+    octave = -1
+
+
+
+class _BrassBase(_SingleVoice):
+    """
+    All brass instruments.
+    """
     pass
 
 
+class TrumpetC(_BrassBase):
+    name = _("Trumpet in C")
+    instrumentNames = _("Trumpet in C|Tr.C"), "Tromba Do|Tr.Do"
+    midiInstrument = 'trumpet'
+
+
+class TrumpetBb(TrumpetC):
+    name = _("Trumpet in Bb")
+    instrumentNames = _("Trumpet in Bb|Tr.Bb"), "Tromba Si-bemolle|Tr.Sib"
+    transpose = (-1, 6, -1)
+
+
+class Trombone(_BrassBase):
+    name = _("Trombone")
+    instrumentNames = _("Trombone|Trb."), "Trombone|Trb."
+    midiInstrument = 'trombone'
+    clef = 'bass'
+    octave = -1
+
+
+class Tuba(_BrassBase):
+    name = _("Tuba")
+    instrumentNames = _("Tuba|Tb."), "Tuba|Tb."
+    midiInstrument = 'tuba'
+    transpose = (-2, 6, -1)
+
+
+class BassTuba(_BrassBase):
+    name = _("Bass Tuba")
+    instrumentNames = _("Bass Tuba|B.Tb."), "Tuba bassa|Tb.b."
+    midiInstrument = 'tuba'
+    transpose = (-2, 0, 0)
+    clef = 'bass'
+    octave = -1
+
+
+class Mandolin(_SingleVoice):
+    name = _("Mandolin")
+    instrumentNames = _("Mandolin|Mdl."), "Mandolino|Mdl."
+    midiInstrument = 'acoustic guitar (steel)'
+
+
+class Banjo(_SingleVoice):
+    name = _("Banjo")
+    instrumentNames = _("Banjo|Bj."), "Banjo|Bj."
+    midiInstrument = 'banjo'
+
+
+class ClassicalGuitar(_SingleVoice):
+    name = _("Classical guitar")
+    instrumentNames = _("Guitar|Gt."), "Chitarra|Chit."
+    midiInstrument = 'acoustic guitar (nylon)'
+    transpose = (-1, 0, 0)
+
+
+class JazzGuitar(_SingleVoice):
+    name = _("Jazz guitar")
+    instrumentNames = _("Jazz guitar|J.Gt."), "Jazz Chitarra|J.Chit."
+    midiInstrument = 'electric guitar (jazz)'
+    transpose = (-1, 0, 0)
+
+
+class Bass(_SingleVoice):
+    name = _("Bass")
+    instrumentNames = _("Bass|Bs."), "Bass|B." #FIXME
+    midiInstrument = 'acoustic bass'
+    transpose = (-1, 0, 0)
+    clef = 'bass'
+    octave = -1
+
+
+class ElectricBass(_SingleVoice):
+    name = _("Electric bass")
+    instrumentNames = _("Electric bass|E.Bs."), "Electric bass|E.B." #FIXME
+    midiInstrument = 'electric bass (finger)'
+    transpose = (-1, 0, 0)
+    clef = 'bass'
+    octave = -1
+
+
+class Harp(_KeyboardBase):
+    name = _("Harp")
+    instrumentNames = _("Harp|Hp."), "Arpa|Ar."
+    midiInstrument = 'harp'
+    def build(self):
+        """ setup structure for 2 manuals. """
+        p = PianoStaff(self.doc)
+        self.addPart(p)
+        self.setInstrumentNames(p, *self.instrumentNames)
+        s = Sim(p, multiline=True)
+        # add two staffs, with a respective number of voices.
+        self.buildStaff('upper', '', 1, s, 1)
+        self.buildStaff('lower', 'bass', 0, s, 1)
+
+    def widgets(self, p):
+        part.widgets(self, p)
 
 
 # The structure of the overview
@@ -338,15 +464,24 @@ categories = (
             Cello,
             Contrabass,
         )),
-    (_("Plucked strings"),
-        ()),
+    (_("Plucked strings"), (
+            Mandolin,
+            Banjo,
+            ClassicalGuitar,
+            JazzGuitar,
+            Bass,
+            ElectricBass,
+            Harp,
+        )),
     (_("Woodwinds"), (
             Flute,
             Piccolo,
             BassFlute,
             Oboe,
+            OboeDAmore,
             EnglishHorn,
             Bassoon,
+            ContraBassoon,
             Clarinet,
             SopraninoSax,
             SopranoSax,
@@ -354,9 +489,17 @@ categories = (
             TenorSax,
             BaritoneSax,
             BassSax,
+            SopranoRecorder,
+            AltoRecorder,
+            TenorRecorder,
+            BassRecorder,
         )),
     (_("Brass"), (
-
+            TrumpetC,
+            TrumpetBb,
+            Trombone,
+            Tuba,
+            BassTuba,
         )),
     (_("Vocal"), (
 
