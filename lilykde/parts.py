@@ -433,6 +433,7 @@ class _TablatureBase(_SingleVoice):
         h = QHBox(p)
         QLabel(_("Tuning:"), h)
         self.tuningSel = QComboBox(False, h)
+        self.tuningSel.insertItem(_("Default"))
         for t in self.tunings:
             self.tuningSel.insertItem(t[0])
 
@@ -486,8 +487,8 @@ class _TablatureBase(_SingleVoice):
 
     def setTunings(self, tab):
         """ set tunings """
-        if self.tunings:
-            tuning = self.tunings[self.tuningSel.currentItem()][1]
+        if self.tunings and self.tuningSel.currentItem() > 0:
+            tuning = self.tunings[self.tuningSel.currentItem() - 1][1]
             Scheme(Assignment(tab.getWith(), 'stringTunings'), tuning)
 
 
@@ -496,6 +497,9 @@ class Mandolin(_TablatureBase):
     name = _("Mandolin")
     instrumentNames = _("Mandolin|Mdl."), "Mandolino|Mdl."
     midiInstrument = 'acoustic guitar (steel)'
+    tunings = (
+        (_("Mandolin tuning"), 'mandolin-tuning'),
+    )
 
 
 class Banjo(_TablatureBase):
@@ -504,11 +508,11 @@ class Banjo(_TablatureBase):
     midiInstrument = 'banjo'
     tabFormat = 'fret-number-tablature-format-banjo'
     tunings = (
-        ('Open G-tuning (aDGBD)', 'banjo-open-g-tuning'),
-        ('C-tuning (gCGBD)', 'banjo-c-tuning'),
-        ('Modal tuning (gDGCD)', 'banjo-modal-tuning'),
-        ('Open D-tuning (aDF#AD)', 'banjo-open-d-tuning'),
-        ('Open Dm-tuning (aDFAD)', 'banjo-open-dm-tuning'),
+        (_("Open G-tuning (aDGBD)"), 'banjo-open-g-tuning'),
+        (_("C-tuning (gCGBD)"), 'banjo-c-tuning'),
+        (_("Modal tuning (gDGCD)"), 'banjo-modal-tuning'),
+        (_("Open D-tuning (aDF#AD)"), 'banjo-open-d-tuning'),
+        (_("Open Dm-tuning (aDFAD)"), 'banjo-open-dm-tuning'),
     )
     def widgetsTuning(self, p):
         super(Banjo, self).widgetsTuning(p)
@@ -531,7 +535,10 @@ class ClassicalGuitar(_TablatureBase):
     instrumentNames = _("Guitar|Gt."), "Chitarra|Chit."
     midiInstrument = 'acoustic guitar (nylon)'
     transpose = (-1, 0, 0)
-
+    tunings = (
+        (_("Guitar tuning"), 'guitar-tuning'),
+        (_("Open G-tuning"), 'guitar-open-g-tuning'),
+    )
 
 class JazzGuitar(_TablatureBase):
     name = _("Jazz guitar")
@@ -547,7 +554,9 @@ class Bass(_SingleVoice):
     transpose = (-1, 0, 0)
     clef = 'bass'
     octave = -1
-
+    tunings = (
+        (_("Bass tuning"), 'bass-tuning'),
+    )
 
 class ElectricBass(_SingleVoice):
     name = _("Electric bass")
