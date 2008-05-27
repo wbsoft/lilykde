@@ -540,14 +540,13 @@ class ClassicalGuitar(_TablatureBase):
         (_("Open G-tuning"), 'guitar-open-g-tuning'),
     )
 
-class JazzGuitar(_TablatureBase):
+class JazzGuitar(ClassicalGuitar):
     name = _("Jazz guitar")
     instrumentNames = _("Jazz guitar|J.Gt."), "Jazz Chitarra|J.Chit." #FIXME
     midiInstrument = 'electric guitar (jazz)'
-    transpose = (-1, 0, 0)
 
 
-class Bass(_SingleVoice):
+class Bass(_TablatureBase):
     name = _("Bass")
     instrumentNames = _("Bass|Bs."), "Bass|B." #FIXME
     midiInstrument = 'acoustic bass'
@@ -558,13 +557,10 @@ class Bass(_SingleVoice):
         (_("Bass tuning"), 'bass-tuning'),
     )
 
-class ElectricBass(_SingleVoice):
+class ElectricBass(Bass):
     name = _("Electric bass")
     instrumentNames = _("Electric bass|E.Bs."), "Electric bass|E.B." #FIXME
     midiInstrument = 'electric bass (finger)'
-    transpose = (-1, 0, 0)
-    clef = 'bass'
-    octave = -1
 
 
 class Harp(_KeyboardBase):
