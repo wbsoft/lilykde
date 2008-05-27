@@ -1194,14 +1194,18 @@ class ContextType(Container):
         Puts instrumentName assignments in the attached with clause.
         """
         w = self.getWith()
-        if longName is None:
-            del w['instrumentName']
-        else:
-            w['instrumentName'] = longName
         if shortName is None:
             del w['shortInstrumentName']
         else:
             w['shortInstrumentName'] = shortName
+            # place them at the beginning:
+            w.insert(0, w['shortInstrumentName'])
+        if longName is None:
+            del w['instrumentName']
+        else:
+            w['instrumentName'] = longName
+            # place them at the beginning:
+            w.insert(0, w['instrumentName'])
 
     def getWith(self):
         """
