@@ -284,8 +284,9 @@ class part(object):
         self.p.part.raiseWidget(self.w)
 
     def delete(self):
-        sip.delete(self.w)
         del self.l.part
+        sip.delete(self.w)
+        sip.delete(self.l)
 
     def widgets(self, parent):
         """
@@ -416,7 +417,7 @@ class part(object):
             toct, tnote, talter = transpose
             Pitch(Transposition(s), toct, tnote, Rational(talter, 2))
             Newline(s)
-        Comment(s, ' '+_("Music follows here."))
+        Comment(s, ' ' + _("Music follows here."))
         Newline(s)
         self.assignGeneric(name, addId, r)
 
@@ -601,7 +602,6 @@ class Parts(object):
         for index in reversed(range(self.score.count())):
             if self.score.isSelected(index):
                 self.score.item(index).part.delete()
-                self.score.removeItem(index)
 
     def moveUp(self):
         """ Move selected parts up. """
@@ -645,7 +645,6 @@ class Parts(object):
         """
         while self.score.count():
             self.score.item(0).part.delete()
-            self.score.removeItem(0)
 
 
 class Settings(object):

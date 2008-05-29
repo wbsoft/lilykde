@@ -45,11 +45,12 @@ class _SingleVoice(part):
         s = Seqr(s)
         if self.clef:
             Clef(s, self.clef)
-        self.assignAutoMusic('', s)
+        self.assignMusic('', s)
 
-    def assignAutoMusic(self, name, node):
+    def assignMusic(self, name, node):
         """ automatically handles transposing instruments """
-        self.assignMusic(name, node, self.octave, self.transpose)
+        super(_SingleVoice, self).assignMusic(
+            name, node, self.octave, self.transpose)
 
 
 class _KeyboardBase(part):
@@ -440,7 +441,7 @@ class _TablatureBase(_SingleVoice):
         # make a tabstaff
         tab = self.newTabStaff()
         s = Seqr(tab)
-        self.assignAutoMusic('', s)
+        self.assignMusic('', s)
         # Tunings?
         self.setTunings(tab)
         # both?
@@ -454,7 +455,7 @@ class _TablatureBase(_SingleVoice):
             s = Seqr(self.newStaff(s1))
             if self.clef:
                 Clef(s, self.clef)
-            self.assignAutoMusic('', s)
+            self.assignMusic('', s)
         self.setInstrumentNames(p, *self.instrumentNames)
         self.addPart(p)
 
@@ -614,20 +615,45 @@ class Drums(part):
     def build(self):
         p = DrumStaff(self.doc)
         s = Simr(p, multiline = True)
-        for i in range(1, self.drumVoices.value()+1):
-            q = Seq(DrumVoice(s))
-            Text(q, '\\voice%s' % nums(i))
-            self.assignDrums('drum%s' % nums(i), q)
+
+        if self.drumVoices.value() > 1:
+            for i in range(1, self.drumVoices.value()+1):
+                q = Seq(DrumVoice(s))
+                Text(q, '\\voice%s' % nums(i))
+                self.assignDrums('drum%s' % nums(i), q)
+        else:
+            self.assignDrums('drum', s)
         self.addPart(p)
         self.setInstrumentNames(p, *self.instrumentNames)
+        i = self.drumStyle.currentItem()
+        if i > 0:
+            v = ('drums', 'timbales', 'congas', 'bongos', 'percussion')[i]
+            p.getWith()['drumStyleTable'] = Scheme(self.doc, '%s-style' % v)
+            v = (5, 2, 2, 2, 1)[i]
+            Text(p.getWith(), "\\override StaffSymbol #'line-count = #%i\n" % v)
+        if self.drumStems.isChecked():
+            Text(p.getWith(), "\\override Stem #'stencil = ##f\n")
+            Text(p.getWith(), "\\override Stem #'length = #3  %% %s"
+                % _("keep some distance."))
 
     def widgets(self, p):
         h = QHBox(p)
-        QLabel(_("Voices count:"), h)
+        QLabel(_("Voices:"), h)
         self.drumVoices = QSpinBox(1, 4, 1, h)
-        self.drumVoices.setValue(2)
-        QToolTip.add(h, _(
-            "How many drumvoices to put in this staff (typically 2)"))
+        QToolTip.add(h, _("How many drum voices to put in this staff."))
+        h = QHBox(p)
+        QLabel(_("Style:"), h)
+        self.drumStyle = QComboBox(False, h)
+        for i in (
+                _("Drums (5 lines, default)"),
+                _("Timbales-style (2 lines)"),
+                _("Congas-style (2 lines)"),
+                _("Bongos-style (2 lines)"),
+                _("Percussion-style (1 line)"),
+            ):
+            self.drumStyle.insertItem(i)
+        self.drumStems = QCheckBox(_("Remove stems"), p)
+        QToolTip.add(self.drumStems, _("Remove the stems from the drum notes"))
 
 
 
