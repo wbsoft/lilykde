@@ -43,6 +43,7 @@ import re
 from string import Template
 from rational import Rational
 
+import sip
 from qt import *
 from kdecore import KCompletion
 from kdeui import *
@@ -235,7 +236,7 @@ class part(object):
         self.p = parts
         self.l = QListBoxText(parts.score)
         self.l.part = self
-        self.w = QVGroupBox(parts.part)
+        self.w = QVGroupBox()
         parts.part.addWidget(self.w)
         self.setName(self.name) # before init self.name is a class variable
         self.widgets(self.w)
@@ -259,9 +260,8 @@ class part(object):
         self.p.part.raiseWidget(self.w)
 
     def delete(self):
-        self.p.part.removeChild(self.w)
+        sip.delete(self.w)
         del self.l.part
-        del self.w, self.l
 
     def widgets(self, parent):
         """
