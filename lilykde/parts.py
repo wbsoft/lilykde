@@ -45,12 +45,12 @@ class _SingleVoice(part):
         s = Seqr(s)
         if self.clef:
             Clef(s, self.clef)
-        self.assignMusic('', s)
+        self.assignAutoMusic('', s)
 
-    def assignMusic(self, name, node):
+    def assignAutoMusic(self, name, node):
         """ automatically handles transposing instruments """
         if self.transpose is None:
-            super(_SingleVoice, self).assignMusic(name, node, self.octave)
+            self.assignMusic(name, node, self.octave)
         else:
             self.assignTransposedMusic(name, node, self.octave, self.transpose)
 
@@ -443,7 +443,7 @@ class _TablatureBase(_SingleVoice):
         # make a tabstaff
         tab = self.newTabStaff()
         s = Seqr(tab)
-        self.assignMusic('', s)
+        self.assignAutoMusic('', s)
         # Tunings?
         self.setTunings(tab)
         # both?
@@ -457,7 +457,7 @@ class _TablatureBase(_SingleVoice):
             s = Seqr(self.newStaff(s1))
             if self.clef:
                 Clef(s, self.clef)
-            self.assignMusic('', s)
+            self.assignAutoMusic('', s)
         self.setInstrumentNames(p, *self.instrumentNames)
         self.addPart(p)
 
