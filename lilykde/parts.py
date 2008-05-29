@@ -49,10 +49,7 @@ class _SingleVoice(part):
 
     def assignAutoMusic(self, name, node):
         """ automatically handles transposing instruments """
-        if self.transpose is None:
-            self.assignMusic(name, node, self.octave)
-        else:
-            self.assignTransposedMusic(name, node, self.octave, self.transpose)
+        self.assignMusic(name, node, self.octave, self.transpose)
 
 
 class _KeyboardBase(part):

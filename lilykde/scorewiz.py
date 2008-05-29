@@ -375,13 +375,15 @@ class part(object):
         """
         return self._partObjs[index]
 
-    def assignGeneric(self, name, addId, node):
+    def assignGeneric(self, name, addId, stub):
         """
-        Adds an identifier to the object in addId, referring to a stub
-        of music that yet has to be created.
+        Adds an identifier to the object in addId, referring to the stub
+        of music.
+        The stub (dangling lilydom tree) is added to our list of assignments
+        if there not already exists one.
 
-        The node (dangling lilydom tree) is added to our list of assignments
-        if there did not already exist one.
+        If the name is empty or None, the identifier() will be used,
+        with the first letter lowered.
         """
         if not name:
             name = self.identifier()
@@ -396,33 +398,27 @@ class part(object):
         # the assignment is stored as the first item of a list,
         # if there are multiple references to it, those are stored
         # as the next elements of this list.
-        self._assignments.append((i, [node]))
+        self._assignments.append((i, [stub]))
 
-    def assignMusic(self, name, addId, octave = 0):
+    def assignMusic(self, name, addId, octave = 0, transpose = None):
         """
         Creates a stub for music (\relative pitch { \global .... }) and adds
         an Identifier (referring to it) to the object given in addId.
 
-        If the name is empty or None, the identifier() will be used,
-        with the first letter lowered.
+        transpose, if given, should be a tuple (octaves, notes, semitones).
         """
         r = Relative(self.doc)
         Pitch(r, octave, 0, 0)
         s = Seq(r)
         Identifier(s, 'global')
         Newline(s)
+        if transpose is not None:
+            toct, tnote, talter = transpose
+            Pitch(Transposition(s), toct, tnote, Rational(talter, 2))
+            Newline(s)
         Comment(s, ' '+_("Music follows here."))
         Newline(s)
         self.assignGeneric(name, addId, r)
-
-    def assignTransposedMusic(self, name, addId, octave = 0, transp = (0,0,0)):
-        toct, tnote, talter = transp
-        t = Transposition(self.doc)
-        Pitch(t, toct, tnote, Rational(talter, 2))
-        self.assignMusic(name, addId, octave)
-        s = self._assignments[-1][1][0][1]
-        s.insert(2, t)
-        s.insert(3, Newline(s))
 
     def newStaff(self, node = None, name = None, midiInstrument = None):
         """
