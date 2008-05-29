@@ -200,6 +200,30 @@ html = Template(r"""<table style='font-family:serif;'>
         _("bottom of last page"))
 
 
+_nums = (
+    'Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight',
+    'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',
+    'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen')
+
+_tens = (
+    'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty',
+    'Ninety', 'Hundred')
+
+def nums(num):
+    """
+    Returns a textual representation of a number (e.g. 1 -> "One"), for use
+    in LilyPond identifiers (that do not support numbers).
+    Supports numbers 0 to 109.
+    """
+    if num < 20:
+        return _nums[num]
+    d, r = divmod(num, 10)
+    n = _tens[d-2]
+    if r:
+        n += _nums[r]
+    return n
+
+
 class part(object):
     """
     The base class for LilyKDE part types.
@@ -351,13 +375,13 @@ class part(object):
         """
         return self._partObjs[index]
 
-    def assignMusic(self, name, addId, octave = 0):
+    def assignGeneric(self, name, addId, node):
         """
-        Creates a stub for music (\relative pitch { \global .... }) and adds
-        an Identifier (referring to it) to the object given in addId.
+        Adds an identifier to the object in addId, referring to a stub
+        of music that yet has to be created.
 
-        If the name is empty or None, the identifier() will be used,
-        with the first letter lowered.
+        The node (dangling lilydom tree) is added to our list of assignments
+        if there did not already exist one.
         """
         if not name:
             name = self.identifier()
@@ -369,7 +393,19 @@ class part(object):
             if j.name == name:
                 r.append(i)
                 return
-        # create new assignment.
+        # the assignment is stored as the first item of a list,
+        # if there are multiple references to it, those are stored
+        # as the next elements of this list.
+        self._assignments.append((i, [node]))
+
+    def assignMusic(self, name, addId, octave = 0):
+        """
+        Creates a stub for music (\relative pitch { \global .... }) and adds
+        an Identifier (referring to it) to the object given in addId.
+
+        If the name is empty or None, the identifier() will be used,
+        with the first letter lowered.
+        """
         r = Relative(self.doc)
         Pitch(r, octave, 0, 0)
         s = Seq(r)
@@ -377,10 +413,7 @@ class part(object):
         Newline(s)
         Comment(s, ' '+_("Music follows here."))
         Newline(s)
-        # the assignment is stored as the first item of a list,
-        # if there are multiple references to it, those are stored
-        # as the next elements of this list.
-        self._assignments.append((i, [r]))
+        self.assignGeneric(name, addId, r)
 
     def assignTransposedMusic(self, name, addId, octave = 0, transp = (0,0,0)):
         toct, tnote, talter = transp

@@ -8,32 +8,8 @@ from qt import *
 
 # Translate titles, etc.
 from lilykde.i18n import _
-from lilykde.scorewiz import part
-from lilydom import *
-
-
-_nums = (
-    'Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight',
-    'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',
-    'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen')
-
-_tens = (
-    'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty',
-    'Ninety', 'Hundred')
-
-def nums(num):
-    """
-    Returns a textual representation of a number (e.g. 1 -> "One"), for use
-    in LilyPond identifiers (that do not support numbers).
-    Supports numbers 0 to 109.
-    """
-    if num < 20:
-        return _nums[num]
-    d, r = divmod(num, 10)
-    n = _tens[d-2]
-    if r:
-        n += _nums[r]
-    return n
+from lilykde.scorewiz import part, nums
+from lilykde.lilydom import *
 
 
 class _SingleVoice(part):
@@ -581,6 +557,85 @@ class Harp(_KeyboardBase):
         part.widgets(self, p)
 
 
+class _PitchedPercussionBase(_SingleVoice):
+    """
+    All pitched percussion instruments.
+    """
+    pass
+
+
+class Timpani(_PitchedPercussionBase):
+    name = _("Timpani")
+    instrumentNames = _("Timpani|Tmp."), "Timpani|Tmp."
+    midiInstrument = 'timpani'
+    clef = 'bass'
+    octave = -1
+
+
+class Xylophone(_PitchedPercussionBase):
+    name = _("Xylophone")
+    instrumentNames = _("Xylophone|Xyl."), "Silofono|Sil."
+    midiInstrument = 'xylophone'
+
+
+class Marimba(_PitchedPercussionBase):
+    name = _("Marimba")
+    instrumentNames = _("Marimba|Mar."), "Marimba|Mar."
+    midiInstrument = 'marimba'
+
+
+class Vibraphone(_PitchedPercussionBase):
+    name = _("Vibraphone")
+    instrumentNames = _("Vibraphone|Vib."), "Vibrafono|Vib."
+    midiInstrument = 'vibraphone'
+
+
+class TubularBells(_PitchedPercussionBase):
+    name = _("Tubular bells")
+    instrumentNames = _("Tubular bells|Tub."), "Campana tubolare|Cmp.t."
+    midiInstrument = 'tubular bells'
+
+
+class Glockenspiel(_PitchedPercussionBase):
+    name = _("Glockenspiel")
+    instrumentNames = _("Glockenspiel|Gls."), "Campanelli|Camp."
+    midiInstrument = 'glockenspiel'
+
+
+class Drums(part):
+    name = _("Drums")
+    instrumentNames = _("Drums|Dr."), "Tamburo|Tamb."
+
+    def assignDrums(self, name, node):
+        s = DrumMode(self.doc)
+        Identifier(s, 'global')
+        Newline(s)
+        Comment(s, ' '+_("Drums follow here."))
+        Newline(s)
+        self.assignGeneric(name, node, s)
+
+    def build(self):
+        p = DrumStaff(self.doc)
+        s = Simr(p, multiline = True)
+        for i in range(1, self.drumVoices.value()+1):
+            q = Seq(DrumVoice(s))
+            Text(q, '\\voice%s' % nums(i))
+            self.assignDrums('drum%s' % nums(i), q)
+        self.addPart(p)
+        self.setInstrumentNames(p, *self.instrumentNames)
+
+    def widgets(self, p):
+        h = QHBox(p)
+        QLabel(_("Voices count:"), h)
+        self.drumVoices = QSpinBox(1, 4, 1, h)
+        self.drumVoices.setValue(2)
+        QToolTip.add(h, _(
+            "How many drumvoices to put in this staff (typically 2)"))
+
+
+
+
+
 # The structure of the overview
 categories = (
     (_("Strings"), (
@@ -635,10 +690,16 @@ categories = (
             Harpsichord,
             Clavichord,
             Organ,
-            Celesta
+            Celesta,
         )),
     (_("Percussion"), (
-
+            Timpani,
+            Xylophone,
+            Marimba,
+            Vibraphone,
+            TubularBells,
+            Glockenspiel,
+            Drums,
         )),
     (_("Special"), (
 
