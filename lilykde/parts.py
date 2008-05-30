@@ -724,8 +724,7 @@ class BassFigures(part):
             p.getWith()['useBassFigureExtenders'] = Scheme(self.doc, '#t')
 
     def widgets(self, p):
-        self.useExtenderLines = QCheckBox(
-            _("Use extender lines"), p)
+        self.useExtenderLines = QCheckBox(_("Use extender lines"), p)
 
 
 class _Vocal(part):
@@ -779,13 +778,15 @@ class LeadSheet(_Vocal, Chords):
         self.addPart(p)
 
     def widgets(self, p):
+        QLabel('<p><i>%s</i></p>' % _(
+            "The Lead Sheet provides a staff with chord names above "
+            "and lyrics below it. A second staff is optional."), p)
         Chords.widgets(self, p)
         h = QHBox(p)
         QLabel(_("Stanzas:"), h)
         self.stanzas = QSpinBox(1, 10, 1, h)
         QToolTip.add(h, _("The number of stanzas."))
-        self.accomp = QCheckBox(
-            _("Add accompaniment staff"), p)
+        self.accomp = QCheckBox(_("Add accompaniment staff"), p)
 
 
 
