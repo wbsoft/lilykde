@@ -653,10 +653,51 @@ class Drums(part):
             ):
             self.drumStyle.insertItem(i)
         self.drumStems = QCheckBox(_("Remove stems"), p)
-        QToolTip.add(self.drumStems, _("Remove the stems from the drum notes"))
+        QToolTip.add(self.drumStems, _("Remove the stems from the drum notes."))
 
 
+class Chords(part):
+    name = _("Chord names")
+    def build(self):
+        p = ChordNames(self.doc)
+        s = ChordMode(self.doc)
+        Identifier(s, 'global')
+        Newline(s)
+        i = self.chordStyle.currentItem()
+        if i > 0:
+            Identifier(s, '%sChords' %
+                ('german', 'semiGerman', 'italian', 'french')[i-1])
+            Newline(s)
+        Comment(s, ' ' + _("Chords follow here."))
+        Newline(s)
+        self.assignGeneric('chordNames', p, s)
+        self.addPart(p)
 
+    def widgets(self, p):
+        h = QHBox(p)
+        QLabel(_("Chord style:"), h)
+        self.chordStyle = QComboBox(False, h)
+        for i in (
+                _("Default"),
+                _("German"),
+                _("Semi-German"),
+                _("Italian"),
+                _("French"),
+            ):
+            self.chordStyle.insertItem(i)
+
+
+class BassFigures(part):
+    name = _("Figured Bass")
+    def build(self):
+        p = FiguredBass(self.doc)
+        s = FigureMode(self.doc)
+        Identifier(s, 'global')
+        Newline(s)
+        Comment(s, ' ' + _("Figures follow here."))
+        Newline(s)
+        self.assignGeneric('figBass', p, s)
+        self.addPart(p)
 
 
 # The structure of the overview
@@ -725,7 +766,8 @@ categories = (
             Drums,
         )),
     (_("Special"), (
-
+            Chords,
+            BassFigures,
         )),
 )
 
