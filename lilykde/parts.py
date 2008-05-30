@@ -220,7 +220,7 @@ class Cello(_StringBase):
     instrumentNames = _("Cello|Cl."), "Violoncello|Vcl."
     midiInstrument = 'cello'
     clef = 'bass'
-    octave = 0
+    octave = -1
 
 
 class Contrabass(_StringBase):
@@ -229,6 +229,28 @@ class Contrabass(_StringBase):
     midiInstrument = 'contrabass'
     clef = 'bass'
     octave = -1
+
+
+class BassoContinuo(Cello):
+    name = _("Basso continuo")
+    instrumentNames = _("Basso Continuo|B.c."), "Basso Continuo|B.c."
+    def build(self):
+        s = self.newStaff()
+        self.addPart(s)
+        self.setInstrumentNames(s, *self.instrumentNames)
+        s = Sim(s)
+        if self.clef:
+            Clef(s, self.clef)
+        self.assignMusic('bcMusic', s)
+        b = FigureMode(self.doc)
+        Identifier(b, 'global')
+        Newline(b)
+        Text(b,
+            "\\override Staff.BassFigureAlignmentPositioning "
+            "#'direction = #DOWN\n")
+        Comment(b, ' ' + _("Figures follow here."))
+        Newline(b)
+        self.assignGeneric('bcFigures', s, b)
 
 
 class _WoodWindBase(_SingleVoice):
@@ -707,6 +729,7 @@ categories = (
             Viola,
             Cello,
             Contrabass,
+            BassoContinuo,
         )),
     (_("Plucked strings"), (
             Mandolin,
