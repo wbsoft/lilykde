@@ -720,6 +720,73 @@ class BassFigures(part):
         Newline(s)
         self.assignGeneric('figBass', p, s)
         self.addPart(p)
+        if self.useExtenderLines.isChecked():
+            p.getWith()['useBassFigureExtenders'] = Scheme(self.doc, '#t')
+
+    def widgets(self, p):
+        self.useExtenderLines = QCheckBox(
+            _("Use extender lines"), p)
+
+
+class _Vocal(part):
+    """
+    Base class for vocal stuff.
+    """
+    def assignLyrics(self, name, node, verse = 0):
+        l = LyricMode(self.doc)
+        if verse:
+            name = name + nums(verse)
+            Text(l, '\\set stanza = "%d."\n' % verse)
+        Comment(l, ' ' + _("Lyrics follow here."))
+        Newline(l)
+        self.assignGeneric(name, node, l)
+
+
+class LeadSheet(_Vocal, Chords):
+    name = _("Lead sheet")
+    def build(self):
+        """
+        Create chord names, song and lyrics.
+        Optional a second staff with a piano accompaniment.
+        """
+        Chords.build(self)
+        if self.accomp.isChecked():
+            p = ChoirStaff(self.doc)
+            #TODO: instrument mames ?
+            s = Sim(p, multiline = True)
+            mel = Sim(Staff(s), multiline = True)
+            v1 = Voice(mel)
+            s1 = Seq(v1, multiline = True)
+            Text(s1, '\\voiceOne\n')
+            self.assignMusic('melody', s1, 1)
+            v2 = Voice(mel)
+            s2 = Seq(v2, multiline = True)
+            Text(s2, '\\voiceTwo\n')
+            self.assignMusic('accRight', s2, 0)
+            s3 = Seqr(Staff(s))
+            Clef(s3, 'bass')
+            self.assignMusic('accLeft', s3, -1)
+            addlyr = v1
+        else:
+            p = Staff(self.doc)
+            self.assignMusic('melody', Seq(p), 1)
+            addlyr = p
+        if self.stanzas.value() == 1:
+            self.assignLyrics('verse', AddLyrics(addlyr, multiline=True))
+        else:
+            for i in range(1, self.stanzas.value() + 1):
+                self.assignLyrics('verse', AddLyrics(addlyr, multiline=True), i)
+        self.addPart(p)
+
+    def widgets(self, p):
+        Chords.widgets(self, p)
+        h = QHBox(p)
+        QLabel(_("Stanzas:"), h)
+        self.stanzas = QSpinBox(1, 10, 1, h)
+        QToolTip.add(h, _("The number of stanzas."))
+        self.accomp = QCheckBox(
+            _("Add accompaniment staff"), p)
+
 
 
 # The structure of the overview
@@ -770,7 +837,7 @@ categories = (
             BassTuba,
         )),
     (_("Vocal"), (
-
+            LeadSheet,
         )),
     (_("Keyboard instruments"), (
             Piano,

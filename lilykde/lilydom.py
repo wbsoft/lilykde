@@ -1319,6 +1319,11 @@ class InputLyrics(LyricMode):
     pass
 
 
+class AddLyrics(InputLyrics):
+    name = 'addlyrics'
+    pass
+
+
 class NoteMode(InputMode):
     name = 'notemode'
     pass
