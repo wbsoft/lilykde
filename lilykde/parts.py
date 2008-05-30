@@ -771,7 +771,7 @@ class LeadSheet(_Vocal, Chords):
             self.assignMusic('melody', Seq(p), 1)
             addlyr = p
         if self.stanzas.value() == 1:
-            self.assignLyrics('verse', AddLyrics(addlyr, multiline=True))
+            self.assignLyrics('verse', AddLyrics(addlyr))
         else:
             for i in range(1, self.stanzas.value() + 1):
                 self.assignLyrics('verse', AddLyrics(addlyr, multiline=True), i)
@@ -787,7 +787,9 @@ class LeadSheet(_Vocal, Chords):
         self.stanzas = QSpinBox(1, 10, 1, h)
         QToolTip.add(h, _("The number of stanzas."))
         self.accomp = QCheckBox(_("Add accompaniment staff"), p)
-
+        QToolTip.add(self.accomp, _(
+            "Adds an accompaniment staff and also puts an accompaniment "
+            "voice in the upper staff."))
 
 
 # The structure of the overview
