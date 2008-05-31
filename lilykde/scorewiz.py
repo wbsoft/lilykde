@@ -407,10 +407,12 @@ class part(object):
         an Identifier (referring to it) to the object given in addId.
 
         transpose, if given, should be a tuple (octaves, notes, semitones).
+
+        Returns the stub, for possible other manipulations...
         """
-        r = Relative(self.doc)
-        Pitch(r, octave, 0, 0)
-        s = Seq(r)
+        stub = Relative(self.doc)
+        Pitch(stub, octave, 0, 0)
+        s = Seq(stub)
         Identifier(s, 'global')
         Newline(s)
         if transpose is not None:
@@ -419,7 +421,8 @@ class part(object):
             Newline(s)
         Comment(s, ' ' + _("Music follows here."))
         Newline(s)
-        self.assignGeneric(name, addId, r)
+        self.assignGeneric(name, addId, stub)
+        return stub
 
     def newStaff(self, node = None, name = None, midiInstrument = None):
         """

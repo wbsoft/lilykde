@@ -30,7 +30,7 @@ def add(menu, text, key="", icon=""):
 
 menu = KActionMenu(_("LilyPond"))
 
-@add(menu, _("Setup New Score..."), "", "filenew")
+@add(menu, _("Setup New Score..."), "Ctrl+Shift+N", "filenew")
 def scoreWizard():
     from lilykde import scorewiz
     scorewiz.scorewiz.show()

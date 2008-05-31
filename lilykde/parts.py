@@ -38,18 +38,25 @@ class _SingleVoice(part):
     # to ease the translation (otherwise the short names are not understood.)
     instrumentNames = None
 
-    def build(self):
+    def build(self, braces = False):
+        """
+        Returns both the stub for the music voice, and the newly created
+        staff object.
+
+        if braces == True the music identifier will be put inside braces
+        (needed for addlyrics).
+        """
         s = self.newStaff()
         self.addPart(s)
         self.setInstrumentNames(s, *self.instrumentNames)
-        s = Seqr(s)
+        s1 = braces and Seq(s) or Seqr(s)
         if self.clef:
-            Clef(s, self.clef)
-        self.assignMusic('', s)
+            Clef(s1, self.clef)
+        return self.assignMusic('', s1), s
 
     def assignMusic(self, name, node):
         """ automatically handles transposing instruments """
-        super(_SingleVoice, self).assignMusic(
+        return super(_SingleVoice, self).assignMusic(
             name, node, self.octave, self.transpose)
 
 
@@ -727,7 +734,7 @@ class BassFigures(part):
         self.useExtenderLines = QCheckBox(_("Use extender lines"), p)
 
 
-class _Vocal(part):
+class _VocalBase(part):
     """
     Base class for vocal stuff.
     """
@@ -740,8 +747,69 @@ class _Vocal(part):
         Newline(l)
         self.assignGeneric(name, node, l)
 
+    def widgets(self, p):
+        h = QHBox(p)
+        QLabel(_("Stanzas:"), h)
+        self.stanzas = QSpinBox(1, 10, 1, h)
+        QToolTip.add(h, _("The number of stanzas."))
 
-class LeadSheet(_Vocal, Chords):
+    def addStanzas(self, node, name = '', count = 0):
+        r"""
+        Add stanzas in count (or self.stanzas.value()) to the (Voice) node
+        using \addlyrics.
+        """
+        name = name or 'verse'
+        count = count or self.stanzas.value()
+        if count == 1:
+            self.assignLyrics(name, AddLyrics(node))
+        else:
+            for i in range(count):
+                self.assignLyrics(name, AddLyrics(node, multiline=True), i + 1)
+
+
+class _VocalSolo(_VocalBase, _SingleVoice):
+    """
+    Base class for solo voices
+    """
+    midiInstrument = 'choir aahs'
+
+    def build(self):
+        stub, staff = _SingleVoice.build(self, True)
+        stub[1].insert(stub[1][-2], Text(self.doc, '\\dynamicUp\n'))
+        self.addStanzas(staff)
+
+
+class SopranoVoice(_VocalSolo):
+    name = _("Soprano")
+    instrumentNames = _("Soprano|S."), "Soprano|S."
+
+
+class MezzoSopranoVoice(_VocalSolo):
+    name = _("Mezzo soprano")
+    instrumentNames = _("Mezzo-soprano|Ms."), "Mezzosoprano|Ms."
+
+
+class AltoVoice(_VocalSolo):
+    name = _("Alto")
+    instrumentNames = _("Alto|A."), "Alto|A."
+    octave = 0
+
+
+class TenorVoice(_VocalSolo):
+    name = _("Tenor")
+    instrumentNames = _("Tenor|T."), "Tenore|T."
+    octave = 0
+    clef = 'treble_8'
+
+
+class BassVoice(_VocalSolo):
+    name = _("Bass")
+    instrumentNames = _("Bass|B."), "Basso|B."
+    octave = -1
+    clef = 'bass'
+
+
+class LeadSheet(_VocalBase, Chords):
     name = _("Lead sheet")
     def build(self):
         """
@@ -758,23 +826,17 @@ class LeadSheet(_Vocal, Chords):
             s1 = Seq(v1, multiline = True)
             Text(s1, '\\voiceOne\n')
             self.assignMusic('melody', s1, 1)
-            v2 = Voice(mel)
-            s2 = Seq(v2, multiline = True)
+            s2 = Seq(Voice(mel), multiline = True)
             Text(s2, '\\voiceTwo\n')
             self.assignMusic('accRight', s2, 0)
-            s3 = Seqr(Staff(s))
-            Clef(s3, 'bass')
-            self.assignMusic('accLeft', s3, -1)
-            addlyr = v1
+            acc = Seqr(Staff(s))
+            Clef(acc, 'bass')
+            self.assignMusic('accLeft', acc, -1)
+            self.addStanzas(v1)
         else:
             p = Staff(self.doc)
             self.assignMusic('melody', Seq(p), 1)
-            addlyr = p
-        if self.stanzas.value() == 1:
-            self.assignLyrics('verse', AddLyrics(addlyr))
-        else:
-            for i in range(1, self.stanzas.value() + 1):
-                self.assignLyrics('verse', AddLyrics(addlyr, multiline=True), i)
+            self.addStanzas(p)
         self.addPart(p)
 
     def widgets(self, p):
@@ -782,14 +844,15 @@ class LeadSheet(_Vocal, Chords):
             "The Lead Sheet provides a staff with chord names above "
             "and lyrics below it. A second staff is optional."), p)
         Chords.widgets(self, p)
-        h = QHBox(p)
-        QLabel(_("Stanzas:"), h)
-        self.stanzas = QSpinBox(1, 10, 1, h)
-        QToolTip.add(h, _("The number of stanzas."))
+        _VocalBase.widgets(self, p)
         self.accomp = QCheckBox(_("Add accompaniment staff"), p)
         QToolTip.add(self.accomp, _(
             "Adds an accompaniment staff and also puts an accompaniment "
             "voice in the upper staff."))
+
+
+class Choir(_VocalBase):
+    pass
 
 
 # The structure of the overview
@@ -841,6 +904,12 @@ categories = (
         )),
     (_("Vocal"), (
             LeadSheet,
+            SopranoVoice,
+            MezzoSopranoVoice,
+            AltoVoice,
+            TenorVoice,
+            BassVoice,
+            Choir,
         )),
     (_("Keyboard instruments"), (
             Piano,
