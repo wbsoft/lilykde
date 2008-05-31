@@ -7,12 +7,12 @@ pngs = $(patsubst %.ly,%.png,$(lys))
 all: $(pngs)
 
 $(pngs): %.png: %.ly $(wildcard *.ily)
-	lilypond --png $<
+	lilypond -ddelete-intermediate-files --png $<
 	mogrify +repage -trim -bordercolor transparent -border 3 \
 		-transparent white $@
 
 clean:
-	rm -f *.png *.ps
+	rm -f *.png
 
 install: all
 	@echo Installing generated LilyPond PNGs:
