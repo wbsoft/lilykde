@@ -94,7 +94,7 @@ class _KeyboardBase(part):
 
     def widgetsStaffVoice(self, p):
         l = QLabel('<p>%s <i>(%s)</i></p>' % (
-            _("Adjust how many separate voices you want on each staff:"),
+            _("Adjust how many separate voices you want on each staff."),
             _("This is primarily useful when you write polyphonic music "
             "like a fuge.")), p)
         h = QHBox(p)
