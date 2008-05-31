@@ -20,6 +20,8 @@ translate = \
 	../lilykde/hyphen.py \
 	../lilykde/settings.py \
 	../lilykde/rumor.py \
+	../lilykde/scorewiz.py \
+	../lilykde/parts.py \
 	../lilypond-servicemenu-helper.py \
 
 

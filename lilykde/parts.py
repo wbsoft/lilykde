@@ -120,7 +120,7 @@ class Organ(_KeyboardBase):
         self.pedalVoices = QSpinBox(0, 4, 1, h)
         self.pedalVoices.setValue(1)
         QToolTip.add(self.pedalVoices, _(
-            "Set to 0 to disable the pedal altogether"))
+            "Set to 0 to disable the pedal altogether."))
 
     def build(self):
         super(Organ, self).build()
