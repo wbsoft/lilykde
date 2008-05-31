@@ -723,10 +723,12 @@ class Settings(object):
         l = QLabel('=', h)
         l.setMaximumWidth(12)
         self.metroVal = QComboBox(True, h)
-        self.metroValues, start = [], 40
+        metroValues, start = [], 40
         for end, step in (60, 2), (72, 3), (120, 4), (144, 6), (210, 8):
-            self.metroValues.extend(range(start, end, step))
+            metroValues.extend(range(start, end, step))
             start = end
+        # reverse so mousewheeling is more intuitive
+        self.metroValues = metroValues[::-1]
         self.metroVal.insertStringList(py2qstringlist(map(str, self.metroValues)))
         self.metroVal.setCurrentText('100')
         tap = TapButton(h, self.tap)
@@ -785,6 +787,12 @@ class Settings(object):
         QToolTip.add(self.midi, _(
             "Create a MIDI file in addition to the PDF file."))
         self.midi.setChecked(conf['midi'] == '1')
+
+        self.metro = QCheckBox(_("Show metronome mark"), prefs)
+        QToolTip.add(self.metro, _(
+            "If checked, show the metronome mark at the beginning of the "
+            "score. The MIDI output also uses the metronome setting."))
+        self.metro.setChecked(conf['metronome mark'] == '1')
 
 
         # Instrument names
@@ -857,6 +865,7 @@ class Settings(object):
         conf['typographical'] = self.typq.isChecked() and '1' or '0'
         conf['remove tagline'] = self.tagl.isChecked() and '1' or '0'
         conf['midi'] = self.midi.isChecked() and '1' or '0'
+        conf['metronome mark'] = self.metro.isChecked() and '1' or '0'
         conf['instrument names'] = self.instr.isChecked() and '1' or '0'
         conf['italian instrument names'] = self.instrIt.isChecked() and '1' or '0'
         conf['instrument names first system'] = \
@@ -958,13 +967,51 @@ class ScoreWizard(KDialogBase):
         """
         Write the parts to the LilyDOM document in d
         """
-        # First write a global = {  } construct setting key and time sig
+        # First find out if we need to define a tempoMark section.
+        midi = self.settings.midi.isChecked()
+        text = unicode(self.settings.tempoInd.text())
+        metro = self.settings.metro.isChecked()
+        dur = durations[self.settings.metroDur.currentItem()]
+        val = self.settings.metroVal.currentText()
+        if text:
+            # Yes.
+            tm = Seq(Assignment(d.body, 'tempoMark'), multiline=True)
+            tempo = Identifier(d, 'tempoMark')
+            Newline(d.body)
+            if midi:
+                Text(tm, r"\once \override Score.MetronomeMark #'stencil = ##f")
+                Text(tm, r"\tempo %s=%s" % (dur, val))
+            for i in (
+                "self-alignment-X = #LEFT",
+                "break-align-symbols = #'(time-signature)",
+                "extra-offset = #'(-0.5 . 0)",
+                ):
+                Text(tm, r"\once \override Score.RehearsalMark #'" + i)
+            # Should we also display the metronome mark?
+            if metro:
+                # Constuct a tempo indication with metronome mark
+                m = MarkupEncl(Markup(Mark(tm)), 'bold', multiline=True)
+                QuotedString(m, text + " ")
+                Text(m,
+                    r'\small \general-align #Y #DOWN \note #"%s" #1 = %s' %
+                    (dur, val))
+            else:
+                # Constuct a tempo indication without metronome mark
+                QuotedString(MarkupEncl(Markup(Mark(tm)), 'bold'), text)
+        else:
+            # No.
+            tempo = metro and Text(d, '\\tempo %s=%s' % (dur, val)) or None
+
+        # Then write a global = {  } construct setting key and time sig
         g = Seq(Assignment(d.body, 'global'), multiline=True)
         # key signature
         note, alter = keys[self.settings.key.currentItem()]
         alter = Rational(alter, 2)
         mode = modes[self.settings.mode.currentItem()][0]
         KeySignature(g, note, alter, mode)
+        # Add the tempo indication:
+        if tempo:
+            g.append(tempo)
         # time signature
         if self.settings.time.currentText() in ('2/2', '4/4'):
             Text(g, r"\override Staff.TimeSignature #'style = #'()")
@@ -1021,7 +1068,7 @@ class ScoreWizard(KDialogBase):
             p.appendParts(s1)
 
         Layout(s)
-        if self.settings.midi.isChecked():
+        if midi:
             Midi(s)
 
         # Aftermath

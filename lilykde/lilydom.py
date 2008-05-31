@@ -1486,6 +1486,14 @@ class VoiceSeparator(Node):
         return r'\\'
 
 
+class Mark(_Name, Container):
+    r"""
+    The \mark command.
+    """
+    name = 'mark'
+    pass
+
+
 class Markup(_Name, _RemoveFormattingIfOneChild, EnclosedBase):
     r"""
     The \markup command.
@@ -1501,7 +1509,7 @@ class MarkupEncl(_Name, _RemoveFormattingIfOneChild, EnclosedBase):
     A markup that auto-encloses all its arguments, like 'italic', 'bold'
     etc.  You must supply the name.
     """
-    def __init__(self, pdoc, name, *args):
+    def __init__(self, pdoc, name, *args, **kwargs):
         self.name = name
 
 
