@@ -839,6 +839,7 @@ class Container(Node):
 class Text(Node):
     """ Any piece of text """
     def __init__(self, pdoc, text):
+        assert isinstance(text, basestring)
         self.text = text
 
     def __str__(self):

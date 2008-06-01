@@ -8,6 +8,7 @@ from qt import *
 
 # Translate titles, etc.
 from lilykde.i18n import _
+from lilykde.util import romanize
 from lilykde.scorewiz import part, nums
 from lilykde.lilydom import *
 
@@ -883,6 +884,59 @@ class Choir(_VocalBase):
         QToolTip.add(self.lyrEachDiff, _(
             "Every voice gets a different set of lyrics."))
         _VocalBase.widgets(self, b)
+
+    def build(self):
+        # normalize voicing
+        staffs = unicode(self.voicing.currentText()).upper()
+        # remove unwanted characters
+        staffs = re.sub(r'[^SATB-]+', '', staffs)
+        # remove double hyphens, and from begin and end
+        staffs = re.sub('-+', '-', staffs).strip('-')
+        p = ChoirStaff(self.doc)
+        choir = Sim(p, multiline = True)
+        self.addPart(p)
+        # print main instrumentName if there are more choirs, and we
+        # have more than one staff.
+        if '-' in staffs and self.num > 0:
+            self.setInstrumentNames(p, _("Choir|Ch."), "Coro|C.")
+            Text(p.getWith(), '\\consists "Instrument_name_engraver"\n')
+
+        d = dict.fromkeys('SATB', 0)  # dict with count of parts.
+        for staff in staffs.split('-'):
+            s = Staff(choir)
+            instrNames, voices = [], []
+            c = len(staff)
+            for part in staff:
+                if staffs.count(part) > 1:
+                    d[part] += 1
+                num = d[part]
+                translated, italian = { 'S': SopranoVoice, 'A': AltoVoice,
+                    'T': TenorVoice, 'B': BassVoice }[part].instrumentNames
+                instrNames.append(
+                    self.buildInstrumentNames(translated, italian, num))
+                voices.append((part, num))
+            if c == 1:
+                # Only one voice in the staff.
+                s.instrName(*instrNames[0])
+                mus = Seqr(s)
+            else:
+                # there are more instrument names for the staff, stack them.
+                def mkup(names):
+                    if max(names):
+                        n = Markup(self.doc)
+                        m = MarkupEncl(n, 'center-align', multiline=True)
+                        for i in names:
+                            QuotedString(m, i)
+                        return n
+                s.instrName(*map(mkup, zip(*instrNames)))
+                mus = Simr(s)
+            # Clef for this staff:
+            if 'B' in staff:
+                Clef(mus, 'bass')
+            elif 'T' in staff:
+                Clef(mus, 'treble_8')
+
+
 
 
 

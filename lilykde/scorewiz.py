@@ -435,9 +435,16 @@ class part(object):
                 s.getWith()['midiInstrument'] = midi
         return s
 
-    def setInstrumentNames(self, node, translated, italian):
+    def setInstrumentNames(self, node, translated, italian, num = None):
         """
         Sets the instrumentnames of the node, obeying user preferences
+        """
+        node.instrName(*self.buildInstrumentNames(translated, italian, num))
+
+    def buildInstrumentNames(self, translated, italian, num = None):
+        """
+        Return None (if no instrument names desired), or desired instrument
+        names (short, long).
         """
         if not self._instr:
             return
@@ -446,15 +453,16 @@ class part(object):
         else:
             names = translated
         longName, shortName = names.split('|')
-        if self.num:
-            suffix = " %s" % romanize(self.num)
+        if num is None:
+            num = self.num
+        if num:
+            suffix = " " + romanize(num)
             longName += suffix
             shortName += suffix
 
         l = (shortName, longName)[self._instrFirst]
         s = (None, shortName, longName)[self._instrOther]
-        node.instrName(l, s)
-
+        return l, s
 
 class Titles(object):
     """
