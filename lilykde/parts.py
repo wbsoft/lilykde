@@ -852,7 +852,28 @@ class LeadSheet(_VocalBase, Chords):
 
 
 class Choir(_VocalBase):
-    pass
+    name = _("Choir")
+
+    def widgets(self, p):
+        QLabel('<p>%s</p><p><i>(%s)</i></p>' % (
+            _("Please select the voices for the choir. "
+            "Use the letters S, A, T, or B. A hyphen denotes a new staff. "
+            "Then press the \"Setup Lyrics\" button to adjust how the lyrics "
+            "should be displayed."),
+            _("Tip: For a double choir you can use two choir parts.")), p)
+        h = QHBox(p)
+        QLabel(_("Voicing:"), h)
+        self.voicing = QComboBox(True, h)
+        for i in (
+            'SA-TB', 'S-A-T-B',
+            'SA', 'S-A', 'SS-A',
+            'TB', 'T-B', 'TT-B',
+            'SS-A-T-B', 'SS-A-TT-B',
+            'S-S-A-T-T-B', 'S-S-A-A-T-T-B-B'
+            ):
+            self.voicing.insertItem(i)
+        but = QPushButton(_("Setup Lyrics..."), p)
+
 
 
 # The structure of the overview
