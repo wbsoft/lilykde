@@ -857,9 +857,7 @@ class Choir(_VocalBase):
     def widgets(self, p):
         QLabel('<p>%s</p><p><i>(%s)</i></p>' % (
             _("Please select the voices for the choir. "
-            "Use the letters S, A, T, or B. A hyphen denotes a new staff. "
-            "Then press the \"Setup Lyrics\" button to adjust how the lyrics "
-            "should be displayed."),
+            "Use the letters S, A, T, or B. A hyphen denotes a new staff."),
             _("Tip: For a double choir you can use two choir parts.")), p)
         h = QHBox(p)
         QLabel(_("Voicing:"), h)
@@ -872,7 +870,20 @@ class Choir(_VocalBase):
             'S-S-A-T-T-B', 'S-S-A-A-T-T-B-B'
             ):
             self.voicing.insertItem(i)
-        but = QPushButton(_("Setup Lyrics..."), p)
+        b = QVButtonGroup(_("Lyrics"), p)
+        self.lyrAllSame = QRadioButton(_("All voices same lyrics"), b)
+        self.lyrAllSame.setChecked(True)
+        QToolTip.add(self.lyrAllSame, _(
+            "One set of the same lyrics is placed between all staffs."))
+        self.lyrEachSame = QRadioButton(_("Every voice same lyrics"), b)
+        QToolTip.add(self.lyrEachSame, _(
+            "Every voice gets its own lyrics, using the same text as the "
+            "other voices."))
+        self.lyrEachDiff = QRadioButton(_("Every voice different lyrics"), b)
+        QToolTip.add(self.lyrEachDiff, _(
+            "Every voice gets a different set of lyrics."))
+        _VocalBase.widgets(self, b)
+
 
 
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-05-31 23:17+0200\n"
+"POT-Creation-Date: 2008-06-01 13:36+0200\n"
 "PO-Revision-Date: 2008-04-17 21:14+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
@@ -1529,35 +1529,82 @@ msgid ""
 "upper staff."
 msgstr ""
 
-#: ../lilykde/parts.py:860
+#: ../lilykde/parts.py:855
+msgid "Choir"
+msgstr ""
+
+#: ../lilykde/parts.py:859
+msgid ""
+"Please select the voices for the choir. Use the letters S, A, T, or B. A "
+"hyphen denotes a new staff."
+msgstr ""
+
+#: ../lilykde/parts.py:861
+msgid "Tip: For a double choir you can use two choir parts."
+msgstr ""
+
+#: ../lilykde/parts.py:863
+msgid "Voicing:"
+msgstr ""
+
+#: ../lilykde/parts.py:873
+msgid "Lyrics"
+msgstr ""
+
+#: ../lilykde/parts.py:874
+msgid "All voices same lyrics"
+msgstr ""
+
+#: ../lilykde/parts.py:877
+msgid "One set of the same lyrics is placed between all staffs."
+msgstr ""
+
+#: ../lilykde/parts.py:878
+msgid "Every voice same lyrics"
+msgstr ""
+
+#: ../lilykde/parts.py:880
+msgid ""
+"Every voice gets its own lyrics, using the same text as the other voices."
+msgstr ""
+
+#: ../lilykde/parts.py:882
+msgid "Every voice different lyrics"
+msgstr ""
+
+#: ../lilykde/parts.py:884
+msgid "Every voice gets a different set of lyrics."
+msgstr ""
+
+#: ../lilykde/parts.py:892
 msgid "Strings"
 msgstr ""
 
-#: ../lilykde/parts.py:867
+#: ../lilykde/parts.py:899
 msgid "Plucked strings"
 msgstr ""
 
-#: ../lilykde/parts.py:876
+#: ../lilykde/parts.py:908
 msgid "Woodwinds"
 msgstr ""
 
-#: ../lilykde/parts.py:897
+#: ../lilykde/parts.py:929
 msgid "Brass"
 msgstr ""
 
-#: ../lilykde/parts.py:905
+#: ../lilykde/parts.py:937
 msgid "Vocal"
 msgstr ""
 
-#: ../lilykde/parts.py:914
+#: ../lilykde/parts.py:946
 msgid "Keyboard instruments"
 msgstr ""
 
-#: ../lilykde/parts.py:921
+#: ../lilykde/parts.py:953
 msgid "Percussion"
 msgstr ""
 
-#: ../lilykde/parts.py:930
+#: ../lilykde/parts.py:962
 msgid "Special"
 msgstr ""
 
