@@ -892,6 +892,7 @@ class Choir(_VocalBase):
         staffs = re.sub(r'[^SATB-]+', '', staffs)
         # remove double hyphens, and from begin and end
         staffs = re.sub('-+', '-', staffs).strip('-')
+        splitStaffs = staffs.split('-')
         p = ChoirStaff(self.doc)
         choir = Sim(p, multiline = True)
         self.addPart(p)
@@ -902,10 +903,11 @@ class Choir(_VocalBase):
             Text(p.getWith(), '\\consists "Instrument_name_engraver"\n')
 
         d = dict.fromkeys('SATB', 0)  # dict with count of parts.
-        for staff in staffs.split('-'):
+        for staff in splitStaffs:
+            # sort the letters in order SATB
+            staff = ''.join(i * staff.count(i) for i in 'SATB')
             s = Staff(choir)
             instrNames, voices = [], []
-            c = len(staff)
             for part in staff:
                 if staffs.count(part) > 1:
                     d[part] += 1
@@ -914,11 +916,14 @@ class Choir(_VocalBase):
                     'T': TenorVoice, 'B': BassVoice }[part].instrumentNames
                 instrNames.append(
                     self.buildInstrumentNames(translated, italian, num))
-                voices.append((part, num))
-            if c == 1:
+                name = {'S':'soprano','A':'alto','T':'tenor','B':'bass'}[part]
+                name += num and nums(num) or ''
+                octave = {'S':1, 'A':0, 'T':0, 'B':-1}[part]
+                voices.append((name, octave))
+            if len(staff) == 1:
                 # Only one voice in the staff.
                 s.instrName(*instrNames[0])
-                mus = Seqr(s)
+                mus = Seqr(s, multiline = True)
             else:
                 # there are more instrument names for the staff, stack them.
                 def mkup(names):
@@ -929,12 +934,23 @@ class Choir(_VocalBase):
                             QuotedString(m, i)
                         return n
                 s.instrName(*map(mkup, zip(*instrNames)))
-                mus = Simr(s)
+                mus = Simr(s, multiline = True)
             # Clef for this staff:
             if 'B' in staff:
                 Clef(mus, 'bass')
             elif 'T' in staff:
                 Clef(mus, 'treble_8')
+
+            # add the voices
+            if len(voices) == 1:
+                for name, octave in voices:
+                    v = Seqr(Voice(mus, name))
+                    self.assignMusic(name, v, octave)
+            else:
+                for name, octave in voices:
+                    v = Seqr(Voice(mus, name))
+                    #TODO: voiceOne etc.
+                    self.assignMusic(name, v, octave)
 
 
 
