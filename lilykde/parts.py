@@ -885,6 +885,13 @@ class Choir(_VocalBase):
             "Every voice gets a different set of lyrics."))
         _VocalBase.widgets(self, b)
 
+    partInfo = {
+        'S': ('soprano', 1, SopranoVoice.instrumentNames),
+        'A': ('alto', 0, AltoVoice.instrumentNames),
+        'T': ('tenor', 0, TenorVoice.instrumentNames),
+        'B': ('bass', -1, BassVoice.instrumentNames),
+    }
+
     def build(self):
         # normalize voicing
         staffs = unicode(self.voicing.currentText()).upper()
@@ -912,13 +919,10 @@ class Choir(_VocalBase):
                 if staffs.count(part) > 1:
                     d[part] += 1
                 num = d[part]
-                translated, italian = { 'S': SopranoVoice, 'A': AltoVoice,
-                    'T': TenorVoice, 'B': BassVoice }[part].instrumentNames
+                name, octave, (translated, italian) = self.partInfo[part]
                 instrNames.append(
                     self.buildInstrumentNames(translated, italian, num))
-                name = {'S':'soprano','A':'alto','T':'tenor','B':'bass'}[part]
                 name += num and nums(num) or ''
-                octave = {'S':1, 'A':0, 'T':0, 'B':-1}[part]
                 voices.append((name, octave))
             if len(staff) == 1:
                 # Only one voice in the staff.
@@ -942,14 +946,24 @@ class Choir(_VocalBase):
                 Clef(mus, 'treble_8')
 
             # add the voices
-            if len(voices) == 1:
+            if len(staff) == 1:
                 for name, octave in voices:
                     v = Seqr(Voice(mus, name))
                     self.assignMusic(name, v, octave)
             else:
-                for name, octave in voices:
+                if len(staff) == 2:
+                    v = 1, 2
+                elif staff in ('SSA', 'TTB'):
+                    v = 1, 3, 2
+                elif staff in ('SAA', 'TBB'):
+                    v = 1, 2, 4
+                elif staff in ('SSAA', 'TTBB'):
+                    v = 1, 3, 2, 4
+                else:
+                    v = range(1, len(staff)+1)
+                for (name, octave), num in zip(voices, v):
                     v = Seqr(Voice(mus, name))
-                    #TODO: voiceOne etc.
+                    Text(v, '\\voice' + nums(num))
                     self.assignMusic(name, v, octave)
 
 

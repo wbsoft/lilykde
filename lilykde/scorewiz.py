@@ -443,11 +443,10 @@ class part(object):
 
     def buildInstrumentNames(self, translated, italian, num = None):
         """
-        Return None (if no instrument names desired), or desired instrument
-        names (short, long).
+        Return desired instrument names (short, long). Both can be None.
         """
         if not self._instr:
-            return
+            return (None, None)
         if self._instrItalian:
             names = italian
         else:
