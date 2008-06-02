@@ -905,7 +905,7 @@ class Choir(_VocalBase):
         self.addPart(p)
         # print main instrumentName if there are more choirs, and we
         # have more than one staff.
-        if '-' in staffs and self.num > 0:
+        if self._instr and '-' in staffs and self.num > 0:
             self.setInstrumentNames(p, _("Choir|Ch."), "Coro|C.")
             Text(p.getWith(), '\\consists "Instrument_name_engraver"\n')
 
@@ -922,8 +922,7 @@ class Choir(_VocalBase):
                 name, octave, (translated, italian) = self.partInfo[part]
                 instrNames.append(
                     self.buildInstrumentNames(translated, italian, num))
-                name += num and nums(num) or ''
-                voices.append((name, octave))
+                voices.append((name, num, octave))
             if len(staff) == 1:
                 # Only one voice in the staff.
                 s.instrName(*instrNames[0])
@@ -947,9 +946,9 @@ class Choir(_VocalBase):
 
             # add the voices
             if len(staff) == 1:
-                for name, octave in voices:
-                    v = Seqr(Voice(mus, name))
-                    self.assignMusic(name, v, octave)
+                name, num, octave = voices[0]
+                v = Seqr(Voice(mus, name + str(num or '')))
+                self.assignMusic(name + (num and nums(num) or ''), v, octave)
             else:
                 if len(staff) == 2:
                     v = 1, 2
@@ -961,10 +960,10 @@ class Choir(_VocalBase):
                     v = 1, 3, 2, 4
                 else:
                     v = range(1, len(staff)+1)
-                for (name, octave), num in zip(voices, v):
-                    v = Seqr(Voice(mus, name))
-                    Text(v, '\\voice' + nums(num))
-                    self.assignMusic(name, v, octave)
+                for (name, num, octave), vnum in zip(voices, v):
+                    v = Seqr(Voice(mus, name + str(num or '')))
+                    Text(v, '\\voice' + nums(vnum))
+                    self.assignMusic(name + (num and nums(num) or ''), v, octave)
 
 
 
