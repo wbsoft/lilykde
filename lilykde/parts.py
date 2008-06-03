@@ -739,6 +739,8 @@ class _VocalBase(part):
     """
     Base class for vocal stuff.
     """
+    midiInstrument = 'choir aahs'
+
     def assignLyrics(self, name, node, verse = 0):
         l = LyricMode(self.doc)
         if verse:
@@ -765,15 +767,14 @@ class _VocalBase(part):
             self.assignLyrics(name, AddLyrics(node))
         else:
             for i in range(count):
-                self.assignLyrics(name, AddLyrics(node, multiline=True), i + 1)
+                Newline(node)
+                self.assignLyrics(name, AddLyrics(node), i + 1)
 
 
 class _VocalSolo(_VocalBase, _SingleVoice):
     """
     Base class for solo voices
     """
-    midiInstrument = 'choir aahs'
-
     def build(self):
         stub, staff = _SingleVoice.build(self, True)
         stub[1].insert(stub[1][-2], Text(self.doc, '\\dynamicUp\n'))
@@ -905,28 +906,33 @@ class Choir(_VocalBase):
         self.addPart(p)
         # print main instrumentName if there are more choirs, and we
         # have more than one staff.
-        if self._instr and '-' in staffs and self.num > 0:
+        if self._instr and '-' in staffs and self.num:
             self.setInstrumentNames(p, _("Choir|Ch."), "Coro|C.")
             Text(p.getWith(), '\\consists "Instrument_name_engraver"\n')
 
-        d = dict.fromkeys('SATB', 0)  # dict with count of parts.
+        count = dict.fromkeys('SATB', 0)  # dict with count of parts.
+        toGo = len(splitStaffs)
+        maxLen = max(map(len, splitStaffs))
+        lyr = []
         for staff in splitStaffs:
+            toGo -= 1
             # sort the letters in order SATB
             staff = ''.join(i * staff.count(i) for i in 'SATB')
-            s = Staff(choir)
+            s = self.newStaff(choir)
             instrNames, voices = [], []
             for part in staff:
                 if staffs.count(part) > 1:
-                    d[part] += 1
-                num = d[part]
+                    count[part] += 1
                 name, octave, (translated, italian) = self.partInfo[part]
                 instrNames.append(
-                    self.buildInstrumentNames(translated, italian, num))
-                voices.append((name, num, octave))
+                    self.buildInstrumentNames(translated, italian, count[part]))
+                voices.append((name, count[part], octave))
             if len(staff) == 1:
                 # Only one voice in the staff.
                 s.instrName(*instrNames[0])
-                mus = Seqr(s, multiline = True)
+                # if all staffs have one, voice, addlyrics is used,
+                # in that case, don't remove the braces.
+                mus = maxLen == 1 and Seq(s) or Seqr(s)
             else:
                 # there are more instrument names for the staff, stack them.
                 def mkup(names):
@@ -944,11 +950,31 @@ class Choir(_VocalBase):
             elif 'T' in staff:
                 Clef(mus, 'treble_8')
 
+            stanzas = range(1, self.stanzas.value() + 1)
+
             # add the voices
             if len(staff) == 1:
                 name, num, octave = voices[0]
-                v = Seqr(Voice(mus, name + str(num or '')))
-                self.assignMusic(name + (num and nums(num) or ''), v, octave)
+                mname = name + (num and nums(num) or '')
+                if self.lyrEachDiff.isChecked():
+                    lyrName = mname + 'Verse'
+                else:
+                    lyrName = 'verse'
+                if maxLen == 1:
+                    # if all staffs have only one voice, use \addlyrics.
+                    self.assignMusic(mname, mus, octave)
+                    if not (self.lyrAllSame.isChecked() and not toGo):
+                        for verse in stanzas:
+                            Newline(s)
+                            lyr.append((lyrName, AddLyrics(s), verse))
+                else:
+                    vname = name + str(num or '')
+                    v = Seqr(Voice(mus, vname))
+                    self.assignMusic(mname, v, octave)
+                    if not (self.lyrAllSame.isChecked() and not toGo):
+                        for verse in stanzas:
+                            lyr.append(
+                                (lyrName, LyricsTo(Lyrics(choir), vname), verse))
             else:
                 if len(staff) == 2:
                     v = 1, 2
@@ -964,7 +990,11 @@ class Choir(_VocalBase):
                     v = Seqr(Voice(mus, name + str(num or '')))
                     Text(v, '\\voice' + nums(vnum))
                     self.assignMusic(name + (num and nums(num) or ''), v, octave)
+                    # TODO: lyrics in staffs with multiple voices
 
+        # assign the lyrics, so their definitions come after the note defs.
+        for name, node, verse in lyr:
+            self.assignLyrics(name, node, verse)
 
 
 

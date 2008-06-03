@@ -1358,6 +1358,16 @@ class InputDrums(DrumMode):
     pass
 
 
+class LyricsTo(LyricMode):
+    name = 'lyricsto'
+    def __init__(self, pdoc, cid, *args, **kwargs):
+        self.cid = cid
+
+    def __str__(self):
+        s = super(LyricsTo, self).__str__()
+        return re.sub(r'\\lyricsto', r'\g<0> "%s"' % self.cid, s)
+
+
 class Pitch(Node):
     """
     A pitch with octave, note, alter.
