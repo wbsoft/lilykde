@@ -1051,6 +1051,7 @@ class ScoreWizard(KDialogBase):
                 for p in plist:
                     p.renameAssignment(name, name + p.identifier())
         # Same for collisions in named contexts:
+        # TODO, but seems to work nonetheless!
         names = {}
         for p in parts:
             for i in p.namedContexts():

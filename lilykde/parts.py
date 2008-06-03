@@ -913,7 +913,7 @@ class Choir(_VocalBase):
         count = dict.fromkeys('SATB', 0)  # dict with count of parts.
         toGo = len(splitStaffs)
         maxLen = max(map(len, splitStaffs))
-        lyr = []
+        lyr, staffNames = [], []
         for staff in splitStaffs:
             toGo -= 1
             # sort the letters in order SATB
@@ -950,7 +950,8 @@ class Choir(_VocalBase):
             elif 'T' in staff:
                 Clef(mus, 'treble_8')
 
-            stanzas = range(1, self.stanzas.value() + 1)
+            stanzas = self.stanzas.value()
+            stanzas = stanzas == 1 and [0] or range(1, stanzas + 1)
 
             # add the voices
             if len(staff) == 1:
@@ -986,11 +987,40 @@ class Choir(_VocalBase):
                     v = 1, 3, 2, 4
                 else:
                     v = range(1, len(staff)+1)
+                # what name would the staff get if we need to refer to it?
+                staffName, snum = staff, 1
+                while staffName in staffNames:
+                    snum += 1
+                    staffName = staff + str(snum)
+                staffNames.append(staffName)
+                staffName = staffName.lower()
+                # create the voices and their lyrics.
                 for (name, num, octave), vnum in zip(voices, v):
-                    v = Seqr(Voice(mus, name + str(num or '')))
+                    mname = name + (num and nums(num) or '')
+                    vname = name + str(num or '')
+                    v = Seqr(Voice(mus, vname))
                     Text(v, '\\voice' + nums(vnum))
-                    self.assignMusic(name + (num and nums(num) or ''), v, octave)
-                    # TODO: lyrics in staffs with multiple voices
+                    self.assignMusic(mname, v, octave)
+                    if self.lyrAllSame.isChecked() and toGo and vnum == 1:
+                        lyrName = 'verse'
+                        above = False
+                    elif self.lyrEachSame.isChecked():
+                        lyrName = 'verse'
+                        above = vnum & 1
+                    elif self.lyrEachDiff.isChecked():
+                        lyrName = mname + 'Verse'
+                        above = vnum & 1
+                    else:
+                        lyrName = ''
+                    if lyrName:
+                        # we need lyrics.
+                        if above:
+                            s.cid = staffName
+                        for verse in stanzas:
+                            l = Lyrics(choir)
+                            if above:
+                                l.getWith()['alignAboveContext'] = staffName
+                            lyr.append((lyrName, LyricsTo(l, vname), verse))
 
         # assign the lyrics, so their definitions come after the note defs.
         for name, node, verse in lyr:
