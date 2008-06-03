@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-03 12:03+0200\n"
-"PO-Revision-Date: 2008-06-03 12:04+0200\n"
+"POT-Creation-Date: 2008-06-03 13:50+0200\n"
+"PO-Revision-Date: 2008-06-03 13:53+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -785,7 +785,7 @@ msgstr "Maatsoort:"
 msgid "Pickup measure:"
 msgstr "Opmaat:"
 
-#: ../lilykde/scorewiz.py:714 ../lilykde/scorewiz.py:822
+#: ../lilykde/scorewiz.py:714 ../lilykde/scorewiz.py:839
 msgid "None"
 msgstr "Geen"
 
@@ -801,7 +801,8 @@ msgstr "Tempo-aanduiding:"
 msgid "A tempo indication, e.g. \"Allegro.\""
 msgstr "Een tempo-aanduiding, zoals \"Allegro.\""
 
-#: ../lilykde/scorewiz.py:757 ../lilykde/parts.py:440 ../lilykde/parts.py:711
+#: ../lilykde/scorewiz.py:757 ../lilykde/scorewiz.py:815
+#: ../lilykde/parts.py:440 ../lilykde/parts.py:711
 msgid "Default"
 msgstr "Standaard"
 
@@ -836,18 +837,26 @@ msgid "Suppress the default tagline output by LilyPond."
 msgstr "Onderdrukt de weergave van de standaard tagline door LilyPond."
 
 #: ../lilykde/scorewiz.py:793
+msgid "Remove bar numbers"
+msgstr "Maatnummers verwijderen"
+
+#: ../lilykde/scorewiz.py:795
+msgid "Suppress the display of measure numbers at the beginning of every system."
+msgstr "Onderdrukt de weergave van maatnummers aan het begin van elk systeem."
+
+#: ../lilykde/scorewiz.py:799
 msgid "Create MIDI output"
 msgstr "MIDI uitvoer aanmaken"
 
-#: ../lilykde/scorewiz.py:795
+#: ../lilykde/scorewiz.py:801
 msgid "Create a MIDI file in addition to the PDF file."
 msgstr "Maak, behalve een PDF, ook een MIDI-bestand aan."
 
-#: ../lilykde/scorewiz.py:798
+#: ../lilykde/scorewiz.py:804
 msgid "Show metronome mark"
 msgstr "Metronoomgetal weergeven"
 
-#: ../lilykde/scorewiz.py:800
+#: ../lilykde/scorewiz.py:806
 msgid ""
 "If checked, show the metronome mark at the beginning of the score. The MIDI "
 "output also uses the metronome setting."
@@ -855,44 +864,48 @@ msgstr ""
 "Indien aangekruist, toont het metronoomgetal aan het begin van de partituur. "
 "De MIDI-uitvoer gebruikt deze instelling ook."
 
-#: ../lilykde/scorewiz.py:811
+#: ../lilykde/scorewiz.py:813
+msgid "Paper size:"
+msgstr "Papiergrootte:"
+
+#: ../lilykde/scorewiz.py:828
 msgid "First system:"
 msgstr "Eerste systeem:"
 
-#: ../lilykde/scorewiz.py:813 ../lilykde/scorewiz.py:822
+#: ../lilykde/scorewiz.py:830 ../lilykde/scorewiz.py:839
 msgid "Short"
 msgstr "Kort"
 
-#: ../lilykde/scorewiz.py:813 ../lilykde/scorewiz.py:822
+#: ../lilykde/scorewiz.py:830 ../lilykde/scorewiz.py:839
 msgid "Long"
 msgstr "Lang"
 
-#: ../lilykde/scorewiz.py:816
+#: ../lilykde/scorewiz.py:833
 msgid "Use long or short instrument names before the first system."
 msgstr "Gebruik lange of korte instrumentnamen voor het eerste systeem."
 
-#: ../lilykde/scorewiz.py:820
+#: ../lilykde/scorewiz.py:837
 msgid "Other systems:"
 msgstr "Volgende systemen:"
 
-#: ../lilykde/scorewiz.py:825
+#: ../lilykde/scorewiz.py:842
 msgid "Use no, short or long instrument names before the next systems."
 msgstr "Gebruik geen, korte of lange instrumentnamen voor de volgende systemen."
 
-#: ../lilykde/scorewiz.py:827
+#: ../lilykde/scorewiz.py:844
 msgid "Italian names"
 msgstr "Italiaanse namen"
 
-#: ../lilykde/scorewiz.py:829
+#: ../lilykde/scorewiz.py:846
 #, python-format
 msgid "Choose standard Italian instrument names, like '%s' instead of 'Organ.'"
 msgstr "Kies standaard Italiaanse instrumentnamen, zoals '%s' in plaats van 'Orgel.'"
 
-#: ../lilykde/scorewiz.py:898
+#: ../lilykde/scorewiz.py:918
 msgid "Score Setup Wizard"
 msgstr "Partituur opzetten"
 
-#: ../lilykde/scorewiz.py:960
+#: ../lilykde/scorewiz.py:980
 msgid "Remove default LilyPond tagline"
 msgstr "Standaard LilyPond-tagline verwijderen"
 

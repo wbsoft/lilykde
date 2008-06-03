@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lilykde 0.6.0\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-03 12:03+0200\n"
+"POT-Creation-Date: 2008-06-03 13:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -733,7 +733,7 @@ msgstr ""
 msgid "Pickup measure:"
 msgstr ""
 
-#: ../lilykde/scorewiz.py:714 ../lilykde/scorewiz.py:822
+#: ../lilykde/scorewiz.py:714 ../lilykde/scorewiz.py:839
 msgid "None"
 msgstr ""
 
@@ -749,7 +749,8 @@ msgstr ""
 msgid "A tempo indication, e.g. \"Allegro.\""
 msgstr ""
 
-#: ../lilykde/scorewiz.py:757 ../lilykde/parts.py:440 ../lilykde/parts.py:711
+#: ../lilykde/scorewiz.py:757 ../lilykde/scorewiz.py:815
+#: ../lilykde/parts.py:440 ../lilykde/parts.py:711
 msgid "Default"
 msgstr ""
 
@@ -782,61 +783,74 @@ msgid "Suppress the default tagline output by LilyPond."
 msgstr ""
 
 #: ../lilykde/scorewiz.py:793
-msgid "Create MIDI output"
+msgid "Remove bar numbers"
 msgstr ""
 
 #: ../lilykde/scorewiz.py:795
+msgid ""
+"Suppress the display of measure numbers at the beginning of every system."
+msgstr ""
+
+#: ../lilykde/scorewiz.py:799
+msgid "Create MIDI output"
+msgstr ""
+
+#: ../lilykde/scorewiz.py:801
 msgid "Create a MIDI file in addition to the PDF file."
 msgstr ""
 
-#: ../lilykde/scorewiz.py:798
+#: ../lilykde/scorewiz.py:804
 msgid "Show metronome mark"
 msgstr ""
 
-#: ../lilykde/scorewiz.py:800
+#: ../lilykde/scorewiz.py:806
 msgid ""
 "If checked, show the metronome mark at the beginning of the score. The MIDI "
 "output also uses the metronome setting."
 msgstr ""
 
-#: ../lilykde/scorewiz.py:811
+#: ../lilykde/scorewiz.py:813
+msgid "Paper size:"
+msgstr ""
+
+#: ../lilykde/scorewiz.py:828
 msgid "First system:"
 msgstr ""
 
-#: ../lilykde/scorewiz.py:813 ../lilykde/scorewiz.py:822
+#: ../lilykde/scorewiz.py:830 ../lilykde/scorewiz.py:839
 msgid "Short"
 msgstr ""
 
-#: ../lilykde/scorewiz.py:813 ../lilykde/scorewiz.py:822
+#: ../lilykde/scorewiz.py:830 ../lilykde/scorewiz.py:839
 msgid "Long"
 msgstr ""
 
-#: ../lilykde/scorewiz.py:816
+#: ../lilykde/scorewiz.py:833
 msgid "Use long or short instrument names before the first system."
 msgstr ""
 
-#: ../lilykde/scorewiz.py:820
+#: ../lilykde/scorewiz.py:837
 msgid "Other systems:"
 msgstr ""
 
-#: ../lilykde/scorewiz.py:825
+#: ../lilykde/scorewiz.py:842
 msgid "Use no, short or long instrument names before the next systems."
 msgstr ""
 
-#: ../lilykde/scorewiz.py:827
+#: ../lilykde/scorewiz.py:844
 msgid "Italian names"
 msgstr ""
 
-#: ../lilykde/scorewiz.py:829
+#: ../lilykde/scorewiz.py:846
 #, python-format
 msgid "Choose standard Italian instrument names, like '%s' instead of 'Organ.'"
 msgstr ""
 
-#: ../lilykde/scorewiz.py:898
+#: ../lilykde/scorewiz.py:918
 msgid "Score Setup Wizard"
 msgstr ""
 
-#: ../lilykde/scorewiz.py:960
+#: ../lilykde/scorewiz.py:980
 msgid "Remove default LilyPond tagline"
 msgstr ""
 

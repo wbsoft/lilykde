@@ -790,6 +790,12 @@ class Settings(object):
             "Suppress the default tagline output by LilyPond."))
         self.tagl.setChecked(conf['remove tagline'] == '1')
 
+        self.barnum = QCheckBox(_("Remove bar numbers"), prefs)
+        QToolTip.add(self.barnum, _(
+            "Suppress the display of measure numbers at the beginning of "
+            "every system."))
+        self.barnum.setChecked(conf['remove barnumbers'] == '1')
+
         self.midi = QCheckBox(_("Create MIDI output"), prefs)
         QToolTip.add(self.midi, _(
             "Create a MIDI file in addition to the PDF file."))
@@ -801,6 +807,17 @@ class Settings(object):
             "score. The MIDI output also uses the metronome setting."))
         self.metro.setChecked(conf['metronome mark'] == '1')
 
+        # paper size:
+        paperSizes = ('a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17')
+        h = QHBox(prefs)
+        QLabel(_("Paper size:"), h)
+        self.paper = QComboBox(False, h)
+        self.paper.insertItem(_("Default"))
+        for i in paperSizes:
+            self.paper.insertItem(i)
+        t = conf['paper size']
+        if t in paperSizes:
+            self.paper.setCurrentText(t)
 
         # Instrument names
         instr.setCheckable(True)
@@ -839,7 +856,7 @@ class Settings(object):
                 ['none', 'short', 'long'].index(conf.get(
                     'instrument names other systems', 'none')))
         except: pass
-        self.instrIt.setChecked(conf['italian instrument names'] == '1')
+        self.instrIt.setChecked(conf['instrument names italian'] == '1')
         self.instr.setChecked(conf['instrument names'] == '1')
 
 
@@ -871,10 +888,13 @@ class Settings(object):
         conf['language'] = self.getLanguage() or 'default'
         conf['typographical'] = self.typq.isChecked() and '1' or '0'
         conf['remove tagline'] = self.tagl.isChecked() and '1' or '0'
+        conf['remove barnumbers'] = self.barnum.isChecked() and '1' or '0'
         conf['midi'] = self.midi.isChecked() and '1' or '0'
         conf['metronome mark'] = self.metro.isChecked() and '1' or '0'
+        conf['paper size'] = self.paper.currentItem() and \
+            str(self.paper.currentText()) or 'default'
         conf['instrument names'] = self.instr.isChecked() and '1' or '0'
-        conf['italian instrument names'] = self.instrIt.isChecked() and '1' or '0'
+        conf['instrument names italian'] = self.instrIt.isChecked() and '1' or '0'
         conf['instrument names first system'] = \
             ('short', 'long')[self.instrFirst.currentItem()]
         conf['instrument names other systems'] = \
@@ -961,6 +981,12 @@ class ScoreWizard(KDialogBase):
             h['tagline'] = Scheme(d, '#f')
         if len(h):
             d.body.append(h)
+            Newline(d.body)
+
+        # paper size:
+        if self.settings.paper.currentItem():
+            Scheme(Paper(d.body), '(set-paper-size "%s")' %
+                str(self.settings.paper.currentText()))
             Newline(d.body)
 
         parts = self.parts.parts()
@@ -1051,7 +1077,7 @@ class ScoreWizard(KDialogBase):
                 for p in plist:
                     p.renameAssignment(name, name + p.identifier())
         # Same for collisions in named contexts:
-        # TODO, but seems to work nonetheless!
+        # TODO, but LilyPond seems to work nonetheless!
         names = {}
         for p in parts:
             for i in p.namedContexts():
@@ -1075,7 +1101,9 @@ class ScoreWizard(KDialogBase):
         for p in parts:
             p.appendParts(s1)
 
-        Layout(s)
+        l = Layout(s)
+        if self.settings.barnum.isChecked():
+            Text(Context(l, 'Score'), '\\remove "Bar_number_engraver"\n')
         if midi:
             Midi(s)
 
