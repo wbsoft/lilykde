@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
 "POT-Creation-Date: 2008-06-03 13:50+0200\n"
-"PO-Revision-Date: 2008-04-17 21:14+0300\n"
+"PO-Revision-Date: 2008-06-05 21:34+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
 "MIME-Version: 1.0\n"
@@ -102,8 +102,7 @@ msgstr "PDF'yi e-posta ile gönder"
 
 #: ../lilykde/runlily.py:212
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
-msgstr ""
-"LilyPond bir PDF. Büyük ihtimalle şunu eklemeyi unuttunuz <b>\\layout</b>?"
+msgstr "LilyPond bir PDF. Büyük ihtimalle şunu eklemeyi unuttunuz <b>\\layout</b>?"
 
 #: ../lilykde/runlily.py:216 ../lilykde/settings.py:186
 msgid "Play MIDI"
@@ -131,7 +130,7 @@ msgstr "LilyPond"
 
 #: ../lilykde/menu.py:33
 msgid "Setup New Score..."
-msgstr ""
+msgstr "Yeni Bir Esere Başla..."
 
 #: ../lilykde/menu.py:38
 msgid "Run LilyPond (preview)"
@@ -195,8 +194,7 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr ""
-"Lilypond sürümü belirli değil. Lütfen, Lilypond kurulumunuzu denetleyin."
+msgstr "Lilypond sürümü belirli değil. Lütfen, Lilypond kurulumunuzu denetleyin."
 
 #: ../lilykde/version.py:74
 msgid "This LilyPond document is already up-to-date."
@@ -311,8 +309,7 @@ msgstr ""
 "Rumor'u kullanarak çalmak için)"
 
 #: ../lilykde/settings.py:98
-msgid ""
-"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "ALSA MIDI istemcisi olarak Timidity (veya bir diğer başka programı) "
 "başlatmanın tam komutu."
@@ -352,8 +349,7 @@ msgid "Open the generated PDF file with the default PDF viewer."
 msgstr "İşlenmiş PDF dosyasını varsayılan PDF okuyucu ile aç."
 
 #: ../lilykde/settings.py:182
-msgid ""
-"Print the PDF using the print command set in the Commands settings page."
+msgid "Print the PDF using the print command set in the Commands settings page."
 msgstr "Komut ayarları sayfasındaki ayarları kullanarak PDF dosyasını yazdır."
 
 #: ../lilykde/settings.py:185
@@ -621,196 +617,190 @@ msgid "Rumor"
 msgstr "Rumor"
 
 #: ../lilykde/scorewiz.py:62
-#, fuzzy
 msgid "Dedication"
-msgstr "Tanımlama"
+msgstr "İthaf"
 
 #: ../lilykde/scorewiz.py:63
 msgid "Title"
-msgstr ""
+msgstr "Başlık"
 
 #: ../lilykde/scorewiz.py:64
 msgid "Subtitle"
-msgstr ""
+msgstr "Alt Başlık"
 
 #: ../lilykde/scorewiz.py:65
 msgid "Subsubtitle"
-msgstr ""
+msgstr "Alt alt başlık"
 
 #: ../lilykde/scorewiz.py:66
 msgid "Instrument"
-msgstr ""
+msgstr "Çalgı"
 
 #: ../lilykde/scorewiz.py:67
 msgid "Composer"
-msgstr ""
+msgstr "Besteci"
 
 #: ../lilykde/scorewiz.py:68
 msgid "Arranger"
-msgstr ""
+msgstr "Aranjör"
 
 #: ../lilykde/scorewiz.py:69
 msgid "Poet"
-msgstr ""
+msgstr "Şair"
 
 #: ../lilykde/scorewiz.py:70
-#, fuzzy
 msgid "Meter"
-msgstr "Ölçü:"
+msgstr "Ölçü"
 
 #: ../lilykde/scorewiz.py:71
 msgid "Piece"
-msgstr ""
+msgstr "Parça"
 
 #: ../lilykde/scorewiz.py:72
 msgid "Opus"
-msgstr ""
+msgstr "Opus"
 
 #: ../lilykde/scorewiz.py:73
 msgid "Copyright"
-msgstr ""
+msgstr "Telif Hakkı"
 
 #: ../lilykde/scorewiz.py:74
 msgid "Tagline"
-msgstr ""
+msgstr "Slogan"
 
 #: ../lilykde/scorewiz.py:80
 msgid "Major"
-msgstr ""
+msgstr "Majör"
 
 #: ../lilykde/scorewiz.py:81
-#, fuzzy
 msgid "Minor"
-msgstr "Mono"
+msgstr "Minör"
 
 #: ../lilykde/scorewiz.py:82
 msgid "Ionian"
-msgstr ""
+msgstr "İyonyan"
 
 #: ../lilykde/scorewiz.py:83
 msgid "Dorian"
-msgstr ""
+msgstr "Doryan"
 
 #: ../lilykde/scorewiz.py:84
-#, fuzzy
 msgid "Phrygian"
-msgstr "Yazdır"
+msgstr "Frigyan"
 
 #: ../lilykde/scorewiz.py:85
 msgid "Lydian"
-msgstr ""
+msgstr "Lidyan"
 
 #: ../lilykde/scorewiz.py:86
 msgid "Mixolydian"
-msgstr ""
+msgstr "Miksolidyan"
 
 #: ../lilykde/scorewiz.py:87
 msgid "Aeolian"
-msgstr ""
+msgstr "Aolyan"
 
 #: ../lilykde/scorewiz.py:88
 msgid "Locrian"
-msgstr ""
+msgstr "Lokriyan"
 
 #: ../lilykde/scorewiz.py:199
 msgid "bottom of first page"
-msgstr ""
+msgstr "ilk sayfanın altı"
 
 #: ../lilykde/scorewiz.py:200
 msgid "bottom of last page"
-msgstr ""
+msgstr "son sayfanın altı"
 
 #: ../lilykde/scorewiz.py:273
-#, fuzzy, python-format
+#, python-format
 msgid "Configure %s"
-msgstr "Yapılandır..."
+msgstr "Yapılandır %s"
 
 #: ../lilykde/scorewiz.py:296
 msgid "No settings available."
-msgstr ""
+msgstr "Hiç bir ayarlama yapılamaz."
 
 #: ../lilykde/scorewiz.py:422
 msgid "Music follows here."
-msgstr ""
+msgstr "Müziği buradan gireceksiniz."
 
 #: ../lilykde/scorewiz.py:473
 msgid "Titles and Headers"
-msgstr ""
+msgstr "Başlık isimleri ve Başlıklar"
 
 #: ../lilykde/scorewiz.py:527
-#, fuzzy
 msgid "Parts"
-msgstr "Yazdır"
+msgstr "Partiler"
 
 #: ../lilykde/scorewiz.py:539
 msgid "Available parts:"
-msgstr ""
+msgstr "Uygun partiler:"
 
 #: ../lilykde/scorewiz.py:542
 msgid "Add selected part to your score."
-msgstr ""
+msgstr "Seçili partiyi partisyonunuza ekleyin."
 
 #: ../lilykde/scorewiz.py:567
 msgid "Score:"
-msgstr ""
+msgstr "Partisyon:"
 
 #: ../lilykde/scorewiz.py:574
 msgid "Remove selected part from your score."
-msgstr ""
+msgstr "Seçili partileri partisyondan çıkartınız."
 
 #: ../lilykde/scorewiz.py:579
 msgid "Move selected part up."
-msgstr ""
+msgstr "Seçili partiyi yukarı taşı."
 
 #: ../lilykde/scorewiz.py:580
 msgid "Move selected part down."
-msgstr ""
+msgstr "Seçili partiyi aşağı taşı."
 
 #: ../lilykde/scorewiz.py:665 ../lilykde/scorewiz.py:666
-#, fuzzy
 msgid "Score settings"
-msgstr "Rumor Ayarları"
+msgstr "Partisyon ayarları"
 
 #: ../lilykde/scorewiz.py:668
 msgid "General preferences"
-msgstr ""
+msgstr "Genel tercihler"
 
 #: ../lilykde/scorewiz.py:669
 msgid "Instrument names"
-msgstr ""
+msgstr "Çalgı isimleri"
 
 #: ../lilykde/scorewiz.py:690
 msgid "Key signature:"
-msgstr ""
+msgstr "Tonalite:"
 
 #: ../lilykde/scorewiz.py:698
 msgid "Time signature:"
-msgstr ""
+msgstr "Ölçü birimi:"
 
 #: ../lilykde/scorewiz.py:711
 msgid "Pickup measure:"
-msgstr ""
+msgstr "Önel ölçüsü:"
 
 #: ../lilykde/scorewiz.py:714 ../lilykde/scorewiz.py:839
 msgid "None"
-msgstr ""
+msgstr "Yok"
 
 #: ../lilykde/scorewiz.py:723
 msgid "Metronome mark:"
-msgstr ""
+msgstr "Metronom işareti:"
 
 #: ../lilykde/scorewiz.py:745
 msgid "Tempo indication:"
-msgstr ""
+msgstr "Hız belirteci:"
 
 #: ../lilykde/scorewiz.py:749
 msgid "A tempo indication, e.g. \"Allegro.\""
-msgstr ""
+msgstr "A tempo belirteci, e.g. \"Allegro.\""
 
 #: ../lilykde/scorewiz.py:757 ../lilykde/scorewiz.py:815
 #: ../lilykde/parts.py:440 ../lilykde/parts.py:711
 msgid "Default"
-msgstr ""
+msgstr "Varsayılan"
 
 #: ../lilykde/scorewiz.py:761
 #, fuzzy
@@ -819,117 +809,114 @@ msgstr "Rumor'un içindeki sesleri dışa aktaracağı Lilypond dili."
 
 #: ../lilykde/scorewiz.py:771
 msgid "Version:"
-msgstr ""
+msgstr "Sürüm:"
 
 #: ../lilykde/scorewiz.py:779
 msgid "The LilyPond version you will be using for this document."
-msgstr ""
+msgstr "Bu belge için kullanacağınız Lilypond sürüm numarası:"
 
 #: ../lilykde/scorewiz.py:783
 msgid "Use typographical quotes"
-msgstr ""
+msgstr "Tipografik tırnak işaretini kullan"
 
 #: ../lilykde/scorewiz.py:785
 msgid "Replace normal quotes in titles with nice typographical quotes."
-msgstr ""
+msgstr "Başlıklardaki normal tırnak işaretlerini güzel tipografik tırnaklarla değiştir."
 
 #: ../lilykde/scorewiz.py:788
-#, fuzzy
 msgid "Remove default tagline"
-msgstr "Tirelemeyi kaldır"
+msgstr "Varsayılan sloganı kaldır"
 
 #: ../lilykde/scorewiz.py:790
 msgid "Suppress the default tagline output by LilyPond."
-msgstr ""
+msgstr "Lilypond'un varsayılan slogan çıktısını gösterme."
 
 #: ../lilykde/scorewiz.py:793
 msgid "Remove bar numbers"
-msgstr ""
+msgstr "Ölçü numaralarını kaldır"
 
 #: ../lilykde/scorewiz.py:795
-msgid ""
-"Suppress the display of measure numbers at the beginning of every system."
-msgstr ""
+msgid "Suppress the display of measure numbers at the beginning of every system."
+msgstr "Her satırdaki ölçü işaretlerinin gösterilmesini önle."
 
 #: ../lilykde/scorewiz.py:799
-#, fuzzy
 msgid "Create MIDI output"
-msgstr "MIDI çıkışı:"
+msgstr "MIDI çıktısı oluştur"
 
 #: ../lilykde/scorewiz.py:801
 msgid "Create a MIDI file in addition to the PDF file."
-msgstr ""
+msgstr "PDF dosyasıyla birlikte MIDI dosyası da oluştur."
 
 #: ../lilykde/scorewiz.py:804
 msgid "Show metronome mark"
-msgstr ""
+msgstr "Metronom işaretini göster"
 
 #: ../lilykde/scorewiz.py:806
 msgid ""
 "If checked, show the metronome mark at the beginning of the score. The MIDI "
 "output also uses the metronome setting."
-msgstr ""
+msgstr "Eğer işaretlenmişse, notanın başında metronom işaretini göster. MIDI çıktısı da metronom ayarını kullanacaktır böylece."
 
 #: ../lilykde/scorewiz.py:813
 msgid "Paper size:"
-msgstr ""
+msgstr "Sayfa boyutu:"
 
 #: ../lilykde/scorewiz.py:828
 msgid "First system:"
-msgstr ""
+msgstr "İlk satır:"
 
 #: ../lilykde/scorewiz.py:830 ../lilykde/scorewiz.py:839
 msgid "Short"
-msgstr ""
+msgstr "Kısa"
 
 #: ../lilykde/scorewiz.py:830 ../lilykde/scorewiz.py:839
 msgid "Long"
-msgstr ""
+msgstr "Uzun"
 
 #: ../lilykde/scorewiz.py:833
 msgid "Use long or short instrument names before the first system."
-msgstr ""
+msgstr "İlk satırdan önce uzun ve kısa çalgı isimlerini kullan."
 
 #: ../lilykde/scorewiz.py:837
 msgid "Other systems:"
-msgstr ""
+msgstr "Diğer satırlar:"
 
 #: ../lilykde/scorewiz.py:842
 msgid "Use no, short or long instrument names before the next systems."
-msgstr ""
+msgstr "Sonraki satırda kısa veya uzun hiç çalgı isimleri kullanma."
 
 #: ../lilykde/scorewiz.py:844
 msgid "Italian names"
-msgstr ""
+msgstr "İtalyan isimleri"
 
 #: ../lilykde/scorewiz.py:846
 #, python-format
 msgid "Choose standard Italian instrument names, like '%s' instead of 'Organ.'"
-msgstr ""
+msgstr "Org yerine '%s'gibi İtalyan çalgı adlarını seç."
 
 #: ../lilykde/scorewiz.py:918
 msgid "Score Setup Wizard"
-msgstr ""
+msgstr "Partisyon Yapılandırma Sihirbazı"
 
 #: ../lilykde/scorewiz.py:980
 msgid "Remove default LilyPond tagline"
-msgstr ""
+msgstr "Varsayılan Lilypond sloganını kaldır"
 
 #: ../lilykde/parts.py:98
 msgid "Adjust how many separate voices you want on each staff."
-msgstr ""
+msgstr "Her dizekte kaç tane ayrı ses istediğinizi ayarlayın."
 
 #: ../lilykde/parts.py:99
 msgid "This is primarily useful when you write polyphonic music like a fuge."
-msgstr ""
+msgstr "Bu özellik füg gibi polifonik bir müzik yazıyorsanız birincil derecede faydalıdır."
 
 #: ../lilykde/parts.py:102
 msgid "Right hand:"
-msgstr ""
+msgstr "Sağ el:"
 
 #: ../lilykde/parts.py:105
 msgid "Left hand:"
-msgstr ""
+msgstr "Sol el:"
 
 #: ../lilykde/parts.py:113
 msgid "Organ"
@@ -945,12 +932,11 @@ msgstr ""
 
 #: ../lilykde/parts.py:124
 msgid "Set to 0 to disable the pedal altogether."
-msgstr ""
+msgstr "Pedal'ı yok etmek istiyorsanız 0 olarak ayarlayınız."
 
 #: ../lilykde/parts.py:134
-#, fuzzy
 msgid "Piano"
-msgstr "Yazdır"
+msgstr ""
 
 #: ../lilykde/parts.py:135
 msgid "Piano|Pno."
@@ -1070,7 +1056,7 @@ msgstr ""
 
 #: ../lilykde/parts.py:259 ../lilykde/parts.py:727
 msgid "Figures follow here."
-msgstr ""
+msgstr "Figürler burada başlayacak."
 
 #: ../lilykde/parts.py:270
 msgid "Flute"
@@ -1137,9 +1123,8 @@ msgid "Contrabassoon|C.Bn."
 msgstr ""
 
 #: ../lilykde/parts.py:327
-#, fuzzy
 msgid "Clarinet"
-msgstr "Yazdır"
+msgstr ""
 
 #: ../lilykde/parts.py:328
 msgid "Clarinet|Cl."
@@ -1223,7 +1208,7 @@ msgstr ""
 
 #: ../lilykde/parts.py:424
 msgid "Normal staff"
-msgstr ""
+msgstr "Normal dizek"
 
 #: ../lilykde/parts.py:425
 msgid "Tablature"
@@ -1231,11 +1216,11 @@ msgstr ""
 
 #: ../lilykde/parts.py:426
 msgid "Both"
-msgstr ""
+msgstr "Her ikisi de"
 
 #: ../lilykde/parts.py:438
 msgid "Tuning:"
-msgstr ""
+msgstr "Akort:"
 
 #: ../lilykde/parts.py:501
 msgid "Mandolin"
@@ -1259,31 +1244,31 @@ msgstr ""
 
 #: ../lilykde/parts.py:515
 msgid "Open G-tuning (aDGBD)"
-msgstr ""
+msgstr "Açık SOL-teli akordu (aDGBD)"
 
 #: ../lilykde/parts.py:516
 msgid "C-tuning (gCGBD)"
-msgstr ""
+msgstr "DO-akordu (gCGBD)"
 
 #: ../lilykde/parts.py:517
 msgid "Modal tuning (gDGCD)"
-msgstr ""
+msgstr "Modal akort (gDGCD)"
 
 #: ../lilykde/parts.py:518
 msgid "Open D-tuning (aDF#AD)"
-msgstr ""
+msgstr "Açık RE akordu (aDF#AD)"
 
 #: ../lilykde/parts.py:519
 msgid "Open Dm-tuning (aDFAD)"
-msgstr ""
+msgstr "Açık Re minör-akordu (aDFAD)"
 
 #: ../lilykde/parts.py:523
 msgid "Four strings (instead of five)"
-msgstr ""
+msgstr "Dört tel (beş tel yerine)"
 
 #: ../lilykde/parts.py:538
 msgid "Classical guitar"
-msgstr ""
+msgstr "Klasik Gitar"
 
 #: ../lilykde/parts.py:539
 msgid "Guitar|Gt."
@@ -1291,15 +1276,15 @@ msgstr ""
 
 #: ../lilykde/parts.py:543
 msgid "Guitar tuning"
-msgstr ""
+msgstr "Gitar akordu"
 
 #: ../lilykde/parts.py:544
 msgid "Open G-tuning"
-msgstr ""
+msgstr "Açık SOL-akordu"
 
 #: ../lilykde/parts.py:548
 msgid "Jazz guitar"
-msgstr ""
+msgstr "Caz gitar"
 
 #: ../lilykde/parts.py:549
 msgid "Jazz guitar|J.Gt."
@@ -1315,7 +1300,7 @@ msgstr ""
 
 #: ../lilykde/parts.py:561
 msgid "Bass tuning"
-msgstr ""
+msgstr "Bas akordu"
 
 #: ../lilykde/parts.py:565
 msgid "Electric bass"
@@ -1391,100 +1376,99 @@ msgstr ""
 
 #: ../lilykde/parts.py:641
 msgid "Drums follow here."
-msgstr ""
+msgstr "Davul notası burada başlayacak."
 
 #: ../lilykde/parts.py:667
 msgid "keep some distance."
-msgstr ""
+msgstr "biraz mesafe bırak."
 
 #: ../lilykde/parts.py:671
 msgid "Voices:"
-msgstr ""
+msgstr "Sesler:"
 
 #: ../lilykde/parts.py:673
 msgid "How many drum voices to put in this staff."
-msgstr ""
+msgstr "Bu dizeğe kaç tane davul partisi yazılacağını gösterir."
 
 #: ../lilykde/parts.py:675
-#, fuzzy
 msgid "Style:"
-msgstr "Adım"
+msgstr "Stil:"
 
 #: ../lilykde/parts.py:678
 msgid "Drums (5 lines, default)"
-msgstr ""
+msgstr "Davul (5 çizgi, varsayılan)"
 
 #: ../lilykde/parts.py:679
 msgid "Timbales-style (2 lines)"
-msgstr ""
+msgstr "Timbal-stili (2 çizgi)"
 
 #: ../lilykde/parts.py:680
 msgid "Congas-style (2 lines)"
-msgstr ""
+msgstr "Konga-stili (2 çizgi)"
 
 #: ../lilykde/parts.py:681
 msgid "Bongos-style (2 lines)"
-msgstr ""
+msgstr "Bongo-stili (2 çizgi)"
 
 #: ../lilykde/parts.py:682
 msgid "Percussion-style (1 line)"
-msgstr ""
+msgstr "Perkusyon-stili (1 çizgi)"
 
 #: ../lilykde/parts.py:685
 msgid "Remove stems"
-msgstr ""
+msgstr "Kuyrukları kaldır"
 
 #: ../lilykde/parts.py:686
 msgid "Remove the stems from the drum notes."
-msgstr ""
+msgstr "Davul notasından kuyrukları kaldır."
 
 #: ../lilykde/parts.py:690
 msgid "Chord names"
-msgstr ""
+msgstr "Akor adları"
 
 #: ../lilykde/parts.py:701
 msgid "Chords follow here."
-msgstr ""
+msgstr "Akorlar burada başlayacak."
 
 #: ../lilykde/parts.py:708
 msgid "Chord style:"
-msgstr ""
+msgstr "Akor stili:"
 
 #: ../lilykde/parts.py:712
 msgid "German"
-msgstr ""
+msgstr "Alman"
 
 #: ../lilykde/parts.py:713
 msgid "Semi-German"
-msgstr ""
+msgstr "Yarı-Alman"
 
 #: ../lilykde/parts.py:714
 msgid "Italian"
-msgstr ""
+msgstr "İtalyan"
 
 #: ../lilykde/parts.py:715
 msgid "French"
-msgstr ""
+msgstr "Fransız"
 
 #: ../lilykde/parts.py:721
 msgid "Figured Bass"
-msgstr ""
+msgstr "Şifreli Bas"
 
 #: ../lilykde/parts.py:735
 msgid "Use extender lines"
-msgstr ""
+msgstr "Uzama çizgilerini kullan"
 
 #: ../lilykde/parts.py:749
 msgid "Lyrics follow here."
-msgstr ""
+msgstr "Şarkı sözleri burada başlayacak."
 
 #: ../lilykde/parts.py:755
 msgid "Stanzas:"
-msgstr ""
+msgstr "Kıtalar:"
 
 #: ../lilykde/parts.py:757
 msgid "The number of stanzas."
-msgstr ""
+msgstr "Kıtaların numarası."
 
 #: ../lilykde/parts.py:785
 msgid "Soprano"
@@ -1503,9 +1487,8 @@ msgid "Mezzo-soprano|Ms."
 msgstr ""
 
 #: ../lilykde/parts.py:795
-#, fuzzy
 msgid "Alto"
-msgstr "Otomatik"
+msgstr ""
 
 #: ../lilykde/parts.py:796
 msgid "Alto|A."
@@ -1525,70 +1508,69 @@ msgstr ""
 
 #: ../lilykde/parts.py:815
 msgid "Lead sheet"
-msgstr ""
+msgstr "Detaylı Şarkı Notası"
 
 #: ../lilykde/parts.py:846
 msgid ""
 "The Lead Sheet provides a staff with chord names above and lyrics below it. "
 "A second staff is optional."
-msgstr ""
+msgstr "Detaylı Şarkı Notası, üzerinde akorları olan ve altında da şarkı sözlerini içeren notadır."
 
 #: ../lilykde/parts.py:850
 msgid "Add accompaniment staff"
-msgstr ""
+msgstr "Eşlik dizeği ekle"
 
 #: ../lilykde/parts.py:852
 msgid ""
 "Adds an accompaniment staff and also puts an accompaniment voice in the "
 "upper staff."
-msgstr ""
+msgstr "Bir eşlik dizeği ekler ve aynı zamanda da üst dizeğe eşlik sesi ekler."
 
 #: ../lilykde/parts.py:857
 msgid "Choir"
-msgstr ""
+msgstr "Koro"
 
 #: ../lilykde/parts.py:861
 msgid ""
 "Please select the voices for the choir. Use the letters S, A, T, or B. A "
 "hyphen denotes a new staff."
-msgstr ""
+msgstr "Lütfen koro için sesleri seçiniz. Sesleri seçmek için S,A, T veya B gibi harfleri kullanınız. Tire eklemek yeni bir dizek anlamına gelir."
 
 #: ../lilykde/parts.py:863
 msgid "Tip: For a double choir you can use two choir parts."
-msgstr ""
+msgstr "İpucu: Çift koro için iki koro partilerini kullanabilirsiniz."
 
 #: ../lilykde/parts.py:865
 msgid "Voicing:"
-msgstr ""
+msgstr "Ses Kümesi:"
 
 #: ../lilykde/parts.py:875
 msgid "Lyrics"
-msgstr ""
+msgstr "Şarkı Sözleri"
 
 #: ../lilykde/parts.py:876
 msgid "All voices same lyrics"
-msgstr ""
+msgstr "Tüm seslerde aynı sözler"
 
 #: ../lilykde/parts.py:879
 msgid "One set of the same lyrics is placed between all staffs."
-msgstr ""
+msgstr "Şarkı sözlerinin tek seti bütün dizeklere yerleştirilmiştir."
 
 #: ../lilykde/parts.py:880
 msgid "Every voice same lyrics"
-msgstr ""
+msgstr "Her ses de aynı sözler"
 
 #: ../lilykde/parts.py:882
-msgid ""
-"Every voice gets its own lyrics, using the same text as the other voices."
-msgstr ""
+msgid "Every voice gets its own lyrics, using the same text as the other voices."
+msgstr "Her sesin diğer seslerdeki aynı metni kullanan kendine ait sözleri vardır, "
 
 #: ../lilykde/parts.py:884
 msgid "Every voice different lyrics"
-msgstr ""
+msgstr "Her sesin sözleri farklıdır"
 
 #: ../lilykde/parts.py:886
 msgid "Every voice gets a different set of lyrics."
-msgstr ""
+msgstr "Her sesin sözleri kendine özgüdür."
 
 #: ../lilykde/parts.py:910
 msgid "Choir|Ch."
@@ -1596,42 +1578,43 @@ msgstr ""
 
 #: ../lilykde/parts.py:1035
 msgid "Strings"
-msgstr ""
+msgstr "Yaylılar"
 
 #: ../lilykde/parts.py:1042
 msgid "Plucked strings"
-msgstr ""
+msgstr "Telli çalgılar"
 
 #: ../lilykde/parts.py:1051
 msgid "Woodwinds"
-msgstr ""
+msgstr "Tahta üflemeliler"
 
 #: ../lilykde/parts.py:1072
 msgid "Brass"
-msgstr ""
+msgstr "Bakır üflemeliler"
 
 #: ../lilykde/parts.py:1080
 msgid "Vocal"
-msgstr ""
+msgstr "İnsan sesi"
 
 #: ../lilykde/parts.py:1089
 msgid "Keyboard instruments"
-msgstr ""
+msgstr "Tuşlu çalgılar"
 
 #: ../lilykde/parts.py:1096
 msgid "Percussion"
-msgstr ""
+msgstr "Vurmalı Çalgılar"
 
 #: ../lilykde/parts.py:1105
 msgid "Special"
-msgstr ""
+msgstr "Özel"
 
 #: ../lilypond-servicemenu-helper.py:41
 msgid "One document failed."
 msgid_plural "$count documents failed."
-msgstr[0] "One document failed. "
+msgstr[0] "Bir belge çalıştırılamadı."
 msgstr[1] ""
 
 #: ../lilypond-servicemenu-helper.py:45
 msgid "All documents successfully converted."
 msgstr "Tüm belgeler başarıyla dönüştürüldü."
+
