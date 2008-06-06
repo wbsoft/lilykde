@@ -94,16 +94,18 @@ class _KeyboardBase(part):
         self.buildStaff('left', 'bass', 0, s, self.leftVoices.value())
 
     def widgetsStaffVoice(self, p):
-        l = QLabel('<p>%s <i>(%s)</i></p>' % (
+        QLabel('<p>%s <i>(%s)</i></p>' % (
             _("Adjust how many separate voices you want on each staff."),
             _("This is primarily useful when you write polyphonic music "
             "like a fuge.")), p)
         h = QHBox(p)
-        QLabel(_("Right hand:"), h)
+        l = QLabel(_("Right hand:"), h)
         self.rightVoices = QSpinBox(1, 4, 1, h)
+        l.setBuddy(self.rightVoices)
         h = QHBox(p)
-        QLabel(_("Left hand:"), h)
+        l = QLabel(_("Left hand:"), h)
         self.leftVoices = QSpinBox(1, 4, 1, h)
+        l.setBuddy(self.leftVoices)
 
     def widgets(self, p):
         self.widgetsStaffVoice(p)
@@ -117,8 +119,9 @@ class Organ(_KeyboardBase):
     def widgetsStaffVoice(self, p):
         super(Organ, self).widgetsStaffVoice(p)
         h = QHBox(p)
-        QLabel(_("Pedal:"), h)
+        l = QLabel(_("Pedal:"), h)
         self.pedalVoices = QSpinBox(0, 4, 1, h)
+        l.setBuddy(self.pedalVoices)
         self.pedalVoices.setValue(1)
         QToolTip.add(self.pedalVoices, _(
             "Set to 0 to disable the pedal altogether."))
@@ -366,7 +369,7 @@ class _BrassBase(_SingleVoice):
 
 
 class HornF(_BrassBase):
-    name = "Horn in F"
+    name = _("Horn in F")
     instrumentNames = ("Horn in F|Hn.F."), "Corno|Cor."
     midiInstrument = 'french horn'
     transpose = (-1, 3, 0)
@@ -418,8 +421,9 @@ class _TablatureBase(_SingleVoice):
 
     def widgets(self, p):
         h = QHBox(p)
-        QLabel(_("Staff type:"), h)
+        l = QLabel(_("Staff type:"), h)
         self.staffType = QComboBox(False, h)
+        l.setBuddy(self.staffType)
         for i in (
                 _("Normal staff"),
                 _("Tablature"),
@@ -435,8 +439,9 @@ class _TablatureBase(_SingleVoice):
     def widgetsTuning(self, p):
         """ Implement widgets related to tuning """
         h = QHBox(p)
-        QLabel(_("Tuning:"), h)
+        l = QLabel(_("Tuning:"), h)
         self.tuningSel = QComboBox(False, h)
+        l.setBuddy(self.tuningSel)
         self.tuningSel.insertItem(_("Default"))
         for t in self.tunings:
             self.tuningSel.insertItem(t[0])
@@ -671,12 +676,14 @@ class Drums(part):
 
     def widgets(self, p):
         h = QHBox(p)
-        QLabel(_("Voices:"), h)
+        l = QLabel(_("Voices:"), h)
         self.drumVoices = QSpinBox(1, 4, 1, h)
+        l.setBuddy(self.drumVoices)
         QToolTip.add(h, _("How many drum voices to put in this staff."))
         h = QHBox(p)
-        QLabel(_("Style:"), h)
+        l = QLabel(_("Style:"), h)
         self.drumStyle = QComboBox(False, h)
+        l.setBuddy(self.drumStyle)
         for i in (
                 _("Drums (5 lines, default)"),
                 _("Timbales-style (2 lines)"),
@@ -708,8 +715,9 @@ class Chords(part):
 
     def widgets(self, p):
         h = QHBox(p)
-        QLabel(_("Chord style:"), h)
+        l = QLabel(_("Chord style:"), h)
         self.chordStyle = QComboBox(False, h)
+        l.setBuddy(self.chordStyle)
         for i in (
                 _("Default"),
                 _("German"),
@@ -755,8 +763,9 @@ class _VocalBase(part):
 
     def widgets(self, p):
         h = QHBox(p)
-        QLabel(_("Stanzas:"), h)
+        l = QLabel(_("Stanzas:"), h)
         self.stanzas = QSpinBox(1, 10, 1, h)
+        l.setBuddy(self.stanzas)
         QToolTip.add(h, _("The number of stanzas."))
 
     def addStanzas(self, node, name = '', count = 0):
@@ -865,8 +874,9 @@ class Choir(_VocalBase):
             "Use the letters S, A, T, or B. A hyphen denotes a new staff."),
             _("Tip: For a double choir you can use two choir parts.")), p)
         h = QHBox(p)
-        QLabel(_("Voicing:"), h)
+        l = QLabel(_("Voicing:"), h)
         self.voicing = QComboBox(True, h)
+        l.setBuddy(self.voicing)
         for i in (
             'SA-TB', 'S-A-T-B',
             'SA', 'S-A', 'SS-A',

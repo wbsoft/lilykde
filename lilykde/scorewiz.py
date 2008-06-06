@@ -811,8 +811,9 @@ class Settings(object):
         paperSizes = ('a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17')
         h = QHBox(prefs)
         h.setSpacing(2)
-        QLabel(_("Paper size:"), h)
+        l = QLabel(_("Paper size:"), h)
         self.paper = QComboBox(False, h)
+        l.setBuddy(self.paper)
         self.paperLandscape = QCheckBox(_("Landscape"), h)
         self.paper.insertItem(_("Default"))
         for i in paperSizes:
