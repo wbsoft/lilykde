@@ -534,6 +534,7 @@ class Banjo(_TablatureBase):
                 '(four-string-banjo %s)' %
                 self.tunings[self.tuningSel.currentItem()][1])
 
+
 class ClassicalGuitar(_TablatureBase):
     name = _("Classical guitar")
     instrumentNames = _("Guitar|Gt."), "Chitarra|Chit."
@@ -543,6 +544,7 @@ class ClassicalGuitar(_TablatureBase):
         (_("Guitar tuning"), 'guitar-tuning'),
         (_("Open G-tuning"), 'guitar-open-g-tuning'),
     )
+
 
 class JazzGuitar(ClassicalGuitar):
     name = _("Jazz guitar")
@@ -560,6 +562,7 @@ class Bass(_TablatureBase):
     tunings = (
         (_("Bass tuning"), 'bass-tuning'),
     )
+
 
 class ElectricBass(Bass):
     name = _("Electric bass")
@@ -930,7 +933,7 @@ class Choir(_VocalBase):
             if len(staff) == 1:
                 # Only one voice in the staff.
                 s.instrName(*instrNames[0])
-                # if all staffs have one, voice, addlyrics is used,
+                # if all staffs have one voice, addlyrics is used,
                 # in that case, don't remove the braces.
                 mus = maxLen == 1 and Seq(s) or Seqr(s)
             else:

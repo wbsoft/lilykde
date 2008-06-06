@@ -17,6 +17,7 @@ LilyPond (of course!) 2.11.x    http://lilypond.org/
 Please use the tools of your operating system to install these
 prerequisites.  If you need to build Pate from source, install it to the
 same prefix as KDE, e.g. ./configure --prefix=$(kde-config --prefix)
+and make sure it links to the most recent Python on your system.
 
 Then unpack the LilyKDE tarball (you obviously did :-) and cd into the
 extracted package:

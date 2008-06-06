@@ -810,14 +810,20 @@ class Settings(object):
         # paper size:
         paperSizes = ('a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17')
         h = QHBox(prefs)
+        h.setSpacing(2)
         QLabel(_("Paper size:"), h)
         self.paper = QComboBox(False, h)
+        self.paperLandscape = QCheckBox(_("Landscape"), h)
         self.paper.insertItem(_("Default"))
         for i in paperSizes:
             self.paper.insertItem(i)
         t = conf['paper size']
         if t in paperSizes:
             self.paper.setCurrentText(t)
+        self.paperLandscape.setChecked(conf['paper landscape'] == '1')
+        self.paperLandscape.setEnabled(t in paperSizes)
+        QObject.connect(self.paper, SIGNAL("activated(int)"),
+            lambda i: self.paperLandscape.setEnabled(bool(i)))
 
         # Instrument names
         instr.setCheckable(True)
@@ -893,6 +899,7 @@ class Settings(object):
         conf['metronome mark'] = self.metro.isChecked() and '1' or '0'
         conf['paper size'] = self.paper.currentItem() and \
             str(self.paper.currentText()) or 'default'
+        conf['paper landscape'] = self.paperLandscape.isChecked() and '1' or '0'
         conf['instrument names'] = self.instr.isChecked() and '1' or '0'
         conf['instrument names italian'] = self.instrIt.isChecked() and '1' or '0'
         conf['instrument names first system'] = \
@@ -985,8 +992,11 @@ class ScoreWizard(KDialogBase):
 
         # paper size:
         if self.settings.paper.currentItem():
-            Scheme(Paper(d.body), '(set-paper-size "%s")' %
-                str(self.settings.paper.currentText()))
+            Scheme(Paper(d.body), '(set-paper-size "%s"%s)' % (
+                str(self.settings.paper.currentText()),
+                self.settings.paperLandscape.isChecked() and
+                " 'landscape" or ""
+                ))
             Newline(d.body)
 
         parts = self.parts.parts()
