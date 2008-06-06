@@ -1,3 +1,5 @@
+# AFAIK, this file is in the public domain.
+
 """Implementation of rational arithmetic."""
 
 from __future__ import division
@@ -16,7 +18,7 @@ def _gcf(a, b):
 class Rational(object):
     """
     This class provides an exact representation of rational numbers.
- 
+
     All of the standard arithmetic operators are provided.  In mixed-type
     expressions, an int or a long can be converted to a Rational without
     loss of precision, and will be done as such.
@@ -30,7 +32,7 @@ class Rational(object):
     conversions to Rational can be made with
     approx_smallest_denominator or approx_smallest_error.
     """
-    
+
     def __init__(self, numerator, denominator=None):
        """Contructs the Rational object for numerator/denominator."""
        if isinstance(numerator, Rational) and denominator is None:
@@ -52,52 +54,52 @@ class Rational(object):
        if self._d < 0:
            self._n = -self._n
            self._d = -self._d
-           
+
     def __repr__(self):
         if self._d == 1:
             return "Rational(%d)" % self._n
         else:
             return "Rational(%d, %d)" % (self._n, self._d)
-            
+
     def __str__(self):
         if self._d == 1:
             return str(self._n)
         else:
             return "%d/%d" % (self._n, self._d)
-            
+
     def __hash__(self):
         try:
             return hash(float(self))
         except OverflowError:
             return hash(long(self))
-            
+
     def __float__(self):
         return self._n / self._d
-        
+
     def __int__(self):
         if self._n < 0:
             return -int(-self._n // self._d)
         else:
             return int(self._n // self._d)
-            
+
     def __long__(self):
         return long(int(self))
-        
+
     def __nonzero__(self):
         return bool(self._n)
-        
+
     def __pos__(self):
         return self
-        
+
     def __neg__(self):
         return Rational(-self._n, self._d)
-        
+
     def __abs__(self):
         if self._n < 0:
             return -self
         else:
             return self
-            
+
     def __add__(self, other):
         if isinstance(other, Rational):
             return Rational(self._n * other._d + self._d * other._n,
@@ -111,7 +113,7 @@ class Rational(object):
         else:
             return NotImplemented
     __radd__ = __add__
-    
+
     def __sub__(self, other):
         if isinstance(other, Rational):
             return Rational(self._n * other._d - self._d * other._n,
@@ -124,7 +126,7 @@ class Rational(object):
             return self.decimal() - other
         else:
             return NotImplemented
-            
+
     def __rsub__(self, other):
         if isinstance(other, (int, long)):
             return Rational(other * self._d - self._n, self._d)
@@ -134,7 +136,7 @@ class Rational(object):
             return other - self.decimal()
         else:
             return NotImplemented
-            
+
     def __mul__(self, other):
         if isinstance(other, Rational):
             return Rational(self._n * other._n, self._d * other._d)
@@ -145,9 +147,9 @@ class Rational(object):
         elif isinstance(other, _decimal.Decimal):
             return self.decimal() * other
         else:
-            return NotImplemented            
+            return NotImplemented
     __rmul__ = __mul__
-    
+
     def __truediv__(self, other):
         if isinstance(other, Rational):
             return Rational(self._n * other._d, self._d * other._n)
@@ -159,7 +161,7 @@ class Rational(object):
             return self.decimal() / other
         else:
             return NotImplemented
-    __div__ = __truediv__    
+    __div__ = __truediv__
     def __rtruediv__(self, other):
         if isinstance(other, (int, long)):
             return Rational(other * self._d, self._n)
@@ -170,7 +172,7 @@ class Rational(object):
         else:
             return NotImplemented
     __rdiv__ = __rtruediv__
-    
+
     def __floordiv__(self, other):
         truediv = self / other
         if isinstance(truediv, Rational):
@@ -179,21 +181,21 @@ class Rational(object):
             return truediv // 1
     def __rfloordiv__(self, other):
         return (other / self) // 1
-        
+
     def __mod__(self, other):
         return self - self // other * other
     def __rmod__(self, other):
         return other - other // self * self
-        
+
     def __divmod__(self, other):
         return self // other, self % other
-        
+
     def __cmp__(self, other):
         if other == 0:
             return cmp(self._n, 0)
         else:
             return cmp(self - other, 0)
-            
+
     def __pow__(self, other):
         if isinstance(other, (int, long)):
             if other < 0:
@@ -202,14 +204,14 @@ class Rational(object):
                 return Rational(self._n ** other, self._d ** other)
         else:
                 return float(self) ** other
-                
+
     def __rpow__(self, other):
         return other ** float(self)
-        
+
     def decimal(self):
         """Return a Decimal approximation of self in the current context."""
         return _decimal.Decimal(self._n) / _decimal.Decimal(self._d)
-        
+
     def round(self, denominator):
         """Return self rounded to nearest multiple of 1/denominator."""
         int_part, frac_part = divmod(self * denominator, 1)
@@ -221,7 +223,7 @@ class Rational(object):
         else:
            numerator = int_part + 1
         return Rational(numerator, denominator)
-        
+
     @staticmethod
     def _from_exact_float(x):
         """Returns the exact Rational equivalent of x."""
@@ -232,7 +234,7 @@ class Rational(object):
             return Rational(mantissa, 2 ** (-exponent))
         else:
             return Rational(mantissa * 2 ** exponent)
-            
+
     @staticmethod
     def _from_exact_decimal(x):
         """Returns the exact Rational equivalent of x."""
@@ -260,13 +262,13 @@ class Rational(object):
           return Rational._from_exact_decimal(x)
        else:
           raise TypeError('cannot convert %s to Rational' % type(x).__name__)
-            
+
     @staticmethod
     def approx_smallest_denominator(x, tolerance):
         """
         Returns a Rational approximation of x.
         Minimizes the denominator given a constraint on the error.
-        
+
         x = the float or Decimal value to convert
         tolerance = maximum absolute error allowed,
                     must be of the same type as x
@@ -279,13 +281,13 @@ class Rational(object):
             if abs(result - x) < tolerance:
                 return result
             n += 1
-            
+
     @staticmethod
     def approx_smallest_error(x, maxDenominator):
         """
         Returns a Rational approximation of x.
         Minimizes the error given a constraint on the denominator.
-        
+
         x = the float or Decimal value to convert
         maxDenominator = maximum denominator allowed
         """
