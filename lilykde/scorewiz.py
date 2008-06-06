@@ -3,40 +3,12 @@ A Score Wizard
 
 provides a wizard dialog to quickly set up a LilyPond score.
 
-The user can select items (staffs or different types of staffgroup)
-and define their order. All items will live in Score, i.e.
-
-general preambule (main settings, title etc.)
-preambule of item1 (assignments etc.)
-preambule of item2
-
-\score {
-  <<
-    music of item1
-    music of item2
-  >>
-  \layout {
-    general layout stuff
-  }
-  optional midi block
-}
-
-aftermath of item1 (additional score blocks,)
-aftermath of item2 (e.g. for extra midi output files)
-
-
-Wizard:
-
-    Page 1:
-
-        Titling, etc.
-
-    page 2:
-
-        Parts with associated settings
-
-
-
+The main dialog has three tabs:
+    1. Titling. The user can set the titles and other header information
+    2. The user can select parts (staffs or different types of staffgroup)
+       and define their order, and configure some preferences.
+    3. The user can set score preferences, such as key, time, tempo, and
+       other settings.
 """
 
 import re
@@ -227,6 +199,11 @@ def nums(num):
 class part(object):
     """
     The base class for LilyKDE part types.
+
+    You create new part types by subclassing this class.  You should define
+    at least a build method, that should create at least one LilyDOM object
+    representing a part context (e.g. a Staff or StaffGroup, etc.). That object
+    should be registered using addPart(node).
     """
     name = 'unnamed'    # subclasses should set a real name as class variable
 
@@ -267,6 +244,10 @@ class part(object):
         self.num = 0  # used when there are more parts of the same type
 
     def setName(self, name):
+        """
+        Change the name of our part type, both in the Score listbox, and in the
+        title of the QVGroupBox with the preferences.
+        """
         self.name = name
         self.l.setText(name)
         self.l.listBox().updateItem(self.l) # seems necessary
@@ -276,14 +257,21 @@ class part(object):
         """
         Return a name for this part, suitable for use in a LilyPond
         identifier.
-        part.numberDoubles must have been run on the part list.
+        part.numberDoubles must have been run on the part list, so the .num
+        attribute is set correctly.
         """
         return self.__class__.__name__ + (self.num and romanize(self.num) or '')
 
     def select(self):
+        """
+        Show our config widget.
+        """
         self.p.part.raiseWidget(self.w)
 
     def delete(self):
+        """
+        Remove this part from our score.
+        """
         del self.l.part
         sip.delete(self.w)
         sip.delete(self.l)
@@ -832,8 +820,9 @@ class Settings(object):
 
         h = QHBox(instr)
         h.setSpacing(2)
-        QLabel(_("First system:"), h)
+        l = QLabel(_("First system:"), h)
         self.instrFirst = QComboBox(False, h)
+        l.setBuddy(self.instrFirst)
         for i in _("Short"), _("Long"):
             self.instrFirst.insertItem(i)
         QToolTip.add(h, _(
@@ -841,8 +830,9 @@ class Settings(object):
 
         h = QHBox(instr)
         h.setSpacing(2)
-        QLabel(_("Other systems:"), h)
+        l = QLabel(_("Other systems:"), h)
         self.instrOther = QComboBox(False, h)
+        l.setBuddy(self.instrOther)
         for i in _("None"), _("Short"), _("Long"):
             self.instrOther.insertItem(i)
         QToolTip.add(h, _(
