@@ -113,7 +113,10 @@ def rumor():
 # (Un)dock PDF
 @kate.onAction(_("Dock/Undock PDF preview"), "", "window")
 def undockPDF():
+    loaded = 'lilykde.pdf' in sys.modules
     import lilykde.pdf
-    lilykde.pdf.tool.toggle()
+    if loaded:
+        lilykde.pdf.tool.toggle()
+
 
 # kate: indent-width 4;
