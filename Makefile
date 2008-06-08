@@ -96,16 +96,12 @@ install-plugin:
 	@cd $(LILYKDE) && $(PYCOMPILE) $(modules)
 	@echo Installing runpty.py helper script:
 	cp runpty.py $(LILYKDE)/
-	@echo Installing lilypond stuff for expand Pate plugin:
-	@mkdir -p $(PYPLUGINS)/expand
-	-cp x-lilypond.conf $(PYPLUGINS)/expand/
 
 uninstall-plugin:
 	@echo Uninstalling plugin and lilykde package:
 	rm -f $(PYPLUGINS)/lilypond.py*
 	cd $(LILYKDE)/ && rm -f $(modules) $(addsuffix c,$(modules))
 	rm -f $(LILYKDE)/runpty.py
-	rm -f $(PYPLUGINS)/expand/x-lilypond.conf
 
 install-servicemenu:
 	@echo Installing Konqueror servicemenu:
