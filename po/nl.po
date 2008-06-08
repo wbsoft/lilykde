@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-06 13:38+0200\n"
+"POT-Creation-Date: 2008-06-08 22:02+0200\n"
 "PO-Revision-Date: 2008-06-06 09:55+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -169,6 +169,11 @@ msgstr "Liedtekst-afbreking verwijderen"
 msgid "Record MIDI with Rumor"
 msgstr "MIDI opnemen met Rumor"
 
+#: ../lilykde/menu.py:114
+#, fuzzy
+msgid "Dock/Undock PDF preview"
+msgstr "PDF e-mailen (vooruitblik)"
+
 #: ../lilykde/version.py:51
 #, python-format
 msgid "Could not start LilyPond: %s"
@@ -229,11 +234,11 @@ msgstr "Kan convert-ly niet starten: %s"
 msgid "LilyPond Log"
 msgstr "LilyPond-uitvoer"
 
-#: ../lilykde/pdf.py:34
+#: ../lilykde/pdf.py:37
 msgid "PDF"
 msgstr "PDF"
 
-#: ../lilykde/kateutil.py:39
+#: ../lilykde/kateutil.py:42
 msgid "Please select some text first."
 msgstr "Selecteer eerst de tekst waarop u de functie wilt toepassen."
 

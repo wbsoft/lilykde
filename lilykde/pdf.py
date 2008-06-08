@@ -27,13 +27,15 @@ from dcopext import DCOPApp
 from kdecore import KApplication, KURL
 from kparts import createReadOnlyPart
 
+from lilykde.kateutil import Dockable
+
 # Translate the messages
 from lilykde.i18n import _
 
 
-tool = kate.gui.Tool(_("PDF"), "pdf", kate.gui.Tool.right)
-pdfpart = createReadOnlyPart("libkpdfpart", tool.widget)
-pdfpart.widget().setFocusPolicy(QWidget.NoFocus)
+pdfpart = createReadOnlyPart("libkpdfpart")
+tool = Dockable(pdfpart.widget(), _("PDF"), "pdf", kate.gui.Tool.right, False)
+
 tool.show()
 
 show = tool.show

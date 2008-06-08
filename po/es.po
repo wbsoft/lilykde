@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-06 13:38+0200\n"
+"POT-Creation-Date: 2008-06-08 22:02+0200\n"
 "PO-Revision-Date: 2008-05-05 01:53+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -167,6 +167,11 @@ msgstr "Quitar el enguionado"
 msgid "Record MIDI with Rumor"
 msgstr "Grabar MIDI con Rumor"
 
+#: ../lilykde/menu.py:114
+#, fuzzy
+msgid "Dock/Undock PDF preview"
+msgstr "Enviar PDF (vista previa)"
+
 #: ../lilykde/version.py:51
 #, python-format
 msgid "Could not start LilyPond: %s"
@@ -228,11 +233,11 @@ msgstr "No ha sido posible iniciar convert-ly: %s"
 msgid "LilyPond Log"
 msgstr "Registro de LilyPond"
 
-#: ../lilykde/pdf.py:34
+#: ../lilykde/pdf.py:37
 msgid "PDF"
 msgstr "PDF"
 
-#: ../lilykde/kateutil.py:39
+#: ../lilykde/kateutil.py:42
 msgid "Please select some text first."
 msgstr "Seleccione primero algo de texto."
 

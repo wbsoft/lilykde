@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-06 13:38+0200\n"
+"POT-Creation-Date: 2008-06-08 22:02+0200\n"
 "PO-Revision-Date: 2008-06-05 21:34+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
@@ -170,6 +170,11 @@ msgstr "Tirelemeyi kaldır"
 msgid "Record MIDI with Rumor"
 msgstr "MIDI dosyasını Rumor ile kaydedin"
 
+#: ../lilykde/menu.py:114
+#, fuzzy
+msgid "Dock/Undock PDF preview"
+msgstr "PDF'yi e-posta ile gönder (önizleme)"
+
 #: ../lilykde/version.py:51
 #, python-format
 msgid "Could not start LilyPond: %s"
@@ -229,11 +234,11 @@ msgstr "convert-ly başlatılamadı: %s"
 msgid "LilyPond Log"
 msgstr "LilyPond Günlüğü"
 
-#: ../lilykde/pdf.py:34
+#: ../lilykde/pdf.py:37
 msgid "PDF"
 msgstr "PDF"
 
-#: ../lilykde/kateutil.py:39
+#: ../lilykde/kateutil.py:42
 msgid "Please select some text first."
 msgstr "Lütfen önce bir metin seçiniz."
 
