@@ -36,6 +36,7 @@ def settings(parent):
         CommandSettings,
         ActionSettings,
         HyphenSettings,
+        GeneralSettings,
     ).show()
 
 
@@ -148,14 +149,13 @@ class HyphenSettings(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self, parent)
         self.title = _("Hyphenation")
-        self.layout = QVBoxLayout(self)
-        self.layout.addWidget(QLabel('<p>%s</p>' % htmlescape (_(
+        QVBoxLayout(self).setAutoAdd(True)
+        QLabel('<p>%s</p>' % htmlescape (_(
             "Paths to search for hyphenation dictionaries of OpenOffice.org, "
             "Scribus, KOffice, etc, one per line. "
             "If you leave out the starting slash, the prefixes from the "
-            "KDEDIRS environment variable are prepended.")), self))
+            "KDEDIRS environment variable are prepended.")), self)
         self.pathList = QTextEdit(self)
-        self.layout.addWidget(self.pathList)
 
     def defaults(self):
         from lilykde.hyphen import defaultpaths
@@ -181,15 +181,14 @@ class ActionSettings(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self, parent)
         self.title = _("Actions")
-        self.layout = QVBoxLayout(self)
-        self.layout.addWidget(QLabel('<p>%s</p>' % htmlescape (_(
+        QVBoxLayout(self).setAutoAdd(True)
+        QLabel('<p>%s</p>' % htmlescape (_(
             "Check the actions you want to display (if applicable) after "
-            "LilyPond has successfully compiled your document.")), self))
+            "LilyPond has successfully compiled your document.")), self)
 
         def action(name, title, tooltip):
             widget = QCheckBox(title, self)
             QToolTip.add(widget, tooltip)
-            self.layout.addWidget(widget)
             return name, widget
 
         self.actions = (
@@ -221,6 +220,41 @@ class ActionSettings(QFrame):
         conf = config("actions")
         for a, w in self.actions:
             conf[a] = w.isChecked() and 1 or 0
+
+
+class GeneralSettings(QFrame):
+    """
+    General preferences
+    """
+    def __init__(self, parent):
+        QFrame.__init__(self, parent)
+        self.title = _("Preferences")
+        QVBoxLayout(self).setAutoAdd(True)
+
+        self.checks = [(QCheckBox(t, self), c, d) for t, c, d in (
+            (_("Keep undocked windows on top of Kate"),
+                 "keep undocked on top", True),
+            (_("Save document when LilyPond is run"),
+                "save on run", False),
+            )]
+
+    def defaults(self):
+        for w, c, d in self.checks:
+            w.setChecked(d)
+
+    def load(self):
+        conf = config("preferences")
+        for w, c, d in self.checks:
+            if conf[c]:
+                w.setChecked(conf[c] != '0')
+            else:
+                w.setChecked(d)
+
+    def save(self):
+        conf = config("preferences")
+        for w, c, d in self.checks:
+            conf[c] = w.isChecked() and 1 or 0
+
 
 
 # kate: indent-width 4;

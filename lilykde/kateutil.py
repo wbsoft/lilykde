@@ -25,6 +25,7 @@ import sip
 
 import kate
 
+from lilykde import config
 from lilykde.widgets import sorry
 from lilykde.about import PROGRAMNAME
 # Translate the messages
@@ -55,8 +56,8 @@ class DockDialog(QDialog):
     """
     A QDialog that (re)docks itself when closed.
     """
-    def __init__(self, dockable):
-        super(DockDialog, self).__init__()
+    def __init__(self, dockable, parent = None):
+        super(DockDialog, self).__init__(parent)
         self.dockable = dockable
 
     def closeEvent(self, e):
@@ -108,7 +109,10 @@ class Dockable(object):
         Undocks the widget and place it in a QDialog
         """
         if not self.dialog:
-            d = DockDialog(self)
+            parent = None
+            if config("preferences")["keep undocked on top"] != '0':
+                parent = kate.mainWidget()
+            d = DockDialog(self, parent)
             d.setCaption("%s - %s" % (self.title, PROGRAMNAME))
             d.resize(*self.dialogSize)
             if self.dialogPos:

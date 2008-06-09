@@ -250,8 +250,11 @@ def runLilyPond(doc, preview=False):
         return
 
     if doc.modified:
-        sorry(_("Your document has been modified, please save first."))
-        return
+        if config("preferences")["save on run"] == '1':
+            doc.save()
+        else:
+            sorry(_("Your document has been modified, please save first."))
+            return
 
     f = LyFile(doc)
     if not f.isLocalFile():
