@@ -56,7 +56,14 @@ def findDicts():
     # build a list of existing paths.
     # is the path is not absolute, try with all known prefixes.
     res = []
-    prefixes = os.environ['KDEDIRS'].split(':')
+
+    if 'KDEDIRS' in os.environ:
+        prefixes = os.environ['KDEDIRS'].split(':')
+    else:
+        prefixes = ['/usr', '/usr/local']
+        if 'KDEDIR' in os.environ:
+            prefixes.append(os.environ['KDEDIR'])
+
     for path in paths:
         if os.path.isabs(path):
             res.append(path)
