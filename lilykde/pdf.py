@@ -64,8 +64,6 @@ def openFile(pdf):
 
     # keep the current page number
     page = kpdf.currentPage()[1]
-    # KPDF does not always watch the file for updates if the inode
-    # number changes, which LilyPond does...
     kpdf.openDocument(KURL(pdf))
     if _file == pdf:
         QTimer.singleShot(100, lambda: kpdf.goToPage(page))

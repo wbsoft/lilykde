@@ -91,9 +91,7 @@ class Dockable(object):
         if not self.tool:
             t = kate.gui.Tool(self.title, self.name, self.orientation)
             self.widget.reparent(t.widget, QPoint(0, 0))
-            if self.focus:
-                self.widget.setFocusPolicy(QWidget.WheelFocus)
-            else:
+            if not self.focus:
                 self.widget.setFocusPolicy(QWidget.NoFocus)
             self.tool = t
             if self.dialog:
@@ -117,7 +115,8 @@ class Dockable(object):
                 d.move(*self.dialogPos)
             QHBoxLayout(d).setAutoAdd(True)
             self.widget.reparent(d, QPoint(0, 0))
-            self.widget.setFocusPolicy(QWidget.WheelFocus)
+            if not self.focus:
+                self.widget.setFocusPolicy(QWidget.WheelFocus)
             self.dialog = d
             if self.tool:
                 sip.delete(self.tool.widget)
