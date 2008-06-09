@@ -34,7 +34,8 @@ from lilykde.i18n import _
 
 
 pdfpart = createReadOnlyPart("libkpdfpart")
-tool = Dockable(pdfpart.widget(), _("PDF"), "pdf", kate.gui.Tool.right, False)
+tool = Dockable(pdfpart.widget(), _("PDF"), "pdf", kate.gui.Tool.right,
+        (500, 500), False)
 
 tool.show()
 

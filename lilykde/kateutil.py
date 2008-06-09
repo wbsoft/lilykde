@@ -70,9 +70,11 @@ class Dockable(object):
     the widget in/from the tool view sidebar.
 
     title, name and orientation are given to the kate.gui.Tool.
+    size may hold a tuple (width, height).
     if focus is False: do not allow keyboard focus when docked.
     """
-    def __init__(self, widget, title, name, orientation, focus = True):
+    def __init__(self, widget, title, name, orientation,
+            size = None, focus = True):
         self.title = title
         self.name = name
         self.orientation = orientation
@@ -81,7 +83,7 @@ class Dockable(object):
 
         self.tool = None
         self.dialog = None
-        self.dialogSize = (500, 500)
+        self.dialogSize = size
         self.dialogPos = None
         self.dock()
 
@@ -114,7 +116,8 @@ class Dockable(object):
                 parent = kate.mainWidget()
             d = DockDialog(self, parent)
             d.setCaption("%s - %s" % (self.title, PROGRAMNAME))
-            d.resize(*self.dialogSize)
+            if self.dialogSize:
+                d.resize(*self.dialogSize)
             if self.dialogPos:
                 d.move(*self.dialogPos)
             QHBoxLayout(d).setAutoAdd(True)
