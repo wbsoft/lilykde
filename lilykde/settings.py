@@ -47,25 +47,25 @@ class Settings(QFrame):
     """
     def __init__(self, parent, *moduleClasses):
         QFrame.__init__(self, parent)
-        self.layout = QVBoxLayout(self)
-        self.layout.setMargin(4)
+        layout = QVBoxLayout(self)
+        layout.setMargin(4)
         self.tab = QTabWidget(self)
         self.tab.setMargin(4)
-        self.defaultsButton = KPushButton(KStdGuiItem.defaults(), self)
-        self.applyButton = KPushButton(KStdGuiItem.apply(), self)
-        self.resetButton = KPushButton(KStdGuiItem.reset(), self)
-        self.layout.addWidget(self.tab)
+        defaultsButton = KPushButton(KStdGuiItem.defaults(), self)
+        applyButton = KPushButton(KStdGuiItem.apply(), self)
+        resetButton = KPushButton(KStdGuiItem.reset(), self)
+        layout.addWidget(self.tab)
         hbox = QHBoxLayout()
-        hbox.addWidget(self.defaultsButton)
+        hbox.addWidget(defaultsButton)
         hbox.addStretch(1)
-        hbox.addWidget(self.applyButton)
-        hbox.addWidget(self.resetButton)
-        self.layout.addLayout(hbox)
+        hbox.addWidget(applyButton)
+        hbox.addWidget(resetButton)
+        layout.addLayout(hbox)
         self.setMinimumHeight(240)
         self.setMinimumWidth(400)
-        self.connect(self.defaultsButton, SIGNAL("clicked()"), self.defaults)
-        self.connect(self.applyButton, SIGNAL("clicked()"), self.saveSettings)
-        self.connect(self.resetButton, SIGNAL("clicked()"), self.loadSettings)
+        self.connect(defaultsButton, SIGNAL("clicked()"), self.defaults)
+        self.connect(applyButton, SIGNAL("clicked()"), self.saveSettings)
+        self.connect(resetButton, SIGNAL("clicked()"), self.loadSettings)
         self.modules = []
         # instantiate all modules
         for mc in moduleClasses:
@@ -97,7 +97,7 @@ class CommandSettings(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self, parent)
         self.title = _("Commands")
-        self.layout = QGridLayout(self)
+        layout = QGridLayout(self)
         self.commands = []
         for name, default, title, lineedit, tooltip in (
             ('lilypond', 'lilypond', "LilyPond:", ExecLineEdit,
@@ -122,8 +122,8 @@ class CommandSettings(QFrame):
             widget = lineedit(self)
             QToolTip.add(label, tooltip)
             QToolTip.add(widget, tooltip)
-            self.layout.addWidget(label, len(self.commands), 0)
-            self.layout.addWidget(widget, len(self.commands), 1)
+            layout.addWidget(label, len(self.commands), 0)
+            layout.addWidget(widget, len(self.commands), 1)
             self.commands.append((name, widget, default))
 
     def defaults(self):
@@ -233,9 +233,9 @@ class GeneralSettings(QFrame):
 
         self.checks = [(QCheckBox(t, self), c, d) for t, c, d in (
             (_("Keep undocked windows on top of Kate"),
-                 "keep undocked on top", True),
+                 "keep undocked on top", 1),
             (_("Save document when LilyPond is run"),
-                "save on run", False),
+                "save on run", 0),
             )]
 
     def defaults(self):
@@ -245,10 +245,7 @@ class GeneralSettings(QFrame):
     def load(self):
         conf = config("preferences")
         for w, c, d in self.checks:
-            if conf[c]:
-                w.setChecked(conf[c] != '0')
-            else:
-                w.setChecked(d)
+            w.setChecked(bool(int(conf.get(c, d))))
 
     def save(self):
         conf = config("preferences")
