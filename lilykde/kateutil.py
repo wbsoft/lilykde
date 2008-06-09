@@ -20,7 +20,7 @@
 """
 Utility functions for interacting with Kate
 """
-from qt import *
+from qt import QDialog, QVBoxLayout, QPoint, QWidget
 import sip
 
 import kate
@@ -120,7 +120,7 @@ class Dockable(object):
                 d.resize(*self.dialogSize)
             if self.dialogPos:
                 d.move(*self.dialogPos)
-            QHBoxLayout(d).setAutoAdd(True)
+            QVBoxLayout(d).setAutoAdd(True)
             self.widget.reparent(d, QPoint(0, 0))
             if not self.focus:
                 self.widget.setFocusPolicy(QWidget.WheelFocus)
