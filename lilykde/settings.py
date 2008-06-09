@@ -49,12 +49,12 @@ class Settings(QFrame):
         QFrame.__init__(self, parent)
         layout = QVBoxLayout(self)
         layout.setMargin(4)
-        self.tab = QTabWidget(self)
-        self.tab.setMargin(4)
+        tab = QTabWidget(self)
+        tab.setMargin(4)
         defaultsButton = KPushButton(KStdGuiItem.defaults(), self)
         applyButton = KPushButton(KStdGuiItem.apply(), self)
         resetButton = KPushButton(KStdGuiItem.reset(), self)
-        layout.addWidget(self.tab)
+        layout.addWidget(tab)
         hbox = QHBoxLayout()
         hbox.addWidget(defaultsButton)
         hbox.addStretch(1)
@@ -63,19 +63,12 @@ class Settings(QFrame):
         layout.addLayout(hbox)
         self.setMinimumHeight(240)
         self.setMinimumWidth(400)
-        self.connect(defaultsButton, SIGNAL("clicked()"), self.defaults)
-        self.connect(applyButton, SIGNAL("clicked()"), self.saveSettings)
-        self.connect(resetButton, SIGNAL("clicked()"), self.loadSettings)
-        self.modules = []
+        QObject.connect(defaultsButton, SIGNAL("clicked()"), self.defaults)
+        QObject.connect(applyButton, SIGNAL("clicked()"), self.saveSettings)
+        QObject.connect(resetButton, SIGNAL("clicked()"), self.loadSettings)
         # instantiate all modules
-        for mc in moduleClasses:
-            self.addModule(mc)
-
-    def addModule(self, moduleClass):
-        m = moduleClass(self.tab)
-        self.tab.addTab(m, m.title)
-        self.modules.append(m)
-        m.load()
+        self.modules = [m(tab) for m in moduleClasses]
+        self.loadSettings()
 
     def loadSettings(self):
         for m in self.modules:
@@ -96,7 +89,7 @@ class CommandSettings(QFrame):
     """
     def __init__(self, parent):
         QFrame.__init__(self, parent)
-        self.title = _("Commands")
+        parent.addTab(self, _("Commands"))
         layout = QGridLayout(self)
         self.commands = []
         for name, default, title, lineedit, tooltip in (
@@ -148,7 +141,7 @@ class HyphenSettings(QFrame):
     """
     def __init__(self, parent):
         QFrame.__init__(self, parent)
-        self.title = _("Hyphenation")
+        parent.addTab(self, _("Hyphenation"))
         QVBoxLayout(self).setAutoAdd(True)
         QLabel('<p>%s</p>' % htmlescape (_(
             "Paths to search for hyphenation dictionaries of OpenOffice.org, "
@@ -180,7 +173,7 @@ class ActionSettings(QFrame):
     """
     def __init__(self, parent):
         QFrame.__init__(self, parent)
-        self.title = _("Actions")
+        parent.addTab(self, _("Actions"))
         QVBoxLayout(self).setAutoAdd(True)
         QLabel('<p>%s</p>' % htmlescape (_(
             "Check the actions you want to display (if applicable) after "
@@ -228,9 +221,8 @@ class GeneralSettings(QFrame):
     """
     def __init__(self, parent):
         QFrame.__init__(self, parent)
-        self.title = _("Preferences")
+        parent.addTab(self, _("Preferences"))
         QVBoxLayout(self).setAutoAdd(True)
-
         self.checks = [(QCheckBox(t, self), c, d) for t, c, d in (
             (_("Keep undocked windows on top of Kate"),
                  "keep undocked on top", 1),

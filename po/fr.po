@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-09 11:53+0200\n"
+"POT-Creation-Date: 2008-06-09 23:25+0200\n"
 "PO-Revision-Date: 2008-04-11 16:36+0200\n"
 "Last-Translator: Valentin Villenave <v.villenave@gmail.com>\n"
 "Language-Team: France <kde-i18n-fr@kde.org>\n"
@@ -81,15 +81,15 @@ msgstr "aperçu"
 msgid "publish mode"
 msgstr "publication"
 
-#: ../lilykde/runlily.py:213 ../lilykde/settings.py:195
+#: ../lilykde/runlily.py:213 ../lilykde/settings.py:188
 msgid "Open folder"
 msgstr "Ouvrir dossier"
 
-#: ../lilykde/runlily.py:217 ../lilykde/settings.py:197
+#: ../lilykde/runlily.py:217 ../lilykde/settings.py:190
 msgid "Open PDF"
 msgstr "Ouvrir PDF"
 
-#: ../lilykde/runlily.py:219 ../lilykde/settings.py:199
+#: ../lilykde/runlily.py:219 ../lilykde/settings.py:192
 msgid "Print"
 msgstr "Imprimer"
 
@@ -97,7 +97,7 @@ msgstr "Imprimer"
 msgid "Email PDF (preview)"
 msgstr "Envoyer PDF (aperçu)"
 
-#: ../lilykde/runlily.py:229 ../lilykde/settings.py:202
+#: ../lilykde/runlily.py:229 ../lilykde/settings.py:195
 msgid "Email PDF"
 msgstr "Envoyer PDF"
 
@@ -107,7 +107,7 @@ msgstr ""
 "LilyPond n'a pas écrit de fichier de sortie PDF. Avez-vous pensé à "
 "indiquerun bloc <b>\\layout</b> ?"
 
-#: ../lilykde/runlily.py:235 ../lilykde/settings.py:204
+#: ../lilykde/runlily.py:235 ../lilykde/settings.py:197
 msgid "Play MIDI"
 msgstr "Jouer MIDI"
 
@@ -283,23 +283,23 @@ msgstr "Sélection de la langue"
 msgid "Please select a language:"
 msgstr "Choisissez une langue :"
 
-#: ../lilykde/settings.py:99
+#: ../lilykde/settings.py:92
 msgid "Commands"
 msgstr "Commandes"
 
-#: ../lilykde/settings.py:104
+#: ../lilykde/settings.py:97
 msgid "Name or full path of the LilyPond program."
 msgstr "Nom ou chemin de l'exécutable LilyPond."
 
-#: ../lilykde/settings.py:106
+#: ../lilykde/settings.py:99
 msgid "Name or full path of the convert-ly program."
 msgstr "Nom ou chemin de l'exécutable convert-ly."
 
-#: ../lilykde/settings.py:107
+#: ../lilykde/settings.py:100
 msgid "Printcommand:"
 msgstr "Commande d'impression :"
 
-#: ../lilykde/settings.py:108
+#: ../lilykde/settings.py:101
 msgid ""
 "Command to print a PDF file, for example lpr or kprinter. You may add some "
 "arguments, e.g. lpr -P myprinter."
@@ -307,11 +307,11 @@ msgstr ""
 "Commande d'impression des fichiers PDF, telle que lpr ou kprinter. Des "
 "arguments peuvent être ajoutés, tels que lpr -P Imprimante."
 
-#: ../lilykde/settings.py:112
+#: ../lilykde/settings.py:105
 msgid "Name or full path of the Rumor program."
 msgstr "Nom ou chemin de l'exécutable Rumor."
 
-#: ../lilykde/settings.py:114
+#: ../lilykde/settings.py:107
 msgid ""
 "Name or full path of the aconnect program (part of ALSA, for MIDI input and "
 "playback using Rumor)."
@@ -319,18 +319,18 @@ msgstr ""
 "Nom ou chemin de l'exécutable aconnect (inclus dans ALSA, pour entrée et "
 "sortie MIDI via Rumor)."
 
-#: ../lilykde/settings.py:118
+#: ../lilykde/settings.py:111
 msgid ""
 "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Commande complète de lancement de TiMidity (ou autre) en tant que client "
 "MIDI pour ALSA."
 
-#: ../lilykde/settings.py:151
+#: ../lilykde/settings.py:144
 msgid "Hyphenation"
 msgstr "Césure"
 
-#: ../lilykde/settings.py:154
+#: ../lilykde/settings.py:147
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
@@ -341,11 +341,11 @@ msgstr ""
 "une barre oblique sera parcouru à partir de la variable d'environnement "
 "KDEDIRS."
 
-#: ../lilykde/settings.py:183
+#: ../lilykde/settings.py:176
 msgid "Actions"
 msgstr "Actions"
 
-#: ../lilykde/settings.py:186
+#: ../lilykde/settings.py:179
 msgid ""
 "Check the actions you want to display (if applicable) after LilyPond has "
 "successfully compiled your document."
@@ -353,26 +353,26 @@ msgstr ""
 "Indiquez quelles actions vous voulez lancer lorsque LilyPond a compilé un "
 "document avec succès."
 
-#: ../lilykde/settings.py:196
+#: ../lilykde/settings.py:189
 msgid "Open the folder containing the LilyPond and PDF documents."
 msgstr "Ouvrir le répertoire contenant les fichiers source et PDF."
 
-#: ../lilykde/settings.py:198
+#: ../lilykde/settings.py:191
 msgid "Open the generated PDF file with the default PDF viewer."
 msgstr "Ouvrir le PDF produit dans la visionneuse PDF par défaut."
 
-#: ../lilykde/settings.py:200
+#: ../lilykde/settings.py:193
 msgid ""
 "Print the PDF using the print command set in the Commands settings page."
 msgstr ""
 "Imprimer le fichier PDF (au moyen de la commande spécifiée dans \"Commandes"
 "\")."
 
-#: ../lilykde/settings.py:203
+#: ../lilykde/settings.py:196
 msgid "Attach the PDF to an email message."
 msgstr "Joindre le PDF à un courrier électronique."
 
-#: ../lilykde/settings.py:205
+#: ../lilykde/settings.py:198
 msgid ""
 "Play the generated MIDI files using the default MIDI player (Timidity++ is "
 "recommended)."
@@ -380,15 +380,15 @@ msgstr ""
 "Jouer le fichier MIDI produit, au moyen du lecteur MIDI par défaut (Timidity+"
 "+ est recommandé)."
 
-#: ../lilykde/settings.py:231
+#: ../lilykde/settings.py:224
 msgid "Preferences"
 msgstr ""
 
-#: ../lilykde/settings.py:235
+#: ../lilykde/settings.py:227
 msgid "Keep undocked windows on top of Kate"
 msgstr ""
 
-#: ../lilykde/settings.py:237
+#: ../lilykde/settings.py:229
 msgid "Save document when LilyPond is run"
 msgstr ""
 
