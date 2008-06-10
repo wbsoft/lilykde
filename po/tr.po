@@ -171,9 +171,8 @@ msgid "Record MIDI with Rumor"
 msgstr "MIDI dosyasını Rumor ile kaydedin"
 
 #: ../lilykde/menu.py:114
-#, fuzzy
 msgid "Dock/Undock PDF preview"
-msgstr "PDF'yi e-posta ile gönder (önizleme)"
+msgstr "PDF önizlemesini Küçült/Büyüt"
 
 #: ../lilykde/version.py:51
 #, python-format
@@ -372,21 +371,20 @@ msgid ""
 msgstr "Varsayılan MIDI çalıcıyı kullanarak işlenmiş MIDI dosyalarını çal."
 
 #: ../lilykde/settings.py:224
-#, fuzzy
 msgid "Preferences"
-msgstr "Genel tercihler"
+msgstr "Tercihler"
 
 #: ../lilykde/settings.py:228
 msgid "Keep undocked windows on top of Kate"
-msgstr ""
+msgstr "Küçüktülmemiş pencereleri Kate'in üstünde tut"
 
 #: ../lilykde/settings.py:230
 msgid "Save document when LilyPond is run"
-msgstr ""
+msgstr "Lilypond çalışırken belgeleri kaydet"
 
 #: ../lilykde/settings.py:232
 msgid "Let LilyPond delete intermediate output files"
-msgstr ""
+msgstr "LilyPond'un ara çıktı dosyalarını silmesine izin ver"
 
 #: ../lilykde/rumor.py:109
 msgid "Auto"
@@ -829,9 +827,8 @@ msgid "Default"
 msgstr "Varsayılan"
 
 #: ../lilykde/scorewiz.py:768
-#, fuzzy
 msgid "The LilyPond language you want to use for the pitch names."
-msgstr "Rumor'un içindeki sesleri dışa aktaracağı Lilypond dili."
+msgstr "Ses bölgesi adları için kullanmak istediğiniz LilyPond dili."
 
 #: ../lilykde/scorewiz.py:778
 msgid "Version:"
