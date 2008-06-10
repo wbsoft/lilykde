@@ -52,25 +52,28 @@ hyphdicts = {}
 
 def findDicts():
     conf = config("hyphenation")
-    paths = conf["paths"].splitlines() or defaultpaths
-    # build a list of existing paths.
-    # is the path is not absolute, try with all known prefixes.
-    res = []
 
-    if 'KDEDIRS' in os.environ:
-        prefixes = os.environ['KDEDIRS'].split(':')
-    else:
-        prefixes = ['/usr', '/usr/local']
-        if 'KDEDIR' in os.environ:
-            prefixes.append(os.environ['KDEDIR'])
-
-    for path in paths:
-        if os.path.isabs(path):
-            res.append(path)
+    def paths():
+        """ build a list of existing paths based on config """
+        # in which prefixes to look for relative paths
+        if 'KDEDIRS' in os.environ:
+            prefixes = os.environ['KDEDIRS'].split(':')
         else:
-            for pref in prefixes:
-                res.append(os.path.join(pref, path))
-    paths = (p for p in res if os.path.isdir(p))
+            prefixes = ['/usr', '/usr/local']
+            if 'KDEDIR' in os.environ:
+                prefixes.append(os.environ['KDEDIR'])
+        # if the path is not absolute, add it to all prefixes.
+        for path in conf["paths"].splitlines() or defaultpaths:
+            if os.path.isabs(path):
+                yield path
+            else:
+                for pref in prefixes:
+                    yield os.path.join(pref, path)
+
+    # now find the hyph_xx_XX.dic files
+    dicfiles = (f
+        for p in paths() if os.path.isdir(p)
+            for f in glob(os.path.join(p, 'hyph_*.dic')) if os.path.isfile(f))
 
     # present the user with human readable language names
     all_languages = kconfig("all_languages", True, False, "locale")
@@ -78,27 +81,24 @@ def findDicts():
     # default to the users current locale if not used before
     defaultlang = None
 
-    # now find the hyph_xx_XX.dic files
     global hyphdicts
-    # empty it again, because we might be called again when the user changes
+    # empty it, because we might be called again when the user changes
     # the settings.
     hyphdicts = {}
-    for p in paths:
-        for g in glob(os.path.join(p, 'hyph_*.dic')):
-            if os.path.isfile(g):
-                lang = re.sub(r'hyph_(.*).dic', r'\1', os.path.basename(g))
-                # find a human readable name belonging to the language code
-                for i in lang, lang.split('_')[0]:
-                    name = all_languages.group(i).get("Name")
-                    if name:
-                        name = '%s  (%s)' % (name, lang)
-                        hyphdicts[name] = g
-                        # set current locale as default
-                        if lang == language:
-                            defaultlang = name
-                        break
-                else:
-                    hyphdicts[lang] = g
+    for dic in dicfiles:
+        lang = re.sub(r'hyph_(.*).dic', r'\1', os.path.basename(dic))
+        # find a human readable name belonging to the language code
+        for i in lang, lang.split('_')[0]:
+            name = all_languages.group(i).get("Name")
+            if name:
+                name = '%s  (%s)' % (name, lang)
+                hyphdicts[name] = dic
+                # set current locale as default
+                if lang == language:
+                    defaultlang = name
+                break
+        else:
+            hyphdicts[lang] = dic
 
     # if not used before, write the current locale (if existing) as default
     if defaultlang and conf["lastused"] not in hyphdicts:
