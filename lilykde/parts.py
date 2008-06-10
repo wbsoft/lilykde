@@ -389,7 +389,7 @@ class _BrassBase(_SingleVoice):
 
 class HornF(_BrassBase):
     name = _("Horn in F")
-    instrumentNames = ("Horn in F|Hn.F."), "Corno|Cor."
+    instrumentNames = _("Horn in F|Hn.F."), "Corno|Cor."
     midiInstrument = 'french horn'
     transpose = (-1, 3, 0)
 
