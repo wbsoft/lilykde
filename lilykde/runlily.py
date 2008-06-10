@@ -152,6 +152,8 @@ class LyJob(kprocess):
             self.stderr.receive)
 
     def _run(self, args, mode=None):
+        if config("preferences")['delete intermediate files'] == '1':
+            args.insert(0, "-ddelete-intermediate-files")
         self.setArguments(args)
         a = dict(filename = self.f.ly, mode = mode)
         if mode:
@@ -200,8 +202,6 @@ class Ly2PDF(LyJob):
         else:
             mode = _("publish mode")
             args.append("-dno-point-and-click")
-        if config("preferences")['delete intermediate files'] == '1':
-            args.append("-ddelete-intermediate-files")
         args.append(self.f.ly)
         self._run(args, mode)
 
