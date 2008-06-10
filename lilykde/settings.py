@@ -223,11 +223,14 @@ class GeneralSettings(QFrame):
         QFrame.__init__(self, parent)
         parent.addTab(self, _("Preferences"))
         QVBoxLayout(self).setAutoAdd(True)
-        self.checks = [(QCheckBox(t, self), c, d) for t, c, d in (
+        self.checks = [(QCheckBox(title, self), name, default)
+            for title, name, default in (
             (_("Keep undocked windows on top of Kate"),
                  "keep undocked on top", 1),
             (_("Save document when LilyPond is run"),
                 "save on run", 0),
+            (_("Let LilyPond delete intermediate output files"),
+                "delete intermediate files", 0),
             )]
 
     def defaults(self):

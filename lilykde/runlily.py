@@ -200,6 +200,8 @@ class Ly2PDF(LyJob):
         else:
             mode = _("publish mode")
             args.append("-dno-point-and-click")
+        if config("preferences")['delete intermediate files'] == '1':
+            args.append("-ddelete-intermediate-files")
         args.append(self.f.ly)
         self._run(args, mode)
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-09 23:25+0200\n"
+"POT-Creation-Date: 2008-06-10 09:25+0200\n"
 "PO-Revision-Date: 2008-06-05 21:34+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
@@ -80,44 +80,44 @@ msgstr "önizleme kipi"
 msgid "publish mode"
 msgstr "yayınlama kipi"
 
-#: ../lilykde/runlily.py:213 ../lilykde/settings.py:188
+#: ../lilykde/runlily.py:215 ../lilykde/settings.py:188
 msgid "Open folder"
 msgstr "Dizin aç"
 
-#: ../lilykde/runlily.py:217 ../lilykde/settings.py:190
+#: ../lilykde/runlily.py:219 ../lilykde/settings.py:190
 msgid "Open PDF"
 msgstr "PDF aç"
 
-#: ../lilykde/runlily.py:219 ../lilykde/settings.py:192
+#: ../lilykde/runlily.py:221 ../lilykde/settings.py:192
 msgid "Print"
 msgstr "Yazdır"
 
-#: ../lilykde/runlily.py:226
+#: ../lilykde/runlily.py:228
 msgid "Email PDF (preview)"
 msgstr "PDF'yi e-posta ile gönder (önizleme)"
 
-#: ../lilykde/runlily.py:229 ../lilykde/settings.py:195
+#: ../lilykde/runlily.py:231 ../lilykde/settings.py:195
 msgid "Email PDF"
 msgstr "PDF'yi e-posta ile gönder"
 
-#: ../lilykde/runlily.py:231
+#: ../lilykde/runlily.py:233
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond bir PDF. Büyük ihtimalle şunu eklemeyi unuttunuz <b>\\layout</b>?"
 
-#: ../lilykde/runlily.py:235 ../lilykde/settings.py:197
+#: ../lilykde/runlily.py:237 ../lilykde/settings.py:197
 msgid "Play MIDI"
 msgstr "MIDI çal"
 
-#: ../lilykde/runlily.py:249
+#: ../lilykde/runlily.py:251
 msgid "Your document currently has no filename, please save first."
 msgstr "Belgenize bir dosya adı vermediniz, lütfen önce kaydediniz."
 
-#: ../lilykde/runlily.py:256
+#: ../lilykde/runlily.py:258
 msgid "Your document has been modified, please save first."
 msgstr "Belgeniz değiştirildi, lütfen önce kaydediniz."
 
-#: ../lilykde/runlily.py:262
+#: ../lilykde/runlily.py:264
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -376,12 +376,16 @@ msgstr "Varsayılan MIDI çalıcıyı kullanarak işlenmiş MIDI dosyalarını �
 msgid "Preferences"
 msgstr "Genel tercihler"
 
-#: ../lilykde/settings.py:227
+#: ../lilykde/settings.py:228
 msgid "Keep undocked windows on top of Kate"
 msgstr ""
 
-#: ../lilykde/settings.py:229
+#: ../lilykde/settings.py:230
 msgid "Save document when LilyPond is run"
+msgstr ""
+
+#: ../lilykde/settings.py:232
+msgid "Let LilyPond delete intermediate output files"
 msgstr ""
 
 #: ../lilykde/rumor.py:109

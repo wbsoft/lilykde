@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-09 23:25+0200\n"
-"PO-Revision-Date: 2008-06-09 07:52+0200\n"
+"POT-Creation-Date: 2008-06-10 09:25+0200\n"
+"PO-Revision-Date: 2008-06-10 09:26+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -78,45 +78,45 @@ msgstr "vooruitblik"
 msgid "publish mode"
 msgstr "publiceren"
 
-#: ../lilykde/runlily.py:213 ../lilykde/settings.py:188
+#: ../lilykde/runlily.py:215 ../lilykde/settings.py:188
 msgid "Open folder"
 msgstr "Map openen"
 
-#: ../lilykde/runlily.py:217 ../lilykde/settings.py:190
+#: ../lilykde/runlily.py:219 ../lilykde/settings.py:190
 msgid "Open PDF"
 msgstr "PDF weergeven"
 
-#: ../lilykde/runlily.py:219 ../lilykde/settings.py:192
+#: ../lilykde/runlily.py:221 ../lilykde/settings.py:192
 msgid "Print"
 msgstr "Afdrukken"
 
-#: ../lilykde/runlily.py:226
+#: ../lilykde/runlily.py:228
 msgid "Email PDF (preview)"
 msgstr "PDF e-mailen (vooruitblik)"
 
-#: ../lilykde/runlily.py:229 ../lilykde/settings.py:195
+#: ../lilykde/runlily.py:231 ../lilykde/settings.py:195
 msgid "Email PDF"
 msgstr "PDF e-mailen"
 
-#: ../lilykde/runlily.py:231
+#: ../lilykde/runlily.py:233
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
 "\\layout</b> vergeten?"
 
-#: ../lilykde/runlily.py:235 ../lilykde/settings.py:197
+#: ../lilykde/runlily.py:237 ../lilykde/settings.py:197
 msgid "Play MIDI"
 msgstr "MIDI afspelen"
 
-#: ../lilykde/runlily.py:249
+#: ../lilykde/runlily.py:251
 msgid "Your document currently has no filename, please save first."
 msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:256
+#: ../lilykde/runlily.py:258
 msgid "Your document has been modified, please save first."
 msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:262
+#: ../lilykde/runlily.py:264
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -198,8 +198,7 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr ""
-"Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
+msgstr "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
 #: ../lilykde/version.py:93
 msgid "This LilyPond document is already up-to-date."
@@ -315,8 +314,7 @@ msgstr ""
 "uitvoer via Rumor)."
 
 #: ../lilykde/settings.py:111
-msgid ""
-"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Commandoregel om Timidity (of een ander programma) te starten als ALSA MIDI-"
 "client."
@@ -353,14 +351,11 @@ msgstr "Map met de LilyPond- en PDF-documenten openen."
 
 #: ../lilykde/settings.py:191
 msgid "Open the generated PDF file with the default PDF viewer."
-msgstr ""
-"Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
+msgstr "Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
 
 #: ../lilykde/settings.py:193
-msgid ""
-"Print the PDF using the print command set in the Commands settings page."
-msgstr ""
-"De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
+msgid "Print the PDF using the print command set in the Commands settings page."
+msgstr "De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
 
 #: ../lilykde/settings.py:196
 msgid "Attach the PDF to an email message."
@@ -378,13 +373,17 @@ msgstr ""
 msgid "Preferences"
 msgstr "Voorkeuren"
 
-#: ../lilykde/settings.py:227
+#: ../lilykde/settings.py:228
 msgid "Keep undocked windows on top of Kate"
 msgstr "Ontkoppelde vensters boven Kate houden"
 
-#: ../lilykde/settings.py:229
+#: ../lilykde/settings.py:230
 msgid "Save document when LilyPond is run"
 msgstr "Document opslaan als LilyPond wordt gestart"
+
+#: ../lilykde/settings.py:232
+msgid "Let LilyPond delete intermediate output files"
+msgstr "Laat LilyPond tussentijdse uitvoerbestanden verwijderen"
 
 #: ../lilykde/rumor.py:109
 msgid "Auto"
@@ -862,8 +861,7 @@ msgid "Remove bar numbers"
 msgstr "Maatnummers verwijderen"
 
 #: ../lilykde/scorewiz.py:802
-msgid ""
-"Suppress the display of measure numbers at the beginning of every system."
+msgid "Suppress the display of measure numbers at the beginning of every system."
 msgstr "Onderdrukt de weergave van maatnummers aan het begin van elk systeem."
 
 #: ../lilykde/scorewiz.py:806
@@ -916,8 +914,7 @@ msgstr "Volgende systemen:"
 
 #: ../lilykde/scorewiz.py:858
 msgid "Use no, short or long instrument names before the next systems."
-msgstr ""
-"Gebruik geen, korte of lange instrumentnamen voor de volgende systemen."
+msgstr "Gebruik geen, korte of lange instrumentnamen voor de volgende systemen."
 
 #: ../lilykde/scorewiz.py:860
 msgid "Italian names"
@@ -926,8 +923,7 @@ msgstr "Italiaanse namen"
 #: ../lilykde/scorewiz.py:862
 #, python-format
 msgid "Choose standard Italian instrument names, like '%s' instead of 'Organ.'"
-msgstr ""
-"Kies standaard Italiaanse instrumentnamen, zoals '%s' in plaats van 'Orgel.'"
+msgstr "Kies standaard Italiaanse instrumentnamen, zoals '%s' in plaats van 'Orgel.'"
 
 #: ../lilykde/scorewiz.py:935
 msgid "Score Setup Wizard"
@@ -1565,8 +1561,7 @@ msgstr "Begeleidingsbalk toevoegen"
 msgid ""
 "Adds an accompaniment staff and also puts an accompaniment voice in the "
 "upper staff."
-msgstr ""
-"Voegt een begeleidingsbalk toe, en ook een tweede stem aan de bovenste balk."
+msgstr "Voegt een begeleidingsbalk toe, en ook een tweede stem aan de bovenste balk."
 
 #: ../lilykde/parts.py:888
 msgid "Choir"
@@ -1605,8 +1600,7 @@ msgid "Every voice same lyrics"
 msgstr "Elke stem zelfde liedtekst"
 
 #: ../lilykde/parts.py:914
-msgid ""
-"Every voice gets its own lyrics, using the same text as the other voices."
+msgid "Every voice gets its own lyrics, using the same text as the other voices."
 msgstr ""
 "Elke stem krijgt zijn eigen liedtekst, met dezelfde tekst als de andere "
 "stemmen."
@@ -1664,3 +1658,4 @@ msgstr[1] "$count documenten gefaald."
 #: ../lilypond-servicemenu-helper.py:65
 msgid "All documents successfully converted."
 msgstr "Alle documenten zijn succesvol geconverteerd."
+
