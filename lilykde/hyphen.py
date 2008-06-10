@@ -22,8 +22,7 @@ This module contains the user interface for breaking Lyrics text
 using the hyphenator module.
 """
 
-import re
-import os
+import os, re
 from glob import glob
 
 from kdeui import KInputDialog
@@ -38,6 +37,7 @@ from lilykde import config, language
 # Translate the messages
 from lilykde.i18n import _
 
+_wordSub = re.compile(r'[^\W0-9_]+', re.U).sub
 
 defaultpaths = (
     '/opt/OpenOffice.org/share/dict/ooo',
@@ -54,7 +54,7 @@ def findDicts():
     conf = config("hyphenation")
 
     def paths():
-        """ build a list of existing paths based on config """
+        """ build a list of paths based on config """
         # in which prefixes to look for relative paths
         if 'KDEDIRS' in os.environ:
             prefixes = os.environ['KDEDIRS'].split(':')
@@ -86,7 +86,7 @@ def findDicts():
     # the settings.
     hyphdicts = {}
     for dic in dicfiles:
-        lang = re.sub(r'hyph_(.*).dic', r'\1', os.path.basename(dic))
+        lang = os.path.basename(dic)[5:-4]
         # find a human readable name belonging to the language code
         for i in lang, lang.split('_')[0]:
             name = all_languages.group(i).get("Name")
@@ -129,20 +129,18 @@ def askLanguage():
 @runOnSelection
 def hyphenateText(text):
     """
-    Add hyphenation to the selected text
+    Add lyrics hyphenation to the selected text.
     """
     lang = askLanguage()
-    if not lang: return None
-    from hyphenator import Hyphenator
-    h = Hyphenator(hyphdicts[lang])
-    def hyphrepl(matchObj):
-        return h.inserted(matchObj.group(), ' -- ')
-    return re.compile(r'[^\W0-9_]+', re.U).sub(hyphrepl, text)
+    if lang:
+        from hyphenator import Hyphenator
+        h = Hyphenator(hyphdicts[lang])
+        return _wordSub(lambda m: h.inserted(m.group(), ' -- '), text)
 
 @runOnSelection
 def deHyphenateText(text):
     """
-    Remove lyrics hyphenation from selected text
+    Remove lyrics hyphenation from selected text.
     """
     return text.replace(' -- ', '')
 
