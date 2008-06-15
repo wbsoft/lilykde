@@ -31,7 +31,7 @@ import sys
 import kate
 
 # Translate the messages
-from lilykde.i18n import _
+from lilykde.i18n import _, I18N_NOOP
 
 # setup LilyPond menu. Somehow it seems not to be possible to use pate's
 # standard decorators on an own toplevel menu.
@@ -110,8 +110,8 @@ def rumor():
     lilykde.rumor.show()
 
 
-# (Un)dock PDF
-@kate.onAction(_("Dock/Undock PDF preview"), "", "window")
+# (Un)dock PDF, pate already translates this.
+@kate.onAction(I18N_NOOP("Dock/Undock PDF preview"), "", "window")
 def undockPDF():
     loaded = 'lilykde.pdf' in sys.modules
     import lilykde.pdf

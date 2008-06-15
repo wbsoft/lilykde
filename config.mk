@@ -13,6 +13,7 @@ DATADIR := $(DESTDIR)$(PREFIX)/share
 LILYKDE = $(DATADIR)/apps/lilykde
 # next one is LILYKDE without DESTDIR prepended
 REAL_LILYKDE = $(PREFIX)/share/apps/lilykde
+LOCALEDIR = $(DATADIR)/locale
 ICONDIR = $(DATADIR)/icons
 SERVICEDIR = $(DATADIR)/services
 SERVICEMENUDIR = $(DATADIR)/apps/konqueror/servicemenus
