@@ -34,7 +34,7 @@ from lilykde.runlily import LyFile, LyJob
 from lilykde.widgets import LogWidget
 
 # Translate the messages
-from lilykde.i18n import _
+from lilykde.i18n import _, I18N_NOOP
 
 
 class File(LyFile):
@@ -73,11 +73,14 @@ class Job(LyJob):
 def main():
     aboutData = KAboutData(
         PACKAGE, PROGRAMNAME, VERSION,
-        "LilyKDE servicemenu helper", KAboutData.License_GPL,
+        I18N_NOOP("LilyKDE servicemenu helper"),
+        KAboutData.License_GPL,
         "Copyright (c) 2008, " + AUTHOR,
         "", HOMEPAGE)
     KCmdLineArgs.init (sys.argv, aboutData)
-    KCmdLineArgs.addCmdLineOptions([("+files", "LilyPond files to convert")])
+    KCmdLineArgs.addCmdLineOptions([
+        ("+files", I18N_NOOP("LilyPond files to convert"))
+        ])
     app = KApplication()
     log = LogWidget()
     app.setMainWidget(log)
