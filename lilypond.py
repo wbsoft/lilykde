@@ -19,14 +19,16 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import sys
-import os
+import os, sys
 import kate
+from kdecore import KGlobal, KStandardDirs
+
+# Add our domain so that the translations can be found
+KGlobal.locale().insertCatalogue('lilykde')
 
 # The rest of the plugin is located in KDE/share/apps/lilykde/,
 # as a python package named lilykde.
 # TODO: install lilykde as site package if system-wide install
-from kdecore import KStandardDirs
 sys.path[0:0] = map(os.path.normpath, map(str,
     KStandardDirs().findDirs("data", "lilykde")))
 

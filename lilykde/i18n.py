@@ -18,9 +18,7 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 from string import Template
-from kdecore import KGlobal, i18n
-
-KGlobal.locale().insertCatalogue('lilykde')
+from kdecore import i18n
 
 I18N_NOOP = lambda s: s
 
