@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-16 22:05+0200\n"
+"POT-Creation-Date: 2008-06-17 11:19+0200\n"
 "PO-Revision-Date: 2008-06-14 01:40+0400\n"
 "Last-Translator: Сергей Полтавский\n"
 "Language-Team:  <ru@li.org>\n"
@@ -233,7 +233,7 @@ msgstr " Невозможно запустить convert-ly: %s"
 msgid "LilyPond Log"
 msgstr "LilyPond журнал"
 
-#: ../lilykde/pdf.py:37
+#: ../lilykde/pdf.py:42
 msgid "PDF"
 msgstr "PDF"
 
@@ -386,6 +386,11 @@ msgstr "Сохранять документ перед запуском LilyPond
 #: ../lilykde/settings.py:232
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Удалить служебные файлы LilyPond."
+
+#: ../lilykde/settings.py:234
+#, fuzzy
+msgid "Force reload of PDF preview when LilyPond has run"
+msgstr "Сохранять документ перед запуском LilyPond"
 
 #: ../lilykde/rumor.py:109
 msgid "Auto"

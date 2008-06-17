@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-16 22:05+0200\n"
+"POT-Creation-Date: 2008-06-17 11:19+0200\n"
 "PO-Revision-Date: 2008-06-05 21:34+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
@@ -233,7 +233,7 @@ msgstr "convert-ly başlatılamadı: %s"
 msgid "LilyPond Log"
 msgstr "LilyPond Günlüğü"
 
-#: ../lilykde/pdf.py:37
+#: ../lilykde/pdf.py:42
 msgid "PDF"
 msgstr "PDF"
 
@@ -385,6 +385,11 @@ msgstr "Lilypond çalışırken belgeleri kaydet"
 #: ../lilykde/settings.py:232
 msgid "Let LilyPond delete intermediate output files"
 msgstr "LilyPond'un ara çıktı dosyalarını silmesine izin ver"
+
+#: ../lilykde/settings.py:234
+#, fuzzy
+msgid "Force reload of PDF preview when LilyPond has run"
+msgstr "Lilypond çalışırken belgeleri kaydet"
 
 #: ../lilykde/rumor.py:109
 msgid "Auto"

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-16 22:05+0200\n"
-"PO-Revision-Date: 2008-06-16 22:07+0200\n"
+"POT-Creation-Date: 2008-06-17 11:19+0200\n"
+"PO-Revision-Date: 2008-06-17 11:24+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -232,7 +232,7 @@ msgstr "Kan convert-ly niet starten: %s"
 msgid "LilyPond Log"
 msgstr "LilyPond-uitvoer"
 
-#: ../lilykde/pdf.py:37
+#: ../lilykde/pdf.py:42
 msgid "PDF"
 msgstr "PDF"
 
@@ -384,6 +384,10 @@ msgstr "Document opslaan als LilyPond wordt gestart"
 #: ../lilykde/settings.py:232
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Laat LilyPond tussentijdse uitvoerbestanden verwijderen"
+
+#: ../lilykde/settings.py:234
+msgid "Force reload of PDF preview when LilyPond has run"
+msgstr "PDF-weergave herladen nadat LilyPond is gestart"
 
 #: ../lilykde/rumor.py:109
 msgid "Auto"

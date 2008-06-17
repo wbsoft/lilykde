@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-16 22:05+0200\n"
+"POT-Creation-Date: 2008-06-17 11:19+0200\n"
 "PO-Revision-Date: 2008-06-13 11:48+0200\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
 "MIME-Version: 1.0\n"
@@ -233,7 +233,7 @@ msgstr "No ha sido posible iniciar convert-ly: %s"
 msgid "LilyPond Log"
 msgstr "Registro de LilyPond"
 
-#: ../lilykde/pdf.py:37
+#: ../lilykde/pdf.py:42
 msgid "PDF"
 msgstr "PDF"
 
@@ -389,6 +389,11 @@ msgstr "Guardar el documento al ejecutar LilyPond"
 #: ../lilykde/settings.py:232
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Permitir a LilyPond borrar los archivos de salida intermedios"
+
+#: ../lilykde/settings.py:234
+#, fuzzy
+msgid "Force reload of PDF preview when LilyPond has run"
+msgstr "Guardar el documento al ejecutar LilyPond"
 
 #: ../lilykde/rumor.py:109
 msgid "Auto"

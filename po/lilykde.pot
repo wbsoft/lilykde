@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lilykde 0.6.1\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-16 22:05+0200\n"
+"POT-Creation-Date: 2008-06-17 11:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -211,7 +211,7 @@ msgstr ""
 msgid "LilyPond Log"
 msgstr ""
 
-#: ../lilykde/pdf.py:37
+#: ../lilykde/pdf.py:42
 msgid "PDF"
 msgstr ""
 
@@ -347,6 +347,10 @@ msgstr ""
 
 #: ../lilykde/settings.py:232
 msgid "Let LilyPond delete intermediate output files"
+msgstr ""
+
+#: ../lilykde/settings.py:234
+msgid "Force reload of PDF preview when LilyPond has run"
 msgstr ""
 
 #: ../lilykde/rumor.py:109
