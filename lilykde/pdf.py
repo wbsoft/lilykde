@@ -19,6 +19,8 @@
 
 """ The embedded PDF preview """
 
+import os
+
 import kate
 import kate.gui
 
@@ -27,6 +29,9 @@ from dcopext import DCOPApp
 from kdecore import KApplication, KURL
 from kparts import createReadOnlyPart
 
+from lilykde import config
+
+from lilykde.util import kconfig
 from lilykde.kateutil import Dockable
 
 # Translate the messages
@@ -63,12 +68,31 @@ def openFile(pdf):
     # LilyPond is fixed to not delete the old PDF first, but just
     # truncate it and write the new data into it.
 
-    # keep the current page number
-    page = kpdf.currentPage()[1]
-    kpdf.openDocument(KURL(pdf))
+    # Update June 17, 2008: LilyPond >= 2.11.49 does not delete the PDF
+    # anymore!
+
+    # Document already shown?
     if _file == pdf:
-        QTimer.singleShot(100, lambda: kpdf.goToPage(page))
-    _file = pdf
+        # Yes this is the same PDF, see if we need to force KPDF to
+        # reload the document. If not, we trust that KPDF automatically
+        # updates its view.
+        from lilykde.version import version
+        if not (
+                # read KPDF's 'watch file' option (default is true)
+                kconfig('kpdfpartrc', True, False).group('General')['WatchFile']
+                not in ('false', '0', 'off', 'no')
+                # LilyPond >= 2.11.49 does not delete the PDF anymore on unix
+                and version >= (2, 11, 49) and os.name in ('posix', 'mac')
+                # User can force reload of PDF with config option
+                and config('preferences')['force reload pdf'] != '1'):
+            # Reopen same document, remembering page number
+            page = kpdf.currentPage()[1]
+            kpdf.openDocument(KURL(pdf))
+            QTimer.singleShot(100, lambda: kpdf.goToPage(page))
+    else:
+        # This is another PDF, just open it.
+        kpdf.openDocument(KURL(pdf))
+        _file = pdf
 
 
 # kate: indent-width 4;

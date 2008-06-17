@@ -231,6 +231,8 @@ class GeneralSettings(QFrame):
                 "save on run", 0),
             (_("Let LilyPond delete intermediate output files"),
                 "delete intermediate files", 0),
+            (_("Force reload of PDF preview when LilyPond has run"),
+                "force reload pdf", 0),
             )]
 
     def defaults(self):
