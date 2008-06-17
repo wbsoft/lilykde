@@ -48,10 +48,11 @@ uninstall: $(uninstall) $(subdirs)
 
 dist:
 	@echo Creating $(DIST).tar.gz ...
-	@svn export -q . $(DIST)
-	@cd $(DIST) && make -s
-	@tar zcf $(DIST).tar.gz $(DIST)
-	@rm -rf $(DIST)/
+	svn export -q . $(DIST)
+	cd $(DIST) && make
+	cd $(DIST) && rm -f textedit.protocol lilypond-servicemenu.desktop
+	tar zcf $(DIST).tar.gz $(DIST)
+	rm -rf $(DIST)/
 	@echo Finished creating $(DIST).tar.gz.
 
 install-mimetype: ly.png
