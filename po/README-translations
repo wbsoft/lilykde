@@ -8,11 +8,12 @@ First create an empty but initialized po file for your language.
 
 $ cd po/
 $ cp lilykde.pot xx.po       # (where xx is your language code)
-$ make
 
 Now you can edit the xx.po file with a tool like KBabel.  If done,
 you can send the translated po file to the LilyKDE author if you like
-to contribute it to the LilyKDE project.
+to contribute it to the LilyKDE project.  To use your new language:
+
+$ make && make install
 
 There are many instrument names in LilyKDE, with the full name and
 abridged name in one string, separated by a pipe symbol (|). This is done
