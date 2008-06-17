@@ -31,7 +31,7 @@ To install in your local ~/.kde directory, just type:
 
 To install system-wide:
 
-	make
+	make PREFIX=$(kde-config --prefix)
 	su
 	make PREFIX=$(kde-config --prefix) install
 

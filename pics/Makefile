@@ -16,11 +16,11 @@ clean:
 
 install: all
 	@echo Installing generated LilyPond PNGs:
-	@mkdir -p $(LILYKDE)/pics
-	cp $(pngs) $(LILYKDE)/pics/
+	$(INSTALL) -d $(DESTDIR)$(LILYKDE)/pics
+	$(INSTALL) -m 644 $(pngs) $(DESTDIR)$(LILYKDE)/pics/
 
 uninstall:
 	@echo Uninstalling generated LilyPond PNGs:
-	rm -fr "$(LILYKDE)/pics"
+	rm -fr $(DESTDIR)$(LILYKDE)/pics
 
 .PHONY: all clean install uninstall

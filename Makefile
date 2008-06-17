@@ -24,13 +24,16 @@ include config.mk
 # for making tarballs
 DIST = $(PACKAGE)-$(VERSION)
 
-all = ly.png
+all = ly.png textedit.protocol lilypond-servicemenu.desktop
 
 all: $(all) $(subdirs)
 
 ly.png: ly.svg
 	@echo Creating ly.png from ly.svg...
 	@ksvgtopng 128 128 "`pwd`/ly.svg" "`pwd`/ly.png"
+
+textedit.protocol lilypond-servicemenu.desktop: %: %.in
+	sed 's!LILYKDEDIR!$(LILYKDE)!' $< > $@
 
 $(subdirs):
 	@$(MAKE) -C $@ $(MAKECMDGOALS)
@@ -41,77 +44,76 @@ clean: $(subdirs)
 	rm -f $(all)
 
 uninstall: $(uninstall) $(subdirs)
-	rm -rf $(LILYKDE)
+	rm -rf $(DESTDIR)$(LILYKDE)
 
 dist:
 	@echo Creating $(DIST).tar.gz ...
 	@svn export -q . $(DIST)
-	@-cd $(DIST) && make -s
+	@cd $(DIST) && make -s
 	@tar zcf $(DIST).tar.gz $(DIST)
 	@rm -rf $(DIST)/
+	@echo Finished creating $(DIST).tar.gz.
 
 install-mimetype: ly.png
 	@echo Installing LilyPond icon and mimetype:
-	@mkdir -p $(ICONDIR)
-	cp ly.svg ly.png $(ICONDIR)/
-	@mkdir -p $(MIMELNK)/text
-	cp x-lilypond.desktop $(MIMELNK)/text/
+	$(INSTALL) -d $(DESTDIR)$(ICONDIR)
+	$(INSTALL) -m 644 ly.svg ly.png $(DESTDIR)$(ICONDIR)/
+	$(INSTALL) -d $(DESTDIR)$(MIMELNK)/text
+	$(INSTALL) -m 644 x-lilypond.desktop $(DESTDIR)$(MIMELNK)/text/
 
 uninstall-mimetype:
 	@echo Uninstalling LilyPond icon and mimetype:
-	rm -f $(ICONDIR)/ly.png
-	rm -f $(ICONDIR)/ly.svg
-	rm -f $(MIMELNK)/text/x-lilypond.desktop
+	rm -f $(DESTDIR)$(ICONDIR)/ly.png
+	rm -f $(DESTDIR)$(ICONDIR)/ly.svg
+	rm -f $(DESTDIR)$(MIMELNK)/text/x-lilypond.desktop
 
 install-syntax:
 	@echo Installing LilyPond syntax highlighting:
-	@mkdir -p $(KATEPARTDIR)/syntax
-	cp lilypond.xml $(KATEPARTDIR)/syntax
+	$(INSTALL) -d $(DESTDIR)$(KATEPARTDIR)/syntax
+	$(INSTALL) -m 644 lilypond.xml $(DESTDIR)$(KATEPARTDIR)/syntax/
 
 uninstall-syntax:
 	@echo Uninstalling LilyPond syntax highlighting:
-	rm -f $(KATEPARTDIR)/syntax/lilypond.xml
+	rm -f $(DESTDIR)$(KATEPARTDIR)/syntax/lilypond.xml
 
-install-textedit:
+install-textedit: textedit.protocol
 	@echo Installing textedit protocol:
-	@mkdir -p $(SERVICEDIR)
-	sed 's!LILYKDEDIR!$(REAL_LILYKDE)!' textedit.protocol.in \
-		> $(SERVICEDIR)/textedit.protocol
-	@mkdir -p $(LILYKDE)
-	cp ktexteditservice.py $(LILYKDE)/
+	$(INSTALL) -d $(DESTDIR)$(SERVICEDIR)
+	$(INSTALL) -m 644 textedit.protocol $(DESTDIR)$(SERVICEDIR)/
+	$(INSTALL) -d $(DESTDIR)$(LILYKDE)
+	$(INSTALL) -m 644 ktexteditservice.py $(DESTDIR)$(LILYKDE)/
 
 uninstall-textedit:
 	@echo Uninstalling textedit integration:
-	rm -f $(SERVICEDIR)/textedit.protocol
-	rm -f $(LILYKDE)/ktexteditservice.py
+	rm -f $(DESTDIR)$(SERVICEDIR)/textedit.protocol
+	rm -f $(DESTDIR)$(LILYKDE)/ktexteditservice.py
 
 install-plugin:
 	@echo Installing plugin:
-	@mkdir -p $(PYPLUGINS)
-	cp lilypond.py $(PYPLUGINS)/
-	@cd $(PYPLUGINS) && $(PYCOMPILE) lilypond.py
+	$(INSTALL) -d $(DESTDIR)$(PYPLUGINS)
+	$(INSTALL) -m 644 lilypond.py $(DESTDIR)$(PYPLUGINS)/
+	cd $(DESTDIR)$(PYPLUGINS) && $(PYCOMPILE) lilypond.py
 	@echo Installing Python modules $(modules):
-	@mkdir -p $(LILYKDE)
-	cp $(modules) $(LILYKDE)/
-	@cd $(LILYKDE) && $(PYCOMPILE) $(modules)
+	$(INSTALL) -d $(DESTDIR)$(LILYKDE)
+	$(INSTALL) -m 644 $(modules) $(DESTDIR)$(LILYKDE)/
+	cd $(DESTDIR)$(LILYKDE) && $(PYCOMPILE) $(modules)
 	@echo Installing runpty.py helper script:
-	cp runpty.py $(LILYKDE)/
+	$(INSTALL) -m 644 runpty.py $(DESTDIR)$(LILYKDE)/
 
 uninstall-plugin:
-	@echo Uninstalling plugin and lilykde package:
-	rm -f $(PYPLUGINS)/lilypond.py*
-	cd $(LILYKDE)/ && rm -f $(modules) $(addsuffix c,$(modules))
-	rm -f $(LILYKDE)/runpty.py
+	@echo Uninstalling plugin:
+	rm -f $(DESTDIR)$(PYPLUGINS)/lilypond.py*
+	-cd $(DESTDIR)$(LILYKDE)/ && rm -f $(modules) $(addsuffix c,$(modules))
+	rm -f $(DESTDIR)$(LILYKDE)/runpty.py
 
-install-servicemenu:
+install-servicemenu: lilypond-servicemenu.desktop
 	@echo Installing Konqueror servicemenu:
-	@mkdir -p $(LILYKDE)
-	cp lilypond-servicemenu-helper.py $(LILYKDE)/
-	@mkdir -p $(SERVICEMENUDIR)
-	sed 's!LILYKDEDIR!$(REAL_LILYKDE)!' lilypond-servicemenu.desktop.in \
-		> $(SERVICEMENUDIR)/lilypond-servicemenu.desktop
+	$(INSTALL) -d $(DESTDIR)$(LILYKDE)
+	$(INSTALL) -m 644 lilypond-servicemenu-helper.py $(DESTDIR)$(LILYKDE)/
+	$(INSTALL) -d $(DESTDIR)$(SERVICEMENUDIR)
+	$(INSTALL) -m 644 lilypond-servicemenu.desktop $(DESTDIR)$(SERVICEMENUDIR)/
 
 uninstall-servicemenu:
 	@echo Uninstalling Konqueror servicemenu:
-	rm -f $(SERVICEMENUDIR)/lilypond-servicemenu.desktop
-	rm -f $(LILYKDE)/lilypond-servicemenu-helper.py
+	rm -f $(DESTDIR)$(SERVICEMENUDIR)/lilypond-servicemenu.desktop
+	rm -f $(DESTDIR)$(LILYKDE)/lilypond-servicemenu-helper.py

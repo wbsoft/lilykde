@@ -12,11 +12,10 @@ clean:
 
 install: all
 	@echo Installing Python package lilykde:
-	@mkdir -p $(LILYKDE)/lilykde
-	@cd $(LILYKDE)/lilykde && rm -f *.py*
-	cp *.py $(LILYKDE)/lilykde/
-	@cd $(LILYKDE)/lilykde && $(PYCOMPILE) *.py
+	$(INSTALL) -d $(DESTDIR)$(LILYKDE)/lilykde
+	$(INSTALL) -m 644 *.py $(DESTDIR)$(LILYKDE)/lilykde/
+	cd $(DESTDIR)$(LILYKDE)/lilykde && $(PYCOMPILE) *.py
 
 uninstall:
 	@echo Uninstalling Python package lilykde:
-	rm -rf $(LILYKDE)/lilykde
+	rm -rf $(DESTDIR)$(LILYKDE)/lilykde

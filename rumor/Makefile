@@ -5,9 +5,9 @@ clean:
 
 install: all
 	@echo Installing Rumor scripts:
-	@mkdir -p $(LILYKDE)/rumor
-	cp *.scm $(LILYKDE)/rumor/
+	$(INSTALL) -d $(DESTDIR)$(LILYKDE)/rumor
+	$(INSTALL) -m 644 *.scm $(DESTDIR)$(LILYKDE)/rumor/
 
 uninstall:
 	@echo Uninstalling Rumor scripts:
-	rm -fr $(LILYKDE)/rumor
+	rm -fr $(DESTDIR)$(LILYKDE)/rumor

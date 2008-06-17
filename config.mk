@@ -1,18 +1,17 @@
 # kate: hl Makefile;
 
-# prefix to install LilyKDE to.
 # setting DESTDIR enables you to install to a temporary image
 # directory, from which you can create a distributable package.
 DESTDIR =
+
+# prefix to install LilyKDE to.
 PREFIX  := $(shell kde-config --localprefix | sed 's,/$$,,')
 ifeq ($(PREFIX),)
 PREFIX  := $(HOME)/.kde
 endif
-DATADIR := $(DESTDIR)$(PREFIX)/share
+DATADIR := $(PREFIX)/share
 
 LILYKDE = $(DATADIR)/apps/lilykde
-# next one is LILYKDE without DESTDIR prepended
-REAL_LILYKDE = $(PREFIX)/share/apps/lilykde
 LOCALEDIR = $(DATADIR)/locale
 ICONDIR = $(DATADIR)/icons
 SERVICEDIR = $(DATADIR)/services
@@ -23,6 +22,7 @@ MIMELNK = $(DATADIR)/mimelnk
 CONFIGDIR = $(DATADIR)/config
 
 # Various programs:
+INSTALL = install
 PYCOMPILE = python -m py_compile
 XGETTEXT = xgettext
 MSGMERGE = msgmerge

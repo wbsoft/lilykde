@@ -24,18 +24,18 @@ translate = \
 
 pofiles = $(wildcard *.po)
 mofiles = $(patsubst %.po,%.mo,$(pofiles))
-LANGUAGES = $(patsubst %.po,%,$(pofiles))
+CATALOGS = $(patsubst %.po,%,$(pofiles))
 
 all: $(mofiles)
 
 lilykde.pot: $(translate) ../VERSION
 	$(XGETTEXT) --output=lilykde.pot --keyword= \
-		--keyword=_:1,2,3t --keyword=_:1,1t \
-		--keyword=I18N_NOOP:1,1t \
-		--package-name=$(PACKAGE) \
-		--package-version=$(VERSION) \
-		--msgid-bugs-address=$(EMAIL) \
-		$(translate)
+	 --keyword=_:1,2,3t --keyword=_:1,1t \
+	 --keyword=I18N_NOOP:1,1t \
+	 --package-name=$(PACKAGE) \
+	 --package-version=$(VERSION) \
+	 --msgid-bugs-address=$(EMAIL) \
+	 $(translate)
 
 $(pofiles): lilykde.pot
 	$(MSGMERGE) -U $@ $< && touch $@
@@ -44,16 +44,19 @@ $(mofiles): %.mo: %.po
 	$(MSGFMT) -o $@ $<
 
 install: all
-	@echo Installing message catalogs: $(LANGUAGES)
-	@for l in $(LANGUAGES); do \
-		d="$(LOCALEDIR)/$$l/LC_MESSAGES"; \
-		mkdir -p "$$d"; \
-		cp $$l.mo "$$d/lilykde.mo" ; \
-		done
+	@echo Installing message catalogs: $(CATALOGS)
+	for i in $(CATALOGS); do \
+	 $(INSTALL) -d $(DESTDIR)$(LOCALEDIR)/$$i/LC_MESSAGES; \
+	 $(INSTALL) -m 644 $$i.mo \
+	  $(DESTDIR)$(LOCALEDIR)/$$i/LC_MESSAGES/$(PACKAGE).mo; \
+	done
 
 uninstall:
-	@echo Uninstalling message catalogs
-	@rm -f "$(LOCALEDIR)/"*"/LC_MESSAGES/lilykde.mo"
+	@echo Uninstalling message catalogs: $(CATALOGS)
+	for i in $(CATALOGS); do \
+	 rm -f $(DESTDIR)$(LOCALEDIR)/$$i/LC_MESSAGES/$(PACKAGE).mo; \
+	 rmdir $(DESTDIR)$(LOCALEDIR)/$$i/LC_MESSAGES || true; \
+	done
 
 clean:
 	rm -f $(mofiles)
