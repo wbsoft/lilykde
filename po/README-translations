@@ -7,7 +7,7 @@ First create an empty but initialized po file for your language.
 (PO means: Portable Object)
 
 $ cd po/
-$ touch xx.po       # (where xx is your language code)
+$ cp lilykde.pot xx.po       # (where xx is your language code)
 $ make
 
 Now you can edit the xx.po file with a tool like KBabel.  If done,
