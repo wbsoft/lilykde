@@ -69,7 +69,7 @@ def openFile(pdf):
     # truncate it and write the new data into it.
 
     # Update June 17, 2008: LilyPond >= 2.11.49 does not delete the PDF
-    # anymore!
+    # anymore on unix platforms!
 
     # Document already shown?
     if _file == pdf:
@@ -77,14 +77,14 @@ def openFile(pdf):
         # reload the document. If not, we trust that KPDF automatically
         # updates its view.
         from lilykde.version import version
-        if not (
-                # read KPDF's 'watch file' option (default is true)
-                kconfig('kpdfpartrc', True, False).group('General')['WatchFile']
-                not in ('false', '0', 'off', 'no')
-                # LilyPond >= 2.11.49 does not delete the PDF anymore on unix
-                and version >= (2, 11, 49) and os.name in ('posix', 'mac')
-                # User can force reload of PDF with config option
-                and config('preferences')['force reload pdf'] != '1'):
+        if (
+            # User can force reload of PDF with config option
+            config('preferences')['force reload pdf'] == '1'
+            # LilyPond >= 2.11.49 does not delete the PDF anymore on unix
+            or version < (2, 11, 49) or os.name not in ('posix', 'mac')
+            # read KPDF's 'watch file' option (default is true)
+            or kconfig('kpdfpartrc', True, False).group('General')['WatchFile']
+                in ('false', '0', 'off', 'no')):
             # Reopen same document, remembering page number
             page = kpdf.currentPage()[1]
             kpdf.openDocument(KURL(pdf))
