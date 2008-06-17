@@ -55,7 +55,6 @@ uninstall:
 	@echo Uninstalling message catalogs: $(CATALOGS)
 	for i in $(CATALOGS); do \
 	 rm -f $(DESTDIR)$(LOCALEDIR)/$$i/LC_MESSAGES/$(PACKAGE).mo; \
-	 rmdir $(DESTDIR)$(LOCALEDIR)/$$i/LC_MESSAGES || true; \
 	done
 
 clean:

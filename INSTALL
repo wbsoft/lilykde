@@ -39,7 +39,7 @@ Then launch Kate and enable Pate in Settings->Configure Kate->Plugins.
 As Pate starts, LilyKDE will start as well.  You can enable or disable
 Pate plugins using Settings->Configure Python Plugins.
 
-You may want to associate Kate with LilyPond files. Right-click a
+You may want to associate Kate with LilyPond files. Right-click any
 LilyPond file, select Properties, and click on the small configure icon.
 Then, under Applications for this filetype, click Add and select Kate or
 enter the command:
@@ -53,8 +53,8 @@ For distributors:
 =================
 
 Use:
-	make &&
-	make DESTDIR=/some/path PREFIX=$(kde-config --prefix) install
+	make PREFIX=$(kde-config --prefix) &&
+	make PREFIX=$(kde-config --prefix) DESTDIR=/some/path install
 
 to install LilyKDE to some temporary image directory, from which a
 package can be created. DESTDIR should be an absolute path.
