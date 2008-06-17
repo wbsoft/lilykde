@@ -21,19 +21,18 @@ modules = hyphenator.py rational.py
 include VERSION
 include config.mk
 
+sed_dir = sed 's!LILYKDEDIR!$(LILYKDE)!'
+
 # for making tarballs
 DIST = $(PACKAGE)-$(VERSION)
 
-all = ly.png textedit.protocol lilypond-servicemenu.desktop
+all = ly.png
 
 all: $(all) $(subdirs)
 
 ly.png: ly.svg
 	@echo Creating ly.png from ly.svg...
 	@ksvgtopng 128 128 "`pwd`/ly.svg" "`pwd`/ly.png"
-
-textedit.protocol lilypond-servicemenu.desktop: %: %.in
-	sed 's!LILYKDEDIR!$(LILYKDE)!' $< > $@
 
 $(subdirs):
 	@$(MAKE) -C $@ $(MAKECMDGOALS)
@@ -48,11 +47,10 @@ uninstall: $(uninstall) $(subdirs)
 
 dist:
 	@echo Creating $(DIST).tar.gz ...
-	svn export -q . $(DIST)
-	cd $(DIST) && make
-	cd $(DIST) && rm -f textedit.protocol lilypond-servicemenu.desktop
-	tar zcf $(DIST).tar.gz $(DIST)
-	rm -rf $(DIST)/
+	@svn export -q . $(DIST)
+	@cd $(DIST) && make -s
+	@tar zcf $(DIST).tar.gz $(DIST)
+	@rm -rf $(DIST)/
 	@echo Finished creating $(DIST).tar.gz.
 
 install-mimetype: ly.png
@@ -77,10 +75,11 @@ uninstall-syntax:
 	@echo Uninstalling LilyPond syntax highlighting:
 	rm -f $(DESTDIR)$(KATEPARTDIR)/syntax/lilypond.xml
 
-install-textedit: textedit.protocol
+install-textedit:
 	@echo Installing textedit protocol:
 	$(INSTALL) -d $(DESTDIR)$(SERVICEDIR)
-	$(INSTALL) -m 644 textedit.protocol $(DESTDIR)$(SERVICEDIR)/
+	$(sed_dir) textedit.protocol.in > $(DESTDIR)$(SERVICEDIR)/textedit.protocol
+	chmod 644 $(DESTDIR)$(SERVICEDIR)/textedit.protocol
 	$(INSTALL) -d $(DESTDIR)$(LILYKDE)
 	$(INSTALL) -m 644 ktexteditservice.py $(DESTDIR)$(LILYKDE)/
 
@@ -107,12 +106,13 @@ uninstall-plugin:
 	-cd $(DESTDIR)$(LILYKDE)/ && rm -f $(modules) $(addsuffix c,$(modules))
 	rm -f $(DESTDIR)$(LILYKDE)/runpty.py
 
-install-servicemenu: lilypond-servicemenu.desktop
+install-servicemenu:
 	@echo Installing Konqueror servicemenu:
 	$(INSTALL) -d $(DESTDIR)$(LILYKDE)
 	$(INSTALL) -m 644 lilypond-servicemenu-helper.py $(DESTDIR)$(LILYKDE)/
 	$(INSTALL) -d $(DESTDIR)$(SERVICEMENUDIR)
-	$(INSTALL) -m 644 lilypond-servicemenu.desktop $(DESTDIR)$(SERVICEMENUDIR)/
+	$(sed_dir) lilypond-servicemenu.desktop.in > $(DESTDIR)$(SERVICEMENUDIR)/lilypond-servicemenu.desktop
+	chmod 644 $(DESTDIR)$(SERVICEMENUDIR)/lilypond-servicemenu.desktop
 
 uninstall-servicemenu:
 	@echo Uninstalling Konqueror servicemenu:

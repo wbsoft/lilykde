@@ -31,7 +31,7 @@ To install in your local ~/.kde directory, just type:
 
 To install system-wide:
 
-	make PREFIX=$(kde-config --prefix)
+	make
 	su
 	make PREFIX=$(kde-config --prefix) install
 
@@ -53,7 +53,7 @@ For distributors:
 =================
 
 Use:
-	make PREFIX=$(kde-config --prefix) &&
+	make &&
 	make PREFIX=$(kde-config --prefix) DESTDIR=/some/path install
 
 to install LilyKDE to some temporary image directory, from which a
