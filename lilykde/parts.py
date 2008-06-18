@@ -108,7 +108,7 @@ class _KeyboardBase(part):
         self.addPart(p)
         self.setInstrumentNames(p, *self.instrumentNames)
         s = Sim(p, multiline=True)
-        # add two staffs, with a respective number of voices.
+        # add two staves, with a respective number of voices.
         self.buildStaff('right', '', 1, s, self.rightVoices.value())
         self.buildStaff('left', 'bass', 0, s, self.leftVoices.value())
 
@@ -604,7 +604,7 @@ class Harp(_KeyboardBase):
         self.addPart(p)
         self.setInstrumentNames(p, *self.instrumentNames)
         s = Sim(p, multiline=True)
-        # add two staffs, with a respective number of voices.
+        # add two staves, with a respective number of voices.
         self.buildStaff('upper', '', 1, s, 1)
         self.buildStaff('lower', 'bass', 0, s, 1)
 
@@ -908,7 +908,7 @@ class Choir(_VocalBase):
         self.lyrAllSame = QRadioButton(_("All voices same lyrics"), b)
         self.lyrAllSame.setChecked(True)
         QToolTip.add(self.lyrAllSame, _(
-            "One set of the same lyrics is placed between all staffs."))
+            "One set of the same lyrics is placed between all staves."))
         self.lyrEachSame = QRadioButton(_("Every voice same lyrics"), b)
         QToolTip.add(self.lyrEachSame, _(
             "Every voice gets its own lyrics, using the same text as the "
@@ -962,7 +962,7 @@ class Choir(_VocalBase):
             if len(staff) == 1:
                 # Only one voice in the staff.
                 s.instrName(*instrNames[0])
-                # if all staffs have one voice, addlyrics is used,
+                # if all staves have one voice, addlyrics is used,
                 # in that case, don't remove the braces.
                 mus = maxLen == 1 and Seq(s) or Seqr(s)
             else:
@@ -994,7 +994,7 @@ class Choir(_VocalBase):
                 else:
                     lyrName = 'verse'
                 if maxLen == 1:
-                    # if all staffs have only one voice, use \addlyrics.
+                    # if all staves have only one voice, use \addlyrics.
                     self.assignMusic(mname, mus, octave)
                     if not (self.lyrAllSame.isChecked() and not toGo):
                         for verse in stanzas:

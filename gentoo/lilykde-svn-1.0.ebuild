@@ -4,7 +4,7 @@ ESVN_REPO_URI="http://lilykde.googlecode.com/svn/trunk"
 ESVN_PROJECT="lilykde"
 
 DESCRIPTION="Tools to integrate LilyPond into KDE"
-HOMEPAGE="http://code.google.com/p/lilykde/"
+HOMEPAGE="http://lilykde.googlecode.com/"
 SRC_URI=""
 
 LICENSE="GPL"
@@ -23,6 +23,6 @@ src_compile() {
 
 src_install() {
 	make DESTDIR=${D} PREFIX=${prefix} install
-	dodoc README INSTALL
+	dodoc README INSTALL THANKS TODO
 }
 
