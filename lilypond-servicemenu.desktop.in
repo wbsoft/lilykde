@@ -1,9 +1,11 @@
 [Desktop Entry]
+Encoding=UTF-8
 ServiceTypes=text/x-lilypond
 Actions=convertToPDF
 
 [Desktop Action convertToPDF]
 Name=Convert to PDF
 Name[nl]=Converteren naar PDF
+Name[ru]=Конвертировать в PDF
 Icon=ly
 Exec=python "LILYKDEDIR/lilypond-servicemenu-helper.py" %F
