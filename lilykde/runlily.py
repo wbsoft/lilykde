@@ -229,6 +229,16 @@ class Ly2PDF(LyJob):
                     else:
                         actions.append(("email=file://%s" % self.f.pdf,
                             _("Email PDF")))
+                # should we embed the LilyPond source files in the PDF?
+                from lilykde import pdftk
+                if (not self.preview
+                    and config("preferences")['embed source files'] == '1'
+                    and pdftk.installed()
+                    ):
+                    pdftk.attach_files(self.f.path, 3)
+                elif act("embed_source") and pdftk.installed():
+                    actions.append(("embed=file://%s" % self.f.path,
+                        _("Embed source")))
             else:
                 self.log.msg(_("LilyPond did not write a PDF. "
                                "You probably forgot <b>\layout</b>?"))

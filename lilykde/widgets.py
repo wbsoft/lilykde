@@ -144,6 +144,10 @@ def runAction(url):
             "because they are much smaller. Continue anyway?")):
             KApplication.kApplication().invokeMailer(
                 KURL(u"mailto:?attach=%s" % url), "", True)
+    elif command == 'embed':
+        ly = unicode(KURL(url).path())
+        from lilykde import pdftk
+        pdftk.attach_files(ly)
 
 
 class ExecLineEdit(QLineEdit):

@@ -110,6 +110,9 @@ class CommandSettings(QFrame):
                 ExecArgsLineEdit,
                 _("Full command to start Timidity (or any other program) "
                   "as an ALSA MIDI client.")),
+            ('pdftk', 'pdftk', "Pdftk:", ExecLineEdit,
+                _("Name or full path of the pdftk program (see %s).") %
+                    "www.accesspdf.com/pdftk"),
         ):
             label = QLabel(title, self)
             widget = lineedit(self)
@@ -197,6 +200,8 @@ class ActionSettings(QFrame):
             action('play_midi', _("Play MIDI"), _(
                 "Play the generated MIDI files using the default MIDI player "
                 "(Timidity++ is recommended).")),
+            action('embed_source', _("Embed source"), _(
+                "Embed the LilyPond source files in the published PDF (using pdftk).")),
         )
 
     def defaults(self):
@@ -233,6 +238,8 @@ class GeneralSettings(QFrame):
                 "delete intermediate files", 0),
             (_("Force reload of PDF preview when LilyPond has run"),
                 "force reload pdf", 0),
+            (_("Always embed LilyPond source files in published PDF"),
+                "embed source files", 0),
             )]
 
     def defaults(self):
