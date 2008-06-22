@@ -19,8 +19,7 @@
 
 """ Contains small often used utility functions """
 
-import re
-import os, stat
+import os, re
 
 from qt import SIGNAL, Qt, QApplication, QCursor, QObject, QTimer, QStringList
 from kdecore import KConfig, KConfigGroup, KProcess, KURL
@@ -131,9 +130,7 @@ def isexe(path):
     """
     Return path if it is an executable file, otherwise False
     """
-    if os.path.isfile(path) and os.stat(path).st_mode & stat.S_IEXEC:
-        return path
-    return False
+    return os.access(path, os.X_OK) and path
 
 def findexe(filename):
     """
