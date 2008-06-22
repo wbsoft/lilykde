@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lilykde 0.6.1\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-18 07:25+0200\n"
+"POT-Creation-Date: 2008-06-22 22:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,15 +68,15 @@ msgstr ""
 msgid "publish mode"
 msgstr ""
 
-#: ../lilykde/runlily.py:215 ../lilykde/settings.py:188
+#: ../lilykde/runlily.py:215 ../lilykde/settings.py:191
 msgid "Open folder"
 msgstr ""
 
-#: ../lilykde/runlily.py:219 ../lilykde/settings.py:190
+#: ../lilykde/runlily.py:219 ../lilykde/settings.py:193
 msgid "Open PDF"
 msgstr ""
 
-#: ../lilykde/runlily.py:221 ../lilykde/settings.py:192
+#: ../lilykde/runlily.py:221 ../lilykde/settings.py:195
 msgid "Print"
 msgstr ""
 
@@ -84,27 +84,31 @@ msgstr ""
 msgid "Email PDF (preview)"
 msgstr ""
 
-#: ../lilykde/runlily.py:231 ../lilykde/settings.py:195
+#: ../lilykde/runlily.py:231 ../lilykde/settings.py:198
 msgid "Email PDF"
 msgstr ""
 
-#: ../lilykde/runlily.py:233
+#: ../lilykde/runlily.py:241 ../lilykde/settings.py:203
+msgid "Embed source"
+msgstr ""
+
+#: ../lilykde/runlily.py:243
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 
-#: ../lilykde/runlily.py:237 ../lilykde/settings.py:197
+#: ../lilykde/runlily.py:247 ../lilykde/settings.py:200
 msgid "Play MIDI"
 msgstr ""
 
-#: ../lilykde/runlily.py:251
+#: ../lilykde/runlily.py:261
 msgid "Your document currently has no filename, please save first."
 msgstr ""
 
-#: ../lilykde/runlily.py:258
+#: ../lilykde/runlily.py:268
 msgid "Your document has been modified, please save first."
 msgstr ""
 
-#: ../lilykde/runlily.py:264
+#: ../lilykde/runlily.py:274
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -236,11 +240,11 @@ msgid ""
 "anyway?"
 msgstr ""
 
-#: ../lilykde/widgets.py:305
+#: ../lilykde/widgets.py:309
 msgid "Tap"
 msgstr ""
 
-#: ../lilykde/widgets.py:309
+#: ../lilykde/widgets.py:313
 msgid "Click this button a few times to set the tempo."
 msgstr ""
 
@@ -289,68 +293,81 @@ msgid ""
 "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 
-#: ../lilykde/settings.py:144
-msgid "Hyphenation"
+#: ../lilykde/settings.py:114
+#, python-format
+msgid "Name or full path of the pdftk program (see %s)."
 msgstr ""
 
 #: ../lilykde/settings.py:147
+msgid "Hyphenation"
+msgstr ""
+
+#: ../lilykde/settings.py:150
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
 "prefixes from the KDEDIRS environment variable are prepended."
 msgstr ""
 
-#: ../lilykde/settings.py:176
+#: ../lilykde/settings.py:179
 msgid "Actions"
 msgstr ""
 
-#: ../lilykde/settings.py:179
+#: ../lilykde/settings.py:182
 msgid ""
 "Check the actions you want to display (if applicable) after LilyPond has "
 "successfully compiled your document."
 msgstr ""
 
-#: ../lilykde/settings.py:189
+#: ../lilykde/settings.py:192
 msgid "Open the folder containing the LilyPond and PDF documents."
 msgstr ""
 
-#: ../lilykde/settings.py:191
+#: ../lilykde/settings.py:194
 msgid "Open the generated PDF file with the default PDF viewer."
 msgstr ""
 
-#: ../lilykde/settings.py:193
+#: ../lilykde/settings.py:196
 msgid ""
 "Print the PDF using the print command set in the Commands settings page."
 msgstr ""
 
-#: ../lilykde/settings.py:196
+#: ../lilykde/settings.py:199
 msgid "Attach the PDF to an email message."
 msgstr ""
 
-#: ../lilykde/settings.py:198
+#: ../lilykde/settings.py:201
 msgid ""
 "Play the generated MIDI files using the default MIDI player (Timidity++ is "
 "recommended)."
 msgstr ""
 
-#: ../lilykde/settings.py:224
+#: ../lilykde/settings.py:204
+msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
+msgstr ""
+
+#: ../lilykde/settings.py:229
 msgid "Preferences"
 msgstr ""
 
-#: ../lilykde/settings.py:228
+#: ../lilykde/settings.py:233
 msgid "Keep undocked windows on top of Kate"
 msgstr ""
 
-#: ../lilykde/settings.py:230
+#: ../lilykde/settings.py:235
 msgid "Save document when LilyPond is run"
 msgstr ""
 
-#: ../lilykde/settings.py:232
+#: ../lilykde/settings.py:237
 msgid "Let LilyPond delete intermediate output files"
 msgstr ""
 
-#: ../lilykde/settings.py:234
+#: ../lilykde/settings.py:239
 msgid "Force reload of PDF preview when LilyPond has run"
+msgstr ""
+
+#: ../lilykde/settings.py:241
+msgid "Always embed LilyPond source files in published PDF"
 msgstr ""
 
 #: ../lilykde/rumor.py:109
@@ -1595,6 +1612,27 @@ msgstr ""
 
 #: ../lilykde/parts.py:1137
 msgid "Special"
+msgstr ""
+
+#: ../lilykde/pdftk.py:84
+#, python-format
+msgid "Could not start Pdftk: %s"
+msgstr ""
+
+#: ../lilykde/pdftk.py:94
+#, python-format
+msgid "Embedded file %s in PDF."
+msgid_plural "Embedded files %s in PDF."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../lilykde/pdftk.py:106
+msgid "Embedding files in PDF failed."
+msgstr ""
+
+#: ../lilykde/pdftk.py:107
+#, python-format
+msgid "Return code: %i"
 msgstr ""
 
 #: ../lilypond-servicemenu-helper.py:61

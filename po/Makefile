@@ -19,6 +19,7 @@ translate = \
 	../lilykde/rumor.py \
 	../lilykde/scorewiz.py \
 	../lilykde/parts.py \
+	../lilykde/pdftk.py \
 	../lilypond-servicemenu-helper.py \
 
 

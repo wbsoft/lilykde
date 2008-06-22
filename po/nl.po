@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-18 07:25+0200\n"
-"PO-Revision-Date: 2008-06-17 11:24+0200\n"
+"POT-Creation-Date: 2008-06-22 22:33+0200\n"
+"PO-Revision-Date: 2008-06-22 22:25+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -78,15 +78,15 @@ msgstr "vooruitblik"
 msgid "publish mode"
 msgstr "publiceren"
 
-#: ../lilykde/runlily.py:215 ../lilykde/settings.py:188
+#: ../lilykde/runlily.py:215 ../lilykde/settings.py:191
 msgid "Open folder"
 msgstr "Map openen"
 
-#: ../lilykde/runlily.py:219 ../lilykde/settings.py:190
+#: ../lilykde/runlily.py:219 ../lilykde/settings.py:193
 msgid "Open PDF"
 msgstr "PDF weergeven"
 
-#: ../lilykde/runlily.py:221 ../lilykde/settings.py:192
+#: ../lilykde/runlily.py:221 ../lilykde/settings.py:195
 msgid "Print"
 msgstr "Afdrukken"
 
@@ -94,29 +94,33 @@ msgstr "Afdrukken"
 msgid "Email PDF (preview)"
 msgstr "PDF e-mailen (vooruitblik)"
 
-#: ../lilykde/runlily.py:231 ../lilykde/settings.py:195
+#: ../lilykde/runlily.py:231 ../lilykde/settings.py:198
 msgid "Email PDF"
 msgstr "PDF e-mailen"
 
-#: ../lilykde/runlily.py:233
+#: ../lilykde/runlily.py:241 ../lilykde/settings.py:203
+msgid "Embed source"
+msgstr "Bron inbedden"
+
+#: ../lilykde/runlily.py:243
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
 "\\layout</b> vergeten?"
 
-#: ../lilykde/runlily.py:237 ../lilykde/settings.py:197
+#: ../lilykde/runlily.py:247 ../lilykde/settings.py:200
 msgid "Play MIDI"
 msgstr "MIDI afspelen"
 
-#: ../lilykde/runlily.py:251
+#: ../lilykde/runlily.py:261
 msgid "Your document currently has no filename, please save first."
 msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:258
+#: ../lilykde/runlily.py:268
 msgid "Your document has been modified, please save first."
 msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:264
+#: ../lilykde/runlily.py:274
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -262,11 +266,11 @@ msgstr ""
 "documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
 "kleiner zijn. Toch doorgaan?"
 
-#: ../lilykde/widgets.py:305
+#: ../lilykde/widgets.py:309
 msgid "Tap"
 msgstr "Tik"
 
-#: ../lilykde/widgets.py:309
+#: ../lilykde/widgets.py:313
 msgid "Click this button a few times to set the tempo."
 msgstr "Klik een paar keer op deze knop om het tempo in te stellen."
 
@@ -321,11 +325,16 @@ msgstr ""
 "Commandoregel om Timidity (of een ander programma) te starten als ALSA MIDI-"
 "client."
 
-#: ../lilykde/settings.py:144
+#: ../lilykde/settings.py:114
+#, python-format
+msgid "Name or full path of the pdftk program (see %s)."
+msgstr "Naam of pad van het pdftk programma (zie %s)."
+
+#: ../lilykde/settings.py:147
 msgid "Hyphenation"
 msgstr "Afbreking"
 
-#: ../lilykde/settings.py:147
+#: ../lilykde/settings.py:150
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
@@ -335,11 +344,11 @@ msgstr ""
 "Scribus of KOffice, één per regel.  Als u de beginslash weglaat, wordt het "
 "pad gekoppeld aan alle paden in de KDEDIRS-omgevingsvariable."
 
-#: ../lilykde/settings.py:176
+#: ../lilykde/settings.py:179
 msgid "Actions"
 msgstr "Acties"
 
-#: ../lilykde/settings.py:179
+#: ../lilykde/settings.py:182
 msgid ""
 "Check the actions you want to display (if applicable) after LilyPond has "
 "successfully compiled your document."
@@ -347,26 +356,26 @@ msgstr ""
 "Selecteer de acties die u wilt laten weergeven (indien van toepassing) nadat "
 "LilyPond uw document succesvol heeft verwerkt."
 
-#: ../lilykde/settings.py:189
+#: ../lilykde/settings.py:192
 msgid "Open the folder containing the LilyPond and PDF documents."
 msgstr "Map met de LilyPond- en PDF-documenten openen."
 
-#: ../lilykde/settings.py:191
+#: ../lilykde/settings.py:194
 msgid "Open the generated PDF file with the default PDF viewer."
 msgstr ""
 "Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
 
-#: ../lilykde/settings.py:193
+#: ../lilykde/settings.py:196
 msgid ""
 "Print the PDF using the print command set in the Commands settings page."
 msgstr ""
 "De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
 
-#: ../lilykde/settings.py:196
+#: ../lilykde/settings.py:199
 msgid "Attach the PDF to an email message."
 msgstr "Het PDF-bestand bij een e-mailbericht voegen."
 
-#: ../lilykde/settings.py:198
+#: ../lilykde/settings.py:201
 msgid ""
 "Play the generated MIDI files using the default MIDI player (Timidity++ is "
 "recommended)."
@@ -374,25 +383,35 @@ msgstr ""
 "De aangemaakte MIDI-bestanden afspelen met de standaard MIDI-speler (Timidity"
 "++ is aanbevolen)."
 
-#: ../lilykde/settings.py:224
+#: ../lilykde/settings.py:204
+msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
+msgstr ""
+"De LilyPond bronbestanden in de gepubliceerde PDF inbedden (gebruikmakend "
+"van pdftk)."
+
+#: ../lilykde/settings.py:229
 msgid "Preferences"
 msgstr "Voorkeuren"
 
-#: ../lilykde/settings.py:228
+#: ../lilykde/settings.py:233
 msgid "Keep undocked windows on top of Kate"
 msgstr "Ontkoppelde vensters boven Kate houden"
 
-#: ../lilykde/settings.py:230
+#: ../lilykde/settings.py:235
 msgid "Save document when LilyPond is run"
 msgstr "Document opslaan als LilyPond wordt gestart"
 
-#: ../lilykde/settings.py:232
+#: ../lilykde/settings.py:237
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Laat LilyPond tussentijdse uitvoerbestanden verwijderen"
 
-#: ../lilykde/settings.py:234
+#: ../lilykde/settings.py:239
 msgid "Force reload of PDF preview when LilyPond has run"
 msgstr "PDF-weergave herladen nadat LilyPond is gestart"
+
+#: ../lilykde/settings.py:241
+msgid "Always embed LilyPond source files in published PDF"
+msgstr "LilyPond-bronbestanden altijd in gepubliceerde PDF inbedden"
 
 #: ../lilykde/rumor.py:109
 msgid "Auto"
@@ -1666,6 +1685,27 @@ msgstr "Percussie"
 #: ../lilykde/parts.py:1137
 msgid "Special"
 msgstr "Speciaal"
+
+#: ../lilykde/pdftk.py:84
+#, python-format
+msgid "Could not start Pdftk: %s"
+msgstr "Kan Pdftk niet starten: %s"
+
+#: ../lilykde/pdftk.py:94
+#, python-format
+msgid "Embedded file %s in PDF."
+msgid_plural "Embedded files %s in PDF."
+msgstr[0] "Bestand %s ingebed in PDF."
+msgstr[1] "Bestanden %s ingebed in PDF."
+
+#: ../lilykde/pdftk.py:106
+msgid "Embedding files in PDF failed."
+msgstr "Het inbedden van de bestanden in de PDF is mislukt."
+
+#: ../lilykde/pdftk.py:107
+#, python-format
+msgid "Return code: %i"
+msgstr "Foutcode: %i"
 
 #: ../lilypond-servicemenu-helper.py:61
 msgid "One document failed."

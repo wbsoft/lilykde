@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-18 07:25+0200\n"
+"POT-Creation-Date: 2008-06-22 22:33+0200\n"
 "PO-Revision-Date: 2008-06-14 01:40+0400\n"
 "Last-Translator: Сергей Полтавский\n"
 "Language-Team:  <ru@li.org>\n"
@@ -81,15 +81,15 @@ msgstr "режим просмотра"
 msgid "publish mode"
 msgstr "режим публикации"
 
-#: ../lilykde/runlily.py:215 ../lilykde/settings.py:188
+#: ../lilykde/runlily.py:215 ../lilykde/settings.py:191
 msgid "Open folder"
 msgstr "Открыть папку"
 
-#: ../lilykde/runlily.py:219 ../lilykde/settings.py:190
+#: ../lilykde/runlily.py:219 ../lilykde/settings.py:193
 msgid "Open PDF"
 msgstr "Открыть PDF"
 
-#: ../lilykde/runlily.py:221 ../lilykde/settings.py:192
+#: ../lilykde/runlily.py:221 ../lilykde/settings.py:195
 msgid "Print"
 msgstr "Печать"
 
@@ -97,27 +97,31 @@ msgstr "Печать"
 msgid "Email PDF (preview)"
 msgstr "Отправить PDF (просмотр) по E-mail"
 
-#: ../lilykde/runlily.py:231 ../lilykde/settings.py:195
+#: ../lilykde/runlily.py:231 ../lilykde/settings.py:198
 msgid "Email PDF"
 msgstr "Отправить PDF по E-mail"
 
-#: ../lilykde/runlily.py:233
+#: ../lilykde/runlily.py:241 ../lilykde/settings.py:203
+msgid "Embed source"
+msgstr ""
+
+#: ../lilykde/runlily.py:243
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr "LilyPond не создал PDF. Возможно, вы забыли <b>\\layout<b/>?"
 
-#: ../lilykde/runlily.py:237 ../lilykde/settings.py:197
+#: ../lilykde/runlily.py:247 ../lilykde/settings.py:200
 msgid "Play MIDI"
 msgstr "Воспроизвести MIDI"
 
-#: ../lilykde/runlily.py:251
+#: ../lilykde/runlily.py:261
 msgid "Your document currently has no filename, please save first."
 msgstr "У документа нет имени файла, сохраните его сначала."
 
-#: ../lilykde/runlily.py:258
+#: ../lilykde/runlily.py:268
 msgid "Your document has been modified, please save first."
 msgstr "Документ был изменен, необходимо сохранить его."
 
-#: ../lilykde/runlily.py:264
+#: ../lilykde/runlily.py:274
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -262,11 +266,11 @@ msgstr ""
 "по электронной почте документы без \"point-and-click\", потому что они "
 "значительно меньше. Всё равно продолжить?"
 
-#: ../lilykde/widgets.py:305
+#: ../lilykde/widgets.py:309
 msgid "Tap"
 msgstr ""
 
-#: ../lilykde/widgets.py:309
+#: ../lilykde/widgets.py:313
 msgid "Click this button a few times to set the tempo."
 msgstr "Кликните по кнопке несколько раз, чтобы установить темп"
 
@@ -320,11 +324,16 @@ msgid ""
 msgstr ""
 "Полная команда запуска TiMidity или другой программы MIDI-клиента ALSA."
 
-#: ../lilykde/settings.py:144
+#: ../lilykde/settings.py:114
+#, fuzzy, python-format
+msgid "Name or full path of the pdftk program (see %s)."
+msgstr "Имя или полный путь к программе Rumor."
+
+#: ../lilykde/settings.py:147
 msgid "Hyphenation"
 msgstr "Переносы"
 
-#: ../lilykde/settings.py:147
+#: ../lilykde/settings.py:150
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
@@ -334,11 +343,11 @@ msgstr ""
 "и т.д., по одному на строку. Если опустить начальный слеш, префиксы из "
 "KDEDIRS переменных окружения будут добавлены."
 
-#: ../lilykde/settings.py:176
+#: ../lilykde/settings.py:179
 msgid "Actions"
 msgstr "Действия"
 
-#: ../lilykde/settings.py:179
+#: ../lilykde/settings.py:182
 msgid ""
 "Check the actions you want to display (if applicable) after LilyPond has "
 "successfully compiled your document."
@@ -346,24 +355,24 @@ msgstr ""
 "Выберите действия, которые вы хотите показать (если применимы) после того "
 "как  LilyPond обработает документ."
 
-#: ../lilykde/settings.py:189
+#: ../lilykde/settings.py:192
 msgid "Open the folder containing the LilyPond and PDF documents."
 msgstr "Открыть папку с LilyPond и PDF файлами."
 
-#: ../lilykde/settings.py:191
+#: ../lilykde/settings.py:194
 msgid "Open the generated PDF file with the default PDF viewer."
 msgstr "Открыть полученный PDF с помощью просмотрщика PDF по умолчанию."
 
-#: ../lilykde/settings.py:193
+#: ../lilykde/settings.py:196
 msgid ""
 "Print the PDF using the print command set in the Commands settings page."
 msgstr "Напечатать PDF, использую команду печати в Настройках команд."
 
-#: ../lilykde/settings.py:196
+#: ../lilykde/settings.py:199
 msgid "Attach the PDF to an email message."
 msgstr "Прикрепить PDF к сообщению электронной почты."
 
-#: ../lilykde/settings.py:198
+#: ../lilykde/settings.py:201
 msgid ""
 "Play the generated MIDI files using the default MIDI player (Timidity++ is "
 "recommended)."
@@ -371,26 +380,34 @@ msgstr ""
 "Воспроизвести созданные MIDI файлы с помощью MIDI плеера по умолчанию "
 "(рекомендуется TiMidity++)"
 
-#: ../lilykde/settings.py:224
+#: ../lilykde/settings.py:204
+msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
+msgstr ""
+
+#: ../lilykde/settings.py:229
 msgid "Preferences"
 msgstr "Настройки"
 
-#: ../lilykde/settings.py:228
+#: ../lilykde/settings.py:233
 msgid "Keep undocked windows on top of Kate"
 msgstr ""
 
-#: ../lilykde/settings.py:230
+#: ../lilykde/settings.py:235
 msgid "Save document when LilyPond is run"
 msgstr "Сохранять документ перед запуском LilyPond"
 
-#: ../lilykde/settings.py:232
+#: ../lilykde/settings.py:237
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Удалить служебные файлы LilyPond."
 
-#: ../lilykde/settings.py:234
+#: ../lilykde/settings.py:239
 #, fuzzy
 msgid "Force reload of PDF preview when LilyPond has run"
 msgstr "Сохранять документ перед запуском LilyPond"
+
+#: ../lilykde/settings.py:241
+msgid "Always embed LilyPond source files in published PDF"
+msgstr ""
 
 #: ../lilykde/rumor.py:109
 msgid "Auto"
@@ -1655,6 +1672,28 @@ msgstr "Ударные"
 #: ../lilykde/parts.py:1137
 msgid "Special"
 msgstr "Другие"
+
+#: ../lilykde/pdftk.py:84
+#, fuzzy, python-format
+msgid "Could not start Pdftk: %s"
+msgstr "Невозможно запустить LilyPond: %s"
+
+#: ../lilykde/pdftk.py:94
+#, python-format
+msgid "Embedded file %s in PDF."
+msgid_plural "Embedded files %s in PDF."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: ../lilykde/pdftk.py:106
+msgid "Embedding files in PDF failed."
+msgstr ""
+
+#: ../lilykde/pdftk.py:107
+#, python-format
+msgid "Return code: %i"
+msgstr ""
 
 #: ../lilypond-servicemenu-helper.py:61
 msgid "One document failed."
