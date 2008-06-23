@@ -63,8 +63,11 @@ def attach_files(ly, wait = 0):
     """
     Checks the ly file for includes, and attaches all files
     to the ly's PDF file.
+
+    Optionally waits the number of seconds before copying the new
+    PDF, so kpdf gets time to update, and will not read a truncated file.
     """
-    import shutil, subprocess, tempfile, time
+    import shutil, subprocess, tempfile
 
     directory, filename = os.path.split(ly)
     files = list(set(find_included_files(filename, directory)))
@@ -73,13 +76,13 @@ def attach_files(ly, wait = 0):
     handle, temp = tempfile.mkstemp('.pdf')
     os.close(handle)
 
-    wait += time.time()
     cmd = [pdftk(), pdf, 'attach_files'] + files + ['output', temp]
 
     try:
         retcode = subprocess.call(cmd, cwd = directory)
     except OSError, e:
         log.fail(_("Could not start Pdftk: %s") % e)
+        os.remove(temp)
     else:
         if retcode == 0:
             # copy temp to the pdf, but do it not too quick if wait
@@ -93,17 +96,12 @@ def attach_files(ly, wait = 0):
                     "Embedded files %s in PDF.",
                     len(files)
                     ) % '[%s]' % ', '.join(files))
-            wait = int((wait - time.time()) * 1000)
-            if wait > 0:
-                QTimer.singleShot(wait, finish)
-            else:
-                finish()
-            return
+            QTimer.singleShot(int(wait * 1000), finish)
         else:
+            os.remove(temp)
             log.fail('%s %s' % (
                 _("Embedding files in PDF failed."),
                 _("Return code: %i") % retcode))
-    os.remove(temp)
 
 
 # kate: indent-width 4;
