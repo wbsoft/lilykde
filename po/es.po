@@ -6,9 +6,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-23 07:56+0200\n"
-"PO-Revision-Date: 2008-06-13 11:48+0200\n"
+"POT-Creation-Date: 2008-06-24 00:57+0200\n"
+"PO-Revision-Date: 2008-06-23 10:02+0200\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
+"Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -100,7 +101,7 @@ msgstr "Enviar PDF"
 
 #: ../lilykde/runlily.py:241 ../lilykde/settings.py:203
 msgid "Embed source"
-msgstr ""
+msgstr "Empotrar fuente"
 
 #: ../lilykde/runlily.py:243
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
@@ -326,9 +327,9 @@ msgstr ""
 "cliente de MIDI ALSA."
 
 #: ../lilykde/settings.py:114
-#, fuzzy, python-format
+#, python-format
 msgid "Name or full path of the pdftk program (see %s)."
-msgstr "Nombre o ruta completa del programaRumor."
+msgstr "Nombre o ruta completa del programa pdftk (véase %s)."
 
 #: ../lilykde/settings.py:147
 msgid "Hyphenation"
@@ -386,6 +387,8 @@ msgstr ""
 #: ../lilykde/settings.py:204
 msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
 msgstr ""
+"Empotrar los archivos fuente de LilyPond dentro del PDF publicado "
+"(utilizando pdftk)."
 
 #: ../lilykde/settings.py:229
 msgid "Preferences"
@@ -404,13 +407,13 @@ msgid "Let LilyPond delete intermediate output files"
 msgstr "Permitir a LilyPond borrar los archivos de salida intermedios"
 
 #: ../lilykde/settings.py:239
-#, fuzzy
 msgid "Force reload of PDF preview when LilyPond has run"
-msgstr "Guardar el documento al ejecutar LilyPond"
+msgstr ""
+"Forzar la recarga de la vista previa de PDF cuando LilyPond se ha ejecutado"
 
 #: ../lilykde/settings.py:241
 msgid "Always embed LilyPond source files in published PDF"
-msgstr ""
+msgstr "Empotrar siempre los archivos fuente de LilyPond en el PDF publicado"
 
 #: ../lilykde/rumor.py:109
 msgid "Auto"
@@ -1693,25 +1696,25 @@ msgid "Special"
 msgstr "Especial"
 
 #: ../lilykde/pdftk.py:84
-#, fuzzy, python-format
+#, python-format
 msgid "Could not start Pdftk: %s"
-msgstr "No se ha podido iniciar LilyPond: %s"
+msgstr "No se ha podido iniciar Pdftk: %s"
 
 #: ../lilykde/pdftk.py:95
 #, python-format
 msgid "Embedded file %s in PDF."
 msgid_plural "Embedded files %s in PDF."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Empotrado el archivo %s en el PDF."
+msgstr[1] "Empotrados los archivos %s en el PDF."
 
 #: ../lilykde/pdftk.py:103
 msgid "Embedding files in PDF failed."
-msgstr ""
+msgstr "El empotrado de los archivos en el PDF ha fallado."
 
 #: ../lilykde/pdftk.py:104
 #, python-format
 msgid "Return code: %i"
-msgstr ""
+msgstr "Código devuelto: %i"
 
 #: ../lilypond-servicemenu-helper.py:61
 msgid "One document failed."
@@ -1725,8 +1728,8 @@ msgstr "Todos los documentos se han convertido con éxito."
 
 #: ../lilypond-servicemenu-helper.py:76
 msgid "LilyKDE servicemenu helper"
-msgstr ""
+msgstr "Servicio de ayuda de menú de LilyKDE"
 
 #: ../lilypond-servicemenu-helper.py:82
 msgid "LilyPond files to convert"
-msgstr ""
+msgstr "Archivos de LilyPond que convertir"
