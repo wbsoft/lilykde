@@ -23,7 +23,7 @@ PDFTK frontend to attach LilyPond source files to a PDF file.
 Needs Pdftk installed. See http://www.accesspdf.com/pdftk .
 """
 
-import os, re, shutil, subprocess, tempfile, time
+import os, re
 
 from qt import QTimer
 
@@ -38,11 +38,9 @@ def pdftk():
     """ Returns the Pdftk command. """
     return config("commands").get('pdftk', 'pdftk')
 
-
 def installed():
     """ Returns True if Pdftk is installed, otherwise False """
     return findexe(pdftk()) and True
-
 
 def find_included_files(filename, directory):
     """
@@ -61,17 +59,17 @@ def find_included_files(filename, directory):
             for p in find_included_files(f, directory):
                 yield p
 
-
 def attach_files(ly, wait = 0):
     """
     Checks the ly file for includes, and attaches all files
     to the ly's PDF file.
     """
+    import shutil, subprocess, tempfile, time
+
     directory, filename = os.path.split(ly)
-
     files = list(set(find_included_files(filename, directory)))
-
     pdf = os.path.splitext(ly)[0] + '.pdf'
+
     handle, temp = tempfile.mkstemp('.pdf')
     os.close(handle)
 
