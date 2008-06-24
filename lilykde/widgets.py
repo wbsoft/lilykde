@@ -23,13 +23,12 @@ Widgets used in LilyKDE
 
 import os, re
 from time import time
-from subprocess import Popen, PIPE
 
 from qt import *
 from kdecore import KApplication, KProcess
 from kdeui import KMessageBox, KTextBrowser
 
-from lilykde import config, appdir
+from lilykde import appdir
 from lilykde.util import \
     findexe, keepspaces, htmlescapeurl, htmlescape, splitcommandline
 
@@ -270,18 +269,18 @@ class ProcessButton(QPushButton):
 class TapButton(QPushButton):
     """
     A button the user can tap a tempo on.
+
+    The callback is a function that is called
+    with the number of beats per minute.
     """
     def __init__(self, parent, callback):
         QPushButton.__init__(self, _("Tap"), parent)
-        self.callback = callback
         self.tapTime = 0.0
-        QObject.connect(self, SIGNAL("pressed()"), self.tap)
+        def tap():
+            self.tapTime, t = time(), self.tapTime
+            callback(int(60.0 / (self.tapTime - t)))
+        QObject.connect(self, SIGNAL("pressed()"), tap)
         QToolTip.add(self, _("Click this button a few times to set the tempo."))
-
-    def tap(self):
-        self.tapTime, t = time(), self.tapTime
-        bpm = int(60.0 / (self.tapTime - t))
-        self.callback(bpm)
 
 
 
