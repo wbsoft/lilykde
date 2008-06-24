@@ -1,4 +1,4 @@
-# translation of tr.po to Türkçe
+# translation of tr.po to Turkish
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-24 15:01+0200\n"
-"PO-Revision-Date: 2008-06-05 21:34+0300\n"
+"POT-Creation-Date: 2008-06-25 01:04+0200\n"
+"PO-Revision-Date: 2008-06-24 22:05+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
-"Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
+"Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms:  nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=1;plural=0\n"
 "X-Generator: KBabel 1.11.4\n"
 
 #: ../lilypond.py:50
@@ -277,9 +277,9 @@ msgstr ""
 "başlatmanın tam komutu."
 
 #: ../lilykde/settings.py:114
-#, fuzzy, python-format
+#, python-format
 msgid "Name or full path of the pdftk program (see %s)."
-msgstr "Rumor programının tam yolunun adı."
+msgstr "Pdftk programının tam yolunun adı. [bakınız %s)."
 
 #: ../lilykde/settings.py:147
 msgid "Hyphenation"
@@ -324,13 +324,12 @@ msgid "Let LilyPond delete intermediate output files"
 msgstr "LilyPond'un ara çıktı dosyalarını silmesine izin ver"
 
 #: ../lilykde/settings.py:223
-#, fuzzy
 msgid "Force reload of PDF preview when LilyPond has run"
-msgstr "Lilypond çalışırken belgeleri kaydet"
+msgstr "Lilypond çalışırken PDF önizlemeyi yeniden yüklemeye çalış"
 
 #: ../lilykde/settings.py:225
 msgid "Always embed LilyPond source files in published PDF"
-msgstr ""
+msgstr "Yayınlanmış PDF'ye daima Lilypond kaynak dosyalarını göm"
 
 #: ../lilykde/rumor.py:109
 msgid "Auto"
@@ -837,7 +836,7 @@ msgstr "Sayfa boyutu:"
 
 #: ../lilykde/scorewiz.py:824
 msgid "Landscape"
-msgstr ""
+msgstr "Yatay"
 
 #: ../lilykde/scorewiz.py:842
 msgid "First system:"
@@ -900,7 +899,7 @@ msgstr "Sol el:"
 
 #: ../lilykde/parts.py:134
 msgid "Organ"
-msgstr ""
+msgstr "Organ"
 
 #: ../lilykde/parts.py:135
 msgid "Organ|Org."
@@ -1444,7 +1443,7 @@ msgstr "Şifreli Bas"
 
 #: ../lilykde/parts.py:765
 msgid "Use extender lines"
-msgstr "Uzama çizgilerini kullan"
+msgstr "Uzatma çizgilerini kullan"
 
 #: ../lilykde/parts.py:779
 msgid "Lyrics follow here."
@@ -1504,7 +1503,7 @@ msgid ""
 "A second staff is optional."
 msgstr ""
 "Detaylı Şarkı Notası, üzerinde akorları olan ve altında da şarkı sözlerini "
-"içeren notadır."
+"içeren notadır. İkinci dizek opsiyoneldir."
 
 #: ../lilykde/parts.py:881
 msgid "Add accompaniment staff"
@@ -1603,24 +1602,25 @@ msgid "Special"
 msgstr "Özel"
 
 #: ../lilykde/pdftk.py:84
-#, fuzzy, python-format
+#, python-format
 msgid "Could not start Pdftk: %s"
-msgstr "LilyPond başlatılamadı: %s"
+msgstr "Pdftk başlatılamadı: %s"
 
 #: ../lilykde/pdftk.py:95
 #, python-format
 msgid "Embedded file %s in PDF."
 msgid_plural "Embedded files %s in PDF."
-msgstr[0] ""
+msgstr[0] "PDF içine gömülü dosya %2."
+msgstr[1] "PDF içinde gömülü dosyalar %s."
 
 #: ../lilykde/pdftk.py:103
 msgid "Embedding files in PDF failed."
-msgstr ""
+msgstr "PDF içinde dosyaların gömülmesi başarılamadı."
 
 #: ../lilykde/pdftk.py:104
 #, python-format
 msgid "Return code: %i"
-msgstr ""
+msgstr "Dönüş kodu: %i"
 
 #: ../lilykde/actions.py:39 ../lilykde/actions.py:117
 msgid "Open folder"
@@ -1663,15 +1663,18 @@ msgstr "MIDI çal"
 msgid ""
 "Play the generated MIDI files using the default MIDI player (Timidity++ is "
 "recommended)."
-msgstr "Varsayılan MIDI çalıcıyı kullanarak işlenmiş MIDI dosyalarını çal."
+msgstr ""
+"Varsayılan MIDI çalıcıyı kullanarak işlenmiş MIDI dosyalarını çal (Timidity+"
+"+ önerilir)."
 
 #: ../lilykde/actions.py:56 ../lilykde/actions.py:137
 msgid "Embed source"
-msgstr ""
+msgstr "Kaynağı içine göm"
 
 #: ../lilykde/actions.py:57
 msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
 msgstr ""
+"Lilypond kaynak dosyalarını yayınlanmış PDF'nin içine göm (pdftk kullanarak)."
 
 #: ../lilykde/actions.py:92
 #, python-format
@@ -1702,7 +1705,7 @@ msgstr "PDF'yi e-posta ile gönder (önizleme)"
 msgid "One document failed."
 msgid_plural "$count documents failed."
 msgstr[0] "Bir belge çalıştırılamadı."
-msgstr[1] ""
+msgstr[1] "$tane belge çalıştırılamadı."
 
 #: ../lilypond-servicemenu-helper.py:65
 msgid "All documents successfully converted."
@@ -1710,8 +1713,8 @@ msgstr "Tüm belgeler başarıyla dönüştürüldü."
 
 #: ../lilypond-servicemenu-helper.py:76
 msgid "LilyKDE servicemenu helper"
-msgstr ""
+msgstr "LilyKDE servis menüsü yardımcısı"
 
 #: ../lilypond-servicemenu-helper.py:82
 msgid "LilyPond files to convert"
-msgstr ""
+msgstr "Çevrilecek LilyPond dosyaları"
