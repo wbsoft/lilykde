@@ -502,11 +502,11 @@ class Rumor(QFrame):
         conf = config("rumor")
         conf["tempo"] = self.tempo.tempo()
         conf["quantize"] = self.quantize.currentText()
-        conf["step"] = self.step.isChecked() and "1" or "0"
-        conf["mono"] = self.mono.isChecked() and "1" or "0"
+        conf["step"] = int(self.step.isChecked())
+        conf["mono"] = int(self.mono.isChecked())
         conf["meter"] = autofy(self.meter.currentText())
         conf["keysig"] = autofy(self.keysig.currentText())
-        conf["timidity"] = self.timidity.isRunning() and "1" or "0"
+        conf["timidity"] = int(self.timidity.isRunning())
         self.status.message(_("Settings have been saved."), 2000)
 
     def loadSettings(self):
@@ -707,12 +707,12 @@ class RumorSettings(QDialog):
         conf["midi in"] = self.ilist[self.ibut.currentItem()]
         conf["midi out"] = self.olist[self.obut.currentItem()]
         conf["language"] = autofy(self.lang.currentText())
-        conf["absolute pitches"] = self.absPitches.isChecked() and "1" or "0"
-        conf["explicit durations"] = self.explDur.isChecked() and "1" or "0"
-        conf["no barlines"] = self.noBar.isChecked() and "1" or "0"
-        conf["no dots"] = self.noDots.isChecked() and "1" or "0"
-        conf["legato"] = self.legato.isChecked() and "1" or "0"
-        conf["strip rests"] = self.stripRests.isChecked() and "1" or "0"
+        conf["absolute pitches"] = int(self.absPitches.isChecked())
+        conf["explicit durations"] = int(self.explDur.isChecked())
+        conf["no barlines"] = int(self.noBar.isChecked())
+        conf["no dots"] = int(self.noDots.isChecked())
+        conf["legato"] = int(self.legato.isChecked())
+        conf["strip rests"] = int(self.stripRests.isChecked())
         # Read script listview
         c = self.scripts.firstChild()
         names = []

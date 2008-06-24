@@ -238,7 +238,7 @@ class GeneralSettings(QFrame):
     def save(self):
         conf = config("preferences")
         for w, c, d in self.checks:
-            conf[c] = w.isChecked() and 1 or 0
+            conf[c] = int(w.isChecked())
 
 
 
