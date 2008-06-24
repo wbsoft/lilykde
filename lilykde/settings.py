@@ -182,42 +182,26 @@ class ActionSettings(QFrame):
             "Check the actions you want to display (if applicable) after "
             "LilyPond has successfully compiled your document.")), self)
 
-        def action(name, title, tooltip):
+        self.actions = []
+        from lilykde.actions import actions
+        for name, default, title, tooltip in actions:
             widget = QCheckBox(title, self)
             QToolTip.add(widget, tooltip)
-            return name, widget
-
-        self.actions = (
-            action('open_folder', _("Open folder"), _(
-                "Open the folder containing the LilyPond and PDF documents.")),
-            action('open_pdf', _("Open PDF"), _(
-                "Open the generated PDF file with the default PDF viewer.")),
-            action('print_pdf', _("Print"), _(
-                "Print the PDF using the print command set in the Commands "
-                "settings page.")),
-            action('email_pdf', _("Email PDF"), _(
-                "Attach the PDF to an email message.")),
-            action('play_midi', _("Play MIDI"), _(
-                "Play the generated MIDI files using the default MIDI player "
-                "(Timidity++ is recommended).")),
-            action('embed_source', _("Embed source"), _(
-                "Embed the LilyPond source files in the published PDF (using pdftk).")),
-        )
+            self.actions.append((name, widget, default))
 
     def defaults(self):
-        for a, w in self.actions:
-            w.setChecked(True)
+        for a, w, d in self.actions:
+            w.setChecked(bool(d))
 
     def load(self):
         conf = config("actions")
-        for a, w in self.actions:
-            check = bool(conf[a] != '0')
-            w.setChecked(check)
+        for a, w, d in self.actions:
+            w.setChecked(bool(int(conf[a] or d)))
 
     def save(self):
         conf = config("actions")
-        for a, w in self.actions:
-            conf[a] = w.isChecked() and 1 or 0
+        for a, w, d in self.actions:
+            conf[a] = int(w.isChecked())
 
 
 class GeneralSettings(QFrame):

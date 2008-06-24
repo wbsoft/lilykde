@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-23 07:56+0200\n"
+"POT-Creation-Date: 2008-06-24 12:11+0200\n"
 "PO-Revision-Date: 2008-06-22 22:25+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -78,49 +78,21 @@ msgstr "vooruitblik"
 msgid "publish mode"
 msgstr "publiceren"
 
-#: ../lilykde/runlily.py:215 ../lilykde/settings.py:191
-msgid "Open folder"
-msgstr "Map openen"
-
-#: ../lilykde/runlily.py:219 ../lilykde/settings.py:193
-msgid "Open PDF"
-msgstr "PDF weergeven"
-
-#: ../lilykde/runlily.py:221 ../lilykde/settings.py:195
-msgid "Print"
-msgstr "Afdrukken"
-
-#: ../lilykde/runlily.py:228
-msgid "Email PDF (preview)"
-msgstr "PDF e-mailen (vooruitblik)"
-
-#: ../lilykde/runlily.py:231 ../lilykde/settings.py:198
-msgid "Email PDF"
-msgstr "PDF e-mailen"
-
-#: ../lilykde/runlily.py:241 ../lilykde/settings.py:203
-msgid "Embed source"
-msgstr "Bron inbedden"
-
-#: ../lilykde/runlily.py:243
+#: ../lilykde/runlily.py:219
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond heeft geen PDF-bestand geschreven. Waarschijnlijk bent u <b>"
 "\\layout</b> vergeten?"
 
-#: ../lilykde/runlily.py:247 ../lilykde/settings.py:200
-msgid "Play MIDI"
-msgstr "MIDI afspelen"
-
-#: ../lilykde/runlily.py:261
+#: ../lilykde/runlily.py:233
 msgid "Your document currently has no filename, please save first."
 msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:268
+#: ../lilykde/runlily.py:240
 msgid "Your document has been modified, please save first."
 msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
 
-#: ../lilykde/runlily.py:274
+#: ../lilykde/runlily.py:246
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -245,32 +217,11 @@ msgstr "PDF"
 msgid "Please select some text first."
 msgstr "Selecteer eerst de tekst waarop u de functie wilt toepassen."
 
-#: ../lilykde/widgets.py:136
-#, python-format
-msgid "Printing failed: %s"
-msgstr "Het afdrukken is mislukt: %s"
-
-#: ../lilykde/widgets.py:138
-msgid "The document has been sent to the printer."
-msgstr "Het document is naar de printer gestuurd."
-
-#: ../lilykde/widgets.py:141
-msgid ""
-"This PDF has been created with point-and-click urls (preview mode), which "
-"increases the file size dramatically. It's better to email documents without "
-"point-and-click urls (publish mode), because they are much smaller. Continue "
-"anyway?"
-msgstr ""
-"Dit PDF-bestand is aangemaakt met \"point-and-click\" URLs (vooruitblik), "
-"waardoor het bestand veel groter dan noodzakelijk is. Het is beter om "
-"documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
-"kleiner zijn. Toch doorgaan?"
-
-#: ../lilykde/widgets.py:309
+#: ../lilykde/widgets.py:275
 msgid "Tap"
 msgstr "Tik"
 
-#: ../lilykde/widgets.py:313
+#: ../lilykde/widgets.py:279
 msgid "Click this button a few times to set the tempo."
 msgstr "Klik een paar keer op deze knop om het tempo in te stellen."
 
@@ -356,60 +307,27 @@ msgstr ""
 "Selecteer de acties die u wilt laten weergeven (indien van toepassing) nadat "
 "LilyPond uw document succesvol heeft verwerkt."
 
-#: ../lilykde/settings.py:192
-msgid "Open the folder containing the LilyPond and PDF documents."
-msgstr "Map met de LilyPond- en PDF-documenten openen."
-
-#: ../lilykde/settings.py:194
-msgid "Open the generated PDF file with the default PDF viewer."
-msgstr ""
-"Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
-
-#: ../lilykde/settings.py:196
-msgid ""
-"Print the PDF using the print command set in the Commands settings page."
-msgstr ""
-"De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
-
-#: ../lilykde/settings.py:199
-msgid "Attach the PDF to an email message."
-msgstr "Het PDF-bestand bij een e-mailbericht voegen."
-
-#: ../lilykde/settings.py:201
-msgid ""
-"Play the generated MIDI files using the default MIDI player (Timidity++ is "
-"recommended)."
-msgstr ""
-"De aangemaakte MIDI-bestanden afspelen met de standaard MIDI-speler (Timidity"
-"++ is aanbevolen)."
-
-#: ../lilykde/settings.py:204
-msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
-msgstr ""
-"De LilyPond bronbestanden in de gepubliceerde PDF inbedden (gebruikmakend "
-"van pdftk)."
-
-#: ../lilykde/settings.py:229
+#: ../lilykde/settings.py:213
 msgid "Preferences"
 msgstr "Voorkeuren"
 
-#: ../lilykde/settings.py:233
+#: ../lilykde/settings.py:217
 msgid "Keep undocked windows on top of Kate"
 msgstr "Ontkoppelde vensters boven Kate houden"
 
-#: ../lilykde/settings.py:235
+#: ../lilykde/settings.py:219
 msgid "Save document when LilyPond is run"
 msgstr "Document opslaan als LilyPond wordt gestart"
 
-#: ../lilykde/settings.py:237
+#: ../lilykde/settings.py:221
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Laat LilyPond tussentijdse uitvoerbestanden verwijderen"
 
-#: ../lilykde/settings.py:239
+#: ../lilykde/settings.py:223
 msgid "Force reload of PDF preview when LilyPond has run"
 msgstr "PDF-weergave herladen nadat LilyPond is gestart"
 
-#: ../lilykde/settings.py:241
+#: ../lilykde/settings.py:225
 msgid "Always embed LilyPond source files in published PDF"
 msgstr "LilyPond-bronbestanden altijd in gepubliceerde PDF inbedden"
 
@@ -1706,6 +1624,88 @@ msgstr "Het inbedden van de bestanden in de PDF is mislukt."
 #, python-format
 msgid "Return code: %i"
 msgstr "Foutcode: %i"
+
+#: ../lilykde/actions.py:39 ../lilykde/actions.py:117
+msgid "Open folder"
+msgstr "Map openen"
+
+#: ../lilykde/actions.py:40
+msgid "Open the folder containing the LilyPond and PDF documents."
+msgstr "Map met de LilyPond- en PDF-documenten openen."
+
+#: ../lilykde/actions.py:42 ../lilykde/actions.py:120
+msgid "Open PDF"
+msgstr "PDF weergeven"
+
+#: ../lilykde/actions.py:43
+msgid "Open the generated PDF file with the default PDF viewer."
+msgstr ""
+"Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
+
+#: ../lilykde/actions.py:45 ../lilykde/actions.py:122
+msgid "Print"
+msgstr "Afdrukken"
+
+#: ../lilykde/actions.py:46
+msgid ""
+"Print the PDF using the print command set in the Commands settings page."
+msgstr ""
+"De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
+
+#: ../lilykde/actions.py:49 ../lilykde/actions.py:132
+msgid "Email PDF"
+msgstr "PDF e-mailen"
+
+#: ../lilykde/actions.py:50
+msgid "Attach the PDF to an email message."
+msgstr "Het PDF-bestand bij een e-mailbericht voegen."
+
+#: ../lilykde/actions.py:52 ../lilykde/actions.py:140
+msgid "Play MIDI"
+msgstr "MIDI afspelen"
+
+#: ../lilykde/actions.py:53
+msgid ""
+"Play the generated MIDI files using the default MIDI player (Timidity++ is "
+"recommended)."
+msgstr ""
+"De aangemaakte MIDI-bestanden afspelen met de standaard MIDI-speler (Timidity"
+"++ is aanbevolen)."
+
+#: ../lilykde/actions.py:56 ../lilykde/actions.py:137
+msgid "Embed source"
+msgstr "Bron inbedden"
+
+#: ../lilykde/actions.py:57
+msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
+msgstr ""
+"De LilyPond bronbestanden in de gepubliceerde PDF inbedden (gebruikmakend "
+"van pdftk)."
+
+#: ../lilykde/actions.py:92
+#, python-format
+msgid "Printing failed: %s"
+msgstr "Het afdrukken is mislukt: %s"
+
+#: ../lilykde/actions.py:94
+msgid "The document has been sent to the printer."
+msgstr "Het document is naar de printer gestuurd."
+
+#: ../lilykde/actions.py:97
+msgid ""
+"This PDF has been created with point-and-click urls (preview mode), which "
+"increases the file size dramatically. It's better to email documents without "
+"point-and-click urls (publish mode), because they are much smaller. Continue "
+"anyway?"
+msgstr ""
+"Dit PDF-bestand is aangemaakt met \"point-and-click\" URLs (vooruitblik), "
+"waardoor het bestand veel groter dan noodzakelijk is. Het is beter om "
+"documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
+"kleiner zijn. Toch doorgaan?"
+
+#: ../lilykde/actions.py:129
+msgid "Email PDF (preview)"
+msgstr "PDF e-mailen (vooruitblik)"
 
 #: ../lilypond-servicemenu-helper.py:61
 msgid "One document failed."

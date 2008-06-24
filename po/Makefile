@@ -20,6 +20,7 @@ translate = \
 	../lilykde/scorewiz.py \
 	../lilykde/parts.py \
 	../lilykde/pdftk.py \
+	../lilykde/actions.py \
 	../lilypond-servicemenu-helper.py \
 
 

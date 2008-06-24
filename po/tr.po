@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-23 07:56+0200\n"
+"POT-Creation-Date: 2008-06-24 12:11+0200\n"
 "PO-Revision-Date: 2008-06-05 21:34+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
@@ -80,48 +80,20 @@ msgstr "önizleme kipi"
 msgid "publish mode"
 msgstr "yayınlama kipi"
 
-#: ../lilykde/runlily.py:215 ../lilykde/settings.py:191
-msgid "Open folder"
-msgstr "Dizin aç"
-
-#: ../lilykde/runlily.py:219 ../lilykde/settings.py:193
-msgid "Open PDF"
-msgstr "PDF aç"
-
-#: ../lilykde/runlily.py:221 ../lilykde/settings.py:195
-msgid "Print"
-msgstr "Yazdır"
-
-#: ../lilykde/runlily.py:228
-msgid "Email PDF (preview)"
-msgstr "PDF'yi e-posta ile gönder (önizleme)"
-
-#: ../lilykde/runlily.py:231 ../lilykde/settings.py:198
-msgid "Email PDF"
-msgstr "PDF'yi e-posta ile gönder"
-
-#: ../lilykde/runlily.py:241 ../lilykde/settings.py:203
-msgid "Embed source"
-msgstr ""
-
-#: ../lilykde/runlily.py:243
+#: ../lilykde/runlily.py:219
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond bir PDF. Büyük ihtimalle şunu eklemeyi unuttunuz <b>\\layout</b>?"
 
-#: ../lilykde/runlily.py:247 ../lilykde/settings.py:200
-msgid "Play MIDI"
-msgstr "MIDI çal"
-
-#: ../lilykde/runlily.py:261
+#: ../lilykde/runlily.py:233
 msgid "Your document currently has no filename, please save first."
 msgstr "Belgenize bir dosya adı vermediniz, lütfen önce kaydediniz."
 
-#: ../lilykde/runlily.py:268
+#: ../lilykde/runlily.py:240
 msgid "Your document has been modified, please save first."
 msgstr "Belgeniz değiştirildi, lütfen önce kaydediniz."
 
-#: ../lilykde/runlily.py:274
+#: ../lilykde/runlily.py:246
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -245,32 +217,11 @@ msgstr "PDF"
 msgid "Please select some text first."
 msgstr "Lütfen önce bir metin seçiniz."
 
-#: ../lilykde/widgets.py:136
-#, python-format
-msgid "Printing failed: %s"
-msgstr "Yazdırma başarılamadı: %s"
-
-#: ../lilykde/widgets.py:138
-msgid "The document has been sent to the printer."
-msgstr "Belge yazıcıya gönderildi."
-
-#: ../lilykde/widgets.py:141
-msgid ""
-"This PDF has been created with point-and-click urls (preview mode), which "
-"increases the file size dramatically. It's better to email documents without "
-"point-and-click urls (publish mode), because they are much smaller. Continue "
-"anyway?"
-msgstr ""
-"Bu PDF dosya boyutunu önemli derecede arttıran işaretle-ve-tıkla "
-"bağlantısıyla yaratılmıştır. (önizleme kipi) Belgeleri işaretle-ve-tıkla "
-"bağlantısı olmadan e-mail ile göndermek önerilir (baskı kipi), çünkü bu "
-"dosyaların boyutu daha küçüktür. Yine de devam edilsin mi?"
-
-#: ../lilykde/widgets.py:309
+#: ../lilykde/widgets.py:275
 msgid "Tap"
 msgstr "Tık"
 
-#: ../lilykde/widgets.py:313
+#: ../lilykde/widgets.py:279
 msgid "Click this button a few times to set the tempo."
 msgstr "Hızı ayarlamak için bu düşmeye bir kaç kez tıklayınız."
 
@@ -356,55 +307,28 @@ msgstr ""
 "Lilypond belgenizi başarıyla derledikten sonra görüntülenmesini istediğiniz "
 "işlemleri denetleyiniz. (Eğer mümkünse)"
 
-#: ../lilykde/settings.py:192
-msgid "Open the folder containing the LilyPond and PDF documents."
-msgstr "Lilypond ve PDF belgelerini içeren dizini aç."
-
-#: ../lilykde/settings.py:194
-msgid "Open the generated PDF file with the default PDF viewer."
-msgstr "İşlenmiş PDF dosyasını varsayılan PDF okuyucu ile aç."
-
-#: ../lilykde/settings.py:196
-msgid ""
-"Print the PDF using the print command set in the Commands settings page."
-msgstr "Komut ayarları sayfasındaki ayarları kullanarak PDF dosyasını yazdır."
-
-#: ../lilykde/settings.py:199
-msgid "Attach the PDF to an email message."
-msgstr "PDF dosyasını bir e-posta iletisine ekle."
-
-#: ../lilykde/settings.py:201
-msgid ""
-"Play the generated MIDI files using the default MIDI player (Timidity++ is "
-"recommended)."
-msgstr "Varsayılan MIDI çalıcıyı kullanarak işlenmiş MIDI dosyalarını çal."
-
-#: ../lilykde/settings.py:204
-msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
-msgstr ""
-
-#: ../lilykde/settings.py:229
+#: ../lilykde/settings.py:213
 msgid "Preferences"
 msgstr "Tercihler"
 
-#: ../lilykde/settings.py:233
+#: ../lilykde/settings.py:217
 msgid "Keep undocked windows on top of Kate"
 msgstr "Küçüktülmemiş pencereleri Kate'in üstünde tut"
 
-#: ../lilykde/settings.py:235
+#: ../lilykde/settings.py:219
 msgid "Save document when LilyPond is run"
 msgstr "Lilypond çalışırken belgeleri kaydet"
 
-#: ../lilykde/settings.py:237
+#: ../lilykde/settings.py:221
 msgid "Let LilyPond delete intermediate output files"
 msgstr "LilyPond'un ara çıktı dosyalarını silmesine izin ver"
 
-#: ../lilykde/settings.py:239
+#: ../lilykde/settings.py:223
 #, fuzzy
 msgid "Force reload of PDF preview when LilyPond has run"
 msgstr "Lilypond çalışırken belgeleri kaydet"
 
-#: ../lilykde/settings.py:241
+#: ../lilykde/settings.py:225
 msgid "Always embed LilyPond source files in published PDF"
 msgstr ""
 
@@ -1697,6 +1621,82 @@ msgstr ""
 #, python-format
 msgid "Return code: %i"
 msgstr ""
+
+#: ../lilykde/actions.py:39 ../lilykde/actions.py:117
+msgid "Open folder"
+msgstr "Dizin aç"
+
+#: ../lilykde/actions.py:40
+msgid "Open the folder containing the LilyPond and PDF documents."
+msgstr "Lilypond ve PDF belgelerini içeren dizini aç."
+
+#: ../lilykde/actions.py:42 ../lilykde/actions.py:120
+msgid "Open PDF"
+msgstr "PDF aç"
+
+#: ../lilykde/actions.py:43
+msgid "Open the generated PDF file with the default PDF viewer."
+msgstr "İşlenmiş PDF dosyasını varsayılan PDF okuyucu ile aç."
+
+#: ../lilykde/actions.py:45 ../lilykde/actions.py:122
+msgid "Print"
+msgstr "Yazdır"
+
+#: ../lilykde/actions.py:46
+msgid ""
+"Print the PDF using the print command set in the Commands settings page."
+msgstr "Komut ayarları sayfasındaki ayarları kullanarak PDF dosyasını yazdır."
+
+#: ../lilykde/actions.py:49 ../lilykde/actions.py:132
+msgid "Email PDF"
+msgstr "PDF'yi e-posta ile gönder"
+
+#: ../lilykde/actions.py:50
+msgid "Attach the PDF to an email message."
+msgstr "PDF dosyasını bir e-posta iletisine ekle."
+
+#: ../lilykde/actions.py:52 ../lilykde/actions.py:140
+msgid "Play MIDI"
+msgstr "MIDI çal"
+
+#: ../lilykde/actions.py:53
+msgid ""
+"Play the generated MIDI files using the default MIDI player (Timidity++ is "
+"recommended)."
+msgstr "Varsayılan MIDI çalıcıyı kullanarak işlenmiş MIDI dosyalarını çal."
+
+#: ../lilykde/actions.py:56 ../lilykde/actions.py:137
+msgid "Embed source"
+msgstr ""
+
+#: ../lilykde/actions.py:57
+msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
+msgstr ""
+
+#: ../lilykde/actions.py:92
+#, python-format
+msgid "Printing failed: %s"
+msgstr "Yazdırma başarılamadı: %s"
+
+#: ../lilykde/actions.py:94
+msgid "The document has been sent to the printer."
+msgstr "Belge yazıcıya gönderildi."
+
+#: ../lilykde/actions.py:97
+msgid ""
+"This PDF has been created with point-and-click urls (preview mode), which "
+"increases the file size dramatically. It's better to email documents without "
+"point-and-click urls (publish mode), because they are much smaller. Continue "
+"anyway?"
+msgstr ""
+"Bu PDF dosya boyutunu önemli derecede arttıran işaretle-ve-tıkla "
+"bağlantısıyla yaratılmıştır. (önizleme kipi) Belgeleri işaretle-ve-tıkla "
+"bağlantısı olmadan e-mail ile göndermek önerilir (baskı kipi), çünkü bu "
+"dosyaların boyutu daha küçüktür. Yine de devam edilsin mi?"
+
+#: ../lilykde/actions.py:129
+msgid "Email PDF (preview)"
+msgstr "PDF'yi e-posta ile gönder (önizleme)"
 
 #: ../lilypond-servicemenu-helper.py:61
 msgid "One document failed."

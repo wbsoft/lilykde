@@ -207,47 +207,19 @@ class Ly2PDF(LyJob):
 
     def completed(self, success):
         if success and self.f.pdf:
-            def act(action):
-                return int(config("actions").get(action, 1))
-            actions = []
-            if act("open_folder"):
-                actions.append(("file://%s" % self.f.directory,
-                    _("Open folder")))
             if self.f.hasUpdatedPDF():
                 self.f.previewPDF()
-                if act("open_pdf"):
-                    actions.append(("file://%s" % self.f.pdf, _("Open PDF")))
-                if act("print_pdf"):
-                    actions.append(("print=file://%s" % self.f.pdf, _("Print")))
-                if act("email_pdf"):
-                    # hack: prevent QTextView from recognizing mailto urls, as
-                    # it then uses the mailClick signal, which does not give us
-                    # the query string. Later on, we prepend the "mailto:?" :)
-                    if self.preview:
-                        actions.append(("emailpreview=file://%s" % self.f.pdf,
-                            _("Email PDF (preview)")))
-                    else:
-                        actions.append(("email=file://%s" % self.f.pdf,
-                            _("Email PDF")))
                 # should we embed the LilyPond source files in the PDF?
                 from lilykde import pdftk
                 if (not self.preview
                     and config("preferences")['embed source files'] == '1'
-                    and pdftk.installed()
-                    ):
+                    and pdftk.installed()):
                     pdftk.attach_files(self.f.path, 3)
-                elif act("embed_source") and pdftk.installed():
-                    actions.append(("embed=file://%s" % self.f.path,
-                        _("Embed source")))
             else:
                 self.log.msg(_("LilyPond did not write a PDF. "
                                "You probably forgot <b>\layout</b>?"))
-            midis = self.f.getUpdated(".midi")
-            if act("play_midi") and midis:
-                actions.append(("file://%s" % midis[0], _("Play MIDI")))
-                actions.extend([("file://%s" % m, str(n+1))
-                    for n, m in enumerate(midis[1:])])
-            self.log.actions(actions)
+            from lilykde import actions
+            self.log.actions(actions.listActions(self.f, self.preview))
 
 
 def runLilyPond(doc, preview=False):

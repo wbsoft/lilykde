@@ -26,12 +26,12 @@ from time import time
 from subprocess import Popen, PIPE
 
 from qt import *
-from kdecore import KApplication, KProcess, KURL
+from kdecore import KApplication, KProcess
 from kdeui import KMessageBox, KTextBrowser
 
 from lilykde import config, appdir
 from lilykde.util import \
-    findexe, keepspaces, htmlescapeurl, htmlescape, krun, splitcommandline
+    findexe, keepspaces, htmlescapeurl, htmlescape, splitcommandline
 
 # Translate the messages
 from lilykde.i18n import _
@@ -87,6 +87,9 @@ class LogWidget(KTextBrowser):
         KTextBrowser.__init__(self, parent, None, True)
         self.setTextFormat(Qt.RichText)
         self.setFont(QFont("Sans", 9))
+        def runAction(url):
+            from lilykde import actions
+            actions.runAction(url)
         QObject.connect(self, SIGNAL("urlClick(const QString&)"), runAction)
 
     def append(self, text, color=None, bold=False):
@@ -111,43 +114,6 @@ class LogWidget(KTextBrowser):
             self.msg(" - ".join([
                 '<a href="%s">%s</a>' % (htmlescapeurl(u), htmlescape(m))
                     for u, m in actions]), color, bold)
-
-
-def runAction(url):
-    """
-    Runs an URL with KRun. If url starts with "email=" or "emailpreview=",
-    it is converted to a mailto: link with the url attached, and opened in
-    the default KDE mailer.
-    If url starts with "print=", the file is directly printed with lpr.
-    """
-    # hack: prevent QTextView recognizing mailto: urls cos it can't handle
-    # query string
-    url = unicode(url)        # url could be a QString
-    m = re.match("([a-z]+)=(.*)", url)
-    if not m:
-        return krun(url)
-    command, url = m.groups()
-    if command == 'print':
-        path = unicode(KURL(url).path())
-        cmd = splitcommandline(config("commands").get("lpr", "lpr"))
-        cmd.append(path)
-        p = Popen(cmd, stderr=PIPE)
-        if p.wait() != 0:
-            error(_("Printing failed: %s") % p.stderr.read())
-        else:
-            info(_("The document has been sent to the printer."))
-    elif command in ('email', 'emailpreview'):
-        if command == "email" or warncontinue(_(
-            "This PDF has been created with point-and-click urls (preview "
-            "mode), which increases the file size dramatically. It's better "
-            "to email documents without point-and-click urls (publish mode), "
-            "because they are much smaller. Continue anyway?")):
-            KApplication.kApplication().invokeMailer(
-                KURL(u"mailto:?attach=%s" % url), "", True)
-    elif command == 'embed':
-        ly = unicode(KURL(url).path())
-        from lilykde import pdftk
-        pdftk.attach_files(ly)
 
 
 class ExecLineEdit(QLineEdit):
