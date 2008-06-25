@@ -52,7 +52,6 @@ class LyFile(object):
         self.doc = doc
         self.kurl = KURL(doc.url)
         self.setPath(unicode(self.kurl.path())) # the full path to the ly file
-        self.preview = False    # run with point-and-click?
 
     def setPath(self, path):
         self.path = path

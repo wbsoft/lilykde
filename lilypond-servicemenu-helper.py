@@ -44,7 +44,7 @@ class File(LyFile):
         self.setPath(unicode(self.kurl.path())) # the full path to the ly file
 
     def isLyFile(self):
-        return self.extension in ('.ly', '.ily', 'lyi')
+        return self.extension in ('.ly', '.ily', '.lyi')
 
 
 class Job(LyJob):

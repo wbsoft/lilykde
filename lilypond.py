@@ -84,7 +84,7 @@ def documentChanged(doc):
     if kate.application.mainWindow() and doc.url:
         # load lilykde if this is probably a lilypond file
         if doc.information.mimeType == 'text/x-lilypond' or \
-                os.path.splitext(doc.url)[1] in ('.ly', '.ily', 'lyi'):
+                os.path.splitext(doc.url)[1] in ('.ly', '.ily', '.lyi'):
             from lilykde import runlily
             f = runlily.LyFile(doc)
             # Show corresponding PDF if it's not older than the LilyPond file.
