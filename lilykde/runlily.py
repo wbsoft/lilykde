@@ -66,7 +66,7 @@ class LyFile(object):
 
     def isLyFile(self):
         return self.doc.information.mimeType == 'text/x-lilypond' or \
-               self.extension in ('.ly', '.ily', 'lyi')
+               self.extension in ('.ly', '.ily', '.lyi')
 
     def updated(self, file):
         return os.path.getmtime(self.path) <= os.path.getmtime(file)
