@@ -934,7 +934,7 @@ class ScoreWizard(KDialogBase):
         KDialogBase.__init__(self, KDialogBase.Tabbed,
             "LilyKDE " + _("Score Setup Wizard"),
             KDialogBase.Ok | KDialogBase.Cancel | KDialogBase.Default,
-            KDialogBase.Ok, parent)
+            KDialogBase.Ok, parent, "", False)
         self.completableWidgets = []
         self.titles = Titles(self)
         self.parts = Parts(self)
