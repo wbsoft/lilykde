@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-24 15:01+0200\n"
+"POT-Creation-Date: 2008-06-25 10:36+0200\n"
 "PO-Revision-Date: 2008-06-14 01:40+0400\n"
 "Last-Translator: Сергей Полтавский\n"
 "Language-Team:  <ru@li.org>\n"
@@ -45,55 +45,55 @@ msgstr ""
 "Версия: $version\n"
 "Страница проекта: $homepage\n"
 
-#: ../lilykde/runlily.py:160
+#: ../lilykde/runlily.py:159
 msgid "LilyPond [$filename] starting ($mode)..."
 msgstr "Запуск LilyPond [$filename] ($mode)..."
 
-#: ../lilykde/runlily.py:162
+#: ../lilykde/runlily.py:161
 msgid "LilyPond [$filename] starting..."
 msgstr "Запуск LilyPond [$filename]..."
 
-#: ../lilykde/runlily.py:163
+#: ../lilykde/runlily.py:162
 msgid "Could not start LilyPond."
 msgstr "Невозможно запустить LilyPond"
 
-#: ../lilykde/runlily.py:174
+#: ../lilykde/runlily.py:173
 msgid "LilyPond [$filename] was terminated by signal $signal."
 msgstr "LilyPond [$filename] был заверешен после получения сигнала $signal"
 
-#: ../lilykde/runlily.py:179
+#: ../lilykde/runlily.py:178
 msgid "LilyPond [$filename] exited with return code $retcode."
 msgstr "Программа LilyPond [$filename] завершилась с кодом $retcode."
 
-#: ../lilykde/runlily.py:182
+#: ../lilykde/runlily.py:181
 msgid "LilyPond [$filename] finished."
 msgstr "LilyPond [$filename] завершен."
 
-#: ../lilykde/runlily.py:185
+#: ../lilykde/runlily.py:184
 msgid "LilyPond [$filename] exited abnormally."
 msgstr "LilyPond [$filename] завершен с ошибкой."
 
-#: ../lilykde/runlily.py:201
+#: ../lilykde/runlily.py:200
 msgid "preview mode"
 msgstr "режим просмотра"
 
-#: ../lilykde/runlily.py:203
+#: ../lilykde/runlily.py:202
 msgid "publish mode"
 msgstr "режим публикации"
 
-#: ../lilykde/runlily.py:219
+#: ../lilykde/runlily.py:218
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr "LilyPond не создал PDF. Возможно, вы забыли <b>\\layout<b/>?"
 
-#: ../lilykde/runlily.py:233
+#: ../lilykde/runlily.py:232
 msgid "Your document currently has no filename, please save first."
 msgstr "У документа нет имени файла, сохраните его сначала."
 
-#: ../lilykde/runlily.py:240
+#: ../lilykde/runlily.py:239
 msgid "Your document has been modified, please save first."
 msgstr "Документ был изменен, необходимо сохранить его."
 
-#: ../lilykde/runlily.py:246
+#: ../lilykde/runlily.py:245
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
