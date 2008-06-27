@@ -8,8 +8,10 @@ all: $(pngs)
 
 $(pngs): %.png: %.ly $(wildcard *.ily)
 	lilypond -ddelete-intermediate-files --png $<
-	mogrify -trim -bordercolor transparent -border 3 \
-		-fuzz 10% -transparent white +repage $@
+	convert $@ -trim -bordercolor white -border 3 \
+		\( +clone -threshold 100% \) \
+		\( -clone 0 -negate \) \
+		-delete 0 -compose CopyOpacity -composite +repage $@
 
 clean:
 	rm -f *.png
