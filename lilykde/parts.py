@@ -502,7 +502,8 @@ class _TablatureBase(_SingleVoice):
         p = tab
         if t == 2:
             s = StaffGroup(self.doc)
-            Text(s.getWith(), '\\consists "Instrument_name_engraver"\n')
+            if self._instr:
+                Text(s.getWith(), '\\consists "Instrument_name_engraver"\n')
             s1 = Sim(s, multiline=True)
             s1.append(tab)
             p = s
