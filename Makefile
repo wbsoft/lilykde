@@ -43,7 +43,7 @@ clean: $(subdirs)
 	rm -f $(all)
 
 uninstall: $(uninstall) $(subdirs)
-	rm -rf $(DESTDIR)$(LILYKDE)
+	-rmdir $(DESTDIR)$(LILYKDE)
 
 dist:
 	@echo Creating $(DIST).tar.gz ...
