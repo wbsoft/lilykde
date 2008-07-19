@@ -1,0 +1,20 @@
+What's new in LilyKDE 0.6.1:
+============================
+
+- support for embedding .ly files in PDF using PDFTK (www.accesspdf.com/pdftk)
+- option to let LilyPond delete intermediate files
+- new translations: Russian by Serge Poltavskiy; Italian by Gianluca D'Orazio.
+  Many thanks!
+- various small fixes and improvements
+
+
+What's new in LilyKDE 0.6.0:
+============================
+
+- New Score Wizard
+- The PDF preview window can be detached.
+- An option has been added to save the document (if modified) when LilyPond is
+  run (implementing wishlist issue #4)
+- Hyphenation did not work when the KDEDIRS environment variable isn't set.
+  This has been fixed.
+
