@@ -1,0 +1,1714 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: lilykde 0.6.1\n"
+"Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
+"POT-Creation-Date: 2008-06-27 19:14+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Henrik Evers <henrik.evers@gmx.de>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../lilypond.py:50
+msgid ""
+"A LilyPond Kate/Pate plugin.\n"
+"\n"
+"This is LilyKDE, a plugin to make it easy to run the LilyPond music "
+"typesetter from within Kate.\n"
+"\n"
+"If you also enable the Expand plugin, you get some nice shorthands for often "
+"used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in "
+"the Expand configuration dialog.\n"
+"\n"
+"Version: $version\n"
+"Homepage: $homepage\n"
+msgstr ""
+"Ein LilyPond Kate/Pate Plugin.\n"
+"\n"
+"Hier ist LilyKDE, ein Plugin zum einfachen Editieren von LilyPond-Dateien "
+"mit Hilfe von Kate. \n"
+"\n"
+"Wenn Sie auch das Expand-Plugin einschalten, gibt es weitere Unterstützung "
+"für oft benötigte Funktionen. Um diese zu sehen, schauen Sie nach dem x-lilypond MIME-Type im "
+"erweiterten Konfigurations-Dialog.\n"
+"\n"
+"Version: $version\n"
+"Homepage: $homepage\n"
+
+#: ../lilykde/runlily.py:159
+msgid "LilyPond [$filename] starting ($mode)..."
+msgstr "LilyPond [$filename] startet ($mode)..."
+
+#: ../lilykde/runlily.py:161
+msgid "LilyPond [$filename] starting..."
+msgstr "LilyPond [$filename] startet..."
+
+#: ../lilykde/runlily.py:162
+msgid "Could not start LilyPond."
+msgstr "Konnte LilyPond nicht starten."
+
+#: ../lilykde/runlily.py:173
+msgid "LilyPond [$filename] was terminated by signal $signal."
+msgstr "LilyPond [$filename] wurde von Signal $signal beendet."
+
+#: ../lilykde/runlily.py:178
+msgid "LilyPond [$filename] exited with return code $retcode."
+msgstr "LilyPond [$filename] wurde mit dem Return-Code $retcode beendet."
+
+#: ../lilykde/runlily.py:181
+msgid "LilyPond [$filename] finished."
+msgstr "LilyPond [$filename] ist fertig."
+
+#: ../lilykde/runlily.py:184
+msgid "LilyPond [$filename] exited abnormally."
+msgstr "LilyPond [$filename] wurde vorzeitig beendet."
+
+#: ../lilykde/runlily.py:200
+msgid "preview mode"
+msgstr "Vorschau-Modus"
+
+#: ../lilykde/runlily.py:202
+msgid "publish mode"
+msgstr "Veröffentlichungs-Modus"
+
+#: ../lilykde/runlily.py:218
+msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
+msgstr "LilyPond hat kein PDF erzeugt. Möglicherweise haben Sie <b>\\layout</b> vergessen?"
+
+#: ../lilykde/runlily.py:232
+msgid "Your document currently has no filename, please save first."
+msgstr "Ihr Dokument hat zur Zeit keinen Namen. Bitte speichern Sie es zunächst ab."
+
+#: ../lilykde/runlily.py:239
+msgid "Your document has been modified, please save first."
+msgstr "Ihr Dokument wurde verändert. Bitte speichern Sie es zuerst ab."
+
+#: ../lilykde/runlily.py:245
+msgid ""
+"Sorry, support for remote files is not yet implemented.\n"
+"Please save your document to a local file."
+msgstr ""
+"Remote-Files werden noch nicht unterstützt.\n"
+"Bitte speichern Sie Ihr Dokument lokal ab."
+
+#: ../lilykde/menu.py:50 ../lilykde/scorewiz.py:674
+msgid "LilyPond"
+msgstr "LilyPond"
+
+#: ../lilykde/menu.py:52
+msgid "Setup New Score..."
+msgstr "Neue Partitur vorbereiten..."
+
+#: ../lilykde/menu.py:57
+msgid "Run LilyPond (preview)"
+msgstr "LilyPond läuft (Vorschau)"
+
+#: ../lilykde/menu.py:62
+msgid "Run LilyPond (publish)"
+msgstr "LilyPond läuft (Veröffentlichung)"
+
+#: ../lilykde/menu.py:69
+msgid "Interrupt LilyPond Job"
+msgstr "LilyPond-Job unterbrochen"
+
+#: ../lilykde/menu.py:74
+msgid "Clear LilyPond Log"
+msgstr "Räume LilyPond-Logfile auf"
+
+#: ../lilykde/menu.py:81
+#, python-format
+msgid "Insert LilyPond version (%s)"
+msgstr "Füge LilyPond-Version (%s) ein"
+
+#: ../lilykde/menu.py:88
+msgid "Update with convert-ly"
+msgstr "Update mit convert-ly"
+
+#: ../lilykde/menu.py:95
+msgid "Hyphenate Lyrics Text"
+msgstr "Hyphenate Lyrics Text"
+
+#: ../lilykde/menu.py:100
+msgid "Remove hyphenation"
+msgstr "Entferne Bindestriche"
+
+#: ../lilykde/menu.py:107
+msgid "Record MIDI with Rumor"
+msgstr "Nehme MIDI mit Rumor auf"
+
+#: ../lilykde/menu.py:114
+msgid "Dock/Undock PDF preview"
+msgstr "PDF-Vorschau andocken/abdocken "
+
+#: ../lilykde/version.py:51
+#, python-format
+msgid "Could not start LilyPond: %s"
+msgstr "Konnte LilyPond nicht starten: %s"
+
+#: ../lilykde/version.py:59
+msgid "unknown"
+msgstr "unbekannt"
+
+#: ../lilykde/version.py:67
+msgid "Your document has already a LilyPond version statement."
+msgstr "Ihr Dokument hat bereits ein LilyPond Versions-Deklaration"
+
+#: ../lilykde/version.py:87
+msgid ""
+"Can't determine the LilyPond version of the current document. Please add a "
+"\\version statement with the correct version."
+msgstr ""
+"Konnte die LilyPond-Version nicht entdecken. Bitte fügen Sie eine "
+"\\Versions-Deklaration mit der korrekten Version hinzu."
+
+#: ../lilykde/version.py:90
+msgid ""
+"Can't determine the version of LilyPond. Please check your LilyPond "
+"installation."
+msgstr ""
+"Konnte die LilyPond-Version nicht entdecken. Bitte kontrollieren Sie Ihre "
+"Installation."
+
+#: ../lilykde/version.py:93
+msgid "This LilyPond document is already up-to-date."
+msgstr "Dieses LilyPond-Dokument ist bereits auf dem neuesten Stand."
+
+#: ../lilykde/version.py:117
+msgid ""
+"The document has been processed with convert-ly. You'll find the messages of "
+"convert-ly in a comment block at the end. You still may have to edit some "
+"parts manually."
+msgstr ""
+"Das Dokument wurde mit convert-ly verarbeitet. Sie finden die Meldungen von "
+"convert-ly in einem Kommentar-Block am Ende. Sie müssen vielleicht noch einige "
+"Teile manuell bearbeiten."
+
+#: ../lilykde/version.py:123
+#, python-format
+msgid ""
+"The document has been processed with convert-ly, but remained unchanged. "
+"This is the message given by convert-ly: %s"
+msgstr ""
+"Das Dokument wurde mit convert-ly verarbeitet, aber blieb unverändert. "
+"Das ist die meldung von convert-ly: %s"
+
+#: ../lilykde/version.py:127
+#, python-format
+msgid "Could not start convert-ly: %s"
+msgstr "Konnte convert-ly nicht starten: %s"
+
+#: ../lilykde/log.py:35
+msgid "LilyPond Log"
+msgstr "LilyPond-Log"
+
+#: ../lilykde/pdf.py:42
+msgid "PDF"
+msgstr "PDF"
+
+#: ../lilykde/kateutil.py:43
+msgid "Please select some text first."
+msgstr "Bitte wählen Sie zuerst Text aus."
+
+#: ../lilykde/widgets.py:277
+msgid "Tap"
+msgstr "Tap"
+
+#: ../lilykde/widgets.py:283
+msgid "Click this button a few times to set the tempo."
+msgstr "Klicken Sie auf diesen Knopf, um das Tempo einzustellen."
+
+#: ../lilykde/hyphen.py:119
+msgid "Language selection"
+msgstr "Sprach-Auswahl"
+
+#: ../lilykde/hyphen.py:120
+msgid "Please select a language:"
+msgstr "Bitte wählen Sie eine Sprache:"
+
+#: ../lilykde/settings.py:92
+msgid "Commands"
+msgstr "Befehle"
+
+#: ../lilykde/settings.py:97
+msgid "Name or full path of the LilyPond program."
+msgstr "Name oder vollständiger Pfad des LilyPond-Programms."
+
+#: ../lilykde/settings.py:99
+msgid "Name or full path of the convert-ly program."
+msgstr "Name oder vollständiger Pfad des convert-ly-Programms."
+
+#: ../lilykde/settings.py:100
+msgid "Printcommand:"
+msgstr "Druckbefehl:"
+
+#: ../lilykde/settings.py:101
+msgid ""
+"Command to print a PDF file, for example lpr or kprinter. You may add some "
+"arguments, e.g. lpr -P myprinter."
+msgstr ""
+"Befehl, um ein PDF zu drucken, z.B. lpr oder kprinter. Sie können auch weitere "
+"Argumente hinzufügen, beispielsweise lpr -P meindrucker."
+
+#: ../lilykde/settings.py:105
+msgid "Name or full path of the Rumor program."
+msgstr "Name oder vollständiger Pfad des Programms Rumor."
+
+#: ../lilykde/settings.py:107
+msgid ""
+"Name or full path of the aconnect program (part of ALSA, for MIDI input and "
+"playback using Rumor)."
+msgstr ""
+"Name oder vollständiger Pfad des Programms aconnect (Teil von ALSA, für MIDI-Input und "
+"Abspielen mit Rumor)."
+
+#: ../lilykde/settings.py:111
+msgid ""
+"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgstr "Vollständiger Befehl zum Starten von Timidity (oder einem anderen Programm) als ALSA-MIDI-Client."
+
+#: ../lilykde/settings.py:114
+#, python-format
+msgid "Name or full path of the pdftk program (see %s)."
+msgstr "Name oder vollständiger Pfad des Programms pdftk (siehe %s)."
+
+#: ../lilykde/settings.py:147
+msgid "Hyphenation"
+msgstr "Hyphenation"
+
+#: ../lilykde/settings.py:150
+msgid ""
+"Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
+"KOffice, etc, one per line. If you leave out the starting slash, the "
+"prefixes from the KDEDIRS environment variable are prepended."
+msgstr ""
+"Pfade zur Suche der Trennungs-Wörterbücher (Hyphenation) von OpenOffice.org, Scribus, "
+"KOffice, etc, eins pro Zeile. Wenn Sie den Slash am Anfang weglassen, werden die "
+"Pfade aus der KDEDIR-Umgebung genommen."
+
+#: ../lilykde/settings.py:179
+msgid "Actions"
+msgstr "Aktionen"
+
+#: ../lilykde/settings.py:182
+msgid ""
+"Check the actions you want to display (if applicable) after LilyPond has "
+"successfully compiled your document."
+msgstr ""
+"Wählen Sie die Aktionen aus, die nach Abschluss der "
+"Übersetzung durch LilyPond angezeigt werden sollen."
+
+#: ../lilykde/settings.py:213
+msgid "Preferences"
+msgstr "Voreinstellungen"
+
+#: ../lilykde/settings.py:217
+msgid "Keep undocked windows on top of Kate"
+msgstr "Abgedockte Fenster über Kate halten"
+
+#: ../lilykde/settings.py:219
+msgid "Save document when LilyPond is run"
+msgstr "Dokument nach Ablauf von LilyPond speichern"
+
+#: ../lilykde/settings.py:221
+msgid "Let LilyPond delete intermediate output files"
+msgstr "LilyPond die temporären Output-Dateien löschen lassen"
+
+#: ../lilykde/settings.py:223
+msgid "Force reload of PDF preview when LilyPond has run"
+msgstr "Neuladen der PDF-Vorschau forcieren nach Ablauf von LilyPond"
+
+#: ../lilykde/settings.py:225
+msgid "Always embed LilyPond source files in published PDF"
+msgstr "Quellcode der LilyPond-Dateien immer in die PDF-Dateien einbetten"
+
+#: ../lilykde/rumor.py:109
+msgid "Auto"
+msgstr "Auto"
+
+#: ../lilykde/rumor.py:168
+msgid "TiMidity"
+msgstr "TiMidity"
+
+#: ../lilykde/rumor.py:169
+msgid "Start or stop the TiMidity ALSA MIDI client."
+msgstr "Starte oder stoppe den TiMidity-ALSA-MIDI-Client."
+
+#: ../lilykde/rumor.py:176
+msgid "TiMidity successfully started."
+msgstr "TiMidity erfolgreich gestartet."
+
+#: ../lilykde/rumor.py:179
+msgid "TiMidity stopped."
+msgstr "TiMidity gestoppt."
+
+#: ../lilykde/rumor.py:183
+#, python-format
+msgid ""
+"Could not start TiMidity. Please try the command %s in a terminal to find "
+"out what went wrong."
+msgstr ""
+"Konnte TiMidity nicht starten. Starten Sie den Befehl %s in einer Konsole, um herauszufinden, "
+"was falsch gelaufen ist."
+
+#: ../lilykde/rumor.py:198
+msgid "REC"
+msgstr "REC"
+
+#: ../lilykde/rumor.py:202
+msgid "Start or stop Rumor"
+msgstr "Starte oder stoppe Rumor"
+
+#: ../lilykde/rumor.py:344
+msgid "Rumor is recording, press ESC to stop."
+msgstr "Rumor nimmt auf, drücken Sie ESC zum Stoppen."
+
+#: ../lilykde/rumor.py:386
+msgid "Tempo:"
+msgstr "Tempo:"
+
+#: ../lilykde/rumor.py:387
+msgid "Meter:"
+msgstr "Metrum:"
+
+#: ../lilykde/rumor.py:388
+msgid "Key:"
+msgstr "Schlüssel:"
+
+#: ../lilykde/rumor.py:417
+msgid ""
+"The meter to use. Leave 'Auto' to let LilyKDE determine the meter from the "
+"LilyPond document."
+msgstr ""
+"Das Metrum. 'Auto' lässt LilyKDE das Metrum vom LilPond-Dokument "
+"bestimmen."
+
+#: ../lilykde/rumor.py:424
+msgid "Quantize:"
+msgstr "Quantisierung:"
+
+#: ../lilykde/rumor.py:429
+msgid "The shortest note duration to use."
+msgstr "Kürzester zu benutzender Notenwert."
+
+#: ../lilykde/rumor.py:433
+msgid "Step"
+msgstr "Schritt"
+
+#: ../lilykde/rumor.py:435
+msgid "Record LilyPond input note by note, without durations."
+msgstr "Nehme LilyPond-Input Note für Note auf, ohne Notenlängen."
+
+#: ../lilykde/rumor.py:439
+msgid "Mono"
+msgstr "Mono"
+
+#: ../lilykde/rumor.py:441
+msgid "Record monophonic input, without chords."
+msgstr "Nehme einstimmig auf, ohne Akkorde."
+
+#: ../lilykde/rumor.py:452
+msgid ""
+"The number of accidentals. A negative number designates flats. Leave 'Auto' "
+"to let LilyKDE determine the key signature from the LilyPond document."
+msgstr ""
+"Anzahl der Vorzeichen. Negative Nummern bedeuten Bs. 'Auto' lässt "
+"LilyKDE die Vorzeichen aus dem LilyPond-Dokument bestimmen."
+
+#: ../lilykde/rumor.py:465
+msgid "Configure..."
+msgstr "Konfiguriere..."
+
+#: ../lilykde/rumor.py:466
+msgid "Adjust more settings, like MIDI input and output."
+msgstr "Mehr Einstellungen, wie MIDI-Input und -Output."
+
+#: ../lilykde/rumor.py:471
+msgid "Save"
+msgstr "Speichern"
+
+#: ../lilykde/rumor.py:472
+msgid "Set these settings as default."
+msgstr "Diese Einstellungen als Voreinstellung speichern."
+
+#: ../lilykde/rumor.py:482
+msgid "Found rumor version $version."
+msgstr "Rumor Version $version gefunden."
+
+#: ../lilykde/rumor.py:485
+#, python-format
+msgid "Could not find Rumor: %s"
+msgstr "Konnte Rumor nicht finden: %s"
+
+#: ../lilykde/rumor.py:510
+msgid "Settings have been saved."
+msgstr "Voreinstellungen wurden gespeichert."
+
+#: ../lilykde/rumor.py:544
+msgid "The tempo in beats per minute."
+msgstr "Das Tempo in BPM (beats per minute)."
+
+#: ../lilykde/rumor.py:563
+msgid "Rumor Settings"
+msgstr "Rumor Voreinstellungen"
+
+#: ../lilykde/rumor.py:567
+#, python-format
+msgid "OSS device %d"
+msgstr "OSS Gerät %d"
+
+#: ../lilykde/rumor.py:569
+msgid "Keyboard"
+msgstr "Keyboard"
+
+#: ../lilykde/rumor.py:575
+msgid "MIDI input:"
+msgstr "MIDI Input:"
+
+#: ../lilykde/rumor.py:578
+msgid ""
+"MIDI input to use. Choose 'Keyboard' if you want to play on the keyboard of "
+"your computer."
+msgstr ""
+"Zu benutzende MIDI-Quelle. Wählen Sie 'Keyboard', wenn Sie auf dem Keyboard ihres "
+"Rechners spielen möchten."
+
+#: ../lilykde/rumor.py:583
+msgid "MIDI output:"
+msgstr "MIDI Output:"
+
+#: ../lilykde/rumor.py:586
+msgid "MIDI output to use."
+msgstr "Zu benutzender MIDI-Output."
+
+#: ../lilykde/rumor.py:590 ../lilykde/scorewiz.py:761
+msgid "Language:"
+msgstr "Sprache:"
+
+#: ../lilykde/rumor.py:594
+msgid "The LilyPond language you want Rumor to output the pitches in."
+msgstr "Die LilyPond-Sprache, in der Rumor die Tonstufen ausgeben soll."
+
+#: ../lilykde/rumor.py:601
+msgid "Explicit durations"
+msgstr "Eindeutige Länge"
+
+#: ../lilykde/rumor.py:603
+msgid ""
+"Add a duration after every note, even if it is the same as the preceding "
+"note."
+msgstr ""
+"Eine bestimmte Notenlänge nach jeder Note einfügen, auch wenn es die selbe ist wie "
+"die vorhergehende."
+
+#: ../lilykde/rumor.py:608
+msgid "Absolute pitch"
+msgstr "Absolute Tonlage"
+
+#: ../lilykde/rumor.py:610
+msgid "Use absolute pitches instead of relative."
+msgstr "Benutze alsolute Tonhöhe anstatt relative"
+
+#: ../lilykde/rumor.py:616
+msgid "No barlines"
+msgstr "Keine Taktstriche"
+
+#: ../lilykde/rumor.py:618
+msgid "Filter the barlines out of Rumor's output."
+msgstr "Filtere die Taktstriche aus dem Output von Rumor."
+
+#: ../lilykde/rumor.py:622
+msgid "No dots"
+msgstr "Keine Punktierung"
+
+#: ../lilykde/rumor.py:624
+msgid "Do not use dotted notes, but ties instead."
+msgstr "Keine punktierten Noten, stattdessen Bindebögen."
+
+#: ../lilykde/rumor.py:628
+msgid "Legato"
+msgstr "Legato"
+
+#: ../lilykde/rumor.py:629
+msgid "Do not use rests, but give all notes the maximum length."
+msgstr "Keine Pausen benutzen, sondern allen Noten die maximale Länge geben."
+
+#: ../lilykde/rumor.py:634
+msgid "Strip rests"
+msgstr "Pausen ablösen"
+
+#: ../lilykde/rumor.py:636
+msgid "Strip leading and trialing rests from output."
+msgstr "Führende und folgende Pausen nicht verarbeiten."
+
+#: ../lilykde/rumor.py:640
+msgid "Guile scripts to load:"
+msgstr "Guile-Scripts, die gespeichert werden sollen:"
+
+#: ../lilykde/rumor.py:644
+msgid "Name"
+msgstr "Name"
+
+#: ../lilykde/rumor.py:645
+msgid "Description"
+msgstr "Beschreibung"
+
+#: ../lilykde/rumor.py:647
+msgid ""
+"Here you can select which Guile scripts you want Rumor to load. Check "
+"\"What's this\" for more information."
+msgstr ""
+"Hier können Sie auswählen, welche Guile-Skripte von Rumor geladen werden sollen. Siehe auch "
+"\"Was ist das\" für mehr Informationen."
+
+#: ../lilykde/rumor.py:650
+#, python-format
+msgid ""
+"Here you can select which Guile scripts you want Rumor to load. You can add "
+"your own scripts by putting them in %s. If the first line of your script "
+"starts with a semicolon (;) that line will be shown as description."
+msgstr ""
+"Hier können Sie auswählen, welche Guile-Skripte von Rumor geladen werden sollen. Sie können Ihre "
+"eigenen Skripte hinzufügen, indem Sie sie in %s angeben. Wenn die erste Zeile Ihres Skripts mit "
+"einem Semicolor (;) startet, wird die Zeile als Beschreibung hergenommen."
+
+#: ../lilykde/rumor.py:732
+msgid "Rumor"
+msgstr "Rumor"
+
+#: ../lilykde/scorewiz.py:53
+msgid "Dedication"
+msgstr "Gewidmet"
+
+#: ../lilykde/scorewiz.py:54
+msgid "Title"
+msgstr "Titel"
+
+#: ../lilykde/scorewiz.py:55
+msgid "Subtitle"
+msgstr "Untertitel"
+
+#: ../lilykde/scorewiz.py:56
+msgid "Subsubtitle"
+msgstr "zweiter Untertitel"
+
+#: ../lilykde/scorewiz.py:57
+msgid "Instrument"
+msgstr "Instrument"
+
+#: ../lilykde/scorewiz.py:58
+msgid "Composer"
+msgstr "Komponist"
+
+#: ../lilykde/scorewiz.py:59
+msgid "Arranger"
+msgstr "Arrangeur"
+
+#: ../lilykde/scorewiz.py:60
+msgid "Poet"
+msgstr "Dichter"
+
+#: ../lilykde/scorewiz.py:61
+msgid "Meter"
+msgstr "Metrum"
+
+#: ../lilykde/scorewiz.py:62
+msgid "Piece"
+msgstr ""
+
+#: ../lilykde/scorewiz.py:63
+msgid "Opus"
+msgstr "Opus"
+
+#: ../lilykde/scorewiz.py:64
+msgid "Copyright"
+msgstr "Copyright"
+
+#: ../lilykde/scorewiz.py:65
+msgid "Tagline"
+msgstr "Tagline"
+
+#: ../lilykde/scorewiz.py:71
+msgid "Major"
+msgstr "Dur"
+
+#: ../lilykde/scorewiz.py:72
+msgid "Minor"
+msgstr "Moll"
+
+#: ../lilykde/scorewiz.py:73
+msgid "Ionian"
+msgstr "Ionisch"
+
+#: ../lilykde/scorewiz.py:74
+msgid "Dorian"
+msgstr "Dorich"
+
+#: ../lilykde/scorewiz.py:75
+msgid "Phrygian"
+msgstr "Phrygisch"
+
+#: ../lilykde/scorewiz.py:76
+msgid "Lydian"
+msgstr "Lydisch"
+
+#: ../lilykde/scorewiz.py:77
+msgid "Mixolydian"
+msgstr "Mixolydisch"
+
+#: ../lilykde/scorewiz.py:78
+msgid "Aeolian"
+msgstr "Aeolisch"
+
+#: ../lilykde/scorewiz.py:79
+msgid "Locrian"
+msgstr "Lokrisch"
+
+#: ../lilykde/scorewiz.py:190
+msgid "bottom of first page"
+msgstr "Fußzeile der ersten Seite"
+
+#: ../lilykde/scorewiz.py:191
+msgid "bottom of last page"
+msgstr "Fußzeile der letzten Seite"
+
+#: ../lilykde/scorewiz.py:273
+#, python-format
+msgid "Configure %s"
+msgstr "Konfiguriere %s"
+
+#: ../lilykde/scorewiz.py:303
+msgid "No settings available."
+msgstr "Keine Einstellungen vorhanden"
+
+#: ../lilykde/scorewiz.py:429
+msgid "Music follows here."
+msgstr "Musik folgt hier."
+
+#: ../lilykde/scorewiz.py:480
+msgid "Titles and Headers"
+msgstr "Titel un Kopfzeilen"
+
+#: ../lilykde/scorewiz.py:534
+msgid "Parts"
+msgstr "Teile"
+
+#: ../lilykde/scorewiz.py:546
+msgid "Available parts:"
+msgstr "Verfügbare Teile:"
+
+#: ../lilykde/scorewiz.py:549
+msgid "Add selected part to your score."
+msgstr "Ausgewählten Teil der Partitur hinzufügen."
+
+#: ../lilykde/scorewiz.py:574
+msgid "Score:"
+msgstr "Partitur:"
+
+#: ../lilykde/scorewiz.py:581
+msgid "Remove selected part from your score."
+msgstr "Ausgewählten Teil der Partitur löschen."
+
+#: ../lilykde/scorewiz.py:586
+msgid "Move selected part up."
+msgstr "Ausgewählten Teil hoch schieben."
+
+#: ../lilykde/scorewiz.py:587
+msgid "Move selected part down."
+msgstr "Ausgewählten Teil herunter schieben"
+
+#: ../lilykde/scorewiz.py:672 ../lilykde/scorewiz.py:673
+msgid "Score settings"
+msgstr "Partitur-Einstellungen"
+
+#: ../lilykde/scorewiz.py:675
+msgid "General preferences"
+msgstr "Generelle Einstellungen"
+
+#: ../lilykde/scorewiz.py:676
+msgid "Instrument names"
+msgstr "Instrumentennamen"
+
+#: ../lilykde/scorewiz.py:697
+msgid "Key signature:"
+msgstr "Notenschlüssel:"
+
+#: ../lilykde/scorewiz.py:705
+msgid "Time signature:"
+msgstr "Taktart:"
+
+#: ../lilykde/scorewiz.py:718
+msgid "Pickup measure:"
+msgstr "Auftakt-Maß:"
+
+#: ../lilykde/scorewiz.py:721 ../lilykde/scorewiz.py:855
+msgid "None"
+msgstr "Nichts"
+
+#: ../lilykde/scorewiz.py:730
+msgid "Metronome mark:"
+msgstr "Metronom Markierung:"
+
+#: ../lilykde/scorewiz.py:752
+msgid "Tempo indication:"
+msgstr "Tempo-Bezeichnung:"
+
+#: ../lilykde/scorewiz.py:756
+msgid "A tempo indication, e.g. \"Allegro.\""
+msgstr "Eine Tempo-Bezeichnung, z.B. \"Allegro.\""
+
+#: ../lilykde/scorewiz.py:764 ../lilykde/scorewiz.py:825
+#: ../lilykde/parts.py:464 ../lilykde/parts.py:742
+msgid "Default"
+msgstr "Voreinstellung"
+
+#: ../lilykde/scorewiz.py:768
+msgid "The LilyPond language you want to use for the pitch names."
+msgstr "Die LilyPond-Sprache für die Tonlage-Namen."
+
+#: ../lilykde/scorewiz.py:778
+msgid "Version:"
+msgstr "Version:"
+
+#: ../lilykde/scorewiz.py:786
+msgid "The LilyPond version you will be using for this document."
+msgstr "Die LilyPond-Version für dieses Dokument."
+
+#: ../lilykde/scorewiz.py:790
+msgid "Use typographical quotes"
+msgstr "Typografische Anführungszeichen benutzen"
+
+#: ../lilykde/scorewiz.py:792
+msgid "Replace normal quotes in titles with nice typographical quotes."
+msgstr "Normale Anführungszeichen in Titeln durch schöne typografische ersetzen."
+
+#: ../lilykde/scorewiz.py:795
+msgid "Remove default tagline"
+msgstr "Voreingestellte Tagline löschen"
+
+#: ../lilykde/scorewiz.py:797
+msgid "Suppress the default tagline output by LilyPond."
+msgstr "Voreingestellte LilyPond Tagline unterdrücken."
+
+#: ../lilykde/scorewiz.py:800
+msgid "Remove bar numbers"
+msgstr "Taktnummer löschen"
+
+#: ../lilykde/scorewiz.py:802
+msgid ""
+"Suppress the display of measure numbers at the beginning of every system."
+msgstr ""
+"Takt-Angaben am Beginn jedes Systems unterdrücken."
+
+#: ../lilykde/scorewiz.py:806
+msgid "Create MIDI output"
+msgstr "MIDI-Ausgabe erstellen"
+
+#: ../lilykde/scorewiz.py:808
+msgid "Create a MIDI file in addition to the PDF file."
+msgstr "Zusätzlich zum PDF eine MIDI-Datei erstellen."
+
+#: ../lilykde/scorewiz.py:811
+msgid "Show metronome mark"
+msgstr "Metronom-Markierung anzeigen"
+
+#: ../lilykde/scorewiz.py:813
+msgid ""
+"If checked, show the metronome mark at the beginning of the score. The MIDI "
+"output also uses the metronome setting."
+msgstr ""
+"Wenn ausgewählt, Metronom.Markierung am beginn der Prtitur anzeigen. Die Midi-Ausgabe "
+"nutzt ebenfalls die Mentronom-Einstellungen."
+
+#: ../lilykde/scorewiz.py:821
+msgid "Paper size:"
+msgstr "Papier-Format:"
+
+#: ../lilykde/scorewiz.py:824
+msgid "Landscape"
+msgstr "Quer"
+
+#: ../lilykde/scorewiz.py:842
+msgid "First system:"
+msgstr "Erstes System:"
+
+#: ../lilykde/scorewiz.py:845 ../lilykde/scorewiz.py:855
+msgid "Short"
+msgstr "Kurz"
+
+#: ../lilykde/scorewiz.py:845 ../lilykde/scorewiz.py:855
+msgid "Long"
+msgstr "Lang"
+
+#: ../lilykde/scorewiz.py:848
+msgid "Use long or short instrument names before the first system."
+msgstr "Lange oder kurze Instrumentennamen vor dem ersten System benutzen."
+
+#: ../lilykde/scorewiz.py:852
+msgid "Other systems:"
+msgstr "Andere Systeme:"
+
+#: ../lilykde/scorewiz.py:858
+msgid "Use no, short or long instrument names before the next systems."
+msgstr "Keine, kurze oder lange Instrumentennamen vor dem nächsten System."
+
+#: ../lilykde/scorewiz.py:860
+msgid "Italian names"
+msgstr "Italienische Namen"
+
+#: ../lilykde/scorewiz.py:862
+#, python-format
+msgid "Choose standard Italian instrument names, like '%s' instead of 'Organ.'"
+msgstr "Italienische Instrumentennamen, wie %s, statt 'Orgel'."
+
+#: ../lilykde/scorewiz.py:935
+msgid "Score Setup Wizard"
+msgstr "Partitur-Einstellungs-Assistent"
+
+#: ../lilykde/scorewiz.py:997
+msgid "Remove default LilyPond tagline"
+msgstr "Voreingestellte LilyPond Tagline entfernen"
+
+#: ../lilykde/parts.py:117
+msgid "Adjust how many separate voices you want on each staff."
+msgstr "Einstellung, wie viele separate Stimmen Sie in jeder Zeile haben möchten."
+
+#: ../lilykde/parts.py:118
+msgid "This is primarily useful when you write polyphonic music like a fuge."
+msgstr "das ist in erster Linie nützlich, wenn Sie polyphone Musik schreiben, wie z.B. eine Fuge."
+
+#: ../lilykde/parts.py:121
+msgid "Right hand:"
+msgstr "Rechte Hand:"
+
+#: ../lilykde/parts.py:125
+msgid "Left hand:"
+msgstr "Linke Hand:"
+
+#: ../lilykde/parts.py:134
+msgid "Organ"
+msgstr "Orgel"
+
+#: ../lilykde/parts.py:135
+msgid "Organ|Org."
+msgstr "Orgel|Org."
+
+#: ../lilykde/parts.py:141
+msgid "Pedal:"
+msgstr "Pedal:"
+
+#: ../lilykde/parts.py:146
+msgid "Set to 0 to disable the pedal altogether."
+msgstr "Auf 0 setzen, um das Pedal abzuschalten."
+
+#: ../lilykde/parts.py:156
+msgid "Piano"
+msgstr "Klavier"
+
+#: ../lilykde/parts.py:157
+msgid "Piano|Pno."
+msgstr "Klavier|Klav."
+
+#: ../lilykde/parts.py:162
+msgid "Harpsichord"
+msgstr "Harfe"
+
+#: ../lilykde/parts.py:163
+msgid "Harpsichord|Hs."
+msgstr "Harfe|Hrf."
+
+#: ../lilykde/parts.py:168
+msgid "Clavichord"
+msgstr "Spinnett"
+
+#: ../lilykde/parts.py:169
+msgid "Clavichord|Clv."
+msgstr "Spinnett|Spin."
+
+#: ../lilykde/parts.py:174
+msgid "Celesta"
+msgstr "Celesta"
+
+#: ../lilykde/parts.py:175
+msgid "Celesta|Cel."
+msgstr "Celesta|Cel."
+
+#: ../lilykde/parts.py:186
+msgid "Sopranino Sax"
+msgstr "Sopranino Saxophon"
+
+#: ../lilykde/parts.py:187
+msgid "Sopranino Sax|SiSx."
+msgstr "Sopranino Saxophon|SiSax."
+
+#: ../lilykde/parts.py:193
+msgid "Soprano Sax"
+msgstr "Sopransaxophon"
+
+#: ../lilykde/parts.py:194
+msgid "Soprano Sax|SoSx."
+msgstr "Sopransaxophon|SoSax."
+
+#: ../lilykde/parts.py:200
+msgid "Alto Sax"
+msgstr "Altsaxophon"
+
+#: ../lilykde/parts.py:201
+msgid "Alto Sax|ASx."
+msgstr "Altsaxophon|ASax."
+
+#: ../lilykde/parts.py:207
+msgid "Tenor Sax"
+msgstr "Tenorsaxophon"
+
+#: ../lilykde/parts.py:208
+msgid "Tenor Sax|TSx."
+msgstr "Tenorsaxophon|TSax."
+
+#: ../lilykde/parts.py:214
+msgid "Baritone Sax"
+msgstr "Baritonsaxophon"
+
+#: ../lilykde/parts.py:215
+msgid "Baritone Sax|BSx."
+msgstr "Baritonsaxophon|BSax."
+
+#: ../lilykde/parts.py:221
+msgid "Bass Sax"
+msgstr "Basssaxophon"
+
+#: ../lilykde/parts.py:222
+msgid "Bass Sax|BsSx."
+msgstr "Basssaxophon|BsSax."
+
+#: ../lilykde/parts.py:235
+msgid "Violin"
+msgstr "Violine"
+
+#: ../lilykde/parts.py:236
+msgid "Violin|Vl."
+msgstr "Violine|Vl."
+
+#: ../lilykde/parts.py:241
+msgid "Viola"
+msgstr "Bratsche"
+
+#: ../lilykde/parts.py:242
+msgid "Viola|Vla."
+msgstr "Bratsche|Bra."
+
+#: ../lilykde/parts.py:249
+msgid "Cello"
+msgstr "Cello"
+
+#: ../lilykde/parts.py:250
+msgid "Cello|Cl."
+msgstr "Cello|Cl."
+
+#: ../lilykde/parts.py:257
+msgid "Contrabass"
+msgstr "Konrabass"
+
+#: ../lilykde/parts.py:258
+msgid "Contrabass|Cb."
+msgstr "Kontrabass|Kb."
+
+#: ../lilykde/parts.py:265
+msgid "Basso continuo"
+msgstr "Basso Continuo"
+
+#: ../lilykde/parts.py:266
+msgid "Basso Continuo|B.c."
+msgstr "Basso Continuo|B.C."
+
+#: ../lilykde/parts.py:281 ../lilykde/parts.py:758
+msgid "Figures follow here."
+msgstr "Figur folgt hier."
+
+#: ../lilykde/parts.py:292
+msgid "Flute"
+msgstr "Flöte"
+
+#: ../lilykde/parts.py:293
+msgid "Flute|Fl."
+msgstr "Flöte|Fl."
+
+#: ../lilykde/parts.py:298
+msgid "Piccolo"
+msgstr "Piccolo-Flöte"
+
+#: ../lilykde/parts.py:299
+msgid "Piccolo|Pic."
+msgstr "Piccolo-Flöte|Pic."
+
+#: ../lilykde/parts.py:305
+msgid "Bass flute"
+msgstr "Bass-Flöte"
+
+#: ../lilykde/parts.py:306
+msgid "Bass flute|Bfl."
+msgstr "Bass-Flöte|Bfl."
+
+#: ../lilykde/parts.py:312
+msgid "Oboe"
+msgstr "Oboe"
+
+#: ../lilykde/parts.py:313
+msgid "Oboe|Ob."
+msgstr "Oboe|Ob."
+
+#: ../lilykde/parts.py:318
+msgid "Oboe d'Amore"
+msgstr "Oboe d'Amore"
+
+#: ../lilykde/parts.py:319
+msgid "Oboe d'amore|Ob.d'am."
+msgstr "Oboe d'amore|Ob.d'am."
+
+#: ../lilykde/parts.py:325
+msgid "English Horn"
+msgstr "English Horn"
+
+#: ../lilykde/parts.py:326
+msgid "English horn|Eng.h."
+msgstr "English horn|Eng.h."
+
+#: ../lilykde/parts.py:332
+msgid "Fagott"
+msgstr ""
+
+#: ../lilykde/parts.py:333
+msgid "Bassoon|Bn."
+msgstr "Fagott|Fg."
+
+#: ../lilykde/parts.py:340
+msgid "Contrabassoon"
+msgstr "Kontra-Fagott"
+
+#: ../lilykde/parts.py:341
+msgid "Contrabassoon|C.Bn."
+msgstr "Kontra-Fagott|K.Fg."
+
+#: ../lilykde/parts.py:349
+msgid "Clarinet"
+msgstr "Klarinette"
+
+#: ../lilykde/parts.py:350
+msgid "Clarinet|Cl."
+msgstr "Klarinette|Kl."
+
+#: ../lilykde/parts.py:356
+msgid "Soprano recorder"
+msgstr "Sopran-Blockflöte"
+
+#: ../lilykde/parts.py:357
+msgid "Soprano recorder|S.rec."
+msgstr "Sopran-Blockflöte|S.Bl."
+
+#: ../lilykde/parts.py:363
+msgid "Alto recorder"
+msgstr "Alt-Blocklöte"
+
+#: ../lilykde/parts.py:364
+msgid "Alto recorder|A.rec."
+msgstr "Alt-Blockflöte|A.Bl."
+
+#: ../lilykde/parts.py:369
+msgid "Tenor recorder"
+msgstr "Tenor-Blockflöte"
+
+#: ../lilykde/parts.py:370
+msgid "Tenor recorder|T.rec."
+msgstr "Tenor-Blockflöte|T.Bl."
+
+#: ../lilykde/parts.py:375
+msgid "Bass recorder"
+msgstr "Bass-Blockflöte"
+
+#: ../lilykde/parts.py:376
+msgid "Bass recorder|B.rec."
+msgstr "Bass-Blockflöte|B.Bl."
+
+#: ../lilykde/parts.py:391
+msgid "Horn in F"
+msgstr "Horn in F"
+
+#: ../lilykde/parts.py:392
+msgid "Horn in F|Hn.F."
+msgstr "Horn in F|Hn.F."
+
+#: ../lilykde/parts.py:398
+msgid "Trumpet in C"
+msgstr "Trompete in C"
+
+#: ../lilykde/parts.py:399
+msgid "Trumpet in C|Tr.C"
+msgstr "Trompete in C|Tr.C"
+
+#: ../lilykde/parts.py:404
+msgid "Trumpet in Bb"
+msgstr "Trompete in B"
+
+#: ../lilykde/parts.py:405
+msgid "Trumpet in Bb|Tr.Bb"
+msgstr "Trompete in B|Tr.B"
+
+#: ../lilykde/parts.py:410
+msgid "Trombone"
+msgstr "Posaune"
+
+#: ../lilykde/parts.py:411
+msgid "Trombone|Trb."
+msgstr "Posaune|Pos."
+
+#: ../lilykde/parts.py:418
+msgid "Tuba"
+msgstr "Tuba"
+
+#: ../lilykde/parts.py:419
+msgid "Tuba|Tb."
+msgstr "Tuba|Tb."
+
+#: ../lilykde/parts.py:425
+msgid "Bass Tuba"
+msgstr "Bass Tuba"
+
+#: ../lilykde/parts.py:426
+msgid "Bass Tuba|B.Tb."
+msgstr "Bass Tuba|B.Tb."
+
+#: ../lilykde/parts.py:443
+msgid "Staff type:"
+msgstr "Notenlinien-Typ"
+
+#: ../lilykde/parts.py:447
+msgid "Normal staff"
+msgstr "Normale Notenlinien"
+
+#: ../lilykde/parts.py:448
+msgid "Tablature"
+msgstr "Tabulatur"
+
+#: ../lilykde/parts.py:449
+msgid "Both"
+msgstr "beides"
+
+#: ../lilykde/parts.py:461
+msgid "Tuning:"
+msgstr "Stimmung:"
+
+#: ../lilykde/parts.py:526
+msgid "Mandolin"
+msgstr "Mandoline"
+
+#: ../lilykde/parts.py:527
+msgid "Mandolin|Mdl."
+msgstr "Mandoline|Mdl."
+
+#: ../lilykde/parts.py:530
+msgid "Mandolin tuning"
+msgstr "Mandoline-Stimmung"
+
+#: ../lilykde/parts.py:535
+msgid "Banjo"
+msgstr "Banjo"
+
+#: ../lilykde/parts.py:536
+msgid "Banjo|Bj."
+msgstr "Banjo|Bj."
+
+#: ../lilykde/parts.py:540
+msgid "Open G-tuning (aDGBD)"
+msgstr "Offene G-Stimmung (aDGBD)"
+
+#: ../lilykde/parts.py:541
+msgid "C-tuning (gCGBD)"
+msgstr "C-Stimmung (gCGBD)"
+
+#: ../lilykde/parts.py:542
+msgid "Modal tuning (gDGCD)"
+msgstr "Modale Stimmung (gDGCD)"
+
+#: ../lilykde/parts.py:543
+msgid "Open D-tuning (aDF#AD)"
+msgstr "Offene D-Stimmung (aDF#AD)"
+
+#: ../lilykde/parts.py:544
+msgid "Open Dm-tuning (aDFAD)"
+msgstr "Offene D-moll-Stimmung (aDFAD)"
+
+#: ../lilykde/parts.py:548
+msgid "Four strings (instead of five)"
+msgstr "Vier Streicher (statt fünf)"
+
+#: ../lilykde/parts.py:564
+msgid "Classical guitar"
+msgstr "Klassische Gitarre"
+
+#: ../lilykde/parts.py:565
+msgid "Guitar|Gt."
+msgstr "Gitarre|Gt."
+
+#: ../lilykde/parts.py:569
+msgid "Guitar tuning"
+msgstr "Gitarren-Stimmung"
+
+#: ../lilykde/parts.py:570
+msgid "Open G-tuning"
+msgstr "Offene G-Stimmung"
+
+#: ../lilykde/parts.py:575
+msgid "Jazz guitar"
+msgstr "Jazz-Gitarre"
+
+#: ../lilykde/parts.py:576
+msgid "Jazz guitar|J.Gt."
+msgstr "Jazz-Gitarre|J.Gt."
+
+#: ../lilykde/parts.py:581 ../lilykde/parts.py:840
+msgid "Bass"
+msgstr "Bass"
+
+#: ../lilykde/parts.py:582
+msgid "Bass|Bs."
+msgstr "Bass|Bs."
+
+#: ../lilykde/parts.py:588
+msgid "Bass tuning"
+msgstr "Bas- Stimmung"
+
+#: ../lilykde/parts.py:593
+msgid "Electric bass"
+msgstr "Elektrischer Bass"
+
+#: ../lilykde/parts.py:594
+msgid "Electric bass|E.Bs."
+msgstr "Elektrischer Bass|E.Bs."
+
+#: ../lilykde/parts.py:599
+msgid "Harp"
+msgstr "Harfe"
+
+#: ../lilykde/parts.py:600
+msgid "Harp|Hp."
+msgstr "Harfe|Hf."
+
+#: ../lilykde/parts.py:624
+msgid "Timpani"
+msgstr "Pauken"
+
+#: ../lilykde/parts.py:625
+msgid "Timpani|Tmp."
+msgstr "Pauken|Pk."
+
+#: ../lilykde/parts.py:632
+msgid "Xylophone"
+msgstr "Xylofon"
+
+#: ../lilykde/parts.py:633
+msgid "Xylophone|Xyl."
+msgstr "Xylofon|Xyl."
+
+#: ../lilykde/parts.py:638
+msgid "Marimba"
+msgstr "Marimba"
+
+#: ../lilykde/parts.py:639
+msgid "Marimba|Mar."
+msgstr "Marimba|Mar."
+
+#: ../lilykde/parts.py:644
+msgid "Vibraphone"
+msgstr "Vibrafon"
+
+#: ../lilykde/parts.py:645
+msgid "Vibraphone|Vib."
+msgstr "Vibrafon|Vib."
+
+#: ../lilykde/parts.py:650
+msgid "Tubular bells"
+msgstr "Röhrenglocken"
+
+#: ../lilykde/parts.py:651
+msgid "Tubular bells|Tub."
+msgstr "Röhrenglocken|Röh."
+
+#: ../lilykde/parts.py:656
+msgid "Glockenspiel"
+msgstr "Glockenspiel"
+
+#: ../lilykde/parts.py:657
+msgid "Glockenspiel|Gls."
+msgstr "Glockenspiel|Gls."
+
+#: ../lilykde/parts.py:662
+msgid "Drums"
+msgstr "Schlagzeug"
+
+#: ../lilykde/parts.py:663
+msgid "Drums|Dr."
+msgstr "Schlagzeug|Schl."
+
+#: ../lilykde/parts.py:669
+msgid "Drums follow here."
+msgstr "Schlagzeug hier"
+
+#: ../lilykde/parts.py:695
+msgid "keep some distance."
+msgstr "etwas Abstand halten"
+
+#: ../lilykde/parts.py:699
+msgid "Voices:"
+msgstr "Stimmen:"
+
+#: ../lilykde/parts.py:702
+msgid "How many drum voices to put in this staff."
+msgstr "Wie viele Stimmen in dieser Notenzeile Sind"
+
+#: ../lilykde/parts.py:704
+msgid "Style:"
+msgstr "Stil:"
+
+#: ../lilykde/parts.py:708
+msgid "Drums (5 lines, default)"
+msgstr "Schlagzeug (5 Linien, Voreinstellung)"
+
+#: ../lilykde/parts.py:709
+msgid "Timbales-style (2 lines)"
+msgstr "Kesselpauken-Stil (2 Zeilen)"
+
+#: ../lilykde/parts.py:710
+msgid "Congas-style (2 lines)"
+msgstr "Conga-Stil (2 Zeilen)"
+
+#: ../lilykde/parts.py:711
+msgid "Bongos-style (2 lines)"
+msgstr "Bongo-Stil (zwei Zeilen)"
+
+#: ../lilykde/parts.py:712
+msgid "Percussion-style (1 line)"
+msgstr "Percussion-Stil (1 Zeile)"
+
+#: ../lilykde/parts.py:715
+msgid "Remove stems"
+msgstr "Notenhälse entfernen"
+
+#: ../lilykde/parts.py:716
+msgid "Remove the stems from the drum notes."
+msgstr "Notenhälse von Schlagzeugnoten entfernen"
+
+#: ../lilykde/parts.py:720
+msgid "Chord names"
+msgstr "Akkord-Namen"
+
+#: ../lilykde/parts.py:731
+msgid "Chords follow here."
+msgstr "Akkorde folgen hier."
+
+#: ../lilykde/parts.py:738
+msgid "Chord style:"
+msgstr "Akkord-Stil:"
+
+#: ../lilykde/parts.py:743
+msgid "German"
+msgstr "Deutsch"
+
+#: ../lilykde/parts.py:744
+msgid "Semi-German"
+msgstr "Halb-Deutsch"
+
+#: ../lilykde/parts.py:745
+msgid "Italian"
+msgstr "Italienisch"
+
+#: ../lilykde/parts.py:746
+msgid "French"
+msgstr "Französisch"
+
+#: ../lilykde/parts.py:752
+msgid "Figured Bass"
+msgstr "Firgurierter Bass"
+
+#: ../lilykde/parts.py:766
+msgid "Use extender lines"
+msgstr "Benutzer erweiterte Linien"
+
+#: ../lilykde/parts.py:780
+msgid "Lyrics follow here."
+msgstr "Text folgt hier."
+
+#: ../lilykde/parts.py:786
+msgid "Stanzas:"
+msgstr "Strofen:"
+
+#: ../lilykde/parts.py:789
+msgid "The number of stanzas."
+msgstr "Anzahl der Strofen"
+
+#: ../lilykde/parts.py:817
+msgid "Soprano"
+msgstr "Sopran"
+
+#: ../lilykde/parts.py:818
+msgid "Soprano|S."
+msgstr "Sopran|S."
+
+#: ../lilykde/parts.py:822
+msgid "Mezzo soprano"
+msgstr "Mezzosopran"
+
+#: ../lilykde/parts.py:823
+msgid "Mezzo-soprano|Ms."
+msgstr "Mezzosopran|Ms."
+
+#: ../lilykde/parts.py:827
+msgid "Alto"
+msgstr "Alt"
+
+#: ../lilykde/parts.py:828
+msgid "Alto|A."
+msgstr "Alt|A."
+
+#: ../lilykde/parts.py:833
+msgid "Tenor"
+msgstr "Tenor"
+
+#: ../lilykde/parts.py:834
+msgid "Tenor|T."
+msgstr "Tenor|T."
+
+#: ../lilykde/parts.py:841
+msgid "Bass|B."
+msgstr "Bass|B."
+
+#: ../lilykde/parts.py:847
+msgid "Lead sheet"
+msgstr "erstes Blatt"
+
+#: ../lilykde/parts.py:878
+msgid ""
+"The Lead Sheet provides a staff with chord names above and lyrics below it. "
+"A second staff is optional."
+msgstr ""
+"Das erste Blatt hat eine Zeile mit Akkord-Namen darüber und Text drunter. "
+"Eine zweite Zeile ist optional."
+
+#: ../lilykde/parts.py:882
+msgid "Add accompaniment staff"
+msgstr "Zeile für Begleitung hinzufügen"
+
+#: ../lilykde/parts.py:884
+msgid ""
+"Adds an accompaniment staff and also puts an accompaniment voice in the "
+"upper staff."
+msgstr ""
+"Fügt eine Zeile für die Begleitung hinzu und ebenso eine Begleitstimme "
+"in der oberen Zeile."
+
+#: ../lilykde/parts.py:889
+msgid "Choir"
+msgstr "Chor"
+
+#: ../lilykde/parts.py:893
+msgid ""
+"Please select the voices for the choir. Use the letters S, A, T, or B. A "
+"hyphen denotes a new staff."
+msgstr ""
+"Bitte wählen Sie die Stimmen für den Chor aus. Benutzen Sie die Buchstaben S, A, T, oder B. Ein "
+"Bindestrich bedeutet eine neue Zeile."
+
+#: ../lilykde/parts.py:895
+msgid "Tip: For a double choir you can use two choir parts."
+msgstr "Tipp: Für einen Doppelchor können Sie zwei Chorteile einrichten."
+
+#: ../lilykde/parts.py:897
+msgid "Voicing:"
+msgstr "Stimmen:"
+
+#: ../lilykde/parts.py:908
+msgid "Lyrics"
+msgstr "Text"
+
+#: ../lilykde/parts.py:909
+msgid "All voices same lyrics"
+msgstr "Alle Stimmen mit gleichem Text"
+
+#: ../lilykde/parts.py:912
+msgid "One set of the same lyrics is placed between all staves."
+msgstr "Ein Set des gleichen Textes wird zwischen allen Notenzeilen plaziert."
+
+#: ../lilykde/parts.py:913
+msgid "Every voice same lyrics"
+msgstr "Jede Stimme hat den gleichen Text"
+
+#: ../lilykde/parts.py:915
+msgid ""
+"Every voice gets its own lyrics, using the same text as the other voices."
+msgstr "Jede Stimme hat ihren eigenen Text, benutzt den selben Text wie die anderen Stimmen."
+
+#: ../lilykde/parts.py:917
+msgid "Every voice different lyrics"
+msgstr "Jede Stimme mit anderem Text"
+
+#: ../lilykde/parts.py:919
+msgid "Every voice gets a different set of lyrics."
+msgstr "Jede Stimme hat ein unterschiedliches Set Text"
+
+#: ../lilykde/parts.py:943
+msgid "Choir|Ch."
+msgstr "Chor|Ch."
+
+#: ../lilykde/parts.py:1068
+msgid "Strings"
+msgstr "Streicher"
+
+#: ../lilykde/parts.py:1075
+msgid "Plucked strings"
+msgstr "gezupfte Streicher"
+
+#: ../lilykde/parts.py:1084
+msgid "Woodwinds"
+msgstr "Holzbläser"
+
+#: ../lilykde/parts.py:1105
+msgid "Brass"
+msgstr "Bläser"
+
+#: ../lilykde/parts.py:1113
+msgid "Vocal"
+msgstr "Vokal"
+
+#: ../lilykde/parts.py:1122
+msgid "Keyboard instruments"
+msgstr "Tasteninstrumente"
+
+#: ../lilykde/parts.py:1129
+msgid "Percussion"
+msgstr "Schlagzeug"
+
+#: ../lilykde/parts.py:1138
+msgid "Special"
+msgstr "Spezial"
+
+#: ../lilykde/pdftk.py:84
+#, python-format
+msgid "Could not start Pdftk: %s"
+msgstr "Konnte Pdftk nicht starten: %s"
+
+#: ../lilykde/pdftk.py:95
+#, python-format
+msgid "Embedded file %s in PDF."
+msgid_plural "Embedded files %s in PDF."
+msgstr[0] "Datei %s in PDF eingebettet."
+msgstr[1] "Dateien %s in PDF eingebettet."
+
+#: ../lilykde/pdftk.py:103
+msgid "Embedding files in PDF failed."
+msgstr "Einbetten von Dateien ins PDF missglückt."
+
+#: ../lilykde/pdftk.py:104
+#, python-format
+msgid "Return code: %i"
+msgstr "Return-Code: %i"
+
+#: ../lilykde/actions.py:39 ../lilykde/actions.py:117
+msgid "Open folder"
+msgstr "Öffne Verzeichnis"
+
+#: ../lilykde/actions.py:40
+msgid "Open the folder containing the LilyPond and PDF documents."
+msgstr "Öffene das Verzeichnis mit den LilyPond und PDF-Dokumenten"
+
+#: ../lilykde/actions.py:42 ../lilykde/actions.py:120
+msgid "Open PDF"
+msgstr "Öffne PDF"
+
+#: ../lilykde/actions.py:43
+msgid "Open the generated PDF file with the default PDF viewer."
+msgstr "Öffne das generierte PDF mit dem voreingestellten Anzeigeprogramm."
+
+#: ../lilykde/actions.py:45 ../lilykde/actions.py:122
+msgid "Print"
+msgstr "Drucken"
+
+#: ../lilykde/actions.py:46
+msgid ""
+"Print the PDF using the print command set in the Commands settings page."
+msgstr "Drucke das PDF mit dem angegebenen Druckbefehl."
+
+#: ../lilykde/actions.py:49 ../lilykde/actions.py:132
+msgid "Email PDF"
+msgstr "Verschicke PDF per Email"
+
+#: ../lilykde/actions.py:50
+msgid "Attach the PDF to an email message."
+msgstr "PDF als Email-Anhang."
+
+#: ../lilykde/actions.py:52 ../lilykde/actions.py:140
+msgid "Play MIDI"
+msgstr "Spiele MIDI"
+
+#: ../lilykde/actions.py:53
+msgid ""
+"Play the generated MIDI files using the default MIDI player (Timidity++ is "
+"recommended)."
+msgstr ""
+"Spiele das generierte MIDI mit dem voreingestellten MIDI-Player."
+
+#: ../lilykde/actions.py:56 ../lilykde/actions.py:137
+msgid "Embed source"
+msgstr "Quelle einbetten"
+
+#: ../lilykde/actions.py:57
+msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
+msgstr "LilyPond-Quelldatei in das PDF einbetten (mit pdfk)"
+
+#: ../lilykde/actions.py:92
+#, python-format
+msgid "Printing failed: %s"
+msgstr "Drucken misslang: %s"
+
+#: ../lilykde/actions.py:94
+msgid "The document has been sent to the printer."
+msgstr "Das Dokument wurde zum Drucker geschickt."
+
+#: ../lilykde/actions.py:97
+msgid ""
+"This PDF has been created with point-and-click urls (preview mode), which "
+"increases the file size dramatically. It's better to email documents without "
+"point-and-click urls (publish mode), because they are much smaller. Continue "
+"anyway?"
+msgstr ""
+"Dieses PDF wurde mit Point-And-Click-URLs erstellt (im Vorschau-Modus), was "
+"die Dateigroße extrem stark ansteigen lässt. Es ist besser, Dokumente ohne "
+"Point-And-Click-URLs zu verschicken, weil sie dann kleiner sind. "
+"Trotzdem fortfahren?"
+
+#: ../lilykde/actions.py:129
+msgid "Email PDF (preview)"
+msgstr "Verschicke PDF (Vorschau) per Email"
+
+#: ../lilypond-servicemenu-helper.py:61
+msgid "One document failed."
+msgid_plural "$count documents failed."
+msgstr[0] "Ein Dokument hat es nicht geschafft."
+msgstr[1] "$count Dokumente haben es nicht geschafft."
+
+#: ../lilypond-servicemenu-helper.py:65
+msgid "All documents successfully converted."
+msgstr "Alle Dokumente wurden erfolgreich konvertiert."
+
+#: ../lilypond-servicemenu-helper.py:76
+msgid "LilyKDE servicemenu helper"
+msgstr "LilyKDE Servicemenü-Hilfe"
+
+#: ../lilypond-servicemenu-helper.py:82
+msgid "LilyPond files to convert"
+msgstr "LilyPont files, die konvertiert werden"
