@@ -1102,16 +1102,17 @@ class Choir(_VocalBase):
                         lyrName = mname + 'Verse'
                         above = vnum & 1
                     else:
-                        lyrName = ''
-                    if lyrName:
-                        # This voice needs lyrics.
+                        continue
+                    # Create the lyrics. If they should be above the staff,
+                    # give the staff a suitable name, and use alignAboveContext
+                    # to align the Lyrics above the staff.
+                    if above:
+                        s.cid = staffName
+                    for verse in stanzas:
+                        l = Lyrics(choir)
                         if above:
-                            s.cid = staffName
-                        for verse in stanzas:
-                            l = Lyrics(choir)
-                            if above:
-                                l.getWith()['alignAboveContext'] = staffName
-                            lyr.append((lyrName, LyricsTo(l, vname), verse))
+                            l.getWith()['alignAboveContext'] = staffName
+                        lyr.append((lyrName, LyricsTo(l, vname), verse))
 
         # Assign the lyrics, so their definitions come after the note defs.
         for name, node, verse in lyr:
