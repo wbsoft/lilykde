@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-27 19:14+0200\n"
+"POT-Creation-Date: 2008-09-30 10:37+0200\n"
 "PO-Revision-Date: 2008-06-23 10:02+0200\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
 "Language-Team: Spanish\n"
@@ -23,10 +23,6 @@ msgid ""
 "This is LilyKDE, a plugin to make it easy to run the LilyPond music "
 "typesetter from within Kate.\n"
 "\n"
-"If you also enable the Expand plugin, you get some nice shorthands for often "
-"used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in "
-"the Expand configuration dialog.\n"
-"\n"
 "Version: $version\n"
 "Homepage: $homepage\n"
 msgstr ""
@@ -34,11 +30,6 @@ msgstr ""
 "\n"
 "Esto es LilyKDE, un complemento para hacer fácil el lanzamiento del "
 "compositor tipográfico de música LilyPond desde dentro de Kate.\n"
-"\n"
-"Si habilita también el complemento Expand, dispondrá de interesantes métodos "
-"abreviados para las construcciones de LilyPond más comúnmente utilizadas. "
-"Para verlas, consulte el tipo x-lilypond MIME-Type en el diálogo de "
-"configuración de Expand.\n"
 "\n"
 "Versión: $version\n"
 "Página principal del proyecto: $homepage\n"
@@ -317,19 +308,23 @@ msgid "Keep undocked windows on top of Kate"
 msgstr "Mantener las ventanas separadas encima de Kate"
 
 #: ../lilykde/settings.py:219
+msgid "Clear log before LilyPond is started"
+msgstr ""
+
+#: ../lilykde/settings.py:221
 msgid "Save document when LilyPond is run"
 msgstr "Guardar el documento al ejecutar LilyPond"
 
-#: ../lilykde/settings.py:221
+#: ../lilykde/settings.py:223
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Permitir a LilyPond borrar los archivos de salida intermedios"
 
-#: ../lilykde/settings.py:223
+#: ../lilykde/settings.py:225
 msgid "Force reload of PDF preview when LilyPond has run"
 msgstr ""
 "Forzar la recarga de la vista previa de PDF cuando LilyPond se ha ejecutado"
 
-#: ../lilykde/settings.py:225
+#: ../lilykde/settings.py:227
 msgid "Always embed LilyPond source files in published PDF"
 msgstr "Empotrar siempre los archivos fuente de LilyPond en el PDF publicado"
 
@@ -1288,7 +1283,7 @@ msgstr "Guitarra de jazz"
 msgid "Jazz guitar|J.Gt."
 msgstr "Guitarra de jazz|G.jz."
 
-#: ../lilykde/parts.py:581 ../lilykde/parts.py:840
+#: ../lilykde/parts.py:581 ../lilykde/parts.py:850
 msgid "Bass"
 msgstr "Bajo"
 
@@ -1460,55 +1455,66 @@ msgstr "Usar líneas de extensión"
 msgid "Lyrics follow here."
 msgstr "La letra sigue aquí."
 
-#: ../lilykde/parts.py:786
+#: ../lilykde/parts.py:790
 msgid "Stanzas:"
 msgstr "Estrofas:"
 
-#: ../lilykde/parts.py:789
+#: ../lilykde/parts.py:793
 msgid "The number of stanzas."
 msgstr "Número de estrofas."
 
-#: ../lilykde/parts.py:817
+#: ../lilykde/parts.py:796
+msgid "Ambitus"
+msgstr ""
+
+#: ../lilykde/parts.py:798
+#, fuzzy
+msgid "Show the pitch range of the voice at the beginning of the staff."
+msgstr ""
+"Eliminar la numeración de compases que aparece a la izquierda de los "
+"sistemas."
+
+#: ../lilykde/parts.py:827
 msgid "Soprano"
 msgstr "Soprano"
 
-#: ../lilykde/parts.py:818
+#: ../lilykde/parts.py:828
 msgid "Soprano|S."
 msgstr "Soprano|S."
 
-#: ../lilykde/parts.py:822
+#: ../lilykde/parts.py:832
 msgid "Mezzo soprano"
 msgstr "Mezzosoprano"
 
-#: ../lilykde/parts.py:823
+#: ../lilykde/parts.py:833
 msgid "Mezzo-soprano|Ms."
 msgstr "Mezzosoprano|Mezz."
 
-#: ../lilykde/parts.py:827
+#: ../lilykde/parts.py:837
 msgid "Alto"
 msgstr "Alto"
 
-#: ../lilykde/parts.py:828
+#: ../lilykde/parts.py:838
 msgid "Alto|A."
 msgstr "Alto|A."
 
-#: ../lilykde/parts.py:833
+#: ../lilykde/parts.py:843
 msgid "Tenor"
 msgstr "Tenor"
 
-#: ../lilykde/parts.py:834
+#: ../lilykde/parts.py:844
 msgid "Tenor|T."
 msgstr "Tenor|T."
 
-#: ../lilykde/parts.py:841
+#: ../lilykde/parts.py:851
 msgid "Bass|B."
 msgstr "Bajo|B."
 
-#: ../lilykde/parts.py:847
+#: ../lilykde/parts.py:857
 msgid "Lead sheet"
 msgstr "Hoja guía de acordes"
 
-#: ../lilykde/parts.py:878
+#: ../lilykde/parts.py:911
 msgid ""
 "The Lead Sheet provides a staff with chord names above and lyrics below it. "
 "A second staff is optional."
@@ -1516,11 +1522,11 @@ msgstr ""
 "La hoja guía proporciona un pentagrama con nombres de acorde encima y letra "
 "debajo. Es opcional un segundo pentagrama."
 
-#: ../lilykde/parts.py:882
+#: ../lilykde/parts.py:913
 msgid "Add accompaniment staff"
 msgstr "Añadir pentagrama de acompañamiento"
 
-#: ../lilykde/parts.py:884
+#: ../lilykde/parts.py:915
 msgid ""
 "Adds an accompaniment staff and also puts an accompaniment voice in the "
 "upper staff."
@@ -1528,11 +1534,11 @@ msgstr ""
 "Añade un pentagrama de acompañamiento y pone una voz de acompañamiento en el "
 "pentagrama superior."
 
-#: ../lilykde/parts.py:889
+#: ../lilykde/parts.py:922
 msgid "Choir"
 msgstr "Coro"
 
-#: ../lilykde/parts.py:893
+#: ../lilykde/parts.py:926
 msgid ""
 "Please select the voices for the choir. Use the letters S, A, T, or B. A "
 "hyphen denotes a new staff."
@@ -1540,76 +1546,76 @@ msgstr ""
 "Seleccione las voces para el coro. Use las letras S, A, T o B. Un guión "
 "denota un pentagrama nuevo."
 
-#: ../lilykde/parts.py:895
+#: ../lilykde/parts.py:928
 msgid "Tip: For a double choir you can use two choir parts."
 msgstr "Consejo: para doble coro puede usar dos partes de coro."
 
-#: ../lilykde/parts.py:897
+#: ../lilykde/parts.py:930
 msgid "Voicing:"
 msgstr "Canto:"
 
-#: ../lilykde/parts.py:908
+#: ../lilykde/parts.py:941
 msgid "Lyrics"
 msgstr "Letra"
 
-#: ../lilykde/parts.py:909
+#: ../lilykde/parts.py:942
 msgid "All voices same lyrics"
 msgstr "Misma letra en todas las voces"
 
-#: ../lilykde/parts.py:912
+#: ../lilykde/parts.py:945
 msgid "One set of the same lyrics is placed between all staves."
 msgstr "Se coloca un bloque de letra único entre todos los pentagramas."
 
-#: ../lilykde/parts.py:913
+#: ../lilykde/parts.py:946
 msgid "Every voice same lyrics"
 msgstr "Misma letra todas las voces"
 
-#: ../lilykde/parts.py:915
+#: ../lilykde/parts.py:948
 msgid ""
 "Every voice gets its own lyrics, using the same text as the other voices."
 msgstr "Cada letra tiene su voz, usando el mismo texto que las otras voces."
 
-#: ../lilykde/parts.py:917
+#: ../lilykde/parts.py:950
 msgid "Every voice different lyrics"
 msgstr "Cada voz tiene diferente letra"
 
-#: ../lilykde/parts.py:919
+#: ../lilykde/parts.py:952
 msgid "Every voice gets a different set of lyrics."
 msgstr "Cada una de las voces recibe un bloque de letras distinto."
 
-#: ../lilykde/parts.py:943
+#: ../lilykde/parts.py:977
 msgid "Choir|Ch."
 msgstr "Coro|Co."
 
-#: ../lilykde/parts.py:1068
+#: ../lilykde/parts.py:1118
 msgid "Strings"
 msgstr "Instrumentos de cuerda"
 
-#: ../lilykde/parts.py:1075
+#: ../lilykde/parts.py:1125
 msgid "Plucked strings"
 msgstr "Cuerda pulsada"
 
-#: ../lilykde/parts.py:1084
+#: ../lilykde/parts.py:1134
 msgid "Woodwinds"
 msgstr "Instrumentos de viento"
 
-#: ../lilykde/parts.py:1105
+#: ../lilykde/parts.py:1155
 msgid "Brass"
 msgstr "Viento metal"
 
-#: ../lilykde/parts.py:1113
+#: ../lilykde/parts.py:1163
 msgid "Vocal"
 msgstr "Vocal"
 
-#: ../lilykde/parts.py:1122
+#: ../lilykde/parts.py:1172
 msgid "Keyboard instruments"
 msgstr "Teclados"
 
-#: ../lilykde/parts.py:1129
+#: ../lilykde/parts.py:1179
 msgid "Percussion"
 msgstr "Percusión"
 
-#: ../lilykde/parts.py:1138
+#: ../lilykde/parts.py:1188
 msgid "Special"
 msgstr "Especial"
 

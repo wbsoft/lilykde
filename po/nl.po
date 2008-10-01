@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-27 19:14+0200\n"
-"PO-Revision-Date: 2008-06-22 22:25+0200\n"
+"POT-Creation-Date: 2008-09-30 10:37+0200\n"
+"PO-Revision-Date: 2008-10-01 08:19+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -23,10 +23,6 @@ msgid ""
 "This is LilyKDE, a plugin to make it easy to run the LilyPond music "
 "typesetter from within Kate.\n"
 "\n"
-"If you also enable the Expand plugin, you get some nice shorthands for often "
-"used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in "
-"the Expand configuration dialog.\n"
-"\n"
 "Version: $version\n"
 "Homepage: $homepage\n"
 msgstr ""
@@ -34,10 +30,6 @@ msgstr ""
 "\n"
 "Dit is LilyKDE, een plugin waarmee het eenvoudig is om het LilyPond "
 "muziekgraveer-programma vanuit Kate te gebruiken.\n"
-"\n"
-"Als u ook de Expand-plugin inschakelt, kunt u veelgebruikte LilyPond-"
-"constructies sneller typen. Om deze te bekijken raadpleegt u het x-lilypond "
-"mime-type in het instelscherm van de Expand-plugin.\n"
 "\n"
 "Versie: $version\n"
 "Homepage: $homepage\n"
@@ -174,8 +166,7 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr ""
-"Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
+msgstr "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
 #: ../lilykde/version.py:93
 msgid "This LilyPond document is already up-to-date."
@@ -270,8 +261,7 @@ msgstr ""
 "uitvoer via Rumor)."
 
 #: ../lilykde/settings.py:111
-msgid ""
-"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Commandoregel om Timidity (of een ander programma) te starten als ALSA MIDI-"
 "client."
@@ -316,18 +306,22 @@ msgid "Keep undocked windows on top of Kate"
 msgstr "Ontkoppelde vensters boven Kate houden"
 
 #: ../lilykde/settings.py:219
+msgid "Clear log before LilyPond is started"
+msgstr "Log wissen als LilyPond wordt gestart"
+
+#: ../lilykde/settings.py:221
 msgid "Save document when LilyPond is run"
 msgstr "Document opslaan als LilyPond wordt gestart"
 
-#: ../lilykde/settings.py:221
+#: ../lilykde/settings.py:223
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Laat LilyPond tussentijdse uitvoerbestanden verwijderen"
 
-#: ../lilykde/settings.py:223
+#: ../lilykde/settings.py:225
 msgid "Force reload of PDF preview when LilyPond has run"
 msgstr "PDF-weergave herladen nadat LilyPond is gestart"
 
-#: ../lilykde/settings.py:225
+#: ../lilykde/settings.py:227
 msgid "Always embed LilyPond source files in published PDF"
 msgstr "LilyPond-bronbestanden altijd in gepubliceerde PDF inbedden"
 
@@ -807,8 +801,7 @@ msgid "Remove bar numbers"
 msgstr "Maatnummers verwijderen"
 
 #: ../lilykde/scorewiz.py:802
-msgid ""
-"Suppress the display of measure numbers at the beginning of every system."
+msgid "Suppress the display of measure numbers at the beginning of every system."
 msgstr "Onderdrukt de weergave van maatnummers aan het begin van elk systeem."
 
 #: ../lilykde/scorewiz.py:806
@@ -861,8 +854,7 @@ msgstr "Volgende systemen:"
 
 #: ../lilykde/scorewiz.py:858
 msgid "Use no, short or long instrument names before the next systems."
-msgstr ""
-"Gebruik geen, korte of lange instrumentnamen voor de volgende systemen."
+msgstr "Gebruik geen, korte of lange instrumentnamen voor de volgende systemen."
 
 #: ../lilykde/scorewiz.py:860
 msgid "Italian names"
@@ -871,8 +863,7 @@ msgstr "Italiaanse namen"
 #: ../lilykde/scorewiz.py:862
 #, python-format
 msgid "Choose standard Italian instrument names, like '%s' instead of 'Organ.'"
-msgstr ""
-"Kies standaard Italiaanse instrumentnamen, zoals '%s' in plaats van 'Orgel.'"
+msgstr "Kies standaard Italiaanse instrumentnamen, zoals '%s' in plaats van 'Orgel.'"
 
 #: ../lilykde/scorewiz.py:935
 msgid "Score Setup Wizard"
@@ -1278,7 +1269,7 @@ msgstr "Jazzgitaar"
 msgid "Jazz guitar|J.Gt."
 msgstr "Jazzgitaar|J.gt."
 
-#: ../lilykde/parts.py:581 ../lilykde/parts.py:840
+#: ../lilykde/parts.py:581 ../lilykde/parts.py:850
 msgid "Bass"
 msgstr "Bas"
 
@@ -1450,55 +1441,63 @@ msgstr "Extender-lijnen gebruiken"
 msgid "Lyrics follow here."
 msgstr "Liedtekst volgt hier."
 
-#: ../lilykde/parts.py:786
+#: ../lilykde/parts.py:790
 msgid "Stanzas:"
 msgstr "Coupletten:"
 
-#: ../lilykde/parts.py:789
+#: ../lilykde/parts.py:793
 msgid "The number of stanzas."
 msgstr "Het aantal coupletten."
 
-#: ../lilykde/parts.py:817
+#: ../lilykde/parts.py:796
+msgid "Ambitus"
+msgstr "Ambitus"
+
+#: ../lilykde/parts.py:798
+msgid "Show the pitch range of the voice at the beginning of the staff."
+msgstr "Toont het bereik van een zangstem aan het begin van de balk."
+
+#: ../lilykde/parts.py:827
 msgid "Soprano"
 msgstr "Sopraan"
 
-#: ../lilykde/parts.py:818
+#: ../lilykde/parts.py:828
 msgid "Soprano|S."
 msgstr "Sopraan|S."
 
-#: ../lilykde/parts.py:822
+#: ../lilykde/parts.py:832
 msgid "Mezzo soprano"
 msgstr "Mezzosopraan"
 
-#: ../lilykde/parts.py:823
+#: ../lilykde/parts.py:833
 msgid "Mezzo-soprano|Ms."
 msgstr "Mezzosopraan|Ms."
 
-#: ../lilykde/parts.py:827
+#: ../lilykde/parts.py:837
 msgid "Alto"
 msgstr "Alt"
 
-#: ../lilykde/parts.py:828
+#: ../lilykde/parts.py:838
 msgid "Alto|A."
 msgstr "Alt|A."
 
-#: ../lilykde/parts.py:833
+#: ../lilykde/parts.py:843
 msgid "Tenor"
 msgstr "Tenor"
 
-#: ../lilykde/parts.py:834
+#: ../lilykde/parts.py:844
 msgid "Tenor|T."
 msgstr "Tenor|T."
 
-#: ../lilykde/parts.py:841
+#: ../lilykde/parts.py:851
 msgid "Bass|B."
 msgstr "Bas|B."
 
-#: ../lilykde/parts.py:847
+#: ../lilykde/parts.py:857
 msgid "Lead sheet"
 msgstr "Lead-sheet"
 
-#: ../lilykde/parts.py:878
+#: ../lilykde/parts.py:911
 msgid ""
 "The Lead Sheet provides a staff with chord names above and lyrics below it. "
 "A second staff is optional."
@@ -1506,22 +1505,21 @@ msgstr ""
 "Met een \"Lead-sheet\" krijgt u een balk met akkoordnamen erboven en "
 "liedteksten eronder. Een tweede balk is optioneel."
 
-#: ../lilykde/parts.py:882
+#: ../lilykde/parts.py:913
 msgid "Add accompaniment staff"
 msgstr "Begeleidingsbalk toevoegen"
 
-#: ../lilykde/parts.py:884
+#: ../lilykde/parts.py:915
 msgid ""
 "Adds an accompaniment staff and also puts an accompaniment voice in the "
 "upper staff."
-msgstr ""
-"Voegt een begeleidingsbalk toe, en ook een tweede stem aan de bovenste balk."
+msgstr "Voegt een begeleidingsbalk toe, en ook een tweede stem aan de bovenste balk."
 
-#: ../lilykde/parts.py:889
+#: ../lilykde/parts.py:922
 msgid "Choir"
 msgstr "Koor"
 
-#: ../lilykde/parts.py:893
+#: ../lilykde/parts.py:926
 msgid ""
 "Please select the voices for the choir. Use the letters S, A, T, or B. A "
 "hyphen denotes a new staff."
@@ -1529,78 +1527,77 @@ msgstr ""
 "Selecteer de stemmen voor het koor. Gebruik de letters S, A, T en/of B. Een "
 "koppelteken geeft een nieuwe balk aan."
 
-#: ../lilykde/parts.py:895
+#: ../lilykde/parts.py:928
 msgid "Tip: For a double choir you can use two choir parts."
 msgstr "Tip: gebruik twee koorpartijen voor een dubbelkoor."
 
-#: ../lilykde/parts.py:897
+#: ../lilykde/parts.py:930
 msgid "Voicing:"
 msgstr "Stemmen:"
 
-#: ../lilykde/parts.py:908
+#: ../lilykde/parts.py:941
 msgid "Lyrics"
 msgstr "Liedteksten"
 
-#: ../lilykde/parts.py:909
+#: ../lilykde/parts.py:942
 msgid "All voices same lyrics"
 msgstr "Alle stemmen zelfde liedtekst"
 
-#: ../lilykde/parts.py:912
+#: ../lilykde/parts.py:945
 msgid "One set of the same lyrics is placed between all staves."
 msgstr "Een set van dezelfde liedteksten wordt tussen alle balken geplaatst."
 
-#: ../lilykde/parts.py:913
+#: ../lilykde/parts.py:946
 msgid "Every voice same lyrics"
 msgstr "Elke stem zelfde liedtekst"
 
-#: ../lilykde/parts.py:915
-msgid ""
-"Every voice gets its own lyrics, using the same text as the other voices."
+#: ../lilykde/parts.py:948
+msgid "Every voice gets its own lyrics, using the same text as the other voices."
 msgstr ""
 "Elke stem krijgt zijn eigen liedtekst, met dezelfde tekst als de andere "
 "stemmen."
 
-#: ../lilykde/parts.py:917
+#: ../lilykde/parts.py:950
 msgid "Every voice different lyrics"
 msgstr "Elke stem andere liedtekst"
 
-#: ../lilykde/parts.py:919
+#: ../lilykde/parts.py:952
 msgid "Every voice gets a different set of lyrics."
 msgstr "Elke stem krijgt zijn eigen liedteksten."
 
-#: ../lilykde/parts.py:943
+#: ../lilykde/parts.py:977
 msgid "Choir|Ch."
 msgstr "Koor|K."
 
-#: ../lilykde/parts.py:1068
+#: ../lilykde/parts.py:1118
 msgid "Strings"
 msgstr "Snaarinstrumenten"
 
-#: ../lilykde/parts.py:1075
+#: ../lilykde/parts.py:1125
 msgid "Plucked strings"
 msgstr "Getokkelde instrumenten"
 
-#: ../lilykde/parts.py:1084
+#: ../lilykde/parts.py:1134
 msgid "Woodwinds"
 msgstr "Houtblazers"
 
-#: ../lilykde/parts.py:1105
+#: ../lilykde/parts.py:1155
 msgid "Brass"
 msgstr "Koper"
 
-#: ../lilykde/parts.py:1113
+#: ../lilykde/parts.py:1163
 msgid "Vocal"
 msgstr "Vocaal"
 
-#: ../lilykde/parts.py:1122
+#: ../lilykde/parts.py:1172
 msgid "Keyboard instruments"
 msgstr "Toetsinstrumenten"
 
-#: ../lilykde/parts.py:1129
+#: ../lilykde/parts.py:1179
 msgid "Percussion"
 msgstr "Percussie"
 
-#: ../lilykde/parts.py:1138
+#: ../lilykde/parts.py:1188
 msgid "Special"
 msgstr "Speciaal"
 
@@ -1639,18 +1636,15 @@ msgstr "PDF weergeven"
 
 #: ../lilykde/actions.py:43
 msgid "Open the generated PDF file with the default PDF viewer."
-msgstr ""
-"Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
+msgstr "Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
 
 #: ../lilykde/actions.py:45 ../lilykde/actions.py:122
 msgid "Print"
 msgstr "Afdrukken"
 
 #: ../lilykde/actions.py:46
-msgid ""
-"Print the PDF using the print command set in the Commands settings page."
-msgstr ""
-"De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
+msgid "Print the PDF using the print command set in the Commands settings page."
+msgstr "De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
 
 #: ../lilykde/actions.py:49 ../lilykde/actions.py:132
 msgid "Email PDF"
@@ -1724,3 +1718,4 @@ msgstr "LilyKDE servicemenu hulpprogramma"
 #: ../lilypond-servicemenu-helper.py:82
 msgid "LilyPond files to convert"
 msgstr "Te converteren LilyPond-bestanden"
+

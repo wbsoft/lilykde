@@ -52,10 +52,6 @@ __doc__ = _(
     "This is LilyKDE, a plugin to make it easy to run the LilyPond music "
     "typesetter from within Kate.\n"
     "\n"
-    "If you also enable the Expand plugin, you get some nice shorthands for "
-    "often used LilyPond constructs. To view those, look at the x-lilypond "
-    "MIME-Type in the Expand configuration dialog.\n"
-    "\n"
     "Version: $version\n"
     "Homepage: $homepage\n"
 ).args(

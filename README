@@ -30,6 +30,11 @@ There you can enable or disable LilyKDE (called LilyPond in the plugin
 list) and the other Python plugins that come with Pate. You can also
 adjust some LilyKDE settings there, should that be necessary.
 
+You can copy the file x-lilypond.conf to the Pate Expand plugin directory
+at $HOME/.kde/share/apps/kate/pyplugins/expand/. This will give you short-
+cuts for often typed LilyPond commands. Look at Settings->Configure Python
+Plugins->Expand to add your own LilyPond shortcuts.
+
 
 More information
 ================

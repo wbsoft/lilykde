@@ -215,7 +215,9 @@ class GeneralSettings(QFrame):
         self.checks = [(QCheckBox(title, self), name, default)
             for title, name, default in (
             (_("Keep undocked windows on top of Kate"),
-                 "keep undocked on top", 1),
+                "keep undocked on top", 1),
+            (_("Clear log before LilyPond is started"),
+                "clear log", 0),
             (_("Save document when LilyPond is run"),
                 "save on run", 0),
             (_("Let LilyPond delete intermediate output files"),

@@ -782,11 +782,20 @@ class _VocalBase(part):
         self.assignGeneric(name, node, l)
 
     def widgets(self, p):
+        self.stanzaWidget(p)
+        self.ambitusWidget(p)
+
+    def stanzaWidget(self, p):
         h = QHBox(p)
         l = QLabel(_("Stanzas:"), h)
         self.stanzas = QSpinBox(1, 10, 1, h)
         l.setBuddy(self.stanzas)
         QToolTip.add(h, _("The number of stanzas."))
+
+    def ambitusWidget(self, p):
+        self.ambitus = QCheckBox(_("Ambitus"), p)
+        QToolTip.add(self.ambitus, _(
+            "Show the pitch range of the voice at the beginning of the staff."))
 
     def addStanzas(self, node, name = '', count = 0):
         r"""
@@ -811,7 +820,8 @@ class _VocalSolo(_VocalBase, _SingleVoice):
         stub, staff = _SingleVoice.build(self, True)
         stub[1].insert(stub[1][-2], Text(self.doc, '\\dynamicUp\n'))
         self.addStanzas(staff)
-
+        if self.ambitus.isChecked():
+            Text(staff.getWith(), '\\consists "Ambitus_engraver"\n')
 
 class SopranoVoice(_VocalSolo):
     name = _("Soprano")
@@ -845,6 +855,7 @@ class BassVoice(_VocalSolo):
 
 class LeadSheet(_VocalBase, Chords):
     name = _("Lead sheet")
+
     def build(self):
         """
         Create chord names, song and lyrics.
@@ -866,23 +877,45 @@ class LeadSheet(_VocalBase, Chords):
             acc = Seqr(Staff(s))
             Clef(acc, 'bass')
             self.assignMusic('accLeft', acc, -1)
-            self.addStanzas(v1)
+            if self.ambitus.isChecked():
+                # We can't use \addlyrics when the voice has a \with {}
+                # section, because it creates a nested Voice context.
+                # So if the ambitus engraver should be added to the Voice,
+                # we don't use \addlyrics but create a new Lyrics context.
+                # So in that case we don't use addStanzas, but insert the
+                # Lyrics contexts manually inside our ChoirStaff.
+                v1.cid = 'melody'
+                Text(v1.getWith(), '\\consists "Ambitus_engraver"\n')
+                count = self.stanzas.value() # number of stanzas
+                if count == 1:
+                    l = Lyrics(self.doc)
+                    s.insert(acc.parent, l)
+                    self.assignLyrics('verse', LyricsTo(l, v1.cid))
+                else:
+                    for i in range(count):
+                        l = Lyrics(self.doc)
+                        s.insert(acc.parent, l)
+                        self.assignLyrics('verse', LyricsTo(l, v1.cid), i + 1)
+            else:
+                self.addStanzas(v1)
         else:
             p = Staff(self.doc)
             self.assignMusic('melody', Seq(p), 1)
             self.addStanzas(p)
+            if self.ambitus.isChecked():
+                Text(p.getWith(), '\\consists "Ambitus_engraver"\n')
         self.addPart(p)
 
     def widgets(self, p):
         QLabel('<p><i>%s</i></p>' % _(
             "The Lead Sheet provides a staff with chord names above "
             "and lyrics below it. A second staff is optional."), p)
-        Chords.widgets(self, p)
-        _VocalBase.widgets(self, p)
         self.accomp = QCheckBox(_("Add accompaniment staff"), p)
         QToolTip.add(self.accomp, _(
             "Adds an accompaniment staff and also puts an accompaniment "
             "voice in the upper staff."))
+        Chords.widgets(self, p)
+        _VocalBase.widgets(self, p)
 
 
 class Choir(_VocalBase):
@@ -917,7 +950,8 @@ class Choir(_VocalBase):
         self.lyrEachDiff = QRadioButton(_("Every voice different lyrics"), b)
         QToolTip.add(self.lyrEachDiff, _(
             "Every voice gets a different set of lyrics."))
-        _VocalBase.widgets(self, b)
+        self.stanzaWidget(b)
+        self.ambitusWidget(p)
 
     partInfo = {
         'S': ('soprano', 1, SopranoVoice.instrumentNames),
@@ -971,7 +1005,12 @@ class Choir(_VocalBase):
                 def mkup(names):
                     if max(names):
                         n = Markup(self.doc)
-                        m = MarkupEncl(n, 'center-align', multiline=True)
+                        # from 2.11.57 and above LilyPond uses center-column
+                        from lilykde.version import version
+                        if version and version >= (2, 11, 57):
+                            m = MarkupEncl(n, 'center-column', multiline=True)
+                        else:
+                            m = MarkupEncl(n, 'center-align', multiline=True)
                         for i in names:
                             QuotedString(m, i)
                         return n
@@ -1009,6 +1048,9 @@ class Choir(_VocalBase):
                         for verse in stanzas:
                             lyr.append(
                                 (lyrName, LyricsTo(Lyrics(choir), vname), verse))
+
+                if self.ambitus.isChecked():
+                    Text(s.getWith(), '\\consists "Ambitus_engraver"\n')
             else:
                 if len(staff) == 2:
                     v = 1, 2
@@ -1031,7 +1073,15 @@ class Choir(_VocalBase):
                 for (name, num, octave), vnum in zip(voices, v):
                     mname = name + (num and nums(num) or '')
                     vname = name + str(num or '')
-                    v = Seqr(Voice(mus, vname))
+                    v = Voice(mus, vname)
+                    # add ambitus to voice, move if necessary
+                    if self.ambitus.isChecked():
+                        Text(v.getWith(), '\\consists "Ambitus_engraver"\n')
+                        if vnum > 1:
+                            Text(v.getWith(),
+                                "\\override Ambitus #'X-offset = #%s\n" %
+                                ((vnum - 1) * 2.0))
+                    v = Seqr(v)
                     Text(v, '\\voice' + nums(vnum))
                     self.assignMusic(mname, v, octave)
                     if self.lyrAllSame.isChecked() and toGo and vnum == 1:

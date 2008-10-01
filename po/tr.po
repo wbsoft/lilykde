@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-27 19:14+0200\n"
+"POT-Creation-Date: 2008-09-30 10:37+0200\n"
 "PO-Revision-Date: 2008-06-24 22:05+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
@@ -24,10 +24,6 @@ msgid ""
 "This is LilyKDE, a plugin to make it easy to run the LilyPond music "
 "typesetter from within Kate.\n"
 "\n"
-"If you also enable the Expand plugin, you get some nice shorthands for often "
-"used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in "
-"the Expand configuration dialog.\n"
-"\n"
 "Version: $version\n"
 "Homepage: $homepage\n"
 msgstr ""
@@ -35,11 +31,6 @@ msgstr ""
 "\n"
 "Bu bir Kate uygulamasından LilyPond nota yazma işlemlerini yapabilmenizi "
 "sağlayan bir eklentidir.\n"
-"\n"
-"Eğer, Expand eklentisini etkinleştirebiliseniz, daha çok LilyPond "
-"yapılarında kullanılan kolaylıklara sahip olabilirsiniz. Bunları görmek "
-"için, Expand yapılandırma penceresindeki x-lilypond MIME-Type özelliğine "
-"bakabilirsiniz..\n"
 "\n"
 "Version: $version\n"
 "Homepage: $homepage\n"
@@ -316,18 +307,22 @@ msgid "Keep undocked windows on top of Kate"
 msgstr "Küçüktülmemiş pencereleri Kate'in üstünde tut"
 
 #: ../lilykde/settings.py:219
+msgid "Clear log before LilyPond is started"
+msgstr ""
+
+#: ../lilykde/settings.py:221
 msgid "Save document when LilyPond is run"
 msgstr "Lilypond çalışırken belgeleri kaydet"
 
-#: ../lilykde/settings.py:221
+#: ../lilykde/settings.py:223
 msgid "Let LilyPond delete intermediate output files"
 msgstr "LilyPond'un ara çıktı dosyalarını silmesine izin ver"
 
-#: ../lilykde/settings.py:223
+#: ../lilykde/settings.py:225
 msgid "Force reload of PDF preview when LilyPond has run"
 msgstr "Lilypond çalışırken PDF önizlemeyi yeniden yüklemeye çalış"
 
-#: ../lilykde/settings.py:225
+#: ../lilykde/settings.py:227
 msgid "Always embed LilyPond source files in published PDF"
 msgstr "Yayınlanmış PDF'ye daima Lilypond kaynak dosyalarını göm"
 
@@ -1277,7 +1272,7 @@ msgstr "Caz gitar"
 msgid "Jazz guitar|J.Gt."
 msgstr ""
 
-#: ../lilykde/parts.py:581 ../lilykde/parts.py:840
+#: ../lilykde/parts.py:581 ../lilykde/parts.py:850
 msgid "Bass"
 msgstr ""
 
@@ -1449,55 +1444,64 @@ msgstr "Uzatma çizgilerini kullan"
 msgid "Lyrics follow here."
 msgstr "Şarkı sözleri burada başlayacak."
 
-#: ../lilykde/parts.py:786
+#: ../lilykde/parts.py:790
 msgid "Stanzas:"
 msgstr "Kıtalar:"
 
-#: ../lilykde/parts.py:789
+#: ../lilykde/parts.py:793
 msgid "The number of stanzas."
 msgstr "Kıtaların numarası."
 
-#: ../lilykde/parts.py:817
+#: ../lilykde/parts.py:796
+msgid "Ambitus"
+msgstr ""
+
+#: ../lilykde/parts.py:798
+#, fuzzy
+msgid "Show the pitch range of the voice at the beginning of the staff."
+msgstr "Her satırdaki ölçü işaretlerinin gösterilmesini önle."
+
+#: ../lilykde/parts.py:827
 msgid "Soprano"
 msgstr ""
 
-#: ../lilykde/parts.py:818
+#: ../lilykde/parts.py:828
 msgid "Soprano|S."
 msgstr ""
 
-#: ../lilykde/parts.py:822
+#: ../lilykde/parts.py:832
 msgid "Mezzo soprano"
 msgstr ""
 
-#: ../lilykde/parts.py:823
+#: ../lilykde/parts.py:833
 msgid "Mezzo-soprano|Ms."
 msgstr ""
 
-#: ../lilykde/parts.py:827
+#: ../lilykde/parts.py:837
 msgid "Alto"
 msgstr ""
 
-#: ../lilykde/parts.py:828
+#: ../lilykde/parts.py:838
 msgid "Alto|A."
 msgstr ""
 
-#: ../lilykde/parts.py:833
+#: ../lilykde/parts.py:843
 msgid "Tenor"
 msgstr ""
 
-#: ../lilykde/parts.py:834
+#: ../lilykde/parts.py:844
 msgid "Tenor|T."
 msgstr ""
 
-#: ../lilykde/parts.py:841
+#: ../lilykde/parts.py:851
 msgid "Bass|B."
 msgstr ""
 
-#: ../lilykde/parts.py:847
+#: ../lilykde/parts.py:857
 msgid "Lead sheet"
 msgstr "Detaylı Şarkı Notası"
 
-#: ../lilykde/parts.py:878
+#: ../lilykde/parts.py:911
 msgid ""
 "The Lead Sheet provides a staff with chord names above and lyrics below it. "
 "A second staff is optional."
@@ -1505,21 +1509,21 @@ msgstr ""
 "Detaylı Şarkı Notası, üzerinde akorları olan ve altında da şarkı sözlerini "
 "içeren notadır. İkinci dizek opsiyoneldir."
 
-#: ../lilykde/parts.py:882
+#: ../lilykde/parts.py:913
 msgid "Add accompaniment staff"
 msgstr "Eşlik dizeği ekle"
 
-#: ../lilykde/parts.py:884
+#: ../lilykde/parts.py:915
 msgid ""
 "Adds an accompaniment staff and also puts an accompaniment voice in the "
 "upper staff."
 msgstr "Bir eşlik dizeği ekler ve aynı zamanda da üst dizeğe eşlik sesi ekler."
 
-#: ../lilykde/parts.py:889
+#: ../lilykde/parts.py:922
 msgid "Choir"
 msgstr "Koro"
 
-#: ../lilykde/parts.py:893
+#: ../lilykde/parts.py:926
 msgid ""
 "Please select the voices for the choir. Use the letters S, A, T, or B. A "
 "hyphen denotes a new staff."
@@ -1527,77 +1531,77 @@ msgstr ""
 "Lütfen koro için sesleri seçiniz. Sesleri seçmek için S,A, T veya B gibi "
 "harfleri kullanınız. Tire eklemek yeni bir dizek anlamına gelir."
 
-#: ../lilykde/parts.py:895
+#: ../lilykde/parts.py:928
 msgid "Tip: For a double choir you can use two choir parts."
 msgstr "İpucu: Çift koro için iki koro partilerini kullanabilirsiniz."
 
-#: ../lilykde/parts.py:897
+#: ../lilykde/parts.py:930
 msgid "Voicing:"
 msgstr "Ses Kümesi:"
 
-#: ../lilykde/parts.py:908
+#: ../lilykde/parts.py:941
 msgid "Lyrics"
 msgstr "Şarkı Sözleri"
 
-#: ../lilykde/parts.py:909
+#: ../lilykde/parts.py:942
 msgid "All voices same lyrics"
 msgstr "Tüm seslerde aynı sözler"
 
-#: ../lilykde/parts.py:912
+#: ../lilykde/parts.py:945
 msgid "One set of the same lyrics is placed between all staves."
 msgstr "Şarkı sözlerinin tek seti bütün dizeklere yerleştirilmiştir."
 
-#: ../lilykde/parts.py:913
+#: ../lilykde/parts.py:946
 msgid "Every voice same lyrics"
 msgstr "Her ses de aynı sözler"
 
-#: ../lilykde/parts.py:915
+#: ../lilykde/parts.py:948
 msgid ""
 "Every voice gets its own lyrics, using the same text as the other voices."
 msgstr ""
 "Her sesin diğer seslerdeki aynı metni kullanan kendine ait sözleri vardır, "
 
-#: ../lilykde/parts.py:917
+#: ../lilykde/parts.py:950
 msgid "Every voice different lyrics"
 msgstr "Her sesin sözleri farklıdır"
 
-#: ../lilykde/parts.py:919
+#: ../lilykde/parts.py:952
 msgid "Every voice gets a different set of lyrics."
 msgstr "Her sesin sözleri kendine özgüdür."
 
-#: ../lilykde/parts.py:943
+#: ../lilykde/parts.py:977
 msgid "Choir|Ch."
 msgstr ""
 
-#: ../lilykde/parts.py:1068
+#: ../lilykde/parts.py:1118
 msgid "Strings"
 msgstr "Yaylılar"
 
-#: ../lilykde/parts.py:1075
+#: ../lilykde/parts.py:1125
 msgid "Plucked strings"
 msgstr "Telli çalgılar"
 
-#: ../lilykde/parts.py:1084
+#: ../lilykde/parts.py:1134
 msgid "Woodwinds"
 msgstr "Tahta üflemeliler"
 
-#: ../lilykde/parts.py:1105
+#: ../lilykde/parts.py:1155
 msgid "Brass"
 msgstr "Bakır üflemeliler"
 
-#: ../lilykde/parts.py:1113
+#: ../lilykde/parts.py:1163
 msgid "Vocal"
 msgstr "İnsan sesi"
 
-#: ../lilykde/parts.py:1122
+#: ../lilykde/parts.py:1172
 msgid "Keyboard instruments"
 msgstr "Tuşlu çalgılar"
 
-#: ../lilykde/parts.py:1129
+#: ../lilykde/parts.py:1179
 msgid "Percussion"
 msgstr "Vurmalı Çalgılar"
 
-#: ../lilykde/parts.py:1138
+#: ../lilykde/parts.py:1188
 msgid "Special"
 msgstr "Özel"
 

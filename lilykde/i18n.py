@@ -17,10 +17,33 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
+import gettext
 from string import Template
-from kdecore import i18n
+from kdecore import KStandardDirs
+from lilykde import language
 
 I18N_NOOP = lambda s: s
+
+def getTranslations():
+    if language:
+        for l in language, language.split("_")[0]:
+            f = unicode(KStandardDirs().findResource('locale',
+                    '%s/LC_MESSAGES/lilykde.mo' % l))
+            if f:
+                try:
+                    return gettext.GNUTranslations(open(f))
+                except IOError:
+                    pass
+    return gettext.NullTranslations()
+
+#translations = gettext.translation('lilykde', fallback=True)
+translations = getTranslations()
+
+def _i18n(msgid1, msgid2=None, n=None):
+    if n is None:
+        return translations.ugettext(msgid1)
+    else:
+        return translations.ungettext(msgid1, msgid2, n)
 
 class _(unicode):
     """
@@ -29,7 +52,7 @@ class _(unicode):
     string.Template class.
     """
     def __new__(cls, *args):
-        return unicode.__new__(cls, i18n(*args))
+        return unicode.__new__(cls, _i18n(*args))
 
     def args(self, *args, **kwargs):
         return Template(self).substitute(*args, **kwargs)

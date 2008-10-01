@@ -1,3 +1,20 @@
+What's new in LilyKDE 0.6.3:
+============================
+
+- ScoreWizard: Choir: use \center-column if LilyPond >= 2.11.57
+- config option to always empty log when a LilyPond job is started
+- All vocal part types have now a checkbox Ambitus that adds the Ambitus_engraver
+  to the correct staff or voice, showing the pitch range of that vocal part
+- Example x-lilypond.conf file for Expand plugin added
+
+
+What's new in LilyKDE 0.6.2:
+============================
+
+- German translation by Henrik Evers, thanks!
+- small fix to translation system so our messages don't mix with Kate's
+
+
 What's new in LilyKDE 0.6.1:
 ============================
 

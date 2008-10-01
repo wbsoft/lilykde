@@ -255,6 +255,8 @@ def runLilyPond(doc, preview=False):
         f.setPath(os.path.join(f.directory, ly))
 
     from lilykde import log
+    if config("preferences")['clear log'] == '1':
+        log.logWidget().clear()
     Ly2PDF(f, log.logWidget()).run(preview)
 
 def interrupt(doc):

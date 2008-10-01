@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-06-27 19:14+0200\n"
+"POT-Creation-Date: 2008-09-30 10:37+0200\n"
 "PO-Revision-Date: 2008-07-06 11:34+0400\n"
 "Last-Translator: Сергей Полтавский\n"
 "Language-Team:  <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: KBabel 1.11.4\n"
 
 #: ../lilypond.py:50
@@ -24,10 +25,6 @@ msgid ""
 "This is LilyKDE, a plugin to make it easy to run the LilyPond music "
 "typesetter from within Kate.\n"
 "\n"
-"If you also enable the Expand plugin, you get some nice shorthands for often "
-"used LilyPond constructs. To view those, look at the x-lilypond MIME-Type in "
-"the Expand configuration dialog.\n"
-"\n"
 "Version: $version\n"
 "Homepage: $homepage\n"
 msgstr ""
@@ -35,11 +32,6 @@ msgstr ""
 "\n"
 "LilyKDE - плагин, позволяющий легко запускать нотатор LilyPond из редактора "
 "Kate.\n"
-"\n"
-"Если Вы также активируете плагин Expand, появится возможность использования "
-"горячих клавиш для часто используемых LilyPond конструкций.  Чтобы "
-"просмотреть их, загляните в x-lilypond MIME-Type в диалоге конфигурации "
-"Expand.\n"
 "\n"
 "Версия: $version\n"
 "Страница проекта: $homepage\n"
@@ -269,8 +261,10 @@ msgstr ""
 "воспроизведения MIDI, используя Rumor)"
 
 #: ../lilykde/settings.py:111
-msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
-msgstr "Полная команда запуска TiMidity или другой программы MIDI-клиента ALSA."
+msgid ""
+"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgstr ""
+"Полная команда запуска TiMidity или другой программы MIDI-клиента ALSA."
 
 #: ../lilykde/settings.py:114
 #, python-format
@@ -312,18 +306,22 @@ msgid "Keep undocked windows on top of Kate"
 msgstr "Помещать открепленные окна на переднем плане"
 
 #: ../lilykde/settings.py:219
+msgid "Clear log before LilyPond is started"
+msgstr ""
+
+#: ../lilykde/settings.py:221
 msgid "Save document when LilyPond is run"
 msgstr "Сохранять документ перед запуском LilyPond"
 
-#: ../lilykde/settings.py:221
+#: ../lilykde/settings.py:223
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Удалить служебные файлы LilyPond."
 
-#: ../lilykde/settings.py:223
+#: ../lilykde/settings.py:225
 msgid "Force reload of PDF preview when LilyPond has run"
 msgstr "Обновлять PDF просмотр после запуска LilyPond"
 
-#: ../lilykde/settings.py:225
+#: ../lilykde/settings.py:227
 msgid "Always embed LilyPond source files in published PDF"
 msgstr "Всегда встраивать LilyPond код в публикуемые файлы LilyPond."
 
@@ -798,7 +796,8 @@ msgid "Remove bar numbers"
 msgstr "Удалить номера тактов"
 
 #: ../lilykde/scorewiz.py:802
-msgid "Suppress the display of measure numbers at the beginning of every system."
+msgid ""
+"Suppress the display of measure numbers at the beginning of every system."
 msgstr "Удаляет номера тактов в начале каждой системы."
 
 #: ../lilykde/scorewiz.py:806
@@ -843,7 +842,8 @@ msgstr "Длинный"
 
 #: ../lilykde/scorewiz.py:848
 msgid "Use long or short instrument names before the first system."
-msgstr "Использовать длинные или короткие имена инструментов перед первой системой."
+msgstr ""
+"Использовать длинные или короткие имена инструментов перед первой системой."
 
 #: ../lilykde/scorewiz.py:852
 msgid "Other systems:"
@@ -1266,7 +1266,7 @@ msgstr "Джазовая гитара"
 msgid "Jazz guitar|J.Gt."
 msgstr "Jazz guitar|J.Gt."
 
-#: ../lilykde/parts.py:581 ../lilykde/parts.py:840
+#: ../lilykde/parts.py:581 ../lilykde/parts.py:850
 msgid "Bass"
 msgstr "Бас"
 
@@ -1439,150 +1439,165 @@ msgstr ""
 msgid "Lyrics follow here."
 msgstr ""
 
-#: ../lilykde/parts.py:786
+#: ../lilykde/parts.py:790
 msgid "Stanzas:"
 msgstr "Строфы:"
 
-#: ../lilykde/parts.py:789
+#: ../lilykde/parts.py:793
 msgid "The number of stanzas."
 msgstr "Количество строф."
 
-#: ../lilykde/parts.py:817
+#: ../lilykde/parts.py:796
+msgid "Ambitus"
+msgstr ""
+
+#: ../lilykde/parts.py:798
+#, fuzzy
+msgid "Show the pitch range of the voice at the beginning of the staff."
+msgstr "Удаляет номера тактов в начале каждой системы."
+
+#: ../lilykde/parts.py:827
 msgid "Soprano"
 msgstr "Сопрано"
 
-#: ../lilykde/parts.py:818
+#: ../lilykde/parts.py:828
 msgid "Soprano|S."
 msgstr "Soprano|S."
 
-#: ../lilykde/parts.py:822
+#: ../lilykde/parts.py:832
 msgid "Mezzo soprano"
 msgstr "Меццо-сопрано"
 
-#: ../lilykde/parts.py:823
+#: ../lilykde/parts.py:833
 msgid "Mezzo-soprano|Ms."
 msgstr "Mezzo-soprano|Ms."
 
-#: ../lilykde/parts.py:827
+#: ../lilykde/parts.py:837
 msgid "Alto"
 msgstr "Альт"
 
-#: ../lilykde/parts.py:828
+#: ../lilykde/parts.py:838
 msgid "Alto|A."
 msgstr "Alto|A."
 
-#: ../lilykde/parts.py:833
+#: ../lilykde/parts.py:843
 msgid "Tenor"
 msgstr "Тенор"
 
-#: ../lilykde/parts.py:834
+#: ../lilykde/parts.py:844
 msgid "Tenor|T."
 msgstr "Tenor|T."
 
-#: ../lilykde/parts.py:841
+#: ../lilykde/parts.py:851
 msgid "Bass|B."
 msgstr "Bass|B."
 
-#: ../lilykde/parts.py:847
+#: ../lilykde/parts.py:857
 #, fuzzy
 msgid "Lead sheet"
 msgstr "Lead sheet"
 
-#: ../lilykde/parts.py:878
+#: ../lilykde/parts.py:911
 msgid ""
 "The Lead Sheet provides a staff with chord names above and lyrics below it. "
 "A second staff is optional."
-msgstr "Нотный стан с названиями аккордов сверху и текстом снизу. Второй нотоносец опционален."
+msgstr ""
+"Нотный стан с названиями аккордов сверху и текстом снизу. Второй нотоносец "
+"опционален."
 
-#: ../lilykde/parts.py:882
+#: ../lilykde/parts.py:913
 msgid "Add accompaniment staff"
 msgstr "Добавить стан для аккомпанемента."
 
-#: ../lilykde/parts.py:884
+#: ../lilykde/parts.py:915
 msgid ""
 "Adds an accompaniment staff and also puts an accompaniment voice in the "
 "upper staff."
-msgstr "Добавить станы для аккомпанемента и поместить аккомпанируемый голос верхним."
+msgstr ""
+"Добавить станы для аккомпанемента и поместить аккомпанируемый голос верхним."
 
-#: ../lilykde/parts.py:889
+#: ../lilykde/parts.py:922
 msgid "Choir"
 msgstr "Хор"
 
-#: ../lilykde/parts.py:893
+#: ../lilykde/parts.py:926
 msgid ""
 "Please select the voices for the choir. Use the letters S, A, T, or B. A "
 "hyphen denotes a new staff."
-msgstr "Выберите голоса для хора. Используйте буквы S, A, T или B. Дефис означает новый нотоносец."
+msgstr ""
+"Выберите голоса для хора. Используйте буквы S, A, T или B. Дефис означает "
+"новый нотоносец."
 
-#: ../lilykde/parts.py:895
+#: ../lilykde/parts.py:928
 msgid "Tip: For a double choir you can use two choir parts."
 msgstr "Совет: для двойного хора можно использовать две хоровые партии."
 
-#: ../lilykde/parts.py:897
+#: ../lilykde/parts.py:930
 msgid "Voicing:"
 msgstr "Голоса:"
 
-#: ../lilykde/parts.py:908
+#: ../lilykde/parts.py:941
 msgid "Lyrics"
 msgstr "Тексты"
 
-#: ../lilykde/parts.py:909
+#: ../lilykde/parts.py:942
 msgid "All voices same lyrics"
 msgstr "Одинаковый текст во всех голосах"
 
-#: ../lilykde/parts.py:912
+#: ../lilykde/parts.py:945
 msgid "One set of the same lyrics is placed between all staves."
 msgstr "Один и тот же текст располагается между всеми нотоносцами."
 
-#: ../lilykde/parts.py:913
+#: ../lilykde/parts.py:946
 msgid "Every voice same lyrics"
 msgstr "Одинаковый текст во всех голосах"
 
-#: ../lilykde/parts.py:915
-msgid "Every voice gets its own lyrics, using the same text as the other voices."
+#: ../lilykde/parts.py:948
+msgid ""
+"Every voice gets its own lyrics, using the same text as the other voices."
 msgstr ""
 
-#: ../lilykde/parts.py:917
+#: ../lilykde/parts.py:950
 msgid "Every voice different lyrics"
 msgstr "Разный текст у каждого голоса"
 
-#: ../lilykde/parts.py:919
+#: ../lilykde/parts.py:952
 msgid "Every voice gets a different set of lyrics."
 msgstr "Каждый голос имеет свой текст."
 
-#: ../lilykde/parts.py:943
+#: ../lilykde/parts.py:977
 msgid "Choir|Ch."
 msgstr "Choir|Ch."
 
-#: ../lilykde/parts.py:1068
+#: ../lilykde/parts.py:1118
 msgid "Strings"
 msgstr "Струнные"
 
-#: ../lilykde/parts.py:1075
+#: ../lilykde/parts.py:1125
 msgid "Plucked strings"
 msgstr "Струнные щипковые"
 
-#: ../lilykde/parts.py:1084
+#: ../lilykde/parts.py:1134
 msgid "Woodwinds"
 msgstr "Деревянные духовые"
 
-#: ../lilykde/parts.py:1105
+#: ../lilykde/parts.py:1155
 msgid "Brass"
 msgstr "Медные духовые"
 
-#: ../lilykde/parts.py:1113
+#: ../lilykde/parts.py:1163
 msgid "Vocal"
 msgstr "Голос"
 
-#: ../lilykde/parts.py:1122
+#: ../lilykde/parts.py:1172
 msgid "Keyboard instruments"
 msgstr "Клавишные"
 
-#: ../lilykde/parts.py:1129
+#: ../lilykde/parts.py:1179
 msgid "Percussion"
 msgstr "Ударные"
 
-#: ../lilykde/parts.py:1138
+#: ../lilykde/parts.py:1188
 msgid "Special"
 msgstr "Другие"
 
@@ -1629,7 +1644,8 @@ msgid "Print"
 msgstr "Печать"
 
 #: ../lilykde/actions.py:46
-msgid "Print the PDF using the print command set in the Commands settings page."
+msgid ""
+"Print the PDF using the print command set in the Commands settings page."
 msgstr "Напечатать PDF, использую команду печати в Настройках команд."
 
 #: ../lilykde/actions.py:49 ../lilykde/actions.py:132
@@ -1658,7 +1674,8 @@ msgstr "Встроить исходный код"
 
 #: ../lilykde/actions.py:57
 msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
-msgstr "Встроить файлы с исходным кодом LilyPond в публикуемый PDF (используя pdftk)"
+msgstr ""
+"Встроить файлы с исходным кодом LilyPond в публикуемый PDF (используя pdftk)"
 
 #: ../lilykde/actions.py:92
 #, python-format
@@ -1703,4 +1720,3 @@ msgstr "LilyKDE servicemenu helper"
 #: ../lilypond-servicemenu-helper.py:82
 msgid "LilyPond files to convert"
 msgstr "Файлы LilyPond для конвертирования"
-
