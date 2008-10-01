@@ -23,6 +23,6 @@ src_compile() {
 
 src_install() {
 	make DESTDIR=${D} PREFIX=${prefix} install
-	dodoc README INSTALL THANKS TODO
+	dodoc README INSTALL THANKS TODO NEWS x-lilypond.conf
 }
 
