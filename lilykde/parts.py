@@ -112,7 +112,7 @@ class _KeyboardBase(part):
         self.buildStaff('right', '', 1, s, self.rightVoices.value())
         self.buildStaff('left', 'bass', 0, s, self.leftVoices.value())
 
-    def widgetsStaffVoice(self, p):
+    def widgets(self, p):
         QLabel('<p>%s <i>(%s)</i></p>' % (
             _("Adjust how many separate voices you want on each staff."),
             _("This is primarily useful when you write polyphonic music "
@@ -126,17 +126,14 @@ class _KeyboardBase(part):
         self.leftVoices = QSpinBox(1, 4, 1, h)
         l.setBuddy(self.leftVoices)
 
-    def widgets(self, p):
-        self.widgetsStaffVoice(p)
-
 
 class Organ(_KeyboardBase):
     name = _("Organ")
     instrumentNames = _("Organ|Org."), "Organo|Org."
     midiInstrument = 'church organ'
 
-    def widgetsStaffVoice(self, p):
-        super(Organ, self).widgetsStaffVoice(p)
+    def widgets(self, p):
+        super(Organ, self).widgets(p)
         h = QHBox(p)
         l = QLabel(_("Pedal:"), h)
         self.pedalVoices = QSpinBox(0, 4, 1, h)
@@ -181,6 +178,7 @@ class _SaxBase(_SingleVoice):
     All saxophone types.
     """
     pass
+
 
 class SopraninoSax(_SaxBase):
     name = _("Sopranino Sax")
@@ -377,7 +375,6 @@ class BassRecorder(_WoodWindBase):
     midiInstrument = 'recorder'
     clef = 'bass'
     octave = -1
-
 
 
 class _BrassBase(_SingleVoice):
@@ -985,7 +982,9 @@ class Choir(_VocalBase):
             toGo -= 1
             # sort the letters in order SATB
             staff = ''.join(i * staff.count(i) for i in 'SATB')
+            # Create the staff for the voices
             s = self.newStaff(choir)
+            # Build lists of the voices and their instrument names
             instrNames, voices = [], []
             for part in staff:
                 if staffs.count(part) > 1:
@@ -995,14 +994,17 @@ class Choir(_VocalBase):
                     self.buildInstrumentNames(translated, italian, count[part]))
                 voices.append((name, count[part], octave))
             if len(staff) == 1:
-                # Only one voice in the staff.
+                # There is only one voice in the staff. Just set the instrument
+                # name directly in the staff.
                 s.instrName(*instrNames[0])
-                # if all staves have one voice, addlyrics is used,
-                # in that case, don't remove the braces.
+                # if *all* staves have only one voice, addlyrics is used.
+                # In that case, don't remove the braces.
                 mus = maxLen == 1 and Seq(s) or Seqr(s)
             else:
-                # there are more instrument names for the staff, stack them.
+                # There are more instrument names for the staff, stack them in
+                # a markup column.
                 def mkup(names):
+                    # return a markup object with names stacked vertically
                     if max(names):
                         n = Markup(self.doc)
                         # from 2.11.57 and above LilyPond uses center-column
@@ -1016,7 +1018,7 @@ class Choir(_VocalBase):
                         return n
                 s.instrName(*map(mkup, zip(*instrNames)))
                 mus = Simr(s, multiline = True)
-            # Clef for this staff:
+            # Set the clef for this staff:
             if 'B' in staff:
                 Clef(mus, 'bass')
             elif 'T' in staff:
@@ -1025,7 +1027,7 @@ class Choir(_VocalBase):
             stanzas = self.stanzas.value()
             stanzas = stanzas == 1 and [0] or range(1, stanzas + 1)
 
-            # add the voices
+            # Add the voices
             if len(staff) == 1:
                 name, num, octave = voices[0]
                 mname = name + (num and nums(num) or '')
@@ -1034,13 +1036,14 @@ class Choir(_VocalBase):
                 else:
                     lyrName = 'verse'
                 if maxLen == 1:
-                    # if all staves have only one voice, use \addlyrics.
+                    # if all staves have only one voice, use \addlyrics...
                     self.assignMusic(mname, mus, octave)
                     if not (self.lyrAllSame.isChecked() and not toGo):
                         for verse in stanzas:
                             Newline(s)
                             lyr.append((lyrName, AddLyrics(s), verse))
                 else:
+                    # otherwise create explicit Voice and Lyrics contexts.
                     vname = name + str(num or '')
                     v = Seqr(Voice(mus, vname))
                     self.assignMusic(mname, v, octave)
@@ -1052,29 +1055,34 @@ class Choir(_VocalBase):
                 if self.ambitus.isChecked():
                     Text(s.getWith(), '\\consists "Ambitus_engraver"\n')
             else:
+                # There is more than one voice in the staff.
+                # Determine their order (\voiceOne, \voiceTwo etc.)
                 if len(staff) == 2:
-                    v = 1, 2
+                    order = 1, 2
                 elif staff in ('SSA', 'TTB'):
-                    v = 1, 3, 2
+                    order = 1, 3, 2
                 elif staff in ('SAA', 'TBB'):
-                    v = 1, 2, 4
+                    order = 1, 2, 4
                 elif staff in ('SSAA', 'TTBB'):
-                    v = 1, 3, 2, 4
+                    order = 1, 3, 2, 4
                 else:
-                    v = range(1, len(staff)+1)
-                # what name would the staff get if we need to refer to it?
+                    order = range(1, len(staff) + 1)
+                # What name would the staff get if we need to refer to it?
                 staffName, snum = staff, 1
+                # if a name (like 's' or 'sa') is already in use in this part,
+                # just add a number ('ss2' or 'sa2', etc.)
                 while staffName in staffNames:
                     snum += 1
                     staffName = staff + str(snum)
                 staffNames.append(staffName)
+                # We want the staff name (actually context-id) in lower case.
                 staffName = staffName.lower()
-                # create the voices and their lyrics.
-                for (name, num, octave), vnum in zip(voices, v):
+                # Create the voices and their lyrics.
+                for (name, num, octave), vnum in zip(voices, order):
                     mname = name + (num and nums(num) or '')
                     vname = name + str(num or '')
                     v = Voice(mus, vname)
-                    # add ambitus to voice, move if necessary
+                    # Add ambitus to voice, move to the right if necessary
                     if self.ambitus.isChecked():
                         Text(v.getWith(), '\\consists "Ambitus_engraver"\n')
                         if vnum > 1:
@@ -1096,7 +1104,7 @@ class Choir(_VocalBase):
                     else:
                         lyrName = ''
                     if lyrName:
-                        # we need lyrics.
+                        # This voice needs lyrics.
                         if above:
                             s.cid = staffName
                         for verse in stanzas:
@@ -1105,7 +1113,7 @@ class Choir(_VocalBase):
                                 l.getWith()['alignAboveContext'] = staffName
                             lyr.append((lyrName, LyricsTo(l, vname), verse))
 
-        # assign the lyrics, so their definitions come after the note defs.
+        # Assign the lyrics, so their definitions come after the note defs.
         for name, node, verse in lyr:
             self.assignLyrics(name, node, verse)
 
