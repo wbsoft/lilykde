@@ -35,7 +35,7 @@ from lilykde.i18n import _
 toolbox = QToolBox()
 
 tool = Dockable(toolbox, _("Quick Insert"), "edit", Dockable.left,
-        (150, 500), False)
+        (170, 540), False)
 show = tool.show
 hide = tool.hide
 
@@ -48,18 +48,6 @@ articulation_groups = (
         ('portato', _("Portato")),
         ('tenuto', _("Tenuto")),
         ('espressivo', _("Espressivo")),
-        )),
-    (_("Performing"), (
-        ('upbow', _("Upbow")),
-        ('downbow', _("Downbow")),
-        ('open', _("Open (e.g. brass)")),
-        ('stopped', _("Stopped (e.g. brass)")),
-        ('flageolet', _("Flageolet")),
-        ('thumb', _("Thumb")),
-        ('lheel', _("Left heel")),
-        ('rheel', _("Right heel")),
-        ('ltoe', _("Left toe")),
-        ('rtoe', _("Right toe")),
         )),
     (_("Ornaments"), (
         ('trill', _("Trill")),
@@ -77,7 +65,7 @@ articulation_groups = (
         ('lineprall', _("Line prall")),
         ('reverseturn', _("Reverse turn")),
         )),
-    (_("Other"), (
+    (_("Signs"), (
         ('fermata', _("Fermata")),
         ('shortfermata', _("Short fermata")),
         ('longfermata', _("Long fermata")),
@@ -86,6 +74,18 @@ articulation_groups = (
         ('coda', _("Coda")),
         ('varcoda', _("Varcoda")),
         ('signumcongruentiae', _("Signumcongruentiae")),
+        )),
+    (_("Other"), (
+        ('upbow', _("Upbow")),
+        ('downbow', _("Downbow")),
+        ('open', _("Open (e.g. brass)")),
+        ('stopped', _("Stopped (e.g. brass)")),
+        ('flageolet', _("Flageolet")),
+        ('thumb', _("Thumb")),
+        ('lheel', _("Left heel")),
+        ('rheel', _("Right heel")),
+        ('ltoe', _("Left toe")),
+        ('rtoe', _("Right toe")),
         )),
     )
 
@@ -129,15 +129,16 @@ class Lqi(QWidget):
 
 class Articulations(Lqi):
     """
-    A toolbox item with articulations. Clicking an articulation will insert
-    in the text document.
+    A toolbox item with articulations.
+    Clicking an articulation will insert it in the text document.
+    If text (music) is selected, the articulation will be added to all notes.
     """
     label = _("Articulations")
     icon = 'articulation_prall.png'
     tooltip = _("Different kinds of articulations and other signs.")
 
     def widgets(self):
-        layout = QGridLayout(self)
+        layout = QGridLayout(self, 18, 5, 2, 0)
         row = 0
         cols = 5
 
@@ -156,8 +157,7 @@ class Articulations(Lqi):
             self.direction.insertItem(s)
         self.direction.setCurrentItem(1)
         l.setBuddy(self.direction)
-        QToolTip.add(h, _(
-            "The direction to use for the articulations."))
+        QToolTip.add(h, _("The direction to use for the articulations."))
         row += 1
 
         for title, group in articulation_groups:
@@ -180,6 +180,14 @@ class Articulations(Lqi):
                     row += 1
             if col != 0:
                 row += 1
+
+        # help text
+        l = QLabel("<p><i>%s</i></p><p><i>%s</i></p>" % (
+            _("Click an articulation sign to add it to your document."),
+            _("If you select some music first, the articulation will "
+              "be added to all notes in the selection.")), self)
+        l.setMaximumWidth(150)
+        layout.addMultiCellWidget(l, row, row + 4, 0, cols - 1)
 
     def writeSign(self, sign):
         if self.shorthands.isChecked() and sign in shorthands:

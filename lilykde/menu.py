@@ -122,5 +122,11 @@ def undockPDF():
     if loaded:
         lilykde.pdf.tool.toggle()
 
+# (Un)dock Quick Insert, pate already translates this.
+@kate.onAction(I18N_NOOP("Dock/Undock Quick Insert Panel"), "", "window")
+def undockLQI():
+    import lilykde.lqi
+    lilykde.lqi.tool.toggle()
+
 
 # kate: indent-width 4;

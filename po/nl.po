@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-10-03 22:05+0200\n"
+"POT-Creation-Date: 2008-10-03 22:54+0200\n"
 "PO-Revision-Date: 2008-10-01 08:19+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
@@ -144,6 +144,10 @@ msgstr ""
 #: ../lilykde/menu.py:118
 msgid "Dock/Undock PDF preview"
 msgstr "PDF-weergave los- of aankoppelen"
+
+#: ../lilykde/menu.py:126
+msgid "Dock/Undock Quick Insert Panel"
+msgstr ""
 
 #: ../lilykde/version.py:51
 #, python-format
@@ -1754,191 +1758,202 @@ msgid "Espressivo"
 msgstr ""
 
 #: ../lilykde/lqi.py:52
-msgid "Performing"
-msgstr ""
-
-#: ../lilykde/lqi.py:53
-msgid "Upbow"
-msgstr ""
-
-#: ../lilykde/lqi.py:54
-msgid "Downbow"
-msgstr ""
-
-#: ../lilykde/lqi.py:55
-msgid "Open (e.g. brass)"
-msgstr ""
-
-#: ../lilykde/lqi.py:56
-msgid "Stopped (e.g. brass)"
-msgstr ""
-
-#: ../lilykde/lqi.py:57
-msgid "Flageolet"
-msgstr ""
-
-#: ../lilykde/lqi.py:58
-#, fuzzy
-msgid "Thumb"
-msgstr "Tuba"
-
-#: ../lilykde/lqi.py:59
-#, fuzzy
-msgid "Left heel"
-msgstr "Links:"
-
-#: ../lilykde/lqi.py:60
-#, fuzzy
-msgid "Right heel"
-msgstr "Rechts:"
-
-#: ../lilykde/lqi.py:61
-msgid "Left toe"
-msgstr ""
-
-#: ../lilykde/lqi.py:62
-#, fuzzy
-msgid "Right toe"
-msgstr "Rechts:"
-
-#: ../lilykde/lqi.py:64
 #, fuzzy
 msgid "Ornaments"
 msgstr "Akkoordnamen"
 
-#: ../lilykde/lqi.py:65
+#: ../lilykde/lqi.py:53
 #, fuzzy
 msgid "Trill"
 msgstr "Titel"
 
-#: ../lilykde/lqi.py:66
+#: ../lilykde/lqi.py:54
 msgid "Prall"
 msgstr ""
 
-#: ../lilykde/lqi.py:67
+#: ../lilykde/lqi.py:55
 msgid "Mordent"
 msgstr ""
 
-#: ../lilykde/lqi.py:68
+#: ../lilykde/lqi.py:56
 msgid "Turn"
 msgstr ""
 
-#: ../lilykde/lqi.py:69
+#: ../lilykde/lqi.py:57
 msgid "Prall prall"
 msgstr ""
 
-#: ../lilykde/lqi.py:70
+#: ../lilykde/lqi.py:58
 msgid "Prall mordent"
 msgstr ""
 
-#: ../lilykde/lqi.py:71
+#: ../lilykde/lqi.py:59
 msgid "Up prall"
 msgstr ""
 
-#: ../lilykde/lqi.py:72
+#: ../lilykde/lqi.py:60
 msgid "Down prall"
 msgstr ""
 
-#: ../lilykde/lqi.py:73
+#: ../lilykde/lqi.py:61
 msgid "Up mordent"
 msgstr ""
 
-#: ../lilykde/lqi.py:74
+#: ../lilykde/lqi.py:62
 msgid "Down mordent"
 msgstr ""
 
-#: ../lilykde/lqi.py:75
+#: ../lilykde/lqi.py:63
 msgid "Prall up"
 msgstr ""
 
-#: ../lilykde/lqi.py:76
+#: ../lilykde/lqi.py:64
 msgid "Prall down"
 msgstr ""
 
-#: ../lilykde/lqi.py:77
+#: ../lilykde/lqi.py:65
 msgid "Line prall"
 msgstr ""
 
-#: ../lilykde/lqi.py:78
+#: ../lilykde/lqi.py:66
 msgid "Reverse turn"
 msgstr ""
 
-#: ../lilykde/lqi.py:80
+#: ../lilykde/lqi.py:68
 #, fuzzy
-msgid "Other"
-msgstr "Versvoet"
+msgid "Signs"
+msgstr "Snaarinstrumenten"
 
-#: ../lilykde/lqi.py:81
+#: ../lilykde/lqi.py:69
 #, fuzzy
 msgid "Fermata"
 msgstr "Duits"
 
-#: ../lilykde/lqi.py:82
+#: ../lilykde/lqi.py:70
 msgid "Short fermata"
 msgstr ""
 
-#: ../lilykde/lqi.py:83
+#: ../lilykde/lqi.py:71
 msgid "Long fermata"
 msgstr ""
 
-#: ../lilykde/lqi.py:84
+#: ../lilykde/lqi.py:72
 msgid "Very long fermata"
 msgstr ""
 
-#: ../lilykde/lqi.py:85
+#: ../lilykde/lqi.py:73
 #, fuzzy
 msgid "Segno"
 msgstr "Tenor"
 
-#: ../lilykde/lqi.py:86
+#: ../lilykde/lqi.py:74
 msgid "Coda"
 msgstr ""
 
-#: ../lilykde/lqi.py:87
+#: ../lilykde/lqi.py:75
 msgid "Varcoda"
 msgstr ""
 
-#: ../lilykde/lqi.py:88
+#: ../lilykde/lqi.py:76
 msgid "Signumcongruentiae"
 msgstr ""
 
-#: ../lilykde/lqi.py:135
+#: ../lilykde/lqi.py:78
+#, fuzzy
+msgid "Other"
+msgstr "Versvoet"
+
+#: ../lilykde/lqi.py:79
+msgid "Upbow"
+msgstr ""
+
+#: ../lilykde/lqi.py:80
+msgid "Downbow"
+msgstr ""
+
+#: ../lilykde/lqi.py:81
+msgid "Open (e.g. brass)"
+msgstr ""
+
+#: ../lilykde/lqi.py:82
+msgid "Stopped (e.g. brass)"
+msgstr ""
+
+#: ../lilykde/lqi.py:83
+msgid "Flageolet"
+msgstr ""
+
+#: ../lilykde/lqi.py:84
+#, fuzzy
+msgid "Thumb"
+msgstr "Tuba"
+
+#: ../lilykde/lqi.py:85
+#, fuzzy
+msgid "Left heel"
+msgstr "Links:"
+
+#: ../lilykde/lqi.py:86
+#, fuzzy
+msgid "Right heel"
+msgstr "Rechts:"
+
+#: ../lilykde/lqi.py:87
+msgid "Left toe"
+msgstr ""
+
+#: ../lilykde/lqi.py:88
+#, fuzzy
+msgid "Right toe"
+msgstr "Rechts:"
+
+#: ../lilykde/lqi.py:136
 #, fuzzy
 msgid "Articulations"
 msgstr "Acties"
 
-#: ../lilykde/lqi.py:137
+#: ../lilykde/lqi.py:138
 msgid "Different kinds of articulations and other signs."
 msgstr ""
 
-#: ../lilykde/lqi.py:144
+#: ../lilykde/lqi.py:145
 msgid "Allow shorthands"
 msgstr ""
 
-#: ../lilykde/lqi.py:148
+#: ../lilykde/lqi.py:149
 msgid "Use short notation for some articulations like staccato"
 msgstr ""
 
-#: ../lilykde/lqi.py:153
+#: ../lilykde/lqi.py:154
 #, fuzzy
 msgid "Direction:"
 msgstr "Opdracht"
 
-#: ../lilykde/lqi.py:155
+#: ../lilykde/lqi.py:156
 msgid "Up"
 msgstr ""
 
-#: ../lilykde/lqi.py:155
+#: ../lilykde/lqi.py:156
 msgid "Neutral"
 msgstr ""
 
-#: ../lilykde/lqi.py:155
+#: ../lilykde/lqi.py:156
 #, fuzzy
 msgid "Down"
 msgstr "Dorisch"
 
 #: ../lilykde/lqi.py:160
 msgid "The direction to use for the articulations."
+msgstr ""
+
+#: ../lilykde/lqi.py:186
+msgid "Click an articulation sign to add it to your document."
+msgstr ""
+
+#: ../lilykde/lqi.py:187
+msgid ""
+"If you select some music first, the articulation will be added to all notes "
+"in the selection."
 msgstr ""
 
 #: ../lilypond-servicemenu-helper.py:61
