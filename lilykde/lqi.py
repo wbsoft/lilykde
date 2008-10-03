@@ -100,15 +100,20 @@ shorthands = {
     }
 
 note_re = re.compile(
-    # pitches:
-    r"\b([a-h]((iss){1,2}|(ess){1,2}|(is){1,2}|(es){1,2}|"
+    # skip this:
+    r"\\[A-Za-z]+|<<|>>|\"(?:\\\\|\\\"|[^\"])*\""
+    r"|("
+    # but catch a pitch...
+    r"(\b([a-h]((iss){1,2}|(ess){1,2}|(is){1,2}|(es){1,2}|"
     r"(sharp){1,2}|(flat){1,2}|ss?|ff?)?"
-    r"|(do|re|mi|fa|sol|la|si)(dd?|bb?|ss?|kk?)?)"
-    # octave:
-    r"('+|,+|(?![A-Za-z]))"
-    # duration ?
-    r"((\\(longa|breve)\b|(1|2|4|8|16|32|64|128|256|512|1024|2048)"
-    r"(?!\d))(\s*\.+)?(\s*\*\s*\d+(/\d+)?)*)?"
+    r"|(do|re|mi|fa|sol|la|si)(dd?|bb?|ss?|kk?)?)[?!]?"
+    # ...plus an octave:
+    r"('+|,+|(?![A-Za-z]))|"
+    # or a chord:
+    r"<(\\[A-Za-z]+|\"(\\\\|\\\"|[^\"])*\"|[^>])+>)"
+    # finally a duration?
+    r"\s*((\\(longa|breve)\b|(1|2|4|8|16|32|64|128|256|512|1024|2048)"
+    r"(?!\d))(\s*\.+)?(\s*\*\s*\d+(/\d+)?)*)?)"
     )
 
 
@@ -186,7 +191,7 @@ class Articulations(Lqi):
             _("Click an articulation sign to add it to your document."),
             _("If you select some music first, the articulation will "
               "be added to all notes in the selection.")), self)
-        l.setMaximumWidth(150)
+        l.setMaximumWidth(160)
         layout.addMultiCellWidget(l, row, row + 4, 0, cols - 1)
 
     def writeSign(self, sign):
@@ -198,7 +203,12 @@ class Articulations(Lqi):
         sel = kate.view().selection
         if sel.exists:
             d, v, text = kate.document(), kate.view(), sel.text
-            text = note_re.sub(lambda m: m.group(0) + art, text)
+            def repl(m):
+                if m.group(1):
+                    return m.group(1) + art
+                else:
+                    return m.group(0)
+            text = note_re.sub(repl, text)
             d.editingSequence.begin()
             sel.removeSelectedText()
             v.insertText(text)
