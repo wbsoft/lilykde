@@ -112,7 +112,7 @@ def rumor():
 @add(menu, _("Quick Insert Panel"), "Ctrl+Shift+Q", "edit")
 def lqi():
     import lilykde.lqi
-
+    lilykde.lqi.show()
 
 # (Un)dock PDF, pate already translates this.
 @kate.onAction(I18N_NOOP("Dock/Undock PDF preview"), "", "window")

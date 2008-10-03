@@ -21,11 +21,13 @@
 A LilyPond Quick Insert toolbox.
 """
 
+import re
 from qt import *
 
 import kate
 
-from kateutil import Dockable
+from lilykde.util import py2qstringlist
+from lilykde.kateutil import Dockable
 
 # Translate the messages
 from lilykde.i18n import _
@@ -34,7 +36,8 @@ toolbox = QToolBox()
 
 tool = Dockable(toolbox, _("Quick Insert"), "edit", Dockable.left,
         (150, 500), False)
-
+show = tool.show
+hide = tool.hide
 
 articulation_groups = (
     (_("Articulation"), (
@@ -96,12 +99,26 @@ shorthands = {
     'portato': '_',
     }
 
-class Lqi(QFrame):
+note_re = re.compile(
+    # pitches:
+    r"\b([a-h]((iss){1,2}|(ess){1,2}|(is){1,2}|(es){1,2}|"
+    r"(sharp){1,2}|(flat){1,2}|ss?|ff?)?"
+    r"|(do|re|mi|fa|sol|la|si)(dd?|bb?|ss?|kk?)?)"
+    # octave:
+    r"('+|,+|(?![A-Za-z]))"
+    # duration ?
+    r"((\\(longa|breve)\b|(1|2|4|8|16|32|64|128|256|512|1024|2048)"
+    r"(?!\d))(\s*\.+)?(\s*\*\s*\d+(/\d+)?)*)?"
+    )
+
+
+class Lqi(QWidget):
     """ Abstract base class for LilyPond Quick Insert tools """
     label, icon, tooltip = '', '', ''
 
     def __init__(self):
-        super(Lqi, self).__init__(toolbox)
+        QWidget.__init__(self, toolbox)
+        self.widgets()
         i = toolbox.addItem(self, self.label)
         if self.icon:
             toolbox.setItemIconSet(i,
@@ -119,17 +136,30 @@ class Articulations(Lqi):
     icon = 'articulation_prall.png'
     tooltip = _("Different kinds of articulations and other signs.")
 
-    def __init__(self):
-        super(Articulations, self).__init__()
+    def widgets(self):
         layout = QGridLayout(self)
         row = 0
         cols = 5
+
         self.shorthands = QCheckBox(_("Allow shorthands"), self)
         self.shorthands.setChecked(True)
         layout.addMultiCellWidget(self.shorthands, row, row, 0, cols - 1)
         QToolTip.add(self.shorthands, _(
             "Use short notation for some articulations like staccato"))
         row += 1
+
+        h = QHBox(self)
+        layout.addMultiCellWidget(h, row, row, 0, cols - 1)
+        l = QLabel(_("Direction:"), h)
+        self.direction = QComboBox(h)
+        for s in (_("Up"), _("Neutral"), _("Down")):
+            self.direction.insertItem(s)
+        self.direction.setCurrentItem(1)
+        l.setBuddy(self.direction)
+        QToolTip.add(h, _(
+            "The direction to use for the articulations."))
+        row += 1
+
         for title, group in articulation_groups:
             layout.addMultiCellWidget(
                 QLabel('<u>%s</u>:' % title, self), row, row, 0, cols - 1)
@@ -152,15 +182,24 @@ class Articulations(Lqi):
                 row += 1
 
     def writeSign(self, sign):
-        #TODO: direction (up, down, neutral)
-        #TODO: add articulation to many selected notes
         if self.shorthands.isChecked() and sign in shorthands:
-            kate.view().insertText('-' + shorthands[sign])
+            art = '^-_'[self.direction.currentItem()] + shorthands[sign]
         else:
-            kate.view().insertText('\\' + sign)
+            art = ('^', '', '_')[self.direction.currentItem()] + '\\' + sign
+
+        sel = kate.view().selection
+        if sel.exists:
+            d, v, text = kate.document(), kate.view(), sel.text
+            text = note_re.sub(lambda m: m.group(0) + art, text)
+            d.editingSequence.begin()
+            sel.removeSelectedText()
+            v.insertText(text)
+            d.editingSequence.end()
+        else:
+            kate.view().insertText(art)
 
 
-Articulations()
+
 Articulations()
 
 

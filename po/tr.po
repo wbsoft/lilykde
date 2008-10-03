@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-10-01 23:52+0200\n"
+"POT-Creation-Date: 2008-10-03 22:05+0200\n"
 "PO-Revision-Date: 2008-06-24 22:05+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
@@ -137,7 +137,11 @@ msgstr "Tirelemeyi kaldır"
 msgid "Record MIDI with Rumor"
 msgstr "MIDI dosyasını Rumor ile kaydedin"
 
-#: ../lilykde/menu.py:114
+#: ../lilykde/menu.py:112
+msgid "Quick Insert Panel"
+msgstr ""
+
+#: ../lilykde/menu.py:118
 msgid "Dock/Undock PDF preview"
 msgstr "PDF önizlemesini Küçült/Büyüt"
 
@@ -200,7 +204,7 @@ msgstr "convert-ly başlatılamadı: %s"
 msgid "LilyPond Log"
 msgstr "LilyPond Günlüğü"
 
-#: ../lilykde/pdf.py:42
+#: ../lilykde/pdf.py:39
 msgid "PDF"
 msgstr "PDF"
 
@@ -1704,6 +1708,230 @@ msgstr ""
 #: ../lilykde/actions.py:129
 msgid "Email PDF (preview)"
 msgstr "PDF'yi e-posta ile gönder (önizleme)"
+
+#: ../lilykde/lqi.py:37
+msgid "Quick Insert"
+msgstr ""
+
+#: ../lilykde/lqi.py:43
+#, fuzzy
+msgid "Articulation"
+msgstr "İthaf"
+
+#: ../lilykde/lqi.py:44
+msgid "Accent"
+msgstr ""
+
+#: ../lilykde/lqi.py:45
+msgid "Marcato"
+msgstr ""
+
+#: ../lilykde/lqi.py:46
+msgid "Staccatissimo"
+msgstr ""
+
+#: ../lilykde/lqi.py:47
+msgid "Staccato"
+msgstr ""
+
+#: ../lilykde/lqi.py:48
+msgid "Portato"
+msgstr ""
+
+#: ../lilykde/lqi.py:49
+#, fuzzy
+msgid "Tenuto"
+msgstr "Otomatik"
+
+#: ../lilykde/lqi.py:50
+msgid "Espressivo"
+msgstr ""
+
+#: ../lilykde/lqi.py:52
+msgid "Performing"
+msgstr ""
+
+#: ../lilykde/lqi.py:53
+msgid "Upbow"
+msgstr ""
+
+#: ../lilykde/lqi.py:54
+msgid "Downbow"
+msgstr ""
+
+#: ../lilykde/lqi.py:55
+msgid "Open (e.g. brass)"
+msgstr ""
+
+#: ../lilykde/lqi.py:56
+msgid "Stopped (e.g. brass)"
+msgstr ""
+
+#: ../lilykde/lqi.py:57
+msgid "Flageolet"
+msgstr ""
+
+#: ../lilykde/lqi.py:58
+msgid "Thumb"
+msgstr ""
+
+#: ../lilykde/lqi.py:59
+#, fuzzy
+msgid "Left heel"
+msgstr "Sol el:"
+
+#: ../lilykde/lqi.py:60
+#, fuzzy
+msgid "Right heel"
+msgstr "Sağ el:"
+
+#: ../lilykde/lqi.py:61
+msgid "Left toe"
+msgstr ""
+
+#: ../lilykde/lqi.py:62
+#, fuzzy
+msgid "Right toe"
+msgstr "Sağ el:"
+
+#: ../lilykde/lqi.py:64
+#, fuzzy
+msgid "Ornaments"
+msgstr "Akor adları"
+
+#: ../lilykde/lqi.py:65
+#, fuzzy
+msgid "Trill"
+msgstr "Başlık"
+
+#: ../lilykde/lqi.py:66
+msgid "Prall"
+msgstr ""
+
+#: ../lilykde/lqi.py:67
+msgid "Mordent"
+msgstr ""
+
+#: ../lilykde/lqi.py:68
+msgid "Turn"
+msgstr ""
+
+#: ../lilykde/lqi.py:69
+msgid "Prall prall"
+msgstr ""
+
+#: ../lilykde/lqi.py:70
+msgid "Prall mordent"
+msgstr ""
+
+#: ../lilykde/lqi.py:71
+msgid "Up prall"
+msgstr ""
+
+#: ../lilykde/lqi.py:72
+msgid "Down prall"
+msgstr ""
+
+#: ../lilykde/lqi.py:73
+msgid "Up mordent"
+msgstr ""
+
+#: ../lilykde/lqi.py:74
+msgid "Down mordent"
+msgstr ""
+
+#: ../lilykde/lqi.py:75
+msgid "Prall up"
+msgstr ""
+
+#: ../lilykde/lqi.py:76
+msgid "Prall down"
+msgstr ""
+
+#: ../lilykde/lqi.py:77
+msgid "Line prall"
+msgstr ""
+
+#: ../lilykde/lqi.py:78
+msgid "Reverse turn"
+msgstr ""
+
+#: ../lilykde/lqi.py:80
+#, fuzzy
+msgid "Other"
+msgstr "Ölçü"
+
+#: ../lilykde/lqi.py:81
+#, fuzzy
+msgid "Fermata"
+msgstr "Alman"
+
+#: ../lilykde/lqi.py:82
+msgid "Short fermata"
+msgstr ""
+
+#: ../lilykde/lqi.py:83
+msgid "Long fermata"
+msgstr ""
+
+#: ../lilykde/lqi.py:84
+msgid "Very long fermata"
+msgstr ""
+
+#: ../lilykde/lqi.py:85
+msgid "Segno"
+msgstr ""
+
+#: ../lilykde/lqi.py:86
+msgid "Coda"
+msgstr ""
+
+#: ../lilykde/lqi.py:87
+msgid "Varcoda"
+msgstr ""
+
+#: ../lilykde/lqi.py:88
+msgid "Signumcongruentiae"
+msgstr ""
+
+#: ../lilykde/lqi.py:135
+#, fuzzy
+msgid "Articulations"
+msgstr "İşlemler"
+
+#: ../lilykde/lqi.py:137
+msgid "Different kinds of articulations and other signs."
+msgstr ""
+
+#: ../lilykde/lqi.py:144
+msgid "Allow shorthands"
+msgstr ""
+
+#: ../lilykde/lqi.py:148
+msgid "Use short notation for some articulations like staccato"
+msgstr ""
+
+#: ../lilykde/lqi.py:153
+#, fuzzy
+msgid "Direction:"
+msgstr "İthaf"
+
+#: ../lilykde/lqi.py:155
+msgid "Up"
+msgstr ""
+
+#: ../lilykde/lqi.py:155
+msgid "Neutral"
+msgstr ""
+
+#: ../lilykde/lqi.py:155
+#, fuzzy
+msgid "Down"
+msgstr "Doryan"
+
+#: ../lilykde/lqi.py:160
+msgid "The direction to use for the articulations."
+msgstr ""
 
 #: ../lilypond-servicemenu-helper.py:61
 msgid "One document failed."

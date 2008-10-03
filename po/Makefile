@@ -21,6 +21,7 @@ translate = \
 	../lilykde/parts.py \
 	../lilykde/pdftk.py \
 	../lilykde/actions.py \
+	../lilykde/lqi.py \
 	../lilypond-servicemenu-helper.py \
 
 

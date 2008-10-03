@@ -90,7 +90,7 @@ def documentChanged(doc):
         else:
             # Hide the toolviews (if they exist) when a probably non-lilypond
             # document is selected.
-            for m in 'log', 'pdf', 'rumor':
+            for m in 'log', 'pdf', 'rumor', 'lqi':
                 if hasattr(sys.modules['lilykde'], m):
                     getattr(sys.modules['lilykde'], m).hide()
 
