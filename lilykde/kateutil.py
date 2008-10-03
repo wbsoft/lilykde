@@ -72,7 +72,14 @@ class Dockable(object):
     title, name and orientation are given to the kate.gui.Tool.
     size may hold a tuple (width, height).
     if focus is False: do not allow keyboard focus when docked.
+
+    The orientation is one of Dockable.{top,right,bottom,left}
     """
+    top    = kate.gui.Tool.top
+    right  = kate.gui.Tool.right
+    bottom = kate.gui.Tool.bottom
+    left   = kate.gui.Tool.left
+
     def __init__(self, widget, title, name, orientation,
             size = None, focus = True):
         self.title = title

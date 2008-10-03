@@ -21,9 +21,6 @@
 
 import os
 
-import kate
-import kate.gui
-
 from qt import QWidget, QTimer
 from dcopext import DCOPApp
 from kdecore import KApplication, KURL
@@ -39,7 +36,7 @@ from lilykde.i18n import _
 
 
 pdfpart = createReadOnlyPart("libkpdfpart")
-tool = Dockable(pdfpart.widget(), _("PDF"), "pdf", kate.gui.Tool.right,
+tool = Dockable(pdfpart.widget(), _("PDF"), "pdf", Dockable.right,
         (500, 500), False)
 
 tool.show()
