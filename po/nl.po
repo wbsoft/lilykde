@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-10-03 22:54+0200\n"
-"PO-Revision-Date: 2008-10-01 08:19+0200\n"
+"POT-Creation-Date: 2008-10-03 23:07+0200\n"
+"PO-Revision-Date: 2008-10-03 23:07+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -139,7 +139,7 @@ msgstr "MIDI opnemen met Rumor"
 
 #: ../lilykde/menu.py:112
 msgid "Quick Insert Panel"
-msgstr ""
+msgstr "Quick Insert-paneel"
 
 #: ../lilykde/menu.py:118
 msgid "Dock/Undock PDF preview"
@@ -147,7 +147,7 @@ msgstr "PDF-weergave los- of aankoppelen"
 
 #: ../lilykde/menu.py:126
 msgid "Dock/Undock Quick Insert Panel"
-msgstr ""
+msgstr "Quick Insert-paneel los- of aankoppelen"
 
 #: ../lilykde/version.py:51
 #, python-format
@@ -174,8 +174,7 @@ msgstr ""
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
-msgstr ""
-"Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
+msgstr "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
 #: ../lilykde/version.py:93
 msgid "This LilyPond document is already up-to-date."
@@ -270,8 +269,7 @@ msgstr ""
 "uitvoer via Rumor)."
 
 #: ../lilykde/settings.py:111
-msgid ""
-"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Commandoregel om Timidity (of een ander programma) te starten als ALSA MIDI-"
 "client."
@@ -811,8 +809,7 @@ msgid "Remove bar numbers"
 msgstr "Maatnummers verwijderen"
 
 #: ../lilykde/scorewiz.py:802
-msgid ""
-"Suppress the display of measure numbers at the beginning of every system."
+msgid "Suppress the display of measure numbers at the beginning of every system."
 msgstr "Onderdrukt de weergave van maatnummers aan het begin van elk systeem."
 
 #: ../lilykde/scorewiz.py:806
@@ -865,8 +862,7 @@ msgstr "Volgende systemen:"
 
 #: ../lilykde/scorewiz.py:858
 msgid "Use no, short or long instrument names before the next systems."
-msgstr ""
-"Gebruik geen, korte of lange instrumentnamen voor de volgende systemen."
+msgstr "Gebruik geen, korte of lange instrumentnamen voor de volgende systemen."
 
 #: ../lilykde/scorewiz.py:860
 msgid "Italian names"
@@ -875,8 +871,7 @@ msgstr "Italiaanse namen"
 #: ../lilykde/scorewiz.py:862
 #, python-format
 msgid "Choose standard Italian instrument names, like '%s' instead of 'Organ.'"
-msgstr ""
-"Kies standaard Italiaanse instrumentnamen, zoals '%s' in plaats van 'Orgel.'"
+msgstr "Kies standaard Italiaanse instrumentnamen, zoals '%s' in plaats van 'Orgel.'"
 
 #: ../lilykde/scorewiz.py:935
 msgid "Score Setup Wizard"
@@ -1526,8 +1521,7 @@ msgstr "Begeleidingsbalk toevoegen"
 msgid ""
 "Adds an accompaniment staff and also puts an accompaniment voice in the "
 "upper staff."
-msgstr ""
-"Voegt een begeleidingsbalk toe, en ook een tweede stem aan de bovenste balk."
+msgstr "Voegt een begeleidingsbalk toe, en ook een tweede stem aan de bovenste balk."
 
 #: ../lilykde/parts.py:919
 msgid "Choir"
@@ -1566,8 +1560,7 @@ msgid "Every voice same lyrics"
 msgstr "Elke stem zelfde liedtekst"
 
 #: ../lilykde/parts.py:945
-msgid ""
-"Every voice gets its own lyrics, using the same text as the other voices."
+msgid "Every voice gets its own lyrics, using the same text as the other voices."
 msgstr ""
 "Elke stem krijgt zijn eigen liedtekst, met dezelfde tekst als de andere "
 "stemmen."
@@ -1651,18 +1644,15 @@ msgstr "PDF weergeven"
 
 #: ../lilykde/actions.py:43
 msgid "Open the generated PDF file with the default PDF viewer."
-msgstr ""
-"Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
+msgstr "Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
 
 #: ../lilykde/actions.py:45 ../lilykde/actions.py:122
 msgid "Print"
 msgstr "Afdrukken"
 
 #: ../lilykde/actions.py:46
-msgid ""
-"Print the PDF using the print command set in the Commands settings page."
-msgstr ""
-"De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
+msgid "Print the PDF using the print command set in the Commands settings page."
+msgstr "De PDF afdrukken met het printcommando dat onder Commando's is ingesteld."
 
 #: ../lilykde/actions.py:49 ../lilykde/actions.py:132
 msgid "Email PDF"
@@ -1721,240 +1711,227 @@ msgstr "PDF e-mailen (vooruitblik)"
 
 #: ../lilykde/lqi.py:37
 msgid "Quick Insert"
-msgstr ""
+msgstr "Quick Insert"
 
 #: ../lilykde/lqi.py:43
-#, fuzzy
 msgid "Articulation"
-msgstr "Opdracht"
+msgstr "Articulatie"
 
 #: ../lilykde/lqi.py:44
 msgid "Accent"
-msgstr ""
+msgstr "Accent"
 
 #: ../lilykde/lqi.py:45
 msgid "Marcato"
-msgstr ""
+msgstr "Marcato"
 
 #: ../lilykde/lqi.py:46
 msgid "Staccatissimo"
-msgstr ""
+msgstr "Staccatissimo"
 
 #: ../lilykde/lqi.py:47
 msgid "Staccato"
-msgstr ""
+msgstr "Staccato"
 
 #: ../lilykde/lqi.py:48
 msgid "Portato"
-msgstr ""
+msgstr "Portato"
 
 #: ../lilykde/lqi.py:49
-#, fuzzy
 msgid "Tenuto"
-msgstr "Tenor"
+msgstr "Tenuto"
 
 #: ../lilykde/lqi.py:50
 msgid "Espressivo"
-msgstr ""
+msgstr "Espressivo"
 
 #: ../lilykde/lqi.py:52
-#, fuzzy
 msgid "Ornaments"
-msgstr "Akkoordnamen"
+msgstr "Versieringen"
 
 #: ../lilykde/lqi.py:53
-#, fuzzy
 msgid "Trill"
-msgstr "Titel"
+msgstr "Triller"
 
 #: ../lilykde/lqi.py:54
 msgid "Prall"
-msgstr ""
+msgstr "Praller"
 
 #: ../lilykde/lqi.py:55
 msgid "Mordent"
-msgstr ""
+msgstr "Mordent"
 
 #: ../lilykde/lqi.py:56
 msgid "Turn"
-msgstr ""
+msgstr "Dubbelslag"
 
 #: ../lilykde/lqi.py:57
 msgid "Prall prall"
-msgstr ""
+msgstr "Lange praller"
 
 #: ../lilykde/lqi.py:58
 msgid "Prall mordent"
-msgstr ""
+msgstr "Praller met mordent"
 
 #: ../lilykde/lqi.py:59
 msgid "Up prall"
-msgstr ""
+msgstr "Praller van boven"
 
 #: ../lilykde/lqi.py:60
 msgid "Down prall"
-msgstr ""
+msgstr "Praller van onder"
 
 #: ../lilykde/lqi.py:61
 msgid "Up mordent"
-msgstr ""
+msgstr "Mordent van boven"
 
 #: ../lilykde/lqi.py:62
 msgid "Down mordent"
-msgstr ""
+msgstr "Mordent van onder"
 
 #: ../lilykde/lqi.py:63
 msgid "Prall up"
-msgstr ""
+msgstr "Praller naar boven"
 
 #: ../lilykde/lqi.py:64
 msgid "Prall down"
-msgstr ""
+msgstr "Praller naar onder"
 
 #: ../lilykde/lqi.py:65
 msgid "Line prall"
-msgstr ""
+msgstr "Praller met lijn"
 
 #: ../lilykde/lqi.py:66
 msgid "Reverse turn"
-msgstr ""
+msgstr "Omgekeerde dubbelslag"
 
 #: ../lilykde/lqi.py:68
-#, fuzzy
 msgid "Signs"
-msgstr "Snaarinstrumenten"
+msgstr "Tekens"
 
 #: ../lilykde/lqi.py:69
-#, fuzzy
 msgid "Fermata"
-msgstr "Duits"
+msgstr "Fermate"
 
 #: ../lilykde/lqi.py:70
 msgid "Short fermata"
-msgstr ""
+msgstr "Korte fermate"
 
 #: ../lilykde/lqi.py:71
 msgid "Long fermata"
-msgstr ""
+msgstr "Lange fermate"
 
 #: ../lilykde/lqi.py:72
 msgid "Very long fermata"
-msgstr ""
+msgstr "Zeer lange fermate"
 
 #: ../lilykde/lqi.py:73
-#, fuzzy
 msgid "Segno"
-msgstr "Tenor"
+msgstr "Teken"
 
 #: ../lilykde/lqi.py:74
 msgid "Coda"
-msgstr ""
+msgstr "Coda"
 
 #: ../lilykde/lqi.py:75
 msgid "Varcoda"
-msgstr ""
+msgstr "Varcoda"
 
 #: ../lilykde/lqi.py:76
 msgid "Signumcongruentiae"
-msgstr ""
+msgstr "Signumcongruentiae"
 
 #: ../lilykde/lqi.py:78
-#, fuzzy
 msgid "Other"
-msgstr "Versvoet"
+msgstr "Overig"
 
 #: ../lilykde/lqi.py:79
 msgid "Upbow"
-msgstr ""
+msgstr "Opstreek"
 
 #: ../lilykde/lqi.py:80
 msgid "Downbow"
-msgstr ""
+msgstr "Afstreek"
 
 #: ../lilykde/lqi.py:81
 msgid "Open (e.g. brass)"
-msgstr ""
+msgstr "Open (koper)"
 
 #: ../lilykde/lqi.py:82
 msgid "Stopped (e.g. brass)"
-msgstr ""
+msgstr "Gestopt (koper)"
 
 #: ../lilykde/lqi.py:83
 msgid "Flageolet"
-msgstr ""
+msgstr "Flageolet"
 
 #: ../lilykde/lqi.py:84
-#, fuzzy
 msgid "Thumb"
-msgstr "Tuba"
+msgstr "Duim"
 
 #: ../lilykde/lqi.py:85
-#, fuzzy
 msgid "Left heel"
-msgstr "Links:"
+msgstr "Linker hak"
 
 #: ../lilykde/lqi.py:86
-#, fuzzy
 msgid "Right heel"
-msgstr "Rechts:"
+msgstr "Rechter hak"
 
 #: ../lilykde/lqi.py:87
 msgid "Left toe"
-msgstr ""
+msgstr "Linker teen"
 
 #: ../lilykde/lqi.py:88
-#, fuzzy
 msgid "Right toe"
-msgstr "Rechts:"
+msgstr "Rechter teen"
 
 #: ../lilykde/lqi.py:136
-#, fuzzy
 msgid "Articulations"
-msgstr "Acties"
+msgstr "Articulaties"
 
 #: ../lilykde/lqi.py:138
 msgid "Different kinds of articulations and other signs."
-msgstr ""
+msgstr "Verschillende soorten articulatie en andere tekens."
 
 #: ../lilykde/lqi.py:145
 msgid "Allow shorthands"
-msgstr ""
+msgstr "Korte notatie"
 
 #: ../lilykde/lqi.py:149
-msgid "Use short notation for some articulations like staccato"
-msgstr ""
+msgid "Use short notation for some articulations like staccato."
+msgstr "Korte notatie toestaan voor sommige articulaties zoals staccato."
 
 #: ../lilykde/lqi.py:154
-#, fuzzy
 msgid "Direction:"
-msgstr "Opdracht"
+msgstr "Richting:"
 
 #: ../lilykde/lqi.py:156
 msgid "Up"
-msgstr ""
+msgstr "Boven"
 
 #: ../lilykde/lqi.py:156
 msgid "Neutral"
-msgstr ""
+msgstr "Neutraal"
 
 #: ../lilykde/lqi.py:156
-#, fuzzy
 msgid "Down"
-msgstr "Dorisch"
+msgstr "Onder"
 
 #: ../lilykde/lqi.py:160
 msgid "The direction to use for the articulations."
-msgstr ""
+msgstr "Plaatsing van de articulaties: onder of boven de balk of neutraal."
 
 #: ../lilykde/lqi.py:186
 msgid "Click an articulation sign to add it to your document."
-msgstr ""
+msgstr "Klik op een articulatie-teken om het aan uw document toe te voegen."
 
 #: ../lilykde/lqi.py:187
 msgid ""
 "If you select some music first, the articulation will be added to all notes "
 "in the selection."
 msgstr ""
+"Als u eerst muziek selecteert, wordt het articulatie-teken aan alle noten in "
+"de selectie toegevoegd."
 
 #: ../lilypond-servicemenu-helper.py:61
 msgid "One document failed."
@@ -1973,3 +1950,4 @@ msgstr "LilyKDE servicemenu hulpprogramma"
 #: ../lilypond-servicemenu-helper.py:82
 msgid "LilyPond files to convert"
 msgstr "Te converteren LilyPond-bestanden"
+

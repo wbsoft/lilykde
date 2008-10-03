@@ -146,7 +146,7 @@ class Articulations(Lqi):
         self.shorthands.setChecked(True)
         layout.addMultiCellWidget(self.shorthands, row, row, 0, cols - 1)
         QToolTip.add(self.shorthands, _(
-            "Use short notation for some articulations like staccato"))
+            "Use short notation for some articulations like staccato."))
         row += 1
 
         h = QHBox(self)
