@@ -108,7 +108,7 @@ note_re = re.compile(
     r"(sharp){1,2}|(flat){1,2}|ss?|ff?)?"
     r"|(do|re|mi|fa|sol|la|si)(dd?|bb?|ss?|kk?)?)[?!]?"
     # ...plus an octave:
-    r"('+|,+|(?![A-Za-z]))|"
+    r"('+|,+|(?![A-Za-z]))(\s*=[',]*)?|"
     # or a chord:
     r"<(\\[A-Za-z]+|\"(\\\\|\\\"|[^\"])*\"|[^>])+>)"
     # finally a duration?
