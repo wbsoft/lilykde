@@ -7,11 +7,8 @@ pngs = $(patsubst %.ly,%.png,$(lys))
 all: $(pngs)
 
 $(pngs): %.png: %.ly
-	lilypond -ddelete-intermediate-files --png $<
-	convert $@ -trim -bordercolor white -border 3 \
-		\( +clone -threshold 100% \) \
-		\( -clone 0 -negate \) \
-		-delete 0 -compose CopyOpacity -composite +repage $@
+	lilypond --png -ddelete-intermediate-files -dpixmap-format=pngalpha $<
+	mogrify -trim -bordercolor transparent -border 3 +repage $@
 
 # Make some lilypond images also depend on the files they include
 $(patsubst %.ly,%.png,$(wildcard note_*.ly)): note_defaults.ily
