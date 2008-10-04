@@ -27,6 +27,7 @@ from qt import *
 from lilykde.util import py2qstringlist
 from lilykde import config, editor
 from lilykde.kateutil import Dockable
+from lilykde.widgets import sorry
 
 # Translate the messages
 from lilykde.i18n import _
@@ -106,13 +107,30 @@ durations = ['\\maxima', '\\longa', '\\breve',
 class Res(object):
     """ static class to store regexps """
 
-    pitch = (
-        r"(?P<pitch>\b([a-h]((iss){1,2}|(ess){1,2}|(is){1,2}|(es){1,2}|"
+    step = (
+        r"\b([a-h]((iss){1,2}|(ess){1,2}|(is){1,2}|(es){1,2}|"
         r"(sharp){1,2}|(flat){1,2}|ss?|ff?)?"
-        r"|(do|re|mi|fa|sol|la|si)(dd?|bb?|ss?|kk?)?)(?P<cautionary>[?!])?)"
+        r"|(do|re|mi|fa|sol|la|si)(dd?|bb?|ss?|kk?)?)"
     )
+    named_step = "(?P<step>" + step + ")"
 
-    octave = r"(?P<octave>'+|,+|(?![A-Za-z]))(\s*(?P<octcheck>=[',]*))?"
+    cautionary = r"[?!]?"
+    named_cautionary = "(?P<cautionary>" + cautionary + ")"
+
+    rest = r"(\b[Rrs]|\\skip(?![A-Za-z]))"
+    named_rest = "(?P<rest>" + rest + ")"
+
+    octave = r"('+|,+|(?![A-Za-z]))"
+    named_octave = "(?P<octave>" + octave + ")"
+
+    octcheck = "=[',]*"
+    named_octcheck = "(?P<octcheck>" + octcheck + ")"
+
+    pitch = (
+        step + cautionary + octave + r"(\s*" + octcheck + r")?")
+    named_pitch = (
+        named_step + named_cautionary + named_octave + r"(\s*" +
+        named_octcheck + r")?")
 
     duration = (
         r"(?P<duration>"
@@ -127,18 +145,61 @@ class Res(object):
 
     quotedstring = r"\"(?:\\\\|\\\"|[^\"])*\""
 
+    skip_pitches = (
+        # skip \relative or \transpose pitch, etc:
+        r"\\(relative|transposition)\s+" + pitch +
+        r"|\\transpose\s+" + pitch + r"\s*" + pitch +
+        # and skip commands
+        r"|\\[A-Za-z]+"
+    )
+
+    # a sounding pitch/chord with duration
     chord = re.compile(
         # skip this:
-        r"\\[A-Za-z]+|<<|>>|" + quotedstring +
+        r"<<|>>|" + quotedstring +
         # but catch either a pitch plus an octave
-        r"|((?P<chord>" + pitch + octave +
+        r"|(?P<full>(?P<chord>" + named_pitch +
         # or a chord:
-        r"|<(\\[A-Za-z]+|" + quotedstring + r"|[^>])*>)"
+        r"|<(\\[A-Za-z]+|" + quotedstring + r"|[^>])*>"
+        r")"
         # finally a duration?
         r"(\s*" + duration + r")?)"
+        r"|" + skip_pitches
+    )
+
+    # a sounding pitch/chord OR rest/skip with duration
+    chord_rest = re.compile(
+        # skip this:
+        r"<<|>>|" + quotedstring +
+        # but catch either a pitch plus an octave
+        r"|(?P<full>(?P<chord>" + named_pitch +
+        # or a chord:
+        r"|<(\\[A-Za-z]+|" + quotedstring + r"|[^>])*>"
+        # or a spacer or rest:
+        r"|" + named_rest +
+        r")"
+        # finally a duration?
+        r"(\s*" + duration + r")?)"
+        r"|" + skip_pitches
     )
 
     finddurs = re.compile(duration)
+
+    @staticmethod
+    def edit(func):
+        """ edit the selected text using chord_rest and a function """
+        text = editor.selectedText()
+        if text:
+            # return the full match if the function did not return anything.
+            def repl(m):
+                result = func(m)
+                if result is None:
+                    return m.group()
+                else:
+                    return result
+            editor.replaceSelectionWith(Res.chord_rest.sub(repl, text), True)
+        else:
+            sorry(_("Please select some text first."))
 
 
 class Lqi(QWidget):
@@ -227,10 +288,10 @@ class Articulations(Lqi):
         text = editor.selectedText()
         if text:
             def repl(m):
-                if m.group(1):
-                    return m.group(1) + art
+                if m.group('chord'):
+                    return m.group('full') + art
                 else:
-                    return m.group(0)
+                    return m.group()
             editor.replaceSelectionWith(Res.chord.sub(repl, text))
         else:
             editor.insertText(art)
@@ -246,7 +307,7 @@ class Rhythm(Lqi):
 
 
     def widgets(self):
-        l = QVBoxLayout(self)
+        l = QVBoxLayout(self, 0, 10)
         g = QVGroupBox(_("Durations"), self)
         l.addWidget(g)
 
@@ -264,12 +325,15 @@ class Rhythm(Lqi):
                   "selection.")),
             (self.removeDurations, _("Remove durations"),
                 _("Remove all durations from the selection.")),
+            (self.makeImplicit, _("Make implicit"),
+                _("Make durations implicit (remove repeated durations).")),
+            (self.makeExplicit, _("Make explicit"),
+                _("Make durations explicit (add duration to every note, "
+                  "even if it is the same as the preceding note).")),
             ):
             b = QPushButton(title, g)
             QToolTip.add(b, tooltip)
             QObject.connect(b, SIGNAL("clicked()"), func)
-
-        l.addSpacing(10)
 
         g = QVGroupBox(_("Apply rhythm"), self)
         l.addWidget(g)
@@ -280,7 +344,7 @@ class Rhythm(Lqi):
         b = QPushButton(_("Apply"), g)
         QToolTip.add(b, _(
             "Press to apply the entered rhythm to the selected music. "
-            "This will delete previous entered durations."))
+            "This will delete previously entered durations."))
         QObject.connect(b, SIGNAL("clicked()"), self.applyRhythm)
 
         # at the end
@@ -288,15 +352,23 @@ class Rhythm(Lqi):
 
 
 
-    def editRhythm(func):
+
+    def onSelection(func):
         """
-        Decorator to handles functions that use the Res.chord regexp
-        substitute function to iterate over the selected music.
+        Decorator to run a function on selected text.
+        The function is called to deliver a function that can be
+        used as a callback for the regexp.
         """
         def deco(self):
-            text = editor.selectedText()
-            if text:
-                editor.replaceSelectionWith(Res.chord.sub(func, text), True)
+            Res.edit(func(*[self][0:func.func_code.co_argcount]))
+        return deco
+
+    def editRhythm(func):
+        """
+        Decorator to handle functions that are the callback for the regexp.
+        """
+        def deco(self):
+            Res.edit(func)
         return deco
 
     @editRhythm
@@ -308,8 +380,6 @@ class Rhythm(Lqi):
                 if i > 0:
                     dur = durations[i - 1]
             return ''.join(i or '' for i in (chord, dur, dots, scale))
-        else:
-            return m.group(0)
 
     @editRhythm
     def halveDurations(m):
@@ -320,8 +390,6 @@ class Rhythm(Lqi):
                 if i < len(durations) - 1:
                     dur = durations[i + 1]
             return ''.join(i or '' for i in (chord, dur, dots, scale))
-        else:
-            return m.group(0)
 
     @editRhythm
     def dotDurations(m):
@@ -329,8 +397,6 @@ class Rhythm(Lqi):
             chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
             dots = (dots or '') + '.'
             return ''.join(i or '' for i in (chord, dur, dots, scale))
-        else:
-            return m.group(0)
 
     @editRhythm
     def undotDurations(m):
@@ -339,42 +405,59 @@ class Rhythm(Lqi):
             if dots:
                 dots = dots[1:]
             return ''.join(i or '' for i in (chord, dur, dots, scale))
-        else:
-            return m.group(0)
 
     @editRhythm
     def removeScaling(m):
         if m.group('duration'):
             return ''.join(i or '' for i in m.group('chord', 'dur', 'dots'))
-        else:
-            return m.group(0)
 
     @editRhythm
     def removeDurations(m):
-        if m.group(1):
+        if m.group('full'):
             return m.group('chord')
-        else:
-            return m.group(0)
 
+    @onSelection
+    def makeImplicit():
+        old = ['']
+        def repl(m):
+            chord, duration = m.group('chord', 'duration')
+            if chord:
+                if not duration or duration == old[0]:
+                    return chord
+                else:
+                    old[0] = duration
+                    return chord + duration
+        return repl
+
+    @onSelection
+    def makeExplicit():
+        old = ['']
+        def repl(m):
+            chord, duration = m.group('chord', 'duration')
+            if chord:
+                if not duration:
+                    return chord + old[0]
+                else:
+                    old[0] = duration
+                    return chord + duration
+        return repl
+
+    @onSelection
     def applyRhythm(self):
         """ Adds the entered rhythm to the selected music."""
-        text = editor.selectedText()
-        if text:
-            durs = [m.group() for m in Res.finddurs.finditer(
-                unicode(self.rhythm.text()))]
-            def durgen():
-                old = ''
-                while True:
-                    for i in durs:
-                        yield i != old and i or ''
-                        old = i
-            nextdur = durgen().next
-            def repl(m):
-                if m.group('chord'):
-                    return m.group('chord') + nextdur()
-                else:
-                    return m.group(0)
-            editor.replaceSelectionWith(Res.chord.sub(repl, text), True)
+        durs = [m.group() for m in Res.finddurs.finditer(
+            unicode(self.rhythm.text()))]
+        def durgen():
+            old = ''
+            while True:
+                for i in durs:
+                    yield i != old and i or ''
+                    old = i
+        nextdur = durgen().next
+        def repl(m):
+            if m.group('chord'):
+                return m.group('chord') + nextdur()
+        return repl
 
 
 

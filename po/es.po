@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-10-04 21:28+0200\n"
+"POT-Creation-Date: 2008-10-05 01:50+0200\n"
 "PO-Revision-Date: 2008-06-23 10:02+0200\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
 "Language-Team: Spanish\n"
@@ -213,7 +213,7 @@ msgstr "Registro de LilyPond"
 msgid "PDF"
 msgstr "PDF"
 
-#: ../lilykde/editor.py:80
+#: ../lilykde/editor.py:80 ../lilykde/lqi.py:202
 msgid "Please select some text first."
 msgstr "Seleccione primero algo de texto."
 
@@ -1730,327 +1730,348 @@ msgstr ""
 msgid "Email PDF (preview)"
 msgstr "Enviar PDF (vista previa)"
 
-#: ../lilykde/lqi.py:36
+#: ../lilykde/lqi.py:37
 msgid "Quick Insert"
 msgstr ""
 
-#: ../lilykde/lqi.py:42
+#: ../lilykde/lqi.py:43
 #, fuzzy
 msgid "Articulation"
 msgstr "Dedicatoria"
 
-#: ../lilykde/lqi.py:43
+#: ../lilykde/lqi.py:44
 msgid "Accent"
 msgstr ""
 
-#: ../lilykde/lqi.py:44
+#: ../lilykde/lqi.py:45
 msgid "Marcato"
 msgstr ""
 
-#: ../lilykde/lqi.py:45
+#: ../lilykde/lqi.py:46
 msgid "Staccatissimo"
 msgstr ""
 
-#: ../lilykde/lqi.py:46
+#: ../lilykde/lqi.py:47
 msgid "Staccato"
 msgstr ""
 
-#: ../lilykde/lqi.py:47
+#: ../lilykde/lqi.py:48
 msgid "Portato"
 msgstr ""
 
-#: ../lilykde/lqi.py:48
+#: ../lilykde/lqi.py:49
 #, fuzzy
 msgid "Tenuto"
 msgstr "Tenor"
 
-#: ../lilykde/lqi.py:49
+#: ../lilykde/lqi.py:50
 msgid "Espressivo"
 msgstr ""
 
-#: ../lilykde/lqi.py:51
+#: ../lilykde/lqi.py:52
 #, fuzzy
 msgid "Ornaments"
 msgstr "Nombres de acorde"
 
-#: ../lilykde/lqi.py:52
+#: ../lilykde/lqi.py:53
 #, fuzzy
 msgid "Trill"
 msgstr "Título"
 
-#: ../lilykde/lqi.py:53
+#: ../lilykde/lqi.py:54
 msgid "Prall"
 msgstr ""
 
-#: ../lilykde/lqi.py:54
+#: ../lilykde/lqi.py:55
 msgid "Mordent"
 msgstr ""
 
-#: ../lilykde/lqi.py:55
+#: ../lilykde/lqi.py:56
 msgid "Turn"
 msgstr ""
 
-#: ../lilykde/lqi.py:56
+#: ../lilykde/lqi.py:57
 msgid "Prall prall"
 msgstr ""
 
-#: ../lilykde/lqi.py:57
+#: ../lilykde/lqi.py:58
 msgid "Prall mordent"
 msgstr ""
 
-#: ../lilykde/lqi.py:58
+#: ../lilykde/lqi.py:59
 msgid "Up prall"
 msgstr ""
 
-#: ../lilykde/lqi.py:59
+#: ../lilykde/lqi.py:60
 msgid "Down prall"
 msgstr ""
 
-#: ../lilykde/lqi.py:60
+#: ../lilykde/lqi.py:61
 msgid "Up mordent"
 msgstr ""
 
-#: ../lilykde/lqi.py:61
+#: ../lilykde/lqi.py:62
 msgid "Down mordent"
 msgstr ""
 
-#: ../lilykde/lqi.py:62
+#: ../lilykde/lqi.py:63
 msgid "Prall up"
 msgstr ""
 
-#: ../lilykde/lqi.py:63
+#: ../lilykde/lqi.py:64
 msgid "Prall down"
 msgstr ""
 
-#: ../lilykde/lqi.py:64
+#: ../lilykde/lqi.py:65
 msgid "Line prall"
 msgstr ""
 
-#: ../lilykde/lqi.py:65
+#: ../lilykde/lqi.py:66
 msgid "Reverse turn"
 msgstr ""
 
-#: ../lilykde/lqi.py:67
+#: ../lilykde/lqi.py:68
 #, fuzzy
 msgid "Signs"
 msgstr "Instrumentos de cuerda"
 
-#: ../lilykde/lqi.py:68
+#: ../lilykde/lqi.py:69
 #, fuzzy
 msgid "Fermata"
 msgstr "Alemán"
 
-#: ../lilykde/lqi.py:69
+#: ../lilykde/lqi.py:70
 msgid "Short fermata"
 msgstr ""
 
-#: ../lilykde/lqi.py:70
+#: ../lilykde/lqi.py:71
 msgid "Long fermata"
 msgstr ""
 
-#: ../lilykde/lqi.py:71
+#: ../lilykde/lqi.py:72
 msgid "Very long fermata"
 msgstr ""
 
-#: ../lilykde/lqi.py:72
+#: ../lilykde/lqi.py:73
 #, fuzzy
 msgid "Segno"
 msgstr "Tenor"
 
-#: ../lilykde/lqi.py:73
+#: ../lilykde/lqi.py:74
 msgid "Coda"
 msgstr ""
 
-#: ../lilykde/lqi.py:74
+#: ../lilykde/lqi.py:75
 msgid "Varcoda"
 msgstr ""
 
-#: ../lilykde/lqi.py:75
+#: ../lilykde/lqi.py:76
 msgid "Signumcongruentiae"
 msgstr ""
 
-#: ../lilykde/lqi.py:77
+#: ../lilykde/lqi.py:78
 #, fuzzy
 msgid "Other"
 msgstr "Compás"
 
-#: ../lilykde/lqi.py:78
+#: ../lilykde/lqi.py:79
 msgid "Upbow"
 msgstr ""
 
-#: ../lilykde/lqi.py:79
+#: ../lilykde/lqi.py:80
 msgid "Downbow"
 msgstr ""
 
-#: ../lilykde/lqi.py:80
+#: ../lilykde/lqi.py:81
 msgid "Open (e.g. brass)"
 msgstr ""
 
-#: ../lilykde/lqi.py:81
+#: ../lilykde/lqi.py:82
 msgid "Stopped (e.g. brass)"
 msgstr ""
 
-#: ../lilykde/lqi.py:82
+#: ../lilykde/lqi.py:83
 msgid "Flageolet"
 msgstr ""
 
-#: ../lilykde/lqi.py:83
+#: ../lilykde/lqi.py:84
 #, fuzzy
 msgid "Thumb"
 msgstr "Tuba"
 
-#: ../lilykde/lqi.py:84
+#: ../lilykde/lqi.py:85
 #, fuzzy
 msgid "Left heel"
 msgstr "Mano izquierda:"
 
-#: ../lilykde/lqi.py:85
+#: ../lilykde/lqi.py:86
 #, fuzzy
 msgid "Right heel"
 msgstr "Mano derecha:"
 
-#: ../lilykde/lqi.py:86
+#: ../lilykde/lqi.py:87
 msgid "Left toe"
 msgstr ""
 
-#: ../lilykde/lqi.py:87
+#: ../lilykde/lqi.py:88
 #, fuzzy
 msgid "Right toe"
 msgstr "Mano derecha:"
 
-#: ../lilykde/lqi.py:165
+#: ../lilykde/lqi.py:226
 #, fuzzy
 msgid "Articulations"
 msgstr "Acciones"
 
-#: ../lilykde/lqi.py:167
+#: ../lilykde/lqi.py:228
 msgid "Different kinds of articulations and other signs."
 msgstr ""
 
-#: ../lilykde/lqi.py:174
+#: ../lilykde/lqi.py:235
 msgid "Allow shorthands"
 msgstr ""
 
-#: ../lilykde/lqi.py:178
+#: ../lilykde/lqi.py:239
 msgid "Use short notation for some articulations like staccato."
 msgstr ""
 
-#: ../lilykde/lqi.py:183
+#: ../lilykde/lqi.py:244
 #, fuzzy
 msgid "Direction:"
 msgstr "Dedicatoria"
 
-#: ../lilykde/lqi.py:185
+#: ../lilykde/lqi.py:246
 msgid "Up"
 msgstr ""
 
-#: ../lilykde/lqi.py:185
+#: ../lilykde/lqi.py:246
 msgid "Neutral"
 msgstr ""
 
-#: ../lilykde/lqi.py:185
+#: ../lilykde/lqi.py:246
 #, fuzzy
 msgid "Down"
 msgstr "Dórico"
 
-#: ../lilykde/lqi.py:189
+#: ../lilykde/lqi.py:250
 msgid "The direction to use for the articulations."
 msgstr ""
 
-#: ../lilykde/lqi.py:215
+#: ../lilykde/lqi.py:276
 msgid "Click an articulation sign to add it to your document."
 msgstr ""
 
-#: ../lilykde/lqi.py:216
+#: ../lilykde/lqi.py:277
 msgid ""
 "If you select some music first, the articulation will be added to all notes "
 "in the selection."
 msgstr ""
 
-#: ../lilykde/lqi.py:243
+#: ../lilykde/lqi.py:304
 msgid "Rhythm"
 msgstr ""
 
-#: ../lilykde/lqi.py:245
+#: ../lilykde/lqi.py:306
 msgid "Different tools to edit durations."
 msgstr ""
 
-#: ../lilykde/lqi.py:250
+#: ../lilykde/lqi.py:311
 #, fuzzy
 msgid "Durations"
 msgstr "Acciones"
 
-#: ../lilykde/lqi.py:254
+#: ../lilykde/lqi.py:315
 #, fuzzy
 msgid "Double durations"
 msgstr "Duraciones explícitas"
 
-#: ../lilykde/lqi.py:255
+#: ../lilykde/lqi.py:316
 msgid "Double all the durations in the selection."
 msgstr ""
 
-#: ../lilykde/lqi.py:256
+#: ../lilykde/lqi.py:317
 #, fuzzy
 msgid "Halve durations"
 msgstr "Duraciones explícitas"
 
-#: ../lilykde/lqi.py:257
+#: ../lilykde/lqi.py:318
 msgid "Halve all the durations in the selection."
 msgstr ""
 
-#: ../lilykde/lqi.py:258
+#: ../lilykde/lqi.py:319
 #, fuzzy
 msgid "Dot durations"
 msgstr "Duraciones explícitas"
 
-#: ../lilykde/lqi.py:259
+#: ../lilykde/lqi.py:320
 msgid "Add a dot to all the durations in the selection."
 msgstr ""
 
-#: ../lilykde/lqi.py:260
+#: ../lilykde/lqi.py:321
 #, fuzzy
 msgid "Undot durations"
 msgstr "Quitar el enguionado"
 
-#: ../lilykde/lqi.py:261
+#: ../lilykde/lqi.py:322
 #, fuzzy
 msgid "Remove one dot from all the durations in the selection."
 msgstr "Quitar las plicas de las notas de percusión."
 
-#: ../lilykde/lqi.py:262
+#: ../lilykde/lqi.py:323
 #, fuzzy
 msgid "Remove scaling"
 msgstr "Quitar el enguionado"
 
-#: ../lilykde/lqi.py:263
+#: ../lilykde/lqi.py:324
 msgid "Remove all scaling (*n/m) from the durations in the selection."
 msgstr ""
 
-#: ../lilykde/lqi.py:265
+#: ../lilykde/lqi.py:326
 #, fuzzy
 msgid "Remove durations"
 msgstr "Quitar el enguionado"
 
-#: ../lilykde/lqi.py:266
+#: ../lilykde/lqi.py:327
 msgid "Remove all durations from the selection."
 msgstr ""
 
-#: ../lilykde/lqi.py:274
+#: ../lilykde/lqi.py:328
+msgid "Make implicit"
+msgstr ""
+
+#: ../lilykde/lqi.py:329
+msgid "Make durations implicit (remove repeated durations)."
+msgstr ""
+
+#: ../lilykde/lqi.py:330
+msgid "Make explicit"
+msgstr ""
+
+#: ../lilykde/lqi.py:331
+#, fuzzy
+msgid ""
+"Make durations explicit (add duration to every note, even if it is the same "
+"as the preceding note)."
+msgstr ""
+"Escribir la duración después de cada nota, incluso cuando es la misma que la "
+"de la nota anterior."
+
+#: ../lilykde/lqi.py:338
 msgid "Apply rhythm"
 msgstr ""
 
-#: ../lilykde/lqi.py:278
+#: ../lilykde/lqi.py:342
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr ""
 
-#: ../lilykde/lqi.py:280
+#: ../lilykde/lqi.py:344
 msgid "Apply"
 msgstr ""
 
-#: ../lilykde/lqi.py:282
+#: ../lilykde/lqi.py:346
 msgid ""
 "Press to apply the entered rhythm to the selected music. This will delete "
-"previous entered durations."
+"previously entered durations."
 msgstr ""
 
 #: ../lilypond-servicemenu-helper.py:61

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-10-04 21:28+0200\n"
-"PO-Revision-Date: 2008-10-04 21:36+0200\n"
+"POT-Creation-Date: 2008-10-05 01:50+0200\n"
+"PO-Revision-Date: 2008-10-05 01:52+0200\n"
 "Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
 "Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -212,7 +212,7 @@ msgstr "LilyPond-uitvoer"
 msgid "PDF"
 msgstr "PDF"
 
-#: ../lilykde/editor.py:80
+#: ../lilykde/editor.py:80 ../lilykde/lqi.py:202
 msgid "Please select some text first."
 msgstr "Selecteer eerst de tekst waarop u de functie wilt toepassen."
 
@@ -1709,223 +1709,223 @@ msgstr ""
 msgid "Email PDF (preview)"
 msgstr "PDF e-mailen (vooruitblik)"
 
-#: ../lilykde/lqi.py:36
+#: ../lilykde/lqi.py:37
 msgid "Quick Insert"
 msgstr "Quick Insert"
 
-#: ../lilykde/lqi.py:42
+#: ../lilykde/lqi.py:43
 msgid "Articulation"
 msgstr "Articulatie"
 
-#: ../lilykde/lqi.py:43
+#: ../lilykde/lqi.py:44
 msgid "Accent"
 msgstr "Accent"
 
-#: ../lilykde/lqi.py:44
+#: ../lilykde/lqi.py:45
 msgid "Marcato"
 msgstr "Marcato"
 
-#: ../lilykde/lqi.py:45
+#: ../lilykde/lqi.py:46
 msgid "Staccatissimo"
 msgstr "Staccatissimo"
 
-#: ../lilykde/lqi.py:46
+#: ../lilykde/lqi.py:47
 msgid "Staccato"
 msgstr "Staccato"
 
-#: ../lilykde/lqi.py:47
+#: ../lilykde/lqi.py:48
 msgid "Portato"
 msgstr "Portato"
 
-#: ../lilykde/lqi.py:48
+#: ../lilykde/lqi.py:49
 msgid "Tenuto"
 msgstr "Tenuto"
 
-#: ../lilykde/lqi.py:49
+#: ../lilykde/lqi.py:50
 msgid "Espressivo"
 msgstr "Espressivo"
 
-#: ../lilykde/lqi.py:51
+#: ../lilykde/lqi.py:52
 msgid "Ornaments"
 msgstr "Versieringen"
 
-#: ../lilykde/lqi.py:52
+#: ../lilykde/lqi.py:53
 msgid "Trill"
 msgstr "Triller"
 
-#: ../lilykde/lqi.py:53
+#: ../lilykde/lqi.py:54
 msgid "Prall"
 msgstr "Praller"
 
-#: ../lilykde/lqi.py:54
+#: ../lilykde/lqi.py:55
 msgid "Mordent"
 msgstr "Mordent"
 
-#: ../lilykde/lqi.py:55
+#: ../lilykde/lqi.py:56
 msgid "Turn"
 msgstr "Dubbelslag"
 
-#: ../lilykde/lqi.py:56
+#: ../lilykde/lqi.py:57
 msgid "Prall prall"
 msgstr "Lange praller"
 
-#: ../lilykde/lqi.py:57
+#: ../lilykde/lqi.py:58
 msgid "Prall mordent"
 msgstr "Praller met mordent"
 
-#: ../lilykde/lqi.py:58
+#: ../lilykde/lqi.py:59
 msgid "Up prall"
 msgstr "Praller naar boven"
 
-#: ../lilykde/lqi.py:59
+#: ../lilykde/lqi.py:60
 msgid "Down prall"
 msgstr "Praller naar beneden"
 
-#: ../lilykde/lqi.py:60
+#: ../lilykde/lqi.py:61
 msgid "Up mordent"
 msgstr "Mordent naar boven"
 
-#: ../lilykde/lqi.py:61
+#: ../lilykde/lqi.py:62
 msgid "Down mordent"
 msgstr "Mordent naar beneden"
 
-#: ../lilykde/lqi.py:62
+#: ../lilykde/lqi.py:63
 msgid "Prall up"
 msgstr "Praller naar boven"
 
-#: ../lilykde/lqi.py:63
+#: ../lilykde/lqi.py:64
 msgid "Prall down"
 msgstr "Praller naar onder"
 
-#: ../lilykde/lqi.py:64
+#: ../lilykde/lqi.py:65
 msgid "Line prall"
 msgstr "Praller met lijn"
 
-#: ../lilykde/lqi.py:65
+#: ../lilykde/lqi.py:66
 msgid "Reverse turn"
 msgstr "Omgekeerde dubbelslag"
 
-#: ../lilykde/lqi.py:67
+#: ../lilykde/lqi.py:68
 msgid "Signs"
 msgstr "Tekens"
 
-#: ../lilykde/lqi.py:68
+#: ../lilykde/lqi.py:69
 msgid "Fermata"
 msgstr "Fermate"
 
-#: ../lilykde/lqi.py:69
+#: ../lilykde/lqi.py:70
 msgid "Short fermata"
 msgstr "Korte fermate"
 
-#: ../lilykde/lqi.py:70
+#: ../lilykde/lqi.py:71
 msgid "Long fermata"
 msgstr "Lange fermate"
 
-#: ../lilykde/lqi.py:71
+#: ../lilykde/lqi.py:72
 msgid "Very long fermata"
 msgstr "Zeer lange fermate"
 
-#: ../lilykde/lqi.py:72
+#: ../lilykde/lqi.py:73
 msgid "Segno"
 msgstr "Teken"
 
-#: ../lilykde/lqi.py:73
+#: ../lilykde/lqi.py:74
 msgid "Coda"
 msgstr "Coda"
 
-#: ../lilykde/lqi.py:74
+#: ../lilykde/lqi.py:75
 msgid "Varcoda"
 msgstr "Varcoda"
 
-#: ../lilykde/lqi.py:75
+#: ../lilykde/lqi.py:76
 msgid "Signumcongruentiae"
 msgstr "Signumcongruentiae"
 
-#: ../lilykde/lqi.py:77
+#: ../lilykde/lqi.py:78
 msgid "Other"
 msgstr "Overig"
 
-#: ../lilykde/lqi.py:78
+#: ../lilykde/lqi.py:79
 msgid "Upbow"
 msgstr "Opstreek"
 
-#: ../lilykde/lqi.py:79
+#: ../lilykde/lqi.py:80
 msgid "Downbow"
 msgstr "Afstreek"
 
-#: ../lilykde/lqi.py:80
+#: ../lilykde/lqi.py:81
 msgid "Open (e.g. brass)"
 msgstr "Open (koper)"
 
-#: ../lilykde/lqi.py:81
+#: ../lilykde/lqi.py:82
 msgid "Stopped (e.g. brass)"
 msgstr "Gestopt (koper)"
 
-#: ../lilykde/lqi.py:82
+#: ../lilykde/lqi.py:83
 msgid "Flageolet"
 msgstr "Flageolet"
 
-#: ../lilykde/lqi.py:83
+#: ../lilykde/lqi.py:84
 msgid "Thumb"
 msgstr "Duim"
 
-#: ../lilykde/lqi.py:84
+#: ../lilykde/lqi.py:85
 msgid "Left heel"
 msgstr "Linker hak"
 
-#: ../lilykde/lqi.py:85
+#: ../lilykde/lqi.py:86
 msgid "Right heel"
 msgstr "Rechter hak"
 
-#: ../lilykde/lqi.py:86
+#: ../lilykde/lqi.py:87
 msgid "Left toe"
 msgstr "Linker teen"
 
-#: ../lilykde/lqi.py:87
+#: ../lilykde/lqi.py:88
 msgid "Right toe"
 msgstr "Rechter teen"
 
-#: ../lilykde/lqi.py:165
+#: ../lilykde/lqi.py:226
 msgid "Articulations"
 msgstr "Articulaties"
 
-#: ../lilykde/lqi.py:167
+#: ../lilykde/lqi.py:228
 msgid "Different kinds of articulations and other signs."
 msgstr "Verschillende soorten articulatie en andere tekens."
 
-#: ../lilykde/lqi.py:174
+#: ../lilykde/lqi.py:235
 msgid "Allow shorthands"
 msgstr "Korte notatie"
 
-#: ../lilykde/lqi.py:178
+#: ../lilykde/lqi.py:239
 msgid "Use short notation for some articulations like staccato."
 msgstr "Korte notatie toestaan voor sommige articulaties zoals staccato."
 
-#: ../lilykde/lqi.py:183
+#: ../lilykde/lqi.py:244
 msgid "Direction:"
 msgstr "Richting:"
 
-#: ../lilykde/lqi.py:185
+#: ../lilykde/lqi.py:246
 msgid "Up"
 msgstr "Boven"
 
-#: ../lilykde/lqi.py:185
+#: ../lilykde/lqi.py:246
 msgid "Neutral"
 msgstr "Neutraal"
 
-#: ../lilykde/lqi.py:185
+#: ../lilykde/lqi.py:246
 msgid "Down"
 msgstr "Onder"
 
-#: ../lilykde/lqi.py:189
+#: ../lilykde/lqi.py:250
 msgid "The direction to use for the articulations."
 msgstr "Plaatsing van de articulaties: onder of boven de balk of neutraal."
 
-#: ../lilykde/lqi.py:215
+#: ../lilykde/lqi.py:276
 msgid "Click an articulation sign to add it to your document."
 msgstr "Klik op een articulatie-teken om het aan uw document toe te voegen."
 
-#: ../lilykde/lqi.py:216
+#: ../lilykde/lqi.py:277
 msgid ""
 "If you select some music first, the articulation will be added to all notes "
 "in the selection."
@@ -1933,82 +1933,102 @@ msgstr ""
 "Als u eerst muziek selecteert, wordt het articulatie-teken aan alle noten in "
 "de selectie toegevoegd."
 
-#: ../lilykde/lqi.py:243
+#: ../lilykde/lqi.py:304
 msgid "Rhythm"
 msgstr "Ritme"
 
-#: ../lilykde/lqi.py:245
+#: ../lilykde/lqi.py:306
 msgid "Different tools to edit durations."
 msgstr "Hulpmiddelen voor het bewerken van tijdsduren."
 
-#: ../lilykde/lqi.py:250
+#: ../lilykde/lqi.py:311
 msgid "Durations"
 msgstr "Tijdsduren"
 
-#: ../lilykde/lqi.py:254
+#: ../lilykde/lqi.py:315
 msgid "Double durations"
 msgstr "Tijdsduur verdubbelen"
 
-#: ../lilykde/lqi.py:255
+#: ../lilykde/lqi.py:316
 msgid "Double all the durations in the selection."
 msgstr "Alle nootlengtes in de selectie verdubbelen."
 
-#: ../lilykde/lqi.py:256
+#: ../lilykde/lqi.py:317
 msgid "Halve durations"
 msgstr "Tijdsduur halveren"
 
-#: ../lilykde/lqi.py:257
+#: ../lilykde/lqi.py:318
 msgid "Halve all the durations in the selection."
 msgstr "Alle nootlengtes in de selectie halveren."
 
-#: ../lilykde/lqi.py:258
+#: ../lilykde/lqi.py:319
 msgid "Dot durations"
 msgstr "Punt toevoegen"
 
-#: ../lilykde/lqi.py:259
+#: ../lilykde/lqi.py:320
 msgid "Add a dot to all the durations in the selection."
 msgstr "Een punt toevoegen aan alle noten in de selectie."
 
-#: ../lilykde/lqi.py:260
+#: ../lilykde/lqi.py:321
 msgid "Undot durations"
 msgstr "Punt verwijderen"
 
-#: ../lilykde/lqi.py:261
+#: ../lilykde/lqi.py:322
 msgid "Remove one dot from all the durations in the selection."
 msgstr "Een punt verwijderen van alle noten in de selectie."
 
-#: ../lilykde/lqi.py:262
+#: ../lilykde/lqi.py:323
 msgid "Remove scaling"
 msgstr "Schaling verwijderen"
 
-#: ../lilykde/lqi.py:263
+#: ../lilykde/lqi.py:324
 msgid "Remove all scaling (*n/m) from the durations in the selection."
 msgstr "Alle schaling (*n/m) verwijderen van de nootlengtes in de selectie."
 
-#: ../lilykde/lqi.py:265
+#: ../lilykde/lqi.py:326
 msgid "Remove durations"
 msgstr "Tijdsduur verwijderen"
 
-#: ../lilykde/lqi.py:266
+#: ../lilykde/lqi.py:327
 msgid "Remove all durations from the selection."
 msgstr "De volledige tijdsduur-informatie verwijderen uit de selectie."
 
-#: ../lilykde/lqi.py:274
+#: ../lilykde/lqi.py:328
+msgid "Make implicit"
+msgstr "Impliciet maken"
+
+#: ../lilykde/lqi.py:329
+msgid "Make durations implicit (remove repeated durations)."
+msgstr "Tijdsduren impliciet maken (herhaalde lengtes verwijderen)."
+
+#: ../lilykde/lqi.py:330
+msgid "Make explicit"
+msgstr "Expliciet maken"
+
+#: ../lilykde/lqi.py:331
+msgid ""
+"Make durations explicit (add duration to every note, even if it is the same "
+"as the preceding note)."
+msgstr ""
+"De toonduur na elke noot weergeven, ook als deze hetzelfde is als de vorige "
+"noot."
+
+#: ../lilykde/lqi.py:338
 msgid "Apply rhythm"
 msgstr "Ritme toepassen"
 
-#: ../lilykde/lqi.py:278
+#: ../lilykde/lqi.py:342
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr "Voer een ritme in met nootlengtes en spaties ertussen (bijv. 8. 16 8 4 8)"
 
-#: ../lilykde/lqi.py:280
+#: ../lilykde/lqi.py:344
 msgid "Apply"
 msgstr "Toepassen"
 
-#: ../lilykde/lqi.py:282
+#: ../lilykde/lqi.py:346
 msgid ""
 "Press to apply the entered rhythm to the selected music. This will delete "
-"previous entered durations."
+"previously entered durations."
 msgstr ""
 "Klik om het ingevoerde ritme aan de geselecteerde muziek toe te voegen. "
 "Eerder ingevoerde ritmiek gaat hierdoor verloren."
