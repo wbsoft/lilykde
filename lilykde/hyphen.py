@@ -30,7 +30,7 @@ from kdeui import KInputDialog
 import kate
 
 from lilykde.util import py2qstringlist, kconfig
-from lilykde.kateutil import runOnSelection
+from lilykde.editor import runOnSelection
 
 from lilykde import config, language
 

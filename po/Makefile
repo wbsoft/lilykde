@@ -12,7 +12,7 @@ translate = \
 	../lilykde/log.py \
 	../lilykde/pdf.py \
 	../lilykde/util.py \
-	../lilykde/kateutil.py \
+	../lilykde/editor.py \
 	../lilykde/widgets.py \
 	../lilykde/hyphen.py \
 	../lilykde/settings.py \
