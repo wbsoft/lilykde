@@ -358,53 +358,50 @@ class Rhythm(Lqi):
         Decorator to handle functions that are the callback for the regexp.
         """
         def deco(self):
-            Res.edit(func)
+            def repl(m):
+                if m.group('duration'):
+                    return func(m)
+            Res.edit(repl)
         return deco
 
     @editRhythm
     def doubleDurations(m):
-        if m.group('duration'):
-            chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
-            if dur in durations:
-                i = durations.index(dur)
-                if i > 0:
-                    dur = durations[i - 1]
-            return ''.join(i or '' for i in (chord, dur, dots, scale))
+        chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
+        if dur in durations:
+            i = durations.index(dur)
+            if i > 0:
+                dur = durations[i - 1]
+        return ''.join(i or '' for i in (chord, dur, dots, scale))
 
     @editRhythm
     def halveDurations(m):
-        if m.group('duration'):
-            chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
-            if dur in durations:
-                i = durations.index(dur)
-                if i < len(durations) - 1:
-                    dur = durations[i + 1]
-            return ''.join(i or '' for i in (chord, dur, dots, scale))
+        chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
+        if dur in durations:
+            i = durations.index(dur)
+            if i < len(durations) - 1:
+                dur = durations[i + 1]
+        return ''.join(i or '' for i in (chord, dur, dots, scale))
 
     @editRhythm
     def dotDurations(m):
-        if m.group('duration'):
-            chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
-            dots = (dots or '') + '.'
-            return ''.join(i or '' for i in (chord, dur, dots, scale))
+        chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
+        dots = (dots or '') + '.'
+        return ''.join(i or '' for i in (chord, dur, dots, scale))
 
     @editRhythm
     def undotDurations(m):
-        if m.group('duration'):
-            chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
-            if dots:
-                dots = dots[1:]
-            return ''.join(i or '' for i in (chord, dur, dots, scale))
+        chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
+        if dots:
+            dots = dots[1:]
+        return ''.join(i or '' for i in (chord, dur, dots, scale))
 
     @editRhythm
     def removeScaling(m):
-        if m.group('duration'):
-            return ''.join(i or '' for i in m.group('chord', 'dur', 'dots'))
+        return ''.join(i or '' for i in m.group('chord', 'dur', 'dots'))
 
     @editRhythm
     def removeDurations(m):
-        if m.group('full'):
-            return m.group('chord')
+        return m.group('chord')
 
     def makeImplicit(self):
         old = ['']
