@@ -117,7 +117,7 @@ class Res(object):
     cautionary = r"[?!]?"
     named_cautionary = "(?P<cautionary>" + cautionary + ")"
 
-    rest = r"(\b[Rrs]|\\skip(?![A-Za-z]))"
+    rest = r"(\b[Rrs]|\\skip)(?![A-Za-z])"
     named_rest = "(?P<rest>" + rest + ")"
 
     octave = r"('+|,+|(?![A-Za-z]))"
@@ -353,16 +353,6 @@ class Rhythm(Lqi):
 
 
 
-    def onSelection(func):
-        """
-        Decorator to run a function on selected text.
-        The function is called to deliver a function that can be
-        used as a callback for the regexp.
-        """
-        def deco(self):
-            Res.edit(func(*[self][0:func.func_code.co_argcount]))
-        return deco
-
     def editRhythm(func):
         """
         Decorator to handle functions that are the callback for the regexp.
@@ -416,8 +406,7 @@ class Rhythm(Lqi):
         if m.group('full'):
             return m.group('chord')
 
-    @onSelection
-    def makeImplicit():
+    def makeImplicit(self):
         old = ['']
         def repl(m):
             chord, duration = m.group('chord', 'duration')
@@ -427,10 +416,9 @@ class Rhythm(Lqi):
                 else:
                     old[0] = duration
                     return chord + duration
-        return repl
+        Res.edit(repl)
 
-    @onSelection
-    def makeExplicit():
+    def makeExplicit(self):
         old = ['']
         def repl(m):
             chord, duration = m.group('chord', 'duration')
@@ -440,9 +428,8 @@ class Rhythm(Lqi):
                 else:
                     old[0] = duration
                     return chord + duration
-        return repl
+        Res.edit(repl)
 
-    @onSelection
     def applyRhythm(self):
         """ Adds the entered rhythm to the selected music."""
         durs = [m.group() for m in Res.finddurs.finditer(
@@ -457,7 +444,7 @@ class Rhythm(Lqi):
         def repl(m):
             if m.group('chord'):
                 return m.group('chord') + nextdur()
-        return repl
+        Res.edit(repl)
 
 
 
