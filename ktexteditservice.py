@@ -27,7 +27,7 @@ if len(sys.argv) != 2:
         "ktexteditservice.py textedit:///path/to/file:line:char:col\n")
     sys.exit(2)
 
-url = unicode(sys.argv[1])
+url = sys.argv[1]
 m = re.match("textedit:/{,2}(/[^/].*):(\d+):(\d+):(\d+)$", url)
 if m:
     file, (line, char, col) = "file://%s" % m.group(1), map(int, m.group(2,3,4))
