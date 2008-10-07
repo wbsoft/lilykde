@@ -55,7 +55,7 @@ class _(unicode):
         return unicode.__new__(cls, _i18n(*args))
 
     def args(self, *args, **kwargs):
-        return Template(self).substitute(*args, **kwargs)
+        return Template(unicode(self)).substitute(*args, **kwargs)
 
 
 # kate: indent-width 4;

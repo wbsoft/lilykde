@@ -25,10 +25,9 @@ This part is loaded when the LilyPond is first called.
 
 """
 
-import re, os
+import os, re, sys, urllib
 
 from qt import SIGNAL, QString, QObject
-from kdecore import KURL
 
 # Some utility functions
 from lilykde.util import htmlescape, encodeurl, kprocess
@@ -50,8 +49,10 @@ class LyFile(object):
     """
     def __init__(self, doc):
         self.doc = doc
-        self.kurl = KURL(doc.url)
-        self.setPath(unicode(self.kurl.path())) # the full path to the ly file
+        url = urllib.unquote(doc.url).decode(
+            sys.getfilesystemencoding() or 'utf-8')
+        path = re.sub(r'^file:(//)?(?=/)', '', url)
+        self.setPath(path) # the full path to the ly file
 
     def setPath(self, path):
         self.path = path
@@ -62,7 +63,7 @@ class LyFile(object):
             self.directory, self.basename + ".pdf") or None
 
     def isLocalFile(self):
-            return self.kurl.isLocalFile()
+            return self.doc.url.startswith('file:/')
 
     def isLyFile(self):
         return self.doc.information.mimeType == 'text/x-lilypond' or \
@@ -153,6 +154,7 @@ class LyJob(kprocess):
     def _run(self, args, mode=None):
         if config("preferences")['delete intermediate files'] == '1':
             args.insert(0, "-ddelete-intermediate-files")
+        args = [a.encode(sys.getfilesystemencoding() or 'utf-8') for a in args]
         self.setArguments(args)
         a = dict(filename = self.f.ly, mode = mode)
         if mode:
