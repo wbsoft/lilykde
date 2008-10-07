@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lilykde 0.6.1\n"
 "Report-Msgid-Bugs-To: lilykde@xs4all.nl\n"
-"POT-Creation-Date: 2008-10-05 01:50+0200\n"
+"POT-Creation-Date: 2008-10-07 23:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Henrik Evers <henrik.evers@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,58 +35,58 @@ msgstr ""
 "Version: $version\n"
 "Homepage: $homepage\n"
 
-#: ../lilykde/runlily.py:159
+#: ../lilykde/runlily.py:161
 msgid "LilyPond [$filename] starting ($mode)..."
 msgstr "LilyPond [$filename] startet ($mode)..."
 
-#: ../lilykde/runlily.py:161
+#: ../lilykde/runlily.py:163
 msgid "LilyPond [$filename] starting..."
 msgstr "LilyPond [$filename] startet..."
 
-#: ../lilykde/runlily.py:162
+#: ../lilykde/runlily.py:164
 msgid "Could not start LilyPond."
 msgstr "Konnte LilyPond nicht starten."
 
-#: ../lilykde/runlily.py:173
+#: ../lilykde/runlily.py:175
 msgid "LilyPond [$filename] was terminated by signal $signal."
 msgstr "LilyPond [$filename] wurde von Signal $signal beendet."
 
-#: ../lilykde/runlily.py:178
+#: ../lilykde/runlily.py:180
 msgid "LilyPond [$filename] exited with return code $retcode."
 msgstr "LilyPond [$filename] wurde mit dem Return-Code $retcode beendet."
 
-#: ../lilykde/runlily.py:181
+#: ../lilykde/runlily.py:183
 msgid "LilyPond [$filename] finished."
 msgstr "LilyPond [$filename] ist fertig."
 
-#: ../lilykde/runlily.py:184
+#: ../lilykde/runlily.py:186
 msgid "LilyPond [$filename] exited abnormally."
 msgstr "LilyPond [$filename] wurde vorzeitig beendet."
 
-#: ../lilykde/runlily.py:200
+#: ../lilykde/runlily.py:202
 msgid "preview mode"
 msgstr "Vorschau-Modus"
 
-#: ../lilykde/runlily.py:202
+#: ../lilykde/runlily.py:204
 msgid "publish mode"
 msgstr "Veröffentlichungs-Modus"
 
-#: ../lilykde/runlily.py:218
+#: ../lilykde/runlily.py:220
 msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
 msgstr ""
 "LilyPond hat kein PDF erzeugt. Möglicherweise haben Sie <b>\\layout</b> "
 "vergessen?"
 
-#: ../lilykde/runlily.py:232
+#: ../lilykde/runlily.py:234
 msgid "Your document currently has no filename, please save first."
 msgstr ""
 "Ihr Dokument hat zur Zeit keinen Namen. Bitte speichern Sie es zunächst ab."
 
-#: ../lilykde/runlily.py:239
+#: ../lilykde/runlily.py:241
 msgid "Your document has been modified, please save first."
 msgstr "Ihr Dokument wurde verändert. Bitte speichern Sie es zuerst ab."
 
-#: ../lilykde/runlily.py:245
+#: ../lilykde/runlily.py:247
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
