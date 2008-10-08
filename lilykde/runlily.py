@@ -25,12 +25,12 @@ This part is loaded when the LilyPond is first called.
 
 """
 
-import os, re, sys, urllib
+import os, re, sys
 
 from qt import SIGNAL, QString, QObject
 
 # Some utility functions
-from lilykde.util import htmlescape, encodeurl, kprocess
+from lilykde.util import htmlescape, decodeurl, encodeurl, kprocess
 from lilykde.widgets import sorry
 
 # config settings
@@ -49,7 +49,7 @@ class LyFile(object):
     """
     def __init__(self, doc):
         self.doc = doc
-        url = urllib.unquote(doc.url).decode(
+        url = decodeurl(doc.url).decode(
             sys.getfilesystemencoding() or 'utf-8')
         path = re.sub(r'^file:(//)?(?=/)', '', url)
         self.setPath(path) # the full path to the ly file

@@ -50,6 +50,22 @@ def encodeurl(s):
         ): s = s.replace(a,b)
     return s
 
+_hextochr = dict(('%02x' % i, chr(i)) for i in range(256))
+_hextochr.update(('%02X' % i, chr(i)) for i in range(256))
+
+def decodeurl(s):
+    """Decode an URL, based on Python urllib.unquote"""
+    res = s.split('%')
+    for i in xrange(1, len(res)):
+        item = res[i]
+        try:
+            res[i] = _hextochr[item[:2]] + item[2:]
+        except KeyError:
+            res[i] = '%' + item
+        except UnicodeDecodeError:
+            res[i] = unichr(int(item[:2], 16)) + item[2:]
+    return "".join(res)
+
 def htmlescape(s):
     """Escape strings for use in HTML text and attributes."""
     for a, b in (
