@@ -22,7 +22,7 @@
 
 import sys, os
 
-from kdecore import KAboutData, KApplication, KURL, KStandardDirs, KCmdLineArgs
+from kdecore import KAboutData, KApplication, KStandardDirs, KCmdLineArgs
 
 # Find LilyKDE
 sys.path[0:0] = map(os.path.normpath, map(str,
@@ -40,8 +40,9 @@ from lilykde.i18n import _, I18N_NOOP
 class File(LyFile):
 
     def __init__(self, path):
-        self.kurl = KURL(os.path.abspath(path))
-        self.setPath(unicode(self.kurl.path())) # the full path to the ly file
+        path = os.path.abspath(path).decode(
+            sys.getfilesystemencoding() or 'utf-8')
+        self.setPath(path) # the full path to the ly file
 
     def isLyFile(self):
         return self.extension in ('.ly', '.ily', '.lyi')
