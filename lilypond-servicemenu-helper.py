@@ -64,6 +64,7 @@ class Job(LyJob):
                            numFailed).args(count = numFailed))
             else:
                 log.ok(_("All documents successfully converted."))
+            log.setCaption('%s (%s)' % (PROGRAMNAME, _("Finished")))
 
     def completed(self, success):
         if not success:
