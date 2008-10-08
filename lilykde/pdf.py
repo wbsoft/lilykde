@@ -51,7 +51,7 @@ def openFile(pdf):
 
     global _file
 
-    c = KApplication.kApplication().dcopClient()
+    c = KApplication.dcopClient()
     kpdf = DCOPApp(c.appId(), c).kpdf
 
     # When LilyPond writes a PDF, it first deletes the old one.
