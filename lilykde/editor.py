@@ -31,6 +31,89 @@ from lilykde.widgets import sorry
 # Translate the messages
 from lilykde.i18n import _
 
+def text():
+    """The document text."""
+    return kate.document().text
+
+def setText(text):
+    """Set the document text."""
+    # Just setting d.text does work, but triggers a bug in the
+    # Katepart syntax highlighting: the first part of the document
+    # looses its highlighting when a user undoes the conversion
+    # with Ctrl+Z
+    d = kate.document()
+    d.editingSequence.begin()
+    for i in range(d.numberOfLines):
+        d.removeLine(0)
+    kate.document().text = text
+    d.editingSequence.end()
+
+def insertLine(lineNum, text):
+    """Insert text at the given line number."""
+    kate.document().insertLine(lineNum, text)
+
+def append(text):
+    """Append text to document (starting in a new line)."""
+    d = kate.document()
+    d.insertLine(d.numberOfLines, text)
+
+def clear():
+    """Clear the current editor buffer."""
+    # kate.document().clear() is broken in Pate 0.5.1
+    d = kate.document()
+    for i in range(d.numberOfLines):
+        d.removeLine(0)
+
+def currentLine():
+    """The text on the current line."""
+    return kate.view().currentLine
+
+def line(lineNum):
+    """The text on the given line number."""
+    return kate.document().line(lineNum)
+
+def search(text, start, caseSensitive=True, searchBackwards=False):
+    """
+    Search through the document.
+    Returns match, (line, column), length
+    """
+    return kate.document().search(text, start, caseSensitive, searchBackwards)
+
+def fragment(start, end):
+    """Returns the text from start (line, col) to end (line, col)..."""
+    return kate.document().fragment(start, end)
+
+def pos():
+    """The cursor position."""
+    return kate.view().cursor.position
+
+def setPos(linepos, col = None):
+    """Set the cursor position to line, col or (line, col)."""
+    if col is None:
+        kate.view().cursor.position = linepos
+    else:
+        kate.view().cursor.position = (linepos, col)
+
+def focus():
+    """Give keyboard focus to the text editor widget."""
+    kate.mainWidget().setFocus()
+
+def topLevelWidget():
+    """The toplevel window of the editing widget."""
+    return kate.mainWidget().topLevelWidget()
+
+def mainWidget():
+    """The main text editing widget."""
+    return kate.mainWidget()
+
+def editBegin():
+    """Start an editing sequence."""
+    kate.document().editingSequence.begin()
+
+def editEnd():
+    """End an editing sequence."""
+    kate.document().editingSequence.end()
+
 def insertText(text):
     kate.view().insertText(text)
 
@@ -42,6 +125,10 @@ def selectedText():
         return kate.view().selection.text
     else:
         return ''
+
+def hasSelection():
+    """True if there is a selection"""
+    return kate.view().selection.exists
 
 def replaceSelectionWith(text, keepSelection = False):
     """

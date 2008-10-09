@@ -28,12 +28,9 @@ from qt import *
 from kdecore import KStandardDirs, KProcess
 from kdeui import KPushButton, KStdGuiItem
 
-import kate
-import kate.gui
-
 from lilykde.util import kprocess, qstringlist2py, py2qstringlist, bound, rdict
 from lilykde.widgets import error, ProcessButton, TapButton
-from lilykde import config
+from lilykde import config, editor
 
 # Translate the messages
 from lilykde.i18n import _
@@ -207,9 +204,9 @@ class RumorButton(ProcessButton):
         conf = config("rumor")
         # indent of current line
         self.indent = re.match(r'\s*',
-            kate.view().currentLine[:kate.view().cursor.position[1]]).group()
+            editor.currentLine()[:editor.pos()[1]]).group()
         # text from start to cursor
-        text = kate.document().fragment((0, 0), kate.view().cursor.position)
+        text = editor.fragment((0, 0), editor.pos())
         cmd = [config("commands").get("rumor", "rumor")]
         # Language
         lang = conf.get("language", "auto")
@@ -337,7 +334,7 @@ class RumorButton(ProcessButton):
             text = text.replace('|', '')
         text = text.replace('\n\n', '\n')   # avoid empty lines
         text = text.replace('\n', '\n' + self.indent)
-        kate.view().insertText(text)
+        editor.insertText(text)
 
     def started(self):
         self.parent().status.message(_(
@@ -356,7 +353,7 @@ class RumorButton(ProcessButton):
     def stopped(self):
         self.parent().status.clear()
         if self.keyboardEmu:
-            kate.mainWidget().setFocus()
+            editor.focus()
 
     def sendkey(self, key):
         # pass key to Rumor
@@ -492,7 +489,7 @@ class Rumor(QFrame):
             self.r.animateClick()
         elif self.r.keyboardEmu:
             if e.key() in (Qt.Key_Enter, Qt.Key_Return):
-                kate.view().insertText('\n' + self.r.indent)
+                editor.insertText('\n' + self.r.indent)
             elif not e.isAutoRepeat() and not e.text().isEmpty():
                 # pass key to Rumor
                 self.r.sendkey(str(e.text()))
@@ -729,6 +726,7 @@ class RumorSettings(QDialog):
 
 
 # Main stuff
+import kate
 tool = kate.gui.Tool(_("Rumor"), "ly", kate.gui.Tool.bottom)
 rumor = Rumor(tool.widget)
 show = tool.show

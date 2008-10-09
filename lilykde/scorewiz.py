@@ -39,9 +39,7 @@ from qt import *
 from kdecore import KCompletion
 from kdeui import *
 
-import kate
-
-from lilykde import config
+from lilykde import config, editor
 from lilykde.util import py2qstringlist, qstringlist2py, romanize
 from lilykde.widgets import TapButton
 from lilykde.lilydom import *
@@ -1014,7 +1012,7 @@ class ScoreWizard(KDialogBase):
             self.printoutParts(d, parts)
 
         # and finally print out:
-        kate.view().insertText(unicode(d))
+        editor.insertText(unicode(d))
 
     def printoutParts(self, d, parts):
         """
@@ -1151,6 +1149,6 @@ class ScoreWizard(KDialogBase):
 
 
 # Instantiate one!
-scorewiz = ScoreWizard(kate.mainWidget())
+scorewiz = ScoreWizard(editor.mainWidget())
 
 # kate: indent-width 4;

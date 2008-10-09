@@ -24,14 +24,13 @@
 
 import re
 from subprocess import Popen, PIPE
-import kate
 
 # Some utils, popups
 from lilykde.util import timer
 from lilykde.widgets import info, sorry, error
 
-# config backend
-from lilykde import config
+# config and editor backend
+from lilykde import config, editor
 
 # Translate the messages
 from lilykde.i18n import _
@@ -61,19 +60,19 @@ def init():
 def insertVersion():
     """ insert LilyPond version in the current document """
     global version
-    d = kate.document()
-    match, pos, length = d.search("\\version", (0, 0))
+    match, pos, length = editor.search("\\version", (0, 0))
     if match:
         sorry(_("Your document has already a LilyPond version statement."))
-        d.view.cursor.position = pos
+        editor.setPos(pos)
     else:
-        d.insertLine(0, '\\version "%d.%d.%d"' % version)
-        d.view.cursor.position = (0, d.lineLength(0))
+        versionLine = '\\version "%d.%d.%d"' % version
+        editor.insertLine(0, versionLine)
+        editor.setPos(0, len(versionLine))
 
 def getVersion():
     """ determine the LilyPond version of the current document """
-    d = kate.document()
-    match = re.search(r'\\version\s*"(\d+)(?:\.(\d+)(?:\.(\d+))?)?', d.text)
+    match = re.search(r'\\version\s*"(\d+)(?:\.(\d+)(?:\.(\d+))?)?',
+        editor.text())
     if match:
         return tuple(int(s or "0") for s in match.groups())
     else:
@@ -92,7 +91,6 @@ def convertLy():
     elif docVersion >= version:
         sorry(_("This LilyPond document is already up-to-date."))
     else:
-        d = kate.document()
         # Ok, let's run convert-ly.
         # We add the from-version. Only in that case convert-ly wants to
         # read from stdin.
@@ -100,19 +98,10 @@ def convertLy():
         try:
             out, err = Popen((convert_ly, "-f", "%d.%d.%d" % docVersion, "-"),
                             stdin=PIPE, stdout=PIPE, stderr=PIPE
-                            ).communicate(d.text.encode('utf8'))
+                            ).communicate(editor.text().encode('utf8'))
             if out:
-                # Just setting d.text does work, but triggers a bug in the
-                # Katepart syntax highlighting: the first part of the document
-                # looses its highlighting when a user undoes the conversion
-                # with Ctrl+Z
-                d.editingSequence.begin()
-                # d.clear() is broken in Pate 0.5.1
-                for i in range(d.numberOfLines):
-                    d.removeLine(0)
-                d.text = u"%s\n\n%%{\n%s\n%%}\n" % (
-                    out.decode('utf8'), err.decode('utf8'))
-                d.editingSequence.end()
+                editor.setText(u"%s\n\n%%{\n%s\n%%}\n" %
+                    (out.decode('utf8'), err.decode('utf8')))
                 info(_(
                  "The document has been processed with convert-ly. You'll find "
                  "the messages of convert-ly in a comment block at the end. "

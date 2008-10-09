@@ -27,12 +27,10 @@ from glob import glob
 
 from kdeui import KInputDialog
 
-import kate
-
 from lilykde.util import py2qstringlist, kconfig
 from lilykde.editor import runOnSelection
 
-from lilykde import config, language
+from lilykde import config, editor, language
 
 # Translate the messages
 from lilykde.i18n import _
@@ -119,7 +117,7 @@ def askLanguage():
         _("Language selection"),
         _("Please select a language:"),
         py2qstringlist(langs), index, False,
-        kate.mainWidget().topLevelWidget()
+        editor.topLevelWidget()
     )
     if ok:
         lang = unicode(lang)
