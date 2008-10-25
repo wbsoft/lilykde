@@ -114,8 +114,16 @@ def lqi():
     import lilykde.lqi
     lilykde.lqi.show()
 
+@kate.onAction(I18N_NOOP("Toggle PDF navigation panel"), "", "window",
+    "show_side_panel")
+def toggleNavPanel():
+    loaded = 'lilykde.pdf' in sys.modules
+    from lilykde.pdf import pdfpart
+    if loaded:
+        pdfpart.actionCollection().action('show_leftpanel').activate()
+
 # (Un)dock PDF, pate already translates this.
-@kate.onAction(I18N_NOOP("Dock/Undock PDF preview"), "", "window")
+@kate.onAction(I18N_NOOP("Dock/Undock PDF preview"), "", "window", "pdf")
 def undockPDF():
     loaded = 'lilykde.pdf' in sys.modules
     import lilykde.pdf
@@ -123,10 +131,13 @@ def undockPDF():
         lilykde.pdf.tool.toggle()
 
 # (Un)dock Quick Insert, pate already translates this.
-@kate.onAction(I18N_NOOP("Dock/Undock Quick Insert Panel"), "", "window")
+@kate.onAction(I18N_NOOP("Dock/Undock Quick Insert Panel"), "", "window",
+    "edit")
 def undockLQI():
     import lilykde.lqi
     lilykde.lqi.tool.toggle()
+
+
 
 
 # kate: indent-width 4;
