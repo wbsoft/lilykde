@@ -9,9 +9,15 @@
 
 var triggerCharacters = "}>";
 
+function dbg(s) {
+  // debug to the term in blue so that it's easier to make out amongst all
+  // of Kate's other debug output.
+  debug("\u001B[34m" + s + "\u001B[0m");
+}
+
 reOpener = /\{|\<\</g;
 reCloser = /\}|\>\>/g;
-reStartClosers = /^(\s*(%?\}|\>\>))+/
+reStartClosers = /^(\s*([%#]?\}|\>\>))+/
 reSpaceLine = /^\s*$/;
 reRemove = /"[^"]*"|%\{.*%\}|%(?![{}]).*$/;
 
@@ -23,20 +29,58 @@ function indent(line, indentWidth, ch)
 
   // search backwards for first non-space line.
   var prev = line;
-  while ((prev -= 1) >= 0) {
+  while (prev--) {
     if (!document.line(prev).match(reSpaceLine)) {
       // remove text between double quotes
       var c = document.line(line); // current line
       var p = document.line(prev); // previous non-space line
-      var oldIndent = document.firstVirtualColumn(prev);
+      var prevIndent = document.firstVirtualColumn(prev);
       // count the number of openers and closers in the previous line,
-      // discarding first closers, strings and comments.
-      p = p.replace(reStartClosers, '').replace(reRemove, '');
-      var delta = p.match(reOpener).length - p.match(reCloser).length;
+      // discarding first closers.
+      if (m = p.match(reStartClosers))
+	var pos = m[0].length;
+      else
+	var pos = 0;
+      var end = document.lineLength(prev);
+
+      // the amount of normal lilypond openers { <<  and closers } >>
+      var delta = 0;
+      while (pos < end) {
+	// walk over openers and closers in the remainder of the previous line.
+	var one = document.charAt(prev, pos);
+	var two = one + (pos+1 < end ? document.charAt(prev, pos+1) : "");
+	if (two == "%{") {
+	  ++delta;
+	  ++pos;
+	}
+	else if (two == "%}") {
+	  --delta;
+	  ++pos;
+	}
+	else if (document.isCode(prev, pos)) {
+	  if (two == "#{" || two == "<<") {
+	    ++delta;
+	    ++pos;
+	  }
+	  else if (two == "#}" || two == ">>") {
+	    --delta;
+	    ++pos;
+	  }
+	  else if (one == "{")
+	    ++delta;
+	  else if (one == "}")
+	    --delta;
+	  else if (one == "(")
+	    ++delta;
+	  else if (one == ")")
+	    --delta;
+	}
+	++pos;
+      }
       // now count the number of closers in the beginning of the current line.
       if (m = c.match(reStartClosers))
 	delta -= m[0].match(reCloser).length;
-      return Math.max(0, oldIndent + delta * indentWidth);
+      return Math.max(0, prevIndent + delta * indentWidth);
     }
   }
   return 0;
