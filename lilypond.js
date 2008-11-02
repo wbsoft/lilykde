@@ -53,6 +53,7 @@ function indent(line, indentWidth, ch)
 
       // the amount of normal lilypond openers { <<  and closers } >>
       var delta = 0;
+
       while (pos < end) {
 	// walk over openers and closers in the remainder of the previous line.
 	var one = document.charAt(prev, pos);
@@ -65,7 +66,9 @@ function indent(line, indentWidth, ch)
 	  --delta;
 	  ++pos;
 	}
-	else if (document.isCode(prev, pos)) {
+	else if (one == "%")
+	  break; // discard rest of line
+	else if (!document.isString(prev, pos)) {
 	  if (two == "#{" || two == "<<") {
 	    ++delta;
 	    ++pos;
@@ -80,8 +83,17 @@ function indent(line, indentWidth, ch)
 	    --delta;
 	  else if (one == "(")
 	    ++delta;
-	  else if (one == ")")
-	    --delta;
+	  else if (one == ")") {
+	    var cur = document.anchor(prev, pos, "(");
+	    if (cur) {
+	      delta = 0;
+	      // is this the final closing paren of a Scheme expression?
+	      if (document.attribute(prev, pos) == 26)
+		prevIndent = document.firstVirtualColumn(cur.line);
+	      else
+		prevIndent = document.toVirtualColumn(cur.line, cur.column);
+	    }
+	  }
 	}
 	++pos;
       }
