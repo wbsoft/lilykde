@@ -5,9 +5,11 @@
  * version: 1
  * kate-version: 3.0
  * type: indentation
+ * required-syntax-style: lilypond
+ * indent-languages: lilypond
  */
 
-var triggerCharacters = "}>";
+var triggerCharacters = "}>%;";
 
 function dbg(s) {
   // debug to the term in blue so that it's easier to make out amongst all
@@ -18,7 +20,8 @@ function dbg(s) {
 reOpener = /\{|\<\</g;
 reCloser = /\}|\>\>/g;
 reStartClosers = /^(\s*([%#]?\}|\>\>))+/
-reSpaceLine = /^\s*$/;
+reSpaceLine = /^\s*$|^;;;|^%%%/;
+reFullCommentLine = /^\s*(;;;|%%%)/;
 reRemove = /"[^"]*"|%\{.*%\}|%(?![{}]).*$/;
 
 function indent(line, indentWidth, ch)
@@ -27,12 +30,17 @@ function indent(line, indentWidth, ch)
   if (line == 0)
     return -2;
 
+  var c = document.line(line); // current line
+
+  // return 0 for triple commented lines
+  if (c.match(reFullCommentLine))
+    return 0;
+
   // search backwards for first non-space line.
   var prev = line;
   while (prev--) {
     if (!document.line(prev).match(reSpaceLine)) {
       // remove text between double quotes
-      var c = document.line(line); // current line
       var p = document.line(prev); // previous non-space line
       var prevIndent = document.firstVirtualColumn(prev);
       // count the number of openers and closers in the previous line,
