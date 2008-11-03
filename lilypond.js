@@ -20,7 +20,7 @@ function dbg(s) {
 reOpener = /\{|\<\</g;
 reCloser = /\}|\>\>/g;
 reStartClosers = /^(\s*([%#]?\}|\>\>))+/
-reSkipLine = /^\s*$|^;;;|^%%%/;
+reSkipLine = /^\s*$|^[%;]/;
 reFullCommentLine = /^\s*(;;;|%%%)/;
 reRemove = /"[^"]*"|%\{.*%\}|%(?![{}]).*$/;
 
