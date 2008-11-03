@@ -20,7 +20,7 @@ function dbg(s) {
 reOpener = /\{|\<\</g;
 reCloser = /\}|\>\>/g;
 reStartClosers = /^(\s*([%#]?\}|\>\>))+/
-reSpaceLine = /^\s*$|^;;;|^%%%/;
+reSkipLine = /^\s*$|^;;;|^%%%/;
 reFullCommentLine = /^\s*(;;;|%%%)/;
 reRemove = /"[^"]*"|%\{.*%\}|%(?![{}]).*$/;
 
@@ -32,85 +32,72 @@ function indent(line, indentWidth, ch)
 
   var c = document.line(line); // current line
 
-  // return 0 for triple commented lines
+  // no indent for triple commented lines
   if (c.match(reFullCommentLine))
     return 0;
 
-  // search backwards for first non-space line.
+  // Search backwards for first non-space, non-comment line.
   var prev = line;
   while (prev--) {
-    if (!document.line(prev).match(reSpaceLine)) {
-      // remove text between double quotes
+    if (!document.line(prev).match(reSkipLine)) {
       var p = document.line(prev); // previous non-space line
       var prevIndent = document.firstVirtualColumn(prev);
-      // count the number of openers and closers in the previous line,
-      // discarding first closers.
+      var pos = 0;
+      var end = document.lineLength(prev);
+      // Discard first closers: } and >> as they already influenced the indent.
       if (m = p.match(reStartClosers))
 	var pos = m[0].length;
-      else
-	var pos = 0;
-      var end = document.lineLength(prev);
 
-      // the amount of normal lilypond openers { <<  and closers } >>
-      var delta = 0;
-
-      // the number of opened Scheme parentheses and the position of their
-      // first occurence.
-      var level = 0;
-      var paren = new Array();
-
+      var delta = 0;    // count normal openers/closers: { << } >>
+      var level = 0;    // count opened Scheme parens
+      var paren = [];   // save their positions
+      // Walk over openers and closers in the remainder of the previous line.
       while (pos < end) {
-	// walk over openers and closers in the remainder of the previous line.
-	var one = document.charAt(prev, pos);
-	var two = one + (pos+1 < end ? document.charAt(prev, pos+1) : "");
-	if (two == "%{") {
-	  ++delta;
-	  ++pos;
-	}
-	else if (two == "%}") {
-	  --delta;
-	  ++pos;
-	}
-	else if (!document.isString(prev, pos)) {
-	  if (one == "%" || one == ";")
-	    break; // discard rest of line
-	  else if (two == "#{" || two == "<<") {
+	if (!document.isString(prev, pos)) {
+	  var one = document.charAt(prev, pos);
+	  var two = one + (pos+1 < end ? document.charAt(prev, pos+1) : "");
+	  if (two == "%{" || two == "#{" || two == "<<") {
 	    ++delta;
 	    ++pos;
 	  }
-	  else if (two == "#}" || two == ">>") {
+	  else if (two == "%}" || two == "#}" || two == ">>") {
 	    --delta;
 	    ++pos;
 	  }
+	  else if (one == "%" || one == ";")
+	    break; // discard rest of line
 	  else if (one == "{")
 	    ++delta;
 	  else if (one == "}")
 	    --delta;
-	  else if (one == "(") {
-	    ++delta;
-	    dbg("Opening paren, level="+level);
-	    // save position of first
-	    if (level >= 0 && paren[level] == null)
-	      paren[level] = pos;
-	    ++level;
-	  }
-	  else if (one == ")") {
-	    --level;
-	    --delta;
-	    // have we seen an opening parenthesis in this line?
-	    if (paren[level] != null) {
-	      delta = 0;
-	      prevIndent = document.toVirtualColumn(prev, paren[level]);
+	  else if (document.isCode(prev, pos)) {
+	    // match parens only if they are code (not LilyPond slurs)
+	    if (one == "(") {
+	      ++delta;
+	      // save position of first
+	      if (level >= 0 && paren[level] == null)
+		paren[level] = pos;
+	      ++level;
 	    }
-	    else {
-	      var cur = document.anchor(prev, 0, "(");
-	      if (cur) {
+	    else if (one == ")") {
+	      --level;
+	      --delta;
+	      // is this the final closing paren of a Scheme expression?
+	      isLast = document.attribute(prev, pos) == 26
+	      // have we seen an opening parenthesis in this line?
+	      if (level >= 0 && paren[level] != null && !isLast) {
 		delta = 0;
-		// is this the final closing paren of a Scheme expression?
-		if (document.attribute(prev, pos) == 26)
-		  prevIndent = document.firstVirtualColumn(cur.line);
-		else
-		  prevIndent = document.toVirtualColumn(cur.line, cur.column);
+		prevIndent = document.toVirtualColumn(prev, paren[level]);
+	      }
+	      else {
+		var cur = document.anchor(prev, pos, "(");
+		if (cur) {
+		  delta = 0;
+		  if (isLast)
+		    prevIndent = document.firstVirtualColumn(cur.line);
+		  else
+		    prevIndent = document.toVirtualColumn(cur.line, cur.column);
+		}
 	      }
 	    }
 	  }
