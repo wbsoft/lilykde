@@ -17,12 +17,10 @@ function dbg(s) {
   debug("\u001B[34m" + s + "\u001B[0m");
 }
 
-reOpener = /\{|\<\</g;
 reCloser = /\}|\>\>/g;
 reStartClosers = /^(\s*([%#]?\}|\>\>))+/
-reSkipLine = /^\s*$|^[%;]/;
+reSkipLine = /^\s*$|^%(?![{}])|^;/;
 reFullCommentLine = /^\s*(;;;|%%%)/;
-reRemove = /"[^"]*"|%\{.*%\}|%(?![{}]).*$/;
 
 function indent(line, indentWidth, ch)
 {
@@ -56,14 +54,10 @@ function indent(line, indentWidth, ch)
 	if (!document.isString(prev, pos)) {
 	  var one = document.charAt(prev, pos);
 	  var two = one + (pos+1 < end ? document.charAt(prev, pos+1) : "");
-	  if (two == "%{" || two == "#{" || two == "<<") {
-	    ++delta;
-	    ++pos;
-	  }
-	  else if (two == "%}" || two == "#}" || two == ">>") {
-	    --delta;
-	    ++pos;
-	  }
+	  if (two == "%{" || two == "#{" || two == "<<")
+	    ++delta, ++pos;
+	  else if (two == "%}" || two == "#}" || two == ">>")
+	    --delta, ++pos;
 	  else if (one == "%" || one == ";")
 	    break; // discard rest of line
 	  else if (one == "{")
@@ -73,15 +67,13 @@ function indent(line, indentWidth, ch)
 	  else if (document.isCode(prev, pos)) {
 	    // match parens only if they are code (not LilyPond slurs)
 	    if (one == "(") {
-	      ++delta;
 	      // save position of first
 	      if (level >= 0 && paren[level] == null)
 		paren[level] = pos;
-	      ++level;
+	      ++level, ++delta;
 	    }
 	    else if (one == ")") {
-	      --level;
-	      --delta;
+	      --level, --delta;
 	      // is this the final closing paren of a Scheme expression?
 	      isLast = document.attribute(prev, pos) == 26
 	      // have we seen an opening parenthesis in this line?
