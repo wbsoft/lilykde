@@ -54,6 +54,11 @@ function indent(line, indentWidth, ch)
       // the amount of normal lilypond openers { <<  and closers } >>
       var delta = 0;
 
+      // the number of opened Scheme parentheses and the position of their
+      // first occurence.
+      var level = 0;
+      var paren = new Array();
+
       while (pos < end) {
 	// walk over openers and closers in the remainder of the previous line.
 	var one = document.charAt(prev, pos);
@@ -66,10 +71,10 @@ function indent(line, indentWidth, ch)
 	  --delta;
 	  ++pos;
 	}
-	else if (one == "%")
-	  break; // discard rest of line
 	else if (!document.isString(prev, pos)) {
-	  if (two == "#{" || two == "<<") {
+	  if (one == "%" || one == ";")
+	    break; // discard rest of line
+	  else if (two == "#{" || two == "<<") {
 	    ++delta;
 	    ++pos;
 	  }
@@ -81,17 +86,32 @@ function indent(line, indentWidth, ch)
 	    ++delta;
 	  else if (one == "}")
 	    --delta;
-	  else if (one == "(")
+	  else if (one == "(") {
 	    ++delta;
+	    dbg("Opening paren, level="+level);
+	    // save position of first
+	    if (level >= 0 && paren[level] == null)
+	      paren[level] = pos;
+	    ++level;
+	  }
 	  else if (one == ")") {
-	    var cur = document.anchor(prev, pos, "(");
-	    if (cur) {
+	    --level;
+	    --delta;
+	    // have we seen an opening parenthesis in this line?
+	    if (paren[level] != null) {
 	      delta = 0;
-	      // is this the final closing paren of a Scheme expression?
-	      if (document.attribute(prev, pos) == 26)
-		prevIndent = document.firstVirtualColumn(cur.line);
-	      else
-		prevIndent = document.toVirtualColumn(cur.line, cur.column);
+	      prevIndent = document.toVirtualColumn(prev, paren[level]);
+	    }
+	    else {
+	      var cur = document.anchor(prev, 0, "(");
+	      if (cur) {
+		delta = 0;
+		// is this the final closing paren of a Scheme expression?
+		if (document.attribute(prev, pos) == 26)
+		  prevIndent = document.firstVirtualColumn(cur.line);
+		else
+		  prevIndent = document.toVirtualColumn(cur.line, cur.column);
+	      }
 	    }
 	  }
 	}
