@@ -1,0 +1,53 @@
+What's new in LilyKDE 0.6.5:
+============================
+- Improve adding articulation etc. to selection.  Now also recognizes
+  chords and skips commands like \ff which were previously recognized
+  as pitches.
+- New Rhythm tab in Quick Insert panel with some powerful functions
+  manipulating the rhythm of the selected music.
+- Handling of non-ascii characters in filenames has been fixed.
+
+
+What's new in LilyKDE 0.6.4:
+============================
+- A new Quick Insert Panel. It contains already one handy tool to insert
+  articulations, one by one to to a group of notes at once.
+
+
+What's new in LilyKDE 0.6.3:
+============================
+
+- ScoreWizard: Choir: use \center-column if LilyPond >= 2.11.57
+- config option to always empty log when a LilyPond job is started
+- All vocal part types have now a checkbox Ambitus that adds the Ambitus_engraver
+  to the correct staff or voice, showing the pitch range of that vocal part
+- Example x-lilypond.conf file for Expand plugin added
+
+
+What's new in LilyKDE 0.6.2:
+============================
+
+- German translation by Henrik Evers, thanks!
+- small fix to translation system so our messages don't mix with Kate's
+
+
+What's new in LilyKDE 0.6.1:
+============================
+
+- support for embedding .ly files in PDF using PDFTK (www.accesspdf.com/pdftk)
+- option to let LilyPond delete intermediate files
+- new translations: Russian by Serge Poltavskiy; Italian by Gianluca D'Orazio.
+  Many thanks!
+- various small fixes and improvements
+
+
+What's new in LilyKDE 0.6.0:
+============================
+
+- New Score Wizard
+- The PDF preview window can be detached.
+- An option has been added to save the document (if modified) when LilyPond is
+  run (implementing wishlist issue #4)
+- Hyphenation did not work when the KDEDIRS environment variable isn't set.
+  This has been fixed.
+

@@ -1,0 +1,69 @@
+LilyKDE: LilyPond KDE Integration
+=================================
+
+This is a set of tools to integrate the very fine LilyPond music
+typesetter into KDE 3.5.
+
+It currently consists of:
+
+* a Kate plugin (using Pate, written in Python) that can run LilyPond
+  for you, embedding a PDF preview right into Kate and many other nice
+  things.
+* A textedit service so you can click on the notes in the preview (or
+  any other PDF viewer) and have Kate jump to the correct position.
+* Powerful LilyPond syntax highlighting (already part of KDE).
+* An icon and mimetype for *.ly files. The icon was taken from LilyPond.
+* Some settings in katefiletyperc, to indent LilyPond files nicely and
+  always use utf8 encoding by default. These are installed on first run.
+* A Konqueror service menu to convert LilyPond files to PDF.
+
+See INSTALL for information about how to install LilyKDE.
+
+After you installed Pate and LilyKDE, you have to enable Pate in order
+to run Python plugins (such as LilyKDE) inside Kate. To do this,
+launch Kate and enable Pate in Settings->Configure Kate->Plugins.
+From now on LilyKDE will always start as well, and a LilyPond menu
+should appear in the Kate menubar.
+
+In the Settings menu you will find a new entry Configure Python Plugins.
+There you can enable or disable LilyKDE (called LilyPond in the plugin
+list) and the other Python plugins that come with Pate. You can also
+adjust some LilyKDE settings there, should that be necessary.
+
+You can copy the file x-lilypond.conf to the Pate Expand plugin directory
+at $HOME/.kde/share/apps/kate/pyplugins/expand/. This will give you short-
+cuts for often typed LilyPond commands. Look at Settings->Configure Python
+Plugins->Expand to add your own LilyPond shortcuts.
+
+
+More information
+================
+
+Homepage:        http://lilykde.googlecode.com/
+KDE-Apps.org:    http://www.kde-apps.org/content/show.php/LilyKDE?content=75241
+Mailing list:    http://groups.google.com/group/lilykde
+Bugs and wishes: http://code.google.com/p/lilykde/issues/list
+
+
+License and Disclaimer
+======================
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+
+Main Author
+===========
+
+Wilbert Berendsen <lilykde@xs4all.nl>
+http://www.wilbertberendsen.nl/

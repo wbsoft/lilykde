@@ -1,0 +1,26 @@
+TODO/Wishlist for LilyKDE
+
+- fix indenting of Scheme code.
+- provide example Expand file with expansions like stD -> \stemDown etc.
+- quick shortcut to change a pitch with its enharmonic equivalent
+
+- Score Wizard:
+  - Add Ambitus checkbox to vocal part types
+
+- MIDI stuff:
+  - rewrite Rumor in Python and improve / integrate
+  - possibly integrate a virtual keyboard like clavier or vkeybd
+  - MIDI playback of notes at cursor
+
+- convert to PNG:
+  - save, drag/drop or copy to clipboard
+
+- quick preview of music cursor is in (possibly cached PNGs)
+
+- add simple install tool
+- make .desktop file translatable from po files
+
+DONE:
+
+- detachable PDF preview (log not yet)
+- optional auto-save when running Lilypond (issue #4)
