@@ -20,10 +20,22 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 import sys, os, re
+from PyKDE4.kdecore import *
+from PyKDE4.kdeui import *
+about = KAboutData('ktexteditservice', '', ki18n('KTextEditService'), "1.0")
+KCmdLineArgs.init(about)
+app = KApplication()
+KStartupInfo.appStarted()
 
 TEXTEDIT_DBUS_PATH = 'TEXTEDIT_DBUS_PATH'
 
 # Utility functions
+def bye(msg='', exitCode=0):
+    if msg:
+        sys.stderr.write(msg)
+    app.quit()
+    sys.exit(exitCode)
+
 _hextochr = dict(('%02x' % i, chr(i)) for i in range(256))
 _hextochr.update(('%02X' % i, chr(i)) for i in range(256))
 
@@ -42,17 +54,14 @@ def unquote(s):
 
 # Main stuff
 if len(sys.argv) != 2:
-    sys.stderr.write(
-        "Usage:\n"
-        "ktexteditservice textedit:///path/to/file:line:char:col\n")
-    sys.exit(2)
+    bye("Usage:\n"
+        "ktexteditservice textedit:///path/to/file:line:char:col\n", 2)
 
 url = unquote(sys.argv[1].decode(sys.getfilesystemencoding()).encode('latin1'))
 m = re.match("textedit:/{,2}(/[^/].*):(\d+):(\d+):(\d+)$", url)
 
 if not m:
-    sys.stderr.write("Not a valid textedit URL: %s\n" % url)
-    sys.exit(1)
+    bye("Not a valid textedit URL: %s\n" % url, 1)
 
 # We have a valid textedit:/// uri.
 path, (line, char, col) = m.group(1), map(int, m.group(2,3,4))
@@ -72,11 +81,10 @@ if TEXTEDIT_DBUS_PATH in os.environ:
         obj = dbus.Interface(dbus.SessionBus().get_object(name, '/' + objpath),
             'org.lilypond.TextEdit')
         obj.openTextEditUrl(url)
-        sys.exit(0)
+        bye()
     except:
-        sys.stderr.write("%s in environment, but could not contact it." %
-            TEXTEDIT_DBUS_PATH)
-        sys.exit(1)
+        bye("%s in environment, but could not contact it." %
+            TEXTEDIT_DBUS_PATH, 1)
 
 editor = None
 acceptsTextEditUri = False
@@ -91,20 +99,13 @@ elif 'LYEDITOR' in os.environ:
 
 # 4. Get the preferred service from KDE
 else:
-    from PyQt4.QtCore import *
-    from PyKDE4.kdecore import *
-    from PyKDE4.kdeui import *
-    about = KAboutData('ktexteditservice', '', ki18n('KTextEditService'), "1.0")
-    KCmdLineArgs.init(about)
-    app = KApplication(False) # no GUI
     offers = KMimeTypeTrader.self().query('text/x-lilypond', 'Application')
     if len(offers) > 0:
         service = offers[0] # pick the first
         editor = str(service.exec_()).split()[0] # the executable
         acceptsTextEditUri = (
             'X-Accepts-TextEditUri' in map(str, service.propertyNames()) and
-            service.property('X-Accepts-TextEditUri', QVariant.Bool).toBool())
-    app.quit()
+            service.property('X-Accepts-TextEditUri').toBool())
 
 # 5. Still no luck?
 if not editor:
@@ -128,5 +129,6 @@ elif acceptsTextEditUri:
     cmd += [url]
 else:
     cmd += [path]
-    
+
+app.quit()
 os.execvp(cmd[0], cmd)
