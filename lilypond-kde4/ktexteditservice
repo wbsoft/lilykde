@@ -20,6 +20,7 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 import sys, os, re
+from PyQt4.QtCore import QVariant
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 about = KAboutData('ktexteditservice', '', ki18n('KTextEditService'), "1.0")
@@ -105,7 +106,7 @@ else:
         editor = str(service.exec_()).split()[0] # the executable
         acceptsTextEditUri = (
             'X-Accepts-TextEditUri' in map(str, service.propertyNames()) and
-            service.property('X-Accepts-TextEditUri').toBool())
+            service.property('X-Accepts-TextEditUri', QVariant.Bool).toBool())
 
 # 5. Still no luck?
 if not editor:
