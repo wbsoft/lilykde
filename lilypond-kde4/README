@@ -1,6 +1,8 @@
 lilypond-kde4
 =============
 
+http://lilykde.googlecode.com/
+
 This is a small package with LilyPond-related files that can be shared
 between KDE applications that interact with LilyPond, the GNU music
 typesetter (http://lilypond.org/).
@@ -16,4 +18,10 @@ It contains:
 * A textedit:// protocol handler (ktexteditservice), that opens
   textedit:// links a (running) (LilyPond) editor, configured
   via the KDE associations of the text/x-lilypond MIME type.
+
+
+Main author:
+============
+Wilbert Berendsen <lilykde@xs4all.nl>
+http://www.wilbertberendsen.nl/
 
