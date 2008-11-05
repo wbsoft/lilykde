@@ -13,3 +13,7 @@ It contains:
 * Icons for text/x-lilypond mimetype, for oxygen, crystalsvg and hicolor,
   based on the music note XPM from LilyPond.
 
+* A textedit:// protocol handler (ktexteditservice), that opens
+  textedit:// links a (running) (LilyPond) editor, configured
+  via the KDE associations of the text/x-lilypond MIME type.
+

@@ -1,0 +1,132 @@
+#!/usr/bin/env python
+
+# This file is part of lilypond-kde4, http://lilykde.googlecode.com/
+#
+# Copyright (c) 2008  Wilbert Berendsen
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# See http://www.gnu.org/licenses/ for more information.
+
+import sys, os, re
+
+TEXTEDIT_DBUS_PATH = 'TEXTEDIT_DBUS_PATH'
+
+# Utility functions
+_hextochr = dict(('%02x' % i, chr(i)) for i in range(256))
+_hextochr.update(('%02X' % i, chr(i)) for i in range(256))
+
+def unquote(s):
+    """Decode an URL, based on Python urllib.unquote"""
+    res = s.split('%')
+    for i in xrange(1, len(res)):
+        item = res[i]
+        try:
+            res[i] = _hextochr[item[:2]] + item[2:]
+        except KeyError:
+            res[i] = '%' + item
+        except UnicodeDecodeError:
+            res[i] = unichr(int(item[:2], 16)) + item[2:]
+    return "".join(res)
+
+# Main stuff
+if len(sys.argv) != 2:
+    sys.stderr.write(
+        "Usage:\n"
+        "ktexteditservice textedit:///path/to/file:line:char:col\n")
+    sys.exit(2)
+
+url = unquote(sys.argv[1].decode(sys.getfilesystemencoding()).encode('latin1'))
+m = re.match("textedit:/{,2}(/[^/].*):(\d+):(\d+):(\d+)$", url)
+
+if not m:
+    sys.stderr.write("Not a valid textedit URL: %s\n" % url)
+    sys.exit(1)
+
+# We have a valid textedit:/// uri.
+path, (line, char, col) = m.group(1), map(int, m.group(2,3,4))
+
+# Now find the preferred app/service to run.
+
+# 1. Is there a DBUS app running that can open textedit URLs?
+#    This is used for apps that embed e.g. a Okular/PDF part, and want to
+#    handle clicks on a LilyPond object themselves.
+#    TEXTEDIT_DBUS_PATH should look like org.app.name/path/to/handlerobject
+#    The interface name is 'org.lilypond.TextEdit'.
+#    The method called openTextEditUrl(url).
+if TEXTEDIT_DBUS_PATH in os.environ:
+    try:
+        import dbus
+        name, objpath = os.environ[TEXTEDIT_DBUS_PATH].split('/', 1)
+        obj = dbus.Interface(dbus.SessionBus().get_object(name, '/' + objpath),
+            'org.lilypond.TextEdit')
+        obj.openTextEditUrl(url)
+        sys.exit(0)
+    except:
+        sys.stderr.write("%s in environment, but could not contact it." %
+            TEXTEDIT_DBUS_PATH)
+        sys.exit(1)
+
+editor = None
+acceptsTextEditUri = False
+
+# 2. Are we running from within Kate?
+if 'KATE_PID' in os.environ:
+    editor = 'kate'
+
+# 3. LYEDITOR set?
+elif 'LYEDITOR' in os.environ:
+    editor = os.environ['LYEDITOR']
+
+# 4. Get the preferred service from KDE
+else:
+    from PyQt4.QtCore import *
+    from PyKDE4.kdecore import *
+    from PyKDE4.kdeui import *
+    about = KAboutData('ktexteditservice', '', ki18n('KTextEditService'), "1.0")
+    KCmdLineArgs.init(about)
+    app = KApplication(False) # no GUI
+    offers = KMimeTypeTrader.self().query('text/x-lilypond', 'Application')
+    if len(offers) > 0:
+        service = offers[0] # pick the first
+        editor = str(service.exec_()).split()[0] # the executable
+        acceptsTextEditUri = (
+            'X-Accepts-TextEditUri' in map(str, service.propertyNames()) and
+            service.property('X-Accepts-TextEditUri', QVariant.Bool).toBool())
+    app.quit()
+
+# 5. Still no luck?
+if not editor:
+    editor = 'lilypond-invoke-editor'
+    acceptsTextEditUri = True
+    
+cmd = [editor]
+if editor == 'kate':
+    cmd += ['--use', '--line', str(line), '--column' , str(col+1), path]
+elif editor == 'kwrite':
+    cmd += ['--line', str(line), '--column' , str(col+1), path]
+elif editor == 'kile':
+    cmd += ['--line', str(line), path]
+elif editor == 'emacs':
+    cmd = ['emacsclient', '--no-wait', '+%s:%s' % (line, col), path]
+elif editor == 'nedit':
+    cmd = ['nc', '-noask', '+%s' % line, path]
+elif editor == 'jedit':
+    cmd += ['-reuseview', path, '+line:%s' % line]
+elif acceptsTextEditUri:
+    cmd += [url]
+else:
+    cmd += [path]
+    
+os.execvp(cmd[0], cmd)
