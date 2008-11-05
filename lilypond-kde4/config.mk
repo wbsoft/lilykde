@@ -3,7 +3,10 @@
 DESTDIR =
 
 # prefix to install lilypond-kde4 to.
-PREFIX = $(shell kde4-config --prefix)
+PREFIX := $(shell kde4-config --prefix)
+ifeq ($(PREFIX),)
+PREFIX := /usr
+endif
 
 BINDIR = $(PREFIX)/bin
 DATADIR = $(PREFIX)/share
