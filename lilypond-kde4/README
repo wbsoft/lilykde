@@ -5,16 +5,11 @@ This is a small package with LilyPond-related files that can be shared
 between KDE applications that interact with LilyPond, the GNU music
 typesetter (http://lilypond.org/).
 
+It contains:
 
-Files:
+* Indenter script for Kate (lilypond.js)
+  (in $KDE/share/apps/katepart/script/)
 
-lilypond.js             Indenter script for Kate
-                        (in $KDE/share/apps/katepart/script/)
-
-ly.svg                  .ly icon based on the XPM from LilyPond
-
-text-x-lilypond.svg     Oxygen icon based on same icon + Oxygen
-                        (as svgz in $KDE/share/icons/oxygen/scalable/mimetypes)
-
-
+* Icons for text/x-lilypond mimetype, for oxygen, crystalsvg and hicolor,
+  based on the music note XPM from LilyPond.
 
