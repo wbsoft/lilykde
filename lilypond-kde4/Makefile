@@ -3,6 +3,10 @@ PREFIX = $(shell kde4-config --prefix)
 ICONDIR = $(PREFIX)/share/icons
 KATEDIR = $(PREFIX)/share/apps/katepart
 
+# for make dist
+include VERSION
+pkg = lilypond-kde4-$(VERSION)
+
 icondirs = oxygen crystalsvg hicolor
 
 icons = $(patsubst %,icons/%/text-x-lilypond.svgz,$(icondirs))
@@ -29,3 +33,8 @@ install-indenter:
 clean:
 	rm $(icons)
 
+dist:
+	@svn export -q . $(pkg)
+	@tar zcf $(pkg).tar.gz $(pkg)
+	@rm -fr $(pkg)/
+	@echo Created $(pkg).tar.gz
