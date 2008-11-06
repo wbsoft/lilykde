@@ -5,17 +5,12 @@ pkg = $(PACKAGE)-$(VERSION)
 
 icondirs = oxygen crystalsvg hicolor
 
-icons = $(patsubst %,icons/%/text-x-lilypond.svgz,$(icondirs))
-
-all: $(icons)
-
-$(icons): %z: %
-	gzip < $< > $@
+all:
 
 install: install-icons install-indenter install-textedit
 uninstall: uninstall-icons uninstall-indenter uninstall-textedit
 
-install-icons: $(icons)
+install-icons:
 	for i in $(icondirs) ;\
 	do \
 	  dir=$(DESTDIR)$(ICONDIR)/$$i/scalable/mimetypes ;\
@@ -47,7 +42,6 @@ uninstall-textedit:
 	rm -f "$(DESTDIR)$(BINDIR)/ktexteditservice"
 
 clean:
-	rm $(icons)
 
 dist:
 	@svn export -q . $(pkg)
