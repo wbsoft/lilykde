@@ -35,7 +35,7 @@ install-textedit:
 	install -d $(DESTDIR)$(SERVICEDIR)
 	install -m 644 textedit.protocol $(DESTDIR)$(SERVICEDIR)/
 	install -d $(DESTDIR)$(BINDIR)
-	install -m 755 ktexteditservice $(DESTDIR)$(BINDIR)/
+	install -m 755 ktexteditservice.py $(DESTDIR)$(BINDIR)/ktexteditservice
 
 uninstall-textedit:
 	rm -f "$(DESTDIR)$(SERVICEDIR)/textedit.protocol"
