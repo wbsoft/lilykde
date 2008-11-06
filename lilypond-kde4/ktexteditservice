@@ -100,10 +100,9 @@ elif 'LYEDITOR' in os.environ:
 
 # 4. Get the preferred service from KDE
 else:
-    offers = KMimeTypeTrader.self().query('text/x-lilypond', 'Application')
-    if len(offers) > 0:
-        service = offers[0] # pick the first
-        editor = str(service.exec_()).split()[0] # the executable
+    service = KMimeTypeTrader.self().preferredService('text/x-lilypond')
+    if service:
+        editor = str(service.exec_()).split()[0] # the executable name
         acceptsTextEditUri = (
             'X-Accepts-TextEditUri' in map(str, service.propertyNames()) and
             service.property('X-Accepts-TextEditUri', QVariant.Bool).toBool())
