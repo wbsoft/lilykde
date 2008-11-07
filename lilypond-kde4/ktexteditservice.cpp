@@ -19,12 +19,9 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kmimetypetrader.h>
-#include <kmimetype.h>
 #include <kapplication.h>
 #include <kstartupinfo.h>
 #include <kconfiggroup.h>
-#include <klocale.h>
-#include <kservicetypetrader.h>
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -45,7 +42,7 @@ int main(int argc, char **argv)
 {
   KAboutData aboutData(
     "ktexteditservice", 0, ki18n("KTextEditService"), VERSION,
-    ki18n("Helper app to open LilyPond textedit:// URIs"),
+    ki18n("Helper app to open LilyPond textedit:// URLs"),
     KAboutData::License_LGPL,
     ki18n("Copyright (c) 2008 Wilbert Berendsen"),
     KLocalizedString(), "http://lilykde.googlecode.com/");
@@ -53,7 +50,7 @@ int main(int argc, char **argv)
   KCmdLineArgs::init(argc, argv, &aboutData);
 
   KCmdLineOptions options;
-  options.add("!+uri", ki18n("A textedit:// URI, like textedit:///home/joe/music.ly:1:3:3"));
+  options.add("!+url", ki18n("A textedit:// URL, like textedit:///home/joe/music.ly:1:3:3"));
   KCmdLineArgs::addCmdLineOptions(options);
 
   KApplication app(false); // no GUI
@@ -76,11 +73,11 @@ int main(int argc, char **argv)
 
   /*
    * 1. Is there a DBUS app running that can open textedit URLs?
-   * This is used for apps that embed e.g. a Okular/PDF part, and want to
-   * handle clicks on a LilyPond object themselves.
-   * TEXTEDIT_DBUS_PATH should look like org.app.name/path/to/handlerobject
-   * The interface name is 'org.lilypond.TextEdit'.
-   * The method called openTextEditUrl(url).
+   *    This is used for apps that embed e.g. a Okular/PDF part, and want to
+   *    handle clicks on a LilyPond object themselves.
+   *    TEXTEDIT_DBUS_PATH should look like org.app.name/path/to/handlerobject
+   *    The interface name is 'org.lilypond.TextEdit'.
+   *    The method called is openTextEditUrl(url).
    */
   QString dbus_name(getenv("TEXTEDIT_DBUS_PATH"));
   if (!dbus_name.isNull())
@@ -134,7 +131,7 @@ int main(int argc, char **argv)
     }
   }
   
-  // now find out how to start the editor
+  // make strings of all possible parameters
   QString sline = QString::number(line);
   QString sline0 = QString::number(line > 0 ? line - 1: 0);
   QString scol = QString::number(col);
@@ -142,17 +139,25 @@ int main(int argc, char **argv)
   QString spos = QString::number(pos);
   QString spos1 = QString::number(pos + 1);
 
+  // now find out how to start the editor
   QStringList cmd;
   if (acceptsTextEditUrl)
     cmd << editor << uri;
   else
   {
     // Get info about how to start the editor from our config file
-    QString cli(editor + " {file}");
+    QString cli(editor + " {file}"); // default value
     if (KGlobal::config()->hasGroup("editors"))
+    {
       cli = KGlobal::config()->group("editors").readEntry(editor, cli);
+      cli = cli.simplified();
+      // robustness checks
+      if (! cli.contains("{file}", Qt::CaseInsensitive))
+        cli.append(" {file}");     // at least add the file to open
+      else if (! cli.contains(' '))
+	cli = editor + " {file}";  // fall back to default if invalid command
+    }  
     // replace arguments in cli
-    cli = cli.simplified();
     cli.replace("{line}", sline, Qt::CaseInsensitive);
     cli.replace("{line0}", sline0, Qt::CaseInsensitive);
     cli.replace("{col}", scol, Qt::CaseInsensitive);
@@ -160,6 +165,7 @@ int main(int argc, char **argv)
     cli.replace("{pos}", spos, Qt::CaseInsensitive);
     cli.replace("{pos1}", spos1, Qt::CaseInsensitive);
     cmd = cli.split(' ');
+    // only now replace the file name, it might contain spaces 
     cmd.replaceInStrings("{file}", path, Qt::CaseInsensitive);
   }
   // execute command
