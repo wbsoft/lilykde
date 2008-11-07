@@ -150,7 +150,7 @@ int main(int argc, char **argv)
   else
   {
     // Get info about how to start the editor from our config file
-    QString cli(editor + " {path}");
+    QString cli(editor + " {file}");
     if (KGlobal::config()->hasGroup("editors"))
       cli = KGlobal::config()->group("editors").readEntry(editor, cli);
     // replace arguments in cli
