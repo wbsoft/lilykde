@@ -18,10 +18,20 @@ It contains:
 * A textedit:// protocol handler (ktexteditservice), that opens
   textedit:// links a (running) (LilyPond) editor, configured
   via the KDE associations of the text/x-lilypond MIME type.
+  How editors are started to jump to a specific cursor position
+  can be configured in the configuration file ktexteditservicerc.
 
 
-Main author:
-============
+Author:
+
 Wilbert Berendsen <lilykde@xs4all.nl>
 http://www.wilbertberendsen.nl/
 
+
+Thanks to:
+
+- The KDE and LilyPond projects
+- The Oxygen and Crystalsvg theme artists, I used the document base icon.
+
+
+License: LGPL
