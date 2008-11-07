@@ -1,7 +1,9 @@
 project(lilypond-kde4)
 
-find_package( KDE4 REQUIRED )
-include_directories( ${KDE4_INCLUDES} )
+find_package(KDE4 REQUIRED)
+include_directories(${KDE4_INCLUDES})
+
+add_subdirectory(icons)
 
 kde4_add_executable(ktexteditservice ktexteditservice.cpp)
 target_link_libraries(ktexteditservice ${KDE4_KDEUI_LIBS})
