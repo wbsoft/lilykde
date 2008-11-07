@@ -1,0 +1,22 @@
+# Configuration for ktexteditservice (part of lilypond-kde4)
+#
+# In the editors group you can configure how you
+# want to start an editor with a certain file on a certain
+# line and column. The key is the name of the editors' main
+# executable. The value is the command to start that editor.
+# The following parameters are replaced:
+#    {line}    the line number, starting at 1
+#    {line0}   the line number, starting at 0
+#    {col}     the column number, starting at 0
+#    {col1}    the column number, starting at 1
+#    {pos}     the character position, starting at 0
+#    {pos1}    the character position, starting at 1
+#    {file}    the filename.
+
+[editors]
+kwrite=kwrite --line {line} --column {col1} {file}
+kate=kate --use --line {line} --column {col1} {file}
+gedit=gedit +{line} {file}
+nedit=nc -noask +{line} {file}
+emacs=emacsclient --no-wait +{line}:{col} {file}
+jedit=jedit -reuseview {file} +line:{line}
