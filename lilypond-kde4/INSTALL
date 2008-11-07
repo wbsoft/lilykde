@@ -1,8 +1,15 @@
-This package depends on PyKDE4 and dbus-python.
+Installation instructions:
 
-'make' builds the icons
+cmake .
+make
+make install
 
-'make PREFIX=/usr install' installs everyting.
 
-Look in the Makefile for other options.
+The default prefix is /usr/local, this can be changed with e.g.
 
+cmake . -DCMAKE_INSTALL_PREFIX=/usr/kde/4.1
+
+
+For packaging, you can also install to a subdirectory:
+
+make install DESTDIR=/path/to/packagedir
