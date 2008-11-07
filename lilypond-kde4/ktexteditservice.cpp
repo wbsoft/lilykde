@@ -53,7 +53,7 @@ int main(int argc, char **argv)
   options.add("!+url", ki18n("A textedit:// URL, like textedit:///home/joe/music.ly:1:3:3"));
   KCmdLineArgs::addCmdLineOptions(options);
 
-  KApplication app(false); // no GUI
+  KComponentData cdata(aboutData);
   KStartupInfo::appStarted();
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
