@@ -1,7 +1,10 @@
 project(lilypond-kde4)
+set(version "0.1")
 
 find_package(KDE4 REQUIRED)
 include_directories(${KDE4_INCLUDES})
+
+add_definitions(-DVERSION=\\"${version}\\")
 
 add_subdirectory(icons)
 

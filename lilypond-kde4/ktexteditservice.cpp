@@ -16,8 +16,6 @@
  *  Boston, MA 02110-1301, USA.
  */
 
-#define VERSION "1.0"
-
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kmimetypetrader.h>
