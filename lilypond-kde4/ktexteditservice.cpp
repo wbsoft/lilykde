@@ -57,7 +57,8 @@ int main(int argc, char **argv)
   KStartupInfo::appStarted();
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
+  if (args->count() != 1)
+    KCmdLineArgs::usageError(i18n("Please specify one textedit URL."));
   QString uri = args->arg(0);
   QRegExp rx("textedit:/{,2}(/[^/].*):(\\d+):(\\d+):(\\d+)");
   if (!rx.exactMatch(uri))
