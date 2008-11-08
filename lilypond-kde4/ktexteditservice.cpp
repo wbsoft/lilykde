@@ -60,8 +60,9 @@ int main(int argc, char **argv)
   if (args->count() != 1)
     KCmdLineArgs::usageError(i18n("Please specify one textedit URL."));
   QString uri = args->arg(0);
+  QString unencodedUri = QString::fromUtf8(QByteArray::fromPercentEncoding(uri.toLocal8Bit()));
   QRegExp rx("textedit:/{,2}(/[^/].*):(\\d+):(\\d+):(\\d+)");
-  if (!rx.exactMatch(uri))
+  if (!rx.exactMatch(unencodedUri))
     bye(i18n("Not a valid textedit URI: ") + uri);
   
   // We have a valid uri.
