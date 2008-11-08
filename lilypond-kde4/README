@@ -15,13 +15,25 @@ It contains:
 * Icons for text/x-lilypond mimetype, for oxygen, crystalsvg and hicolor,
   based on the music note XPM from LilyPond.
 
-* A textedit:// protocol handler (ktexteditservice), that opens
-  textedit:// links in a (running) (LilyPond) editor, configured
-  via the KDE associations of the text/x-lilypond MIME type.
-  How editors are started to jump to a specific cursor position
-  can be configured in the configuration file ktexteditservicerc.
+* A textedit:// protocol handler (ktexteditservice), that opens textedit://
+  links in a (running) (LilyPond) editor, configured via the KDE associations
+  of the text/x-lilypond MIME type. How editors are started to jump to a
+  specific cursor position can be configured in the configuration file
+  ktexteditservicerc.
 
+  The protocol handler also looks at the TEXTEDIT_DBUS_PATH environment
+  variable. If defined, it should contain a DBus address that can be called
+  to let the application open the textedit URL.
+  
+  If a specialized LilyPond editing app sets the variable to e.g.
+  "org.myapplication/textedit", the protocol handler calls the method
+  "openTextEditUrl" on it, with the URL as argument and using the interface
+  "org.lilypond.TextEdit".
 
+  This way, an application could embed Okular and clicking on notes or lyrics
+  directly calls the exposed DBus object.
+  
+  
 Author:
 
 Wilbert Berendsen <lilykde@xs4all.nl>

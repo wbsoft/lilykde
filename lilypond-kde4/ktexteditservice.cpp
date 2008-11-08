@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2008, Wilbert Berendsen <info@wilbertberendsen.nl>
  *
- *  This library is free software; you can redistribute it and/or
+ *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Library General Public
  *  License version 2 as published by the Free Software Foundation;
  *
@@ -58,12 +58,12 @@ int main(int argc, char **argv)
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   if (args->count() != 1)
-    KCmdLineArgs::usageError(i18n("Please specify one textedit URL."));
+    KCmdLineArgs::usageError(i18n("Please specify exactly one textedit URL."));
   QString uri = args->arg(0);
-  QString unencodedUri = QString::fromUtf8(QByteArray::fromPercentEncoding(uri.toLocal8Bit()));
+  QString decodedUri = QString::fromUtf8(QByteArray::fromPercentEncoding(uri.toLocal8Bit()));
   QRegExp rx("textedit:/{,2}(/[^/].*):(\\d+):(\\d+):(\\d+)");
-  if (!rx.exactMatch(unencodedUri))
-    KCmdLineArgs::usageError(i18n("Not a valid textedit URI: ") + uri);
+  if (!rx.exactMatch(decodedUri))
+    KCmdLineArgs::usageError(i18n("Not a valid textedit URL: ") + uri);
   
   // We have a valid uri.
   QString path = rx.cap(1);		// the path of the .ly file
@@ -71,36 +71,35 @@ int main(int argc, char **argv)
   int pos  = rx.cap(3).toInt();		// the character position
   int col  = rx.cap(4).toInt();		// the column (differs if tabs are used)
 
-  // Now find the preferred app/service to run.
-
   /*
-   * 1. Is there a DBUS app running that can open textedit URLs?
-   *    This is used for apps that embed e.g. a Okular/PDF part, and want to
-   *    handle clicks on a LilyPond object themselves.
-   *    TEXTEDIT_DBUS_PATH should look like org.app.name/path/to/handlerobject
-   *    The interface name is 'org.lilypond.TextEdit'.
-   *    The method called is openTextEditUrl(url).
+   * Now find the preferred app/service to run.
+   *
+   * First check if there a DBUS app running that can open textedit URLs.
+   * This is used for apps that embed e.g. a Okular/PDF part, and want to
+   * handle clicks on a LilyPond object themselves.
+   * TEXTEDIT_DBUS_PATH should look like org.app.name/path/to/handlerobject
+   * The interface name is 'org.lilypond.TextEdit'.
+   * The method called is openTextEditUrl(url).
    */
   QString dbus_name(getenv("TEXTEDIT_DBUS_PATH"));
   if (!dbus_name.isNull())
   {
-    int pos = dbus_name.indexOf('/');
-    if (pos != -1)
+    int slash = dbus_name.indexOf('/');
+    if (slash != -1)
     {
-      QString name = dbus_name.left(pos);
-      QString path = dbus_name.mid(pos);
+      QString name = dbus_name.left(slash);
+      QString path = dbus_name.mid(slash);
       QDBusConnectionInterface *i = QDBusConnection::sessionBus().interface ();
       QDBusReply<bool> there = i->isServiceRegistered (name);
       if (there.isValid () && there.value())
       {
-	// let the remote app open the textedit uri
 	QDBusMessage m = QDBusMessage::createMethodCall (name, path,
 	  "org.lilypond.TextEdit", "openTextEditUrl");
-
+	
         QList<QVariant> dbusargs;
         dbusargs.append(uri);
         m.setArguments(dbusargs);
-
+	
         QDBusConnection::sessionBus().call (m);
 	return 0;
       }
@@ -112,7 +111,8 @@ int main(int argc, char **argv)
   bool acceptsTextEditUrl = true;            // does it accept a textedit uri?
 
   /*
-   * 2. Special case: are we running inside Kate?
+   * Special case: are we running inside Kate?
+   * Then just run kate (with the --use argument).
    */
   if (getenv("KATE_PID"))
   {
@@ -121,7 +121,12 @@ int main(int argc, char **argv)
   }
 
   /*
-   * 3. Then find the preferred service.
+   * Otherwise find the preferred service (application).
+   * If the application has the X-Accepts-TextEditUrl property set to
+   * true in its desktop file, it is assumed to be able to open a LilyPond
+   * textedit:// URL directly. (But it should parse the URL itself
+   * and not let KIO do it, otherwise we would create an endless loop,
+   * calling ktexteditservice recursively.)
    */
   else
   {
@@ -133,21 +138,34 @@ int main(int argc, char **argv)
     }
   }
   
-  // make strings of all possible parameters
-  QString sline = QString::number(line);
-  QString sline0 = QString::number(line > 0 ? line - 1: 0);
-  QString scol = QString::number(col);
-  QString scol1 = QString::number(col + 1);
-  QString spos = QString::number(pos);
-  QString spos1 = QString::number(pos + 1);
+  /*
+   * Find out how to start the editor.
+   * If the application accepts a textedit URL, just run it now.
+   *
+   * Otherwise, read our config file to determine how to start the editor.
+   */
 
-  // now find out how to start the editor
   QStringList cmd;
   if (acceptsTextEditUrl)
     cmd << editor << uri;
   else
   {
-    // Get info about how to start the editor from our config file
+    /*
+    * Make strings of all possible parameters.
+    * Some editor use line numbers or col number starting at 1, others at 0.
+    * Most editors start line numbers at 1 and columns at 0, but Kate and KWrite
+    * number columns from 1 as well.
+    *
+    * The user can configure in ktexteditservicerc how different editors are to
+    * be started to open a file and jump to a specific cursor position.
+    */
+    QString sline = QString::number(line);
+    QString sline0 = QString::number(line > 0 ? line - 1: 0);
+    QString scol = QString::number(col);
+    QString scol1 = QString::number(col + 1);
+    QString spos = QString::number(pos);
+    QString spos1 = QString::number(pos + 1);
+
     QString cli(editor + " {file}"); // default value
     if (KGlobal::config()->hasGroup("editors"))
     {
@@ -167,9 +185,9 @@ int main(int argc, char **argv)
     cli.replace("{pos}", spos, Qt::CaseInsensitive);
     cli.replace("{pos1}", spos1, Qt::CaseInsensitive);
     cmd = cli.split(' ');
-    // only now replace the file name, it might contain spaces 
+    // only now replace the file name, since it might contain spaces 
     cmd.replaceInStrings("{file}", path, Qt::CaseInsensitive);
   }
-  // execute command
+  // execute the command
   return (int)QProcess::startDetached(cmd.first(), cmd.mid(1));
 }
