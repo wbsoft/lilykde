@@ -3,3 +3,7 @@ TODO for lilypond-kde4
 - look if ktexteditservice protocol can become a non-helper protocol
   (that would run quicker)
 
+- run the application via the KDE service mechanism. This way an editor
+  that requires a terminal would really be started in a terminal.
+  Must look how our own arguments can be added then, though.
+  
