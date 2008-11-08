@@ -34,7 +34,7 @@
 
 void bye(QString msg, int exitCode = 1)
 {
-  fputs((msg + '\n').toLocal8Bit().data(), stderr);
+  fprintf(stderr, "ktexteditservice: %s\n", msg.toLocal8Bit().data());
   exit(exitCode);
 }
 
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
   QString unencodedUri = QString::fromUtf8(QByteArray::fromPercentEncoding(uri.toLocal8Bit()));
   QRegExp rx("textedit:/{,2}(/[^/].*):(\\d+):(\\d+):(\\d+)");
   if (!rx.exactMatch(unencodedUri))
-    bye(i18n("Not a valid textedit URI: ") + uri);
+    KCmdLineArgs::usageError(i18n("Not a valid textedit URI: ") + uri);
   
   // We have a valid uri.
   QString path = rx.cap(1);		// the path of the .ly file
@@ -105,7 +105,7 @@ int main(int argc, char **argv)
 	return 0;
       }
     }
-    bye(i18n("Could not contact service given in TEXTEDIT_DBUS_PATH\n"));
+    bye(i18n("Could not contact service given in TEXTEDIT_DBUS_PATH."));
   }
   
   QString editor = "lilypond-invoke-editor"; // the default editor to run
