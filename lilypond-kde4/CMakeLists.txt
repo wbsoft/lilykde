@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 2.4)
 project(lilypond-kde4)
 set(version "0.1")
 

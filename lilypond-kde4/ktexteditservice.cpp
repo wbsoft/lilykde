@@ -74,7 +74,7 @@ int main(int argc, char **argv)
   /*
    * Now find the preferred app/service to run.
    *
-   * First check if there a DBUS app running that can open textedit URLs.
+   * First check if there's a DBUS app running that can open textedit URLs.
    * This is used for apps that embed e.g. a Okular/PDF part, and want to
    * handle clicks on a LilyPond object themselves.
    * TEXTEDIT_DBUS_PATH should look like org.app.name/path/to/handlerobject
