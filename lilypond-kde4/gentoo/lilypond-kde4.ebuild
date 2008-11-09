@@ -18,10 +18,3 @@ SRC_URI="http://lilykde.googlecode.com/files/${P}.tar.gz"
 DEPEND="
 	kde-base/kdelibs:4.1
 	"
-
-src_configure() {
-	mycmakeargs="${mycmakeargs}
-		-DCMAKE_INSTALL_PREFIX=${PREFIX}
-	"
-	kde4-base_src_configure
-}
