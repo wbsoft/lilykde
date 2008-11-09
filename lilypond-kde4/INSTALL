@@ -4,12 +4,11 @@ cmake .
 make
 make install
 
-
 The default prefix is /usr/local, this can be changed with e.g.
 
 cmake . -DCMAKE_INSTALL_PREFIX=/usr/kde/4.1
 
-
+Of course, to compile it you need cmake and the KDE4 -devel packages.
 For packaging, you can also install to a subdirectory:
 
 make install DESTDIR=/path/to/packagedir
