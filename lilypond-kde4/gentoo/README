@@ -1,0 +1,13 @@
+media-sound/lilypond-kde4 ebuild for Gentoo Linux.
+
+
+Rename lilypond-kde4.ebuild to e.g. lilypond-kde4-<version>.ebuild,
+e.g. lilypond-kde4-0.1.ebuild.
+
+Put it in your media-sound overlay, create digest using:
+
+ebuild lilypond-kde4-0.1.ebuild digest
+
+and then you can install lilypond-kde4 in Gentoo using the command:
+
+emerge lilypond-kde4
