@@ -16,6 +16,7 @@
 [editors]
 kwrite=kwrite --line {line} --column {col1} {file}
 kate=kate --use --line {line} --column {col1} {file}
+kile=kile --line {line} {file}
 gedit=gedit +{line} {file}
 nedit=nc -noask +{line} {file}
 emacs=emacsclient --no-wait +{line}:{col} {file}
