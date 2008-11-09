@@ -65,14 +65,8 @@ int main(int argc, char **argv)
   if (!rx.exactMatch(decodedUri))
     KCmdLineArgs::usageError(i18n("Not a valid textedit URL: ") + uri);
   
-  // We have a valid uri.
-  QString path = rx.cap(1);		// the path of the .ly file
-  int line = rx.cap(2).toInt();		// the line number
-  int pos  = rx.cap(3).toInt();		// the character position
-  int col  = rx.cap(4).toInt();		// the column (differs if tabs are used)
-
   /*
-   * Now find the preferred app/service to run.
+   * We have a valid uri. Now find the preferred app/service to run.
    *
    * First check if there's a DBUS app running that can open textedit URLs.
    * This is used for apps that embed e.g. a Okular/PDF part, and want to
@@ -159,6 +153,11 @@ int main(int argc, char **argv)
     * The user can configure in ktexteditservicerc how different editors are to
     * be started to open a file and jump to a specific cursor position.
     */
+    QString file = rx.cap(1);		// the full path of the .ly file
+    int line = rx.cap(2).toInt();	// the line number
+    int pos  = rx.cap(3).toInt();	// the character position
+    int col  = rx.cap(4).toInt();	// the column (differs if tabs are used)
+
     QString sline = QString::number(line);
     QString sline0 = QString::number(line > 0 ? line - 1: 0);
     QString scol = QString::number(col);
@@ -186,7 +185,7 @@ int main(int argc, char **argv)
     cli.replace("{pos1}", spos1, Qt::CaseInsensitive);
     cmd = cli.split(' ');
     // only now replace the file name, since it might contain spaces 
-    cmd.replaceInStrings("{file}", path, Qt::CaseInsensitive);
+    cmd.replaceInStrings("{file}", file, Qt::CaseInsensitive);
   }
   // execute the command
   return (int)QProcess::startDetached(cmd.first(), cmd.mid(1));
