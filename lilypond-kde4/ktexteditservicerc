@@ -20,4 +20,4 @@ kile=kile --line {line} {file}
 gedit=gedit +{line} {file}
 nedit=nc -noask +{line} {file}
 emacs=emacsclient --no-wait +{line}:{col} {file}
-jedit=jedit -reuseview {file} +line:{line}
+jedit=jedit -reuseview {file} +line:{line},{col1}
