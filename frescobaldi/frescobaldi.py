@@ -63,7 +63,7 @@ def main():
     if not KCmdLineArgs.isSet("new") and frescobaldi.isRunning():
         f = frescobaldi.runningApp()
     else:
-        f = frescobaldi.newApp()
+        f = frescobaldi.NewApp()
     
     nav = False
     line, col = 1, 0
@@ -73,15 +73,12 @@ def main():
     if KCmdLineArgs.isSet("column"):
         col = int(KCmdLineArgs.getOption("column"))
         nav = True
-
-    c = KCmdLineArgs.count()
-    doc = None
-    while c:
+    for c in range(KCmdLineArgs.count()):
         doc = f.openUrl(KCmdLineArgs.url(c))
-        c -= 1
-    if doc and nav:
-        doc.setCursorPosition(line, col)
+        if doc and nav:
+            doc.setCursorPosition(line, col)
+            nav = False # only first doc
         
-    f.exec_()
+    f.run()
         
 main()
