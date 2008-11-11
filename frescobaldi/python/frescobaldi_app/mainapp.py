@@ -20,42 +20,68 @@
 import os, re, sys
 import dbus, dbus.service, dbus.mainloop.qt
 
-from PyQt4.QtCore import QTimer
-from PyQt4.QtGui import QPushButton
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 from PyKDE4.kdeui import KApplication
 
-from . import DBUS_PREFIX, DBUS_PATH, DBUS_IFACE
+from . import DBUS_PREFIX, DBUS_MAIN_PATH, DBUS_MAIN_IFACE
 
 # Make the Qt mainloop the default one
 dbus.mainloop.qt.DBusQtMainLoop(set_as_default=True)
 
-class DBusApp(dbus.service.Object):
+DBUS_SERVICE = "%s%d" % (DBUS_PREFIX, os.getpid())
+
+class DBusItem(dbus.service.Object):
     """
-    The DBus interface for our app.
+    An exported DBus item for our application.
+    To be subclassed!
     """
-    def __init__(self, app):
-        self.app = app
-        name = "%s%d" % (DBUS_PREFIX, os.getpid())
-        bus = dbus.SessionBus(private=True)
-        bus_name = dbus.service.BusName(name, bus)
-        dbus.service.Object.__init__(self, bus_name, DBUS_PATH)
-        # Put in environment so ktexteditservice can find us
-        os.environ["TEXTEDIT_DBUS_PATH"] = name + DBUS_PATH
+    def __init__(self, path=None):
+        if path is None:
+            path = '/%s' % self.__class__.__name__
+        bus_name = dbus.service.BusName(DBUS_SERVICE, dbus.SessionBus(private=True))
+        dbus.service.Object.__init__(self, bus_name, path)
     
-    @dbus.service.method(DBUS_IFACE, in_signature='s', out_signature='b')
+
+class MainApp(DBusItem):
+    """
+    Our main application instance. Also exposes some methods to DBus.
+    Instantiated only once.
+    """
+    def __init__(self):
+         # KApplication needs to be instantiated before any D-Bus stuff
+        self.kapp = KApplication()
+        DBusItem.__init__(self, DBUS_MAIN_PATH)
+        # Put ourselves in environment so ktexteditservice can find us
+        os.environ["TEXTEDIT_DBUS_PATH"] = DBUS_SERVICE + DBUS_MAIN_PATH
+        
+        print "TEXTEDIT_DBUS_PATH=" + DBUS_SERVICE + DBUS_MAIN_PATH # DEBUG
+
+
+        # test stuff
+        w = QPushButton("Quit")
+        w.connect(w, SIGNAL("clicked()"), self.quit)
+        self.kapp.setTopWidget(w)
+        w.show()
+        self.w = w
+    
+    @dbus.service.method(DBUS_MAIN_IFACE, in_signature='s', out_signature='b')
     def openUrl(self, url):
         print url
         return False # TODO
 
-    @dbus.service.method(DBUS_IFACE, in_signature='', out_signature='b')
-    def run(self):
+    @dbus.service.method(DBUS_MAIN_IFACE, in_signature='', out_signature='', sender_keyword="sender")
+    def run(self, sender=None):
         """
         Is called by a remote app after new documents are opened.
         Currently need not to do anything.
+        
+        If we are the caller ourselves, run the KDE app.
         """
-        return True
+        if sender is None:
+            self.kapp.exec_()
 
-    @dbus.service.method(DBUS_IFACE, in_signature='s', out_signature='b')
+    @dbus.service.method(DBUS_MAIN_IFACE, in_signature='s', out_signature='b')
     def isOpen(self, url):
         """
         Returns true is the specified URL is opened by the current application
@@ -68,20 +94,9 @@ class DBusApp(dbus.service.Object):
         To be called by ktexteditservice (part of lilypond-kde4).
         Opens the specified textedit:// URL.
         """
-        print url
+        print "openTextEditUrl called:", url # DEBUG
         return False # TODO
 
-
-class MainApp(object):
-    """ A running Frescobaldi instance. """
-    def __init__(self):
-        self.kapp = KApplication()
-        self.dbus = DBusApp(self)
-
-        # test stuff
-        self.w = QPushButton("bla")
-        self.kapp.setTopWidget(self.w)
-        self.w.show()
-
-    def run(self):
-        return self.kapp.exec_()
+    @dbus.service.method(DBUS_MAIN_IFACE, in_signature='', out_signature='')
+    def quit(self):
+        self.kapp.quit()
