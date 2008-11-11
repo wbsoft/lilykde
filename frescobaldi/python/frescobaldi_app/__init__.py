@@ -32,7 +32,7 @@ def runningApp():
     Returns a proxy object for an instance of Frescobaldi running on the DBus
     session bus, if it is there, or False if none.
     """
-    bus = dbus.SessionBus()
+    bus = dbus.SessionBus(private=True)
     for name in bus.list_names():
         if name.startswith(DBUS_PREFIX):
             obj = bus.get_object(name, DBUS_MAIN_PATH)

@@ -39,7 +39,8 @@ class DBusItem(dbus.service.Object):
     def __init__(self, path=None):
         if path is None:
             path = '/%s' % self.__class__.__name__
-        bus_name = dbus.service.BusName(DBUS_SERVICE, dbus.SessionBus(private=True))
+        bus = dbus.SessionBus()
+        bus_name = dbus.service.BusName(DBUS_SERVICE, bus)
         dbus.service.Object.__init__(self, bus_name, path)
     
 
