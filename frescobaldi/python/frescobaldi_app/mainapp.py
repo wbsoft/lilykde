@@ -25,6 +25,8 @@ from PyQt4.QtGui import *
 from PyKDE4.kdeui import KApplication
 
 from . import DBUS_PREFIX, DBUS_MAIN_PATH, DBUS_MAIN_IFACE
+from .mainwindow import MainWindow
+
 
 # Make the Qt mainloop the default one
 dbus.mainloop.qt.DBusQtMainLoop(set_as_default=True)
@@ -53,18 +55,14 @@ class MainApp(DBusItem):
          # KApplication needs to be instantiated before any D-Bus stuff
         self.kapp = KApplication()
         DBusItem.__init__(self, DBUS_MAIN_PATH)
+
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = DBUS_SERVICE + DBUS_MAIN_PATH
-        
         print "TEXTEDIT_DBUS_PATH=" + DBUS_SERVICE + DBUS_MAIN_PATH # DEBUG
 
-
-        # test stuff
-        w = QPushButton("Quit")
-        w.connect(w, SIGNAL("clicked()"), self.quit)
-        self.kapp.setTopWidget(w)
-        w.show()
-        self.w = w
+        self.mainwin = MainWindow()
+        self.kapp.setTopWidget(self.mainwin)
+        
     
     @dbus.service.method(DBUS_MAIN_IFACE, in_signature='s', out_signature='b')
     def openUrl(self, url):
