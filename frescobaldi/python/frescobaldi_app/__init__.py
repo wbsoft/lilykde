@@ -21,7 +21,7 @@
 Bootstrap application logic for the Frescobaldi editor.
 """
 
-DBUS_PREFIX = "org.frescobaldi.mainApp-"
+DBUS_PREFIX = "org.frescobaldi.main-"
 DBUS_PATH = "/Frescobaldi"
 DBUS_IFACE = "org.frescobaldi.mainApp.Frescobaldi"
 

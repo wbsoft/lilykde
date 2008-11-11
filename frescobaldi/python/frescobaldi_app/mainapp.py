@@ -36,8 +36,9 @@ class DBusApp(dbus.service.Object):
     def __init__(self, app):
         self.app = app
         name = "%s%d" % (DBUS_PREFIX, os.getpid())
-        bus = dbus.service.BusName(name, bus=dbus.SessionBus(private=True))
-        dbus.service.Object.__init__(self, bus, DBUS_PATH)
+        bus = dbus.SessionBus(private=True)
+        bus_name = dbus.service.BusName(name, bus)
+        dbus.service.Object.__init__(self, bus_name, DBUS_PATH)
         # Put in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = name + DBUS_PATH
     
