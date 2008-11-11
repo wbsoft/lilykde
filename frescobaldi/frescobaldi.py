@@ -19,66 +19,50 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import sys, os, re
-import dbus, dbus.service, dbus.mainloop.qt
+import os, sys
 
-from PyKDE4.kdecore import *
-from PyKDE4.kdeui import *
+from PyKDE4.kdecore import (KAboutData, KCmdLineArgs, KCmdLineOptions,
+    KLocalizedString, KStandardDirs, ki18n)
 
-import frescobaldi
+appName = "frescobaldi"
+catalog = appName
+programName = ki18n("Frescobaldi")
+version = "0.1"
+description = ki18n("LilyPond editing environment for KDE")
+license = KAboutData.License_GPL
+copyright = ki18n("Copyright (c) 2008, Wilbert Berendsen")
+text = KLocalizedString()
+homepage = "http://www.frescobaldi.org/"
+bugs = "info@frescobaldi.org"
 
-dbus.mainloop.qt.DBusQtMainLoop(set_as_default=True)
+# Find our own Python modules and packages
+sys.path[0:0] = map(os.path.normpath, map(str,
+    KStandardDirs().findDirs("data", appName+"/python")))
+from frescobaldi_app import newApp, runningApp
 
-def main():
-    appName = "frescobaldi"
-    catalog = appName
-    programName = ki18n("Frescobaldi")
-    version = "0.1"
-    description = ki18n("LilyPond editing environment for KDE")
-    license = KAboutData.License_GPL
-    copyright = ki18n("Copyright (c) 2008, Wilbert Berendsen")
-    text = KLocalizedString()
-    homepage = "http://www.frescobaldi.org/"
-    bugs = "info@frescobaldi.org"
+aboutData = KAboutData(appName, catalog, programName, version, description,
+    license, copyright, text, homepage, bugs)
 
-    aboutData = KAboutData(appName, catalog, programName, version, description,
-        license, copyright, text, homepage, bugs)
+KCmdLineArgs.init(sys.argv, aboutData)
 
-    KCmdLineArgs.init(sys.argv, aboutData)
+options = KCmdLineOptions()
+options.add("start <session>", ki18n("Session to start"))
+options.add("n").add("new", ki18n("Start a new instance"))
+options.add("l").add("line <line>", ki18n("Line number to go to, starting at 1"))
+options.add("c").add("column <col>", ki18n("Column to go to, starting at 0"))
+options.add("+files", ki18n("LilyPond files to open, may also be textedit URLs"))
+KCmdLineArgs.addCmdLineOptions(options)
 
-    options = KCmdLineOptions()
-    options.add("start <session>", ki18n("Session to start"))
-    options.add("n").add("new", ki18n("Start a new instance"))
-    options.add("l").add("line <line>", ki18n("Line number to go to, starting at 1"))
-    options.add("c").add("column <col>", ki18n("Column to go to, starting at 0"))
-    options.add("+files", ki18n("LilyPond files to open, may also be textedit URLs"))
-    KCmdLineArgs.addCmdLineOptions(options)
+args = KCmdLineArgs.parsedArgs()
 
-    app = KApplication()
-
-    # Find our own python modules and packages
-    sys.path[0:0] = map(os.path.normpath, map(str,
-        KStandardDirs().findDirs("appdata", "python")))
-
-    if not KCmdLineArgs.isSet("new") and frescobaldi.isRunning():
-        f = frescobaldi.runningApp()
-    else:
-        f = frescobaldi.NewApp()
+app = (not args.isSet("new") and runningApp()) or newApp()
+nav = args.isSet("line") or args.isSet("column")
+line = int(args.getOption("line") or 1)
+col = int(args.getOption("column") or 0)
+for c in range(args.count()):
+    doc = app.openUrl(unicode(args.url(c).url()))
+    if doc and nav:
+        app.setCursorPosition(line, col)
+        nav = False # only first doc
     
-    nav = False
-    line, col = 1, 0
-    if KCmdLineArgs.isSet("line"):
-        line = int(KCmdLineArgs.getOption("line"))
-        nav = True
-    if KCmdLineArgs.isSet("column"):
-        col = int(KCmdLineArgs.getOption("column"))
-        nav = True
-    for c in range(KCmdLineArgs.count()):
-        doc = f.openUrl(KCmdLineArgs.url(c))
-        if doc and nav:
-            doc.setCursorPosition(line, col)
-            nav = False # only first doc
-        
-    f.run()
-        
-main()
+app.run()
