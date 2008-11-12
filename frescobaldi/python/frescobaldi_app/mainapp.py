@@ -25,7 +25,7 @@ from PyQt4.QtGui import *
 from PyKDE4.kdeui import KApplication
 from PyKDE4.ktexteditor import KTextEditor
 
-from . import DBUS_PREFIX, DBUS_MAIN_PATH, DBUS_MAIN_IFACE
+from . import DBUS_PREFIX, DBUS_MAIN_PATH, DBUS_IFACE_PREFIX
 from .mainwindow import MainWindow
 
 
@@ -52,6 +52,8 @@ class MainApp(DBusItem):
     Our main application instance. Also exposes some methods to DBus.
     Instantiated only once.
     """
+    iface = DBUS_IFACE_PREFIX + "MainApp"
+    
     def __init__(self):
          # KApplication needs to be instantiated before any D-Bus stuff
         self.kapp = KApplication()
@@ -67,13 +69,13 @@ class MainApp(DBusItem):
 
 
     
-    @dbus.service.method(DBUS_MAIN_IFACE, in_signature='s', out_signature='o')
+    @dbus.service.method(iface, in_signature='s', out_signature='o')
     def openUrl(self, url):
         print url       # DEBUG
         d = Document(self.mainwin, url)
         return d
 
-    @dbus.service.method(DBUS_MAIN_IFACE, in_signature='', out_signature='', sender_keyword="sender")
+    @dbus.service.method(iface, in_signature='', out_signature='', sender_keyword="sender")
     def run(self, sender=None):
         """
         Is called by a remote app after new documents are opened.
@@ -84,13 +86,17 @@ class MainApp(DBusItem):
         if sender is None:
             self.kapp.exec_()
 
-    @dbus.service.method(DBUS_MAIN_IFACE, in_signature='s', out_signature='b')
+    @dbus.service.method(iface, in_signature='s', out_signature='b')
     def isOpen(self, url):
         """
         Returns true is the specified URL is opened by the current application
         """
         return False # TODO
         
+    @dbus.service.method(iface, in_signature='', out_signature='')
+    def quit(self):
+        self.kapp.quit()
+
     @dbus.service.method("org.lilypond.TextEdit", in_signature='s', out_signature='b')
     def openTextEditUrl(self, url):
         """
@@ -100,10 +106,6 @@ class MainApp(DBusItem):
         print "openTextEditUrl called:", url # DEBUG
         return False # TODO
 
-    @dbus.service.method(DBUS_MAIN_IFACE, in_signature='', out_signature='')
-    def quit(self):
-        self.kapp.quit()
-
 
 class Document(DBusItem):
     """
@@ -112,7 +114,7 @@ class Document(DBusItem):
     the KTextEditor document and view.
     """
     __instance_counter = 0
-    DOC_IFACE = "org.frescobaldi.Document"
+    iface = DBUS_IFACE_PREFIX + "Document"
 
     def __init__(self, mainwin, url=""):
         Document.__instance_counter += 1
@@ -142,7 +144,7 @@ class Document(DBusItem):
         if self._cursor is not None:
             self.view.setCursorPosition(KTextEditor.Cursor(*self._cursor))
 
-    @dbus.service.method(DOC_IFACE, in_signature='', out_signature='s')
+    @dbus.service.method(iface, in_signature='', out_signature='s')
     def url(self):
         """Returns the URL of this document"""
         if self.doc:
@@ -150,7 +152,7 @@ class Document(DBusItem):
         else:
             return self._url
 
-    @dbus.service.method(DOC_IFACE, in_signature='ii', out_signature='')
+    @dbus.service.method(iface, in_signature='ii', out_signature='')
     def setCursorPosition(self, line, column):
         """Sets the cursor in this document. Lines start at 1, columns at 0."""
         print "setCursorPosition called: ", line, column
@@ -160,8 +162,13 @@ class Document(DBusItem):
         else:
             self._cursor = (line, column)
 
-
-
+    @dbus.service.method(iface, in_signature='', out_signature='b')
+    def close(self):
+        """Closes this document, returning true if closing succeeded."""
+        # TODO implement
+        
+        self.remove_from_connection()
+        return True
 
 
 
