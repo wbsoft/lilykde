@@ -29,7 +29,7 @@ class MainWindow(KParts.MainWindow):
         doc = editor.createDocument(self)
         view = doc.createView(self)
 
-        self.setXMLFile("/home/kde4dev/dev/frescobaldi/data/frescobaldiui.rc")
+        self.setXMLFile("frescobaldiui.rc")
         self.createShellGUI(True)
         self.guiFactory().addClient(view)
         self.setCentralWidget(view)

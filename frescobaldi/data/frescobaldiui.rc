@@ -36,9 +36,15 @@
     <Merge/>
   </Menu>
 
-  <Menu name="view" noMerge="1"><text>&amp;View</text>
-    <Action name="view_new_view" />
+  <Menu name="documents"><text>&amp;Document</text>
+    <Action name="go_back"/>
+    <Action name="go_forward"/>
     <Separator />
+    <Action name="session_list"/>
+    <Separator />
+  </Menu>
+
+  <Menu name="view" noMerge="1"><text>&amp;View</text>
     <DefineGroup name="view_operations" />
   </Menu>
 

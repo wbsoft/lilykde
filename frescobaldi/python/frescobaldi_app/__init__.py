@@ -23,7 +23,7 @@ Bootstrap application logic for the Frescobaldi editor.
 
 DBUS_PREFIX = "org.frescobaldi.main-"
 DBUS_MAIN_PATH = "/Frescobaldi"
-DBUS_MAIN_IFACE = "org.frescobaldi.main.Frescobaldi"
+DBUS_MAIN_IFACE = "org.frescobaldi.MainApp"
 
 import dbus
 
@@ -35,9 +35,9 @@ def runningApp():
     bus = dbus.SessionBus(private=True)
     for name in bus.list_names():
         if name.startswith(DBUS_PREFIX):
+            print "Found running instance:", name # DEBUG
             obj = bus.get_object(name, DBUS_MAIN_PATH)
             iface = dbus.Interface(obj, dbus_interface = DBUS_MAIN_IFACE)
-            print "Found running instance:", name # DEBUG
             return iface
     return False
 

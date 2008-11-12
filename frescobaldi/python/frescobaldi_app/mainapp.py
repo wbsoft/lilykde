@@ -23,6 +23,7 @@ import dbus, dbus.service, dbus.mainloop.qt
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyKDE4.kdeui import KApplication
+from PyKDE4.ktexteditor import KTextEditor
 
 from . import DBUS_PREFIX, DBUS_MAIN_PATH, DBUS_MAIN_IFACE
 from .mainwindow import MainWindow
@@ -60,14 +61,17 @@ class MainApp(DBusItem):
         os.environ["TEXTEDIT_DBUS_PATH"] = DBUS_SERVICE + DBUS_MAIN_PATH
         print "TEXTEDIT_DBUS_PATH=" + DBUS_SERVICE + DBUS_MAIN_PATH # DEBUG
 
+        # We support only one MainWindow.
         self.mainwin = MainWindow()
         self.kapp.setTopWidget(self.mainwin)
-        
+
+
     
-    @dbus.service.method(DBUS_MAIN_IFACE, in_signature='s', out_signature='b')
+    @dbus.service.method(DBUS_MAIN_IFACE, in_signature='s', out_signature='o')
     def openUrl(self, url):
-        print url
-        return False # TODO
+        print url       # DEBUG
+        d = Document(self.mainwin, url)
+        return d
 
     @dbus.service.method(DBUS_MAIN_IFACE, in_signature='', out_signature='', sender_keyword="sender")
     def run(self, sender=None):
@@ -99,3 +103,66 @@ class MainApp(DBusItem):
     @dbus.service.method(DBUS_MAIN_IFACE, in_signature='', out_signature='')
     def quit(self):
         self.kapp.quit()
+
+
+class Document(DBusItem):
+    """
+    A loaded LilyPond text document.
+    We support lazy document creation: only when a view is requested, we create
+    the KTextEditor document and view.
+    """
+    __instance_counter = 0
+    DOC_IFACE = "org.frescobaldi.Document"
+
+    def __init__(self, mainwin, url=""):
+        Document.__instance_counter += 1
+        path = "/Document/%d" % Document.__instance_counter
+        DBusItem.__init__(self, path)
+
+        self.mainwin = mainwin  # our MainWindow
+
+        self.doc = None         # this is going to hold the KTextEditor doc
+        self.view = None        # this is going to hold the KTextEditor view
+        self._url = url         # as long as no doc is really loaded, this
+                                # is the url
+        self._cursor = None     # line, col. None = not set.
+
+
+    def materialize(self):
+        """ Really load the document, create doc and view etc. """
+        if self.view:
+            return True
+        editor = KTextEditor.EditorChooser.editor()
+        self.doc = editor.createDocument(self.mainwin)
+        self.view = doc.createView(self.mainwin)
+
+        if self._url:
+            self.doc.openUrl(self._url)
+        
+        if self._cursor is not None:
+            self.view.setCursorPosition(KTextEditor.Cursor(*self._cursor))
+
+    @dbus.service.method(DOC_IFACE, in_signature='', out_signature='s')
+    def url(self):
+        """Returns the URL of this document"""
+        if self.doc:
+            return unicode(self.doc.url().url())
+        else:
+            return self._url
+
+    @dbus.service.method(DOC_IFACE, in_signature='ii', out_signature='')
+    def setCursorPosition(self, line, column):
+        """Sets the cursor in this document. Lines start at 1, columns at 0."""
+        print "setCursorPosition called: ", line, column
+        column += 1
+        if self.view:
+            self.view.setCursorPosition(KTextEditor.Cursor(line, column))
+        else:
+            self._cursor = (line, column)
+
+
+
+
+
+
+
