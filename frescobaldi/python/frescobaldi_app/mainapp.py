@@ -125,6 +125,13 @@ class MainApp(DBusItem):
         print "openTextEditUrl called:", url # DEBUG
         return bool(self.openUrl(url))
 
+    def addDocument(self, doc):
+        self.documents.append(doc)
+        
+    def removeDocument(self, doc):
+        if doc in self.documents:
+            self.documents.remove(doc)
+
 
 class Document(DBusItem):
     """
@@ -149,7 +156,7 @@ class Document(DBusItem):
                                 # is the url
         self._cursor = None     # line, col. None = not set.
 
-        self.app.documents.append(self)
+        self.app.addDocument(self)
         self.materialize()
 
 
@@ -160,6 +167,7 @@ class Document(DBusItem):
         self.doc = self.app.editor.createDocument(self.mainwin)
         self.view = self.doc.createView(self.mainwin)
 
+        self.mainwin.addView(self.view)
         self.show()
 
         if self._url:
@@ -197,8 +205,9 @@ class Document(DBusItem):
         # TODO implement, ask user etc.
         
 
+        self.mainwin.removeView(self)
         self.remove_from_connection()
-        self.app.documents.remove(self)
+        self.app.removeDocument(self)
         return True
 
 

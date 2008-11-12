@@ -17,6 +17,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
+from PyQt4.QtGui import QStackedWidget
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -28,6 +29,8 @@ class MainWindow(KParts.MainWindow):
         self.createShellGUI(True)
         self.show()
         self._currentView = None
+        self.stack = QStackedWidget(self)
+        self.setCentralWidget(self.stack)
 
     def showView(self, view):
         if view is self._currentView:
@@ -35,6 +38,12 @@ class MainWindow(KParts.MainWindow):
         if self._currentView:
             self.guiFactory().removeClient(self._currentView)
         self.guiFactory().addClient(view)
-        #self.setCentralWidget(view)
         self._currentView = view
+        self.stack.setCurrentWidget(view)
 
+    def addView(self, view):
+        self.stack.addWidget(view)
+        
+    def removeView(self, view):
+        self.stack.removeWidget(view)
+        
