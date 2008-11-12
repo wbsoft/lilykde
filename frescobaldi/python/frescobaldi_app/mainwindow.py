@@ -40,6 +40,7 @@ class MainWindow(KParts.MainWindow):
         self.guiFactory().addClient(view)
         self._currentView = view
         self.stack.setCurrentWidget(view)
+        view.setFocus()
 
     def addView(self, view):
         self.stack.addWidget(view)

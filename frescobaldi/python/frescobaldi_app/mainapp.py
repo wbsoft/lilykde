@@ -73,6 +73,13 @@ class MainApp(DBusItem):
 
         # Get our beloved editor :-)
         self.editor = KTextEditor.EditorChooser.editor()
+
+
+        # restore session etc.
+
+        # At the very last, instantiate one empty doc if nothing loaded yet.
+        if len(self.documents) == 0:
+            Document(self)
         
 
     def getDocumentByUrl(self, url):
@@ -85,6 +92,15 @@ class MainApp(DBusItem):
     @dbus.service.method(iface, in_signature='s', out_signature='o')
     def openUrl(self, url):
         print "openUrl", url       # DEBUG
+        # TODO: parse textedit urls here.
+
+        # If there is only one document open and it is empty, nameless and
+        # unmodified, do not create a new one.
+        if (    len(self.documents) == 1
+                and not self.documents[0].isModified()
+                and not self.documents[0].url()
+                and self.documents[0].isEmpty()):
+            self.documents[0].close()
         d = self.getDocumentByUrl(url)
         if not d:
             print "New document."
@@ -92,7 +108,13 @@ class MainApp(DBusItem):
         else:
             print "Found document:", d.url()
         d.show()
+        # TODO: if textedit url, set cursor position
         return d
+
+    @dbus.service.method(iface, in_signature='', out_signature='o')
+    def new(self):
+        print "new" # DEBUG
+        return Document(self)
 
     @dbus.service.method(iface, in_signature='', out_signature='', sender_keyword="sender")
     def run(self, sender=None):
@@ -131,7 +153,8 @@ class MainApp(DBusItem):
     def removeDocument(self, doc):
         if doc in self.documents:
             self.documents.remove(doc)
-
+            if len(self.documents) == 0:
+                Document(self)
 
 class Document(DBusItem):
     """
@@ -189,11 +212,22 @@ class Document(DBusItem):
         else:
             return self._url
 
+    @dbus.service.method(iface, in_signature='', out_signature='b')
+    def isModified(self):
+        """Returns true if the document has unsaved changes."""
+        return self.doc and self.doc.isModified()
+
+    @dbus.service.method(iface, in_signature='', out_signature='b')
+    def isEmpty(self):
+        if self.doc:
+            return self.doc.isEmpty()
+        return False # if not loaded, because we don't know it yet.
+
     @dbus.service.method(iface, in_signature='ii', out_signature='')
     def setCursorPosition(self, line, column):
         """Sets the cursor in this document. Lines start at 1, columns at 0."""
         print "setCursorPosition called: ", line, column # DEBUG
-        column += 1
+        line -= 1
         if self.view:
             self.view.setCursorPosition(KTextEditor.Cursor(line, column))
         else:
@@ -205,7 +239,7 @@ class Document(DBusItem):
         # TODO implement, ask user etc.
         
 
-        self.mainwin.removeView(self)
+        self.mainwin.removeView(self.view)
         self.remove_from_connection()
         self.app.removeDocument(self)
         return True
