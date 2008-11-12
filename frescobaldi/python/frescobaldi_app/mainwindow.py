@@ -27,4 +27,14 @@ class MainWindow(KParts.MainWindow):
         self.setXMLFile("frescobaldiui.rc")
         self.createShellGUI(True)
         self.show()
+        self._currentView = None
+
+    def showView(self, view):
+        if view is self._currentView:
+            return
+        if self._currentView:
+            self.guiFactory().removeClient(self._currentView)
+        self.guiFactory().addClient(view)
+        #self.setCentralWidget(view)
+        self._currentView = view
 

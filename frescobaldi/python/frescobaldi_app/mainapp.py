@@ -84,10 +84,14 @@ class MainApp(DBusItem):
     
     @dbus.service.method(iface, in_signature='s', out_signature='o')
     def openUrl(self, url):
-        print url       # DEBUG
+        print "openUrl", url       # DEBUG
         d = self.getDocumentByUrl(url)
         if not d:
+            print "New document."
             d = Document(self, url)
+        else:
+            print "Found document:", d.url()
+        d.show()
         return d
 
     @dbus.service.method(iface, in_signature='', out_signature='', sender_keyword="sender")
@@ -164,11 +168,10 @@ class Document(DBusItem):
         if self._cursor is not None:
             self.view.setCursorPosition(KTextEditor.Cursor(*self._cursor))
 
+    @dbus.service.method(iface, in_signature='', out_signature='')
     def show(self):
         """ Show the document """
-        self.mainwin.guiFactory().addClient(self.view)
-        self.mainwin.setCentralWidget(self.view)
-        
+        self.mainwin.showView(self.view)
 
     @dbus.service.method(iface, in_signature='', out_signature='s')
     def url(self):
@@ -181,7 +184,7 @@ class Document(DBusItem):
     @dbus.service.method(iface, in_signature='ii', out_signature='')
     def setCursorPosition(self, line, column):
         """Sets the cursor in this document. Lines start at 1, columns at 0."""
-        print "setCursorPosition called: ", line, column
+        print "setCursorPosition called: ", line, column # DEBUG
         column += 1
         if self.view:
             self.view.setCursorPosition(KTextEditor.Cursor(line, column))
