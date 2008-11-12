@@ -27,49 +27,10 @@ DBUS_PREFIX = "org.frescobaldi.main-"
 DBUS_IFACE_PREFIX = "org.frescobaldi."
 DBUS_MAIN_PATH = "/MainApp"
 
-def get_interface(path):
-    """ Return the default interface to use for the given object path. """
-    for i in 'MainApp', 'Document':
-        if path.startswith("/"+i):
-            return DBUS_IFACE_PREFIX + i
-    return False
-
-class Proxy(object):
-    """
-    A wrapper around a dbus proxy object.
-    
-    Methods are automagically directed to the correct interface,
-    using the object_path to interface name translation in the get_interface
-    function.
-
-    When a remote object call would return a dbus.ObjectPath, we return
-    the same wrapper for the referenced dbus proxy object.
-    This way we can handle DBus objects in a Pythonic way:
-    
-        app = Proxy(bus.get_object(...))
-        doc = app.createDoc()
-        doc.callMethod()
-    """
-    def __init__(self, obj):
-        self.obj = obj
-        i = get_interface(obj.object_path)
-        if i: self.iface = dbus.Interface(obj, dbus_interface=i)
-        else: self.iface None
-        
-    def __getattr__(self, attr):
-        if self.iface:
-            a = getattr(self.iface, attr)
-            if callable(a):
-                def proxy_func(*args, **kwargs):
-                    res = a(*args, **kwargs)
-                    if isinstance(res, dbus.ObjectPath):
-                        bus = dbus.SessionBus(private=True)
-                        obj = bus.get_object(self.obj.bus_name, res)
-                        res = Proxy(obj)
-                    return res
-                return proxy_func
-        return getattr(self.obj, attr)
-
+def newApp():
+    """ Returns a newly started Frescobaldi instance. """
+    from .mainapp import MainApp
+    return MainApp()
 
 def runningApp():
     """
@@ -83,11 +44,49 @@ def runningApp():
     for name in bus.list_names():
         if name.startswith(DBUS_PREFIX):
             print "Found running instance:", name # DEBUG
-            obj = bus.get_object(name, DBUS_MAIN_PATH)
-            return Proxy(obj)
+            return Proxy(bus.get_object(name, DBUS_MAIN_PATH))
     return False
 
-def newApp():
-    """ Returns a newly started Frescobaldi instance. """
-    from .mainapp import MainApp
-    return MainApp()
+def _get_interface(path):
+    """ Return the default interface to use for the given object path. """
+    for i in 'MainApp', 'Document':
+        if path.startswith("/"+i):
+            return DBUS_IFACE_PREFIX + i
+    return False
+
+
+class Proxy(object):
+    """
+    A wrapper around a dbus proxy object.
+    
+    Methods calls are automagically directed to the correct interface,
+    using the object_path to interface name translation in the _get_interface
+    function.
+
+    When a remote object call would return a dbus.ObjectPath, we return
+    the same wrapper for the referenced dbus proxy object.
+    This way we can handle remote DBus objects in a Pythonic way:
+    
+        app = Proxy(bus.get_object(...))
+        doc = app.createDoc()
+        doc.callMethod()
+    """
+    def __init__(self, obj):
+        self.obj = obj
+        i = _get_interface(obj.object_path)
+        if i: self.iface = dbus.Interface(obj, dbus_interface=i)
+        else: self.iface = None
+        
+    def __getattr__(self, attr):
+        if self.iface:
+            a = getattr(self.iface, attr)
+            if callable(a):
+                def proxy_func(*args, **kwargs):
+                    res = a(*args, **kwargs)
+                    if isinstance(res, dbus.ObjectPath):
+                        bus = dbus.SessionBus(private=True)
+                        res = Proxy(bus.get_object(self.obj.bus_name, res))
+                    return res
+                return proxy_func
+        return getattr(self.obj, attr)
+

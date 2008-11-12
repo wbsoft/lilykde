@@ -24,14 +24,7 @@ from PyKDE4.ktexteditor import KTextEditor
 class MainWindow(KParts.MainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-
-        editor = KTextEditor.EditorChooser.editor()
-        doc = editor.createDocument(self)
-        view = doc.createView(self)
-
         self.setXMLFile("frescobaldiui.rc")
         self.createShellGUI(True)
-        self.guiFactory().addClient(view)
-        self.setCentralWidget(view)
         self.show()
 

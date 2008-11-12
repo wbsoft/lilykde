@@ -22,6 +22,7 @@ import dbus, dbus.service, dbus.mainloop.qt
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from PyKDE4.kdecore import KUrl
 from PyKDE4.kdeui import KApplication
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -67,12 +68,26 @@ class MainApp(DBusItem):
         self.mainwin = MainWindow()
         self.kapp.setTopWidget(self.mainwin)
 
+        # We manage our own documents.
+        self.documents = []
 
+        # Get our beloved editor :-)
+        self.editor = KTextEditor.EditorChooser.editor()
+        
+
+    def getDocumentByUrl(self, url):
+        """ Return the opened document or False. """
+        for d in self.documents:
+            if d.url() == url:
+                return d
+        return False
     
     @dbus.service.method(iface, in_signature='s', out_signature='o')
     def openUrl(self, url):
         print url       # DEBUG
-        d = Document(self.mainwin, url)
+        d = self.getDocumentByUrl(url)
+        if not d:
+            d = Document(self, url)
         return d
 
     @dbus.service.method(iface, in_signature='', out_signature='', sender_keyword="sender")
@@ -91,7 +106,7 @@ class MainApp(DBusItem):
         """
         Returns true is the specified URL is opened by the current application
         """
-        return False # TODO
+        return bool(self.getDocumentByUrl(url))
         
     @dbus.service.method(iface, in_signature='', out_signature='')
     def quit(self):
@@ -104,7 +119,7 @@ class MainApp(DBusItem):
         Opens the specified textedit:// URL.
         """
         print "openTextEditUrl called:", url # DEBUG
-        return False # TODO
+        return bool(self.openUrl(url))
 
 
 class Document(DBusItem):
@@ -116,12 +131,13 @@ class Document(DBusItem):
     __instance_counter = 0
     iface = DBUS_IFACE_PREFIX + "Document"
 
-    def __init__(self, mainwin, url=""):
+    def __init__(self, app, url=""):
         Document.__instance_counter += 1
         path = "/Document/%d" % Document.__instance_counter
         DBusItem.__init__(self, path)
 
-        self.mainwin = mainwin  # our MainWindow
+        self.app = app
+        self.mainwin = app.mainwin  # our MainWindow
 
         self.doc = None         # this is going to hold the KTextEditor doc
         self.view = None        # this is going to hold the KTextEditor view
@@ -129,20 +145,30 @@ class Document(DBusItem):
                                 # is the url
         self._cursor = None     # line, col. None = not set.
 
+        self.app.documents.append(self)
+        self.materialize()
+
 
     def materialize(self):
         """ Really load the document, create doc and view etc. """
-        if self.view:
+        if self.doc:
             return True
-        editor = KTextEditor.EditorChooser.editor()
-        self.doc = editor.createDocument(self.mainwin)
-        self.view = doc.createView(self.mainwin)
+        self.doc = self.app.editor.createDocument(self.mainwin)
+        self.view = self.doc.createView(self.mainwin)
+
+        self.show()
 
         if self._url:
-            self.doc.openUrl(self._url)
+            self.doc.openUrl(KUrl(self._url))
         
         if self._cursor is not None:
             self.view.setCursorPosition(KTextEditor.Cursor(*self._cursor))
+
+    def show(self):
+        """ Show the document """
+        self.mainwin.guiFactory().addClient(self.view)
+        self.mainwin.setCentralWidget(self.view)
+        
 
     @dbus.service.method(iface, in_signature='', out_signature='s')
     def url(self):
@@ -165,9 +191,11 @@ class Document(DBusItem):
     @dbus.service.method(iface, in_signature='', out_signature='b')
     def close(self):
         """Closes this document, returning true if closing succeeded."""
-        # TODO implement
+        # TODO implement, ask user etc.
         
+
         self.remove_from_connection()
+        self.app.documents.remove(self)
         return True
 
 
