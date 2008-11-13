@@ -21,7 +21,8 @@ import sip
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyKDE4.kdecore import i18n
+from PyKDE4.kdecore import *
+from PyKDE4.kdeui import *
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -39,11 +40,12 @@ class MainWindow(KParts.MainWindow):
 
         # Documents menu
         self.docMenu = self.factory().container("documents", self)
-        print self.docMenu # DEBUG
         self.docGroup = QActionGroup(self.docMenu)
         self.docGroup.setExclusive(True)
-        QObject.connect(self.docMenu, SIGNAL("aboutToShow()"), self.populateDocMenu)
-        QObject.connect(self.docGroup, SIGNAL("triggered(QAction*)"), lambda a: a.doc.show())
+        QObject.connect(self.docMenu, SIGNAL("aboutToShow()"),
+            self.populateDocMenu)
+        QObject.connect(self.docGroup, SIGNAL("triggered(QAction*)"),
+            lambda a: a.doc.show())
 
     def showView(self, view):
         if view is self._currentView:
@@ -60,22 +62,28 @@ class MainWindow(KParts.MainWindow):
         
     def removeView(self, view):
         self.stack.removeWidget(view)
+        if view is self._currentView:
+            self.guiFactory().removeClient(view)
+            self._currentView = None
+
+    def updateState(self, doc):
+        if doc.view is not self._currentView:
+            return
+        title = doc.title()
+        if doc.isModified():
+            title += " [%s]" % i18n("modified")
+        self.setCaption(title)
 
     def populateDocMenu(self):
-        print "populateDocMenu called!" #DEBUG
         for a in self.docGroup.actions():
             sip.delete(a)
         for d in self.app.documents:
-            name = d.url() or i18n("Untitled")
-            print "populateDocMenu name:",name #DEBUG
-            if d.isModified():
-                name += " [*]"
-            a = QAction(name, self.docGroup)
+            a = KAction(d.title(), self.docGroup)
             a.setCheckable(True)
             a.doc = d
-            if self._currentView and (self._currentView == d.view):
-                print "current document:", d.url() # DEBUG
+            if d.isModified():
+                a.setIcon(KIcon("document-save"))
+            if self._currentView is d.view:
                 a.setChecked(True)
             self.docGroup.addAction(a)
             self.docMenu.addAction(a)
-    

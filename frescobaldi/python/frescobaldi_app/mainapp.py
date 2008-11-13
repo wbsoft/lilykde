@@ -19,10 +19,11 @@
 
 import os, re, sys
 import dbus, dbus.service, dbus.mainloop.qt
+from dbus.service import method
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyKDE4.kdecore import KUrl
+from PyKDE4.kdecore import i18n, KUrl
 from PyKDE4.kdeui import KApplication
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -70,6 +71,7 @@ class MainApp(DBusItem):
 
         # We manage our own documents.
         self.documents = []
+        self.history = []       # latest shown documents
 
         # Get our beloved editor :-)
         self.editor = KTextEditor.EditorChooser.editor()
@@ -85,7 +87,7 @@ class MainApp(DBusItem):
                 return d
         return False
     
-    @dbus.service.method(iface, in_signature='s', out_signature='o')
+    @method(iface, in_signature='s', out_signature='o')
     def openUrl(self, url):
         print "openUrl", url       # DEBUG
         # TODO: parse textedit urls here.
@@ -107,12 +109,14 @@ class MainApp(DBusItem):
         # TODO: if textedit url, set cursor position
         return d
 
-    @dbus.service.method(iface, in_signature='', out_signature='o')
+    @method(iface, in_signature='', out_signature='o')
     def new(self):
         print "new" # DEBUG
-        return Document(self)
+        d = Document(self)
+        d.show()
+        return d
 
-    @dbus.service.method(iface, in_signature='', out_signature='', sender_keyword="sender")
+    @method(iface, in_signature='', out_signature='', sender_keyword="sender")
     def run(self, sender=None):
         """
         Is called by a remote app after new documents are opened.
@@ -124,17 +128,17 @@ class MainApp(DBusItem):
             return
         # At the very last, instantiate one empty doc if nothing loaded yet.
         if len(self.documents) == 0:
-            Document(self)
+            Document(self).show()
         self.kapp.exec_()
 
-    @dbus.service.method(iface, in_signature='s', out_signature='b')
+    @method(iface, in_signature='s', out_signature='b')
     def isOpen(self, url):
         """
         Returns true is the specified URL is opened by the current application
         """
         return bool(self.findDocument(url))
         
-    @dbus.service.method(iface, in_signature='', out_signature='')
+    @method(iface, in_signature='', out_signature='')
     def quit(self):
         self.kapp.quit()
 
@@ -149,10 +153,12 @@ class MainApp(DBusItem):
 
     def addDocument(self, doc):
         self.documents.append(doc)
-        
+        self.history.append(doc)
+
     def removeDocument(self, doc):
         if doc in self.documents:
             self.documents.remove(doc)
+            self.history.remove(doc)
             if len(self.documents) == 0:
                 Document(self)
 
@@ -177,17 +183,18 @@ class Document(DBusItem):
         self.view = None        # this is going to hold the KTextEditor view
         self._url = url         # as long as no doc is really loaded, this
                                 # is the url
+        self._oldname = None    # check if name really changes when url changes
         self._cursor = None     # line, col. None = not set.
 
+        self.checknum()
         self.app.addDocument(self)
-        self.materialize()
-
 
     def materialize(self):
         """ Really load the document, create doc and view etc. """
         if self.doc:
             return
         self.doc = self.app.editor.createDocument(self.mainwin)
+        self.doc.setHighlightingMode("LilyPond")
         self.view = self.doc.createView(self.mainwin)
 
         self.mainwin.addView(self.view)
@@ -199,13 +206,37 @@ class Document(DBusItem):
         if self._cursor is not None:
             self.view.setCursorPosition(KTextEditor.Cursor(*self._cursor))
 
-    @dbus.service.method(iface, in_signature='', out_signature='')
+        for s in ("documentUrlChanged(KTextEditor::Document*)",
+                  "modifiedChanged(KTextEditor::Document*)"):
+            QObject.connect(self.doc, SIGNAL(s), self.propertiesChanged)
+        
+    def propertiesChanged(self, doc):
+        """ Called when name or modifiedstate changes """
+        self.checknum()
+        self.mainwin.updateState(self)
+
+    def checknum(self):
+        """
+        Counts documents with the same name.
+        We don't use the argument which documentUrlChanged(d) supplies.
+        """
+        name = self.name()
+        if name != self._oldname:
+            self._oldname = name
+            same = [d._num for d in self.app.documents
+                           if d is not self and d.name() == name]
+            self._num = same and (max(same) + 1) or 1
+
+    @method(iface, in_signature='', out_signature='')
     def show(self):
         """ Show the document """
         self.materialize()
         self.mainwin.showView(self.view)
+        self.mainwin.updateState(self)
+        self.app.history.remove(self)
+        self.app.history.append(self)
 
-    @dbus.service.method(iface, in_signature='', out_signature='s')
+    @method(iface, in_signature='', out_signature='s')
     def url(self):
         """Returns the URL of this document"""
         if self.doc:
@@ -213,18 +244,31 @@ class Document(DBusItem):
         else:
             return self._url
 
-    @dbus.service.method(iface, in_signature='', out_signature='b')
+    def name(self):
+        if self.url():
+            return os.path.basename(self.url())
+        else:
+            return i18n("Untitled")
+                
+    @method(iface, in_signature='', out_signature='s')
+    def title(self):
+        name = self.name()
+        if self._num > 1:
+            name += " (%d)" % self._num
+        return name
+
+    @method(iface, in_signature='', out_signature='b')
     def isModified(self):
         """Returns true if the document has unsaved changes."""
         return self.doc and self.doc.isModified()
 
-    @dbus.service.method(iface, in_signature='', out_signature='b')
+    @method(iface, in_signature='', out_signature='b')
     def isEmpty(self):
         if self.doc:
             return self.doc.isEmpty()
         return False # if not loaded, because we don't know it yet.
 
-    @dbus.service.method(iface, in_signature='ii', out_signature='')
+    @method(iface, in_signature='ii', out_signature='')
     def setCursorPosition(self, line, column):
         """Sets the cursor in this document. Lines start at 1, columns at 0."""
         print "setCursorPosition called: ", line, column # DEBUG
@@ -234,15 +278,23 @@ class Document(DBusItem):
         else:
             self._cursor = (line, column)
 
-    @dbus.service.method(iface, in_signature='', out_signature='b')
+    @method(iface, in_signature='', out_signature='b')
     def close(self):
         """Closes this document, returning true if closing succeeded."""
+        print "close!" #DEBUG
         # TODO implement, ask user etc.
         
-        if self.view:
-            self.mainwin.removeView(self.view)
+
+        # Were we the active document?
+        wasActive = self.app.history[-1] is self
+        # remove our exported D-Bus object
         self.remove_from_connection()
         self.app.removeDocument(self)
+        if self.view:
+            self.mainwin.removeView(self.view)
+        # If we were the active document, show the last displayed other one.
+        if wasActive:
+            self.app.history[-1].show()
         return True
 
 
