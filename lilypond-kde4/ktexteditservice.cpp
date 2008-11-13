@@ -63,7 +63,7 @@ int main(int argc, char **argv)
   QString decodedUri = QString::fromUtf8(QByteArray::fromPercentEncoding(uri.toLocal8Bit()));
   QRegExp rx("textedit:/{,2}(/[^/].*):(\\d+):(\\d+):(\\d+)");
   if (!rx.exactMatch(decodedUri))
-    KCmdLineArgs::usageError(i18n("Not a valid textedit URL: ") + uri);
+    KCmdLineArgs::usageError(i18n("Not a valid textedit URL: %1", uri));
   
   /*
    * We have a valid uri. Now find the preferred app/service to run.
