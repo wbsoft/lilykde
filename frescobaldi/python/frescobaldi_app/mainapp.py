@@ -65,7 +65,7 @@ class MainApp(DBusItem):
         print "TEXTEDIT_DBUS_PATH=" + DBUS_SERVICE + DBUS_MAIN_PATH # DEBUG
 
         # We support only one MainWindow.
-        self.mainwin = MainWindow()
+        self.mainwin = MainWindow(self)
         self.kapp.setTopWidget(self.mainwin)
 
         # We manage our own documents.
@@ -77,12 +77,8 @@ class MainApp(DBusItem):
 
         # restore session etc.
 
-        # At the very last, instantiate one empty doc if nothing loaded yet.
-        if len(self.documents) == 0:
-            Document(self)
         
-
-    def getDocumentByUrl(self, url):
+    def findDocument(self, url):
         """ Return the opened document or False. """
         for d in self.documents:
             if d.url() == url:
@@ -101,7 +97,7 @@ class MainApp(DBusItem):
                 and not self.documents[0].url()
                 and self.documents[0].isEmpty()):
             self.documents[0].close()
-        d = self.getDocumentByUrl(url)
+        d = self.findDocument(url)
         if not d:
             print "New document."
             d = Document(self, url)
@@ -124,15 +120,19 @@ class MainApp(DBusItem):
         
         If we are the caller ourselves, run the KDE app.
         """
-        if sender is None:
-            self.kapp.exec_()
+        if sender is not None:
+            return
+        # At the very last, instantiate one empty doc if nothing loaded yet.
+        if len(self.documents) == 0:
+            Document(self)
+        self.kapp.exec_()
 
     @dbus.service.method(iface, in_signature='s', out_signature='b')
     def isOpen(self, url):
         """
         Returns true is the specified URL is opened by the current application
         """
-        return bool(self.getDocumentByUrl(url))
+        return bool(self.findDocument(url))
         
     @dbus.service.method(iface, in_signature='', out_signature='')
     def quit(self):
@@ -186,7 +186,7 @@ class Document(DBusItem):
     def materialize(self):
         """ Really load the document, create doc and view etc. """
         if self.doc:
-            return True
+            return
         self.doc = self.app.editor.createDocument(self.mainwin)
         self.view = self.doc.createView(self.mainwin)
 
@@ -202,6 +202,7 @@ class Document(DBusItem):
     @dbus.service.method(iface, in_signature='', out_signature='')
     def show(self):
         """ Show the document """
+        self.materialize()
         self.mainwin.showView(self.view)
 
     @dbus.service.method(iface, in_signature='', out_signature='s')
@@ -238,8 +239,8 @@ class Document(DBusItem):
         """Closes this document, returning true if closing succeeded."""
         # TODO implement, ask user etc.
         
-
-        self.mainwin.removeView(self.view)
+        if self.view:
+            self.mainwin.removeView(self.view)
         self.remove_from_connection()
         self.app.removeDocument(self)
         return True
