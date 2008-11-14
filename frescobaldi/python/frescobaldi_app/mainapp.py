@@ -89,8 +89,7 @@ class MainApp(DBusItem):
         return False
     
     @method(iface, in_signature='s', out_signature='o')
-    def openUrl(self, url):
-        print "openUrl", url       # DEBUG
+    def openUrl(self, url=""):
         # TODO: parse textedit urls here.
 
         # If there is only one document open and it is empty, nameless and
@@ -100,19 +99,13 @@ class MainApp(DBusItem):
                 and not self.documents[0].url()
                 and self.documents[0].isEmpty()):
             self.documents[0].close()
-        d = self.findDocument(url)
-        if not d:
-            print "New document."
-            d = Document(self, url)
-        else:
-            print "Found document:", d.url()
+        d = url and self.findDocument(url) or Document(self, url)
         d.setActive()
         # TODO: if textedit url, set cursor position
         return d
 
     @method(iface, in_signature='', out_signature='o')
     def new(self):
-        print "new" # DEBUG
         d = Document(self)
         d.setActive()
         return d
@@ -123,7 +116,7 @@ class MainApp(DBusItem):
         Is called by a remote app after new documents are opened.
         Currently need not to do anything.
         
-        If we are the caller ourselves, run the KDE app.
+        If we are the caller ourselves, enter the KDE event loop.
         """
         if sender is not None:
             return
@@ -149,7 +142,6 @@ class MainApp(DBusItem):
         To be called by ktexteditservice (part of lilypond-kde4).
         Opens the specified textedit:// URL.
         """
-        print "openTextEditUrl called:", url # DEBUG
         return bool(self.openUrl(url))
 
     def addDocument(self, doc):
@@ -163,6 +155,7 @@ class MainApp(DBusItem):
             if len(self.documents) == 0:
                 Document(self)
 
+    @signal(iface, signature='o')
     def activeChanged(self, doc):
         self.history.remove(doc)
         self.history.append(doc)
@@ -172,8 +165,8 @@ class MainApp(DBusItem):
 class Document(DBusItem):
     """
     A loaded LilyPond text document.
-    We support lazy document creation: only when a view is requested, we create
-    the KTextEditor document and view.
+    We support lazy document instantiation: only when a view is requested,
+    we create the KTextEditor document and view.
     """
     __instance_counter = 0
     iface = DBUS_IFACE_PREFIX + "Document"
@@ -184,7 +177,6 @@ class Document(DBusItem):
         DBusItem.__init__(self, path)
 
         self.app = app
-        self.mainwin = app.mainwin  # our MainWindow
 
         self.doc = None         # this is going to hold the KTextEditor doc
         self.view = None        # this is going to hold the KTextEditor view
@@ -200,10 +192,10 @@ class Document(DBusItem):
         """ Really load the document, create doc and view etc. """
         if self.doc:
             return
-        self.doc = self.app.editor.createDocument(self.mainwin)
-        self.view = self.doc.createView(self.mainwin)
+        self.doc = self.app.editor.createDocument(self.app.mainwin)
+        self.view = self.doc.createView(self.app.mainwin)
 
-        self.mainwin.addView(self.view)
+        self.app.mainwin.addView(self.view)
 
         if self._url:
             self.doc.openUrl(KUrl(self._url))
@@ -217,10 +209,10 @@ class Document(DBusItem):
                   "modifiedChanged(KTextEditor::Document*)"):
             QObject.connect(self.doc, SIGNAL(s), self.propertiesChanged)
         
-    def propertiesChanged(self, doc):
+    def propertiesChanged(self, doc = None):
         """ Called when name or modifiedstate changes """
         self.checknum()
-        self.mainwin.updateState(self)
+        self.app.mainwin.updateState(self)
 
     def checknum(self):
         """
@@ -233,12 +225,6 @@ class Document(DBusItem):
             same = [d._num for d in self.app.documents
                            if d is not self and d.name() == name]
             self._num = same and (max(same) + 1) or 1
-
-    @method(iface, in_signature='', out_signature='')
-    def setActive(self):
-        """ Make the document the active (shown) document """
-        self.materialize()
-        self.app.activeChanged(self)
 
     @method(iface, in_signature='', out_signature='s')
     def url(self):
@@ -276,10 +262,15 @@ class Document(DBusItem):
     def isActive(self):
         return self.app.history[-1] is self
 
+    @method(iface, in_signature='', out_signature='')
+    def setActive(self):
+        """ Make the document the active (shown) document """
+        self.materialize()
+        self.app.activeChanged(self)
+
     @method(iface, in_signature='ii', out_signature='')
     def setCursorPosition(self, line, column):
         """Sets the cursor in this document. Lines start at 1, columns at 0."""
-        print "setCursorPosition called: ", line, column # DEBUG
         line -= 1
         if self.view:
             self.view.setCursorPosition(KTextEditor.Cursor(line, column))
@@ -298,7 +289,7 @@ class Document(DBusItem):
         self.remove_from_connection()
         self.app.removeDocument(self)
         if self.view:
-            self.mainwin.removeView(self.view)
+            self.app.mainwin.removeView(self.view)
         # If we were the active document, show the last displayed other one.
         if wasActive:
             self.app.history[-1].setActive()

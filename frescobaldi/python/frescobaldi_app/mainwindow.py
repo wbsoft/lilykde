@@ -49,6 +49,7 @@ class MainWindow(KParts.MainWindow):
         self._currentView = None
         self.stack = QStackedWidget(self)
         self.setCentralWidget(self.stack)
+        self.resize(500,400) # FIXME: save window size and set reasonable default
         self.show()
         listeners[app.activeChanged].append(self.showDoc)
         listeners[app.activeChanged].append(self.updateState)
