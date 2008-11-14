@@ -26,6 +26,8 @@ from PyKDE4.kdeui import *
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
+# global hash with listeners
+listeners = {}
 
 class MainWindow(KParts.MainWindow):
     def __init__(self, app):
@@ -37,6 +39,8 @@ class MainWindow(KParts.MainWindow):
         self.stack = QStackedWidget(self)
         self.setCentralWidget(self.stack)
         self.show()
+        listeners[app.activeChanged].append(self.showDoc)
+        listeners[app.activeChanged].append(self.updateState)
 
         # Documents menu
         self.docMenu = self.factory().container("documents", self)
@@ -45,17 +49,15 @@ class MainWindow(KParts.MainWindow):
         QObject.connect(self.docMenu, SIGNAL("aboutToShow()"),
             self.populateDocMenu)
         QObject.connect(self.docGroup, SIGNAL("triggered(QAction*)"),
-            lambda a: a.doc.show())
+            lambda a: a.doc.setActive())
 
-    def showView(self, view):
-        if view is self._currentView:
-            return
+    def showDoc(self, doc):
         if self._currentView:
             self.guiFactory().removeClient(self._currentView)
-        self.guiFactory().addClient(view)
-        self._currentView = view
-        self.stack.setCurrentWidget(view)
-        view.setFocus()
+        self.guiFactory().addClient(doc.view)
+        self._currentView = doc.view
+        self.stack.setCurrentWidget(doc.view)
+        doc.view.setFocus()
 
     def addView(self, view):
         self.stack.addWidget(view)

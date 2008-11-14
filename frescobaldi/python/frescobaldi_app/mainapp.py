@@ -19,16 +19,15 @@
 
 import os, re, sys
 import dbus, dbus.service, dbus.mainloop.qt
-from dbus.service import method
+from dbus.service import method, signal
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import QObject, SIGNAL
 from PyKDE4.kdecore import i18n, KUrl
 from PyKDE4.kdeui import KApplication
 from PyKDE4.ktexteditor import KTextEditor
 
 from . import DBUS_PREFIX, DBUS_MAIN_PATH, DBUS_IFACE_PREFIX
-from .mainwindow import MainWindow
+from .mainwindow import MainWindow, listeners
 
 
 # Make the Qt mainloop the default one
@@ -57,7 +56,13 @@ class MainApp(DBusItem):
     iface = DBUS_IFACE_PREFIX + "MainApp"
     
     def __init__(self):
-         # KApplication needs to be instantiated before any D-Bus stuff
+        # listeners to our events
+        listeners[self.activeChanged] = []
+        # We manage our own documents.
+        self.documents = []
+        self.history = []       # latest shown documents
+
+        # KApplication needs to be instantiated before any D-Bus stuff
         self.kapp = KApplication()
         DBusItem.__init__(self, DBUS_MAIN_PATH)
 
@@ -68,10 +73,6 @@ class MainApp(DBusItem):
         # We support only one MainWindow.
         self.mainwin = MainWindow(self)
         self.kapp.setTopWidget(self.mainwin)
-
-        # We manage our own documents.
-        self.documents = []
-        self.history = []       # latest shown documents
 
         # Get our beloved editor :-)
         self.editor = KTextEditor.EditorChooser.editor()
@@ -105,7 +106,7 @@ class MainApp(DBusItem):
             d = Document(self, url)
         else:
             print "Found document:", d.url()
-        d.show()
+        d.setActive()
         # TODO: if textedit url, set cursor position
         return d
 
@@ -113,7 +114,7 @@ class MainApp(DBusItem):
     def new(self):
         print "new" # DEBUG
         d = Document(self)
-        d.show()
+        d.setActive()
         return d
 
     @method(iface, in_signature='', out_signature='', sender_keyword="sender")
@@ -128,7 +129,7 @@ class MainApp(DBusItem):
             return
         # At the very last, instantiate one empty doc if nothing loaded yet.
         if len(self.documents) == 0:
-            Document(self).show()
+            Document(self).setActive()
         self.kapp.exec_()
 
     @method(iface, in_signature='s', out_signature='b')
@@ -162,6 +163,13 @@ class MainApp(DBusItem):
             if len(self.documents) == 0:
                 Document(self)
 
+    def activeChanged(self, doc):
+        self.history.remove(doc)
+        self.history.append(doc)
+        for f in listeners[self.activeChanged]:
+            f(doc)
+        
+
 class Document(DBusItem):
     """
     A loaded LilyPond text document.
@@ -194,15 +202,15 @@ class Document(DBusItem):
         if self.doc:
             return
         self.doc = self.app.editor.createDocument(self.mainwin)
-        self.doc.setHighlightingMode("LilyPond")
         self.view = self.doc.createView(self.mainwin)
 
         self.mainwin.addView(self.view)
-        self.show()
 
         if self._url:
             self.doc.openUrl(KUrl(self._url))
-        
+        else:
+            self.doc.setHighlightingMode("LilyPond")
+
         if self._cursor is not None:
             self.view.setCursorPosition(KTextEditor.Cursor(*self._cursor))
 
@@ -228,13 +236,10 @@ class Document(DBusItem):
             self._num = same and (max(same) + 1) or 1
 
     @method(iface, in_signature='', out_signature='')
-    def show(self):
-        """ Show the document """
+    def setActive(self):
+        """ Make the document the active (shown) document """
         self.materialize()
-        self.mainwin.showView(self.view)
-        self.mainwin.updateState(self)
-        self.app.history.remove(self)
-        self.app.history.append(self)
+        self.app.activeChanged(self)
 
     @method(iface, in_signature='', out_signature='s')
     def url(self):
@@ -268,6 +273,10 @@ class Document(DBusItem):
             return self.doc.isEmpty()
         return False # if not loaded, because we don't know it yet.
 
+    @method(iface, in_signature='', out_signature='b')
+    def isActive(self):
+        return self.app.history[-1] is self
+
     @method(iface, in_signature='ii', out_signature='')
     def setCursorPosition(self, line, column):
         """Sets the cursor in this document. Lines start at 1, columns at 0."""
@@ -281,12 +290,11 @@ class Document(DBusItem):
     @method(iface, in_signature='', out_signature='b')
     def close(self):
         """Closes this document, returning true if closing succeeded."""
-        print "close!" #DEBUG
         # TODO implement, ask user etc.
         
 
         # Were we the active document?
-        wasActive = self.app.history[-1] is self
+        wasActive = self.isActive()
         # remove our exported D-Bus object
         self.remove_from_connection()
         self.app.removeDocument(self)
@@ -294,7 +302,7 @@ class Document(DBusItem):
             self.mainwin.removeView(self.view)
         # If we were the active document, show the last displayed other one.
         if wasActive:
-            self.app.history[-1].show()
+            self.app.history[-1].setActive()
         return True
 
 
