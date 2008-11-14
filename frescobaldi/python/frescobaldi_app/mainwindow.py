@@ -26,8 +26,19 @@ from PyKDE4.kdeui import *
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
+class _signalstore(dict):
+    def __new__(cls):
+        return dict.__new__(cls)
+    def call(self, meth, obj):
+        for f in self[meth]:
+            f(obj)
+    def add(self, meth):
+        self[meth] = []
+    def remove(self, meth):
+        del self[meth]
+
 # global hash with listeners
-listeners = {}
+listeners = _signalstore()
 
 class MainWindow(KParts.MainWindow):
     def __init__(self, app):

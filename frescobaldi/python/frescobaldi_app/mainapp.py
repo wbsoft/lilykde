@@ -57,7 +57,7 @@ class MainApp(DBusItem):
     
     def __init__(self):
         # listeners to our events
-        listeners[self.activeChanged] = []
+        listeners.add(self.activeChanged)
         # We manage our own documents.
         self.documents = []
         self.history = []       # latest shown documents
@@ -143,7 +143,7 @@ class MainApp(DBusItem):
     def quit(self):
         self.kapp.quit()
 
-    @dbus.service.method("org.lilypond.TextEdit", in_signature='s', out_signature='b')
+    @method("org.lilypond.TextEdit", in_signature='s', out_signature='b')
     def openTextEditUrl(self, url):
         """
         To be called by ktexteditservice (part of lilypond-kde4).
@@ -166,8 +166,7 @@ class MainApp(DBusItem):
     def activeChanged(self, doc):
         self.history.remove(doc)
         self.history.append(doc)
-        for f in listeners[self.activeChanged]:
-            f(doc)
+        listeners.call(self.activeChanged, doc)
         
 
 class Document(DBusItem):
