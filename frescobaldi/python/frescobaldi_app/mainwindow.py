@@ -26,8 +26,6 @@ from PyKDE4.kdeui import *
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
-from .actions import setupActions
-
 class _signalstore(dict):
     def __new__(cls):
         return dict.__new__(cls)
@@ -55,7 +53,6 @@ class MainWindow(KParts.MainWindow):
         self.show()
         listeners[app.activeChanged].append(self.showDoc)
         listeners[app.activeChanged].append(self.updateState)
-
             
         # actions, helper function
         def action(name, texttype, func, icon=None, whatsthis=None, key=None):
@@ -71,8 +68,11 @@ class MainWindow(KParts.MainWindow):
         
         action('file_new', KStandardAction.New, app.new)
         action('file_close', KStandardAction.Close,
-            lambda: app.history[-1].close()) # FIXME, make more robust
-
+            lambda: app.activeDocument().close())
+        action('go_back', KStandardAction.Back, app.back)
+        action('go_forward', KStandardAction.Forward, app.forward)
+        
+        self.setXMLFile("frescobaldiui.rc", False)
         self.createShellGUI(True)
 
         # Documents menu

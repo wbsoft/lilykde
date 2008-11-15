@@ -124,7 +124,7 @@ class MainApp(DBusItem):
         if len(self.documents) == 0:
             Document(self).setActive()
         self.kapp.exec_()
-
+       
     @method(iface, in_signature='s', out_signature='b')
     def isOpen(self, url):
         """
@@ -132,6 +132,30 @@ class MainApp(DBusItem):
         """
         return bool(self.findDocument(url))
         
+    @method(iface, in_signature='', out_signature='o')
+    def activeDocument(self):
+        """
+        Returns the currently active document
+        """
+        return self.history[-1]
+
+    @method(iface, in_signature='', out_signature='')
+    def back(self):
+        """
+        Sets the previous document active.
+        """
+        i = self.documents.index(self.activeDocument()) - 1
+        self.documents[i].setActive()
+
+    @method(iface, in_signature='', out_signature='')
+    def forward(self):
+        """
+        Sets the next document active.
+        """
+        i = self.documents.index(self.activeDocument()) + 1
+        i %= len(self.documents)
+        self.documents[i].setActive()
+
     @method(iface, in_signature='', out_signature='')
     def quit(self):
         self.kapp.quit()
@@ -260,7 +284,7 @@ class Document(DBusItem):
 
     @method(iface, in_signature='', out_signature='b')
     def isActive(self):
-        return self.app.history[-1] is self
+        return self.app.activeDocument() is self
 
     @method(iface, in_signature='', out_signature='')
     def setActive(self):
