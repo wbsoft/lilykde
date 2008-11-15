@@ -92,16 +92,19 @@ class MainApp(DBusItem):
     def openUrl(self, url, encoding='UTF-8'):
         # TODO: parse textedit urls here.
 
+        if not encoding:
+            encoding = 'UTF-8'
         # If there is only one document open and it is empty, nameless and
         # unmodified, do not create a new one.
-        if (    len(self.documents) == 1
+        if (url and len(self.documents) == 1
                 and not self.documents[0].isModified()
                 and not self.documents[0].url()
                 and self.documents[0].isEmpty()):
-            self.documents[0].close()
-        if not encoding:
-            encoding = 'UTF-8'
-        d = url and self.findDocument(url) or Document(self, url, encoding)
+            d = self.documents[0]
+            d.setEncoding(encoding)
+            d.openUrl(url)
+        else:
+            d = url and self.findDocument(url) or Document(self, url, encoding)
         d.setActive()
         # TODO: if textedit url, set cursor position
         return d
@@ -237,6 +240,11 @@ class Document(DBusItem):
                   "modifiedChanged(KTextEditor::Document*)"):
             QObject.connect(self.doc, SIGNAL(s), self.propertiesChanged)
         
+    def openUrl(self, url):
+        self._url = url
+        if self.doc:
+            self.doc.openUrl(KUrl(url))
+    
     def propertiesChanged(self, doc = None):
         """ Called when name or modifiedstate changes """
         self.checknum()

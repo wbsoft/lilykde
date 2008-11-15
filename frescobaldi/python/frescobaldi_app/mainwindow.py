@@ -128,10 +128,12 @@ class MainWindow(KParts.MainWindow):
 
     def openDocument(self):
         """ Open an existing document. """
-        res = KEncodingFileDialog.getOpenUrlAndEncoding(
-            'UTF-8', '::lilypond', "*.ly *.ily *.lyi|"+i18n("LilyPond files"),
+        res = KEncodingFileDialog.getOpenUrlsAndEncoding(
+            'UTF-8', '::lilypond', "*.ly *.ily *.lyi|%s\n*.*|%s"
+            % (i18n("LilyPond files"), i18n("All Files")),
             self, i18n("Open File"))
         for url in res.URLs:
-            self.app.openUrl(unicode(url.url()), res.encoding)
+            if url != '':
+                self.app.openUrl(unicode(url.url()), res.encoding)
 
         
