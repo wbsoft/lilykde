@@ -88,8 +88,8 @@ class MainApp(DBusItem):
                 return d
         return False
     
-    @method(iface, in_signature='s', out_signature='o')
-    def openUrl(self, url=""):
+    @method(iface, in_signature='ss', out_signature='o')
+    def openUrl(self, url, encoding='UTF-8'):
         # TODO: parse textedit urls here.
 
         # If there is only one document open and it is empty, nameless and
@@ -99,7 +99,9 @@ class MainApp(DBusItem):
                 and not self.documents[0].url()
                 and self.documents[0].isEmpty()):
             self.documents[0].close()
-        d = url and self.findDocument(url) or Document(self, url)
+        if not encoding:
+            encoding = 'UTF-8'
+        d = url and self.findDocument(url) or Document(self, url, encoding)
         d.setActive()
         # TODO: if textedit url, set cursor position
         return d
@@ -195,7 +197,7 @@ class Document(DBusItem):
     __instance_counter = 0
     iface = DBUS_IFACE_PREFIX + "Document"
 
-    def __init__(self, app, url=""):
+    def __init__(self, app, url="", encoding='UTF-8'):
         Document.__instance_counter += 1
         path = "/Document/%d" % Document.__instance_counter
         DBusItem.__init__(self, path)
@@ -208,6 +210,7 @@ class Document(DBusItem):
                                 # is the url
         self._oldname = None    # check if name really changes when url changes
         self._cursor = None     # line, col. None = not set.
+        self._encoding = encoding # UTF-8 is the mandatory encoding for LilyPond files
 
         self.checknum()
         self.app.addDocument(self)
@@ -217,6 +220,7 @@ class Document(DBusItem):
         if self.doc:
             return
         self.doc = self.app.editor.createDocument(self.app.mainwin)
+        self.doc.setEncoding(self._encoding)
         self.view = self.doc.createView(self.app.mainwin)
 
         self.app.mainwin.addView(self.view)
@@ -249,6 +253,13 @@ class Document(DBusItem):
             same = [d._num for d in self.app.documents
                            if d is not self and d.name() == name]
             self._num = same and (max(same) + 1) or 1
+    
+    @method(iface, in_signature='s', out_signature='')
+    def setEncoding(self, encoding):
+        if self.doc:
+            self.doc.setEncoding(encoding)
+        else:
+            self._encoding = encoding
 
     @method(iface, in_signature='', out_signature='s')
     def url(self):
@@ -260,7 +271,7 @@ class Document(DBusItem):
 
     def name(self):
         if self.url():
-            return os.path.basename(self.url())
+            return os.path.basename(unicode(KUrl(self.url()).prettyUrl()))
         else:
             return i18n("Untitled")
                 

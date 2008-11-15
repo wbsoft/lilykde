@@ -25,6 +25,7 @@ from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
+from PyKDE4.kio import *
 
 class _signalstore(dict):
     def __new__(cls):
@@ -67,6 +68,7 @@ class MainWindow(KParts.MainWindow):
             if key: a.setShortcut(KShortcut(key))
         
         action('file_new', KStandardAction.New, app.new)
+        action('file_open', KStandardAction.Open, self.openDocument)
         action('file_close', KStandardAction.Close,
             lambda: app.activeDocument().close())
         action('go_back', KStandardAction.Back, app.back)
@@ -123,3 +125,13 @@ class MainWindow(KParts.MainWindow):
                 a.setChecked(True)
             self.docGroup.addAction(a)
             self.docMenu.addAction(a)
+
+    def openDocument(self):
+        """ Open an existing document. """
+        res = KEncodingFileDialog.getOpenUrlAndEncoding(
+            'UTF-8', '::lilypond', "*.ly *.ily *.lyi|"+i18n("LilyPond files"),
+            self, i18n("Open File"))
+        for url in res.URLs:
+            self.app.openUrl(unicode(url.url()), res.encoding)
+
+        
