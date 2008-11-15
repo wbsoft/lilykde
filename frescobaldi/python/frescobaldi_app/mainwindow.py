@@ -26,6 +26,8 @@ from PyKDE4.kdeui import *
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
+from .actions import setupActions
+
 class _signalstore(dict):
     def __new__(cls):
         return dict.__new__(cls)
@@ -40,12 +42,12 @@ class _signalstore(dict):
 # global hash with listeners
 listeners = _signalstore()
 
+
+
 class MainWindow(KParts.MainWindow):
     def __init__(self, app):
         super(MainWindow, self).__init__()
         self.app = app
-        self.setXMLFile("frescobaldiui.rc")
-        self.createShellGUI(True)
         self._currentView = None
         self.stack = QStackedWidget(self)
         self.setCentralWidget(self.stack)
@@ -53,6 +55,25 @@ class MainWindow(KParts.MainWindow):
         self.show()
         listeners[app.activeChanged].append(self.showDoc)
         listeners[app.activeChanged].append(self.updateState)
+
+            
+        # actions, helper function
+        def action(name, texttype, func, icon=None, whatsthis=None, key=None):
+            if isinstance(texttype, KStandardAction.StandardAction):
+                a = self.actionCollection().addAction(texttype, name)
+            else:
+                a = self.actionCollection().addAction(name)
+                a.setText(texttype)
+            QObject.connect(a, SIGNAL("triggered()"), func)
+            if icon: a.setIcon(KIcon(icon))
+            if whatsthis: a.setWhatsThis(whatsthis)
+            if key: a.setShortcut(KShortcut(key))
+        
+        action('file_new', KStandardAction.New, app.new)
+        action('file_close', KStandardAction.Close,
+            lambda: app.history[-1].close()) # FIXME, make more robust
+
+        self.createShellGUI(True)
 
         # Documents menu
         self.docMenu = self.factory().container("documents", self)
@@ -62,6 +83,7 @@ class MainWindow(KParts.MainWindow):
             self.populateDocMenu)
         QObject.connect(self.docGroup, SIGNAL("triggered(QAction*)"),
             lambda a: a.doc.setActive())
+        
 
     def showDoc(self, doc):
         if self._currentView:
