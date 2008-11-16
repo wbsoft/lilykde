@@ -17,7 +17,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, re, sys
+import os, re, sip, sys
 import dbus, dbus.service, dbus.mainloop.qt
 from dbus.service import method, signal
 
@@ -179,10 +179,15 @@ class MainApp(DBusItem):
 
     def removeDocument(self, doc):
         if doc in self.documents:
+            # Was this the active document?
+            wasActive = doc is self.activeDocument()
             self.documents.remove(doc)
             self.history.remove(doc)
             if len(self.documents) == 0:
                 Document(self)
+            # If we were the active document, switch to the previous active doc.
+            if wasActive:
+                self.history[-1].setActive()
 
     @signal(iface, signature='o')
     def activeChanged(self, doc):
@@ -324,16 +329,13 @@ class Document(DBusItem):
     def close(self):
         """Closes this document, returning true if closing succeeded."""
         if not self.doc and True or self.doc.closeUrl(True):
-            # Were we the active document?
-            wasActive = self.isActive()
             # remove our exported D-Bus object
             self.remove_from_connection()
-            self.app.removeDocument(self)
             if self.view:
                 self.app.mainwin.removeView(self.view)
-            # If we were the active document, show the last displayed other one.
-            if wasActive:
-                self.app.history[-1].setActive()
+            sip.delete(self.view)
+            sip.delete(self.doc)
+            self.app.removeDocument(self)
             return True
         return False
 
