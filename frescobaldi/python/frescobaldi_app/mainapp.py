@@ -213,7 +213,7 @@ class Document(DBusItem):
                                 # is the url
         self._oldname = None    # check if name really changes when url changes
         self._cursor = None     # line, col. None = not set.
-        self._encoding = encoding # UTF-8 is the mandatory encoding for LilyPond files
+        self._encoding = encoding # UTF-8 is mandatory for LilyPond files
 
         self.checknum()
         self.app.addDocument(self)
@@ -323,21 +323,19 @@ class Document(DBusItem):
     @method(iface, in_signature='', out_signature='b')
     def close(self):
         """Closes this document, returning true if closing succeeded."""
-        # TODO implement, ask user etc.
-        
-
-        # Were we the active document?
-        wasActive = self.isActive()
-        # remove our exported D-Bus object
-        self.remove_from_connection()
-        self.app.removeDocument(self)
-        if self.view:
-            self.app.mainwin.removeView(self.view)
-        # If we were the active document, show the last displayed other one.
-        if wasActive:
-            self.app.history[-1].setActive()
-        return True
-
+        if not self.doc and True or self.doc.closeUrl(True):
+            # Were we the active document?
+            wasActive = self.isActive()
+            # remove our exported D-Bus object
+            self.remove_from_connection()
+            self.app.removeDocument(self)
+            if self.view:
+                self.app.mainwin.removeView(self.view)
+            # If we were the active document, show the last displayed other one.
+            if wasActive:
+                self.app.history[-1].setActive()
+            return True
+        return False
 
 
 
