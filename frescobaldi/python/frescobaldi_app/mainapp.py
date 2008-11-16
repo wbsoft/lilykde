@@ -161,9 +161,13 @@ class MainApp(DBusItem):
         i %= len(self.documents)
         self.documents[i].setActive()
 
-    @method(iface, in_signature='', out_signature='')
-    def quit(self):
+    @method(iface, in_signature='b', out_signature='b')
+    def quit(self, prompt=True):
+        if prompt and not self.mainwin.queryClose():
+            return False
         self.kapp.quit()
+        return True
+
 
     @method("org.lilypond.TextEdit", in_signature='s', out_signature='b')
     def openTextEditUrl(self, url):
@@ -216,11 +220,9 @@ class Document(DBusItem):
         self.view = None        # this is going to hold the KTextEditor view
         self._url = url         # as long as no doc is really loaded, this
                                 # is the url
-        self._oldname = None    # check if name really changes when url changes
         self._cursor = None     # line, col. None = not set.
         self._encoding = encoding # UTF-8 is mandatory for LilyPond files
 
-        self.checknum()
         self.app.addDocument(self)
 
     def materialize(self):
@@ -252,21 +254,8 @@ class Document(DBusItem):
     
     def propertiesChanged(self, doc = None):
         """ Called when name or modifiedstate changes """
-        self.checknum()
         self.app.mainwin.updateState(self)
 
-    def checknum(self):
-        """
-        Counts documents with the same name.
-        We don't use the argument which documentUrlChanged(d) supplies.
-        """
-        name = self.name()
-        if name != self._oldname:
-            self._oldname = name
-            same = [d._num for d in self.app.documents
-                           if d is not self and d.name() == name]
-            self._num = same and (max(same) + 1) or 1
-    
     @method(iface, in_signature='s', out_signature='')
     def setEncoding(self, encoding):
         if self.doc:
@@ -282,19 +271,13 @@ class Document(DBusItem):
         else:
             return self._url
 
-    def name(self):
-        if self.url():
-            return os.path.basename(unicode(KUrl(self.url()).prettyUrl()))
+    @method(iface, in_signature='', out_signature='s')
+    def documentName(self):
+        if self.doc:
+            return self.doc.documentName()
         else:
             return i18n("Untitled")
                 
-    @method(iface, in_signature='', out_signature='s')
-    def title(self):
-        name = self.name()
-        if self._num > 1:
-            name += " (%d)" % self._num
-        return name
-
     @method(iface, in_signature='', out_signature='b')
     def isModified(self):
         """Returns true if the document has unsaved changes."""
@@ -325,19 +308,19 @@ class Document(DBusItem):
         else:
             self._cursor = (line, column)
 
-    @method(iface, in_signature='', out_signature='b')
-    def close(self):
+    @method(iface, in_signature='b', out_signature='b')
+    def close(self, prompt=True):
         """Closes this document, returning true if closing succeeded."""
-        if not self.doc and True or self.doc.closeUrl(True):
-            # remove our exported D-Bus object
-            self.remove_from_connection()
+        if self.doc:
+            if not self.doc.closeUrl(prompt):
+                return False # cancel
             if self.view:
                 self.app.mainwin.removeView(self.view)
-            sip.delete(self.view)
+                sip.delete(self.view)
             sip.delete(self.doc)
-            self.app.removeDocument(self)
-            return True
-        return False
+        self.remove_from_connection() # remove our exported D-Bus object
+        self.app.removeDocument(self)
+        return True
 
 
 

@@ -71,6 +71,7 @@ class MainWindow(KParts.MainWindow):
         action('file_open', KStandardAction.Open, self.openDocument)
         action('file_close', KStandardAction.Close,
             lambda: app.activeDocument().close())
+        action('file_quit', KStandardAction.Quit, app.quit)
         action('go_back', KStandardAction.Back, app.back)
         action('go_forward', KStandardAction.Forward, app.forward)
         
@@ -107,16 +108,16 @@ class MainWindow(KParts.MainWindow):
     def updateState(self, doc):
         if doc.view is not self._currentView:
             return
-        title = doc.title()
         if doc.isModified():
-            title += " [%s]" % i18n("modified")
-        self.setCaption(title)
+            self.setCaption(doc.documentName() + " [%s]" % i18n("modified"))
+        else:
+            self.setCaption(doc.documentName())
 
     def populateDocMenu(self):
         for a in self.docGroup.actions():
             sip.delete(a)
         for d in self.app.documents:
-            a = KAction(d.title(), self.docGroup)
+            a = KAction(d.documentName(), self.docGroup)
             a.setCheckable(True)
             a.doc = d
             if d.isModified():
@@ -136,4 +137,12 @@ class MainWindow(KParts.MainWindow):
             if url != '':
                 self.app.openUrl(unicode(url.url()), res.encoding)
 
+    def queryClose(self):
+        """ Quit the application, also called by closing the window """
+        for d in self.app.documents[:]: # iterate over a copy
+            if d.isModified():
+                d.setActive()
+            if not d.close(True):
+                return False
+        return True
         
