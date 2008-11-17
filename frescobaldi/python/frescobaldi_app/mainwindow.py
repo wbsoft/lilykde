@@ -43,20 +43,11 @@ class _signalstore(dict):
 # global hash with listeners
 listeners = _signalstore()
 
-
-
 class MainWindow(KParts.MainWindow):
     def __init__(self, app):
         super(MainWindow, self).__init__()
         self.app = app
         self._currentDoc = None
-        self.stack = QStackedWidget(self)
-        self.setCentralWidget(self.stack)
-        self.resize(500,400) # FIXME: save window size and set reasonable default
-        self.show()
-        listeners[app.activeChanged].append(self.showDoc)
-        listeners[app.activeChanged].append(self.updateCaption)
-        listeners[app.activeChanged].append(self.updateStatusBar)
 
         # status bar
         sb = self.statusBar()
@@ -73,7 +64,39 @@ class MainWindow(KParts.MainWindow):
         self.sb_selmode = QLabel(sb)
         sb.addWidget(self.sb_selmode, 0)
         
+        tab_bottom = TabBar(KMultiTabBar.Bottom, sb)
+        sb.addWidget(tab_bottom, 0)
+
+        # window layout
+        h = KHBox(self)
+        self.setCentralWidget(h)
+        tab_left = TabBar(KMultiTabBar.Left, h)
+        s = QSplitter(Qt.Horizontal, h)
+        tab_right = TabBar(KMultiTabBar.Right, h)
+
+        self.dock_left = Dock(s, tab_left)
+        s.addWidget(self.dock_left)
+        v = KVBox(s)
+        s.addWidget(v)
+        self.dock_right = Dock(s, tab_right)
+        s.addWidget(self.dock_right)
         
+        tab_top = TabBar(KMultiTabBar.Top, v)
+        s1 = QSplitter(Qt.Vertical, v)
+        
+        self.dock_top = Dock(s1, tab_top)
+        s1.addWidget(self.dock_top)
+        self.viewPlace = QStackedWidget(s1)
+        s1.addWidget(self.viewPlace)
+        self.dock_bottom = Dock(s1, tab_bottom)
+        s1.addWidget(self.dock_bottom)
+       
+        self.resize(500,400) # FIXME: save window size and set reasonable default
+        self.show()
+        listeners[app.activeChanged].append(self.showDoc)
+        listeners[app.activeChanged].append(self.updateCaption)
+        listeners[app.activeChanged].append(self.updateStatusBar)
+
 
         # actions, helper function
         def action(name, texttype, func, icon=None, whatsthis=None, key=None):
@@ -115,16 +138,16 @@ class MainWindow(KParts.MainWindow):
             self.guiFactory().removeClient(self._currentDoc.view)
         self._currentDoc = doc
         self.guiFactory().addClient(doc.view)
-        self.stack.setCurrentWidget(doc.view)
+        self.viewPlace.setCurrentWidget(doc.view)
         listeners[doc.updateCaption].append(self.updateCaption)
         listeners[doc.updateStatus].append(self.updateStatusBar)
         doc.view.setFocus()
 
     def addDoc(self, doc):
-        self.stack.addWidget(doc.view)
+        self.viewPlace.addWidget(doc.view)
         
     def removeDoc(self, doc):
-        self.stack.removeWidget(doc.view)
+        self.viewPlace.removeWidget(doc.view)
         if doc is self._currentDoc:
             self.guiFactory().removeClient(doc.view)
             self._currentDoc = None
@@ -187,4 +210,85 @@ class MainWindow(KParts.MainWindow):
             if not d.close(True):
                 return False
         return True
+
+
+class TabBar(KMultiTabBar):
+    """
+    Our own tabbar with some nice defaults.
+    """
+    def __init__(self, orientation, parent, maxSize=18):
+        KMultiTabBar.__init__(self, orientation, parent)
+        self.setStyle(KMultiTabBar.KDEV3ICON)
+        if maxSize:
+            if orientation in (KMultiTabBar.Bottom, KMultiTabBar.Top):
+                self.setMaximumHeight(maxSize)
+            else:
+                self.setMaximumWidth(maxSize)
+
+
+class Dock(QStackedWidget):
+    """
+    A dock where tools can be added to.
+    Hides itself when there are no tools visible.
+    
+    When it receives a tool, a button is created in the associated tabbar.
+    """
+    def __init__(self, parent, tabbar):
+        QStackedWidget.__init__(self, parent)
+        self.hide() # by default
+        self.tabbar = tabbar
+
+    def addWidget(self, tool):
+        QStackedWidget.addWidget(self, tool)
+        t = self.tabbar.appendTab(KIcon(tool.icon()).pixmap(16))
+        t.setText(tool.name())
+        tool._saved_tab_id = t
         
+    def removeWidget(self, tool):
+        QStackedWidget.removeWidget(self, tool)
+        self.tabbar.removeTab(tool._saved_tab_id)
+
+
+class Tool(QWidget):
+    """
+    A Tool, that can be docked or undocked in/from the MainWindow.
+    To be subclassed.
+    """
+    Top = KMultiTabBar.Top
+    Right = KMultiTabBar.Right
+    Bottom = KMultiTabBar.Bottom
+    Left = KMultiTabBar.Left
+
+    _icon = "document-properties"
+    default_orientation = Right
+    
+    def __init__(self, mainwin, orientation=None, name="", icon="", docked=True):
+        QWidget.__init__(self, mainwin)
+        self._orientation = None
+        if icon:
+            self._icon = icon
+        self._name = name
+        self._docked = docked
+        self.docks = {
+            KMultiTabBar.Top: mainwin.dock_top,
+            KMultiTabBar.Right: mainwin.dock_right,
+            KMultiTabBar.Bottom: mainwin.dock_bottom,
+            KMultiTabBar.Left: mainwin.dock_left,
+        }
+        self.setOrientation(orientation or self.default_orientation)
+        
+    def setOrientation(self, orientation):
+        if orientation is self._orientation:
+            return
+        if not self._docked:
+            # "Reparent" the widget
+            if self._orientation is not None:
+                self.docks[self._orientation].removeWidget(self)
+            self.docks[orientation].addWidget(self)
+        self._orientation = orientation
+        
+    def name(self):
+        return self._name
+        
+    def icon(self):
+        return self._icon
