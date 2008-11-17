@@ -238,57 +238,91 @@ class Dock(QStackedWidget):
         self.hide() # by default
         self.tabbar = tabbar
 
-    def addWidget(self, tool):
-        QStackedWidget.addWidget(self, tool)
-        t = self.tabbar.appendTab(KIcon(tool.icon()).pixmap(16))
-        t.setText(tool.name())
-        tool._saved_tab_id = t
+    def addTool(self, tool):
+        """ Add a tool to our tabbar, save the tab id in the tool """
+        if tool.widget:
+            QStackedWidget.addWidget(self, tool.widget)
+        tab = self.tabbar.appendTab(
+            KIcon(tool.icon()).pixmap(16), tool.title())
+        tool._tab_id = tab
         
-    def removeWidget(self, tool):
-        QStackedWidget.removeWidget(self, tool)
-        self.tabbar.removeTab(tool._saved_tab_id)
-
-
-class Tool(QWidget):
+    def removeTool(self, tool):
+        if tool.widget:
+            QStackedWidget.removeWidget(self, tool.widget)
+        self.tabbar.removeTab(tool._tab_id)
+        tool._tab_id = None
+        
+    def setCurrentTool(self, tool):
+        if not tool.widget:
+            tool.materialize()
+            QStackedWidget.addWidget(self, tool.widget)
+        QStackedWidget.setCurrentWidget(tool.widget)
+        
+    def updateState(self, tool):
+        tab = self.tabbar.tab(tool._tab_id)
+        tab.setIcon(KIcon(tool.icon()).pixmap(16))
+        tab.setText(tool.title())
+        
+class Tool(object):
     """
     A Tool, that can be docked or undocked in/from the MainWindow.
-    To be subclassed.
+    Can be subclassed.
     """
-    Top = KMultiTabBar.Top
-    Right = KMultiTabBar.Right
-    Bottom = KMultiTabBar.Bottom
-    Left = KMultiTabBar.Left
+    Top, Right, Bottom, Left = 0, 1, 2, 3
 
-    _icon = "document-properties"
-    default_orientation = Right
-    
-    def __init__(self, mainwin, orientation=None, name="", icon="", docked=True):
-        QWidget.__init__(self, mainwin)
+    def __init__(self, mainwin, name,
+            title="", icon="", orientation=Right,
+            widget=None, factory=QWidget):
         self._orientation = None
-        if icon:
-            self._icon = icon
-        self._name = name
-        self._docked = docked
-        self.docks = {
-            KMultiTabBar.Top: mainwin.dock_top,
-            KMultiTabBar.Right: mainwin.dock_right,
-            KMultiTabBar.Bottom: mainwin.dock_bottom,
-            KMultiTabBar.Left: mainwin.dock_left,
-        }
-        self.setOrientation(orientation or self.default_orientation)
+        self.name = name
+        self.widget = widget
+        self.factory = factory
+        self._docks = (
+            mainwin.dock_top,
+            mainwin.dock_right,
+            mainwin.dock_bottom,
+            mainwin.dock_left,
+        )
+        self.setOrientation(orientation)
+        self.setTitle(title)
+        self.setIcon(icon)
+
+    def show(self):
+        """ Bring our tool into view. """
+        self.dock().setCurrentTool(self)
+    
+    def materialize(self):
+        if self.widget is None:
+            self.widget = self.factory()
+    
+    def dock(self):
+        return self._docks[self._orientation]
+        
+        
         
     def setOrientation(self, orientation):
         if orientation is self._orientation:
             return
-        if not self._docked:
+        if self._docked:
             # "Reparent" the widget
             if self._orientation is not None:
-                self.docks[self._orientation].removeWidget(self)
-            self.docks[orientation].addWidget(self)
+                self.dock().removeTool(self)
+            self._tab = self.docks[orientation].addTool(self)
         self._orientation = orientation
         
-    def name(self):
-        return self._name
-        
+    
     def icon(self):
         return self._icon
+        
+    def setIcon(self, icon):
+        self._icon = icon
+        if self._docked:
+            self.dock().updateState(self)
+
+    def title(self):
+        return self._title
+    
+    def setTitle(self, title):
+        self._title = title
+        if self._docked:
+            self.dock().updateState(self)
