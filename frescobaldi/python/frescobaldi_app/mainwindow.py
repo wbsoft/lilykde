@@ -33,10 +33,12 @@ class _signalstore(dict):
     def call(self, meth, obj):
         for f in self[meth]:
             f(obj)
-    def add(self, meth):
-        self[meth] = []
-    def remove(self, meth):
-        del self[meth]
+    def add(self, *methods):
+        for meth in methods:
+            self[meth] = []
+    def remove(self, *methods):
+        for meth in methods:
+            del self[meth]
 
 # global hash with listeners
 listeners = _signalstore()
@@ -54,8 +56,25 @@ class MainWindow(KParts.MainWindow):
         self.show()
         listeners[app.activeChanged].append(self.showDoc)
         listeners[app.activeChanged].append(self.updateCaption)
-        self.statusBar()
+        listeners[app.activeChanged].append(self.updateStatusBar)
+
+        # status bar
+        sb = self.statusBar()
+        self.sb_linecol = QLabel(sb)
+        sb.addWidget(self.sb_linecol, 0)
         
+        self.sb_modified = QLabel(sb)
+        self.sb_modified.setFixedSize(16, 16)
+        sb.addWidget(self.sb_modified, 0)
+        
+        self.sb_insmode = QLabel(sb)
+        sb.addWidget(self.sb_insmode, 0)
+        
+        self.sb_selmode = QLabel(sb)
+        sb.addWidget(self.sb_selmode, 0)
+        
+        
+
         # actions, helper function
         def action(name, texttype, func, icon=None, whatsthis=None, key=None):
             if isinstance(texttype, KStandardAction.StandardAction):
@@ -92,11 +111,13 @@ class MainWindow(KParts.MainWindow):
     def showDoc(self, doc):
         if self._currentDoc:
             listeners[self._currentDoc.updateCaption].remove(self.updateCaption)
+            listeners[self._currentDoc.updateStatus].remove(self.updateStatusBar)
             self.guiFactory().removeClient(self._currentDoc.view)
         self._currentDoc = doc
         self.guiFactory().addClient(doc.view)
         self.stack.setCurrentWidget(doc.view)
         listeners[doc.updateCaption].append(self.updateCaption)
+        listeners[doc.updateStatus].append(self.updateStatusBar)
         doc.view.setFocus()
 
     def addDoc(self, doc):
@@ -111,8 +132,24 @@ class MainWindow(KParts.MainWindow):
     def updateCaption(self, doc):
         if doc.isModified():
             self.setCaption(doc.documentName() + " [%s]" % i18n("modified"))
+            self.sb_modified.setPixmap(KIcon("document-properties").pixmap(16))
         else:
             self.setCaption(doc.documentName())
+            self.sb_modified.setPixmap(QPixmap())
+    
+    def updateStatusBar(self, doc):
+        pos = doc.view.cursorPositionVirtual()
+        line, col = pos.line()+1, pos.column()
+        self.sb_linecol.setText(i18n("Line: %1 Col: %2", line, col))
+        
+        if doc.view.blockSelection():
+            t, w = i18n("BLOCK"), i18n("Block selection mode")
+        else:
+            t, w = i18n("LINE"), i18n("Line selection mode")
+        self.sb_selmode.setText(" %s " % t)
+        self.sb_selmode.setToolTip(w)
+        
+        self.sb_insmode.setText(doc.view.viewMode())
 
     def populateDocMenu(self):
         for a in self.docGroup.actions():

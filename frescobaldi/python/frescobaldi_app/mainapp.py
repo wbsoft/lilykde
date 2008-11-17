@@ -225,7 +225,7 @@ class Document(DBusItem):
         self._encoding = encoding # UTF-8 is mandatory for LilyPond files
 
         self.app.addDocument(self)
-        listeners.add(self.updateCaption)
+        listeners.add(self.updateCaption, self.updateStatus)
 
     def materialize(self):
         """ Really load the document, create doc and view etc. """
@@ -248,17 +248,27 @@ class Document(DBusItem):
         for s in ("documentUrlChanged(KTextEditor::Document*)",
                   "modifiedChanged(KTextEditor::Document*)"):
             QObject.connect(self.doc, SIGNAL(s), self.updateCaption)
+        for s in ("cursorPositionChanged(KTextEditor::View*, const KTextEditor::Cursor&)",
+                  "viewModeChanged(KTextEditor::View*)",
+                  "selectionChanged(KTextEditor::View*)",
+                  "informationMessage(KTextEditor::View*)"):
+            QObject.connect(self.view, SIGNAL(s), self.updateStatus)
+            
         
     def openUrl(self, url):
         self._url = url
         if self.doc:
             self.doc.openUrl(KUrl(url))
     
-    def updateCaption(self, doc = None):
+    def updateCaption(self):
         """ Called when name or modifiedstate changes """
         if not self.isModified():
             self._edited = True
         listeners.call(self.updateCaption, self)
+
+    def updateStatus(self):
+        """ Called on signals from the View """
+        listeners.call(self.updateStatus, self)
 
     @method(iface, in_signature='s', out_signature='')
     def setEncoding(self, encoding):
@@ -327,7 +337,7 @@ class Document(DBusItem):
             self.app.mainwin.removeDoc(self)
             sip.delete(self.view)
             sip.delete(self.doc)
-        listeners.remove(self.updateCaption)
+        listeners.remove(self.updateCaption, self.updateStatus)
         self.remove_from_connection() # remove our exported D-Bus object
         self.app.removeDocument(self)
         return True
