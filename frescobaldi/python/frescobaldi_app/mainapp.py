@@ -220,10 +220,12 @@ class Document(DBusItem):
         self.view = None        # this is going to hold the KTextEditor view
         self._url = url         # as long as no doc is really loaded, this
                                 # is the url
+        self._edited = False    # has this document been modified and saved?
         self._cursor = None     # line, col. None = not set.
         self._encoding = encoding # UTF-8 is mandatory for LilyPond files
 
         self.app.addDocument(self)
+        listeners.add(self.updateCaption)
 
     def materialize(self):
         """ Really load the document, create doc and view etc. """
@@ -233,7 +235,7 @@ class Document(DBusItem):
         self.doc.setEncoding(self._encoding)
         self.view = self.doc.createView(self.app.mainwin)
 
-        self.app.mainwin.addView(self.view)
+        self.app.mainwin.addDoc(self)
 
         if self._url:
             self.doc.openUrl(KUrl(self._url))
@@ -245,16 +247,18 @@ class Document(DBusItem):
 
         for s in ("documentUrlChanged(KTextEditor::Document*)",
                   "modifiedChanged(KTextEditor::Document*)"):
-            QObject.connect(self.doc, SIGNAL(s), self.propertiesChanged)
+            QObject.connect(self.doc, SIGNAL(s), self.updateCaption)
         
     def openUrl(self, url):
         self._url = url
         if self.doc:
             self.doc.openUrl(KUrl(url))
     
-    def propertiesChanged(self, doc = None):
+    def updateCaption(self, doc = None):
         """ Called when name or modifiedstate changes """
-        self.app.mainwin.updateState(self)
+        if not self.isModified():
+            self._edited = True
+        listeners.call(self.updateCaption, self)
 
     @method(iface, in_signature='s', out_signature='')
     def setEncoding(self, encoding):
@@ -283,6 +287,12 @@ class Document(DBusItem):
         """Returns true if the document has unsaved changes."""
         return self.doc and self.doc.isModified()
 
+    @method(iface, in_signature='', out_signature='b')
+    def isEdited(self):
+        """Returns true is the document has already been modified and saved
+        during this process."""
+        return self._edited
+    
     @method(iface, in_signature='', out_signature='b')
     def isEmpty(self):
         if self.doc:
@@ -314,10 +324,10 @@ class Document(DBusItem):
         if self.doc:
             if not self.doc.closeUrl(prompt):
                 return False # cancel
-            if self.view:
-                self.app.mainwin.removeView(self.view)
-                sip.delete(self.view)
+            self.app.mainwin.removeDoc(self)
+            sip.delete(self.view)
             sip.delete(self.doc)
+        listeners.remove(self.updateCaption)
         self.remove_from_connection() # remove our exported D-Bus object
         self.app.removeDocument(self)
         return True

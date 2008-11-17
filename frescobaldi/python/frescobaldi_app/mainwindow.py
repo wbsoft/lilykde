@@ -47,14 +47,15 @@ class MainWindow(KParts.MainWindow):
     def __init__(self, app):
         super(MainWindow, self).__init__()
         self.app = app
-        self._currentView = None
+        self._currentDoc = None
         self.stack = QStackedWidget(self)
         self.setCentralWidget(self.stack)
         self.resize(500,400) # FIXME: save window size and set reasonable default
         self.show()
         listeners[app.activeChanged].append(self.showDoc)
-        listeners[app.activeChanged].append(self.updateState)
-            
+        listeners[app.activeChanged].append(self.updateCaption)
+        self.statusBar()
+        
         # actions, helper function
         def action(name, texttype, func, icon=None, whatsthis=None, key=None):
             if isinstance(texttype, KStandardAction.StandardAction):
@@ -72,10 +73,10 @@ class MainWindow(KParts.MainWindow):
         action('file_close', KStandardAction.Close,
             lambda: app.activeDocument().close())
         action('file_quit', KStandardAction.Quit, app.quit)
-        action('go_back', KStandardAction.Back, app.back)
-        action('go_forward', KStandardAction.Forward, app.forward)
+        action('doc_back', KStandardAction.Back, app.back)
+        action('doc_forward', KStandardAction.Forward, app.forward)
         
-        self.setXMLFile("frescobaldiui.rc", False)
+        self.setXMLFile("frescobaldiui.rc")
         self.createShellGUI(True)
 
         # Documents menu
@@ -89,25 +90,25 @@ class MainWindow(KParts.MainWindow):
         
 
     def showDoc(self, doc):
-        if self._currentView:
-            self.guiFactory().removeClient(self._currentView)
+        if self._currentDoc:
+            listeners[self._currentDoc.updateCaption].remove(self.updateCaption)
+            self.guiFactory().removeClient(self._currentDoc.view)
+        self._currentDoc = doc
         self.guiFactory().addClient(doc.view)
-        self._currentView = doc.view
         self.stack.setCurrentWidget(doc.view)
+        listeners[doc.updateCaption].append(self.updateCaption)
         doc.view.setFocus()
 
-    def addView(self, view):
-        self.stack.addWidget(view)
+    def addDoc(self, doc):
+        self.stack.addWidget(doc.view)
         
-    def removeView(self, view):
-        self.stack.removeWidget(view)
-        if view is self._currentView:
-            self.guiFactory().removeClient(view)
-            self._currentView = None
+    def removeDoc(self, doc):
+        self.stack.removeWidget(doc.view)
+        if doc is self._currentDoc:
+            self.guiFactory().removeClient(doc.view)
+            self._currentDoc = None
 
-    def updateState(self, doc):
-        if doc.view is not self._currentView:
-            return
+    def updateCaption(self, doc):
         if doc.isModified():
             self.setCaption(doc.documentName() + " [%s]" % i18n("modified"))
         else:
@@ -122,7 +123,11 @@ class MainWindow(KParts.MainWindow):
             a.doc = d
             if d.isModified():
                 a.setIcon(KIcon("document-save"))
-            if self._currentView is d.view:
+            elif d.isEdited():
+                a.setIcon(KIcon("dialog-ok-apply"))
+            elif d.doc:
+                a.setIcon(KIcon("dialog-ok"))
+            if d is self._currentDoc:
                 a.setChecked(True)
             self.docGroup.addAction(a)
             self.docMenu.addAction(a)
@@ -130,7 +135,7 @@ class MainWindow(KParts.MainWindow):
     def openDocument(self):
         """ Open an existing document. """
         res = KEncodingFileDialog.getOpenUrlsAndEncoding(
-            'UTF-8', '::lilypond', "*.ly *.ily *.lyi|%s\n*.*|%s"
+            'UTF-8', '::lilypond', "*.ly *.ily *.lyi|%s\n*|%s"
             % (i18n("LilyPond files"), i18n("All Files")),
             self, i18n("Open File"))
         for url in res.URLs:
