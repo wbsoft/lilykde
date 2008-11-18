@@ -244,6 +244,7 @@ class TabBar(KMultiTabBar):
     def addTool(self, tool):
         self.appendTab(tool.icon(), id(tool), tool.title())
         tab = self.tab(id(tool))
+        tab.setFocusPolicy(Qt.NoFocus)
         self.tools[tab] = tool
         QObject.connect(tab, SIGNAL("clicked()"), tool.toggle)
         tab.installEventFilter(self)
