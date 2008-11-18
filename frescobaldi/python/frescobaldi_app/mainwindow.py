@@ -289,10 +289,10 @@ class Dock(QStackedWidget):
         if tool.widget:
             QStackedWidget.addWidget(self, tool.widget)
         self.tabbar.addTool(tool)
-        tool.dock = self
         self.tools.append(tool)
         if tool.isActive():
-            tool.show()
+            print "Add active tool to dock:", self.title #DEBUG
+            self.showTool(tool)
 
     def removeTool(self, tool):
         if tool not in self.tools:
@@ -300,7 +300,6 @@ class Dock(QStackedWidget):
         if tool.widget:
             QStackedWidget.removeWidget(self, tool.widget)
         self.tabbar.removeTool(tool)
-        tool.dock = None
         self.tools.remove(tool)
         if tool is self._currentTool:
             self._currentTool = None
@@ -342,6 +341,41 @@ class Dock(QStackedWidget):
         self.tabbar.updateState(tool)
 
 
+class DockDialog(QDialog):
+    """
+    A QDialog that (re)docks itself when closed.
+    """
+    def __init__(self, tool):
+        QDialog.__init__(self, tool.mainwin)
+        self.tool = tool
+        self.setAttribute(Qt.WA_DeleteOnClose, False)
+        if tool.dialogSize:
+            self.resize(*tool.dialogSize)
+        tool.widget.setParent(self)
+        self.updateState()
+    
+    def show(self):
+        QDialog.show(self)
+        if self.tool.dialogPos:
+            self.move(*self.tool.dialogPos)
+        
+    def done(self, r):
+        self.tool.dialogSize = self.width(), self.height()
+        self.tool.dialogPos = self.x(), self.y()
+        self.tool.dock()
+        QDialog.done(self, r)
+
+    def updateState(self):
+        title = KDialog.makeStandardCaption(self.tool.title(), self,
+            KDialog.HIGCompliantCaption)
+        self.setWindowTitle(title)
+        self.setWindowIcon(QIcon(self.tool.icon()))
+
+    def keyPressEvent(self, e):
+        if e.key() != Qt.Key_Escape:
+            QDialog.keyPressEvent(self, e)
+
+
 class Tool(object):
     """
     A Tool, that can be docked or undocked in/from the MainWindow.
@@ -349,12 +383,17 @@ class Tool(object):
     """
     allowedPlaces = Top, Right, Bottom, Left
 
+    __instances = []
+    
     def __init__(self, mainwin, name,
             title="", icon="", dock=Right,
             widget=None, factory=QWidget):
-        self.dock = None
         self._active = False
         self._docked = True
+        self._dock = None
+        self._dialog = None
+        self.dialogSize = None
+        self.dialogPos = None
 
         self.mainwin = mainwin
         self.name = name
@@ -363,32 +402,42 @@ class Tool(object):
         self.setTitle(title)
         self.setIcon(icon)
         self.setDock(dock)
+        Tool.__instances.append(self)
+        
+    def delete(self):
+        """ Completely remove our tool """
+        if self._docked:
+            self._dock.removeTool(self)
+            self._dock = None
+        else:
+            self._dialog.done(0)
+        if self.widget:
+            sip.delete(self.widget)
+            self.widget = None
+        if self._dialog:
+            sip.delete(self._dialog)
+            self._dialog = None
 
     def show(self):
         """ Bring our tool into view. """
         if self._docked:
-            if self.dock:
-                self._active = True
-                self.dock.showTool(self)
+            self._active = True
+            self._dock.showTool(self)
         else:
             pass # handle undocked tools
             
     def hide(self):
         """ Hide our tool """
         if self._docked:
-            if self.dock:
-                self._active = False
-                self.dock.hideTool(self)
-        else:
-            pass # handle undocked tools
+            self._active = False
+            self._dock.hideTool(self)
 
     def toggle(self):
         if self._docked:
-            if self.dock:
-                if self._active:
-                    self.hide()
-                else:
-                    self.show()
+            if self._active:
+                self.hide()
+            else:
+                self.show()
 
     def isActive(self):
         return self._active
@@ -399,53 +448,71 @@ class Tool(object):
     
     def setDock(self, place):
         dock = self.mainwin.docks.get(place, self.dock)
-        if dock is self.dock:
+        if dock is self._dock:
             return
         if self._docked:
-            if self.dock:
-                self.dock.removeTool(self)
+            if self._dock:
+                self._dock.removeTool(self)
             dock.addTool(self)
-        else:
-            self.dock = dock
+        self._dock = dock
             
+    def undock(self):
+        """ Undock our widget """
+        if not self._docked:
+            return
+        self._dock.removeTool(self)
+        self.materialize()
+        self._docked = False
+        if not self._dialog:
+            self._dialog = DockDialog(self)
+        self._dialog.show()
+
+    def dock(self):
+        """ Dock and close the dialog window """
+        if self._docked:
+            return
+        self._docked = True
+        self._dock.addTool(self)
+        
     def icon(self):
         return self._icon
         
     def setIcon(self, icon):
-        if icon:
-            self._icon = KIcon(icon).pixmap(16)
-        else:
-            self._icon = KIcon()
-        if self._docked:
-            if self.dock:
-                self.dock.updateState(self)
-        else:
-            pass # handle undocked tools
-            
+        self._icon = icon and KIcon(icon).pixmap(16) or KIcon()
+        self.updateState()
+
     def title(self):
         return self._title
     
     def setTitle(self, title):
         self._title = title
+        self.updateState()
+            
+    def updateState(self):
         if self._docked:
-            if self.dock:
-                self.dock.updateState(self)
+            if self._dock:
+                self._dock.updateState(self)
         else:
-            pass # handle undocked tools
+            self._dialog.updateState()
             
     def contextMenu(self):
         """
         Return a popup menu to manipulate this tool
         """
         m = KMenu(self.mainwin)
-        m.addTitle(KIcon("transform-move"), i18n("Move To"))
-        for place in Left, Right, Top, Bottom:
-            if place in self.mainwin.docks and place in self.allowedPlaces:
+        places = [place for place in Left, Right, Top, Bottom
+            if place in self.allowedPlaces
+            and self.mainwin.docks.get(place, self._dock) is not self._dock]
+        if places:
+            m.addTitle(KIcon("transform-move"), i18n("Move To"))
+            for place in places:
                 dock = self.mainwin.docks[place]
-                if dock is not self.dock:
-                    a = m.addAction(dock.icon, dock.title)
-                    QObject.connect(a, SIGNAL("triggered()"),
-                        lambda place=place: self.setDock(place))
+                a = m.addAction(dock.icon, dock.title)
+                QObject.connect(a, SIGNAL("triggered()"),
+                    lambda place=place: self.setDock(place))
+            m.addSeparator()
+        a = m.addAction(KIcon("tab-detach"), i18n("Undock"))
+        QObject.connect(a, SIGNAL("triggered()"), self.undock)
         
         return m
         
