@@ -162,6 +162,10 @@ class MainWindow(KParts.MainWindow):
         if doc is self._currentDoc:
             self.guiFactory().removeClient(doc.view)
             self._currentDoc = None
+    
+    def view(self):
+        if self._currentDoc:
+            return self._currentDoc.view
 
     def updateCaption(self, doc):
         if doc.isModified():
@@ -291,7 +295,6 @@ class Dock(QStackedWidget):
         self.tabbar.addTool(tool)
         self.tools.append(tool)
         if tool.isActive():
-            print "Add active tool to dock:", self.title #DEBUG
             self.showTool(tool)
 
     def removeTool(self, tool):
@@ -417,6 +420,7 @@ class Tool(object):
         if self._dialog:
             sip.delete(self._dialog)
             self._dialog = None
+        Tool.__instances.remove(self)
 
     def show(self):
         """ Bring our tool into view. """
@@ -424,13 +428,14 @@ class Tool(object):
             self._active = True
             self._dock.showTool(self)
         else:
-            pass # handle undocked tools
+            self._dialog.raise_()
             
     def hide(self):
         """ Hide our tool """
         if self._docked:
             self._active = False
             self._dock.hideTool(self)
+            self.mainwin.view().setFocus()
 
     def toggle(self):
         if self._docked:
