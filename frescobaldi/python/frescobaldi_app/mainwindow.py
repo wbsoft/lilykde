@@ -82,21 +82,21 @@ class MainWindow(KParts.MainWindow):
         s = QSplitter(Qt.Horizontal, h)
         tab_right = TabBar(Right, h)
 
-        self.docks[Left] = Dock(s, tab_left, i18n("Left Sidebar"))
+        self.docks[Left] = Dock(s, tab_left, "go-previous", i18n("Left Sidebar"))
         s.addWidget(self.docks[Left])
         v = KVBox(s)
         s.addWidget(v)
-        self.docks[Right] = Dock(s, tab_right, i18n("Right Sidebar"))
+        self.docks[Right] = Dock(s, tab_right, "go-next", i18n("Right Sidebar"))
         s.addWidget(self.docks[Right])
         
         tab_top = TabBar(Top, v)
         s1 = QSplitter(Qt.Vertical, v)
         
-        self.docks[Top] = Dock(s1, tab_top, i18n("Top Sidebar"))
+        self.docks[Top] = Dock(s1, tab_top, "go-up", i18n("Top Sidebar"))
         s1.addWidget(self.docks[Top])
         self.viewPlace = QStackedWidget(s1)
         s1.addWidget(self.viewPlace)
-        self.docks[Bottom] = Dock(s1, tab_bottom, i18n("Bottom Sidebar"))
+        self.docks[Bottom] = Dock(s1, tab_bottom, "go-down", i18n("Bottom Sidebar"))
         s1.addWidget(self.docks[Bottom])
        
         self.resize(500,400) # FIXME: save window size and set reasonable default
@@ -235,6 +235,37 @@ class TabBar(KMultiTabBar):
                 self.setMaximumHeight(maxSize)
             else:
                 self.setMaximumWidth(maxSize)
+        self.tools = {}
+        
+    def addTool(self, tool):
+        self.appendTab(tool.icon(), id(tool), tool.title())
+        tab = self.tab(id(tool))
+        self.tools[tab] = tool
+        QObject.connect(tab, SIGNAL("clicked()"), tool.toggle)
+        tab.installEventFilter(self)
+
+    def removeTool(self, tool):
+        tab = self.tab(id(tool))
+        del self.tools[tab]
+        self.removeTab(id(tool))
+        
+    def showTool(self, tool):
+        self.tab(id(tool)).setState(True)
+        
+    def hideTool(self, tool):
+        self.tab(id(tool)).setState(False)
+        
+    def updateState(self, tool):
+        tab = self.tab(id(tool))
+        tab.setIcon(tool.icon())
+        tab.setText(tool.title())
+
+    def eventFilter(self, obj, ev):
+        if ev.type() == QEvent.ContextMenu and obj in self.tools:
+            tool = self.tools[obj]
+            tool.contextMenu().popup(ev.globalPos())
+            return True
+        return False
 
 
 class Dock(QStackedWidget):
@@ -244,36 +275,31 @@ class Dock(QStackedWidget):
     
     When it receives a tool, a button is created in the associated tabbar.
     """
-    def __init__(self, parent, tabbar, title):
+    def __init__(self, parent, tabbar, icon, title):
         QStackedWidget.__init__(self, parent)
         self.tabbar = tabbar
         self.title = title
+        self.icon = icon and KIcon(icon) or KIcon()
         self.tools = []          # a list of the tools we host
         self._currentTool = None # the currently active tool, if any
         self.hide() # by default
 
-    def tab(self, tool):
-        """ Return the tab widget for our tool. """
-        return self.tabbar.tab(id(tool))
-        
     def addTool(self, tool):
         """ Add a tool to our tabbar, save dock and tabid in the tool """
         if tool.widget:
             QStackedWidget.addWidget(self, tool.widget)
-        self.tabbar.appendTab(tool.icon(), id(tool), tool.title())
+        self.tabbar.addTool(tool)
         tool.dock = self
         self.tools.append(tool)
         if tool.isActive():
             tool.show()
-        QObject.connect(self.tab(tool), SIGNAL("clicked()"), tool.toggle)
 
     def removeTool(self, tool):
         if tool not in self.tools:
             return
         if tool.widget:
             QStackedWidget.removeWidget(self, tool.widget)
-        self.tabbar.removeTab(id(tool))
-        tool.tab = None
+        self.tabbar.removeTool(tool)
         tool.dock = None
         self.tools.remove(tool)
         if tool is self._currentTool:
@@ -291,7 +317,7 @@ class Dock(QStackedWidget):
             tool.materialize()
             QStackedWidget.addWidget(self, tool.widget)
         QStackedWidget.setCurrentWidget(self, tool.widget)
-        self.tab(tool).setState(True)
+        self.tabbar.showTool(tool)
         cur = self._currentTool
         self._currentTool = tool
         if cur:
@@ -304,7 +330,7 @@ class Dock(QStackedWidget):
         Only to be called by tool.hide().
         Call tool.hide() to make it inactive.
         """
-        self.tab(tool).setState(False)
+        self.tabbar.hideTool(tool)
         if tool is self._currentTool:
             self._currentTool = None
             self.hide()
@@ -313,16 +339,15 @@ class Dock(QStackedWidget):
         return self._currentTool
         
     def updateState(self, tool):
-        tab = self.tab(tool)
-        tab.setIcon(tool.icon())
-        tab.setText(tool.title())
-        
+        self.tabbar.updateState(tool)
+
 
 class Tool(object):
     """
     A Tool, that can be docked or undocked in/from the MainWindow.
     Can be subclassed.
     """
+    allowedPlaces = Top, Right, Bottom, Left
 
     def __init__(self, mainwin, name,
             title="", icon="", dock=Right,
@@ -408,3 +433,19 @@ class Tool(object):
         else:
             pass # handle undocked tools
             
+    def contextMenu(self):
+        """
+        Return a popup menu to manipulate this tool
+        """
+        m = KMenu(self.mainwin)
+        m.addTitle(KIcon("transform-move"), i18n("Move To"))
+        for place in Left, Right, Top, Bottom:
+            if place in self.mainwin.docks and place in self.allowedPlaces:
+                dock = self.mainwin.docks[place]
+                if dock is not self.dock:
+                    a = m.addAction(dock.icon, dock.title)
+                    QObject.connect(a, SIGNAL("triggered()"),
+                        lambda place=place: self.setDock(place))
+        
+        return m
+        
