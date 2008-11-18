@@ -43,11 +43,19 @@ class _signalstore(dict):
 # global hash with listeners
 listeners = _signalstore()
 
+
+Top = KMultiTabBar.Top
+Right = KMultiTabBar.Right
+Bottom = KMultiTabBar.Bottom
+Left = KMultiTabBar.Left
+
+
 class MainWindow(KParts.MainWindow):
     def __init__(self, app):
         super(MainWindow, self).__init__()
         self.app = app
         self._currentDoc = None
+        self.docks = {}
 
         # status bar
         sb = self.statusBar()
@@ -64,32 +72,32 @@ class MainWindow(KParts.MainWindow):
         self.sb_selmode = QLabel(sb)
         sb.addWidget(self.sb_selmode, 0)
         
-        tab_bottom = TabBar(KMultiTabBar.Bottom, sb)
+        tab_bottom = TabBar(Bottom, sb)
         sb.addWidget(tab_bottom, 0)
 
         # window layout
         h = KHBox(self)
         self.setCentralWidget(h)
-        tab_left = TabBar(KMultiTabBar.Left, h)
+        tab_left = TabBar(Left, h)
         s = QSplitter(Qt.Horizontal, h)
-        tab_right = TabBar(KMultiTabBar.Right, h)
+        tab_right = TabBar(Right, h)
 
-        self.dock_left = Dock(s, tab_left)
-        s.addWidget(self.dock_left)
+        self.docks[Left] = Dock(s, tab_left, i18n("Left Sidebar"))
+        s.addWidget(self.docks[Left])
         v = KVBox(s)
         s.addWidget(v)
-        self.dock_right = Dock(s, tab_right)
-        s.addWidget(self.dock_right)
+        self.docks[Right] = Dock(s, tab_right, i18n("Right Sidebar"))
+        s.addWidget(self.docks[Right])
         
-        tab_top = TabBar(KMultiTabBar.Top, v)
+        tab_top = TabBar(Top, v)
         s1 = QSplitter(Qt.Vertical, v)
         
-        self.dock_top = Dock(s1, tab_top)
-        s1.addWidget(self.dock_top)
+        self.docks[Top] = Dock(s1, tab_top, i18n("Top Sidebar"))
+        s1.addWidget(self.docks[Top])
         self.viewPlace = QStackedWidget(s1)
         s1.addWidget(self.viewPlace)
-        self.dock_bottom = Dock(s1, tab_bottom)
-        s1.addWidget(self.dock_bottom)
+        self.docks[Bottom] = Dock(s1, tab_bottom, i18n("Bottom Sidebar"))
+        s1.addWidget(self.docks[Bottom])
        
         self.resize(500,400) # FIXME: save window size and set reasonable default
         self.show()
@@ -129,6 +137,9 @@ class MainWindow(KParts.MainWindow):
             self.populateDocMenu)
         QObject.connect(self.docGroup, SIGNAL("triggered(QAction*)"),
             lambda a: a.doc.setActive())
+        
+        # test
+        Tool(self, "test", i18n("Test"), "document-properties")
         
 
     def showDoc(self, doc):
@@ -233,96 +244,167 @@ class Dock(QStackedWidget):
     
     When it receives a tool, a button is created in the associated tabbar.
     """
-    def __init__(self, parent, tabbar):
+    def __init__(self, parent, tabbar, title):
         QStackedWidget.__init__(self, parent)
-        self.hide() # by default
         self.tabbar = tabbar
+        self.title = title
+        self.tools = []          # a list of the tools we host
+        self._currentTool = None # the currently active tool, if any
+        self.hide() # by default
 
+    def tab(self, tool):
+        """ Return the tab widget for our tool. """
+        return self.tabbar.tab(id(tool))
+        
     def addTool(self, tool):
-        """ Add a tool to our tabbar, save the tab id in the tool """
+        """ Add a tool to our tabbar, save dock and tabid in the tool """
         if tool.widget:
             QStackedWidget.addWidget(self, tool.widget)
-        tab = self.tabbar.appendTab(
-            KIcon(tool.icon()).pixmap(16), tool.title())
-        tool._tab_id = tab
-        
+        self.tabbar.appendTab(tool.icon(), id(tool), tool.title())
+        tool.dock = self
+        self.tools.append(tool)
+        if tool.isActive():
+            tool.show()
+        QObject.connect(self.tab(tool), SIGNAL("clicked()"), tool.toggle)
+
     def removeTool(self, tool):
+        if tool not in self.tools:
+            return
         if tool.widget:
             QStackedWidget.removeWidget(self, tool.widget)
-        self.tabbar.removeTab(tool._tab_id)
-        tool._tab_id = None
+        self.tabbar.removeTab(id(tool))
+        tool.tab = None
+        tool.dock = None
+        self.tools.remove(tool)
+        if tool is self._currentTool:
+            self._currentTool = None
+            self.hide()
         
-    def setCurrentTool(self, tool):
+    def showTool(self, tool):
+        """
+        Only to be called by tool.show().
+        Call tool.show() to make it active.
+        """
+        if tool not in self.tools or tool is self._currentTool:
+            return
         if not tool.widget:
             tool.materialize()
             QStackedWidget.addWidget(self, tool.widget)
-        QStackedWidget.setCurrentWidget(tool.widget)
+        QStackedWidget.setCurrentWidget(self, tool.widget)
+        self.tab(tool).setState(True)
+        cur = self._currentTool
+        self._currentTool = tool
+        if cur:
+            cur.hide()
+        else:
+            self.show()
+            
+    def hideTool(self, tool):
+        """
+        Only to be called by tool.hide().
+        Call tool.hide() to make it inactive.
+        """
+        self.tab(tool).setState(False)
+        if tool is self._currentTool:
+            self._currentTool = None
+            self.hide()
+        
+    def currentTool(self):
+        return self._currentTool
         
     def updateState(self, tool):
-        tab = self.tabbar.tab(tool._tab_id)
-        tab.setIcon(KIcon(tool.icon()).pixmap(16))
+        tab = self.tab(tool)
+        tab.setIcon(tool.icon())
         tab.setText(tool.title())
         
+
 class Tool(object):
     """
     A Tool, that can be docked or undocked in/from the MainWindow.
     Can be subclassed.
     """
-    Top, Right, Bottom, Left = 0, 1, 2, 3
 
     def __init__(self, mainwin, name,
-            title="", icon="", orientation=Right,
+            title="", icon="", dock=Right,
             widget=None, factory=QWidget):
-        self._orientation = None
+        self.dock = None
+        self._active = False
+        self._docked = True
+
+        self.mainwin = mainwin
         self.name = name
         self.widget = widget
         self.factory = factory
-        self._docks = (
-            mainwin.dock_top,
-            mainwin.dock_right,
-            mainwin.dock_bottom,
-            mainwin.dock_left,
-        )
-        self.setOrientation(orientation)
         self.setTitle(title)
         self.setIcon(icon)
+        self.setDock(dock)
 
     def show(self):
         """ Bring our tool into view. """
-        self.dock().setCurrentTool(self)
-    
+        if self._docked:
+            if self.dock:
+                self._active = True
+                self.dock.showTool(self)
+        else:
+            pass # handle undocked tools
+            
+    def hide(self):
+        """ Hide our tool """
+        if self._docked:
+            if self.dock:
+                self._active = False
+                self.dock.hideTool(self)
+        else:
+            pass # handle undocked tools
+
+    def toggle(self):
+        if self._docked:
+            if self.dock:
+                if self._active:
+                    self.hide()
+                else:
+                    self.show()
+
+    def isActive(self):
+        return self._active
+        
     def materialize(self):
         if self.widget is None:
             self.widget = self.factory()
     
-    def dock(self):
-        return self._docks[self._orientation]
-        
-        
-        
-    def setOrientation(self, orientation):
-        if orientation is self._orientation:
+    def setDock(self, place):
+        dock = self.mainwin.docks.get(place, self.dock)
+        if dock is self.dock:
             return
         if self._docked:
-            # "Reparent" the widget
-            if self._orientation is not None:
-                self.dock().removeTool(self)
-            self._tab = self.docks[orientation].addTool(self)
-        self._orientation = orientation
-        
-    
+            if self.dock:
+                self.dock.removeTool(self)
+            dock.addTool(self)
+        else:
+            self.dock = dock
+            
     def icon(self):
         return self._icon
         
     def setIcon(self, icon):
-        self._icon = icon
+        if icon:
+            self._icon = KIcon(icon).pixmap(16)
+        else:
+            self._icon = KIcon()
         if self._docked:
-            self.dock().updateState(self)
-
+            if self.dock:
+                self.dock.updateState(self)
+        else:
+            pass # handle undocked tools
+            
     def title(self):
         return self._title
     
     def setTitle(self, title):
         self._title = title
         if self._docked:
-            self.dock().updateState(self)
+            if self.dock:
+                self.dock.updateState(self)
+        else:
+            pass # handle undocked tools
+            
