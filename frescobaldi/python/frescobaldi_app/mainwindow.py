@@ -239,37 +239,39 @@ class TabBar(KMultiTabBar):
                 self.setMaximumHeight(maxSize)
             else:
                 self.setMaximumWidth(maxSize)
-        self.tools = {}
+        self._tabs = {}
+        self._id = 0    # to number tabs 
         
     def addTool(self, tool):
-        self.appendTab(tool.icon(), id(tool), tool.title())
-        tab = self.tab(id(tool))
+        self._id += 1
+        self.appendTab(tool.icon(), self._id, tool.title())
+        self._tabs[tool] = self._id
+        tab = self.tab(self._id)
         tab.setFocusPolicy(Qt.NoFocus)
-        self.tools[tab] = tool
         QObject.connect(tab, SIGNAL("clicked()"), tool.toggle)
         tab.installEventFilter(self)
 
     def removeTool(self, tool):
-        tab = self.tab(id(tool))
-        del self.tools[tab]
-        self.removeTab(id(tool))
+        self.removeTab(self._tabs[tool])
+        del self._tabs[tool]
         
     def showTool(self, tool):
-        self.tab(id(tool)).setState(True)
+        self.tab(self._tabs[tool]).setState(True)
         
     def hideTool(self, tool):
-        self.tab(id(tool)).setState(False)
+        self.tab(self._tabs[tool]).setState(False)
         
     def updateState(self, tool):
-        tab = self.tab(id(tool))
+        tab = self.tab(self._tabs[tool])
         tab.setIcon(tool.icon())
         tab.setText(tool.title())
 
     def eventFilter(self, obj, ev):
-        if ev.type() == QEvent.ContextMenu and obj in self.tools:
-            tool = self.tools[obj]
-            tool.contextMenu().popup(ev.globalPos())
-            return True
+        if ev.type() == QEvent.ContextMenu:
+            for tool, _id in self._tabs.iteritems():
+                if obj is self.tab(_id):
+                    tool.contextMenu().popup(ev.globalPos())
+                    return True
         return False
 
 
