@@ -27,10 +27,15 @@ class MainApp(kateshell.app.MainApp):
         kateshell.app.MainApp.__init__(self, servicePrefix)
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
-        print "TEXTEDIT_DBUS_PATH=%s" % os.environ["TEXTEDIT_DBUS_PATH"] # DEBUG
 
     def createDocument(self, url="", encoding='UTF-8'):
         return Document(self, url, encoding)
+        
+    def openUrl(self, url, encoding='UTF-8'):
+        #TODO: check whether URL is textedit URL
+        d = kateshell.app.MainApp.openUrl(self, url, encoding)
+        #TODO: if textedit URL, set cursor position
+        return d
 
     @method("org.lilypond.TextEdit", in_signature='s', out_signature='b')
     def openTextEditUrl(self, url):

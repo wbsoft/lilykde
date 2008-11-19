@@ -63,7 +63,7 @@ class Proxy(object):
     def __init__(self, obj):
         self.obj = obj
         for i in 'MainApp', 'Document':
-            if path.startswith("/"+i):
+            if obj.object_path.startswith("/"+i):
                 self.iface = dbus.Interface(obj, dbus_interface=DBUS_IFACE_PREFIX + i)
                 return
         self.iface = None

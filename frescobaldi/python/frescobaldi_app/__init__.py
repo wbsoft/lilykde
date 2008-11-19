@@ -21,8 +21,6 @@
 Bootstrap application logic for the Frescobaldi editor.
 """
 
-import dbus
-from PyQt4.QtCore import QString
 import kateshell
 
 DBUS_PREFIX = "org.frescobaldi.main-"
