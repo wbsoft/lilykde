@@ -22,6 +22,7 @@ Bootstrap application logic for the Frescobaldi editor.
 """
 
 import dbus
+from PyQt4.QtCore import QString
 
 DBUS_PREFIX = "org.frescobaldi.main-"
 DBUS_IFACE_PREFIX = "org.frescobaldi."
@@ -79,10 +80,20 @@ class Proxy(object):
         
     def __getattr__(self, attr):
         if self.iface:
-            a = getattr(self.iface, attr)
-            if callable(a):
+            meth = getattr(self.iface, attr)
+            if callable(meth):
                 def proxy_func(*args, **kwargs):
-                    res = a(*args, **kwargs)
+                    # convert args from QString to unicode
+                    args = list(args)
+                    for i in range(len(args)):
+                        if isinstance(args[i], QString):
+                            args[i] = unicode(args[i])
+                    for i in kwargs.keys():
+                        if isinstance(kwargs[i], QString):
+                            kwargs[i] = unicode(kwargs[i])
+                    # call the method
+                    res = meth(*args, **kwargs)
+                    # Return same proxy if the returned object is a reference
                     if isinstance(res, dbus.ObjectPath):
                         bus = dbus.SessionBus(private=True)
                         res = Proxy(bus.get_object(self.obj.bus_name, res))

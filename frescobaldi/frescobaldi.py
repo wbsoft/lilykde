@@ -48,19 +48,20 @@ KCmdLineArgs.init(sys.argv, aboutData)
 options = KCmdLineOptions()
 options.add("start <session>", ki18n("Session to start"))
 options.add("n").add("new", ki18n("Start a new instance"))
-options.add("l").add("line <line>", ki18n("Line number to go to, starting at 1"))
-options.add("c").add("column <col>", ki18n("Column to go to, starting at 0"))
+options.add("e").add("encoding <enc>", ki18n("Encoding to use"), "UTF-8")
+options.add("l").add("line <num>", ki18n("Line number to go to, starting at 1"))
+options.add("c").add("column <num>", ki18n("Column to go to, starting at 0"))
 options.add("+files", ki18n("LilyPond files to open, may also be textedit URLs"))
 KCmdLineArgs.addCmdLineOptions(options)
 
 args = KCmdLineArgs.parsedArgs()
 
-app = (not args.isSet("new") and runningApp()) or newApp()
+app = not args.isSet("new") and runningApp() or newApp()
 nav = args.isSet("line") or args.isSet("column")
 line = int(args.getOption("line") or 1)
 col = int(args.getOption("column") or 0)
 for c in range(args.count()):
-    doc = app.openUrl(unicode(args.url(c).url()))
+    doc = app.openUrl(args.url(c).url(), args.getOption("encoding"))
     if doc and nav:
         doc.setCursorPosition(line, col)
         nav = False # only first doc
