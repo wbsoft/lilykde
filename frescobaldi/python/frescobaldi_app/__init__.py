@@ -23,81 +23,13 @@ Bootstrap application logic for the Frescobaldi editor.
 
 import dbus
 from PyQt4.QtCore import QString
+import kateshell
 
 DBUS_PREFIX = "org.frescobaldi.main-"
-DBUS_IFACE_PREFIX = "org.frescobaldi."
-DBUS_MAIN_PATH = "/MainApp"
-
-def newApp():
-    """ Returns a newly started Frescobaldi instance. """
-    from .mainapp import MainApp
-    return MainApp()
 
 def runningApp():
-    """
-    Returns a proxy object for an instance of Frescobaldi running on the DBus
-    session bus, if it is there, or False if none.
-    
-    Using the proxy object, we can command the remote app almost
-    like a local one.
-    """
-    bus = dbus.SessionBus(private=True)
-    for name in bus.list_names():
-        if name.startswith(DBUS_PREFIX):
-            print "Found running instance:", name # DEBUG
-            return Proxy(bus.get_object(name, DBUS_MAIN_PATH))
-    return False
+    return kateshell.runningApp(DBUS_PREFIX)
 
-def _get_interface(path):
-    """ Return the default interface to use for the given object path. """
-    for i in 'MainApp', 'Document':
-        if path.startswith("/"+i):
-            return DBUS_IFACE_PREFIX + i
-    return False
-
-
-class Proxy(object):
-    """
-    A wrapper around a dbus proxy object.
-    
-    Methods calls are automagically directed to the correct interface,
-    using the object_path to interface name translation in the _get_interface
-    function.
-
-    When a remote object call would return a dbus.ObjectPath, we return
-    the same wrapper for the referenced dbus proxy object.
-    This way we can handle remote DBus objects in a Pythonic way:
-    
-        app = Proxy(bus.get_object(...))
-        doc = app.createDoc()
-        doc.callMethod()
-    """
-    def __init__(self, obj):
-        self.obj = obj
-        i = _get_interface(obj.object_path)
-        if i: self.iface = dbus.Interface(obj, dbus_interface=i)
-        else: self.iface = None
-        
-    def __getattr__(self, attr):
-        if self.iface:
-            meth = getattr(self.iface, attr)
-            if callable(meth):
-                def proxy_func(*args, **kwargs):
-                    # convert args from QString to unicode
-                    args = list(args)
-                    for i in range(len(args)):
-                        if isinstance(args[i], QString):
-                            args[i] = unicode(args[i])
-                    for i in kwargs.keys():
-                        if isinstance(kwargs[i], QString):
-                            kwargs[i] = unicode(kwargs[i])
-                    # call the method
-                    res = meth(*args, **kwargs)
-                    # Return same proxy if the returned object is a reference
-                    if isinstance(res, dbus.ObjectPath):
-                        bus = dbus.SessionBus(private=True)
-                        res = Proxy(bus.get_object(self.obj.bus_name, res))
-                    return res
-                return proxy_func
-        return getattr(self.obj, attr)
-
+def newApp():
+    from frescobaldi_app import mainapp
+    return mainapp.MainApp(DBUS_PREFIX)

@@ -126,7 +126,7 @@ class MainWindow(KParts.MainWindow):
         action('doc_back', KStandardAction.Back, app.back)
         action('doc_forward', KStandardAction.Forward, app.forward)
         
-        self.setXMLFile("frescobaldiui.rc")
+        #self.setXMLFile("frescobaldiui.rc")
         self.createShellGUI(True)
 
         # Documents menu

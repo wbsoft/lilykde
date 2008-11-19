@@ -61,7 +61,7 @@ nav = args.isSet("line") or args.isSet("column")
 line = int(args.getOption("line") or 1)
 col = int(args.getOption("column") or 0)
 for c in range(args.count()):
-    doc = app.openUrl(args.url(c).url(), args.getOption("encoding"))
+    doc = app.openUrl(url=args.url(c).url(), encoding=args.getOption("encoding"))
     if doc and nav:
         doc.setCursorPosition(line, col)
         nav = False # only first doc
