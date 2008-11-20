@@ -8,7 +8,6 @@ foreach(_file ${python_files})
   file(RELATIVE_PATH _dir ${CMAKE_CURRENT_SOURCE_DIR} ${_path})
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${_dir})
   set(_pyc ${CMAKE_CURRENT_BINARY_DIR}/${_dir}/${_name}c)
-  message(STATUS ${_pyc})
   set(_dest ${DATA_INSTALL_DIR}/${PROJECT_NAME}/lib/${_dir})
   
   # install source file
@@ -16,7 +15,7 @@ foreach(_file ${python_files})
 
   add_custom_command(
     TARGET bytecompile
-    COMMAND ${CMAKE_COMMAND} -E echo Byte-compiling ${_file} to ${_pyc}
+    COMMAND ${CMAKE_COMMAND} -E echo Byte-compiling ${_dir}/${_name}
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/cmake/modules/PythonCompileFile.py ${_file} ${_pyc}
     DEPENDS ${_file}
     VERBATIM
