@@ -37,7 +37,7 @@ bugs = "info@frescobaldi.org"
 
 # Find our own Python modules and packages
 sys.path[0:0] = map(os.path.normpath, map(str,
-    KStandardDirs().findDirs("data", appName+"/python")))
+    KStandardDirs().findDirs("data", appName+"/lib")))
 from frescobaldi_app import newApp, runningApp
 
 aboutData = KAboutData(appName, catalog, programName, version, description,
