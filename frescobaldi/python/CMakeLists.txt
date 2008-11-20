@@ -3,7 +3,6 @@ set(_pycs)
 foreach(_py ${python_files})
   file(RELATIVE_PATH _rel ${CMAKE_CURRENT_SOURCE_DIR} ${_py})
   get_filename_component(_dir ${_rel} PATH)
-  get_filename_component(_name ${_rel} NAME)
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${_dir})
   set(_pyc ${CMAKE_CURRENT_BINARY_DIR}/${_rel}c)
   add_custom_command(
