@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!@PYTHON_EXECUTABLE@
 
 # This file is part of the Frescobaldi project, http://www.frescobaldi.org/
 #
@@ -27,7 +27,7 @@ from PyKDE4.kdecore import (KAboutData, KCmdLineArgs, KCmdLineOptions,
 appName = "frescobaldi"
 catalog = appName
 programName = ki18n("Frescobaldi")
-version = "0.1"
+version = "@VERSION@"
 description = ki18n("LilyPond editing environment for KDE")
 license = KAboutData.License_GPL
 copyright = ki18n("Copyright (c) 2008, Wilbert Berendsen")

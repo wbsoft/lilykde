@@ -241,7 +241,6 @@ class Document(DBusItem):
                   "selectionChanged(KTextEditor::View*)",
                   "informationMessage(KTextEditor::View*)"):
             QObject.connect(self.view, SIGNAL(s), self.updateStatus)
-            
         
     def openUrl(self, url):
         self._url = url
