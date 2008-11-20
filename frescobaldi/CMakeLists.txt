@@ -10,3 +10,5 @@ find_package(PythonInterp REQUIRED)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/frescobaldi.py
                ${CMAKE_CURRENT_BINARY_DIR}/frescobaldi @ONLY)
 
+install(PROGRAMS frescobaldi DESTINATION ${BIN_INSTALL_DIR})
+install(FILES data/frescobaldiui.rc DESTINATION ${DATA_INSTALL_DIR}/${PROJECT_NAME})

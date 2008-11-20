@@ -19,7 +19,7 @@ STRING(REGEX REPLACE ".*\npykde_version:([^\n]+).*$" "\\1" PYKDE4_VERSION ${pykd
 STRING(REGEX REPLACE ".*\npykde_version_str:([^\n]+).*$" "\\1" PYKDE4_VERSION_STR ${pykde_config})
 MESSAGE(STATUS "Found PyKDE4 version ${PYKDE4_VERSION_STR}")
 
-# We don't need pykdeui4 ...
+# We don't need pykdeui4 in Frescobaldi ...
 ##FIND_PROGRAM(PYKDE4_PYKDEUIC_EXE pykdeuic4 PATHS)# ${PYKDE4_BIN_DIR})
 ##IF(NOT PYKDE4_PYKDEUIC_EXE)
 ##    MESSAGE(FATAL_ERROR "ERROR: Could not find pykdeuic4 (part of PyKDE4)")
