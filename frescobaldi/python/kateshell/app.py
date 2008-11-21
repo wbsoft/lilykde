@@ -52,6 +52,7 @@ class MainApp(DBusItem):
     Instantiated only once.
     """
     iface = DBUS_IFACE_PREFIX + "MainApp"
+    defaultEncoding = 'UTF-8'
     
     def __init__(self, servicePrefix):
         # listeners to our events
@@ -75,7 +76,7 @@ class MainApp(DBusItem):
         # restore session etc.
 
 
-    def createDocument(self, url="", encoding='UTF-8'):
+    def createDocument(self, url="", encoding=None):
         return Document(self, url, encoding)
         
     def findDocument(self, url):
@@ -86,9 +87,9 @@ class MainApp(DBusItem):
         return False
     
     @method(iface, in_signature='ss', out_signature='o')
-    def openUrl(self, url, encoding='UTF-8'):
+    def openUrl(self, url, encoding=None):
         if not encoding:
-            encoding = 'UTF-8'
+            encoding = self.defaultEncoding
         # If there is only one document open and it is empty, nameless and
         # unmodified, do not create a new one.
         if (url and len(self.documents) == 1
@@ -196,7 +197,7 @@ class Document(DBusItem):
     iface = DBUS_IFACE_PREFIX + "Document"
     defaultHighlightingMode = None
 
-    def __init__(self, app, url="", encoding='UTF-8'):
+    def __init__(self, app, url="", encoding=None):
         Document.__instance_counter += 1
         path = "/Document/%d" % Document.__instance_counter
         DBusItem.__init__(self, app.serviceName, path)
@@ -209,7 +210,7 @@ class Document(DBusItem):
                                 # is the url
         self._edited = False    # has this document been modified and saved?
         self._cursor = None     # line, col. None = not set.
-        self._encoding = encoding # (UTF-8 is mandatory for LilyPond files)
+        self._encoding = encoding or self.app.defaultEncoding # encoding [UTF-8]
 
         self.app.addDocument(self)
         listeners.add(self.updateCaption, self.updateStatus)

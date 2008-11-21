@@ -19,19 +19,26 @@
 
 import os
 from dbus.service import method
+
+from PyKDE4.kdecore import i18n
+
 import kateshell.app
 
 class MainApp(kateshell.app.MainApp):
     """ A Frescobaldi application instance """
+    
+    defaultEncoding = 'UTF-8'
+    fileTypes = ["*.ly *.ily *.lyi|%s" % i18n("LilyPond files")]
+    
     def __init__(self, servicePrefix):
         kateshell.app.MainApp.__init__(self, servicePrefix)
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
 
-    def createDocument(self, url="", encoding='UTF-8'):
+    def createDocument(self, url="", encoding=None):
         return Document(self, url, encoding)
         
-    def openUrl(self, url, encoding='UTF-8'):
+    def openUrl(self, url, encoding=None):
         #TODO: check whether URL is textedit URL
         d = kateshell.app.MainApp.openUrl(self, url, encoding)
         #TODO: if textedit URL, set cursor position
