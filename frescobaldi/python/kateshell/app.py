@@ -17,8 +17,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, re, sip, sys
-import dbus, dbus.service, dbus.mainloop.qt
+import os, sip, dbus, dbus.service, dbus.mainloop.qt
 from dbus.service import method, signal
 
 from PyQt4.QtCore import QObject, SIGNAL

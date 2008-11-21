@@ -49,8 +49,7 @@ class Proxy(object):
     A wrapper around a dbus proxy object.
     
     Methods calls are automagically directed to the correct interface,
-    using the object_path to interface name translation in the _get_interface
-    function.
+    using some code in the __init__ method.
 
     When a remote object call would return a dbus.ObjectPath, we return
     the same wrapper for the referenced dbus proxy object.
