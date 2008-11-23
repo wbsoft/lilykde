@@ -19,10 +19,13 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, sys
+import sys
+from PyKDE4.kdecore import (
+    KAboutData, KCmdLineArgs, KCmdLineOptions, KLocalizedString, ki18n)
 
-from PyKDE4.kdecore import (KAboutData, KCmdLineArgs, KCmdLineOptions,
-    KLocalizedString, KStandardDirs, ki18n)
+# Find our own Python modules and packages
+sys.path.insert(0, "@MODULE_DIR@")
+from frescobaldi_app import newApp, runningApp
 
 appName = "frescobaldi"
 catalog = appName
@@ -34,11 +37,6 @@ copyright = ki18n("Copyright (c) 2008, Wilbert Berendsen")
 text = KLocalizedString()
 homepage = "http://www.frescobaldi.org/"
 bugs = "info@frescobaldi.org"
-
-# Find our own Python modules and packages
-sys.path[0:0] = map(os.path.normpath, map(str,
-    KStandardDirs().findDirs("data", appName+"/lib")))
-from frescobaldi_app import newApp, runningApp
 
 aboutData = KAboutData(appName, catalog, programName, version, description,
     license, copyright, text, homepage, bugs)

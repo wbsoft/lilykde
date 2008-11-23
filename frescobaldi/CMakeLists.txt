@@ -6,7 +6,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 find_package(PyKDE4 REQUIRED)
 find_package(PythonInterp REQUIRED)
+
 set(APP_DIR ${DATA_INSTALL_DIR}/${PROJECT_NAME})
+set(MODULE_DIR ${APP_DIR}/lib)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/frescobaldi.py
                ${CMAKE_CURRENT_BINARY_DIR}/frescobaldi @ONLY)

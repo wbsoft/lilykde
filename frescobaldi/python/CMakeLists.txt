@@ -15,6 +15,6 @@ foreach(_py ${python_files})
   )
   list(APPEND _pycs ${_pyc})
   # install .py and .pyc file
-  install(FILES ${_py} ${_pyc} DESTINATION ${APP_DIR}/lib/${_dir})
+  install(FILES ${_py} ${_pyc} DESTINATION ${MODULE_DIR}/${_dir})
 endforeach(_py)
 add_custom_target(bytecompile ALL DEPENDS ${_pycs})
