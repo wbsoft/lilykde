@@ -127,8 +127,10 @@ class MainWindow(KParts.MainWindow):
         action('doc_forward', KStandardAction.Forward, app.forward)
         
         # recent files.
-        self.openRecent = KStandardAction.openRecent(self, SLOT("slotOpenRecent(KUrl)"), self)
-        self.actionCollection().addAction(self.openRecent.objectName(), self.openRecent)
+        self.openRecent = KStandardAction.openRecent(
+            self, SLOT("slotOpenRecent(KUrl)"), self)
+        self.actionCollection().addAction(
+            self.openRecent.objectName(), self.openRecent)
         
         self.createShellGUI(True) # ui.rc is loaded automagically
 
