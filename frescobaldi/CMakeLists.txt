@@ -2,14 +2,11 @@ cmake_minimum_required(VERSION 2.4)
 project(frescobaldi)
 set(VERSION "0.1")
 
+# Find our own modules
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
-# We include KDE4 as well. This might look like overkill, but
-# otherwise some install dirs are not set properly.
-find_package(KDE4 REQUIRED)
+# We need PyKDE4, which will find Python as well.
 find_package(PyKDE4 REQUIRED)
-find_package(PythonInterp REQUIRED)
-
 
 set(APP_DIR ${DATA_INSTALL_DIR}/${PROJECT_NAME})
 set(MODULE_DIR ${APP_DIR}/lib)
