@@ -52,7 +52,7 @@ Left = KMultiTabBar.Left
 
 class MainWindow(KParts.MainWindow):
     def __init__(self, app):
-        super(MainWindow, self).__init__()
+        KParts.MainWindow.__init__(self)
         self.app = app
         self._currentDoc = None
         self.docks = {}
