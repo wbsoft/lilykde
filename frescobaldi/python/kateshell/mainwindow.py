@@ -126,6 +126,13 @@ class MainWindow(KParts.MainWindow):
         action('doc_back', KStandardAction.Back, app.back)
         action('doc_forward', KStandardAction.Forward, app.forward)
         
+        # recent files. Somehow connecting the signal in the openRecent
+        # constructor does not work well. Therefore we create a dummy function
+        # and connect the signal ourselves.
+        self.openRecent = KStandardAction.openRecent(lambda *args: None, self)
+        self.actionCollection().addAction(self.openRecent.objectName(), self.openRecent)
+        QObject.connect(self.openRecent, SIGNAL("urlSelected(KUrl)"), self.slotOpenRecent)
+        
         self.createShellGUI(True) # ui.rc is loaded automagically
 
         # Documents menu
@@ -214,7 +221,12 @@ class MainWindow(KParts.MainWindow):
             self, i18n("Open File"))
         for url in res.URLs:
             if url != '':
-                self.app.openUrl(url.url(), res.encoding)
+                if self.app.openUrl(url.url(), res.encoding):
+                    self.openRecent.addUrl(url)
+
+    def slotOpenRecent(self, kurl):
+        """ Called by the open recent files action """
+        self.app.openUrl(kurl.url())
 
     def queryClose(self):
         """ Quit the application, also called by closing the window """

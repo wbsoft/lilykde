@@ -2,9 +2,11 @@
 # This file is in the public domain.
 
 # Most of this comes from FindKDE4.cmake and FindKDE4Internal.cmake
+
+# Take KDEDIRS into account
 file(TO_CMAKE_PATH "$ENV{KDEDIRS}" _KDEDIRS)
 
-# from FindKDE4.cmake: find kde4-config
+# From FindKDE4.cmake: find kde4-config
 find_program(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config
   # the suffix must be used since KDEDIRS can be a list of directories which don't have bin/ appended
   PATH_SUFFIXES bin               
@@ -22,8 +24,12 @@ endif(NOT KDE4_KDECONFIG_EXECUTABLE)
 # Call kde4-config and strip trailing slash.
 macro(setconfigpath _varname)
   execute_process(
-    COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" ${ARGN}
-    ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE _temp)
+    COMMAND "${KDE4_KDECONFIG_EXECUTABLE}"
+    ARGS ${ARGN}
+    OUTPUT_VARIABLE _temp
+    ERROR_QUIET
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
   if(_temp)
     string(REGEX REPLACE "\\/$" "" _temp ${_temp})
   endif(_temp)
