@@ -17,7 +17,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os
+import os, sip
 from dbus.service import method
 
 from PyQt4.QtCore import *
@@ -27,6 +27,8 @@ from PyKDE4.kdeui import *
 from PyKDE4.kparts import KParts
 
 import kateshell.app, kateshell.mainwindow
+from kateshell.mainwindow import listeners
+
 
 class MainApp(kateshell.app.MainApp):
     """ A Frescobaldi application instance """
@@ -68,12 +70,42 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         
 
 class KonsoleTool(kateshell.mainwindow.Tool):
+    """ A tool embedding a Konsole """
     def __init__(self, mainwin):
-        def konsoleWidgetFactory():
-            return QWidget()
+        self.part = None
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "konsole", i18n("Konsole"), "terminal",
             dock=kateshell.mainwindow.Bottom,
-            factory = konsoleWidgetFactory)
+            factory = self.konsoleWidgetFactory)
+        listeners[mainwin.app.activeChanged].append(self.sync)
             
+    def konsoleWidgetFactory(self):
+        if self.part:
+            return
+        factory = KPluginLoader("libkonsolepart").factory()
+        self.part = factory.create(self.mainwin)
+        self.part.openUrl(KUrl("file:///home/kde4dev/"))
+        QObject.connect(self.part, SIGNAL("destroyed()"), self.slotDestroyed)
+        return self.part.widget()
+
+    def show(self):
+        kateshell.mainwindow.Tool.show(self)
+        self.part.widget().setFocus()
+        
+    def hide(self):
+        kateshell.mainwindow.Tool.hide(self)
+        self.mainwin.view().setFocus()
+
+    def sync(self, doc):
+        if self.part and doc and doc.doc and not doc.doc.url().isEmpty():
+            print "Konsole Change!", doc.doc.url().directory()
+            self.part.openUrl(KUrl(doc.doc.url().directory()))
+
+    def slotDestroyed(self):
+        self.part = None
+        self.widget = None
+        if not sip.isdeleted(self.mainwin):
+            self.hide()
+        
+        
 
