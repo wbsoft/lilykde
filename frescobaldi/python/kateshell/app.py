@@ -37,8 +37,8 @@ class DBusItem(dbus.service.Object):
     An exported DBus item for our application.
     To be subclassed!
     """
-    def __init__(self, servicePrefix, path=None):
-        self.serviceName = "%s%d" % (servicePrefix, os.getpid())
+    def __init__(self, serviceName, path=None):
+        self.serviceName = serviceName
         if path is None:
             path = '/%s' % self.__class__.__name__
         bus = dbus.SessionBus()
@@ -65,7 +65,8 @@ class MainApp(DBusItem):
 
         # KApplication needs to be instantiated before any D-Bus stuff
         self.kapp = KApplication()
-        DBusItem.__init__(self, servicePrefix, '/MainApp')
+        serviceName = "%s%d" % (servicePrefix, os.getpid())
+        DBusItem.__init__(self, serviceName, '/MainApp')
 
         # We support only one MainWindow.
         self.mainwin = self.createMainWindow()

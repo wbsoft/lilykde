@@ -73,6 +73,7 @@ class KonsoleTool(kateshell.mainwindow.Tool):
     """ A tool embedding a Konsole """
     def __init__(self, mainwin):
         self.part = None
+        self._sync = False
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "konsole", i18n("Konsole"), "terminal",
             dock=kateshell.mainwindow.Bottom,
@@ -84,7 +85,11 @@ class KonsoleTool(kateshell.mainwindow.Tool):
             return
         factory = KPluginLoader("libkonsolepart").factory()
         self.part = factory.create(self.mainwin)
-        self.part.openUrl(KUrl("file:///home/kde4dev/"))
+        if self.mainwin.currentDocument() and self.mainwin.currentDocument().url():
+            url = self.mainwin.currentDocument().url()
+        else:
+            url = os.environ["HOME"]
+        self.part.openUrl(KUrl(url))
         QObject.connect(self.part, SIGNAL("destroyed()"), self.slotDestroyed)
         return self.part.widget()
 
@@ -97,15 +102,33 @@ class KonsoleTool(kateshell.mainwindow.Tool):
         self.mainwin.view().setFocus()
 
     def sync(self, doc):
-        if self.part and doc and doc.doc and not doc.doc.url().isEmpty():
-            print "Konsole Change!", doc.doc.url().directory()
+        if (self.part and self._sync
+            and doc and doc.doc and not doc.doc.url().isEmpty()):
+            # FIXME This does not work currently.
             self.part.openUrl(KUrl(doc.doc.url().directory()))
+
+    def contextMenu(self):
+        m = super(KonsoleTool, self).contextMenu()
+        m.addSeparator()
+        a = m.addAction(KIcon("inode-directory"),
+            i18n("S&ynchronize Terminal with Current Document"))
+        a.setCheckable(True)
+        a.setChecked(self._sync)
+        QObject.connect(a, SIGNAL("triggered()"), self.toggleSync)
+        return m
+        
+    def toggleSync(self):
+        self._sync = not self._sync
 
     def slotDestroyed(self):
         self.part = None
         self.widget = None
         if not sip.isdeleted(self.mainwin):
-            self.hide()
+            if self._docked:
+                self.hide()
+            elif self._dialog:
+                self._active = False
+                self._dialog.done(0)
         
         
 

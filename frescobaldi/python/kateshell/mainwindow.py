@@ -99,6 +99,7 @@ class MainWindow(KParts.MainWindow):
         self.docks[Bottom] = Dock(s1, tab_bottom, "go-down", i18n("Bottom Sidebar"))
         s1.addWidget(self.docks[Bottom])
        
+        self.viewPlace.setMinimumSize(200,100)
         self.resize(500,400) # FIXME: save window size and set reasonable default
         self.show()
         listeners[app.activeChanged].append(self.showDoc)
@@ -171,7 +172,11 @@ class MainWindow(KParts.MainWindow):
     def view(self):
         if self._currentDoc:
             return self._currentDoc.view
-
+    
+    def currentDocument(self):
+        if self._currentDoc:
+            return self._currentDoc
+            
     def updateCaption(self, doc):
         if doc.isModified():
             self.setCaption(doc.documentName() + " [%s]" % i18n("modified"))
@@ -251,13 +256,11 @@ class TabBar(KMultiTabBar):
             else:
                 self.setMaximumWidth(maxSize)
         self._tabs = {}
-        self._id = 0    # to number tabs 
         
     def addTool(self, tool):
-        self._id += 1
-        self.appendTab(tool.icon(), self._id, tool.title())
-        self._tabs[tool] = self._id
-        tab = self.tab(self._id)
+        self.appendTab(tool.icon(), tool._id, tool.title())
+        self._tabs[tool] = tool._id
+        tab = self.tab(tool._id)
         tab.setFocusPolicy(Qt.NoFocus)
         QObject.connect(tab, SIGNAL("clicked()"), tool.toggle)
         tab.installEventFilter(self)
@@ -314,8 +317,9 @@ class Dock(QStackedWidget):
     def removeTool(self, tool):
         if tool not in self.tools:
             return
-        if tool.widget:
-            QStackedWidget.removeWidget(self, tool.widget)
+        # Removing is not necessary ...
+        #if tool.widget:
+            #QStackedWidget.removeWidget(self, tool.widget)
         self.tabbar.removeTool(tool)
         self.tools.remove(tool)
         if tool is self._currentTool:
@@ -364,21 +368,23 @@ class DockDialog(QDialog):
     """
     def __init__(self, tool):
         QDialog.__init__(self, tool.mainwin)
+        QVBoxLayout(self).setContentsMargins(0, 0, 0, 0)
         self.tool = tool
         self.setAttribute(Qt.WA_DeleteOnClose, False)
-        if tool.dialogSize:
-            self.resize(*tool.dialogSize)
-        tool.widget.setParent(self)
         self.updateState()
     
     def show(self):
+        # Take the widget by adding it to our layout
+        self.layout().addWidget(self.tool.widget)
+        if self.tool.dialogSize:
+            self.resize(self.tool.dialogSize)
         QDialog.show(self)
         if self.tool.dialogPos:
-            self.move(*self.tool.dialogPos)
+            self.move(self.tool.dialogPos)
         
     def done(self, r):
-        self.tool.dialogSize = self.width(), self.height()
-        self.tool.dialogPos = self.x(), self.y()
+        self.tool.dialogSize = self.size()
+        self.tool.dialogPos = self.pos()
         self.tool.dock()
         QDialog.done(self, r)
 
@@ -399,12 +405,16 @@ class Tool(object):
     Can be subclassed.
     """
     allowedPlaces = Top, Right, Bottom, Left
+    defaultHeight = 300
+    defaultWidth = 500
 
     __instances = []
+    __instance_counter = 0
     
     def __init__(self, mainwin, name,
             title="", icon="", dock=Right,
             widget=None, factory=QWidget):
+        self._id = Tool.__instance_counter
         self._active = False
         self._docked = True
         self._dock = None
@@ -419,6 +429,7 @@ class Tool(object):
         self.setTitle(title)
         self.setIcon(icon)
         self.setDock(dock)
+        Tool.__instance_counter += 1
         Tool.__instances.append(self)
         
     def delete(self):
@@ -483,8 +494,15 @@ class Tool(object):
         self.materialize()
         self._docked = False
         if not self._dialog:
+            size = self._dock.size()
+            if size.height() <= 0:
+                size.setHeight(self.defaultHeight)
+            if size.width() <= 0:
+                size.setWidth(self.defaultWidth)
+            self.dialogSize = size
             self._dialog = DockDialog(self)
         self._dialog.show()
+        self.widget.show()
 
     def dock(self):
         """ Dock and close the dialog window """
