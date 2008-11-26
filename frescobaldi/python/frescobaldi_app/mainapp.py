@@ -20,14 +20,19 @@
 import os
 from dbus.service import method
 
-from PyKDE4.kdecore import i18n
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+from PyKDE4.kdecore import *
+from PyKDE4.kdeui import *
+from PyKDE4.kparts import KParts
 
-import kateshell.app
+import kateshell.app, kateshell.mainwindow
 
 class MainApp(kateshell.app.MainApp):
     """ A Frescobaldi application instance """
     
     defaultEncoding = 'UTF-8'
+    defaultHighlightingMode = "LilyPond"
     fileTypes = ["*.ly *.ily *.lyi|%s" % i18n("LilyPond files")]
     
     def __init__(self, servicePrefix):
@@ -35,9 +40,6 @@ class MainApp(kateshell.app.MainApp):
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
 
-    def createDocument(self, url="", encoding=None):
-        return Document(self, url, encoding)
-        
     def openUrl(self, url, encoding=None):
         #TODO: check whether URL is textedit URL
         d = kateshell.app.MainApp.openUrl(self, url, encoding)
@@ -52,6 +54,26 @@ class MainApp(kateshell.app.MainApp):
         """
         return bool(self.openUrl(url))
 
-class Document(kateshell.app.Document):
-    """ A loaded LilyPond text document. """
-    defaultHighlightingMode = "LilyPond"
+    def createMainWindow(self):
+        """ use our own MainWindow """
+        return MainWindow(self)
+
+
+class MainWindow(kateshell.mainwindow.MainWindow):
+    """ Our customized Frescobaldi MainWindow """
+    def __init__(self, app):
+        kateshell.mainwindow.MainWindow.__init__(self, app)
+        
+        KonsoleTool(self)
+        
+
+class KonsoleTool(kateshell.mainwindow.Tool):
+    def __init__(self, mainwin):
+        def konsoleWidgetFactory():
+            return QWidget()
+        kateshell.mainwindow.Tool.__init__(self, mainwin,
+            "konsole", i18n("Konsole"), "terminal",
+            dock=kateshell.mainwindow.Bottom,
+            factory = konsoleWidgetFactory)
+            
+

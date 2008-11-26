@@ -53,6 +53,8 @@ class MainApp(DBusItem):
     """
     iface = DBUS_IFACE_PREFIX + "MainApp"
     defaultEncoding = 'UTF-8'
+    defaultHighlightingMode = None
+    fileTypes = []
     
     def __init__(self, servicePrefix):
         # listeners to our events
@@ -66,7 +68,7 @@ class MainApp(DBusItem):
         DBusItem.__init__(self, servicePrefix, '/MainApp')
 
         # We support only one MainWindow.
-        self.mainwin = MainWindow(self)
+        self.mainwin = self.createMainWindow()
         self.kapp.setTopWidget(self.mainwin)
 
         # Get our beloved editor :-)
@@ -75,6 +77,8 @@ class MainApp(DBusItem):
 
         # restore session etc.
 
+    def createMainWindow(self):
+        return MainWindow(self)
 
     def createDocument(self, url="", encoding=None):
         return Document(self, url, encoding)
@@ -195,7 +199,6 @@ class Document(DBusItem):
     """
     __instance_counter = 0
     iface = DBUS_IFACE_PREFIX + "Document"
-    defaultHighlightingMode = None
 
     def __init__(self, app, url="", encoding=None):
         Document.__instance_counter += 1
@@ -227,8 +230,8 @@ class Document(DBusItem):
 
         if self._url:
             self.doc.openUrl(KUrl(self._url))
-        elif self.defaultHighlightingMode:
-            self.doc.setHighlightingMode(self.defaultHighlightingMode)
+        elif self.app.defaultHighlightingMode:
+            self.doc.setHighlightingMode(self.app.defaultHighlightingMode)
 
         if self._cursor is not None:
             self.view.setCursorPosition(KTextEditor.Cursor(*self._cursor))
