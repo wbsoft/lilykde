@@ -56,7 +56,8 @@ class MainApp(kateshell.app.MainApp):
                 url = "file://" + path
                 nav = True
             else:
-                url = re.sub("^textedit", "file", url)
+                # We can't open malformed textedit urls
+                return False
         d = kateshell.app.MainApp.openUrl(self, url, encoding)
         if nav:
             d.setCursorPosition(line, col)
