@@ -17,7 +17,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, sip
+import os, re, sip
 from dbus.service import method
 
 from PyQt4.QtCore import *
@@ -41,11 +41,25 @@ class MainApp(kateshell.app.MainApp):
         kateshell.app.MainApp.__init__(self, servicePrefix)
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
+        print "TEXTEDIT_DBUS_PATH=%s" % os.environ["TEXTEDIT_DBUS_PATH"]#DEBUG
 
     def openUrl(self, url, encoding=None):
-        #TODO: check whether URL is textedit URL
+        # The URL can be python string, dbus string or QString
+        url = unicode(url)
+        nav = False
+        if url.startswith("textedit:"):
+            m = re.match(r"textedit:(/[^/].*):(\d+):(\d+):(\d+)$", url)
+            if m:
+                # We have a valid textedit:/ uri.
+                # (KDE deletes the first two slashes)
+                path, (line, char, col) = m.group(1), map(int, m.group(2,3,4))
+                url = "file://" + path
+                nav = True
+            else:
+                url = re.sub("^textedit", "file", url)
         d = kateshell.app.MainApp.openUrl(self, url, encoding)
-        #TODO: if textedit URL, set cursor position
+        if nav:
+            d.setCursorPosition(line, col)
         return d
 
     @method("org.lilypond.TextEdit", in_signature='s', out_signature='b')
@@ -80,7 +94,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         kateshell.mainwindow.MainWindow.__init__(self, app)
         
         KonsoleTool(self)
-        PDFTool(self)
+        self.pdfTool = PDFTool(self)
+        self.pdfTool.openUrl(KUrl("file:///home/kde4dev/test.pdf")) #DEBUG
         
 
 class KonsoleTool(kateshell.mainwindow.Tool):
@@ -163,3 +178,7 @@ class PDFTool(kateshell.mainwindow.Tool):
     def sync(self, doc):
         pass
     
+    def openUrl(self, url):
+        self.show()
+        self.part.openUrl(url)
+        
