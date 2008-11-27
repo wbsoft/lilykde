@@ -24,10 +24,8 @@ endif(NOT KDE4_KDECONFIG_EXECUTABLE)
 # Call kde4-config and strip trailing slash.
 macro(setconfigpath _varname)
   execute_process(
-    COMMAND "${KDE4_KDECONFIG_EXECUTABLE}"
-    ARGS ${ARGN}
+    COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" ${ARGN}
     OUTPUT_VARIABLE _temp
-    ERROR_QUIET
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   if(_temp)
