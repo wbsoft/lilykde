@@ -202,9 +202,21 @@ class PDFTool(KPartTool):
                 "show_leftpanel").isChecked())
             QObject.connect(a, SIGNAL("triggered()"), lambda:
                 self.part.actionCollection().action("show_leftpanel").toggle())
+            a = m.addAction(i18n("Show PDF minibar"))
+            a.setCheckable(True)
+            w = self.part.widget().findChild(QWidget, "miniBar")
+            a.setChecked(w.isVisibleTo(w.parent()))
+            QObject.connect(a, SIGNAL("triggered()"), self.toggleMiniBar)
         return m
     
     def openUrl(self, url):
         self.show()
         super(PDFTool, self).openUrl(url)
-        
+
+    def toggleMiniBar(self):
+        w = self.part.widget().findChild(QWidget, "miniBar")
+        if w.isVisibleTo(w.parent()):
+            w.hide()
+        else:
+            w.show()
+            
