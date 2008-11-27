@@ -48,7 +48,7 @@ class MainApp(kateshell.app.MainApp):
         url = unicode(url)
         nav = False
         if url.startswith("textedit:"):
-            m = re.match(r"textedit:(/[^/].*):(\d+):(\d+):(\d+)$", url)
+            m = re.match(r"textedit:/{,2}(/[^/].*):(\d+):(\d+):(\d+)$", url)
             if m:
                 # We have a valid textedit:/ uri.
                 # (KDE deletes the first two slashes)
