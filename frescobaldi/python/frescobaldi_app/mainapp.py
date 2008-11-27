@@ -41,7 +41,6 @@ class MainApp(kateshell.app.MainApp):
         kateshell.app.MainApp.__init__(self, servicePrefix)
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
-        print "TEXTEDIT_DBUS_PATH=%s" % os.environ["TEXTEDIT_DBUS_PATH"]#DEBUG
 
     def openUrl(self, url, encoding=None):
         # The URL can be python string, dbus string or QString
@@ -94,8 +93,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         kateshell.mainwindow.MainWindow.__init__(self, app)
         
         KonsoleTool(self)
-        self.pdfTool = PDFTool(self)
-        self.pdfTool.openUrl("file:///home/kde4dev/test.pdf") #DEBUG
+        PDFTool(self)
+        self.tools["pdf"].openUrl("file:///home/wilbert/test.pdf") #DEBUG
         
 
 class KPartTool(kateshell.mainwindow.Tool):
@@ -204,7 +203,7 @@ class PDFTool(KPartTool):
                 self.part.actionCollection().action("show_leftpanel").toggle())
             a = m.addAction(i18n("Show PDF minibar"))
             a.setCheckable(True)
-            w = self.part.widget().findChild(QWidget, "miniBar")
+            w = self._okularMiniBar()
             a.setChecked(w.isVisibleTo(w.parent()))
             QObject.connect(a, SIGNAL("triggered()"), self.toggleMiniBar)
         return m
@@ -213,8 +212,12 @@ class PDFTool(KPartTool):
         self.show()
         super(PDFTool, self).openUrl(url)
 
+    def _okularMiniBar(self):
+        """ get the okular miniBar """
+        return self.part.widget().findChild(QWidget, "miniBar").parent()
+        
     def toggleMiniBar(self):
-        w = self.part.widget().findChild(QWidget, "miniBar")
+        w = self._okularMiniBar()
         if w.isVisibleTo(w.parent()):
             w.hide()
         else:

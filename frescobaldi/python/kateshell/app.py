@@ -96,18 +96,16 @@ class MainApp(DBusItem):
         if not encoding:
             encoding = self.defaultEncoding
         # If there is only one document open and it is empty, nameless and
-        # unmodified, do not create a new one.
-        if (url and len(self.documents) == 1
-                and not self.documents[0].isModified()
-                and not self.documents[0].url()
-                and self.documents[0].isEmpty()):
-            d = self.documents[0]
-            d.setEncoding(encoding)
-            d.openUrl(url)
-        else:
-            d = (url and self.findDocument(url)
-                 or self.createDocument(url, encoding))
+        # unmodified, close it.
+        close0 = (url and len(self.documents) == 1
+            and not self.documents[0].isModified()
+            and not self.documents[0].url()
+            and self.documents[0].isEmpty())
+        d = (url and self.findDocument(url)
+            or self.createDocument(url, encoding))
         d.setActive()
+        if close0:
+            self.documents[0].close()
         return d
 
     @method(iface, in_signature='', out_signature='o')

@@ -56,6 +56,7 @@ class MainWindow(KParts.MainWindow):
         self.app = app
         self._currentDoc = None
         self.docks = {}
+        self.tools = {}
 
         # status bar
         sb = self.statusBar()
@@ -405,7 +406,6 @@ class Tool(object):
     defaultHeight = 300
     defaultWidth = 500
 
-    __instances = []
     __instance_counter = 0
     
     def __init__(self, mainwin, name,
@@ -418,16 +418,15 @@ class Tool(object):
         self._dialog = None
         self.dialogSize = None
         self.dialogPos = None
-
         self.mainwin = mainwin
         self.name = name
+        mainwin.tools[name] = self
         self.widget = widget
         self.factory = factory
         self.setTitle(title)
         self.setIcon(icon)
         self.setDock(dock)
         Tool.__instance_counter += 1
-        Tool.__instances.append(self)
         
     def delete(self):
         """ Completely remove our tool """
@@ -442,7 +441,7 @@ class Tool(object):
         if self._dialog:
             sip.delete(self._dialog)
             self._dialog = None
-        Tool.__instances.remove(self)
+        del self.mainwin.tools[self.name]
 
     def show(self):
         """ Bring our tool into view. """
