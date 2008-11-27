@@ -60,6 +60,19 @@ class MainApp(kateshell.app.MainApp):
         """ use our own MainWindow """
         return MainWindow(self)
 
+    def createDocument(self, url="", encoding=None):
+        return Document(self, url, encoding)
+
+
+class Document(kateshell.app.Document):
+    """ Our own Document type with LilyPond-specific features """
+    def hasUpdated(self, ext):
+        """
+        return true if this document has one or more LilyPond-generated
+        outputs with the given extension that are up-to-date.
+        """
+        return True # FIXME implement
+    
 
 class MainWindow(kateshell.mainwindow.MainWindow):
     """ Our customized Frescobaldi MainWindow """
@@ -67,6 +80,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         kateshell.mainwindow.MainWindow.__init__(self, app)
         
         KonsoleTool(self)
+        PDFTool(self)
         
 
 class KonsoleTool(kateshell.mainwindow.Tool):
@@ -75,7 +89,7 @@ class KonsoleTool(kateshell.mainwindow.Tool):
         self.part = None
         self._sync = False
         kateshell.mainwindow.Tool.__init__(self, mainwin,
-            "konsole", i18n("Konsole"), "terminal",
+            "konsole", i18n("Terminal"), "terminal",
             dock=kateshell.mainwindow.Bottom,
             factory = self.konsoleWidgetFactory)
         listeners[mainwin.app.activeChanged].append(self.sync)
@@ -88,7 +102,7 @@ class KonsoleTool(kateshell.mainwindow.Tool):
         if self.mainwin.currentDocument() and self.mainwin.currentDocument().url():
             url = self.mainwin.currentDocument().url()
         else:
-            url = os.environ["HOME"]
+            url = os.getcwd()
         self.part.openUrl(KUrl(url))
         QObject.connect(self.part, SIGNAL("destroyed()"), self.slotDestroyed)
         return self.part.widget()
@@ -110,8 +124,7 @@ class KonsoleTool(kateshell.mainwindow.Tool):
     def contextMenu(self):
         m = super(KonsoleTool, self).contextMenu()
         m.addSeparator()
-        a = m.addAction(KIcon("inode-directory"),
-            i18n("S&ynchronize Terminal with Current Document"))
+        a = m.addAction(i18n("S&ynchronize Terminal with Current Document"))
         a.setCheckable(True)
         a.setChecked(self._sync)
         QObject.connect(a, SIGNAL("triggered()"), self.toggleSync)
@@ -131,4 +144,22 @@ class KonsoleTool(kateshell.mainwindow.Tool):
                 self._dialog.done(0)
         
         
-
+class PDFTool(kateshell.mainwindow.Tool):
+    def __init__(self, mainwin):
+        self.part = None
+        kateshell.mainwindow.Tool.__init__(self, mainwin,
+            "pdf", i18n("PDF Preview"), "application-pdf",
+            dock=kateshell.mainwindow.Right,
+            factory = self.okularWidgetFactory)
+        listeners[mainwin.app.activeChanged].append(self.sync)
+            
+    def okularWidgetFactory(self):
+        if self.part:
+            return
+        factory = KPluginLoader("okularpart").factory()
+        self.part = factory.create(self.mainwin)
+        return self.part.widget()
+    
+    def sync(self, doc):
+        pass
+    
