@@ -95,46 +95,78 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         
         KonsoleTool(self)
         self.pdfTool = PDFTool(self)
-        self.pdfTool.openUrl(KUrl("file:///home/kde4dev/test.pdf")) #DEBUG
+        self.pdfTool.openUrl("file:///home/kde4dev/test.pdf") #DEBUG
         
 
-class KonsoleTool(kateshell.mainwindow.Tool):
-    """ A tool embedding a Konsole """
-    def __init__(self, mainwin):
+class KPartTool(kateshell.mainwindow.Tool):
+    def __init__(self, mainwin, name, title="", icon="",
+            dock=kateshell.mainwindow.Right):
         self.part = None
-        self._sync = False
         kateshell.mainwindow.Tool.__init__(self, mainwin,
-            "konsole", i18n("Terminal"), "terminal",
-            dock=kateshell.mainwindow.Bottom,
-            factory = self.konsoleWidgetFactory)
-        listeners[mainwin.app.activeChanged].append(self.sync)
+            name, title, icon, dock, factory=self.partFactory)
             
-    def konsoleWidgetFactory(self):
+    def partFactory(self):
         if self.part:
             return
-        factory = KPluginLoader("libkonsolepart").factory()
-        self.part = factory.create(self.mainwin)
-        if self.mainwin.currentDocument() and self.mainwin.currentDocument().url():
-            url = self.mainwin.currentDocument().url()
-        else:
-            url = os.getcwd()
-        self.part.openUrl(KUrl(url))
-        QObject.connect(self.part, SIGNAL("destroyed()"), self.slotDestroyed)
-        return self.part.widget()
+        factory = KPluginLoader(self._partlibrary).factory()
+        if factory:
+            part = factory.create(self.mainwin)
+            if part:
+                self.part = part
+                QObject.connect(part, SIGNAL("destroyed()"), self.slotDestroyed)
+                return part.widget()
+        return QLabel("<center>%s</center>" %
+            i18n("Could not load %1", "<br/><b><tt>%s</tt></b><br/>" %
+                self._partlibrary))
+
+    def slotDestroyed(self):
+        self.part = None
+        self.widget = None
+        if not sip.isdeleted(self.mainwin):
+            if self._docked:
+                self.hide()
+            elif self._dialog:
+                self._active = False
+                self._dialog.done(0)
+        
+    def openUrl(self, url):
+        if self.part:
+            self.part.openUrl(KUrl(url))
+
+
+class KonsoleTool(KPartTool):
+    """ A tool embedding a Konsole """
+    _partlibrary = "libkonsolepart"
+    
+    def __init__(self, mainwin):
+        self._sync = False
+        KPartTool.__init__(self, mainwin,
+            "konsole", i18n("Terminal"), "terminal",
+            dock=kateshell.mainwindow.Bottom)
+        listeners[mainwin.app.activeChanged].append(self.sync)
+            
+    def partFactory(self):
+        w = super(KonsoleTool, self).partFactory()
+        if self.part:
+            d = self.mainwin.currentDocument()
+            url = d and d.url() or os.getcwd()
+            self.openUrl(url)
+        return w
 
     def show(self):
-        kateshell.mainwindow.Tool.show(self)
-        self.part.widget().setFocus()
+        super(KonsoleTool, self).show()
+        if self.part:
+            self.part.widget().setFocus()
         
     def hide(self):
-        kateshell.mainwindow.Tool.hide(self)
+        super(KonsoleTool, self).hide()
         self.mainwin.view().setFocus()
 
     def sync(self, doc):
         if (self.part and self._sync
             and doc and doc.doc and not doc.doc.url().isEmpty()):
             # FIXME This does not work currently.
-            self.part.openUrl(KUrl(doc.doc.url().directory()))
+            self.openUrl(doc.doc.url().directory())
 
     def contextMenu(self):
         m = super(KonsoleTool, self).contextMenu()
@@ -148,42 +180,18 @@ class KonsoleTool(kateshell.mainwindow.Tool):
     def toggleSync(self):
         self._sync = not self._sync
 
-    def slotDestroyed(self):
-        self.part = None
-        self.widget = None
-        if not sip.isdeleted(self.mainwin):
-            if self._docked:
-                self.hide()
-            elif self._dialog:
-                self._active = False
-                self._dialog.done(0)
-        
-        
-class PDFTool(kateshell.mainwindow.Tool):
+
+class PDFTool(KPartTool):
+    _partlibrary = "okularpart"
     def __init__(self, mainwin):
-        self.part = None
-        kateshell.mainwindow.Tool.__init__(self, mainwin,
+        KPartTool.__init__(self, mainwin,
             "pdf", i18n("PDF Preview"), "application-pdf",
-            dock=kateshell.mainwindow.Right,
-            factory = self.okularWidgetFactory)
+            dock=kateshell.mainwindow.Right)
         listeners[mainwin.app.activeChanged].append(self.sync)
             
-    def okularWidgetFactory(self):
-        if self.part:
-            return
-        factory = KPluginLoader("okularpart").factory()
-        self.part = factory.create(self.mainwin)
-        for a in self.part.actionCollection().actions():
-            print repr(a.objectName())
-        return self.part.widget()
-    
     def sync(self, doc):
         pass
     
-    def openUrl(self, url):
-        self.show()
-        self.part.openUrl(url)
-
     def contextMenu(self):
         m = super(PDFTool, self).contextMenu()
         if self.part:
@@ -195,4 +203,8 @@ class PDFTool(kateshell.mainwindow.Tool):
             QObject.connect(a, SIGNAL("triggered()"), lambda:
                 self.part.actionCollection().action("show_leftpanel").toggle())
         return m
+    
+    def openUrl(self, url):
+        self.show()
+        super(PDFTool, self).openUrl(url)
         

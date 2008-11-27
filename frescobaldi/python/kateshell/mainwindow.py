@@ -144,9 +144,6 @@ class MainWindow(KParts.MainWindow):
         QObject.connect(self.docGroup, SIGNAL("triggered(QAction*)"),
             lambda a: a.doc.setActive())
         
-        # test
-        Tool(self, "test", i18n("Test"), "document-properties")
-        
 
     def showDoc(self, doc):
         if self._currentDoc:
