@@ -173,6 +173,8 @@ class PDFTool(kateshell.mainwindow.Tool):
             return
         factory = KPluginLoader("okularpart").factory()
         self.part = factory.create(self.mainwin)
+        for a in self.part.actionCollection().actions():
+            print repr(a.objectName())
         return self.part.widget()
     
     def sync(self, doc):
@@ -181,4 +183,16 @@ class PDFTool(kateshell.mainwindow.Tool):
     def openUrl(self, url):
         self.show()
         self.part.openUrl(url)
+
+    def contextMenu(self):
+        m = super(PDFTool, self).contextMenu()
+        if self.part:
+            m.addSeparator()
+            a = m.addAction(i18n("Show PDF Navigation Panel"))
+            a.setCheckable(True)
+            a.setChecked(self.part.actionCollection().action(
+                "show_leftpanel").isChecked())
+            QObject.connect(a, SIGNAL("triggered()"), lambda:
+                self.part.actionCollection().action("show_leftpanel").toggle())
+        return m
         
