@@ -51,13 +51,12 @@ class MainApp(kateshell.app.MainApp):
             m = re.match(r"textedit:/{,2}(/[^/].*):(\d+):(\d+):(\d+)$", url)
             if m:
                 # We have a valid textedit:/ uri.
-                # (KDE deletes the first two slashes)
                 path, (line, char, col) = m.group(1), map(int, m.group(2,3,4))
                 url = "file://" + path
                 nav = True
             else:
                 # We can't open malformed textedit urls
-                return False
+                url = ""
         d = kateshell.app.MainApp.openUrl(self, url, encoding)
         if nav:
             d.setCursorPosition(line, col)
