@@ -97,49 +97,13 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         self.tools["pdf"].openUrl("file:///home/wilbert/test.pdf") #DEBUG
         
 
-class KPartTool(kateshell.mainwindow.Tool):
-    def __init__(self, mainwin, name, title="", icon="",
-            dock=kateshell.mainwindow.Right):
-        self.part = None
-        kateshell.mainwindow.Tool.__init__(self, mainwin,
-            name, title, icon, dock, factory=self.partFactory)
-            
-    def partFactory(self):
-        if self.part:
-            return
-        factory = KPluginLoader(self._partlibrary).factory()
-        if factory:
-            part = factory.create(self.mainwin)
-            if part:
-                self.part = part
-                QObject.connect(part, SIGNAL("destroyed()"), self.slotDestroyed)
-                return part.widget()
-        return QLabel("<center>%s</center>" %
-            i18n("Could not load %1", "<br/><b><tt>%s</tt></b><br/>" %
-                self._partlibrary))
-
-    def slotDestroyed(self):
-        self.part = None
-        self.widget = None
-        if not sip.isdeleted(self.mainwin):
-            if self._docked:
-                self.hide()
-            elif self._dialog:
-                self._active = False
-                self._dialog.done(0)
-        
-    def openUrl(self, url):
-        if self.part:
-            self.part.openUrl(KUrl(url))
-
-
-class KonsoleTool(KPartTool):
+class KonsoleTool(kateshell.mainwindow.KPartTool):
     """ A tool embedding a Konsole """
     _partlibrary = "libkonsolepart"
     
     def __init__(self, mainwin):
         self._sync = False
-        KPartTool.__init__(self, mainwin,
+        kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "konsole", i18n("Terminal"), "terminal",
             dock=kateshell.mainwindow.Bottom)
         listeners[mainwin.app.activeChanged].append(self.sync)
@@ -180,10 +144,10 @@ class KonsoleTool(KPartTool):
         self._sync = not self._sync
 
 
-class PDFTool(KPartTool):
+class PDFTool(kateshell.mainwindow.KPartTool):
     _partlibrary = "okularpart"
     def __init__(self, mainwin):
-        KPartTool.__init__(self, mainwin,
+        kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "pdf", i18n("PDF Preview"), "application-pdf",
             dock=kateshell.mainwindow.Right)
         listeners[mainwin.app.activeChanged].append(self.sync)

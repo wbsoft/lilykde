@@ -549,3 +549,38 @@ class Tool(object):
         
         return m
         
+
+class KPartTool(Tool):
+    def __init__(self, mainwin, name, title="", icon="",
+            dock=Right):
+        self.part = None
+        Tool.__init__(self, mainwin,
+            name, title, icon, dock, factory=self.partFactory)
+            
+    def partFactory(self):
+        if self.part:
+            return
+        factory = KPluginLoader(self._partlibrary).factory()
+        if factory:
+            part = factory.create(self.mainwin)
+            if part:
+                self.part = part
+                QObject.connect(part, SIGNAL("destroyed()"), self.slotDestroyed)
+                return part.widget()
+        return QLabel("<center>%s</center>" %
+            i18n("Could not load %1", "<br/><b><tt>%s</tt></b><br/>" %
+                self._partlibrary))
+
+    def slotDestroyed(self):
+        self.part = None
+        self.widget = None
+        if not sip.isdeleted(self.mainwin):
+            if self._docked:
+                self.hide()
+            elif self._dialog:
+                self._active = False
+                self._dialog.done(0)
+        
+    def openUrl(self, url):
+        if self.part:
+            self.part.openUrl(KUrl(url))
