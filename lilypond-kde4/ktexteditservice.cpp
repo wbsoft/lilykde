@@ -128,7 +128,7 @@ int main(int argc, char **argv)
     if (service)
     {
       editor = service->exec().simplified().section(' ', 0, 0);
-      acceptsTextEditUrl = service->property("X-Accepts-TextEditUrl").toBool();
+      acceptsTextEditUrl = service->property("X-Accepts-TextEditUrl", QVariant::Bool).toBool();
     }
   }
   
