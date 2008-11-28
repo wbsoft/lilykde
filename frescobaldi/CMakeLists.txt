@@ -13,9 +13,7 @@ set(MODULE_DIR ${APP_DIR}/lib)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/frescobaldi.py
                ${CMAKE_CURRENT_BINARY_DIR}/frescobaldi @ONLY)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/frescobaldi DESTINATION ${BIN_INSTALL_DIR})
 
 add_subdirectory(python)
-
-install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/frescobaldi DESTINATION ${BIN_INSTALL_DIR})
-install(FILES data/frescobaldiui.rc DESTINATION ${APP_DIR})
-
+add_subdirectory(data)
