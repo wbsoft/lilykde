@@ -29,5 +29,7 @@ from PyKDE4.kdeui import *
 class ToolBox(QToolBox):
     def __init__(self, tool):
         QToolBox.__init__(self)
+        self.mainwin = tool.mainwin
+        
         
         
