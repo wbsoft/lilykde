@@ -94,7 +94,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         
         KonsoleTool(self)
         PDFTool(self)
-        self.tools["pdf"].openUrl("file:///home/wilbert/test.pdf") #DEBUG
+        QuickInsertTool(self)
         
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):
@@ -186,4 +186,16 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             w.hide()
         else:
             w.show()
+
+
+class QuickInsertTool(kateshell.mainwindow.Tool):
+    def __init__(self, mainwin):
+        kateshell.mainwindow.Tool.__init__(self, mainwin,
+            "quickinsert", i18n("Quick Insert"), "document-properties",
+            dock=kateshell.mainwindow.Left,
+            factory=self.factory)
             
+    def factory(self):
+        import frescobaldi_app.lqi
+        return frescobaldi_app.lqi.ToolBox(self)
+
