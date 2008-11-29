@@ -17,3 +17,4 @@ install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/frescobaldi DESTINATION ${BIN_INSTA
 
 add_subdirectory(python)
 add_subdirectory(data)
+add_subdirectory(pics)
