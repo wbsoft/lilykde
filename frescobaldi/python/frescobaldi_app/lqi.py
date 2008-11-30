@@ -26,66 +26,7 @@ from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 
-shorthands = {
-    'marcato': '^',
-    'stopped': '+',
-    'tenuto': '-',
-    'staccatissimo': '|',
-    'accent': '>',
-    'staccato': '.',
-    'portato': '_',
-    }
-
-def articulation_groups():
-    return (
-        (i18n("Articulation"), (
-            ('accent', i18n("Accent")),
-            ('marcato', i18n("Marcato")),
-            ('staccatissimo', i18n("Staccatissimo")),
-            ('staccato', i18n("Staccato")),
-            ('portato', i18n("Portato")),
-            ('tenuto', i18n("Tenuto")),
-            ('espressivo', i18n("Espressivo")),
-            )),
-        (i18n("Ornaments"), (
-            ('trill', i18n("Trill")),
-            ('prall', i18n("Prall")),
-            ('mordent', i18n("Mordent")),
-            ('turn', i18n("Turn")),
-            ('prallprall', i18n("Prall prall")),
-            ('prallmordent', i18n("Prall mordent")),
-            ('upprall', i18n("Up prall")),
-            ('downprall', i18n("Down prall")),
-            ('upmordent', i18n("Up mordent")),
-            ('downmordent', i18n("Down mordent")),
-            ('prallup', i18n("Prall up")),
-            ('pralldown', i18n("Prall down")),
-            ('lineprall', i18n("Line prall")),
-            ('reverseturn', i18n("Reverse turn")),
-            )),
-        (i18n("Signs"), (
-            ('fermata', i18n("Fermata")),
-            ('shortfermata', i18n("Short fermata")),
-            ('longfermata', i18n("Long fermata")),
-            ('verylongfermata', i18n("Very long fermata")),
-            ('segno', i18n("Segno")),
-            ('coda', i18n("Coda")),
-            ('varcoda', i18n("Varcoda")),
-            ('signumcongruentiae', i18n("Signumcongruentiae")),
-            )),
-        (i18n("Other"), (
-            ('upbow', i18n("Upbow")),
-            ('downbow', i18n("Downbow")),
-            ('open', i18n("Open (e.g. brass)")),
-            ('stopped', i18n("Stopped (e.g. brass)")),
-            ('flageolet', i18n("Flageolet")),
-            ('thumb', i18n("Thumb")),
-            ('lheel', i18n("Left heel")),
-            ('rheel', i18n("Right heel")),
-            ('ltoe', i18n("Left toe")),
-            ('rtoe', i18n("Right toe")),
-            )),
-    )
+import ly.articulation
 
 class ToolBox(QToolBox):
     def __init__(self, tool):
@@ -139,7 +80,7 @@ class Articulations(Lqi):
         h.setToolTip(i18n("The direction to use for the articulations."))
         row += 1
 
-        for title, group in articulation_groups():
+        for title, group in ly.articulation.groups(i18n):
             layout.addWidget(
                 QLabel('<u>%s</u>:' % title, self), row, 0, 1, cols)
             row += 1
@@ -148,6 +89,7 @@ class Articulations(Lqi):
                 b = QToolButton(self)
                 b.setAutoRaise(True)
                 b.setIcon(KIcon('articulation_%s' % sign))
+                b.setIconSize(QSize(22, 22))
                 b.setToolTip('%s (\\%s)' % (title, sign))
                 QObject.connect(b, SIGNAL("clicked()"),
                     lambda sign = sign: self.writeSign(sign))
@@ -169,10 +111,10 @@ class Articulations(Lqi):
         layout.addWidget(l, row, 0, 4, cols)
 
     def writeSign(self, sign):
-        if self.shorthands.isChecked() and sign in shorthands:
-            art = '^-_'[self.direction.currentItem()] + shorthands[sign]
+        if self.shorthands.isChecked() and sign in ly.articulation.shorthands:
+            art = '^-_'[self.direction.currentIndex()] + ly.articulation.shorthands[sign]
         else:
-            art = ('^', '', '_')[self.direction.currentItem()] + '\\' + sign
+            art = ('^', '', '_')[self.direction.currentIndex()] + '\\' + sign
 
         #text = editor.selectedText()
         #if text:

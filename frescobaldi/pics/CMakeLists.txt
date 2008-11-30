@@ -22,11 +22,18 @@ foreach(_ly ${lilypond_files})
     OUTPUT ${_outp}
     DEPENDS ${_deps}
     COMMAND lilypond 
-         -ddelete-intermediate-files
-         --png -dpixmap-format=pngalpha
-         -o "${CMAKE_CURRENT_BINARY_DIR}/${_base}"
-         "${_ly}"
-    COMMAND mogrify -trim -bordercolor transparent -border 3 +repage "${_outp}"
+        -ddelete-intermediate-files
+        --png -dpixmap-format=pngalpha
+        -o "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}"
+        "${_ly}"
+    COMMAND convert
+        "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
+        -trim
+        -bordercolor transparent -border 20
+        +repage
+        -gravity Center -crop 22x22+0+0
+        +repage
+        "${_outp}"
     VERBATIM
   )
   list(APPEND _pngs ${_outp})
