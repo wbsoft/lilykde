@@ -26,6 +26,16 @@ from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 
+shorthands = {
+    'marcato': '^',
+    'stopped': '+',
+    'tenuto': '-',
+    'staccatissimo': '|',
+    'accent': '>',
+    'staccato': '.',
+    'portato': '_',
+    }
+
 def articulation_groups():
     return (
         (i18n("Articulation"), (
