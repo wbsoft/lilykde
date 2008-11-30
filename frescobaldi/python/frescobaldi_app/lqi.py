@@ -26,7 +26,7 @@ from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 
-import ly.articulation
+import ly.articulation, ly.rx
 
 class ToolBox(QToolBox):
     def __init__(self, tool):
@@ -117,15 +117,18 @@ class Articulations(Lqi):
         else:
             art = ('^', '', '_')[self.direction.currentIndex()] + '\\' + sign
 
-        #text = editor.selectedText()
-        #if text:
-            #def repl(m):
-                #if m.group('chord'):
-                    #return m.group('full') + art
-                #else:
-                    #return m.group()
-            #editor.replaceSelectionWith(Res.chord.sub(repl, text))
-        #else:
-            #editor.insertText(art)
+        v, d = self.view(), self.view().document()
+        if v.selection():
+            def repl(m):
+                if m.group('chord'):
+                    return m.group('full') + art
+                else:
+                    return m.group()
+            text = unicode(v.selectionText())
+            d.startEditing()
+            v.removeSelectionText()
+            v.insertText(ly.rx.chord.sub(repl, text))
+            d.endEditing()
+        else:
+            v.insertText(art)
 
-    
