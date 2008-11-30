@@ -1,2 +1,2 @@
 \header { tagline=##f }
-#(set-global-staff-size 24)
+#(set-global-staff-size 20)

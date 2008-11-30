@@ -34,6 +34,7 @@ foreach(_ly ${lilypond_files})
         -gravity Center -crop 22x22+0+0
         +repage
         "${_outp}"
+    COMMAND /bin/rm "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
     VERBATIM
   )
   list(APPEND _pngs ${_outp})
