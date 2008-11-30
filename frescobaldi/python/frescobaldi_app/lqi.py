@@ -59,6 +59,7 @@ class Articulations(Lqi):
             i18n("Different kinds of articulations and other signs."))
             
         layout = QGridLayout(self)
+        layout.setSpacing(0)
         row = 0
         cols = 5
 
