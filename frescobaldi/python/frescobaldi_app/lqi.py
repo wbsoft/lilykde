@@ -107,7 +107,6 @@ class Articulations(Lqi):
             i18n("Click an articulation sign to add it to your document."),
             i18n("If you select some music first, the articulation will "
               "be added to all notes in the selection.")), self)
-        l.setMaximumWidth(160)
         l.setWordWrap(True)
         layout.addWidget(l, row, 0, 4, cols)
 
@@ -133,3 +132,4 @@ class Articulations(Lqi):
             v.insertText(art)
         v.setFocus()
         
+

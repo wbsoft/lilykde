@@ -115,32 +115,7 @@ class MainWindow(KParts.MainWindow):
         listeners[app.activeChanged].append(self.updateCaption)
         listeners[app.activeChanged].append(self.updateStatusBar)
 
-
-        # actions, helper function
-        def action(name, texttype, func, icon=None, whatsthis=None, key=None):
-            if isinstance(texttype, KStandardAction.StandardAction):
-                a = self.actionCollection().addAction(texttype, name)
-            else:
-                a = self.actionCollection().addAction(name)
-                a.setText(texttype)
-            QObject.connect(a, SIGNAL("triggered()"), func)
-            if icon: a.setIcon(KIcon(icon))
-            if whatsthis: a.setWhatsThis(whatsthis)
-            if key: a.setShortcut(KShortcut(key))
-        
-        action('file_new', KStandardAction.New, app.new)
-        action('file_open', KStandardAction.Open, self.openDocument)
-        action('file_close', KStandardAction.Close,
-            lambda: app.activeDocument().close())
-        action('file_quit', KStandardAction.Quit, app.quit)
-        action('doc_back', KStandardAction.Back, app.back)
-        action('doc_forward', KStandardAction.Forward, app.forward)
-        
-        # recent files.
-        self.openRecent = KStandardAction.openRecent(
-            self, SLOT("slotOpenRecent(KUrl)"), self)
-        self.actionCollection().addAction(
-            self.openRecent.objectName(), self.openRecent)
+        self.setupActions() # Let subclasses add more actions
         
         self.createShellGUI(True) # ui.rc is loaded automagically
 
@@ -153,6 +128,35 @@ class MainWindow(KParts.MainWindow):
         QObject.connect(self.docGroup, SIGNAL("triggered(QAction*)"),
             lambda a: a.doc.setActive())
         
+    def setupActions(self):
+        # actions
+        self.act('file_new', KStandardAction.New, self.app.new)
+        self.act('file_open', KStandardAction.Open, self.openDocument)
+        self.act('file_close', KStandardAction.Close,
+            lambda: self.app.activeDocument().close())
+        self.act('file_quit', KStandardAction.Quit, self.app.quit)
+        self.act('doc_back', KStandardAction.Back, self.app.back)
+        self.act('doc_forward', KStandardAction.Forward, self.app.forward)
+        
+        # recent files.
+        self.openRecent = KStandardAction.openRecent(
+            self, SLOT("slotOpenRecent(KUrl)"), self)
+        self.actionCollection().addAction(
+            self.openRecent.objectName(), self.openRecent)
+
+    def act(self, name, texttype, func,
+            icon=None, tooltip=None, whatsthis=None, key=None):
+        """ Create an action and add it to own actionCollection """
+        if isinstance(texttype, KStandardAction.StandardAction):
+            a = self.actionCollection().addAction(texttype, name)
+        else:
+            a = self.actionCollection().addAction(name)
+            a.setText(texttype)
+        QObject.connect(a, SIGNAL("triggered()"), func)
+        if icon: a.setIcon(KIcon(icon))
+        if tooltip: a.setToolTip(tooltip)
+        if whatsthis: a.setWhatsThis(whatsthis)
+        if key: a.setShortcut(KShortcut(key))
 
     def showDoc(self, doc):
         if self._currentDoc:

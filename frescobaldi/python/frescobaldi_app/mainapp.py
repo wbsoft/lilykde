@@ -91,11 +91,67 @@ class MainWindow(kateshell.mainwindow.MainWindow):
     """ Our customized Frescobaldi MainWindow """
     def __init__(self, app):
         kateshell.mainwindow.MainWindow.__init__(self, app)
-        
+
         KonsoleTool(self)
         PDFTool(self)
         QuickInsertTool(self)
+
+    def setupActions(self):
+        super(MainWindow, self).setupActions()
+        self.__rhythmActions = RhythmActions(self) # save a reference
         
+
+class RhythmActions(object):
+    """
+    Container containing actions for editing rhythms and their implementations
+    """
+    def __init__(self, win):
+        self.view = win.view
+        win.act('durations_double', i18n("Double durations"), self.doubleDurations,
+            tooltip=i18n("Double all the durations in the selection."))
+        win.act('durations_halve', i18n("Halve durations"), self.halveDurations,
+            tooltip=i18n("Halve all the durations in the selection."))
+        
+    def editRhythm(func):
+        """
+        Decorator to handle functions that are the callback for the regexp.
+        """
+        def decorator(self):
+            v, d = self.view(), self.view().document()
+            if v.selection():
+                import ly.rx
+                def repl(m):
+                    return m.group('duration') and func(m) or m.group()
+                text = unicode(v.selectionText())
+                # TODO: keep selection on newly inserted text
+                d.startEditing()
+                v.removeSelectionText()
+                v.insertText(ly.rx.chord_rest.sub(repl, text))
+                d.endEditing()
+            else:
+                pass # TODO warn that text must be selected.
+        return decorator
+        
+    @editRhythm
+    def doubleDurations(m):
+        import ly
+        chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
+        if dur in ly.durations:
+            i = ly.durations.index(dur)
+            if i > 0:
+                dur = ly.durations[i - 1]
+        return ''.join(i or '' for i in (chord, dur, dots, scale))
+     
+    @editRhythm
+    def halveDurations(m):
+        import ly
+        chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
+        if dur in ly.durations:
+            i = ly.durations.index(dur)
+            if i < len(ly.durations) - 1:
+                dur = ly.durations[i + 1]
+        return ''.join(i or '' for i in (chord, dur, dots, scale))
+
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):
     """ A tool embedding a Konsole """

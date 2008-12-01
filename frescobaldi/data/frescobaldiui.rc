@@ -48,8 +48,27 @@
     <DefineGroup name="view_operations" />
   </Menu>
 
-  <Merge/>
+  <Menu name="lilypond"><text>&amp;LilyPond</text>
+    <Action name="lilypond_run_preview"/>
+    <Action name="lilypond_run_publish"/>
+    <Separator />
+    <Menu name="lilypond_edit_rhythm"><text>&amp;Edit Rhythm</text>
+      <Action name="durations_double"/>
+      <Action name="durations_halve"/>
+      <Separator />
+      <Action name="durations_dot"/>
+      <Action name="durations_undot"/>
+      <Separator />
+      <Action name="durations_remove_scaling"/>
+      <Action name="durations_remove"/>
+      <Separator />
+      <Action name="durations_implicit"/>
+      <Action name="durations_explicit"/>
+    </Menu>
+  </Menu>
 
+  <Merge/>
+  
   <Menu name="tools"><text>&amp;Tools</text>
     <DefineGroup name="tools_operations" />
   </Menu>
