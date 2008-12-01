@@ -123,6 +123,9 @@ class RhythmActions(object):
                 else:
                     pass  # TODO warn that text must be selected.
             return func
+        def applyRhythm():
+            pass # TODO implement
+            
         win.act('durations_double', i18n("Double durations"), lazy("doubleDurations"),
             tooltip=i18n("Double all the durations in the selection."))
         win.act('durations_halve', i18n("Halve durations"), lazy("halveDurations"),
@@ -141,8 +144,10 @@ class RhythmActions(object):
         win.act('durations_explicit', i18n("Make explicit"), lazy("makeExplicit"),
             tooltip=i18n("Make durations explicit (add duration to every note, "
                          "even if it is the same as the preceding note)."))
+        win.act('durations_apply_rhythm', i18n("Apply rhythm..."), applyRhythm,
+            tooltip=i18n("Apply an entered rhythm to the selected music."))
 
-    
+
 class KonsoleTool(kateshell.mainwindow.KPartTool):
     """ A tool embedding a Konsole """
     _partlibrary = "libkonsolepart"
