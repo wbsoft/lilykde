@@ -99,14 +99,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
 
     def setupActions(self):
         super(MainWindow, self).setupActions()
-        self.setupRhythmActions()
-        self.setupHyphenActions()
         
-
-    def setupRhythmActions(self):
-        """ Setup actions and functionality for editing the rhythm """
-        self._savedRhythms = set()
-            
+        # actions and functionality for editing rhythms
         @self.onSelAction(i18n("Double durations"),
             tooltip=i18n("Double all the durations in the selection."))
         def durations_double(text):
@@ -156,6 +150,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             import ly.duration
             return ly.duration.makeExplicit(text)
             
+        self._savedRhythms = set() # for the completionObject
+            
         @self.onSelAction(i18n("Apply rhythm..."),
             tooltip=i18n("Apply an entered rhythm to the selected music."))
         def durations_apply_rhythm(text):
@@ -181,9 +177,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             QObject.connect(d, SIGNAL("okClicked()"), applyTheRhythm)
             d.show()
 
-       
-    def setupHyphenActions(self):
-        """ Setup lyrics hyphen and de-hyphen action """
+        # Setup lyrics hyphen and de-hyphen action
         @self.onSelAction(i18n("Hyphenate Lyrics Text"))
         def lyrics_hyphen(text):
             pass # TODO: implement
@@ -191,6 +185,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         @self.onSelAction(i18n("Remove hyphenation"))
         def lyrics_dehyphen(text):
             pass # TODO: implement
+
 
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):
