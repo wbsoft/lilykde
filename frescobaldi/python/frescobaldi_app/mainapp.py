@@ -98,7 +98,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
 
     def setupActions(self):
         super(MainWindow, self).setupActions()
-        self.__rhythmActions = RhythmActions(self) # save a reference
+        RhythmActions(self)
         
 
 class RhythmActions(object):
@@ -106,53 +106,43 @@ class RhythmActions(object):
     Container containing actions for editing rhythms and their implementations
     """
     def __init__(self, win):
-        self.view = win.view
-        win.act('durations_double', i18n("Double durations"), self.doubleDurations,
+        def lazy(name):
+            """ Lazy-load lilypond module only when action requested """
+            def func():
+                v, d = win.view(), win.view().document()
+                if v.selection():
+                    text = unicode(v.selectionText())
+                    import ly.duration
+                    # call the relevant module function and get the result
+                    result = getattr(ly.duration, name)(text)
+                    # TODO: keep selection on newly inserted text
+                    d.startEditing()
+                    v.removeSelectionText()
+                    v.insertText(result)
+                    d.endEditing()
+                else:
+                    pass  # TODO warn that text must be selected.
+            return func
+        win.act('durations_double', i18n("Double durations"), lazy("doubleDurations"),
             tooltip=i18n("Double all the durations in the selection."))
-        win.act('durations_halve', i18n("Halve durations"), self.halveDurations,
+        win.act('durations_halve', i18n("Halve durations"), lazy("halveDurations"),
             tooltip=i18n("Halve all the durations in the selection."))
-        
-    def editRhythm(func):
-        """
-        Decorator to handle functions that are the callback for the regexp.
-        """
-        def decorator(self):
-            v, d = self.view(), self.view().document()
-            if v.selection():
-                import ly.rx
-                def repl(m):
-                    return m.group('duration') and func(m) or m.group()
-                text = unicode(v.selectionText())
-                # TODO: keep selection on newly inserted text
-                d.startEditing()
-                v.removeSelectionText()
-                v.insertText(ly.rx.chord_rest.sub(repl, text))
-                d.endEditing()
-            else:
-                pass # TODO warn that text must be selected.
-        return decorator
-        
-    @editRhythm
-    def doubleDurations(m):
-        import ly
-        chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
-        if dur in ly.durations:
-            i = ly.durations.index(dur)
-            if i > 0:
-                dur = ly.durations[i - 1]
-        return ''.join(i or '' for i in (chord, dur, dots, scale))
-     
-    @editRhythm
-    def halveDurations(m):
-        import ly
-        chord, dur, dots, scale = m.group('chord', 'dur', 'dots', 'scale')
-        if dur in ly.durations:
-            i = ly.durations.index(dur)
-            if i < len(ly.durations) - 1:
-                dur = ly.durations[i + 1]
-        return ''.join(i or '' for i in (chord, dur, dots, scale))
+        win.act('durations_dot', i18n("Dot durations"), lazy("dotDurations"),
+            tooltip=i18n("Add a dot to all the durations in the selection."))
+        win.act('durations_undot', i18n("Undot durations"), lazy("undotDurations"),
+            tooltip=i18n("Remove one dot from all the durations in the selection."))
+        win.act('durations_remove_scaling', i18n("Remove scaling"), lazy("removeScaling"),
+            tooltip=i18n("Remove all scaling (*n/m) from the durations in the "
+                         "selection."))
+        win.act('durations_remove', i18n("Remove durations"), lazy("removeDurations"),
+            tooltip=i18n("Remove all durations from the selection."))
+        win.act('durations_implicit', i18n("Make implicit"), lazy("makeImplicit"),
+            tooltip=i18n("Make durations implicit (remove repeated durations)."))
+        win.act('durations_explicit', i18n("Make explicit"), lazy("makeExplicit"),
+            tooltip=i18n("Make durations explicit (add duration to every note, "
+                         "even if it is the same as the preceding note)."))
 
-
+    
 class KonsoleTool(kateshell.mainwindow.KPartTool):
     """ A tool embedding a Konsole """
     _partlibrary = "libkonsolepart"
