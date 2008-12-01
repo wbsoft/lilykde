@@ -90,6 +90,10 @@ class MainWindow(KParts.MainWindow):
         self.docks[Right] = Dock(s, tab_right, "go-next", i18n("Right Sidebar"))
         s.addWidget(self.docks[Right])
         
+        s.setStretchFactor(0, 0)
+        s.setStretchFactor(1, 1)
+        s.setStretchFactor(2, 0)
+        
         tab_top = TabBar(Top, v)
         s1 = QSplitter(Qt.Vertical, v)
         
@@ -99,9 +103,13 @@ class MainWindow(KParts.MainWindow):
         s1.addWidget(self.viewPlace)
         self.docks[Bottom] = Dock(s1, tab_bottom, "go-down", i18n("Bottom Sidebar"))
         s1.addWidget(self.docks[Bottom])
-       
-        self.viewPlace.setMinimumSize(200,100)
-        self.resize(500,400) # FIXME: save window size and set reasonable default
+
+        s1.setStretchFactor(0, 0)
+        s1.setStretchFactor(1, 1)
+        s1.setStretchFactor(2, 0)
+        
+        self.viewPlace.setMinimumSize(200, 100)
+        self.resize(500, 400) # FIXME: save window size and set reasonable default
         self.show()
         listeners[app.activeChanged].append(self.showDoc)
         listeners[app.activeChanged].append(self.updateCaption)

@@ -131,4 +131,5 @@ class Articulations(Lqi):
             d.endEditing()
         else:
             v.insertText(art)
-
+        v.setFocus()
+        
