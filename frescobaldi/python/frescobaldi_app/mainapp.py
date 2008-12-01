@@ -106,18 +106,59 @@ class MainWindow(kateshell.mainwindow.MainWindow):
     def setupRhythmActions(self):
         """ Setup actions and functionality for editing the rhythm """
         self._savedRhythms = set()
-        
-        def lyfunc(name):
-            def actionFunc():
-                text = self.selectionText()
-                if text:
-                    import ly.duration
-                    self.replaceSelectionWith(getattr(ly.duration, name)(text))
-            return actionFunc
             
-        def applyRhythm():
-            text = self.selectionText()
-            if not text: return
+        @self.onSelAction(i18n("Double durations"),
+            tooltip=i18n("Double all the durations in the selection."))
+        def durations_double(text):
+            import ly.duration
+            return ly.duration.doubleDurations(text)
+            
+        @self.onSelAction(i18n("Halve durations"),
+            tooltip=i18n("Halve all the durations in the selection."))
+        def durations_halve(text):
+            import ly.duration
+            return ly.duration.halveDurations(text)
+            
+        @self.onSelAction(i18n("Dot durations"),
+            tooltip=i18n("Add a dot to all the durations in the selection."))
+        def durations_dot(text):
+            import ly.duration
+            return ly.duration.dotDurations(text)
+            
+        @self.onSelAction(i18n("Undot durations"),
+            tooltip=i18n("Remove one dot from all the durations in the selection."))
+        def durations_undot(text):
+            import ly.duration
+            return ly.duration.undotDurations(text)
+            
+        @self.onSelAction(i18n("Remove scaling"),
+            tooltip=i18n("Remove all scaling (*n/m) from the durations in the selection."))
+        def durations_remove_scaling(text):
+            import ly.duration
+            return ly.duration.removeScaling(text)
+            
+        @self.onSelAction(i18n("Remove durations"),
+            tooltip=i18n("Remove all durations from the selection."))
+        def durations_remove(text):
+            import ly.duration
+            return ly.duration.removeDurations(text)
+            
+        @self.onSelAction(i18n("Make implicit"),
+            tooltip=i18n("Make durations implicit (remove repeated durations)."))
+        def durations_implicit(text):
+            import ly.duration
+            return ly.duration.makeImplicit(text)
+            
+        @self.onSelAction(i18n("Make explicit"),
+            tooltip=i18n("Make durations explicit (add duration to every note, "
+                         "even if it is the same as the preceding note)."))
+        def durations_explicit(text):
+            import ly.duration
+            return ly.duration.makeExplicit(text)
+            
+        @self.onSelAction(i18n("Apply rhythm..."),
+            tooltip=i18n("Apply an entered rhythm to the selected music."))
+        def durations_apply_rhythm(text):
             d = KDialog(self)
             d.setCaption(i18n("Apply Rhythm"))
             d.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Apply | KDialog.Cancel))
@@ -139,38 +180,17 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             QObject.connect(d, SIGNAL("applyClicked()"), applyTheRhythm)
             QObject.connect(d, SIGNAL("okClicked()"), applyTheRhythm)
             d.show()
-            
-        self.selAct('durations_double', i18n("Double durations"), lyfunc("doubleDurations"),
-            tooltip=i18n("Double all the durations in the selection."))
-        self.selAct('durations_halve', i18n("Halve durations"), lyfunc("halveDurations"),
-            tooltip=i18n("Halve all the durations in the selection."))
-        self.selAct('durations_dot', i18n("Dot durations"), lyfunc("dotDurations"),
-            tooltip=i18n("Add a dot to all the durations in the selection."))
-        self.selAct('durations_undot', i18n("Undot durations"), lyfunc("undotDurations"),
-            tooltip=i18n("Remove one dot from all the durations in the selection."))
-        self.selAct('durations_remove_scaling', i18n("Remove scaling"), lyfunc("removeScaling"),
-            tooltip=i18n("Remove all scaling (*n/m) from the durations in the selection."))
-        self.selAct('durations_remove', i18n("Remove durations"), lyfunc("removeDurations"),
-            tooltip=i18n("Remove all durations from the selection."))
-        self.selAct('durations_implicit', i18n("Make implicit"), lyfunc("makeImplicit"),
-            tooltip=i18n("Make durations implicit (remove repeated durations)."))
-        self.selAct('durations_explicit', i18n("Make explicit"), lyfunc("makeExplicit"),
-            tooltip=i18n("Make durations explicit (add duration to every note, "
-                         "even if it is the same as the preceding note)."))
-        self.selAct('durations_apply_rhythm', i18n("Apply rhythm..."), applyRhythm,
-            tooltip=i18n("Apply an entered rhythm to the selected music."))
 
        
     def setupHyphenActions(self):
         """ Setup lyrics hyphen and de-hyphen action """
-        def hyph():
-            pass # TODO: implement
-        
-        def dehyph():
+        @self.onSelAction(i18n("Hyphenate Lyrics Text"))
+        def lyrics_hyphen(text):
             pass # TODO: implement
             
-        self.selAct('lyrics_hyphen', i18n("Hyphenate Lyrics Text"), hyph)
-        self.selAct('lyrics_dehyphen', i18n("Remove hyphenation"), dehyph)
+        @self.onSelAction(i18n("Remove hyphenation"))
+        def lyrics_dehyphen(text):
+            pass # TODO: implement
 
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):

@@ -165,6 +165,32 @@ class MainWindow(KParts.MainWindow):
         self._selectionActions.append(a)
         return a
 
+    def onAction(self, texttype, icon=None, tooltip=None, whatsthis=None, key=None):
+        """
+        Decorator to add a function to an action.
+        The name of the function becomes the name of the action.
+        """
+        def decorator(func):
+            self.act(func.func_name, texttype, func, icon, tooltip, whatsthis, key)
+            return func
+        return decorator
+        
+    def onSelAction(self, texttype, icon=None, tooltip=None, whatsthis=None, key=None, warn=True):
+        """
+        Decorator to add a function that is run on selected text to an action.
+        The name of the function becomes the name of the action.
+        """
+        def decorator(func):
+            def selfunc():
+                text = self.selectionText(warn)
+                if text:
+                    result = func(text)
+                    if result is not None:
+                        self.replaceSelectionWith(result)
+            self.selAct(func.func_name, texttype, selfunc, icon, tooltip, whatsthis, key)
+            return func
+        return decorator
+        
     def showDoc(self, doc):
         if self._currentDoc:
             listeners[self._currentDoc.updateCaption].remove(self.updateCaption)
