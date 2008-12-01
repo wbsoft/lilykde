@@ -115,6 +115,7 @@ class MainWindow(KParts.MainWindow):
         listeners[app.activeChanged].append(self.updateCaption)
         listeners[app.activeChanged].append(self.updateStatusBar)
 
+        self._selectionActions = []
         self.setupActions() # Let subclasses add more actions
         
         self.createShellGUI(True) # ui.rc is loaded automagically
@@ -157,6 +158,12 @@ class MainWindow(KParts.MainWindow):
         if tooltip: a.setToolTip(tooltip)
         if whatsthis: a.setWhatsThis(whatsthis)
         if key: a.setShortcut(KShortcut(key))
+        return a
+        
+    def selAct(self, *args, **kwargs):
+        a = self.act(*args, **kwargs)
+        self._selectionActions.append(a)
+        return a
 
     def showDoc(self, doc):
         if self._currentDoc:
@@ -209,6 +216,11 @@ class MainWindow(KParts.MainWindow):
         
         self.sb_insmode.setText(doc.view.viewMode())
 
+        enable = doc.view.selection()
+        for a in self._selectionActions:
+            a.setEnabled(enable)
+            
+
     def populateDocMenu(self):
         for a in self.docGroup.actions():
             sip.delete(a)
@@ -251,6 +263,46 @@ class MainWindow(KParts.MainWindow):
             if not d.close(True):
                 return False
         return True
+
+    def selectionText(self, warn=True):
+        """
+        Convenience method for accessing the current document.
+        
+        Returns selected text or None if no selection.
+        In that case the user is warned to select some text.
+        """
+        v = self.view()
+        if v.selection():
+            return unicode(v.selectionText())
+        if warn:
+            KMessageBox.sorry(self, i18n("Please select some text first."))
+        return None
+
+    def replaceSelectionWith(self, text, keepSelection=True):
+        """
+        Convenience method for accessing the current document.
+        
+        Replaces the selection (if any) with text. If keepSelection
+        is true, select the newly inserted text again.
+        """
+        v, d = self.view(), self.view().document()
+        if v.selection():
+            line = v.selectionRange().start().line()
+            col = v.selectionRange().start().column()
+        else:
+            line = v.cursorPosition().line()
+            col = v.cursorPosition().column()
+        lines = text.split('\n')
+        endline, endcol = line + len(lines) - 1, len(lines[-1])
+        if len(lines) < 2:
+            endcol += col
+        d.startEditing()
+        if v.selection():
+            v.removeSelectionText()
+        v.insertText(text)
+        d.endEditing()
+        if keepSelection:
+            v.setSelection(KTextEditor.Range(line, col, endline, endcol))
 
 
 class TabBar(KMultiTabBar):

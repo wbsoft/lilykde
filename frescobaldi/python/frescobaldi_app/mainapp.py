@@ -99,88 +99,79 @@ class MainWindow(kateshell.mainwindow.MainWindow):
 
     def setupActions(self):
         super(MainWindow, self).setupActions()
-        self.__rhythmActions = RhythmActions(self) # save a reference
+        self.setupRhythmActions()
+        self.setupHyphenActions()
         
 
-class RhythmActions(object):
-    """
-    Container containing actions for editing rhythms and their implementations
-    """
-    def __init__(self, win):
-        self.view = win.view
-        win.act('durations_double', i18n("Double durations"),
-            self.lyfunc("doubleDurations"),
+    def setupRhythmActions(self):
+        """ Setup actions and functionality for editing the rhythm """
+        self._savedRhythms = set()
+        
+        def lyfunc(name):
+            def actionFunc():
+                text = self.selectionText()
+                if text:
+                    import ly.duration
+                    self.replaceSelectionWith(getattr(ly.duration, name)(text))
+            return actionFunc
+            
+        def applyRhythm():
+            text = self.selectionText()
+            if not text: return
+            d = KDialog(self)
+            d.setCaption(i18n("Apply Rhythm"))
+            d.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Apply | KDialog.Cancel))
+            d.setModal(True)
+            h = KVBox(d)
+            d.setMainWidget(h)
+            QLabel(i18n("Enter a rhythm:"), h)
+            edit = KLineEdit(h)
+            edit.completionObject().setItems(list(self._savedRhythms))
+            edit.setFocus()
+            edit.setToolTip(i18n(
+                "Enter a rhythm using space separated duration values "
+                "(e.g. 8. 16 8 4 8)"))
+            def applyTheRhythm():
+                rhythm = unicode(edit.text())
+                self._savedRhythms.add(rhythm)
+                import ly.duration
+                self.replaceSelectionWith(ly.duration.applyRhythm(text, rhythm))
+            QObject.connect(d, SIGNAL("applyClicked()"), applyTheRhythm)
+            QObject.connect(d, SIGNAL("okClicked()"), applyTheRhythm)
+            d.show()
+            
+        self.selAct('durations_double', i18n("Double durations"), lyfunc("doubleDurations"),
             tooltip=i18n("Double all the durations in the selection."))
-        win.act('durations_halve', i18n("Halve durations"),
-            self.lyfunc("halveDurations"),
+        self.selAct('durations_halve', i18n("Halve durations"), lyfunc("halveDurations"),
             tooltip=i18n("Halve all the durations in the selection."))
-        win.act('durations_dot', i18n("Dot durations"),
-            self.lyfunc("dotDurations"),
+        self.selAct('durations_dot', i18n("Dot durations"), lyfunc("dotDurations"),
             tooltip=i18n("Add a dot to all the durations in the selection."))
-        win.act('durations_undot', i18n("Undot durations"),
-            self.lyfunc("undotDurations"),
+        self.selAct('durations_undot', i18n("Undot durations"), lyfunc("undotDurations"),
             tooltip=i18n("Remove one dot from all the durations in the selection."))
-        win.act('durations_remove_scaling', i18n("Remove scaling"),
-            self.lyfunc("removeScaling"),
-            tooltip=i18n("Remove all scaling (*n/m) from the durations in the "
-                         "selection."))
-        win.act('durations_remove', i18n("Remove durations"),
-            self.lyfunc("removeDurations"),
+        self.selAct('durations_remove_scaling', i18n("Remove scaling"), lyfunc("removeScaling"),
+            tooltip=i18n("Remove all scaling (*n/m) from the durations in the selection."))
+        self.selAct('durations_remove', i18n("Remove durations"), lyfunc("removeDurations"),
             tooltip=i18n("Remove all durations from the selection."))
-        win.act('durations_implicit', i18n("Make implicit"),
-            self.lyfunc("makeImplicit"),
+        self.selAct('durations_implicit', i18n("Make implicit"), lyfunc("makeImplicit"),
             tooltip=i18n("Make durations implicit (remove repeated durations)."))
-        win.act('durations_explicit', i18n("Make explicit"),
-            self.lyfunc("makeExplicit"),
+        self.selAct('durations_explicit', i18n("Make explicit"), lyfunc("makeExplicit"),
             tooltip=i18n("Make durations explicit (add duration to every note, "
                          "even if it is the same as the preceding note)."))
-        win.act('durations_apply_rhythm', i18n("Apply rhythm..."), 
-            self.applyRhythm,
+        self.selAct('durations_apply_rhythm', i18n("Apply rhythm..."), applyRhythm,
             tooltip=i18n("Apply an entered rhythm to the selected music."))
 
-    def lyfunc(self, name):
-        """ Lazy-load lilypond module only when action requested """
-        def func():
-            text = self.needSelectionText()
-            if text:
-                import ly.duration
-                self.replaceSelectionWith(getattr(ly.duration, name)(text))
-        return func
-    
-    def needSelectionText(self):
-        """
-        Returns selected text or None if no selection.
-        In that case the user is warned to select some text.
-        """
-        v = self.view()
-        if v.selection():
-            return unicode(v.selectionText())
-        # TODO warn user that text must be selected.
-        return None
-
-    def replaceSelectionWith(self, text, keepSelection=True):
-        v, d = self.view(), self.view().document()
-        if v.selection():
-            line = v.selectionRange().start().line()
-            col = v.selectionRange().start().column()
-        else:
-            line = v.cursorPosition().line()
-            col = v.cursorPosition().column()
-        lines = text.split('\n')
-        endline, endcol = line + len(lines) - 1, len(lines[-1])
-        if len(lines) < 2:
-            endcol += col
-        d.startEditing()
-        if v.selection():
-            v.removeSelectionText()
-        v.insertText(text)
-        d.endEditing()
-        if keepSelection:
-            v.setSelection(KTextEditor.Range(line, col, endline, endcol))
-                
-    def applyRhythm(self):
-        pass # TODO implement
+       
+    def setupHyphenActions(self):
+        """ Setup lyrics hyphen and de-hyphen action """
+        def hyph():
+            pass # TODO: implement
         
+        def dehyph():
+            pass # TODO: implement
+            
+        self.selAct('lyrics_hyphen', i18n("Hyphenate Lyrics Text"), hyph)
+        self.selAct('lyrics_dehyphen', i18n("Remove hyphenation"), dehyph)
+
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):
     """ A tool embedding a Konsole """

@@ -67,6 +67,10 @@
       <Separator />
       <Action name="durations_apply_rhythm"/>
     </Menu>
+    <Menu name="lilypond_lyrics"><text>&amp;Lyrics</text>
+      <Action name="lyrics_hyphen"/>
+      <Action name="lyrics_dehyphen"/>
+    </Menu>
   </Menu>
 
   <Merge/>
