@@ -25,6 +25,7 @@ from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 from PyKDE4.kparts import KParts
+from PyKDE4.ktexteditor import KTextEditor
 
 import kateshell.app, kateshell.mainwindow
 from kateshell.mainwindow import listeners
@@ -98,7 +99,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
 
     def setupActions(self):
         super(MainWindow, self).setupActions()
-        RhythmActions(self)
+        self.__rhythmActions = RhythmActions(self) # save a reference
         
 
 class RhythmActions(object):
@@ -106,47 +107,80 @@ class RhythmActions(object):
     Container containing actions for editing rhythms and their implementations
     """
     def __init__(self, win):
-        def lazy(name):
-            """ Lazy-load lilypond module only when action requested """
-            def func():
-                v, d = win.view(), win.view().document()
-                if v.selection():
-                    text = unicode(v.selectionText())
-                    import ly.duration
-                    # call the relevant module function and get the result
-                    result = getattr(ly.duration, name)(text)
-                    # TODO: keep selection on newly inserted text
-                    d.startEditing()
-                    v.removeSelectionText()
-                    v.insertText(result)
-                    d.endEditing()
-                else:
-                    pass  # TODO warn that text must be selected.
-            return func
-        def applyRhythm():
-            pass # TODO implement
-            
-        win.act('durations_double', i18n("Double durations"), lazy("doubleDurations"),
+        self.view = win.view
+        win.act('durations_double', i18n("Double durations"),
+            self.lyfunc("doubleDurations"),
             tooltip=i18n("Double all the durations in the selection."))
-        win.act('durations_halve', i18n("Halve durations"), lazy("halveDurations"),
+        win.act('durations_halve', i18n("Halve durations"),
+            self.lyfunc("halveDurations"),
             tooltip=i18n("Halve all the durations in the selection."))
-        win.act('durations_dot', i18n("Dot durations"), lazy("dotDurations"),
+        win.act('durations_dot', i18n("Dot durations"),
+            self.lyfunc("dotDurations"),
             tooltip=i18n("Add a dot to all the durations in the selection."))
-        win.act('durations_undot', i18n("Undot durations"), lazy("undotDurations"),
+        win.act('durations_undot', i18n("Undot durations"),
+            self.lyfunc("undotDurations"),
             tooltip=i18n("Remove one dot from all the durations in the selection."))
-        win.act('durations_remove_scaling', i18n("Remove scaling"), lazy("removeScaling"),
+        win.act('durations_remove_scaling', i18n("Remove scaling"),
+            self.lyfunc("removeScaling"),
             tooltip=i18n("Remove all scaling (*n/m) from the durations in the "
                          "selection."))
-        win.act('durations_remove', i18n("Remove durations"), lazy("removeDurations"),
+        win.act('durations_remove', i18n("Remove durations"),
+            self.lyfunc("removeDurations"),
             tooltip=i18n("Remove all durations from the selection."))
-        win.act('durations_implicit', i18n("Make implicit"), lazy("makeImplicit"),
+        win.act('durations_implicit', i18n("Make implicit"),
+            self.lyfunc("makeImplicit"),
             tooltip=i18n("Make durations implicit (remove repeated durations)."))
-        win.act('durations_explicit', i18n("Make explicit"), lazy("makeExplicit"),
+        win.act('durations_explicit', i18n("Make explicit"),
+            self.lyfunc("makeExplicit"),
             tooltip=i18n("Make durations explicit (add duration to every note, "
                          "even if it is the same as the preceding note)."))
-        win.act('durations_apply_rhythm', i18n("Apply rhythm..."), applyRhythm,
+        win.act('durations_apply_rhythm', i18n("Apply rhythm..."), 
+            self.applyRhythm,
             tooltip=i18n("Apply an entered rhythm to the selected music."))
 
+    def lyfunc(self, name):
+        """ Lazy-load lilypond module only when action requested """
+        def func():
+            text = self.needSelectionText()
+            if text:
+                import ly.duration
+                self.replaceSelectionWith(getattr(ly.duration, name)(text))
+        return func
+    
+    def needSelectionText(self):
+        """
+        Returns selected text or None if no selection.
+        In that case the user is warned to select some text.
+        """
+        v = self.view()
+        if v.selection():
+            return unicode(v.selectionText())
+        # TODO warn user that text must be selected.
+        return None
+
+    def replaceSelectionWith(self, text, keepSelection=True):
+        v, d = self.view(), self.view().document()
+        if v.selection():
+            line = v.selectionRange().start().line()
+            col = v.selectionRange().start().column()
+        else:
+            line = v.cursorPosition().line()
+            col = v.cursorPosition().column()
+        lines = text.split('\n')
+        endline, endcol = line + len(lines) - 1, len(lines[-1])
+        if len(lines) < 2:
+            endcol += col
+        d.startEditing()
+        if v.selection():
+            v.removeSelectionText()
+        v.insertText(text)
+        d.endEditing()
+        if keepSelection:
+            v.setSelection(KTextEditor.Range(line, col, endline, endcol))
+                
+    def applyRhythm(self):
+        pass # TODO implement
+        
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):
     """ A tool embedding a Konsole """
