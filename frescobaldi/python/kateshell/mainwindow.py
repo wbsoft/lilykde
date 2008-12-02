@@ -114,6 +114,7 @@ class MainWindow(KParts.MainWindow):
         listeners[app.activeChanged].append(self.showDoc)
         listeners[app.activeChanged].append(self.updateCaption)
         listeners[app.activeChanged].append(self.updateStatusBar)
+        listeners[app.activeChanged].append(self.updateSelection)
 
         self._selectionActions = []
         self.setupActions() # Let subclasses add more actions
@@ -196,12 +197,14 @@ class MainWindow(KParts.MainWindow):
         if self._currentDoc:
             listeners[self._currentDoc.updateCaption].remove(self.updateCaption)
             listeners[self._currentDoc.updateStatus].remove(self.updateStatusBar)
+            listeners[self._currentDoc.updateSelection].remove(self.updateSelection)
             self.guiFactory().removeClient(self._currentDoc.view)
         self._currentDoc = doc
         self.guiFactory().addClient(doc.view)
         self.viewPlace.setCurrentWidget(doc.view)
         listeners[doc.updateCaption].append(self.updateCaption)
         listeners[doc.updateStatus].append(self.updateStatusBar)
+        listeners[doc.updateSelection].append(self.updateSelection)
         doc.view.setFocus()
 
     def addDoc(self, doc):
@@ -243,10 +246,10 @@ class MainWindow(KParts.MainWindow):
         
         self.sb_insmode.setText(doc.view.viewMode())
 
+    def updateSelection(self, doc):
         enable = doc.view.selection()
         for a in self._selectionActions:
             a.setEnabled(enable)
-            
 
     def populateDocMenu(self):
         for a in self.docGroup.actions():

@@ -215,7 +215,7 @@ class Document(DBusItem):
         self._encoding = encoding or self.app.defaultEncoding # encoding [UTF-8]
 
         self.app.addDocument(self)
-        listeners.add(self.updateCaption, self.updateStatus)
+        listeners.add(self.updateCaption, self.updateStatus, self.updateSelection)
 
     def materialize(self):
         """ Really load the document, create doc and view etc. """
@@ -238,12 +238,14 @@ class Document(DBusItem):
         for s in ("documentUrlChanged(KTextEditor::Document*)",
                   "modifiedChanged(KTextEditor::Document*)"):
             QObject.connect(self.doc, SIGNAL(s), self.updateCaption)
-        for s in ("cursorPositionChanged(KTextEditor::View*, const KTextEditor::Cursor&)",
-                  "viewModeChanged(KTextEditor::View*)",
-                  "selectionChanged(KTextEditor::View*)",
-                  "informationMessage(KTextEditor::View*)"):
+        for s in (
+            "cursorPositionChanged(KTextEditor::View*, const KTextEditor::Cursor&)",
+            "viewModeChanged(KTextEditor::View*)",
+            "informationMessage(KTextEditor::View*)"):
             QObject.connect(self.view, SIGNAL(s), self.updateStatus)
-        
+        for s in ("selectionChanged(KTextEditor::View*)",):
+            QObject.connect(self.view, SIGNAL(s), self.updateSelection)
+                  
     def openUrl(self, url):
         self._url = url
         if self.doc:
@@ -258,6 +260,10 @@ class Document(DBusItem):
     def updateStatus(self):
         """ Called on signals from the View """
         listeners.call(self.updateStatus, self)
+
+    def updateSelection(self):
+        """ Called when the selection changes """
+        listeners.call(self.updateSelection, self)
 
     @method(iface, in_signature='s', out_signature='')
     def setEncoding(self, encoding):
@@ -326,7 +332,7 @@ class Document(DBusItem):
             self.app.mainwin.removeDoc(self)
             sip.delete(self.view)
             sip.delete(self.doc)
-        listeners.remove(self.updateCaption, self.updateStatus)
+        listeners.remove(self.updateCaption, self.updateStatus, self.updateSelection)
         self.remove_from_connection() # remove our exported D-Bus object
         self.app.removeDocument(self)
         return True
