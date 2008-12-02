@@ -98,3 +98,5 @@ chord_rest = re.compile(
 )
 
 finddurs = re.compile(duration)
+
+lyric_word = re.compile(r'[^\W0-9_]+', re.U)

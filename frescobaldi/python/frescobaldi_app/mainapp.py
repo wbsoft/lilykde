@@ -159,10 +159,10 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             d.setCaption(i18n("Apply Rhythm"))
             d.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Apply | KDialog.Cancel))
             d.setModal(True)
-            h = KVBox(d)
-            d.setMainWidget(h)
-            QLabel(i18n("Enter a rhythm:"), h)
-            edit = KLineEdit(h)
+            v = KVBox(d)
+            d.setMainWidget(v)
+            QLabel(i18n("Enter a rhythm:"), v)
+            edit = KLineEdit(v)
             edit.completionObject().setItems(list(self._savedRhythms))
             edit.setFocus()
             edit.setToolTip(i18n(
@@ -181,7 +181,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         @self.onSelAction(i18n("Hyphenate Lyrics Text"), keepSelection=False)
         def lyrics_hyphen(text):
             import frescobaldi_app.hyphen
-            return frescobaldi_app.hyphen.hyphenate(text)
+            return frescobaldi_app.hyphen.hyphenate(text, self)
             
         @self.onSelAction(i18n("Remove hyphenation"), keepSelection=False)
         def lyrics_dehyphen(text):
