@@ -175,7 +175,8 @@ class MainWindow(KParts.MainWindow):
             return func
         return decorator
         
-    def onSelAction(self, texttype, icon=None, tooltip=None, whatsthis=None, key=None, warn=True):
+    def onSelAction(self, texttype, icon=None, tooltip=None, whatsthis=None, key=None,
+                    warn=True, keepSelection=True):
         """
         Decorator to add a function that is run on selected text to an action.
         The name of the function becomes the name of the action.
@@ -186,7 +187,7 @@ class MainWindow(KParts.MainWindow):
                 if text:
                     result = func(text)
                     if result is not None:
-                        self.replaceSelectionWith(result)
+                        self.replaceSelectionWith(result, keepSelection)
             self.selAct(func.func_name, texttype, selfunc, icon, tooltip, whatsthis, key)
             return func
         return decorator

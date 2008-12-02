@@ -178,14 +178,14 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             d.show()
 
         # Setup lyrics hyphen and de-hyphen action
-        @self.onSelAction(i18n("Hyphenate Lyrics Text"))
+        @self.onSelAction(i18n("Hyphenate Lyrics Text"), keepSelection=False)
         def lyrics_hyphen(text):
-            pass # TODO: implement
+            import frescobaldi_app.hyphen
+            return frescobaldi_app.hyphen.hyphenate(text)
             
-        @self.onSelAction(i18n("Remove hyphenation"))
+        @self.onSelAction(i18n("Remove hyphenation"), keepSelection=False)
         def lyrics_dehyphen(text):
-            pass # TODO: implement
-
+            return text.replace(' -- ', '')
 
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):
