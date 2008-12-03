@@ -101,9 +101,9 @@ def findDicts():
             hyphdicts[lang] = dic
 
     # if not used before, write the current locale (if existing) as default
-    if defaultlang and conf.readEntry("lastused", "") not in hyphdicts:
+    if defaultlang and unicode(conf.readEntry("lastused", "")) not in hyphdicts:
         conf.writeEntry("lastused", defaultlang)
-        
+        conf.sync()
 
 findDicts()
 
@@ -130,6 +130,7 @@ def hyphenate(text, mainwindow):
     if d.exec_():
         lang = langs[listbox.currentRow()]
         conf.writeEntry("lastused", lang)
+        conf.sync()
         # get hyphenator
         h = Hyphenator(hyphdicts[lang])
         return ly.rx.lyric_word.sub(lambda m: h.inserted(m.group(), ' -- '), text)
