@@ -160,12 +160,9 @@ class MainApp(DBusItem):
         i %= len(self.documents)
         self.documents[i].setActive()
 
-    @method(iface, in_signature='b', out_signature='b')
-    def quit(self, prompt=True):
-        if prompt and not self.mainwin.queryClose():
-            return False
-        self.kapp.quit()
-        return True
+    @method(iface, in_signature='', out_signature='b')
+    def quit(self):
+        return self.mainwin.close()
 
     def addDocument(self, doc):
         self.documents.append(doc)

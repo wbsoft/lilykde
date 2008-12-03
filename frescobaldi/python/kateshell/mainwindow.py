@@ -109,8 +109,7 @@ class MainWindow(KParts.MainWindow):
         s1.setStretchFactor(2, 0)
         
         self.viewPlace.setMinimumSize(200, 100)
-        self.resize(500, 400) # FIXME: save window size and set reasonable default
-        self.show()
+
         listeners[app.activeChanged].append(self.showDoc)
         listeners[app.activeChanged].append(self.updateCaption)
         listeners[app.activeChanged].append(self.updateStatusBar)
@@ -120,6 +119,7 @@ class MainWindow(KParts.MainWindow):
         self.setupActions() # Let subclasses add more actions
         
         self.createShellGUI(True) # ui.rc is loaded automagically
+        self.setAutoSaveSettings()
 
         # Documents menu
         self.docMenu = self.factory().container("documents", self)
@@ -129,6 +129,8 @@ class MainWindow(KParts.MainWindow):
             self.populateDocMenu)
         QObject.connect(self.docGroup, SIGNAL("triggered(QAction*)"),
             lambda a: a.doc.setActive())
+        
+        self.show()
         
     def setupActions(self):
         # actions
@@ -145,7 +147,8 @@ class MainWindow(KParts.MainWindow):
             self, SLOT("slotOpenRecent(KUrl)"), self)
         self.actionCollection().addAction(
             self.openRecent.objectName(), self.openRecent)
-
+        self.openRecent.loadEntries(self.config("Recent Files"))
+        
     def act(self, name, texttype, func,
             icon=None, tooltip=None, whatsthis=None, key=None):
         """ Create an action and add it to own actionCollection """
@@ -285,6 +288,10 @@ class MainWindow(KParts.MainWindow):
         """ Called by the open recent files action """
         self.app.openUrl(kurl.url())
 
+    def config(self, group="General"):
+        """ Return a KConfigGroup object or the global "General" group. """
+        return KGlobal.config().group(group)
+
     def queryClose(self):
         """ Quit the application, also called by closing the window """
         for d in self.app.documents[:]: # iterate over a copy
@@ -292,7 +299,17 @@ class MainWindow(KParts.MainWindow):
                 d.setActive()
             if not d.close(True):
                 return False
+        # save some settings
+        self.saveSettings()
+        for dock in self.docks.values():
+            print dock.height(), dock.width()
         return True
+
+    def saveSettings(self):
+        """ Store settings in our configfile. """
+        self.openRecent.saveEntries(self.config("Recent Files"))
+        # write them back
+        self.config().sync()
 
     def selectionText(self, warn=True):
         """
