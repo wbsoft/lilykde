@@ -301,8 +301,6 @@ class MainWindow(KParts.MainWindow):
                 return False
         # save some settings
         self.saveSettings()
-        for dock in self.docks.values():
-            print dock.height(), dock.width()
         return True
 
     def saveSettings(self):
