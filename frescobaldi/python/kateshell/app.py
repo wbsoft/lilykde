@@ -164,7 +164,6 @@ class MainApp(DBusItem):
     def quit(self, prompt=True):
         if prompt and not self.mainwin.queryClose():
             return False
-        KGlobal.config().sync()
         self.kapp.quit()
         return True
 
