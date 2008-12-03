@@ -49,6 +49,8 @@
   </Menu>
 
   <Menu name="lilypond"><text>&amp;LilyPond</text>
+    <Action name="lilypond_score_wizard"/>
+    <Separator />
     <Action name="lilypond_run_preview"/>
     <Action name="lilypond_run_publish"/>
     <Separator />

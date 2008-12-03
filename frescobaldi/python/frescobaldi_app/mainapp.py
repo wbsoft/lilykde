@@ -87,6 +87,18 @@ class Document(kateshell.app.Document):
         """
         return True # FIXME implement
     
+    def isRunning(self):
+        """
+        Return True if there is a running LilyPond job.
+        """
+        return True # FIXME implement
+        
+    def runLilyPond(self, preview=True):
+        """
+        Start a LilyPond job. If preview=False, switch off point-and-click.
+        """
+        pass # TODO implement
+
 
 class MainWindow(kateshell.mainwindow.MainWindow):
     """ Our customized Frescobaldi MainWindow """
@@ -100,6 +112,28 @@ class MainWindow(kateshell.mainwindow.MainWindow):
     def setupActions(self):
         super(MainWindow, self).setupActions()
         
+        # Score wizard
+        @self.onAction(i18n("Setup New Score..."), "text-x-lilypond")
+        def lilypond_score_wizard():
+            pass # TODO implement
+        
+        # run LilyPond actions
+        @self.onAction(i18n("Run LilyPond (preview)"))
+        def lilypond_run_preview():
+            lilypond_run_publish(True)
+            
+        @self.onAction(i18n("Run LilyPond (publish)"))
+        def lilypond_run_publish(preview=False):
+            d = self.currentDocument()
+            if d:
+                if not d.isRunning():
+                    d.runLilyPond(preview)
+                else:
+                    KMessageBox.sorry(self,
+                        i18n("There is already a LilyPond job running "
+                             "for this document."),
+                        i18n("Already Running"))
+            
         # actions and functionality for editing rhythms
         @self.onSelAction(i18n("Double durations"),
             tooltip=i18n("Double all the durations in the selection."))
