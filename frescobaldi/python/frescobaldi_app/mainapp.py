@@ -80,6 +80,10 @@ class MainApp(kateshell.app.MainApp):
 
 class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """
+    def __init__(self, *args):
+        super(Document, self).__init__(*args)
+        self._job = None        # running LilyPond job
+        
     def hasUpdated(self, ext):
         """
         return true if this document has one or more LilyPond-generated
@@ -91,13 +95,21 @@ class Document(kateshell.app.Document):
         """
         Return True if there is a running LilyPond job.
         """
-        return True # FIXME implement
+        return not self._job
         
     def runLilyPond(self, preview=True):
         """
         Start a LilyPond job. If preview=False, switch off point-and-click.
         """
-        pass # TODO implement
+        if self._job: return
+        from frescobaldi_app.runlily import Ly2PDF
+        self._job = Ly2PDF(self, preview)
+        
+    def abort(self):
+        """
+        Abort a running LilyPond job.
+        """
+        self._job and self._job.kill(2)
 
 
 class MainWindow(kateshell.mainwindow.MainWindow):
@@ -106,6 +118,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         kateshell.mainwindow.MainWindow.__init__(self, app)
 
         KonsoleTool(self)
+        LogTool(self)
         PDFTool(self)
         QuickInsertTool(self)
 
@@ -323,4 +336,24 @@ class QuickInsertTool(kateshell.mainwindow.Tool):
     def factory(self):
         import frescobaldi_app.lqi
         return frescobaldi_app.lqi.ToolBox(self)
+
+
+class LogTool(kateshell.mainwindow.Tool):
+    def __init__(self, mainwin):
+        kateshell.mainwindow.Tool.__init__(self, mainwin,
+            "log", i18n("LilyPond Log"), "help-about",
+            dock=kateshell.mainwindow.Bottom,
+            widget=QStackedWidget())
+        self.logs = {}
+        listeners[mainwin.app.activeChanged].append(self.showLog)
+        
+    def showLog(self, doc):
+        if doc in self.logs:
+            self.widget.setCurrentWidget(self.logs[doc])
+            
+    def createLog(self, doc):
+        if doc not in self.logs:
+            from frescobaldi_app.runlily import LogWidget
+            self.logs[doc] = LogWidget(self, doc)
+        return self.logs[doc]
 
