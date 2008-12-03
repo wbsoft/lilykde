@@ -108,6 +108,10 @@ class MainWindow(KParts.MainWindow):
         s1.setStretchFactor(1, 1)
         s1.setStretchFactor(2, 0)
         
+        # Set some reasonable default sizes for top and bottom dock, to
+        # prevent the embedded terminal taking up a too large default space.
+        s1.setSizes((140, 200, 140))
+        
         self.viewPlace.setMinimumSize(200, 100)
 
         listeners[app.activeChanged].append(self.showDoc)
@@ -119,6 +123,10 @@ class MainWindow(KParts.MainWindow):
         self.setupActions() # Let subclasses add more actions
         
         self.createShellGUI(True) # ui.rc is loaded automagically
+        
+        if not self.initialGeometrySet():
+            self.resize(700, 480)
+        
         self.setAutoSaveSettings()
 
         # Documents menu
