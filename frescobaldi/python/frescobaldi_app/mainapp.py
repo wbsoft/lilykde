@@ -95,15 +95,15 @@ class Document(kateshell.app.Document):
         """
         Return True if there is a running LilyPond job.
         """
-        return not self._job
+        return bool(self._job)
         
-    def runLilyPond(self, preview=True):
+    def runLilyPond(self, log, preview=True):
         """
         Start a LilyPond job. If preview=False, switch off point-and-click.
         """
         if self._job: return
         from frescobaldi_app.runlily import Ly2PDF
-        self._job = Ly2PDF(self, preview)
+        self._job = Ly2PDF(self, log, preview)
         
     def abort(self):
         """
@@ -140,7 +140,9 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             d = self.currentDocument()
             if d:
                 if not d.isRunning():
-                    d.runLilyPond(preview)
+                    # get a LogWidget
+                    log = self.tools["log"].createLog(d)
+                    d.runLilyPond(log, preview)
                 else:
                     KMessageBox.sorry(self,
                         i18n("There is already a LilyPond job running "
@@ -355,5 +357,12 @@ class LogTool(kateshell.mainwindow.Tool):
         if doc not in self.logs:
             from frescobaldi_app.runlily import LogWidget
             self.logs[doc] = LogWidget(self, doc)
+            self.widget.addWidget(self.logs[doc])
+            listeners[doc.close].append(self.removeLog)
         return self.logs[doc]
 
+    def removeLog(self, doc):
+        if doc in self.logs:
+            sip.delete(self.logs[doc])
+            del self.logs[doc]
+            

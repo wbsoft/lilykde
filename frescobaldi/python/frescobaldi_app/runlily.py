@@ -19,9 +19,20 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
-class Ly2PDF():
-    pass
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+from PyKDE4.kdecore import *
 
-class LogWidget():
-    pass
+
+class Ly2PDF():
+    def __init__(self, doc, log, preview):
+        pass
+    
+
+class LogWidget(QTextEdit):
+    def __init__(self, tool, doc):
+        QTextEdit.__init__(self, tool.widget)
+        self.setReadOnly(True)
+        self.setText("hello") # TEST
+        
 

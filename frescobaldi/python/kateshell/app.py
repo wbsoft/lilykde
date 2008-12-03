@@ -212,7 +212,8 @@ class Document(DBusItem):
         self._encoding = encoding or self.app.defaultEncoding # encoding [UTF-8]
 
         self.app.addDocument(self)
-        listeners.add(self.updateCaption, self.updateStatus, self.updateSelection)
+        listeners.add(self.updateCaption, self.updateStatus, self.updateSelection,
+            self.close)
 
     def materialize(self):
         """ Really load the document, create doc and view etc. """
@@ -329,7 +330,9 @@ class Document(DBusItem):
             self.app.mainwin.removeDoc(self)
             sip.delete(self.view)
             sip.delete(self.doc)
-        listeners.remove(self.updateCaption, self.updateStatus, self.updateSelection)
+        listeners.call(self.close, self)
+        listeners.remove(self.updateCaption, self.updateStatus, self.updateSelection,
+            self.close)
         self.remove_from_connection() # remove our exported D-Bus object
         self.app.removeDocument(self)
         return True
