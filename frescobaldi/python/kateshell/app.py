@@ -21,7 +21,7 @@ import os, sip, dbus, dbus.service, dbus.mainloop.qt
 from dbus.service import method, signal
 
 from PyQt4.QtCore import QObject, SIGNAL
-from PyKDE4.kdecore import i18n, KUrl
+from PyKDE4.kdecore import i18n, KGlobal, KUrl
 from PyKDE4.kdeui import KApplication
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -164,6 +164,7 @@ class MainApp(DBusItem):
     def quit(self, prompt=True):
         if prompt and not self.mainwin.queryClose():
             return False
+        KGlobal.config().sync()
         self.kapp.quit()
         return True
 
