@@ -40,7 +40,8 @@ class _signalstore(dict):
         for meth in methods:
             del self[meth]
 
-# global hash with listeners
+# global hash with listeners, this is our way of connecting
+# objects to each other
 listeners = _signalstore()
 
 
