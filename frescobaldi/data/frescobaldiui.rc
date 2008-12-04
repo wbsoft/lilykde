@@ -53,8 +53,9 @@
     <Separator />
     <Action name="lilypond_run_preview"/>
     <Action name="lilypond_run_publish"/>
+    <Action name="lilypond_abort"/>
     <Separator />
-    <Menu name="lilypond_edit_rhythm"><text>&amp;Edit Rhythm</text>
+    <Menu name="lilypond_edit_rhythm"><text>&amp;Rhythm</text>
       <Action name="durations_double"/>
       <Action name="durations_halve"/>
       <Separator />

@@ -327,10 +327,12 @@ class Document(DBusItem):
         if self.doc:
             if not self.doc.closeUrl(prompt):
                 return False # cancel
+            listeners.call(self.close, self) # before we are really deleted
             self.app.mainwin.removeDoc(self)
             sip.delete(self.view)
             sip.delete(self.doc)
-        listeners.call(self.close, self)
+        else:
+            listeners.call(self.close, self) # probably never needed...
         listeners.remove(self.updateCaption, self.updateStatus, self.updateSelection,
             self.close)
         self.remove_from_connection() # remove our exported D-Bus object

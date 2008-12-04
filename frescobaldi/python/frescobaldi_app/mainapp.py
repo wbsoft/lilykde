@@ -131,11 +131,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             pass # TODO implement
         
         # run LilyPond actions
-        @self.onAction(i18n("Run LilyPond (preview)"))
+        @self.onAction(i18n("Run LilyPond (preview)"), "document-preview")
         def lilypond_run_preview():
             lilypond_run_publish(True)
             
-        @self.onAction(i18n("Run LilyPond (publish)"))
+        @self.onAction(i18n("Run LilyPond (publish)"), "system-run")
         def lilypond_run_publish(preview=False):
             d = self.currentDocument()
             if d:
@@ -148,6 +148,12 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                         i18n("There is already a LilyPond job running "
                              "for this document."),
                         i18n("Already Running"))
+        
+        @self.onAction(i18n("Interrupt LilyPond Job"), "process-stop")
+        def lilypond_abort():
+            d = self.currentDocument()
+            if d and d.isRunning():
+                d.abort()
             
         # actions and functionality for editing rhythms
         @self.onSelAction(i18n("Double durations"),
@@ -359,10 +365,17 @@ class LogTool(kateshell.mainwindow.Tool):
             self.logs[doc] = LogWidget(self, doc)
             self.widget.addWidget(self.logs[doc])
             listeners[doc.close].append(self.removeLog)
+        self.showLog(doc)
         return self.logs[doc]
 
     def removeLog(self, doc):
         if doc in self.logs:
             sip.delete(self.logs[doc])
             del self.logs[doc]
-            
+            if self.widget.count() == 0:
+                if not self._docked:
+                    self.dock()
+                self.hide()
+
+
+
