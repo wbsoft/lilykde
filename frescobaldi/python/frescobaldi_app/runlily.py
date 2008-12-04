@@ -99,11 +99,19 @@ class LogWidget(QTextBrowser):
         
     def write(self, text, format='log'):
         self.setCurrentCharFormat(self.formats[format])
+        sb = self.verticalScrollBar()
+        # were we scrolled to the bottom?
+        bottom = sb.value() == sb.maximum()
         self.insertPlainText(text)
-        self.ensureCursorVisible()
+        # if yes, keep it that way.
+        if bottom:
+            sb.setValue(sb.maximum())
 
-    def writeMsg(self, text):
-        self.write(text, 'msg')
+    def writeMsg(self, text, format='msg'):
+        # start on a new line if necessary
+        if self.textCursor().columnNumber() > 0:
+            self.write('\n', format)
+        self.write(text, format)
         
 
     def show(self):
