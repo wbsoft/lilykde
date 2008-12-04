@@ -99,10 +99,21 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         QuickInsertTool(self)
         
         self.jobs = {}
+        listeners[app.activeChanged].append(self.updateJobActions)
 
     def setupActions(self):
         super(MainWindow, self).setupActions()
         
+        # LilyPond runner toolbar icon
+        @self.onAction(i18n("LilyPond"), "frescobaldi")
+        def lilypond_runner():
+            d = self.currentDocument()
+            if d:
+                if d in self.jobs:
+                    self.jobs[d].abort()
+                else:
+                    lilypond_run_preview()
+
         # Score wizard
         @self.onAction(i18n("Setup New Score..."), "text-x-lilypond")
         def lilypond_score_wizard():
@@ -224,13 +235,35 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             # get a LogWidget
             log = self.tools["log"].createLog(doc)
             self.jobs[doc] = Ly2PDF(doc, log, preview)
+            self.updateJobActions()
             def finished():
-                listeners[doc.close].remove(self.jobs[doc].abort)
+                listeners[doc.close].remove(self.abortLilyPondJob)
                 del self.jobs[doc]
+                self.updateJobActions()
             listeners[self.jobs[doc].finished].append(finished)
-            listeners[doc.close].append(self.jobs[doc].abort)
+            listeners[doc.close].append(self.abortLilyPondJob)
             self.jobs[doc].start()
+            
+    def abortLilyPondJob(self, doc):
+        if doc in self.jobs:
+            self.jobs[doc].abort()
 
+    def updateJobActions(self, doc=None):
+        doc = doc or self.currentDocument()
+        running = doc and doc in self.jobs
+        act = self.actionCollection().action
+        act("lilypond_run_preview").setEnabled(not running)
+        act("lilypond_run_publish").setEnabled(not running)
+        act("lilypond_abort").setEnabled(running)
+        if running:
+            icon = "process-stop"
+            tip = i18n("Abort the running LilyPond process")
+        else:
+            icon = "frescobaldi"
+            tip = i18n("Run LilyPond in preview mode")
+        act("lilypond_runner").setIcon(KIcon(icon))
+        act("lilypond_runner").setToolTip(tip)
+            
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):
     """ A tool embedding a Konsole """
