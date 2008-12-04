@@ -269,12 +269,9 @@ class MainWindow(KParts.MainWindow):
             a = KAction(d.documentName(), self.docGroup)
             a.setCheckable(True)
             a.doc = d
-            if d.isModified():
-                a.setIcon(KIcon("document-save"))
-            elif d.isEdited():
-                a.setIcon(KIcon("dialog-ok-apply"))
-            elif d.doc:
-                a.setIcon(KIcon("dialog-ok"))
+            icon = d.documentIcon()
+            if icon:
+                a.setIcon(KIcon(icon))
             if d is self._currentDoc:
                 a.setChecked(True)
             self.docGroup.addAction(a)

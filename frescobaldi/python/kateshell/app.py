@@ -284,7 +284,16 @@ class Document(DBusItem):
             return self.doc.documentName()
         else:
             return i18n("Untitled")
-                
+
+    def documentIcon(self):
+        """Returns None or a suitable icon name for this document"""
+        if self.isModified():
+            return "document-save"
+        elif self.isEdited():
+            return "dialog-ok-apply"
+        elif self.doc:
+            return "dialog-ok"
+
     @method(iface, in_signature='', out_signature='b')
     def isModified(self):
         """Returns true if the document has unsaved changes."""

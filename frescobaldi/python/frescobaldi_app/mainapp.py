@@ -80,6 +80,11 @@ class MainApp(kateshell.app.MainApp):
 
 class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """
+    def documentIcon(self):
+        if self in self.app.mainwin.jobs:
+            return "frescobaldi"
+        return super(Document, self).documentIcon()
+        
     def hasUpdated(self, ext):
         """
         return true if this document has one or more LilyPond-generated
