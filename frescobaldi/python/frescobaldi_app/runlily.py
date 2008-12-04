@@ -23,11 +23,24 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
 
+from kateshell.mainwindow import listeners
 
 class Ly2PDF():
     def __init__(self, doc, log, preview):
-        pass
-    
+        listeners.add(self.finished)
+        
+    def finished(self):
+        listeners.call(self.finished)
+        listeners.remove(self.finished)
+
+    def start(self):
+        """ Start the LilyPond job """
+        pass # TODO implement
+
+    def abort(self):
+        """ Abort the LilyPond job """
+        self.finished() # TODO really implement
+
 
 class LogWidget(QTextEdit):
     def __init__(self, tool, doc):

@@ -30,9 +30,9 @@ from PyKDE4.kio import *
 class _signalstore(dict):
     def __new__(cls):
         return dict.__new__(cls)
-    def call(self, meth, obj):
+    def call(self, meth, *args):
         for f in self[meth]:
-            f(obj)
+            f(*args)
     def add(self, *methods):
         for meth in methods:
             self[meth] = []

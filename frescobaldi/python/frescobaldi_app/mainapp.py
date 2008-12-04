@@ -80,36 +80,12 @@ class MainApp(kateshell.app.MainApp):
 
 class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """
-    def __init__(self, *args):
-        super(Document, self).__init__(*args)
-        self._job = None        # running LilyPond job
-        
     def hasUpdated(self, ext):
         """
         return true if this document has one or more LilyPond-generated
         outputs with the given extension that are up-to-date.
         """
         return True # FIXME implement
-    
-    def isRunning(self):
-        """
-        Return True if there is a running LilyPond job.
-        """
-        return bool(self._job)
-        
-    def runLilyPond(self, log, preview=True):
-        """
-        Start a LilyPond job. If preview=False, switch off point-and-click.
-        """
-        if self._job: return
-        from frescobaldi_app.runlily import Ly2PDF
-        self._job = Ly2PDF(self, log, preview)
-        
-    def abort(self):
-        """
-        Abort a running LilyPond job.
-        """
-        self._job and self._job.kill(2)
 
 
 class MainWindow(kateshell.mainwindow.MainWindow):
@@ -121,6 +97,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         LogTool(self)
         PDFTool(self)
         QuickInsertTool(self)
+        
+        self.jobs = {}
 
     def setupActions(self):
         super(MainWindow, self).setupActions()
@@ -139,10 +117,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         def lilypond_run_publish(preview=False):
             d = self.currentDocument()
             if d:
-                if not d.isRunning():
-                    # get a LogWidget
-                    log = self.tools["log"].createLog(d)
-                    d.runLilyPond(log, preview)
+                if d not in self.jobs:
+                    self.createLilyPondJob(d, preview)
                 else:
                     KMessageBox.sorry(self,
                         i18n("There is already a LilyPond job running "
@@ -152,8 +128,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         @self.onAction(i18n("Interrupt LilyPond Job"), "process-stop")
         def lilypond_abort():
             d = self.currentDocument()
-            if d and d.isRunning():
-                d.abort()
+            if d and d in self.jobs:
+                self.jobs[d].abort()
             
         # actions and functionality for editing rhythms
         @self.onSelAction(i18n("Double durations"),
@@ -241,6 +217,19 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         @self.onSelAction(i18n("Remove hyphenation"), keepSelection=False)
         def lyrics_dehyphen(text):
             return text.replace(' -- ', '')
+
+    def createLilyPondJob(self, doc, preview=True):
+        if doc not in self.jobs:
+            from frescobaldi_app.runlily import Ly2PDF
+            # get a LogWidget
+            log = self.tools["log"].createLog(doc)
+            self.jobs[doc] = Ly2PDF(doc, log, preview)
+            def finished():
+                listeners[doc.close].remove(self.jobs[doc].abort)
+                del self.jobs[doc]
+            listeners[self.jobs[doc].finished].append(finished)
+            listeners[doc.close].append(self.jobs[doc].abort)
+            self.jobs[doc].start()
 
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):
