@@ -19,30 +19,95 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
+import os, re, sys
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
 
 from kateshell.mainwindow import listeners
 
-class Ly2PDF():
+def config(group):
+    return KGlobal.config().group(group)
+
+class Ly2PDF(object):
     def __init__(self, doc, log, preview):
         listeners.add(self.finished)
+
+        self.log = log
+        lyfile = doc.localPath()
+        base = os.path.splitext(lyfile)[0]
+        lyfile_arg = os.path.basename(lyfile)
+
+        self.p = KProcess()
+        self.p.setOutputChannelMode(KProcess.MergedChannels)
+        self.p.setWorkingDirectory(os.path.dirname(lyfile))
+        cmd = [config("commands").readEntry("lilypond", "lilypond"), "--pdf"]
+        cmd.append(preview and "-dpoint-and-click" or "-dno-point-and-click")
+        if config("preferences").readEntry("delete intermediate files",
+                                           QVariant(True)).toBool():
+            cmd.append("-ddelete-intermediate-files")
+        cmd += ["-o", base, lyfile_arg]
         
-    def finished(self):
+        # encode arguments correctly
+        enc = sys.getfilesystemencoding() or 'utf-8'
+        cmd = [unicode(a).encode(enc) for a in cmd]
+        
+        self.p.setProgram(cmd)
+        QObject.connect(self.p, SIGNAL("finished(int, QProcess::ExitStatus)"),
+                        self.finished)
+        QObject.connect(self.p, SIGNAL("readyRead()"), self.readOutput)
+        
+        self.log.clear()
+        self.log.writeMsg("LilyPond started.\n")
+        self.log.show()
+        self.p.start()
+        
+    def finished(self, exitCode, exitStatus):
+        self.log.writeMsg("Exited: %d %d" % (exitCode, exitStatus))
         listeners.call(self.finished)
         listeners.remove(self.finished)
+        self.p = None
 
     def abort(self):
         """ Abort the LilyPond job """
-        self.finished() # TODO really implement
+        if self.p:
+            self.p.terminate()
 
+    def readOutput(self):
+        self.log.write(unicode(self.p.readAllStandardOutput()))
+    
 
-class LogWidget(QTextEdit):
+class LogWidget(QTextBrowser):
     def __init__(self, tool, doc):
         QTextEdit.__init__(self, tool.widget)
-        self.setReadOnly(True)
+        self.tool = tool
+        self.doc = doc
         self.setFocusPolicy(Qt.NoFocus)
-        self.setText("hello") # TEST
+        self.setOpenLinks(False)
+        self.setOpenExternalLinks(False)
+
+        self.formats = {}
+        f = QTextCharFormat()
+        f.setFontFamily("monospace")
+        self.formats['log'] = f
+        
+        f = QTextCharFormat()
+        f.setFontFamily("sans-serif")
+        f.setFontWeight(QFont.Bold)
+        self.formats['msg'] = f
+        
+    def write(self, text, format='log'):
+        self.setCurrentCharFormat(self.formats[format])
+        self.insertPlainText(text)
+        self.ensureCursorVisible()
+
+    def writeMsg(self, text):
+        self.write(text, 'msg')
         
 
+    def show(self):
+        """ Really show our log, e.g. when there are errors """
+        self.tool.showLog(self.doc)
+        self.tool.show()
+        

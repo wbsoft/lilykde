@@ -128,6 +128,7 @@ class MainApp(DBusItem):
         if len(self.documents) == 0:
             self.createDocument().setActive()
         self.kapp.exec_()
+        KGlobal.config().sync()
        
     @method(iface, in_signature='s', out_signature='b')
     def isOpen(self, url):
@@ -281,6 +282,15 @@ class Document(DBusItem):
             return unicode(self.doc.url().url())
         else:
             return self._url
+
+    @method(iface, in_signature='', out_signature='s')
+    def localPath(self):
+        if self.doc:
+            return unicode(self.doc.url().toLocalFile())
+        elif self._url:
+            return unicode(KUrl(self._url).toLocalFile())
+        else:
+            return ""
 
     @method(iface, in_signature='', out_signature='s')
     def documentName(self):

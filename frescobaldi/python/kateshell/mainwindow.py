@@ -27,6 +27,10 @@ from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 from PyKDE4.kio import *
 
+# Easily get our global config
+def config(group="kateshell"):
+    return KGlobal.config().group(group)
+
 class _signalstore(dict):
     def __new__(cls):
         return dict.__new__(cls)
@@ -156,7 +160,7 @@ class MainWindow(KParts.MainWindow):
             self, SLOT("slotOpenRecent(KUrl)"), self)
         self.actionCollection().addAction(
             self.openRecent.objectName(), self.openRecent)
-        self.openRecent.loadEntries(self.config("Recent Files"))
+        self.openRecent.loadEntries(config("recent files"))
         
     def act(self, name, texttype, func,
             icon=None, tooltip=None, whatsthis=None, key=None):
@@ -294,10 +298,6 @@ class MainWindow(KParts.MainWindow):
         """ Called by the open recent files action """
         self.app.openUrl(kurl.url())
 
-    def config(self, group="General"):
-        """ Return a KConfigGroup object or the global "General" group. """
-        return KGlobal.config().group(group)
-
     def queryClose(self):
         """ Quit the application, also called by closing the window """
         for d in self.app.documents[:]: # iterate over a copy
@@ -311,9 +311,9 @@ class MainWindow(KParts.MainWindow):
 
     def saveSettings(self):
         """ Store settings in our configfile. """
-        self.openRecent.saveEntries(self.config("Recent Files"))
+        self.openRecent.saveEntries(config("recent files"))
         # write them back
-        self.config().sync()
+        config().sync()
 
     def selectionText(self, warn=True):
         """

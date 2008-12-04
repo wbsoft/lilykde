@@ -30,6 +30,15 @@ from PyKDE4.ktexteditor import KTextEditor
 import kateshell.app, kateshell.mainwindow
 from kateshell.mainwindow import listeners
 
+# Constants ...
+# find specially formatted variables in a LilyPond source document
+_variables_re = re.compile(r'^%%([a-z]+(?:-[a-z]+)*):[ \t]*(.+?)[ \t]*$', re.M)
+
+
+# Easily get our global config
+def config(group="preferences"):
+    return KGlobal.config().group(group)
+    
 
 class MainApp(kateshell.app.MainApp):
     """ A Frescobaldi application instance """
@@ -84,7 +93,20 @@ class Document(kateshell.app.Document):
         if self in self.app.mainwin.jobs:
             return "frescobaldi"
         return super(Document, self).documentIcon()
-        
+    
+    def variables(self):
+        """
+        Returns a dictionary with variables put in specially formatted LilyPond
+        comments, like:
+        %%varname: value
+        (double percent at start of line, varname, colon and value)
+        Varname should consist of lowercase letters, and may contain (but not
+        end or start with) single hyphens.
+        """
+        if not self.doc:
+            return {}
+        return dict(_variables_re.findall(self.text()))
+    
     def hasUpdated(self, ext):
         """
         return true if this document has one or more LilyPond-generated
@@ -132,28 +154,29 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         @self.onAction(i18n("Run LilyPond (publish)"), "system-run")
         def lilypond_run_publish(preview=False):
             d = self.currentDocument()
-            if d:
-                if d in self.jobs:
-                    return KMessageBox.sorry(self,
-                        i18n("There is already a LilyPond job running "
-                             "for this document."),
-                        i18n("Already Running"))
-                elif not d.url():
+            if not d:
+                return
+            elif d in self.jobs:
+                return KMessageBox.sorry(self,
+                    i18n("There is already a LilyPond job running "
+                            "for this document."),
+                    i18n("Already Running"))
+            elif not d.url():
+                return KMessageBox.sorry(self, i18n(
+                    "Your document currently has no filename, "
+                    "please save first."))
+            elif not d.url().startswith("file:/"):
+                return KMessageBox.sorry(self, i18n(
+                    "Sorry, support for remote files is not yet implemented.\n"
+                    "Please save your document to a local file."))
+            if d.isModified():
+                if config().readEntry("save on run", QVariant(False)).toBool():
+                    d.save()
+                else:
                     return KMessageBox.sorry(self, i18n(
-                        "Your document currently has no filename, "
+                        "Your document has been modified, "
                         "please save first."))
-                elif not d.url().startswith("file:/"):
-                    return KMessageBox.sorry(self, i18n(
-                        "Sorry, support for remote files is not yet implemented.\n"
-                        "Please save your document to a local file."))
-                if d.isModified():
-                    if int(self.config().readEntry("save on run", "0")):
-                        d.save()
-                    else:
-                        return KMessageBox.sorry(self, i18n(
-                            "Your document has been modified, "
-                            "please save first."))
-                self.createLilyPondJob(d, preview)
+            self.createLilyPondJob(d, preview)
         
         @self.onAction(i18n("Interrupt LilyPond Job"), "process-stop")
         def lilypond_abort():

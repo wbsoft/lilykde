@@ -44,12 +44,14 @@ defaultPaths = (
     'share/hunspell',
 )
 
-
 hyphdicts = {}
+
+def config(group="hyphenation"):
+    return KGlobal.config().group(group)
 
 def findDicts():
     """ Find installed hyphen dictionary files """
-    conf = KGlobal.config().group("hyphenation")
+    conf = config("hyphenation")
     def paths():
         """ build a list of paths based on config """
         # in which prefixes to look for relative paths
@@ -113,7 +115,7 @@ def hyphenate(text, mainwindow):
     Ask the user which language to use.
     Returns None if the user cancels the dialog.
     """
-    conf = KGlobal.config().group("hyphenation")
+    conf = config("hyphenation")
     lang = conf.readEntry("lastused", "")
     langs = list(sorted(hyphdicts.keys()))
     index = lang in langs and langs.index(lang) or 0
