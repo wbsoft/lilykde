@@ -33,10 +33,6 @@ class Ly2PDF():
         listeners.call(self.finished)
         listeners.remove(self.finished)
 
-    def start(self):
-        """ Start the LilyPond job """
-        pass # TODO implement
-
     def abort(self):
         """ Abort the LilyPond job """
         self.finished() # TODO really implement

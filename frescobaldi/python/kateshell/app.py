@@ -243,7 +243,11 @@ class Document(DBusItem):
             QObject.connect(self.view, SIGNAL(s), self.updateStatus)
         for s in ("selectionChanged(KTextEditor::View*)",):
             QObject.connect(self.view, SIGNAL(s), self.updateSelection)
-                  
+    
+    def save(self):
+        if self.doc:
+            self.doc.save()
+            
     def openUrl(self, url):
         self._url = url
         if self.doc:

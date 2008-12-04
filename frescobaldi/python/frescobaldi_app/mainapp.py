@@ -115,7 +115,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             d = self.currentDocument()
             if d:
                 if d in self.jobs:
-                    self.jobs[d].abort()
+                    self.abortLilyPondJob(d)
                 else:
                     lilypond_run_preview()
 
@@ -134,6 +134,21 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             d = self.currentDocument()
             if d:
                 if d not in self.jobs:
+                    if not d.url():
+                        return KMessageBox.sorry(self, i18n(
+                            "Your document currently has no filename, "
+                            "please save first."))
+                    elif not d.url().startswith("file:/"):
+                        return KMessageBox.sorry(self, i18n(
+                            "Sorry, support for remote files is not yet implemented.\n"
+                            "Please save your document to a local file."))
+                    if d.isModified():
+                        if int(self.config().readEntry("save on run", "0")):
+                            d.save()
+                        else:
+                            return KMessageBox.sorry(self, i18n(
+                                "Your document has been modified, "
+                                "please save first."))
                     self.createLilyPondJob(d, preview)
                 else:
                     KMessageBox.sorry(self,
@@ -144,8 +159,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         @self.onAction(i18n("Interrupt LilyPond Job"), "process-stop")
         def lilypond_abort():
             d = self.currentDocument()
-            if d and d in self.jobs:
-                self.jobs[d].abort()
+            if d:
+                self.abortLilyPondJob(d)
             
         # actions and functionality for editing rhythms
         @self.onSelAction(i18n("Double durations"),
@@ -245,9 +260,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                 listeners[doc.close].remove(self.abortLilyPondJob)
                 del self.jobs[doc]
                 self.updateJobActions()
-            listeners[self.jobs[doc].finished].append(finished)
             listeners[doc.close].append(self.abortLilyPondJob)
-            self.jobs[doc].start()
+            listeners[self.jobs[doc].finished].append(finished)
             
     def abortLilyPondJob(self, doc):
         if doc in self.jobs:
