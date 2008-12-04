@@ -33,6 +33,7 @@ class LogWidget(QTextEdit):
     def __init__(self, tool, doc):
         QTextEdit.__init__(self, tool.widget)
         self.setReadOnly(True)
+        self.setFocusPolicy(Qt.NoFocus)
         self.setText("hello") # TEST
         
 

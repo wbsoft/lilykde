@@ -353,6 +353,7 @@ class LogTool(kateshell.mainwindow.Tool):
             dock=kateshell.mainwindow.Bottom,
             widget=QStackedWidget())
         self.logs = {}
+        self.widget.addWidget(QLabel("<center>(%s)</center>" % i18n("no log")))
         listeners[mainwin.app.activeChanged].append(self.showLog)
         
     def showLog(self, doc):
@@ -372,7 +373,7 @@ class LogTool(kateshell.mainwindow.Tool):
         if doc in self.logs:
             sip.delete(self.logs[doc])
             del self.logs[doc]
-            if self.widget.count() == 0:
+            if self.widget.count() == 1:
                 if not self._docked:
                     self.dock()
                 self.hide()
