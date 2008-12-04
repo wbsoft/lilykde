@@ -133,28 +133,27 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         def lilypond_run_publish(preview=False):
             d = self.currentDocument()
             if d:
-                if d not in self.jobs:
-                    if not d.url():
-                        return KMessageBox.sorry(self, i18n(
-                            "Your document currently has no filename, "
-                            "please save first."))
-                    elif not d.url().startswith("file:/"):
-                        return KMessageBox.sorry(self, i18n(
-                            "Sorry, support for remote files is not yet implemented.\n"
-                            "Please save your document to a local file."))
-                    if d.isModified():
-                        if int(self.config().readEntry("save on run", "0")):
-                            d.save()
-                        else:
-                            return KMessageBox.sorry(self, i18n(
-                                "Your document has been modified, "
-                                "please save first."))
-                    self.createLilyPondJob(d, preview)
-                else:
-                    KMessageBox.sorry(self,
+                if d in self.jobs:
+                    return KMessageBox.sorry(self,
                         i18n("There is already a LilyPond job running "
                              "for this document."),
                         i18n("Already Running"))
+                elif not d.url():
+                    return KMessageBox.sorry(self, i18n(
+                        "Your document currently has no filename, "
+                        "please save first."))
+                elif not d.url().startswith("file:/"):
+                    return KMessageBox.sorry(self, i18n(
+                        "Sorry, support for remote files is not yet implemented.\n"
+                        "Please save your document to a local file."))
+                if d.isModified():
+                    if int(self.config().readEntry("save on run", "0")):
+                        d.save()
+                    else:
+                        return KMessageBox.sorry(self, i18n(
+                            "Your document has been modified, "
+                            "please save first."))
+                self.createLilyPondJob(d, preview)
         
         @self.onAction(i18n("Interrupt LilyPond Job"), "process-stop")
         def lilypond_abort():
