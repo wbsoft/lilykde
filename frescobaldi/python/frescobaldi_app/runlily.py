@@ -40,7 +40,7 @@ class Ly2PDF(object):
         self.log = log
         lyfile = doc.localPath()
         base = os.path.splitext(lyfile)[0]
-        lyfile_arg = os.path.basename(lyfile)
+        self.lyfile_arg = os.path.basename(lyfile)
         self.directory = os.path.dirname(lyfile)
 
         self.p = KProcess()
@@ -51,7 +51,7 @@ class Ly2PDF(object):
         if config("preferences").readEntry("delete intermediate files",
                                            QVariant(True)).toBool():
             cmd.append("-ddelete-intermediate-files")
-        cmd += ["-o", base, lyfile_arg]
+        cmd += ["-o", base, self.lyfile_arg]
         
         # encode arguments correctly
         enc = sys.getfilesystemencoding() or 'utf-8'
@@ -63,12 +63,21 @@ class Ly2PDF(object):
         QObject.connect(self.p, SIGNAL("readyRead()"), self.readOutput)
         
         self.log.clear()
-        self.log.writeMsg("LilyPond started.\n")
+        mode = unicode(preview and i18n("preview") or i18n("publish"))
+        self.log.writeMsg(i18n("LilyPond [%1] starting (%2)...\n", self.lyfile_arg, mode))
         self.log.show()
         self.p.start()
         
     def finished(self, exitCode, exitStatus):
-        self.log.writeMsg("Exited: %d %d" % (exitCode, exitStatus))
+        if exitCode:
+            self.log.writeMsg(i18n("LilyPond [%1] exited with return code %2.",
+                self.lyfile_arg, exitCode), "msgerr")
+        elif exitStatus:
+            self.log.writeMsg(i18n("LilyPond [%1] exited with exit status %2.",
+                self.lyfile_arg, exitStatus), "msgerr")
+        else:
+            self.log.writeMsg(i18n("LilyPond [%1] finished.", self.lyfile_arg),
+                "msgok")
         listeners.call(self.finished)
         listeners.remove(self.finished)
         self.p = None
@@ -90,7 +99,7 @@ class Ly2PDF(object):
             line = int(line or "1") or 1
             col = int(col or "0")
             href = "textedit://%s:%d:%d:%d" % (path, line, col, col)
-            self.log.writeUrl(url, href)
+            self.log.writeUrl(url, href, i18n("Click to edit this file"))
             self.log.write(msg)
             del parts[:5]
     
@@ -106,9 +115,17 @@ class LogWidget(QTextBrowser):
         QObject.connect(self, SIGNAL("anchorClicked(QUrl)"), self.anchorClicked)
 
         self.formats = {}
+        
         f = QTextCharFormat()
         f.setFontFamily("monospace")
         self.formats['log'] = f
+        
+        f = QTextCharFormat()
+        f.setFontFamily("monospace")
+        f.setForeground(QBrush(QColor("blue")))
+        f.setFontUnderline(True)
+        f.setAnchor(True)
+        self.formats['url'] = f
         
         f = QTextCharFormat()
         f.setFontFamily("sans-serif")
@@ -116,10 +133,16 @@ class LogWidget(QTextBrowser):
         self.formats['msg'] = f
         
         f = QTextCharFormat()
-        f.setFontFamily("monospace")
-        f.setForeground(QBrush(QColor("blue")))
-        f.setFontUnderline(True)
-        self.formats['url'] = f
+        f.setFontFamily("sans-serif")
+        f.setFontWeight(QFont.Bold)
+        f.setForeground(QBrush(QColor("green")))
+        self.formats['msgok'] = f
+        
+        f = QTextCharFormat()
+        f.setFontFamily("sans-serif")
+        f.setFontWeight(QFont.Bold)
+        f.setForeground(QBrush(QColor("red")))
+        self.formats['msgerr'] = f
         
     def write(self, text, format='log'):
         self.setCurrentCharFormat(self.formats[format])
@@ -137,10 +160,11 @@ class LogWidget(QTextBrowser):
             self.write('\n', format)
         self.write(text, format)
 
-    def writeUrl(self, text, href, format='url'):
+    def writeUrl(self, text, href, tooltip=None, format='url'):
         f = self.formats[format]
-        f.setAnchor(True)
         f.setAnchorHref(href)
+        if tooltip:
+            f.setToolTip(tooltip)
         self.write(text, format)
 
     def show(self):
@@ -151,4 +175,3 @@ class LogWidget(QTextBrowser):
     def anchorClicked(self, url):
         url = unicode(url.toString())
         self.doc.app.openUrl(url)
-        
