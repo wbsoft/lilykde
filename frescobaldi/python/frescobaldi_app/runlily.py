@@ -19,7 +19,7 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
-import os, re, sys
+import glob, os, re, sys, time
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -38,8 +38,15 @@ class Ly2PDF(object):
         listeners.add(self.finished)
 
         self.log = log
-        lyfile = doc.localPath()
-        base = os.path.splitext(lyfile)[0]
+
+        lvars = doc.variables()
+        ly = lvars.get(preview and 'master-preview' or 'master-publish') or lvars.get('master')
+        if ly:
+            lyfile = os.path.join(os.path.dirname(doc.localPath()), ly)
+        else:
+            lyfile = doc.localPath()
+        
+        self.basename = os.path.splitext(lyfile)[0]
         self.lyfile_arg = os.path.basename(lyfile)
         self.directory = os.path.dirname(lyfile)
 
@@ -51,7 +58,7 @@ class Ly2PDF(object):
         if config("preferences").readEntry("delete intermediate files",
                                            QVariant(True)).toBool():
             cmd.append("-ddelete-intermediate-files")
-        cmd += ["-o", base, self.lyfile_arg]
+        cmd += ["-o", self.basename, self.lyfile_arg]
         
         # encode arguments correctly
         enc = sys.getfilesystemencoding() or 'utf-8'
@@ -65,7 +72,7 @@ class Ly2PDF(object):
         self.log.clear()
         mode = unicode(preview and i18n("preview") or i18n("publish"))
         self.log.writeMsg(i18n("LilyPond [%1] starting (%2)...\n", self.lyfile_arg, mode))
-        self.log.show()
+        self.startTime = time.time()
         self.p.start()
         
     def finished(self, exitCode, exitStatus):
@@ -93,6 +100,8 @@ class Ly2PDF(object):
         # parts has an odd length(1, 6, 11 etc)
         # message, <url, path, line, col, message> etc.
         self.log.write(parts.pop(0))
+        if parts:
+            self.log.show() # warnings or errors will be printed
         while len(parts[:5]) == 5:
             url, path, line, col, msg = parts[:5]
             path = os.path.join(self.directory, path)
@@ -103,6 +112,15 @@ class Ly2PDF(object):
             self.log.write(msg)
             del parts[:5]
     
+    def updatedFiles(self, ext="*"):
+        """
+        Returns a list of files updated by this process, with given
+        extension.
+        """
+        files = glob.glob(self.basename + "." + ext)
+        files += glob.glob(self.basename + "?*." + ext)
+        return [f for f in files if os.path.getmtime(f) >= self.startTime]
+        
 
 class LogWidget(QTextBrowser):
     def __init__(self, tool, doc):
@@ -113,37 +131,8 @@ class LogWidget(QTextBrowser):
         self.setOpenLinks(False)
         self.setOpenExternalLinks(False)
         QObject.connect(self, SIGNAL("anchorClicked(QUrl)"), self.anchorClicked)
-
-        self.formats = {}
-        
-        f = QTextCharFormat()
-        f.setFontFamily("monospace")
-        self.formats['log'] = f
-        
-        f = QTextCharFormat()
-        f.setFontFamily("monospace")
-        f.setForeground(QBrush(QColor("blue")))
-        f.setFontUnderline(True)
-        f.setAnchor(True)
-        self.formats['url'] = f
-        
-        f = QTextCharFormat()
-        f.setFontFamily("sans-serif")
-        f.setFontWeight(QFont.Bold)
-        self.formats['msg'] = f
-        
-        f = QTextCharFormat()
-        f.setFontFamily("sans-serif")
-        f.setFontWeight(QFont.Bold)
-        f.setForeground(QBrush(QColor("green")))
-        self.formats['msgok'] = f
-        
-        f = QTextCharFormat()
-        f.setFontFamily("sans-serif")
-        f.setFontWeight(QFont.Bold)
-        f.setForeground(QBrush(QColor("red")))
-        self.formats['msgerr'] = f
-        
+        self.formats = textFormats()
+       
     def write(self, text, format='log'):
         self.setCurrentCharFormat(self.formats[format])
         sb = self.verticalScrollBar()
@@ -175,3 +164,26 @@ class LogWidget(QTextBrowser):
     def anchorClicked(self, url):
         url = unicode(url.toString())
         self.doc.app.openUrl(url)
+
+
+def textFormats():
+    """ Return a dict with text formats """
+    log = QTextCharFormat()
+    log.setFontFamily("monospace")
+    
+    url = QTextCharFormat(log)
+    url.setForeground(QBrush(QColor("blue")))
+    url.setFontUnderline(True)
+    url.setAnchor(True)
+    
+    msg = QTextCharFormat()
+    msg.setFontFamily("sans-serif")
+    msg.setFontWeight(QFont.Bold)
+    
+    msgok = QTextCharFormat(msg)
+    msgok.setForeground(QBrush(QColor("green")))
+    
+    msgerr = QTextCharFormat(msg)
+    msgerr.setForeground(QBrush(QColor("red")))
+    
+    return locals()

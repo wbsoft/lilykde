@@ -276,10 +276,15 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             from frescobaldi_app.runlily import Ly2PDF
             # get a LogWidget
             log = self.tools["log"].createLog(doc)
+            if config().readEntry("always show log", QVariant(True)).toBool():
+                log.show()
             self.jobs[doc] = Ly2PDF(doc, log, preview)
             self.updateJobActions()
             def finished():
                 listeners[doc.close].remove(self.abortLilyPondJob)
+                pdfs = self.jobs[doc].updatedFiles("pdf")
+                if pdfs and "pdf" in self.tools:
+                    self.tools["pdf"].openUrl(pdfs[0])
                 del self.jobs[doc]
                 self.updateJobActions()
             listeners[doc.close].append(self.abortLilyPondJob)

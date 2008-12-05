@@ -344,6 +344,13 @@ class Document(DBusItem):
         else:
             self._cursor = (line, column)
 
+    @method(iface, in_signature='', out_signature='s')
+    def text(self):
+        if self.doc:
+            return unicode(self.doc.text())
+        else:
+            return ''
+            
     @method(iface, in_signature='b', out_signature='b')
     def close(self, prompt=True):
         """Closes this document, returning true if closing succeeded."""
