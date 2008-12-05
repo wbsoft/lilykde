@@ -30,6 +30,11 @@ from kateshell.mainwindow import listeners
 def config(group):
     return KGlobal.config().group(group)
 
+# to find filenames with line:col pairs in LilyPond output
+#_ly_message_re = re.compile(r"^(.*?:\d+(?::\d+)?(?=:))", re.M)
+#_ly_message_re = re.compile(r"^(.*?):(\d+)(?::(\d+))?(?=:)", re.M)
+_ly_message_re = re.compile(r"^((.*?):(\d+)(?::(\d+))?)(?=:)", re.M)
+
 class Ly2PDF(object):
     def __init__(self, doc, log, preview):
         listeners.add(self.finished)
@@ -38,10 +43,11 @@ class Ly2PDF(object):
         lyfile = doc.localPath()
         base = os.path.splitext(lyfile)[0]
         lyfile_arg = os.path.basename(lyfile)
+        self.directory = os.path.dirname(lyfile)
 
         self.p = KProcess()
         self.p.setOutputChannelMode(KProcess.MergedChannels)
-        self.p.setWorkingDirectory(os.path.dirname(lyfile))
+        self.p.setWorkingDirectory(self.directory)
         cmd = [config("commands").readEntry("lilypond", "lilypond"), "--pdf"]
         cmd.append(preview and "-dpoint-and-click" or "-dno-point-and-click")
         if config("preferences").readEntry("delete intermediate files",
@@ -75,7 +81,23 @@ class Ly2PDF(object):
             self.p.terminate()
 
     def readOutput(self):
-        self.log.write(unicode(self.p.readAllStandardOutput()))
+        text = unicode(self.p.readAllStandardOutput())
+        nextpart = iter(_ly_message_re.split(text)).next
+        # parts has an odd length(1, 5, 9 etc)
+        # message, <url, path, line, col>
+        while True:
+            try:
+                msg = nextpart()
+                if msg:
+                    self.log.write(msg)
+                url = nextpart()
+                path = os.path.join(self.directory, nextpart())
+                line = int(nextpart() or "1") or 1
+                col = int(nextpart() or "0")
+                href = "textedit://%s:%d:%d:%d" % (path, line, col, col)
+                self.log.writeUrl(url, href)
+            except StopIteration:
+                break
     
 
 class LogWidget(QTextBrowser):
@@ -86,6 +108,7 @@ class LogWidget(QTextBrowser):
         self.setFocusPolicy(Qt.NoFocus)
         self.setOpenLinks(False)
         self.setOpenExternalLinks(False)
+        QObject.connect(self, SIGNAL("anchorClicked(QUrl)"), self.anchorClicked)
 
         self.formats = {}
         f = QTextCharFormat()
@@ -96,6 +119,12 @@ class LogWidget(QTextBrowser):
         f.setFontFamily("sans-serif")
         f.setFontWeight(QFont.Bold)
         self.formats['msg'] = f
+        
+        f = QTextCharFormat()
+        f.setFontFamily("monospace")
+        f.setForeground(QBrush(QColor("blue")))
+        f.setFontUnderline(True)
+        self.formats['url'] = f
         
     def write(self, text, format='log'):
         self.setCurrentCharFormat(self.formats[format])
@@ -112,10 +141,20 @@ class LogWidget(QTextBrowser):
         if self.textCursor().columnNumber() > 0:
             self.write('\n', format)
         self.write(text, format)
-        
+
+    def writeUrl(self, text, href, format='url'):
+        f = self.formats[format]
+        f.setAnchor(True)
+        f.setAnchorHref(href)
+        self.write(text, format)
 
     def show(self):
         """ Really show our log, e.g. when there are errors """
         self.tool.showLog(self.doc)
         self.tool.show()
+
+    def anchorClicked(self, url):
+        url = unicode(url.toString())
+        print url
+        self.doc.app.openUrl(url)
         
