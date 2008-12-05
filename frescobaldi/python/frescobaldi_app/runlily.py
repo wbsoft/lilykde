@@ -39,13 +39,11 @@ class Ly2PDF(object):
 
         self.log = log
 
+        lyfile = doc.localPath()
         lvars = doc.variables()
         ly = lvars.get(preview and 'master-preview' or 'master-publish') or lvars.get('master')
         if ly:
-            lyfile = os.path.join(os.path.dirname(doc.localPath()), ly)
-        else:
-            lyfile = doc.localPath()
-        
+            lyfile = os.path.join(os.path.dirname(lyfile), ly)
         self.basename = os.path.splitext(lyfile)[0]
         self.lyfile_arg = os.path.basename(lyfile)
         self.directory = os.path.dirname(lyfile)
@@ -71,7 +69,7 @@ class Ly2PDF(object):
         QObject.connect(self.p, SIGNAL("readyRead()"), self.readOutput)
         
         self.log.clear()
-        mode = unicode(preview and i18n("preview") or i18n("publish"))
+        mode = unicode(preview and i18n("preview mode") or i18n("publish mode"))
         self.log.writeMsg(i18n("LilyPond [%1] starting (%2)...\n", self.lyfile_arg, mode))
         self.startTime = time.time()
         self.p.start()
