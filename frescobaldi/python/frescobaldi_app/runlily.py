@@ -67,6 +67,7 @@ class Ly2PDF(object):
         self.p.setProgram(cmd)
         QObject.connect(self.p, SIGNAL("finished(int, QProcess::ExitStatus)"),
                         self.finished)
+        QObject.connect(self.p, SIGNAL("error(QProcess::ProcessError)"), self.error)
         QObject.connect(self.p, SIGNAL("readyRead()"), self.readOutput)
         
         self.log.clear()
@@ -85,14 +86,31 @@ class Ly2PDF(object):
         else:
             self.log.writeMsg(i18n("LilyPond [%1] finished.", self.lyfile_arg),
                 "msgok")
+        # so we see the log message before Okular loads...
+        QTimer.singleShot(0, self.bye)
+    
+    def error(self, errCode):
+        """ Called when QProcess encounters an error """
+        def w(msg):
+            self.log.writeMsg(msg, "msgerr")
+        if errCode == QProcess.FailedToStart:
+            w(i18n("Could not start LilyPond. Please check path and permissions."))
+        elif errCode == QProcess.Crashed:
+            w(i18n("LilyPond crashed."))
+        elif errCode == QProcess.ReadError:
+            w(i18n("Could not read from the LilyPond process."))
+        else:
+            w(i18n("An unknown error occured."))
+        # Otherwise we delete ourselves during our event handler, crashing...
+        QTimer.singleShot(0, self.bye)
+        
+    def bye(self):
         listeners.call(self.finished)
         listeners.remove(self.finished)
-        self.p = None
 
     def abort(self):
         """ Abort the LilyPond job """
-        if self.p:
-            self.p.terminate()
+        self.p.terminate()
 
     def readOutput(self):
         text = unicode(self.p.readAllStandardOutput())
