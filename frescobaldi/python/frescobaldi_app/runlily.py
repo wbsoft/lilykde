@@ -31,8 +31,6 @@ def config(group):
     return KGlobal.config().group(group)
 
 # to find filenames with line:col pairs in LilyPond output
-#_ly_message_re = re.compile(r"^(.*?:\d+(?::\d+)?(?=:))", re.M)
-#_ly_message_re = re.compile(r"^(.*?):(\d+)(?::(\d+))?(?=:)", re.M)
 _ly_message_re = re.compile(r"^((.*?):(\d+)(?::(\d+))?)(?=:)", re.M)
 
 class Ly2PDF(object):
@@ -82,22 +80,19 @@ class Ly2PDF(object):
 
     def readOutput(self):
         text = unicode(self.p.readAllStandardOutput())
-        nextpart = iter(_ly_message_re.split(text)).next
-        # parts has an odd length(1, 5, 9 etc)
-        # message, <url, path, line, col>
-        while True:
-            try:
-                msg = nextpart()
-                if msg:
-                    self.log.write(msg)
-                url = nextpart()
-                path = os.path.join(self.directory, nextpart())
-                line = int(nextpart() or "1") or 1
-                col = int(nextpart() or "0")
-                href = "textedit://%s:%d:%d:%d" % (path, line, col, col)
-                self.log.writeUrl(url, href)
-            except StopIteration:
-                break
+        parts = _ly_message_re.split(text)
+        # parts has an odd length(1, 6, 11 etc)
+        # message, <url, path, line, col, message> etc.
+        self.log.write(parts.pop(0))
+        while len(parts[:5]) == 5:
+            url, path, line, col, msg = parts[:5]
+            path = os.path.join(self.directory, path)
+            line = int(line or "1") or 1
+            col = int(col or "0")
+            href = "textedit://%s:%d:%d:%d" % (path, line, col, col)
+            self.log.writeUrl(url, href)
+            self.log.write(msg)
+            del parts[:5]
     
 
 class LogWidget(QTextBrowser):
@@ -155,6 +150,5 @@ class LogWidget(QTextBrowser):
 
     def anchorClicked(self, url):
         url = unicode(url.toString())
-        print url
         self.doc.app.openUrl(url)
         
