@@ -252,7 +252,36 @@ class Node(object):
                 for j in i.iterDepthLast(depth, ring + 1):
                     yield j
 
-    # LilyPond related stuff, could move to subclass
+
+
+class Receiver(object):
+    """
+    Performs certain operations on behalf of a LyNode tree,
+    like quoting strings or translating pitch names, etc.
+    """
+    def __init__(self):
+        self.typographicalQuotes = True
+        
+    def quoteString(self, text):
+        if self.typographicalQuotes:
+            text = re.sub(r'"(.*?)"', u'\u201C\\1\u201D', text)
+            text = re.sub(r"'(.*?)'", u'\u2018\\1\u2019', text)
+            text = text.replace("'", u'\u2018')
+        # escape regular double quotes
+        text = text.replace('"', '\\"')
+        # quote the string
+        return '"%s"' % text
+
+
+
+
+
+
+class LyNode(Node):
+    """
+    Base class for LilyPond objects, based on Node,
+    which takes care of the tree structure.
+    """
     def isAtom(self):
         """
         Returns True if this element is single LilyPond atom, word, note, etc.
@@ -275,6 +304,7 @@ class Node(object):
     def ly(self, receiver):
         """
         Returns printable output for this object.
+        Can ask receiver for certain settings, e.g. pitch language etc.
         """
         return ''
 
@@ -286,35 +316,9 @@ class Node(object):
         return '\n' * max(self.nlAfter(), other.nlBefore()) or repl
         
 
-class Text(Node):
-    """ A leaf node with arbitrary text """
-    
-    def __init__(self, text="", parent=None):
-        super(Text, self).__init__(parent)
-        self.text = text
-    
-    def ly(self, receiver):
-        return self.text
-
-
-class Comment(Text):
-    def nlAfter(self):
-        return 1
-
-    def ly(self, receiver):
-        return re.compile('^', re.M).sub('% ')
-
-
-class Newline(Node):
-    """ A newline. """
-    def nlAfter(self):
-        return 1
-
-
-class BlankLine(Newline):
-    """ A blank line. """
-    def nlBefore(self):
-        return 1
+class Leaf(LyNode):
+    """ A leaf node without children """
+    pass
 
 
 class Container(Node):
@@ -342,7 +346,78 @@ class Container(Node):
                 res.append(m.ly(receiver))
                 n = m
             return "".join(res)
+
+
+class Text(Leaf):
+    """ A leaf node with arbitrary text """
+    def __init__(self, text="", parent=None):
+        super(Text, self).__init__(parent)
+        self.text = text
+    
+    def ly(self, receiver):
+        return self.text
+
+
+class Comment(Text):
+    """ A LilyPond comment at the end of a line """
+    def nlAfter(self):
+        return 1
+
+    def ly(self, receiver):
+        return re.compile('^', re.M).sub('% ', self.text)
+
+
+class LineComment(Comment):
+    """ A LilyPond comment that takes a full line """
+    def nlBefore(self):
+        return 1
         
+
+class BlockComment(Comment):
+    """ A block comment between %{ and %} """
+    def nlBefore(self):
+        return '\n' in self.text and 1 or 0
+    
+    def nlAfter(self):
+        return '\n' in self.text and 1 or 0
+        
+    def ly(self, receiver):
+        text = self.text.replace('%}', '')
+        if '\n' in text:
+            return "%{\n%s\n%}" % text
+        else:
+            return "%{ %s %}" % text
+            
+
+class QuotedString(Text):
+    """ A string that is output inside double quotes. """
+    def ly(self, receiver):
+        return receiver.quoteString(self.text)
+    
+
+class Newline(LyNode):
+    """ A newline. """
+    def nlAfter(self):
+        return 1
+
+
+class BlankLine(Newline):
+    """ A blank line. """
+    def nlBefore(self):
+        return 1
+        
+
+class Scheme(Text):
+    """ A Scheme expression, without the extra # prepended """
+    def ly(self, receiver):
+        return '#%s' % self.text
+
+
+class Version(Text):
+    """ a LilyPond version instruction """
+    def ly(self, receiver):
+        return r'\version "%s"' % self.text
+
 
 class Enclosed(Container):
     """ An expression between brackets: { ... } or << >> """
@@ -389,4 +464,32 @@ class Seqr(Seq):
 class Simr(Sim):
     may_remove_brackets = True
     
+
+class Assignment(Container):
+    """ A varname = value construct with it's value as its first child """
+    def __init__(self, name="", parent=None, valueObj=None):
+        super(Assignment, self).__init__(parent)
+        self.name = name
+        if valueObj:
+            self.append(valueObj)
     
+    def nlBefore(self):
+        return 1
+        
+    def nlAfter(self):
+        return 1
+        
+    # Convenience methods:
+    def setValue(self, obj):
+        if len(self):
+            self[0] = obj
+        else:
+            self.append(obj)
+
+    def value(self):
+        if len(self):
+            return self[0]
+
+    def ly(self, receiver):
+        return '%s = %s' % (self.name, super(Assignment, self).ly(receiver))
+
