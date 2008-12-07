@@ -97,7 +97,7 @@ class MainWindow(KParts.MainWindow):
         
         s.setStretchFactor(0, 0)
         s.setStretchFactor(1, 1)
-        s.setStretchFactor(2, 0)
+        s.setStretchFactor(2, 1)
         
         tab_top = TabBar(Top, v)
         s1 = QSplitter(Qt.Vertical, v)
