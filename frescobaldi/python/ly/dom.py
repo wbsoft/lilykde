@@ -273,7 +273,18 @@ class Receiver(object):
         return '"%s"' % text
 
 
-
+class Reference(object):
+    """
+    A simple object that keeps a name, to use as a (context)
+    identifier. Set the name attribute to the name you want
+    to display, and on all places in the document the name
+    will show up.
+    """
+    def __init__(self, name=""):
+        self.name = name
+    
+    def __unicode__(self):
+        return self.name
 
 
 
@@ -466,8 +477,12 @@ class Simr(Sim):
     
 
 class Assignment(Container):
-    """ A varname = value construct with it's value as its first child """
-    def __init__(self, name="", parent=None, valueObj=None):
+    """
+    A varname = value construct with it's value as its first child
+    The name can be a string or a Reference object: so that everywhere this
+    varname is referenced, the name is the same.
+    """
+    def __init__(self, name=None, parent=None, valueObj=None):
         super(Assignment, self).__init__(parent)
         self.name = name
         if valueObj:
@@ -491,5 +506,42 @@ class Assignment(Container):
             return self[0]
 
     def ly(self, receiver):
-        return '%s = %s' % (self.name, super(Assignment, self).ly(receiver))
+        return "%s = %s" % (
+            unicode(self.name), super(Assignment, self).ly(receiver))
+
+
+class Identifier(LyNode):
+    """
+    An identifier, prints as \name.
+    Name may be a string or a Reference object.
+    """
+    def __init__(self, name=None, parent=None):
+        super(Identifier, self).__init__(parent)
+        self.name = name
+        
+    def ly(self, receiver):
+        return "\\%s" % unicode(self.name)
+
+
+class Section(Enclosed):
+    pre = property(lambda self: self.name + " {")
+    post = "}"
+    
+    
+class Book(Section): name = 'book'
+class Score(Section): name = 'score'
+class Paper(Section): name = 'paper'
+class Layout(Section): name = 'layout'
+class Midi(Section): name = 'midi'
+
+
+class With(Section):
+    """ If this item has no children, it prints nothing. """
+    name = 'with'
+    
+    def ly(self, receiver):
+        if len(self):
+            return super(With, self).ly(receiver)
+        else:
+            return ''
 
