@@ -252,6 +252,22 @@ class Node(object):
                 for j in i.iterDepthLast(depth, ring + 1):
                     yield j
 
+    def findChildren(self, cls, depth = -1):
+        """
+        iterate over all descendants of the current node if they are of
+        the class cls or a subclass.
+        """
+        for node in self.iterDepthLast(depth):
+            if isinstance(node, cls):
+                yield node
+
+    def findParent(self, cls):
+        """
+        find an ancestor of the given class
+        """
+        for node in self.ancestors():
+            if isinstance(node, cls):
+                return node
 
 
 class Receiver(object):
@@ -287,31 +303,25 @@ class Reference(object):
         return self.name
 
 
-
 class LyNode(Node):
     """
     Base class for LilyPond objects, based on Node,
     which takes care of the tree structure.
     """
-    def isAtom(self):
-        """
-        Returns True if this element is single LilyPond atom, word, note, etc.
-        When it is the only element inside { }, the brackets can be removed.
-        """
-        return False
+    
+    ##
+    # True if this element is single LilyPond atom, word, note, etc.
+    # When it is the only element inside { }, the brackets can be removed.
+    isAtom = False
    
-    def nlBefore(self):
-        """
-        Return the number of newlines this object wants before it.
-        """
-        return 0
-        
-    def nlAfter(self):
-        """
-        Return the number of newlines this object wants after it.
-        """
-        return 0
-
+    ##
+    # The number of newlines this object wants before it.
+    before = 0
+    
+    ##
+    # The number of newlines this object wants after it.
+    after = 0
+    
     def ly(self, receiver):
         """
         Returns printable output for this object.
@@ -324,7 +334,7 @@ class LyNode(Node):
         Returns a string with newlines to concat this node to another one.
         If zero newlines are requested, repl is returned, defaulting to a space.
         """
-        return '\n' * max(self.nlAfter(), other.nlBefore()) or repl
+        return '\n' * max(self.after, other.before) or repl
         
 
 class Leaf(LyNode):
@@ -332,17 +342,19 @@ class Leaf(LyNode):
     pass
 
 
-class Container(Node):
+class Container(LyNode):
     """ A node that concatenates its children on output """
-    def nlBefore(self):
+    @property
+    def before(self):
         if self.children():
-            return self[0].nlBefore()
+            return self[0].before
         else:
             return 0
-    
-    def nlAfter(self):
+
+    @property
+    def after(self):
         if self.children():
-            return self[-1].nlAfter()
+            return self[-1].after
         else:
             return 0
             
@@ -371,8 +383,7 @@ class Text(Leaf):
 
 class Comment(Text):
     """ A LilyPond comment at the end of a line """
-    def nlAfter(self):
-        return 1
+    after = 1
 
     def ly(self, receiver):
         return re.compile('^', re.M).sub('% ', self.text)
@@ -380,16 +391,17 @@ class Comment(Text):
 
 class LineComment(Comment):
     """ A LilyPond comment that takes a full line """
-    def nlBefore(self):
-        return 1
+    before = 1
         
 
 class BlockComment(Comment):
     """ A block comment between %{ and %} """
-    def nlBefore(self):
+    @property
+    def before(self):
         return '\n' in self.text and 1 or 0
     
-    def nlAfter(self):
+    @property
+    def after(self):
         return '\n' in self.text and 1 or 0
         
     def ly(self, receiver):
@@ -408,14 +420,12 @@ class QuotedString(Text):
 
 class Newline(LyNode):
     """ A newline. """
-    def nlAfter(self):
-        return 1
+    after = 1
 
 
 class BlankLine(Newline):
     """ A blank line. """
-    def nlBefore(self):
-        return 1
+    before = 1
         
 
 class Scheme(Text):
@@ -433,24 +443,18 @@ class Version(Text):
 class Enclosed(Container):
     """ An expression between brackets: { ... } or << >> """
     may_remove_brackets = False
-    pre = ""
-    post = ""
-    
-    def nlBefore(self):
-        return 0
-    
-    def nlAfter(self):
-        return 0
+    pre, post = "", ""
+    before, after = 0, 0
     
     def ly(self, receiver):
         if len(self) == 0:
             return " ".join((self.pre, self.post))
         sup = super(Enclosed, self)
-        before, text, after = sup.nlBefore(), sup.ly(receiver), sup.nlAfter()
-        if before or after or '\n' in text:
-            return "".join((self.pre, "\n" * max(before, 1), text,
-                                      "\n" * max(after, 1), self.post))
-        elif self.may_remove_brackets and len(self) == 1 and self[0].isAtom():
+        text = sup.ly(receiver)
+        if sup.before or sup.after or '\n' in text:
+            return "".join((self.pre, "\n" * max(sup.before, 1), text,
+                                      "\n" * max(sup.after, 1), self.post))
+        elif self.may_remove_brackets and len(self) == 1 and self[0].isAtom:
             return text
         else:
             return " ".join((self.pre, text, self.post))
@@ -468,12 +472,8 @@ class Sim(Enclosed):
     post = ">>"
 
 
-class Seqr(Seq):
-    may_remove_brackets = True
-    
-
-class Simr(Sim):
-    may_remove_brackets = True
+class Seqr(Seq): may_remove_brackets = True
+class Simr(Sim): may_remove_brackets = True
     
 
 class Assignment(Container):
@@ -482,18 +482,14 @@ class Assignment(Container):
     The name can be a string or a Reference object: so that everywhere this
     varname is referenced, the name is the same.
     """
+    before, after = 1, 1
+    
     def __init__(self, name=None, parent=None, valueObj=None):
         super(Assignment, self).__init__(parent)
         self.name = name
         if valueObj:
             self.append(valueObj)
     
-    def nlBefore(self):
-        return 1
-        
-    def nlAfter(self):
-        return 1
-        
     # Convenience methods:
     def setValue(self, obj):
         if len(self):
@@ -510,11 +506,75 @@ class Assignment(Container):
             unicode(self.name), super(Assignment, self).ly(receiver))
 
 
+class HandleVars(object):
+    """
+    A powerful mixin class that makes handling unique variable assignments
+    inside a Container more easy.
+    Mixin before Container, so you can get to the items by using their
+    string names.
+    E.g.:
+    >>> h = Header()
+    >>> h['composer'] = "Johann Sebastian Bach"
+    creates a subnode (by default Assignment) with the name 'composer', and
+    that node again gets an autogenerated subnode of type QuotedString (If the
+    argument wasn't already a Node).
+    """
+    childClass = Assignment
+
+    def ifbasestring(func):
+        """
+        Ensure that the method is only called for basestring objects.
+        Otherwise the same method from the super class is called.
+        """
+        def newfunc(obj, name, *args):
+            if isinstance(name, basestring):
+                return func(obj, name, *args)
+            else:
+                f = getattr(super(HandleVars, obj), func.func_name)
+                return f(name, *args)
+        return newfunc
+
+    @ifbasestring
+    def __getitem__(self, name):
+        for node in self.findChildren(self.childClass, 1):
+            if node.name == name:
+                return node
+
+    @ifbasestring
+    def __setitem__(self, name, valueObj):
+        if not isinstance(valueObj, LyNode):
+            valueObj = self.importNode(valueObj)
+        assignment = self[name]
+        if assignment:
+            assignment.setValue(valueObj)
+        else:
+            self.childClass(name, self, valueObj)
+
+    @ifbasestring
+    def __contains__(self, name):
+        return bool(self[name])
+
+    @ifbasestring
+    def __delitem__(self, name):
+        h = self[name]
+        if h:
+            self.remove(h)
+
+    def importNode(self, obj):
+        """
+        Try to interpret the object and transform it into a Node object
+        of the right species.
+        """
+        return QuotedString(obj)
+
+
 class Identifier(LyNode):
     """
     An identifier, prints as \name.
     Name may be a string or a Reference object.
     """
+    isAtom = True
+    
     def __init__(self, name=None, parent=None):
         super(Identifier, self).__init__(parent)
         self.name = name
@@ -523,25 +583,208 @@ class Identifier(LyNode):
         return "\\%s" % unicode(self.name)
 
 
-class Section(Enclosed):
-    pre = property(lambda self: self.name + " {")
-    post = "}"
+class Statement(Enclosed):
+    """
+    A statement with an bracket-enclosed list of arguments.
+    """
+    may_remove_brackets = True
+    pre, post = "{", "}"
+    name = ""
     
-    
+    def ly(self, receiver):
+        return "\\%s %s" % (self.name, super(Statement, self).ly(receiver))
+
+
+class Section(Statement):
+    may_remove_brackets = False
+    before, after = 1, 1
+
+
 class Book(Section): name = 'book'
 class Score(Section): name = 'score'
-class Paper(Section): name = 'paper'
-class Layout(Section): name = 'layout'
-class Midi(Section): name = 'midi'
+class Paper(HandleVars, Section): name = 'paper'
+class Layout(HandleVars, Section): name = 'layout'
+class Midi(HandleVars, Section): name = 'midi'
+class Header(HandleVars, Section): name = 'header'
 
 
-class With(Section):
+class With(HandleVars, Section):
     """ If this item has no children, it prints nothing. """
     name = 'with'
+    before, after = 0, 0
     
     def ly(self, receiver):
         if len(self):
             return super(With, self).ly(receiver)
         else:
             return ''
+
+
+class ContextName(Text):
+    """
+    Used to print a context name, like \\Score.
+    """
+    def ly(self, receiver):
+        return "\\%s" % self.text
+
+
+class ContextId(Reference):
+    def __unicode__(self):
+        return '"%s"' % self.name
+
+
+class Context(HandleVars, Section):
+    """
+    A \\context section for use inside Layout or Midi sections.
+    """
+    name = 'context'
+    
+    def __init__(self, contextName="", parent=None):
+        if contextName:
+            ContextName(contextName, self)
+            
+
+class ContextType(Container):
+    """
+    \\new or \\context Staff = 'bla' \\with { } << music >>
+
+    A \\with (With) element is added automatically as the first child as soon
+    as you use our convenience methods that manipulate the variables
+    in \\with. If the \\with element is empty, it does not print anything.
+    You should add one other music object to this.
+    """
+    ctype = None
+    
+    def __init__(self, cid=None, new=True, parent=None):
+        super(ContextType, self).__init__(parent)
+        self.new = new
+        self.cid = cid
+        
+    def ly(self, receiver):
+        res = []
+        res.append(self.new and "\\new" or "\\context")
+        res.append(self.ctype or self.__class__.__name__)
+        if self.cid:
+            res.append("=")
+            res.append(unicode(self.cid))
+        res.append(super(ContextType, self).ly(receiver))
+        return " ".join(res)
+        
+    def getWith(self):
+        """
+        Gets the attached with clause. Creates it if not there.
+        """
+        for node in self:
+            if isinstance(node, With):
+                return node
+        self.insert(0, With())
+        return self[0]
+
+
+class ChoirStaff(ContextType): pass
+class ChordNames(ContextType): pass
+class CueVoice(ContextType): pass
+class Devnull(ContextType): pass
+class DrumStaff(ContextType): pass
+class DrumVoice(ContextType): pass
+class FiguredBass(ContextType): pass
+class FretBoards(ContextType): pass
+class Global(ContextType): pass
+class GrandStaff(ContextType): pass
+class GregorianTranscriptionStaff(ContextType): pass
+class GregorianTranscriptionVoice(ContextType): pass
+class InnerChoirStaff(ContextType): pass
+class InnerStaffGroup(ContextType): pass
+class Lyrics(ContextType): pass
+class MensuralStaff(ContextType): pass
+class MensuralVoice(ContextType): pass
+class NoteNames(ContextType): pass
+class PianoStaff(ContextType): pass
+class RhythmicStaff(ContextType): pass
+class ScoreContext(ContextType):
+    """
+    Represents the Score context in LilyPond, but the name would
+    collide with the Score class that represents \\score { } constructs.
+
+    Because the latter is used more often, use ScoreContext to get
+    \\new Score etc.
+    """
+    ctype = 'Score'
+
+class Staff(ContextType): pass
+class StaffGroup(ContextType): pass
+class TabStaff(ContextType): pass
+class TabVoice(ContextType): pass
+class VaticanaStaff(ContextType): pass
+class VaticanaVoice(ContextType): pass
+class Voice(ContextType): pass
+
+
+class UserContext(ContextType):
+    """
+    Represents a context the user creates.
+    e.g. \\new MyStaff = cid << music >>
+    """
+    def __init__(self, ctype, cid=None, new=True, parent=None):
+        super(UserContext, self).__init__(cid, new, parent)
+        self.ctype = ctype
+
+
+class ContextProperty(Leaf):
+    """
+    A Context.property or Context.layoutObject construct.
+    Call e.g. ContextProperty('aDueText', 'Staff') to get 'Staff.aDueText'.
+    """
+    def __init__(self, prop, context=None, parent=None):
+        self.prop = prop
+        self.context = context
+
+    def ly(self, receiver):
+        if self.context:
+            # In \lyrics or \lyricmode: put spaces around dot.
+            p = self.findParent(InputMode)
+            if p and isinstance(p, LyricMode):
+                f = '%s . %s'
+            else:
+                f = '%s.%s'
+            return f % (self.context, self.prop)
+        else:
+            return self.prop
+
+
+class InputMode(Statement):
+    """
+    The abstract base class for input modes such as lyricmode/lyrics,
+    chordmode/chords etc.
+    """
+    pass
+
+
+class ChordMode(InputMode): name = 'chordmode'
+class InputChords(ChordMode): name = 'chords'
+class LyricMode(InputMode): name = 'lyricmode'
+class InputLyrics(LyricMode): name = 'lyrics'
+class NoteMode(InputMode): name = 'notemode'
+class InputNotes(NoteMode): name = 'notes'
+class FigureMode(InputMode): name = 'figuremode'
+class InputFigures(FigureMode): name = 'figures'
+class DrumMode(InputMode): name = 'drummode'
+class InputDrums(DrumMode): name = 'drums'
+
+
+class AddLyrics(InputLyrics): 
+    name = 'addlyrics'
+    may_remove_brackets = False
+    before, after = 1, 1
+
+
+class LyricsTo(LyricMode):
+    @property
+    def name(self):
+        return 'lyricsto %s' % unicode(self.cid)
+    
+    def __init__(self, cid, parent=None):
+        super(LyricsTo, self).__init__(parent)
+        self.cid = cid
+
 
