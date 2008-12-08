@@ -34,6 +34,9 @@ All elements of a LilyPond document inherit Node.
 """
 
 import re
+from rational import Rational
+
+import ly.pitch, ly.duration
 
 class Node(object):
     
@@ -280,6 +283,8 @@ class Receiver(object):
     """
     def __init__(self):
         self.typographicalQuotes = True
+        self.language = "nederlands"
+        self.indentStr = '  '
         
     def quoteString(self, text):
         if self.typographicalQuotes:
@@ -290,6 +295,25 @@ class Receiver(object):
         text = text.replace('"', '\\"')
         # quote the string
         return '"%s"' % text
+
+    def indentGen(self, sourceLines, startIndent = 0):
+        """
+        A generator that walks on the source lines, and returns
+        properly indented LilyPond code.
+        """
+        d = startIndent
+        for t in sourceLines:
+            if d and re.match(r'}|>|%}', t):
+                d -= 1
+            yield self.indentStr * d + t
+            if re.search(r'(\{|<|%{)$', t):
+                d += 1
+
+    def indent(self, node):
+        """
+        Return a formatted printout of node (and its children)
+        """
+        return '\n'.join(self.indentGen(node.ly(self).splitlines()))
 
 
 class Reference(object):
@@ -311,6 +335,18 @@ class ContextId(Reference):
         return '"%s"' % self.name
 
 
+class Named(object):
+    """
+    Mixin to print a \\name before the contents of the container.
+    unicode() is called on the self.name attribute, so it may also
+    be a Reference.
+    """
+    name = ""
+    
+    def ly(self, receiver):
+        return "\\%s %s" % (unicode(self.name), super(Named, self).ly(receiver))
+        
+        
 class HandleVars(object):
     """
     A powerful mixin class that makes handling unique variable assignments
@@ -371,9 +407,6 @@ class HandleVars(object):
         return QuotedString(obj)
 
 
-##
-# Abstract base classes
-# 
 class LyNode(Node):
     """
     Base class for LilyPond objects, based on Node,
@@ -406,8 +439,12 @@ class LyNode(Node):
         If zero newlines are requested, repl is returned, defaulting to a space.
         """
         return '\n' * max(self.after, other.before) or repl
-        
 
+
+##
+# Leaf and Container are the two base classes the rest of the LilyPond
+# element classes is based on.
+# 
 class Leaf(LyNode):
     """ A leaf node without children """
     pass
@@ -442,28 +479,8 @@ class Container(LyNode):
             return "".join(res)
 
 
-class Enclosed(Container):
-    """ An expression between brackets: { ... } or << >> """
-    may_remove_brackets = False
-    pre, post = "", ""
-    before, after = 0, 0
-    
-    def ly(self, receiver):
-        if len(self) == 0:
-            return " ".join((self.pre, self.post))
-        sup = super(Enclosed, self)
-        text = sup.ly(receiver)
-        if sup.before or sup.after or '\n' in text:
-            return "".join((self.pre, "\n" * max(sup.before, 1), text,
-                                      "\n" * max(sup.after, 1), self.post))
-        elif self.may_remove_brackets and len(self) == 1 and self[0].isAtom:
-            return text
-        else:
-            return " ".join((self.pre, text, self.post))
-
-
 ##
-# These classes correspond to read LilyPond data.
+# These classes correspond to real LilyPond data.
 #
 class Text(Leaf):
     """ A leaf node with arbitrary text """
@@ -540,8 +557,8 @@ class Version(Text):
 class Assignment(Container):
     """
     A varname = value construct with it's value as its first child
-    The name can be a string or a Reference object: so that everywhere this
-    varname is referenced, the name is the same.
+    The name can be a string or a Reference object: so that everywhere
+    where this varname is referenced, the name is the same.
     """
     before, after = 1, 1
     
@@ -572,7 +589,7 @@ HandleVars.childClass = Assignment
 
 class Identifier(Leaf):
     """
-    An identifier, prints as \name.
+    An identifier, prints as \\name.
     Name may be a string or a Reference object.
     """
     isAtom = True
@@ -585,35 +602,89 @@ class Identifier(Leaf):
         return "\\%s" % unicode(self.name)
 
 
+class Statement(Named, Container):
+    """
+    Base class for statements with arguments. The statement is read in the
+    name attribute, the arguments are the children.
+    """
+    before = 0 # do not read property from container
+    isAtom = True
+
+
+class Command(Statement):
+    """
+    Use this to create a LilyPond command supplying the name (or a Reference)
+    when instantiating.
+    """
+    def __init__(self, name, parent=None):
+        super(Command, self).__init__(parent)
+        self.name = name
+
+    
+class Enclosed(Container):
+    """
+    Encloses all children between brackets: { ... }
+    If may_remove_brackets is True in subclasses, the brackets are
+    removed if there is only one child and that child is an atom (i.e.
+    a single LilyPond expression.
+    """
+    may_remove_brackets = False
+    pre, post = "{", "}"
+    before, after = 0, 0
+    isAtom = True
+    
+    def ly(self, receiver):
+        if len(self) == 0:
+            return " ".join((self.pre, self.post))
+        sup = super(Enclosed, self)
+        text = sup.ly(receiver)
+        if sup.before or sup.after or '\n' in text:
+            return "".join((self.pre, "\n" * max(sup.before, 1), text,
+                                      "\n" * max(sup.after, 1), self.post))
+        elif self.may_remove_brackets and len(self) == 1 and self[0].isAtom:
+            return text
+        else:
+            return " ".join((self.pre, text, self.post))
+
+
 class Seq(Enclosed):
-    """ An expression between { } """
-    pre = "{"
-    post = "}"
+    """ An SequentialMusic expression between { } """
+    pre, post = "{", "}"
     
 
 class Sim(Enclosed):
-    """ An expression between << >> """
-    pre = "<<"
-    post = ">>"
+    """ An SimultaneousMusic expression between << >> """
+    pre, post = "<<", ">>"
 
 
 class Seqr(Seq): may_remove_brackets = True
 class Simr(Sim): may_remove_brackets = True
     
 
-class Statement(Enclosed):
+class StatementEnclosed(Named, Enclosed):
     """
-    A statement with an bracket-enclosed list of arguments.
+    Base class for LilyPond commands that have a single bracket-enclosed
+    list of arguments.
     """
     may_remove_brackets = True
-    pre, post = "{", "}"
-    name = ""
-    
-    def ly(self, receiver):
-        return "\\%s %s" % (self.name, super(Statement, self).ly(receiver))
 
 
-class Section(Statement):
+class CommandEnclosed(StatementEnclosed):
+    """
+    Use this to print LilyPond commands that have a single 
+    bracket-enclosed list of arguments. The command name is supplied to
+    the constructor.
+    """
+    def __init__(self, name, parent=None):
+        super(CommandEnclosed, self).__init__(parent)
+        self.name = name
+        
+        
+class Section(StatementEnclosed):
+    """
+    Very much like a Statement. Use as base class for \\book { }, \\score { }
+    etc. By default never removes the brackets and always starts on a new line.
+    """
     may_remove_brackets = False
     before, after = 1, 1
 
@@ -801,3 +872,161 @@ class LyricsTo(LyricMode):
         self.cid = cid
 
 
+class Pitch(Leaf):
+    """
+    A pitch with octave, note, alter.
+    octave is specified by an integer, zero for the octave containing middle C.
+    note is a number from 0 to 6, with 0 corresponding to pitch C and 6
+    corresponding to pitch B.
+    alter is the number of whole tones for alteration (can be int or Rational)
+    """
+
+    def __init__(self, octave=0, note=0, alter=0, parent=None):
+        super(Pitch, self).__init__(parent)
+        self.octave = octave
+        self.note = note
+        self.alter = Rational(alter)
+
+    def ly(self, receiver):
+        """
+        Print the pitch in the preferred language.
+        """
+        p = ly.pitch.pitchNames[receiver.language](self.note, self.alter)
+        if self.octave < -1:
+            return p + ',' * (-self.octave - 1)
+        elif self.octave > -1:
+            return p + "'" * (self.octave + 1)
+        return p
+
+
+class Duration(Leaf):
+    """
+    A duration with duration (in logarithmical form): (-2 ... 8),
+    where -2 = \\longa, -1 = \\breve, 0 = 1, 1 = 2, 2 = 4, 3 = 8, 4 = 16, etc,
+    dots (number of dots),
+    factor (Rational giving the scaling of the duration).
+    """
+    def __init__(self, dur, dots=0, factor=1, parent=None):
+        super(Duration, self).__init__(parent)
+        self.dur = dur # log
+        self.dots = dots
+        self.factor = Rational(factor)
+
+    def ly(self, receiver):
+        s = ly.duration.durations[self.dur + 3] + '.' * self.dots
+        if self.factor != 1:
+            s += '*%s' % str(self.factor)
+        return s
+
+
+class Relative(Statement):
+    """
+    \\relative <pitch> music
+
+    You should add a Pitch (optionally) and another music object,
+    e.g. Sim or Seq, etc.
+    """
+    name = 'relative'
+
+
+class Transposition(Statement):
+    """
+    \\transposition <pitch>
+    You should add a Pitch.
+    """
+    name = 'transposition'
+
+
+class KeySignature(Leaf):
+    """
+    A key signature expression, like:
+
+    \\key c \\major
+    The pitch should be given in the arguments note and alter and is written
+    out in the document's language.
+    """
+    def __init__(self, note=0, alter=0, mode="major", parent=None):
+        super(KeySignature, self).__init__(parent)
+        self.note = note
+        self.alter = Rational(alter)
+        self.mode = mode
+
+    def ly(self, receiver):
+        pitch = ly.pitch.pitchNames[receiver.language](self.note, self.alter)
+        return "\\key %s \\%s" % (pitch, self.mode)
+
+
+class TimeSignature(Leaf):
+    """
+    A time signature, like: \\time 4/4
+    """
+    def __init__(self, num, beat, parent=None):
+        super(TimeSignature, self).__init__(parent)
+        self.num = num
+        self.beat = beat
+
+    def ly(self, receiver):
+        return "\\time %i/%i" % (self.num, self.beat)
+
+
+class Clef(Leaf):
+    """
+    A clef.
+    """
+    def __init__(self, clef, parent=None):
+        super(Clef, self).__init__(parent)
+        self.clef = clef
+
+    def ly(self, receiver):
+        f = self.clef.isalpha() and '%s' or '"%s"'
+        return "\\clef %s\n" % f % self.clef
+
+
+class VoiceSeparator(Leaf):
+    """
+    A Voice Separator: \\\\
+    """
+    def ly(self, receiver):
+        return r'\\'
+
+
+class Mark(Statement):
+    """
+    The \\mark command.
+    """
+    name = 'mark'
+
+
+class Markup(StatementEnclosed):
+    """
+    The \\markup command.
+    You can add many children, in that case Markup automatically prints
+    { and } around them.
+    """
+    name = 'markup'
+
+
+class MarkupEnclosed(CommandEnclosed):
+    """
+    A markup that auto-encloses all its arguments, like 'italic', 'bold'
+    etc.  You must supply the name.
+    """
+    pass
+
+
+class MarkupCommand(Command):
+    """
+    A markup command with more or no arguments, that does not auto-enclose
+    its arguments. Useful for commands like note-by-number or hspace.
+
+    You must supply the name. Its arguments are its children.
+    If one argument can be a markup list, use a Enclosed() construct for that.
+    """
+    pass
+
+
+#Test stuff
+_r = Receiver()
+def p(node):
+    print _r.indent(node)
+        
