@@ -105,17 +105,18 @@ class Titles(QWidget):
         headers = ly.headers(i18n)
         msg = i18n("Click to enter a value.")
         html = string.Template(titles_html % (
-            i18n("bottom of first page"),
-            i18n("bottom of last page"))
-        ).substitute(dict(
-            (k, "<a title='%s' href='%s'>%s</a>" % (msg, k, v))
-            for k, v in headers))
+                i18n("bottom of first page"),
+                i18n("bottom of last page"))
+            ).substitute(dict(
+                (k, "<a title='%s' href='%s'>%s</a>" % (msg, k, v))
+                for k, v in headers))
         t.setHtml(html)
         l.addWidget(t)
         QObject.connect(t, SIGNAL("anchorClicked(QUrl)"), self.focusEntry)
 
         g = QGridLayout()
         g.setVerticalSpacing(1)
+        g.setColumnMinimumWidth(1, 200)
         l.addLayout(g)
 
         for row, (name, title) in enumerate(headers):
