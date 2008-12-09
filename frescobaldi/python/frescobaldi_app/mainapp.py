@@ -127,6 +127,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         
         self.jobs = {}
         listeners[app.activeChanged].append(self.updateJobActions)
+        
+        self._scorewiz = None
 
     def setupActions(self):
         super(MainWindow, self).setupActions()
@@ -144,7 +146,10 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         # Score wizard
         @self.onAction(i18n("Setup New Score..."), "text-x-lilypond")
         def lilypond_score_wizard():
-            pass # TODO implement
+            if not self._scorewiz:
+                from frescobaldi_app.scorewiz import ScoreWizard
+                self._scorewiz = ScoreWizard(self)
+            self._scorewiz.show()
         
         # run LilyPond actions
         @self.onAction(i18n("Run LilyPond (preview)"), "document-preview")

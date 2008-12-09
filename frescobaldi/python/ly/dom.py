@@ -296,13 +296,13 @@ class Receiver(object):
         # quote the string
         return '"%s"' % text
 
-    def indentGen(self, sourceLines, startIndent = 0):
+    def indentGen(self, node, startIndent = 0):
         """
-        A generator that walks on the source lines, and returns
-        properly indented LilyPond code.
+        A generator that walks on the output of the given node,
+        and returns properly indented LilyPond code.
         """
         d = startIndent
-        for t in sourceLines:
+        for t in node.ly(self).splitlines():
             if d and re.match(r'}|>|%}', t):
                 d -= 1
             yield self.indentStr * d + t
@@ -313,7 +313,7 @@ class Receiver(object):
         """
         Return a formatted printout of node (and its children)
         """
-        return '\n'.join(self.indentGen(node.ly(self).splitlines()))
+        return '\n'.join(self.indentGen(node))
 
 
 class Reference(object):
