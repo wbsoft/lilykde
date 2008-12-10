@@ -277,7 +277,6 @@ class Settings(QWidget):
         l.setBuddy(self.metroDur)
         for icon, text in durs:
             self.metroDur.addItem(icon, '')
-        self.metroDur.setCurrentIndex(durations.index('4'))
         l = QLabel('=', h)
         l.setAlignment(Qt.AlignCenter)
         l.setMaximumWidth(20)
@@ -290,7 +289,6 @@ class Settings(QWidget):
         # reverse so mousewheeling is more intuitive
         self.metroValues = metroValues[::-1]
         self.metroVal.addItems(map(str, self.metroValues))
-        self.metroVal.setCurrentIndex(self.metroValues.index(100))
         def tap(bpm):
             """ Tap the tempo tap button """
             l = [abs(t - bpm) for t in self.metroValues]
@@ -312,11 +310,12 @@ class Settings(QWidget):
         h = KHBox()
         v.addWidget(h)
         l = QLabel(i18n("Language:"), h)
+        self.languageNames = list(sorted(ly.keyNames))
         self.lylang = QComboBox(h)
         l.setBuddy(self.lylang)
         self.lylang.addItem(i18n("Default"))
         self.lylang.insertSeparator(1)
-        self.lylang.addItems([l.title() for l in sorted(ly.keyNames)])
+        self.lylang.addItems([l.title() for l in self.languageNames])
         h.setToolTip(i18n(
             "The LilyPond language you want to use for the pitch names."))
         QObject.connect(self.lylang, SIGNAL("activated(const QString&)"),
@@ -406,11 +405,19 @@ class Settings(QWidget):
             "Whether you want instrument names to be standard Italian "
             "(like 'Organo' for 'Organ'), English or in your own language."))
 
+        self.default()
         self.loadConfig()
         
     def loadConfig(self):
         conf = config()
-        self.setLanguage(conf.readEntry('language', 'nederlands'))
+        
+        lylang = conf.readEntry('language', '')
+        self.setLanguage(lylang)
+        if lylang in self.languageNames:
+            index = self.languageNames.index(lylang) + 1
+        else:
+            index = 0
+        self.lylang.setCurrentIndex(index)
 
         self.typq.setChecked(conf.readEntry('typographical', QVariant(True)).toBool())
         self.tagl.setChecked(conf.readEntry('remove tagline', QVariant(False)).toBool())
@@ -442,8 +449,15 @@ class Settings(QWidget):
 
     def default(self):
         """ Set various items to their default state """
+        self.lylang.setCurrentIndex(0)
         self.setLanguage('nederlands')
         self.key.setCurrentIndex(0)
+        self.mode.setCurrentIndex(0)
+        self.time.setCurrentIndex(0)
+        self.pickup.setCurrentIndex(0)
+        self.metroVal.setCurrentIndex(self.metroValues.index(100))
+        self.metroDur.setCurrentIndex(durations.index('4'))
+        self.tempoInd.clear()
         self.typq.setChecked(True)
         self.tagl.setChecked(False)
         self.barnum.setChecked(False)
@@ -459,7 +473,7 @@ class Settings(QWidget):
     def setLanguage(self, lang):
         """ Change the LilyPond language, affects key names """
         lang = unicode(lang).lower()    # can be QString
-        if lang not in ly.keyNames:
+        if lang not in self.languageNames:
             lang = 'nederlands'
         index = self.key.currentIndex()
         if index == -1:
