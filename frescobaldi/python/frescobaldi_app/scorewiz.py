@@ -101,6 +101,8 @@ class Titles(QWidget):
         t.setSearchPaths(KGlobal.dirs().findDirs("appdata", "pics"))
         t.setOpenLinks(False)
         t.setOpenExternalLinks(False)
+        
+        # ensure that the full HTML example page is displayed
         t.setContentsMargins(2, 2, 2, 2)
         t.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         t.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
