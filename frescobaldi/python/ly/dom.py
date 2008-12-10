@@ -1025,6 +1025,18 @@ class MarkupCommand(Command):
     pass
 
 
+# Utility functions
+def addInstrumentNameEngraverIfNecessary(node):
+    """
+    Adds the Instrument_name_engraver to the node if it would need it
+    to print instrument names.
+    """
+    if (isinstance(node, ContextType) and not isinstance(node,
+            (Staff, RhythmicStaff, PianoStaff, Lyrics, FretBoards))):
+        Text('\\consists "Instrument_name_engraver"', node.getWith()).after = 1
+
+
+
 #Test stuff
 _r = Receiver()
 def p(node):

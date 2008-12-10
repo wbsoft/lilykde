@@ -22,7 +22,7 @@ Score Wizard
 """
 
 import os, re, sip, string, sys
-import ly
+import ly, ly.dom
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -34,6 +34,49 @@ def config(group=None):
     if group:
         c = c.group(group)
     return c
+
+
+
+class Builder(ly.dom.Receiver):
+    """
+    Interacts with the parts and builds the LilyPond document,
+    based on the user's preferences.
+    """
+    def __init__(self):
+        super(Builder, self).__init__()
+        
+        # Create MIDI output?
+        self.createMidiOutput = False
+        
+        # output instrument names?
+        self.instrumentNames = False
+        
+        # 0 = italian, 1 = english, 2 = translated
+        self.instrumentNamesLanguage = 0
+        
+        # 0 = long, 1 = short
+        self.instrumentNamesFirst = 0
+        
+        # 0 = long, 1 = short, 2 = none
+        self.instrumentNamesOther = 1
+        
+    
+    def setInstrumentNames(self, node, instrumentNames):
+        if not self.instrumentNames:
+            return
+        names = instrumentNames[self.instrumentNamesLanguage].split('|')
+        # add instrument_name_engraver if necessary
+        ly.dom.addInstrumentNameEngraverIfNecessary(node)
+        w = node.getWith()
+        w['instrumentName'] = names[self.instrumentNamesFirst]
+        if self.instrumentNamesOther < 2:
+            w['shortInstrumentName'] = names[self.instrumentNamesOther]
+
+    def setMidiInstrument(self, node, midiInstrument):
+        if not self.createMidiOutput:
+            return
+        node.getWith()['midiInstrument'] = midiInstrument
+
 
 
 class ScoreWizard(KPageDialog):
@@ -173,6 +216,57 @@ class Settings(QWidget):
         QWidget.__init__(self, parent)
         p = parent.addPage(self, i18n("Score settings"))
 
+        h = QHBoxLayout(self)
+        v = QVBoxLayout()
+        h.addLayout(v)
+        score = QGroupBox(i18n("Score settings"))
+        v.addWidget(score)
+        lily =  QGroupBox(i18n("LilyPond"))
+        v.addWidget(lily)
+        
+        v = QVBoxLayout()
+        h.addLayout(v)
+        prefs = QGroupBox(i18n("General preferences"))
+        v.addWidget(prefs)
+        instr = QGroupBox(i18n("Instrument names"))
+        v.addWidget(instr)
+
+        # Score settings:
+        v = QVBoxLayout(score)
+        h = KHBox()
+        v.addWidget(h)
+        l = QLabel(i18n("Key signature:"), h)
+        self.key = QComboBox(h) # the key names are filled in later
+        self.mode = QComboBox(h)
+        self.mode.addItems([title for name, title in ly.modes(i18n)])
+        l.setBuddy(self.key)
+
+        h = KHBox()
+        v.addWidget(h)
+        l = QLabel(i18n("Time signature:"), h)
+        self.time = QComboBox(h)
+        self.time.setEditable(True)
+        self.time.addItem(KIcon('time_c44'), '(4/4)')
+        self.time.addItem(KIcon('time_c22'), '(2/2)')
+        self.time.addItems([
+            '2/4', '3/4', '4/4', '5/4', '6/4', '7/4',
+            '2/2', '3/2', '4/2',
+            '3/8', '5/8', '6/8', '7/8', '8/8', '9/8', '12/8',
+            '3/16', '6/16', '12/16'])
+        l.setBuddy(self.time)
+
+        h = KHBox()
+        v.addWidget(h)
+        l = QLabel(i18n("Pickup measure:"), h)
+        self.pickup = QComboBox(h)
+        self.pickup.addItem(i18n("None"))
+        durs = [(KIcon('note_%s' % d.replace('.', 'd')), d) for d in durations]
+        for icon, text in durs:
+            self.pickup.addItem(icon, text)
+        l.setBuddy(self.pickup)
+
+
+
     def default(self):
         """ Set various items to their default state """
         pass
@@ -206,3 +300,5 @@ a { text-decoration: none;}
 <tr><td colspan=3 align=center>$copyright <i>(%s)</i></td></tr>
 <tr><td colspan=3 align=center>$tagline <i>(%s)</i></td></tr>
 </table></body></html>"""
+
+durations = ['16', '16.', '8', '8.', '4', '4.', '2', '2.', '1', '1.']
