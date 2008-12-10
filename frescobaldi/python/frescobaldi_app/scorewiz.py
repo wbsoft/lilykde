@@ -443,6 +443,7 @@ class Settings(QWidget):
     def default(self):
         """ Set various items to their default state """
         self.setLanguage('nederlands')
+        self.key.setCurrentIndex(0)
         self.typq.setChecked(True)
         self.tagl.setChecked(False)
         self.barnum.setChecked(False)
