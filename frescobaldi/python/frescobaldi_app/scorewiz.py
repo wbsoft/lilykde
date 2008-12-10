@@ -121,10 +121,11 @@ class ScoreWizard(KPageDialog):
             c = widget.completionObject()
             c.setOrder(KCompletion.Sorted)
             c.setItems(conf.readEntry(name, QStringList()))
-            
+        
     def done(self, result):
         self.saveDialogSize(config("dialogsize"))
         self.saveCompletions()
+        self.settings.saveConfig()
 
     def slotDefault(self):
         self.titles.default()
@@ -407,10 +408,27 @@ class Settings(QWidget):
 
         self.default()
         self.loadConfig()
+
+    def saveConfig(self):
+        conf = config()
+        if self.lylang.currentIndex() > 0:
+            conf.writeEntry('language', self.languageNames[self.lylang.currentIndex() - 1])
+        conf.writeEntry('typographical', QVariant(self.typq.isChecked()))
+        conf.writeEntry('remove tagline', QVariant(self.tagl.isChecked()))
+        conf.writeEntry('remove barnumbers', QVariant(self.barnum.isChecked()))
+        conf.writeEntry('midi', QVariant(self.midi.isChecked()))
+        conf.writeEntry('metronome mark', QVariant(self.metro.isChecked()))
+        if self.paper.currentIndex() > 0:
+            conf.writeEntry('paper size', paperSizes[self.paper.currentIndex() - 1])
+        conf.writeEntry('paper landscape', QVariant(self.paperLandscape.isChecked()))
+        g = config('instrument names')
+        g.writeEntry('show', QVariant(self.instr.isChecked()))
+        g.writeEntry('first', ['short', 'long'][self.instrFirst.currentIndex()])
+        g.writeEntry('other', ['short', 'long', 'none'][self.instrOther.currentIndex()])
+        g.writeEntry('lang', ['italian', 'english', 'translated'][self.instrLang.currentIndex()])
         
     def loadConfig(self):
         conf = config()
-        
         lylang = conf.readEntry('language', '')
         self.setLanguage(lylang)
         if lylang in self.languageNames:
@@ -431,21 +449,22 @@ class Settings(QWidget):
         self.paperLandscape.setChecked(conf.readEntry('paper landscape', QVariant(False)).toBool())
         self.paperLandscape.setEnabled(psize in paperSizes)
 
+        g = config('instrument names')
         def readconf(entry, itemlist, defaultIndex):
-            item = conf.readEntry(entry, itemlist[defaultIndex])
+            item = g.readEntry(entry, itemlist[defaultIndex])
             if item in itemlist:
                 return itemlist.index(item)
             else:
                 return defaultIndex
 
-        first = readconf('instrument names first system', ['short', 'long'], 0)
-        other = readconf('instrument names other systems', ['short', 'long', 'none'], 2)
-        lang = readconf('instrument names language', ['italian', 'english', 'translated'], 0)
+        first = readconf('first', ['short', 'long'], 0)
+        other = readconf('other', ['short', 'long', 'none'], 2)
+        lang = readconf('lang', ['italian', 'english', 'translated'], 0)
 
         self.instrFirst.setCurrentIndex(first)
         self.instrOther.setCurrentIndex(other)
         self.instrLang.setCurrentIndex(lang)
-        self.instr.setChecked(conf.readEntry('instrument names', QVariant(True)).toBool())
+        self.instr.setChecked(g.readEntry('show', QVariant(True)).toBool())
 
     def default(self):
         """ Set various items to their default state """
