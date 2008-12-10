@@ -22,12 +22,15 @@ Score Wizard
 """
 
 import os, re, sip, string, sys
-import ly, ly.dom
+import ly, ly.dom, ly.version
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
+
+from frescobaldi_app.widgets import TapButton
+
 
 def config(group=None):
     c = KGlobal.config().group("scorewiz")
@@ -260,16 +263,211 @@ class Settings(QWidget):
         l = QLabel(i18n("Pickup measure:"), h)
         self.pickup = QComboBox(h)
         self.pickup.addItem(i18n("None"))
+        self.pickup.insertSeparator(1)
         durs = [(KIcon('note_%s' % d.replace('.', 'd')), d) for d in durations]
         for icon, text in durs:
             self.pickup.addItem(icon, text)
         l.setBuddy(self.pickup)
 
+        h = KHBox()
+        v.addWidget(h)
+        l = QLabel(i18n("Metronome mark:"), h)
+        self.metroDur = QComboBox(h)
 
+        l.setBuddy(self.metroDur)
+        for icon, text in durs:
+            self.metroDur.addItem(icon, '')
+        self.metroDur.setCurrentIndex(durations.index('4'))
+        l = QLabel('=', h)
+        l.setAlignment(Qt.AlignCenter)
+        l.setMaximumWidth(20)
+        self.metroVal = QComboBox(h)
+        self.metroVal.setEditable(True)
+        metroValues, start = [], 40
+        for end, step in (60, 2), (72, 3), (120, 4), (144, 6), (210, 8):
+            metroValues.extend(range(start, end, step))
+            start = end
+        # reverse so mousewheeling is more intuitive
+        self.metroValues = metroValues[::-1]
+        self.metroVal.addItems(map(str, self.metroValues))
+        self.metroVal.setCurrentIndex(self.metroValues.index(100))
+        def tap(bpm):
+            """ Tap the tempo tap button """
+            l = [abs(t - bpm) for t in self.metroValues]
+            m = min(l)
+            if m < 6:
+                self.metroVal.setCurrentIndex(l.index(m))
+        TapButton(h, tap)
+
+        h = KHBox()
+        v.addWidget(h)
+        l = QLabel(i18n("Tempo indication:"), h)
+        self.tempoInd = KLineEdit(h)
+        parent.complete(self.tempoInd, "tempo")
+        l.setBuddy(self.tempoInd)
+        h.setToolTip(i18n("A tempo indication, e.g. \"Allegro.\""))
+
+        # LilyPond settings
+        v = QVBoxLayout(lily)
+        h = KHBox()
+        v.addWidget(h)
+        l = QLabel(i18n("Language:"), h)
+        self.lylang = QComboBox(h)
+        l.setBuddy(self.lylang)
+        self.lylang.addItem(i18n("Default"))
+        self.lylang.insertSeparator(1)
+        self.lylang.addItems([l.title() for l in sorted(ly.keyNames)])
+        h.setToolTip(i18n(
+            "The LilyPond language you want to use for the pitch names."))
+        QObject.connect(self.lylang, SIGNAL("activated(const QString&)"),
+            self.setLanguage)
+        
+        h = KHBox()
+        v.addWidget(h)
+        l = QLabel(i18n("Version:"), h)
+        self.lyversion = QComboBox(h)
+        self.lyversion.setEditable(True)
+        l.setBuddy(self.lyversion)
+        version = ly.version.LilyPondVersion('lilypond').versionString
+        if version:
+            self.lyversion.addItem(version)
+        self.lyversion.addItems(('2.10.0', '2.11.0'))
+        h.setToolTip(i18n(
+            "The LilyPond version you will be using for this document."))
+
+        # General preferences
+        v = QVBoxLayout(prefs)
+        self.typq = QCheckBox(i18n("Use typographical quotes"))
+        self.typq.setToolTip(i18n(
+            "Replace normal quotes in titles with nice typographical quotes."))
+        v.addWidget(self.typq)
+        self.tagl = QCheckBox(i18n("Remove default tagline"))
+        self.tagl.setToolTip(i18n(
+            "Suppress the default tagline output by LilyPond."))
+        v.addWidget(self.tagl)
+        self.barnum = QCheckBox(i18n("Remove bar numbers"))
+        self.barnum.setToolTip(i18n(
+            "Suppress the display of measure numbers at the beginning of "
+            "every system."))
+        v.addWidget(self.barnum)
+        self.midi = QCheckBox(i18n("Create MIDI output"))
+        self.midi.setToolTip(i18n(
+            "Create a MIDI file in addition to the PDF file."))
+        v.addWidget(self.midi)
+        self.metro = QCheckBox(i18n("Show metronome mark"))
+        self.metro.setToolTip(i18n(
+            "If checked, show the metronome mark at the beginning of the "
+            "score. The MIDI output also uses the metronome setting."))
+        v.addWidget(self.metro)
+
+        # paper size:
+        h = KHBox()
+        v.addWidget(h)
+        h.setSpacing(2)
+        l = QLabel(i18n("Paper size:"), h)
+        self.paper = QComboBox(h)
+        l.setBuddy(self.paper)
+        self.paperLandscape = QCheckBox(i18n("Landscape"), h)
+        self.paper.addItem(i18n("Default"))
+        self.paper.addItems(paperSizes)
+        QObject.connect(self.paper, SIGNAL("activated(int)"),
+            lambda i: self.paperLandscape.setEnabled(bool(i)))
+
+        # Instrument names
+        instr.setCheckable(True)
+        self.instr = instr
+        v = QVBoxLayout(instr)
+        
+        h = KHBox()
+        v.addWidget(h)
+        l = QLabel(i18n("First system:"), h)
+        self.instrFirst = QComboBox(h)
+        l.setBuddy(self.instrFirst)
+        self.instrFirst.addItems((i18n("Short"), i18n("Long")))
+        h.setToolTip(i18n(
+            "Use long or short instrument names before the first system."))
+
+        h = KHBox()
+        v.addWidget(h)
+        l = QLabel(i18n("Other systems:"), h)
+        self.instrOther = QComboBox(h)
+        l.setBuddy(self.instrOther)
+        self.instrOther.addItems((i18n("Short"), i18n("Long"), i18n("None")))
+        h.setToolTip(i18n(
+            "Use short, long or no instrument names before the next systems."))
+
+        h = KHBox()
+        v.addWidget(h)
+        l = QLabel(i18n("Language:"), h)
+        self.instrLang = QComboBox(h)
+        l.setBuddy(self.instrLang)
+        self.instrLang.addItems((i18n("Italian"), i18n("English"), i18n("Your language")))
+        h.setToolTip(i18n(
+            "Whether you want instrument names to be standard Italian "
+            "(like 'Organo' for 'Organ'), English or in your own language."))
+
+        self.loadConfig()
+        
+    def loadConfig(self):
+        conf = config()
+        self.setLanguage(conf.readEntry('language', 'nederlands'))
+
+        self.typq.setChecked(conf.readEntry('typographical', QVariant(True)).toBool())
+        self.tagl.setChecked(conf.readEntry('remove tagline', QVariant(False)).toBool())
+        self.barnum.setChecked(conf.readEntry('remove barnumbers', QVariant(False)).toBool())
+        self.midi.setChecked(conf.readEntry('midi', QVariant(True)).toBool())
+        self.metro.setChecked(conf.readEntry('metronome mark', QVariant(False)).toBool())
+
+        psize = conf.readEntry('paper size', '')
+        if psize in paperSizes:
+            self.paper.setCurrentIndex(paperSizes.index(psize) + 1)
+        self.paperLandscape.setChecked(conf.readEntry('paper landscape', QVariant(False)).toBool())
+        self.paperLandscape.setEnabled(psize in paperSizes)
+
+        def readconf(entry, itemlist, defaultIndex):
+            item = conf.readEntry(entry, itemlist[defaultIndex])
+            if item in itemlist:
+                return itemlist.index(item)
+            else:
+                return defaultIndex
+
+        first = readconf('instrument names first system', ['short', 'long'], 0)
+        other = readconf('instrument names other systems', ['short', 'long', 'none'], 2)
+        lang = readconf('instrument names language', ['italian', 'english', 'translated'], 0)
+
+        self.instrFirst.setCurrentIndex(first)
+        self.instrOther.setCurrentIndex(other)
+        self.instrLang.setCurrentIndex(lang)
+        self.instr.setChecked(conf.readEntry('instrument names', QVariant(True)).toBool())
 
     def default(self):
         """ Set various items to their default state """
-        pass
+        self.setLanguage('nederlands')
+        self.typq.setChecked(True)
+        self.tagl.setChecked(False)
+        self.barnum.setChecked(False)
+        self.midi.setChecked(True)
+        self.metro.setChecked(False)
+        self.paper.setCurrentIndex(0)
+        self.paperLandscape.setEnabled(False)
+        self.instrFirst.setCurrentIndex(0)
+        self.instrOther.setCurrentIndex(2)
+        self.instrLang.setCurrentIndex(0)
+        self.instr.setChecked(True)
+        
+    def setLanguage(self, lang):
+        """ Change the LilyPond language, affects key names """
+        lang = unicode(lang).lower()    # can be QString
+        if lang not in ly.keyNames:
+            lang = 'nederlands'
+        index = self.key.currentIndex()
+        if index == -1:
+            index = 0
+        self.key.clear()
+        self.key.addItems(ly.keyNames[lang])
+        self.key.setCurrentIndex(index)
+        
+
     
 
 titles_html = r"""
@@ -302,3 +500,5 @@ a { text-decoration: none;}
 </table></body></html>"""
 
 durations = ['16', '16.', '8', '8.', '4', '4.', '2', '2.', '1', '1.']
+
+paperSizes = ('a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17')
