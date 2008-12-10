@@ -101,7 +101,13 @@ class Titles(QWidget):
         t.setSearchPaths(KGlobal.dirs().findDirs("appdata", "pics"))
         t.setOpenLinks(False)
         t.setOpenExternalLinks(False)
-        
+        t.setContentsMargins(2, 2, 2, 2)
+        t.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        t.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        QObject.connect(t.document().documentLayout(),
+            SIGNAL("documentSizeChanged(QSizeF)"), 
+            lambda size: t.setMinimumSize(size.toSize()+QSize(4, 4)))
+
         headers = ly.headers(i18n)
         msg = i18n("Click to enter a value.")
         html = string.Template(titles_html % (
@@ -129,15 +135,19 @@ class Titles(QWidget):
             # set completion items
             parent.complete(e)
 
-
     def focusEntry(self, qurl):
         self.findChild(KLineEdit, qurl.toString()).setFocus()
         
     def default(self):
         """ Set various items to their default state """
-        pass # TODO implement
+        for w in self.findChildren(KLineEdit):
+            w.clear()
         
-    
+    def headers(self):
+        """ Return the user-entered headers. """
+        for h in ly.headerNames:
+            yield h, unicode(self.findChild(KLineEdit, h).text())
+            
     
 class Parts(QSplitter):
     """
