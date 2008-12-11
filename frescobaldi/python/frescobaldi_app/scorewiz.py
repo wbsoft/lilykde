@@ -481,6 +481,7 @@ class Builder(ly.dom.Receiver):
         ly.dom.Version(unicode(s.lyversion.currentText()), doc)
         ly.dom.BlankLine(doc)
         
+        # header:
         h = ly.dom.Header()
         for name, value in t.headers():
             if value:
@@ -491,7 +492,15 @@ class Builder(ly.dom.Receiver):
         if len(h):
             doc.append(h)
             ly.dom.BlankLine(doc)
-            
+        
+        # paper size:
+        if s.paper.currentIndex():
+            ly.dom.Scheme('(set-paper-size "%s"%s)' % (
+                    s.paper.currentText(),
+                    s.paperLandscape.isChecked() and " 'landscape" or ""),
+                ly.dom.Paper(doc)).after = 1
+            ly.dom.BlankLine(doc)
+    
         
         # Create MIDI output?
         self.createMidiOutput = s.midi.isChecked()
@@ -561,4 +570,4 @@ a { text-decoration: none;}
 
 durations = ['16', '16.', '8', '8.', '4', '4.', '2', '2.', '1', '1.']
 
-paperSizes = ('a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17')
+paperSizes = ['a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17']
