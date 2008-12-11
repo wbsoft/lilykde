@@ -171,8 +171,14 @@ class Parts(QSplitter):
 
     def default(self):
         """ Set various items to their default state """
-        pass
+        pass # TODO: implement
     
+    def createParts(self, builder):
+        """Return parts and their assignments"""
+        ### TODO: implement
+        assignments = []
+        parts = []
+        return assignments, parts
 
 class Settings(QWidget):
     """
@@ -474,8 +480,9 @@ class Builder(ly.dom.Receiver):
     def __init__(self, wizard, mainwin):
         super(Builder, self).__init__()
 
+        t = wizard.titles   # the titles tab.
+        p = wizard.parts    # the parts tab.
         s = wizard.settings # the settings tab.
-        t = wizard.titles   # the titles tab
         
         doc = ly.dom.Document()
         ly.dom.Version(unicode(s.lyversion.currentText()), doc)
@@ -500,7 +507,6 @@ class Builder(ly.dom.Receiver):
                     s.paperLandscape.isChecked() and " 'landscape" or ""),
                 ly.dom.Paper(doc)).after = 1
             ly.dom.BlankLine(doc)
-    
         
         # Create MIDI output?
         self.createMidiOutput = s.midi.isChecked()
@@ -514,11 +520,22 @@ class Builder(ly.dom.Receiver):
         # 0 = long, 1 = short, 2 = none
         self.instrumentNamesOther = s.instrOther.currentIndex()
         
-    
+        assignments, parts = p.createParts(self)
+        for a in assignments:
+            doc.append(a)
+            ly.dom.BlankLine(doc)
+        
+        if parts:
+            score = ly.dom.Score(doc)
+            sim = ly.dom.Simr(score)
+            for part in parts:
+                sim.append(part)
+            ly.dom.Layout(score)
+            if self.createMidiOutput:
+                ly.dom.Midi(score)
+        
         # Finally, print out
         mainwin.view().insertText(self.indent(doc))
-        
-        
     
     def setInstrumentNames(self, node, instrumentNames):
         if not self.instrumentNames:
