@@ -284,7 +284,7 @@ class Receiver(object):
     def __init__(self):
         self.typographicalQuotes = True
         self.language = "nederlands"
-        self.indentStr = '  '
+        self.indentString = '  '
         
     def quoteString(self, text):
         if self.typographicalQuotes:
@@ -305,7 +305,7 @@ class Receiver(object):
         for t in node.ly(self).splitlines() + [''] * node.after:
             if d and re.match(r'}|>|%}', t):
                 d -= 1
-            yield self.indentStr * d + t
+            yield self.indentString * d + t
             if re.search(r'(\{|<|%{)$', t):
                 d += 1
 

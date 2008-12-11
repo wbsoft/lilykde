@@ -175,10 +175,42 @@ class Parts(QSplitter):
     
     def createParts(self, builder):
         """Return parts and their assignments"""
-        ### TODO: implement
-        assignments = []
-        parts = []
-        return assignments, parts
+        partList = [BasePart()] # TODO: implement dialog
+        
+        # number instances of the same type (Choir I and Choir II, etc.)
+        types = {}
+        for part in partList:
+            types.setdefault(part.internalPartName(), []).append(part)
+        for t in types.values():
+            if len(t) > 1:
+                for num, part in enumerate(t):
+                    part.num = num + 1
+            else:
+                t[0].num = 0
+                
+        # build the LilyPond output
+        for part in partList:
+            part.build(builder)
+            
+        # check for name collisions in assignment identifiers
+        refs = {}
+        for part in partList:
+            for a in part.assignments:
+                ref = a.name
+                name = ref.name
+                refs.setdefault(name, []).append((ref, part))
+        for reflist in refs.values():
+            if len(reflist) > 1:
+                for ref, part in reflist:
+                    ref.name += part.identifier()
+        
+        # collect all assignments and nodes
+        assignments, nodes = [], []
+        for part in partList:
+            assignments.extend(part.assignments)
+            nodes.extend(part.nodes)
+        return assignments, nodes
+
 
 class Settings(QWidget):
     """
@@ -520,21 +552,22 @@ class Builder(ly.dom.Receiver):
         # 0 = long, 1 = short, 2 = none
         self.instrumentNamesOther = s.instrOther.currentIndex()
         
-        assignments, parts = p.createParts(self)
+        assignments, nodes = p.createParts(self)
         for a in assignments:
             doc.append(a)
             ly.dom.BlankLine(doc)
         
-        if parts:
+        if nodes:
             score = ly.dom.Score(doc)
             sim = ly.dom.Simr(score)
-            for part in parts:
-                sim.append(part)
             ly.dom.Layout(score)
             if self.createMidiOutput:
                 ly.dom.Midi(score)
+            for part in nodes:
+                sim.append(part)
         
         # Finally, print out
+        self.indentString = "  "
         mainwin.view().insertText(self.indent(doc))
     
     def setInstrumentNames(self, node, instrumentNames):
@@ -554,6 +587,56 @@ class Builder(ly.dom.Receiver):
         node.getWith()['midiInstrument'] = midiInstrument
 
 
+class BasePart(object):
+    """
+    Abstract base class for parts in the Parts widget.
+    Classes provide basic information.
+    Instances provide a settings widget and can create LilyPond output.
+    """
+    
+    @staticmethod
+    def translatedPartName():
+        """ The name of our part type in the dialog """
+        return "unnamed"
+        
+    @classmethod
+    def internalPartName(cls):
+        """ The name of our part type in the LilyPond output """
+        return cls.__name__
+    
+    def __init__(self):
+        self.num = 0
+        self.assignments = []
+        self.nodes = []
+    
+    def title(self):
+        """ Returns a title, usable as instrument name. """
+        title = self.translatedPartName()
+        if self.num:
+            title = "%s %s" % (title, ly.romanize(self.num))
+        return title
+        
+    def identifier(self):
+        """ Returns an untranslated name, usable as LilyPond identifier """
+        name =  self.internalPartName()
+        if self.num:
+            name += ly.romanize(self.num)
+        return name
+        
+    def widgets(self, layout):
+        """
+        Reimplement this method to add widgets with settings
+        to the give layout.
+        """
+        layout.addWidget(QLabel('(%s)' % i18n("No settings available.")))
+        
+    def build(self, builder):
+        """
+        May add assignments and created nodes to respectively 
+        self.assignments and self.nodes.
+        builder is a Builder instance providing access to users settings.
+        """
+        pass
     
 
 titles_html = r"""
