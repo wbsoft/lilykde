@@ -479,6 +479,24 @@ class Container(LyNode):
             return "".join(res)
 
 
+class Document(Container):
+    """ 
+    A container type that puts everything on a new line.
+    To be used as a full LilyPond document.
+    """
+    def ly(self, receiver):
+        if len(self) == 0:
+            return ''
+        else:
+            n = self[0]
+            res = [n.ly(receiver)]
+            for m in self[1:]:
+                res.append(n.concat(m), "\n")
+                res.append(m.ly(receiver))
+                n = m
+            return "".join(res)
+    
+
 ##
 # These classes correspond to real LilyPond data.
 #

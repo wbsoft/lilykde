@@ -40,47 +40,6 @@ def config(group=None):
 
 
 
-class Builder(ly.dom.Receiver):
-    """
-    Interacts with the parts and builds the LilyPond document,
-    based on the user's preferences.
-    """
-    def __init__(self):
-        super(Builder, self).__init__()
-        
-        # Create MIDI output?
-        self.createMidiOutput = False
-        
-        # output instrument names?
-        self.instrumentNames = False
-        
-        # 0 = italian, 1 = english, 2 = translated
-        self.instrumentNamesLanguage = 0
-        
-        # 0 = long, 1 = short
-        self.instrumentNamesFirst = 0
-        
-        # 0 = long, 1 = short, 2 = none
-        self.instrumentNamesOther = 1
-        
-    
-    def setInstrumentNames(self, node, instrumentNames):
-        if not self.instrumentNames:
-            return
-        names = instrumentNames[self.instrumentNamesLanguage].split('|')
-        # add instrument_name_engraver if necessary
-        ly.dom.addInstrumentNameEngraverIfNecessary(node)
-        w = node.getWith()
-        w['instrumentName'] = names[self.instrumentNamesFirst]
-        if self.instrumentNamesOther < 2:
-            w['shortInstrumentName'] = names[self.instrumentNamesOther]
-
-    def setMidiInstrument(self, node, midiInstrument):
-        if not self.createMidiOutput:
-            return
-        node.getWith()['midiInstrument'] = midiInstrument
-
-
 
 class ScoreWizard(KPageDialog):
     
@@ -500,6 +459,65 @@ class Settings(QWidget):
         self.key.addItems(ly.keyNames[lang])
         self.key.setCurrentIndex(index)
         
+
+
+class Builder(ly.dom.Receiver):
+    """
+    Interacts with the parts and builds the LilyPond document,
+    based on the user's preferences.
+    
+    wizard should be a ScoreWizard instance, from which all settings are read.
+    """
+    def __init__(self, wizard):
+        super(Builder, self).__init__()
+
+        s = wizard.settings # the settings tab.
+        t = wizard.titles   # the titles tab
+        
+        doc = ly.dom.Document()
+        ly.dom.Version(unicode(s.lyversion.currentText()), doc)
+        ly.dom.BlankLine(doc)
+        
+        h = ly.dom.Header()
+        for name, value in t.headers():
+            h[name] = value
+        if 'tagline' not in h and t.tag.isChecked():
+            Comment(i18n("Remove default LilyPond tagline"), h)
+            h['tagline'] = ly.dom.Scheme('#f')
+        if len(h):
+            doc.append(h)
+            BlankLine(doc)
+            
+        
+        # Create MIDI output?
+        self.createMidiOutput = s.midi.isChecked()
+
+        # Output instrument names?
+        self.instrumentNames = s.instr.isChecked()
+        # 0 = italian, 1 = english, 2 = translated
+        self.instrumentNamesLanguage = s.instrLang.currentIndex()
+        # 0 = long, 1 = short
+        self.instrumentNamesFirst = s.instrFirst.currentIndex()
+        # 0 = long, 1 = short, 2 = none
+        self.instrumentNamesOther = s.instrOther.currentIndex()
+        
+    
+    def setInstrumentNames(self, node, instrumentNames):
+        if not self.instrumentNames:
+            return
+        names = instrumentNames[self.instrumentNamesLanguage].split('|')
+        # add instrument_name_engraver if necessary
+        ly.dom.addInstrumentNameEngraverIfNecessary(node)
+        w = node.getWith()
+        w['instrumentName'] = names[self.instrumentNamesFirst]
+        if self.instrumentNamesOther < 2:
+            w['shortInstrumentName'] = names[self.instrumentNamesOther]
+
+    def setMidiInstrument(self, node, midiInstrument):
+        if not self.createMidiOutput:
+            return
+        node.getWith()['midiInstrument'] = midiInstrument
+
 
     
 
