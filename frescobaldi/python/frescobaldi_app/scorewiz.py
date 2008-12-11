@@ -516,7 +516,7 @@ class Builder(ly.dom.Receiver):
         
     
         # Finally, print out
-        mainwin.view().insertText(self.indent(doc) + "\n")
+        mainwin.view().insertText(self.indent(doc))
         
         
     

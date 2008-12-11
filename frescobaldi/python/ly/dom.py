@@ -302,7 +302,7 @@ class Receiver(object):
         and returns properly indented LilyPond code.
         """
         d = startIndent
-        for t in node.ly(self).splitlines():
+        for t in node.ly(self).splitlines() + [''] * node.after:
             if d and re.match(r'}|>|%}', t):
                 d -= 1
             yield self.indentStr * d + t
@@ -490,7 +490,8 @@ class Document(Container):
     To be used as a full LilyPond document.
     """
     defaultSpace = "\n"
-    
+    after = 1
+
 
 ##
 # These classes correspond to real LilyPond data.
