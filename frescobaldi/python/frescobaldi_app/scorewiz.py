@@ -85,7 +85,10 @@ class ScoreWizard(KPageDialog):
         self.saveDialogSize(config("dialogsize"))
         self.saveCompletions()
         self.settings.saveConfig()
-
+        if result:
+            Builder(self, self.parent())
+        KPageDialog.done(self, result)
+        
     def slotDefault(self):
         self.titles.default()
         self.parts.default()
@@ -468,7 +471,7 @@ class Builder(ly.dom.Receiver):
     
     wizard should be a ScoreWizard instance, from which all settings are read.
     """
-    def __init__(self, wizard):
+    def __init__(self, wizard, mainwin):
         super(Builder, self).__init__()
 
         s = wizard.settings # the settings tab.
@@ -480,13 +483,14 @@ class Builder(ly.dom.Receiver):
         
         h = ly.dom.Header()
         for name, value in t.headers():
-            h[name] = value
-        if 'tagline' not in h and t.tag.isChecked():
-            Comment(i18n("Remove default LilyPond tagline"), h)
+            if value:
+                h[name] = value
+        if 'tagline' not in h and s.tagl.isChecked():
+            ly.dom.Comment(i18n("Remove default LilyPond tagline"), h)
             h['tagline'] = ly.dom.Scheme('#f')
         if len(h):
             doc.append(h)
-            BlankLine(doc)
+            ly.dom.BlankLine(doc)
             
         
         # Create MIDI output?
@@ -500,6 +504,11 @@ class Builder(ly.dom.Receiver):
         self.instrumentNamesFirst = s.instrFirst.currentIndex()
         # 0 = long, 1 = short, 2 = none
         self.instrumentNamesOther = s.instrOther.currentIndex()
+        
+    
+        # Finally, print out
+        mainwin.view().insertText(self.indent(doc) + "\n")
+        
         
     
     def setInstrumentNames(self, node, instrumentNames):

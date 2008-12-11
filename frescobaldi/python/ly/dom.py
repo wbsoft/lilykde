@@ -433,12 +433,12 @@ class LyNode(Node):
         """
         return ''
 
-    def concat(self, other, repl=" "):
+    def concat(self, other):
         """
         Returns a string with newlines to concat this node to another one.
-        If zero newlines are requested, repl is returned, defaulting to a space.
+        If zero newlines are requested, an empty string is returned.
         """
-        return '\n' * max(self.after, other.before) or repl
+        return '\n' * max(self.after, other.before)
 
 
 ##
@@ -452,6 +452,11 @@ class Leaf(LyNode):
 
 class Container(LyNode):
     """ A node that concatenates its children on output """
+    
+    ##
+    # default character to concatenate children with
+    defaultSpace = " "
+    
     @property
     def before(self):
         if self.children():
@@ -473,7 +478,7 @@ class Container(LyNode):
             n = self[0]
             res = [n.ly(receiver)]
             for m in self[1:]:
-                res.append(n.concat(m))
+                res.append(n.concat(m) or self.defaultSpace)
                 res.append(m.ly(receiver))
                 n = m
             return "".join(res)
@@ -484,17 +489,7 @@ class Document(Container):
     A container type that puts everything on a new line.
     To be used as a full LilyPond document.
     """
-    def ly(self, receiver):
-        if len(self) == 0:
-            return ''
-        else:
-            n = self[0]
-            res = [n.ly(receiver)]
-            for m in self[1:]:
-                res.append(n.concat(m), "\n")
-                res.append(m.ly(receiver))
-                n = m
-            return "".join(res)
+    defaultSpace = "\n"
     
 
 ##
@@ -504,6 +499,8 @@ class Text(Leaf):
     """ A leaf node with arbitrary text """
     def __init__(self, text="", parent=None):
         super(Text, self).__init__(parent)
+        if not isinstance(text, basestring):
+            text = unicode(text)
         self.text = text
     
     def ly(self, receiver):
