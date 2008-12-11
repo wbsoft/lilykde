@@ -23,6 +23,7 @@ Score Wizard
 
 import os, re, sip, string, sys
 import ly, ly.dom, ly.version
+from rational import Rational
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -86,7 +87,7 @@ class ScoreWizard(KPageDialog):
         self.saveCompletions()
         self.settings.saveConfig()
         if result:
-            Builder(self, self.parent())
+            Builder(self)
         KPageDialog.done(self, result)
         
     def slotDefault(self):
@@ -173,44 +174,10 @@ class Parts(QSplitter):
         """ Set various items to their default state """
         pass # TODO: implement
     
-    def createParts(self, builder):
-        """Return parts and their assignments"""
-        partList = [BasePart()] # TODO: implement dialog
+    def partList(self):
+        """Return configured part objects """
+        return [BasePart()] # TODO: implement dialog
         
-        # number instances of the same type (Choir I and Choir II, etc.)
-        types = {}
-        for part in partList:
-            types.setdefault(part.internalPartName(), []).append(part)
-        for t in types.values():
-            if len(t) > 1:
-                for num, part in enumerate(t):
-                    part.num = num + 1
-            else:
-                t[0].num = 0
-                
-        # build the LilyPond output
-        for part in partList:
-            part.build(builder)
-            
-        # check for name collisions in assignment identifiers
-        refs = {}
-        for part in partList:
-            for a in part.assignments:
-                ref = a.name
-                name = ref.name
-                refs.setdefault(name, []).append((ref, part))
-        for reflist in refs.values():
-            if len(reflist) > 1:
-                for ref, part in reflist:
-                    ref.name += part.identifier()
-        
-        # collect all assignments and nodes
-        assignments, nodes = [], []
-        for part in partList:
-            assignments.extend(part.assignments)
-            nodes.extend(part.nodes)
-        return assignments, nodes
-
 
 class Settings(QWidget):
     """
@@ -504,25 +471,34 @@ class Settings(QWidget):
 
 class Builder(ly.dom.Receiver):
     """
-    Interacts with the parts and builds the LilyPond document,
-    based on the user's preferences.
+    Builds a LilyPond document, based on the preferences from the ScoreWizard.
+    The builder reads settings from the ScoreWizard, and is thus tightly
+    integrated with the ScoreWizard.
     
-    wizard should be a ScoreWizard instance, from which all settings are read.
+    Interacts also with the parts. The parts (in parts.py) may only use a few 
+    functions, and should not interact with the Wizard directly!
     """
-    def __init__(self, wizard, mainwin):
+    def __init__(self, wizard):
         super(Builder, self).__init__()
-
-        t = wizard.titles   # the titles tab.
-        p = wizard.parts    # the parts tab.
-        s = wizard.settings # the settings tab.
+        self.wizard = wizard
+        
+        s = self.wizard.settings # easily access the settings tab.
         
         doc = ly.dom.Document()
+        
+        # version:
         ly.dom.Version(unicode(s.lyversion.currentText()), doc)
         ly.dom.BlankLine(doc)
         
+        # pitch language:
+        if s.lylang.currentIndex():
+            self.language = s.languageNames[s.lylang.currentIndex()]
+            ly.dom.Text('\\include "%s.ly"' % self.language, doc)
+            ly.dom.BlankLine(doc)
+        
         # header:
         h = ly.dom.Header()
-        for name, value in t.headers():
+        for name, value in self.wizard.titles.headers():
             if value:
                 h[name] = value
         if 'tagline' not in h and s.tagl.isChecked():
@@ -540,51 +516,158 @@ class Builder(ly.dom.Receiver):
                 ly.dom.Paper(doc)).after = 1
             ly.dom.BlankLine(doc)
         
-        # Create MIDI output?
-        self.createMidiOutput = s.midi.isChecked()
-
-        # Output instrument names?
-        self.instrumentNames = s.instr.isChecked()
-        # 0 = italian, 1 = english, 2 = translated
-        self.instrumentNamesLanguage = s.instrLang.currentIndex()
-        # 0 = long, 1 = short
-        self.instrumentNamesFirst = s.instrFirst.currentIndex()
-        # 0 = long, 1 = short, 2 = none
-        self.instrumentNamesOther = s.instrOther.currentIndex()
-        
-        assignments, nodes = p.createParts(self)
-        for a in assignments:
-            doc.append(a)
-            ly.dom.BlankLine(doc)
-        
-        if nodes:
-            score = ly.dom.Score(doc)
-            sim = ly.dom.Simr(score)
-            ly.dom.Layout(score)
-            if self.createMidiOutput:
-                ly.dom.Midi(score)
-            for part in nodes:
-                sim.append(part)
-        
+        # get the part list
+        parts = self.wizard.parts.partList()
+        if parts:
+            self.buildScore(doc, parts)
+            
         # Finally, print out
         self.indentString = "  "
-        mainwin.view().insertText(self.indent(doc))
+        self.wizard.parent().view().insertText(self.indent(doc))
+
+    def buildScore(self, doc, partList):
+        """ Creates a LilyPond score based on parts in partList """
+        s = self.wizard.settings
+        
+        # First find out if we need to define a tempoMark section.
+        midi = s.midi.isChecked()
+        text = unicode(s.tempoInd.text())
+        metro = s.metro.isChecked()
+        dur = durations[s.metroDur.currentIndex()]
+        val = s.metroVal.currentText()
+        if text:
+            # Yes.
+            tm = ly.dom.Enclosed(ly.dom.Assignment('tempoMark', doc))
+            tempo = ly.dom.Line('\\tempoMark')
+            ly.dom.BlankLine(doc)
+            if midi:
+                ly.dom.Line(r"\once \override Score.MetronomeMark #'stencil = ##f", tm)
+                ly.dom.Line(r"\tempo %s=%s" % (dur, val), tm)
+            for i in (
+                "self-alignment-X = #LEFT",
+                "break-align-symbols = #'(time-signature)",
+                "extra-offset = #'(-0.5 . 0)",
+                ):
+                ly.dom.Line(r"\once \override Score.RehearsalMark #'" + i, tm)
+            # Should we also display the metronome mark?
+            if metro:
+                # Constuct a tempo indication with metronome mark
+                m = ly.dom.MarkupEnclosed('bold', ly.dom.Markup(ly.dom.Mark(tm)))
+                ly.dom.QuotedString(text + " ", m)
+                ly.dom.Line(r'\small \general-align #Y #DOWN \note #"%s" #1 = %s' %
+                    (dur, val), m)
+            else:
+                # Constuct a tempo indication without metronome mark
+                ly.dom.QuotedString(text, ly.dom.MarkupEnclosed('bold',
+                    ly.dom.Markup(ly.dom.Mark(tm))))
+        else:
+            # No.
+            tempo = metro and ly.dom.Line('\\tempo %s=%s' % (dur, val)) or None
+
+        # Then write a global = {  } construct setting key and time sig
+        g = ly.dom.Seq(ly.dom.Assignment('global', doc))
+        # Add the tempo indication:
+        if tempo:
+            g.append(tempo)
+        # key signature
+        note, alter = ly.keys[s.key.currentIndex()]
+        alter = Rational(alter, 2)
+        mode = ly.modes()[s.mode.currentIndex()][0]
+        ly.dom.KeySignature(note, alter, mode, g).after = 1
+        # time signature
+        match = re.search('(\\d+).*?(\\d+)', unicode(s.time.currentText()))
+        if match:
+            if s.time.currentText() in ('2/2', '4/4'):
+                ly.dom.Line(r"\override Staff.TimeSignature #'style = #'()", g)
+            num, beat = map(int, match.group(1, 2))
+            ly.dom.TimeSignature(num, beat, g).after = 1
+        # partial
+        if s.pickup.currentIndex() > 0:
+            ly.dom.Line(r"\partial %s" % durations[s.pickup.currentIndex() - 1])
+        ly.dom.BlankLine(doc)
+
+        # Now on to the parts!
+        # number instances of the same type (Choir I and Choir II, etc.)
+        types = {}
+        for part in partList:
+            types.setdefault(part.internalPartName(), []).append(part)
+        for t in types.values():
+            if len(t) > 1:
+                for num, part in enumerate(t):
+                    part.num = num + 1
+            else:
+                t[0].num = 0
+                
+        # let each part build the LilyPond output
+        for part in partList:
+            part.build(self)
+            
+        # check for name collisions in assignment identifiers
+        refs = {}
+        for part in partList:
+            for a in part.assignments:
+                ref = a.name
+                name = ref.name
+                refs.setdefault(name, []).append((ref, part))
+        for reflist in refs.values():
+            if len(reflist) > 1:
+                for ref, part in reflist:
+                    ref.name += part.identifier()
+        
+        # collect all assignments
+        for part in partList:
+            for a in part.assignments:
+                doc.append(a)
+                ly.dom.BlankLine(doc)
+
+        # create a \score and add all nodes:
+        score = ly.dom.Score(doc)
+        sim = ly.dom.Simr(score)
+        for part in partList:
+            for n in part.nodes:
+                sim.append(n)
+    
+        lay = ly.dom.Layout(score)
+        if s.barnum.isChecked():
+            ly.dom.Line('\\remove "Bar_number_engraver"', 
+                ly.dom.Context('Score', lay))
+        if midi:
+            ly.dom.Midi(score)
+
+    ##
+    # The following functions are to be used by the parts.
+    ##
     
     def setInstrumentNames(self, node, instrumentNames):
-        if not self.instrumentNames:
+        """
+        Add instrument names to the given node, which should be of 
+        ly.dom.ContextType.
+        
+        instrumentNames should be a three-tuple containing the names in
+        (italian, english, translated) form.
+        
+        Each instrument name is a string with a pipe symbol separating the
+        long and the short instrument name. (This way the abbreviated
+        instrument names remain translatable).
+        """
+        s = self.wizard.settings
+        if not s.instr.isChecked():
             return
-        names = instrumentNames[self.instrumentNamesLanguage].split('|')
+        names = instrumentNames[s.instrLang.currentIndex()].split('|')
         # add instrument_name_engraver if necessary
         ly.dom.addInstrumentNameEngraverIfNecessary(node)
         w = node.getWith()
-        w['instrumentName'] = names[self.instrumentNamesFirst]
+        w['instrumentName'] = names[s.instrFirst.currentIndex()]
         if self.instrumentNamesOther < 2:
-            w['shortInstrumentName'] = names[self.instrumentNamesOther]
+            w['shortInstrumentName'] = names[s.instrOther.currentIndex()]
 
     def setMidiInstrument(self, node, midiInstrument):
-        if not self.createMidiOutput:
-            return
-        node.getWith()['midiInstrument'] = midiInstrument
+        """
+        Sets the MIDI instrument for the node, if the user wants MIDI output.
+        """
+        if self.wizard.settings.midi.isChecked():
+            node.getWith()['midiInstrument'] = midiInstrument
+
 
 
 class BasePart(object):

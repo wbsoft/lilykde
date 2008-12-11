@@ -508,6 +508,11 @@ class Text(Leaf):
         return self.text
 
 
+class Line(Text):
+    """ A text node that claims its own line. """
+    before, after = 1, 1
+    
+    
 class Comment(Text):
     """ A LilyPond comment at the end of a line """
     after = 1
@@ -654,11 +659,11 @@ class Enclosed(Container):
             return " ".join((self.pre, self.post))
         sup = super(Enclosed, self)
         text = sup.ly(receiver)
-        if sup.before or sup.after or '\n' in text:
+        if self.may_remove_brackets and len(self) == 1 and self[0].isAtom:
+            return text
+        elif sup.before or sup.after or '\n' in text:
             return "".join((self.pre, "\n" * max(sup.before, 1), text,
                                       "\n" * max(sup.after, 1), self.post))
-        elif self.may_remove_brackets and len(self) == 1 and self[0].isAtom:
-            return text
         else:
             return " ".join((self.pre, text, self.post))
 
@@ -740,6 +745,7 @@ class Context(HandleVars, Section):
     name = 'context'
     
     def __init__(self, contextName="", parent=None):
+        super(Context, self).__init__(parent)
         if contextName:
             ContextName(contextName, self)
             
