@@ -319,8 +319,9 @@ class Settings(QWidget):
         self.lylang.addItems([l.title() for l in self.languageNames])
         h.setToolTip(i18n(
             "The LilyPond language you want to use for the pitch names."))
-        QObject.connect(self.lylang, SIGNAL("activated(const QString&)"),
-            self.setLanguage)
+        QObject.connect(self.lylang,
+            SIGNAL("currentIndexChanged(const QString&)"), self.slotSetLanguage)
+        self.slotSetLanguage('') # init with default
         
         h = KHBox()
         v.addWidget(h)
@@ -430,7 +431,6 @@ class Settings(QWidget):
     def loadConfig(self):
         conf = config()
         lylang = conf.readEntry('language', '')
-        self.setLanguage(lylang)
         if lylang in self.languageNames:
             index = self.languageNames.index(lylang) + 1
         else:
@@ -469,7 +469,6 @@ class Settings(QWidget):
     def default(self):
         """ Set various items to their default state """
         self.lylang.setCurrentIndex(0)
-        self.setLanguage('nederlands')
         self.key.setCurrentIndex(0)
         self.mode.setCurrentIndex(0)
         self.time.setCurrentIndex(0)
@@ -489,7 +488,7 @@ class Settings(QWidget):
         self.instrLang.setCurrentIndex(0)
         self.instr.setChecked(True)
         
-    def setLanguage(self, lang):
+    def slotSetLanguage(self, lang):
         """ Change the LilyPond language, affects key names """
         lang = unicode(lang).lower()    # can be QString
         if lang not in self.languageNames:
