@@ -528,21 +528,21 @@ class Builder(ly.dom.Receiver):
     def buildScore(self, doc, partList):
         """ Creates a LilyPond score based on parts in partList """
         s = self.wizard.settings
+
+        # a global = {  } construct setting key and time sig, etc.
+        g = ly.dom.Seq(ly.dom.Assignment('global'))
         
         # First find out if we need to define a tempoMark section.
         midi = s.midi.isChecked()
-        text = unicode(s.tempoInd.text())
+        tempoText = unicode(s.tempoInd.text())
         metro = s.metro.isChecked()
         dur = durations[s.metroDur.currentIndex()]
         val = s.metroVal.currentText()
-        if text:
+        if tempoText:
             # Yes.
             tm = ly.dom.Enclosed(ly.dom.Assignment('tempoMark', doc))
-            tempo = ly.dom.Line('\\tempoMark')
             ly.dom.BlankLine(doc)
-            if midi:
-                ly.dom.Line(r"\once \override Score.MetronomeMark #'stencil = ##f", tm)
-                ly.dom.Line(r"\tempo %s=%s" % (dur, val), tm)
+            ly.dom.Line('\\tempoMark', g)
             for i in (
                 "self-alignment-X = #LEFT",
                 "break-align-symbols = #'(time-signature)",
@@ -550,25 +550,23 @@ class Builder(ly.dom.Receiver):
                 ):
                 ly.dom.Line(r"\once \override Score.RehearsalMark #'" + i, tm)
             # Should we also display the metronome mark?
+            m = ly.dom.MarkupEnclosed('bold', ly.dom.Markup(ly.dom.Mark(tm)))
             if metro:
                 # Constuct a tempo indication with metronome mark
-                m = ly.dom.MarkupEnclosed('bold', ly.dom.Markup(ly.dom.Mark(tm)))
-                ly.dom.QuotedString(text + " ", m)
+                ly.dom.QuotedString(tempoText + " ", m)
                 ly.dom.Line(r'\small \general-align #Y #DOWN \note #"%s" #1 = %s' %
                     (dur, val), m)
             else:
                 # Constuct a tempo indication without metronome mark
-                ly.dom.QuotedString(text, ly.dom.MarkupEnclosed('bold',
-                    ly.dom.Markup(ly.dom.Mark(tm))))
-        else:
-            # No.
-            tempo = metro and ly.dom.Line('\\tempo %s=%s' % (dur, val)) or None
+                ly.dom.QuotedString(tempoText, m)
+        elif metro:
+            # No, but display a metronome value
+            ly.dom.Tempo(dur, val, g).after = 1
 
-        # Then write a global = {  } construct setting key and time sig
-        g = ly.dom.Seq(ly.dom.Assignment('global', doc))
-        # Add the tempo indication:
-        if tempo:
-            g.append(tempo)
+        # Add the global section's assignment to the document:
+        doc.append(g.parent())
+        ly.dom.BlankLine(doc)
+
         # key signature
         note, alter = ly.keys[s.key.currentIndex()]
         alter = Rational(alter, 2)
@@ -584,7 +582,6 @@ class Builder(ly.dom.Receiver):
         # partial
         if s.pickup.currentIndex() > 0:
             ly.dom.Line(r"\partial %s" % durations[s.pickup.currentIndex() - 1])
-        ly.dom.BlankLine(doc)
 
         # Now on to the parts!
         # number instances of the same type (Choir I and Choir II, etc.)
@@ -632,8 +629,13 @@ class Builder(ly.dom.Receiver):
             ly.dom.Line('\\remove "Bar_number_engraver"', 
                 ly.dom.Context('Score', lay))
         if midi:
-            ly.dom.Midi(score)
-
+            mid = ly.dom.Midi(score)
+            if tempoText or not metro:
+                base, mul = midiDurations[s.metroDur.currentIndex()]
+                val = int(val) * mul
+                ly.dom.Context('Score', mid)['tempoWholesPerMinute'] = \
+                    ly.dom.Scheme("(ly:make-moment %s %s)" % (val, base))
+                
     ##
     # The following functions are to be used by the parts.
     ##
@@ -752,5 +754,6 @@ a { text-decoration: none;}
 </table></body></html>"""
 
 durations = ['16', '16.', '8', '8.', '4', '4.', '2', '2.', '1', '1.']
+midiDurations = [(16,1),(32,3),(8,1),(16,3),(4,1),(8,3),(2,1),(4,3),(1,1),(2,3)]
 
 paperSizes = ['a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17']

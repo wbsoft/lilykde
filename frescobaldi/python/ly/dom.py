@@ -991,6 +991,19 @@ class TimeSignature(Leaf):
         return "\\time %i/%i" % (self.num, self.beat)
 
 
+class Tempo(Leaf):
+    """
+    A tempo setting, like: \\tempo 4 = 100
+    """
+    def __init__(self, duration, value, parent=None):
+        super(Tempo, self).__init__(parent)
+        self.duration = duration
+        self.value = value
+        
+    def ly(self, receiver):
+        return "\\tempo %s=%s" % (self.duration, self.value)
+        
+        
 class Clef(Leaf):
     """
     A clef.
