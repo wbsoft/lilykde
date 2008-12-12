@@ -276,7 +276,7 @@ class Node(object):
 ##
 # Helper classes
 #
-class Receiver(object):
+class Printer(object):
     """
     Performs certain operations on behalf of a LyNode tree,
     like quoting strings or translating pitch names, etc.
@@ -343,8 +343,8 @@ class Named(object):
     """
     name = ""
     
-    def ly(self, receiver):
-        return "\\%s %s" % (unicode(self.name), super(Named, self).ly(receiver))
+    def ly(self, printer):
+        return "\\%s %s" % (unicode(self.name), super(Named, self).ly(printer))
         
         
 class HandleVars(object):
@@ -426,10 +426,10 @@ class LyNode(Node):
     # The number of newlines this object wants after it.
     after = 0
     
-    def ly(self, receiver):
+    def ly(self, printer):
         """
         Returns printable output for this object.
-        Can ask receiver for certain settings, e.g. pitch language etc.
+        Can ask printer for certain settings, e.g. pitch language etc.
         """
         return ''
 
@@ -471,15 +471,15 @@ class Container(LyNode):
         else:
             return 0
             
-    def ly(self, receiver):
+    def ly(self, printer):
         if len(self) == 0:
             return ''
         else:
             n = self[0]
-            res = [n.ly(receiver)]
+            res = [n.ly(printer)]
             for m in self[1:]:
                 res.append(n.concat(m) or self.defaultSpace)
-                res.append(m.ly(receiver))
+                res.append(m.ly(printer))
                 n = m
             return "".join(res)
 
@@ -504,7 +504,7 @@ class Text(Leaf):
             text = unicode(text)
         self.text = text
     
-    def ly(self, receiver):
+    def ly(self, printer):
         return self.text
 
 
@@ -517,7 +517,7 @@ class Comment(Text):
     """ A LilyPond comment at the end of a line """
     after = 1
 
-    def ly(self, receiver):
+    def ly(self, printer):
         return re.compile('^', re.M).sub('% ', self.text)
 
 
@@ -536,7 +536,7 @@ class BlockComment(Comment):
     def after(self):
         return '\n' in self.text and 1 or 0
         
-    def ly(self, receiver):
+    def ly(self, printer):
         text = self.text.replace('%}', '')
         if '\n' in text:
             return "%{\n%s\n%}" % text
@@ -547,8 +547,8 @@ class BlockComment(Comment):
 class QuotedString(Text):
     """ A string that is output inside double quotes. """
     isAtom = True
-    def ly(self, receiver):
-        return receiver.quoteString(self.text)
+    def ly(self, printer):
+        return printer.quoteString(self.text)
     
 
 class Newline(LyNode):
@@ -565,13 +565,13 @@ class Scheme(Text):
     """ A Scheme expression, without the extra # prepended """
     isAtom = True
     
-    def ly(self, receiver):
+    def ly(self, printer):
         return '#%s' % self.text
 
 
 class Version(Text):
     """ a LilyPond version instruction """
-    def ly(self, receiver):
+    def ly(self, printer):
         return r'\version "%s"' % self.text
 
 
@@ -600,9 +600,9 @@ class Assignment(Container):
         if len(self):
             return self[0]
 
-    def ly(self, receiver):
+    def ly(self, printer):
         return "%s = %s" % (
-            unicode(self.name), super(Assignment, self).ly(receiver))
+            unicode(self.name), super(Assignment, self).ly(printer))
 
 
 HandleVars.childClass = Assignment
@@ -619,7 +619,7 @@ class Identifier(Leaf):
         super(Identifier, self).__init__(parent)
         self.name = name
         
-    def ly(self, receiver):
+    def ly(self, printer):
         return "\\%s" % unicode(self.name)
 
 
@@ -654,11 +654,11 @@ class Enclosed(Container):
     before, after = 0, 0
     isAtom = True
     
-    def ly(self, receiver):
+    def ly(self, printer):
         if len(self) == 0:
             return " ".join((self.pre, self.post))
         sup = super(Enclosed, self)
-        text = sup.ly(receiver)
+        text = sup.ly(printer)
         if self.may_remove_brackets and len(self) == 1 and self[0].isAtom:
             return text
         elif sup.before or sup.after or '\n' in text:
@@ -723,9 +723,9 @@ class With(HandleVars, Section):
     name = 'with'
     before, after = 0, 0
     
-    def ly(self, receiver):
+    def ly(self, printer):
         if len(self):
-            return super(With, self).ly(receiver)
+            return super(With, self).ly(printer)
         else:
             return ''
 
@@ -734,7 +734,7 @@ class ContextName(Text):
     """
     Used to print a context name, like \\Score.
     """
-    def ly(self, receiver):
+    def ly(self, printer):
         return "\\%s" % self.text
 
 
@@ -766,14 +766,14 @@ class ContextType(Container):
         self.new = new
         self.cid = cid
         
-    def ly(self, receiver):
+    def ly(self, printer):
         res = []
         res.append(self.new and "\\new" or "\\context")
         res.append(self.ctype or self.__class__.__name__)
         if self.cid:
             res.append("=")
             res.append(unicode(self.cid))
-        res.append(super(ContextType, self).ly(receiver))
+        res.append(super(ContextType, self).ly(printer))
         return " ".join(res)
         
     def getWith(self):
@@ -845,7 +845,7 @@ class ContextProperty(Leaf):
         self.prop = prop
         self.context = context
 
-    def ly(self, receiver):
+    def ly(self, printer):
         if self.context:
             # In \lyrics or \lyricmode: put spaces around dot.
             p = self.findParent(InputMode)
@@ -909,11 +909,11 @@ class Pitch(Leaf):
         self.note = note
         self.alter = Rational(alter)
 
-    def ly(self, receiver):
+    def ly(self, printer):
         """
         Print the pitch in the preferred language.
         """
-        p = ly.pitch.pitchNames[receiver.language](self.note, self.alter)
+        p = ly.pitch.pitchNames[printer.language](self.note, self.alter)
         if self.octave < -1:
             return p + ',' * (-self.octave - 1)
         elif self.octave > -1:
@@ -934,7 +934,7 @@ class Duration(Leaf):
         self.dots = dots
         self.factor = Rational(factor)
 
-    def ly(self, receiver):
+    def ly(self, printer):
         s = ly.duration.durations[self.dur + 3] + '.' * self.dots
         if self.factor != 1:
             s += '*%s' % str(self.factor)
@@ -973,8 +973,8 @@ class KeySignature(Leaf):
         self.alter = Rational(alter)
         self.mode = mode
 
-    def ly(self, receiver):
-        pitch = ly.pitch.pitchNames[receiver.language](self.note, self.alter)
+    def ly(self, printer):
+        pitch = ly.pitch.pitchNames[printer.language](self.note, self.alter)
         return "\\key %s \\%s" % (pitch, self.mode)
 
 
@@ -987,7 +987,7 @@ class TimeSignature(Leaf):
         self.num = num
         self.beat = beat
 
-    def ly(self, receiver):
+    def ly(self, printer):
         return "\\time %i/%i" % (self.num, self.beat)
 
 
@@ -1000,7 +1000,7 @@ class Tempo(Leaf):
         self.duration = duration
         self.value = value
         
-    def ly(self, receiver):
+    def ly(self, printer):
         return "\\tempo %s=%s" % (self.duration, self.value)
         
         
@@ -1012,7 +1012,7 @@ class Clef(Leaf):
         super(Clef, self).__init__(parent)
         self.clef = clef
 
-    def ly(self, receiver):
+    def ly(self, printer):
         f = self.clef.isalpha() and '%s' or '"%s"'
         return "\\clef %s\n" % f % self.clef
 
@@ -1021,7 +1021,7 @@ class VoiceSeparator(Leaf):
     """
     A Voice Separator: \\\\
     """
-    def ly(self, receiver):
+    def ly(self, printer):
         return r'\\'
 
 
@@ -1068,12 +1068,7 @@ def addInstrumentNameEngraverIfNecessary(node):
     """
     if (isinstance(node, ContextType) and not isinstance(node,
             (Staff, RhythmicStaff, PianoStaff, Lyrics, FretBoards))):
-        Text('\\consists "Instrument_name_engraver"', node.getWith()).after = 1
+        Line('\\consists "Instrument_name_engraver"', node.getWith())
 
 
-
-#Test stuff
-_r = Receiver()
-def p(node):
-    print _r.indent(node)
         

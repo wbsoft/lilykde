@@ -380,7 +380,9 @@ class Settings(QWidget):
     def saveConfig(self):
         conf = config()
         if self.lylang.currentIndex() > 0:
-            conf.writeEntry('language', self.languageNames[self.lylang.currentIndex() - 1])
+            conf.writeEntry('language', self.languageNames[self.lylang.currentIndex() - 2])
+        else:
+            conf.writeEntry('language', 'default')
         conf.writeEntry('typographical', QVariant(self.typq.isChecked()))
         conf.writeEntry('remove tagline', QVariant(self.tagl.isChecked()))
         conf.writeEntry('remove barnumbers', QVariant(self.barnum.isChecked()))
@@ -399,7 +401,7 @@ class Settings(QWidget):
         conf = config()
         lylang = conf.readEntry('language', '')
         if lylang in self.languageNames:
-            index = self.languageNames.index(lylang) + 1
+            index = self.languageNames.index(lylang) + 2
         else:
             index = 0
         self.lylang.setCurrentIndex(index)
@@ -469,7 +471,7 @@ class Settings(QWidget):
         
 
 
-class Builder(ly.dom.Receiver):
+class Builder(object):
     """
     Builds a LilyPond document, based on the preferences from the ScoreWizard.
     The builder reads settings from the ScoreWizard, and is thus tightly
@@ -479,12 +481,15 @@ class Builder(ly.dom.Receiver):
     functions, and should not interact with the Wizard directly!
     """
     def __init__(self, wizard):
-        super(Builder, self).__init__()
         self.wizard = wizard
         
         s = self.wizard.settings # easily access the settings tab.
         
         doc = ly.dom.Document()
+        
+        printer = ly.dom.Printer()
+        printer.indentString = "  " # FIXME get current indent-width somehow...
+        printer.typographicalQuotes = s.typq.isChecked()
         
         # version:
         ly.dom.Version(unicode(s.lyversion.currentText()), doc)
@@ -492,8 +497,9 @@ class Builder(ly.dom.Receiver):
         
         # pitch language:
         if s.lylang.currentIndex():
-            self.language = s.languageNames[s.lylang.currentIndex()]
-            ly.dom.Text('\\include "%s.ly"' % self.language, doc)
+            language = s.languageNames[s.lylang.currentIndex() - 2]
+            printer.language = language
+            ly.dom.Text('\\include "%s.ly"' % language, doc)
             ly.dom.BlankLine(doc)
         
         # header:
@@ -522,8 +528,7 @@ class Builder(ly.dom.Receiver):
             self.buildScore(doc, parts)
             
         # Finally, print out
-        self.indentString = "  "
-        self.wizard.parent().view().insertText(self.indent(doc))
+        self.wizard.parent().view().insertText(printer.indent(doc))
 
     def buildScore(self, doc, partList):
         """ Creates a LilyPond score based on parts in partList """
