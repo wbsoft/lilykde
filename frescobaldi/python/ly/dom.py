@@ -285,6 +285,7 @@ class Printer(object):
         self.typographicalQuotes = True
         self.language = "nederlands"
         self.indentString = '  '
+        self.lilypondVersion = (2, 10, 0)
         
     def quoteString(self, text):
         if self.typographicalQuotes:

@@ -484,6 +484,15 @@ class Builder(object):
     
     Interacts also with the parts. The parts (in parts.py) may only use a few 
     functions, and should not interact with the Wizard directly!
+    
+    Parts may interact with:
+    
+    lilypondVersion     a tuple like (2, 11, 64) describing the LilyPond the
+                        document is built for.
+                        
+    setInstrumentNames  to set instrument names for a node
+    
+    setMidiInstrument   to set the Midi instrument for a node
     """
     def __init__(self, wizard):
         self.wizard = wizard
@@ -497,8 +506,10 @@ class Builder(object):
         printer.typographicalQuotes = s.typq.isChecked()
         
         # version:
-        ly.dom.Version(unicode(s.lyversion.currentText()), doc)
+        version = unicode(s.lyversion.currentText())
+        ly.dom.Version(version, doc)
         ly.dom.BlankLine(doc)
+        self.lilypondVersion = tuple(map(int, re.findall('\\d+', version)))
         
         # pitch language:
         language = s.getLanguage()
