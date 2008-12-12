@@ -287,8 +287,9 @@ class Settings(QWidget):
         h.setToolTip(i18n(
             "The LilyPond language you want to use for the pitch names."))
         QObject.connect(self.lylang,
-            SIGNAL("currentIndexChanged(const QString&)"), self.slotSetLanguage)
-        self.slotSetLanguage('') # init with default
+            SIGNAL("currentIndexChanged(const QString&)"),
+            self.slotLanguageChanged)
+        self.slotLanguageChanged('') # init with default
         
         h = KHBox()
         v.addWidget(h)
@@ -379,10 +380,7 @@ class Settings(QWidget):
 
     def saveConfig(self):
         conf = config()
-        if self.lylang.currentIndex() > 0:
-            conf.writeEntry('language', self.languageNames[self.lylang.currentIndex() - 2])
-        else:
-            conf.writeEntry('language', 'default')
+        conf.writeEntry('language', self.getLanguage() or 'default')
         conf.writeEntry('typographical', QVariant(self.typq.isChecked()))
         conf.writeEntry('remove tagline', QVariant(self.tagl.isChecked()))
         conf.writeEntry('remove barnumbers', QVariant(self.barnum.isChecked()))
@@ -399,13 +397,7 @@ class Settings(QWidget):
         
     def loadConfig(self):
         conf = config()
-        lylang = conf.readEntry('language', '')
-        if lylang in self.languageNames:
-            index = self.languageNames.index(lylang) + 2
-        else:
-            index = 0
-        self.lylang.setCurrentIndex(index)
-
+        self.setLanguage(conf.readEntry('language', 'default'))
         self.typq.setChecked(conf.readEntry('typographical', QVariant(True)).toBool())
         self.tagl.setChecked(conf.readEntry('remove tagline', QVariant(False)).toBool())
         self.barnum.setChecked(conf.readEntry('remove barnumbers', QVariant(False)).toBool())
@@ -457,7 +449,7 @@ class Settings(QWidget):
         self.instrLang.setCurrentIndex(0)
         self.instr.setChecked(True)
         
-    def slotSetLanguage(self, lang):
+    def slotLanguageChanged(self, lang):
         """ Change the LilyPond language, affects key names """
         lang = unicode(lang).lower()    # can be QString
         if lang not in self.languageNames:
@@ -469,7 +461,20 @@ class Settings(QWidget):
         self.key.addItems(ly.keyNames[lang])
         self.key.setCurrentIndex(index)
         
-
+    def getLanguage(self):
+        """ Return the configured LilyPond pitch language, '' for default. """
+        if self.lylang.currentIndex():
+            return self.languageNames[self.lylang.currentIndex() - 2]
+        else:
+            return ''
+    
+    def setLanguage(self, lang):
+        """ Sets the language combobox to the specified language """
+        if lang not in self.languageNames:
+            self.lylang.setCurrentIndex(0)
+        else:
+            self.lylang.setCurrentIndex(self.languageNames.index(lang) + 2)
+            
 
 class Builder(object):
     """
@@ -496,8 +501,8 @@ class Builder(object):
         ly.dom.BlankLine(doc)
         
         # pitch language:
-        if s.lylang.currentIndex():
-            language = s.languageNames[s.lylang.currentIndex() - 2]
+        language = s.getLanguage()
+        if language:
             printer.language = language
             ly.dom.Text('\\include "%s.ly"' % language, doc)
             ly.dom.BlankLine(doc)
