@@ -176,7 +176,7 @@ class Parts(QSplitter):
     
     def partList(self):
         """Return configured part objects """
-        return [BasePart()] # TODO: implement dialog
+        return [PartBase()] # TODO: implement dialog
         
 
 class Settings(QWidget):
@@ -661,13 +661,15 @@ class Builder(object):
     # The following functions are to be used by the parts.
     ##
     
-    def setInstrumentNames(self, node, instrumentNames):
+    def setInstrumentNames(self, node, instrumentNames, num=0):
         """
         Add instrument names to the given node, which should be of 
         ly.dom.ContextType.
         
         instrumentNames should be a three-tuple containing the names in
         (italian, english, translated) form.
+        
+        If num > 0, it is added to the instrument name (e.g. Violine II)
         
         Each instrument name is a string with a pipe symbol separating the
         long and the short instrument name. (This way the abbreviated
@@ -677,6 +679,8 @@ class Builder(object):
         if not s.instr.isChecked():
             return
         names = instrumentNames[s.instrLang.currentIndex()].split('|')
+        if num:
+            names = [name + " " + ly.romanize(num) for name in names]
         # add instrument_name_engraver if necessary
         ly.dom.addInstrumentNameEngraverIfNecessary(node)
         w = node.getWith()
@@ -693,7 +697,7 @@ class Builder(object):
 
 
 
-class BasePart(object):
+class PartBase(object):
     """
     Abstract base class for parts in the Parts widget.
     Classes provide basic information.
