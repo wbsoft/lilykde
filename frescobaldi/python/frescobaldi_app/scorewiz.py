@@ -207,7 +207,7 @@ class Parts(QSplitter):
 
         allParts.setSelectionMode(QTreeWidget.ExtendedSelection)
         allParts.setRootIsDecorated(False)
-        allParts.setHeaderHidden(True)
+        allParts.headerItem().setHidden(True)
         score.setSelectionMode(QListWidget.ExtendedSelection)
 
         class PartItem(QListWidgetItem):
@@ -732,7 +732,7 @@ class Builder(object):
         # number instances of the same type (Choir I and Choir II, etc.)
         types = {}
         for part in partList:
-            types.setdefault(part.internalPartName(), []).append(part)
+            types.setdefault(part.__class__.__name__, []).append(part)
         for t in types.values():
             if len(t) > 1:
                 for num, part in enumerate(t):
