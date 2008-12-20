@@ -24,7 +24,7 @@ In separate file to ease maintenance.
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyKDE4.kdecore import i18n
+from PyKDE4.kdecore import i18n, ki18n
 from PyKDE4.kdeui import KHBox, KVBox
 
 import ly
@@ -342,6 +342,55 @@ class PitchedPercussionPart(SingleVoicePart):
 # Of course you should also put your part in there, in a sensible group.    #
 #                                                                           #
 #############################################################################
+
+class Chords(Part):
+    _name = ki18n("Chord names")
+
+    def build(self, builder):
+        p = ChordNames()
+        s = ChordMode()
+        Identifier('global', s).after = 1
+        i = self.chordStyle.currentIndex()
+        if i > 0:
+            Line('\\%sChords' %
+                ('german', 'semiGerman', 'italian', 'french')[i-1], s)
+        LineComment(' ' + i18n("Chords follow here."), s)
+        BlankLine(s)
+        self.assign(p, s, 'chordNames')
+        self.nodes.append(p)
+
+    def widgets(self, layout):
+        h = KHBox()
+        layout.addWidget(h)
+        l = QLabel(i18n("Chord style:"), h)
+        self.chordStyle = QComboBox(h)
+        l.setBuddy(self.chordStyle)
+        self.chordStyle.addItems((
+            i18n("Default"),
+            i18n("German"),
+            i18n("Semi-German"),
+            i18n("Italian"),
+            i18n("French")))
+
+
+class BassFigures(Part):
+    _name = ki18n("Figured Bass")
+
+    def build(self, builder):
+        p = FiguredBass()
+        s = FigureMode()
+        Identifier('global', s)
+        LineComment(' ' + i18n("Figures follow here."), s)
+        BlankLine(s)
+        self.assign(p, s, 'figBass')
+        if self.useExtenderLines.isChecked():
+            p.getWith()['useBassFigureExtenders'] = Scheme('#t')
+        self.nodes.append(p)
+
+    def widgets(self, layout):
+        self.useExtenderLines = QCheckBox(i18n("Use extender lines"))
+        layout.addWidget(self.useExtenderLines)
+
 
 class Violin(StringPart):
     _name = ki18n("Violin")
@@ -1114,55 +1163,6 @@ class Drums(Part):
         self.drumStems = QCheckBox(i18n("Remove stems"))
         self.drumStems.setToolTip(i18n("Remove the stems from the drum notes."))
         layout.addWidget(self.drumStems)
-
-
-class Chords(Part):
-    _name = ki18n("Chord names")
-
-    def build(self, builder):
-        p = ChordNames()
-        s = ChordMode()
-        Identifier('global', s).after = 1
-        i = self.chordStyle.currentIndex()
-        if i > 0:
-            Line('\\%sChords' %
-                ('german', 'semiGerman', 'italian', 'french')[i-1], s)
-        LineComment(' ' + i18n("Chords follow here."), s)
-        BlankLine(s)
-        self.assign(p, s, 'chordNames')
-        self.nodes.append(p)
-
-    def widgets(self, layout):
-        h = KHBox()
-        layout.addWidget(h)
-        l = QLabel(i18n("Chord style:"), h)
-        self.chordStyle = QComboBox(h)
-        l.setBuddy(self.chordStyle)
-        self.chordStyle.addItems((
-            i18n("Default"),
-            i18n("German"),
-            i18n("Semi-German"),
-            i18n("Italian"),
-            i18n("French")))
-
-
-class BassFigures(Part):
-    _name = ki18n("Figured Bass")
-
-    def build(self, builder):
-        p = FiguredBass()
-        s = FigureMode()
-        Identifier('global', s)
-        LineComment(' ' + i18n("Figures follow here."), s)
-        BlankLine(s)
-        self.assign(p, s, 'figBass')
-        if self.useExtenderLines.isChecked():
-            p.getWith()['useBassFigureExtenders'] = Scheme('#t')
-        self.nodes.append(p)
-
-    def widgets(self, layout):
-        self.useExtenderLines = QCheckBox(i18n("Use extender lines"))
-        layout.addWidget(self.useExtenderLines)
 
 
 

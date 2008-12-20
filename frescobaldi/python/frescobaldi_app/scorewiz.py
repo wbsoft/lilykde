@@ -191,12 +191,14 @@ class Parts(QSplitter):
         self.score = score  # so the partList method can find us
         h = KHBox(v)
         removeButton = KPushButton(KStandardGuiItem.remove(), h)
-        upButton = QToolButton(KIcon("go-up"), h)       # TODO: check icon
-        downButton = QToolButton(KIcon("go-down"), h)   # TODO: check icon
+        upButton = QToolButton(h)
+        upButton.setIcon(KIcon("go-up"))        # TODO: check icon
+        downButton = QToolButton(h)
+        downButton.setIcon(KIcon("go-down"))    # TODO: check icon
 
         # The StackedWidget with settings
-        part = QStackedWidget()
-        self.addWidget(part)
+        partSettings = QStackedWidget()
+        self.addWidget(partSettings)
 
         all.setSelectionMode(QTreeWidget.ExtendedSelection)
         all.setRootIsDecorated(False)
@@ -208,16 +210,19 @@ class Parts(QSplitter):
             """
             def __init__(self, partClass):
                 name = partClass.name() # partClass.name is a ki18n object
-                QListWidgetItem.__init__(score, name)
-                self.w = QGroupBox(part, name)
+                QListWidgetItem.__init__(self, name, score)
+                self.w = QGroupBox(name)
+                partSettings.addWidget(self.w)
                 self.part = partClass()
-                self.part.widgets(QVBoxLayout(self.w))
+                layout = QVBoxLayout(self.w)
+                self.part.widgets(layout)
+                layout.addStretch(1)
                 if score.count() == 1:
                     score.setCurrentRow(0)
                     self.setSelected(True)
 
             def showSettingsWidget(self):
-                part.setCurrentWidget(self.w)
+                partSettings.setCurrentWidget(self.w)
 
             def remove(self):
                 sip.delete(self.w)
@@ -263,7 +268,7 @@ class Parts(QSplitter):
 
         from frescobaldi_app.parts import categories
         for name, parts in categories():
-            group = QTreeWidgetItem(self.all, [name])
+            group = QTreeWidgetItem(all, [name])
             group.setFlags(Qt.ItemIsEnabled)
             group.setExpanded(True)
             for part in parts:
