@@ -71,7 +71,7 @@ class Part(frescobaldi_app.scorewiz.PartBase):
         if transpose is not None:
             toct, tnote, talter = transpose
             Pitch(toct, tnote, Rational(talter, 2), Transposition(s))
-        LineComment(' ' + i18n("Music follows here."), s)
+        LineComment(i18n("Music follows here."), s)
         BlankLine(s)
         self.assign(node, stub, name)
         return s
@@ -227,7 +227,7 @@ class VocalPart(Part):
         if verse:
             name = name + ly.nums(verse)
             Line('\\set stanza = "%d."' % verse, l)
-        LineComment(' ' + i18n("Lyrics follow here."), l)
+        LineComment(i18n("Lyrics follow here."), l)
         BlankLine(l)
         self.assign(node, l, name)
 
@@ -354,7 +354,7 @@ class Chords(Part):
         if i > 0:
             Line('\\%sChords' %
                 ('german', 'semiGerman', 'italian', 'french')[i-1], s)
-        LineComment(' ' + i18n("Chords follow here."), s)
+        LineComment(i18n("Chords follow here."), s)
         BlankLine(s)
         self.assign(p, s, 'chordNames')
         self.nodes.append(p)
@@ -380,7 +380,7 @@ class BassFigures(Part):
         p = FiguredBass()
         s = FigureMode()
         Identifier('global', s)
-        LineComment(' ' + i18n("Figures follow here."), s)
+        LineComment(i18n("Figures follow here."), s)
         BlankLine(s)
         self.assign(p, s, 'figBass')
         if self.useExtenderLines.isChecked():
@@ -437,7 +437,8 @@ class BassoContinuo(Cello):
         Identifier('global', b)
         Line("\\override Staff.BassFigureAlignmentPositioning "
              "#'direction = #DOWN", b)
-        LineComment(' ' + i18n("Figures follow here."), b)
+        LineComment(i18n("Figures follow here."), b)
+        BlankLine(b)
         self.assign(s, b, 'bcFigures')
         self.nodes.append(s)
 
@@ -1115,7 +1116,7 @@ class Drums(Part):
     def assignDrums(self, node, name):
         s = DrumMode()
         Identifier('global', s)
-        LineComment(' ' + i18n("Drums follow here."), s)
+        LineComment(i18n("Drums follow here."), s)
         BlankLine(s)
         self.assign(node, s, name)
 
