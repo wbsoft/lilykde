@@ -1061,7 +1061,7 @@ class Organ(KeyboardPart):
     def build(self, builder):
         super(Organ, self).build(builder)
         if self.pedalVoices.value():
-            self.nodes.append(self.buildStaff(
+            self.nodes.append(self.buildStaff(builder,
                 'pedal', -1, self.pedalVoices.value(), clef="bass"))
 
 
