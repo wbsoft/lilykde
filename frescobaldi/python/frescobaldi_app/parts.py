@@ -951,8 +951,8 @@ class Choir(VocalPart):
                     self.assignMusic(v, octave, name=mname)
                     if not (self.lyrAllSame.isChecked() and not toGo):
                         for verse in stanzas:
-                            lyr.append(
-                                (LyricsTo(vname, Lyrics(choir)), lyrName, verse))
+                            lyr.append((LyricsTo(vname, Lyrics(parent=choir)),
+                                lyrName, verse))
 
                 if self.ambitus.isChecked():
                     Line('\\consists "Ambitus_engraver"', s.getWith())
@@ -1010,7 +1010,7 @@ class Choir(VocalPart):
                     if above:
                         s.cid = ContextId(staffName)
                     for verse in stanzas:
-                        l = Lyrics(choir)
+                        l = Lyrics(parent=choir)
                         if above:
                             l.getWith()['alignAboveContext'] = s.cid
                         lyr.append((LyricsTo(vname, l), lyrName, verse))
@@ -1124,7 +1124,7 @@ class Drums(Part):
         s = Simr(p)
         if self.drumVoices.value() > 1:
             for i in range(1, self.drumVoices.value()+1):
-                q = Seq(DrumVoice(s))
+                q = Seq(DrumVoice(parent=s))
                 Text('\\voice%s' % ly.nums(i), q)
                 self.assignDrums(q, 'drum%s' % ly.nums(i))
         else:
