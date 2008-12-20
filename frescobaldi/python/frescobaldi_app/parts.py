@@ -488,7 +488,7 @@ class Harp(KeyboardPart):
 
 class Flute(WoodWindPart):
     _name = ki18n("Flute")
-    instrumentNames = ki18n("Flute|Fl."))
+    instrumentNames = ki18n("Flute|Fl.")
     midiInstrument = 'flute'
 
 

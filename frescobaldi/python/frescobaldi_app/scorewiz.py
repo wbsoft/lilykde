@@ -124,7 +124,7 @@ class Titles(QWidget):
         t.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         @onSignal(t.document().documentLayout(), "documentSizeChanged(QSizeF)")
         def resize(size):
-            t.setMinimumSize(size.toSize() + QSize(4, 4)
+            t.setMinimumSize(size.toSize() + QSize(4, 4))
 
         headers = ly.headers(i18n)
         msg = i18n("Click to enter a value.")
@@ -225,11 +225,11 @@ class Parts(QSplitter):
 
         @onSignal(all, "itemDoubleClicked(QTreeWidgetItem*, int)")
         def addPart(item, col):
-            PartItem(item.partClass))
+            PartItem(item.partClass)
 
         @onSignal(all, "itemClicked(QTreeWidgetItem*, int)")
         def toggleExpand(item, col):
-            item.setExpanded(not item.isExpanded()))
+            item.setExpanded(not item.isExpanded())
 
         @onSignal(addButton, "clicked()")
         def addSelectedParts():
@@ -452,7 +452,7 @@ class Settings(QWidget):
         self.paper.addItems(paperSizes)
         @onSignal(self.paper, "activated(int)")
         def checkLandscape(i):
-            self.paperLandscape.setEnabled(bool(i)))
+            self.paperLandscape.setEnabled(bool(i))
 
         # Instrument names
         instr.setCheckable(True)
