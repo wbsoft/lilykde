@@ -179,7 +179,7 @@ class Parts(QSplitter):
         v = KVBox()
         self.addWidget(v)
         QLabel('<b>%s</b>' % i18n("Available parts:"), v)
-        all = QTreeWidget(v)
+        allParts = QTreeWidget(v)
         addButton = KPushButton(KStandardGuiItem.add(), v)
         addButton.setToolTip(i18n("Add selected part to your score."))
 
@@ -199,9 +199,15 @@ class Parts(QSplitter):
         # The StackedWidget with settings
         partSettings = QStackedWidget()
         self.addWidget(partSettings)
+        
+        self.setStretchFactor(0, 1)
+        self.setStretchFactor(1, 1)
+        self.setStretchFactor(2, 1)
+        self.setSizes((100,100,100))
 
-        all.setSelectionMode(QTreeWidget.ExtendedSelection)
-        all.setRootIsDecorated(False)
+        allParts.setSelectionMode(QTreeWidget.ExtendedSelection)
+        allParts.setRootIsDecorated(False)
+        allParts.setHeaderHidden(True)
         score.setSelectionMode(QListWidget.ExtendedSelection)
 
         class PartItem(QListWidgetItem):
@@ -228,17 +234,17 @@ class Parts(QSplitter):
                 sip.delete(self.w)
                 sip.delete(self) # TODO: check if necessary
 
-        @onSignal(all, "itemDoubleClicked(QTreeWidgetItem*, int)")
+        @onSignal(allParts, "itemDoubleClicked(QTreeWidgetItem*, int)")
         def addPart(item, col):
             PartItem(item.partClass)
 
-        @onSignal(all, "itemClicked(QTreeWidgetItem*, int)")
+        @onSignal(allParts, "itemClicked(QTreeWidgetItem*, int)")
         def toggleExpand(item, col):
             item.setExpanded(not item.isExpanded())
 
         @onSignal(addButton, "clicked()")
         def addSelectedParts():
-            for item in all.selectedItems():
+            for item in allParts.selectedItems():
                 PartItem(item.partClass)
 
         @onSignal(removeButton, "clicked()")
@@ -268,7 +274,7 @@ class Parts(QSplitter):
 
         from frescobaldi_app.parts import categories
         for name, parts in categories():
-            group = QTreeWidgetItem(all, [name])
+            group = QTreeWidgetItem(allParts, [name])
             group.setFlags(Qt.ItemIsEnabled)
             group.setExpanded(True)
             for part in parts:
