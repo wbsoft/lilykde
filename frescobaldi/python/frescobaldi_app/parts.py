@@ -282,7 +282,7 @@ class KeyboardPart(Part):
         """
         Build a staff with the given number of voices and name.
         """
-        staff = Staff(name, node)
+        staff = Staff(name, parent=node)
         builder.setMidiInstrument(staff, self.midiInstrument)
         c = Seqr(staff)
         if clef:
