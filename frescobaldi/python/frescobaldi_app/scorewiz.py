@@ -476,7 +476,7 @@ class Settings(QWidget):
         l = QLabel(i18n("First system:"), h)
         self.instrFirst = QComboBox(h)
         l.setBuddy(self.instrFirst)
-        self.instrFirst.addItems((i18n("Short"), i18n("Long")))
+        self.instrFirst.addItems((i18n("Long"), i18n("Short")))
         h.setToolTip(i18n(
             "Use long or short instrument names before the first system."))
 
@@ -485,7 +485,7 @@ class Settings(QWidget):
         l = QLabel(i18n("Other systems:"), h)
         self.instrOther = QComboBox(h)
         l.setBuddy(self.instrOther)
-        self.instrOther.addItems((i18n("Short"), i18n("Long"), i18n("None")))
+        self.instrOther.addItems((i18n("Long"), i18n("Short"), i18n("None")))
         h.setToolTip(i18n(
             "Use short, long or no instrument names before the next systems."))
 
@@ -515,8 +515,8 @@ class Settings(QWidget):
         conf.writeEntry('paper landscape', QVariant(self.paperLandscape.isChecked()))
         g = config('instrument names')
         g.writeEntry('show', QVariant(self.instr.isChecked()))
-        g.writeEntry('first', ['short', 'long'][self.instrFirst.currentIndex()])
-        g.writeEntry('other', ['short', 'long', 'none'][self.instrOther.currentIndex()])
+        g.writeEntry('first', ['long', 'short'][self.instrFirst.currentIndex()])
+        g.writeEntry('other', ['long', 'short', 'none'][self.instrOther.currentIndex()])
         g.writeEntry('lang', ['italian', 'english', 'translated'][self.instrLang.currentIndex()])
 
     def loadConfig(self):
@@ -542,8 +542,8 @@ class Settings(QWidget):
             else:
                 return defaultIndex
 
-        first = readconf('first', ['short', 'long'], 0)
-        other = readconf('other', ['short', 'long', 'none'], 2)
+        first = readconf('first', ['long', 'short'], 0)
+        other = readconf('other', ['long', 'short', 'none'], 2)
         lang = readconf('lang', ['italian', 'english', 'translated'], 0)
 
         self.instrFirst.setCurrentIndex(first)
@@ -742,7 +742,7 @@ class Builder(object):
 
         # let each part build the LilyPond output
         for part in partList:
-            part.build(self)
+            part.run(self)
 
         # check for name collisions in assignment identifiers
         refs = {}
@@ -835,13 +835,20 @@ class PartBase(object):
     """
 
     # The name of our part type in the dialog, mark for translation using ki18n!
-    name = "unnamed"
+    _name = "unnamed"
 
-    def __init__(self):
+    def run(self, builder):
+        """
+        This method is called by the score wizard to build our part.
+        It initializes the nodes and assignments and calls the build
+        method. You should not reimplement this method, but rather the
+        build method.
+        """
         self.num = 0
         self.assignments = []
         self.nodes = []
-
+        self.build(builder)
+        
     @classmethod
     def name(cls):
         """
@@ -875,6 +882,7 @@ class PartBase(object):
         May add assignments and created nodes to respectively
         self.assignments and self.nodes.
         builder is a Builder instance providing access to users settings.
+        You must implement this method in your part subclasses.
         """
         pass
 

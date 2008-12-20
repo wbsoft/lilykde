@@ -102,7 +102,7 @@ class SingleVoicePart(Part):
     # ease the translation (otherwise the short names would be incomprehensible.)
     instrumentNames = "longname|shortname"
 
-    def build(self, builder):
+    def build(self, builder, braces=False):
         """
         Build a single staff, with instrument name, midi instrument, octave and
         possible transposition.  Returns the staff and the stub for other
@@ -111,7 +111,7 @@ class SingleVoicePart(Part):
         staff = Staff()
         builder.setInstrumentNames(staff, self.instrumentNames, self.num)
         builder.setMidiInstrument(staff, self.midiInstrument)
-        s1 = Seqr(staff)
+        s1 = braces and Seq(staff) or Seqr(staff)
         if self.clef:
             Clef(self.clef, s1)
         stub = self.assignMusic(s1, self.octave, self.transpose)
@@ -267,7 +267,7 @@ class VocalSoloPart(VocalPart, SingleVoicePart):
     Base class for solo voices
     """
     def build(self, builder):
-        staff, stub = SingleVoicePart.build(self, builder)
+        staff, stub = SingleVoicePart.build(self, builder, braces=True)
         stub.insert(1, Line('\\dynamicUp')) # just after the \global
         self.addStanzas(staff)
         if self.ambitus.isChecked():
