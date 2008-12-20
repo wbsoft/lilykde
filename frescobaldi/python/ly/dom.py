@@ -1016,7 +1016,7 @@ class Clef(Leaf):
 
     def ly(self, printer):
         f = self.clef.isalpha() and '%s' or '"%s"'
-        return "\\clef %s\n" % f % self.clef
+        return "\\clef %s" % f % self.clef
 
 
 class VoiceSeparator(Leaf):
