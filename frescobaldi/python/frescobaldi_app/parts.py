@@ -111,7 +111,7 @@ class SingleVoicePart(Part):
         staff = Staff()
         builder.setInstrumentNames(staff, self.instrumentNames, self.num)
         builder.setMidiInstrument(staff, self.midiInstrument)
-        s1 = Seq(staff)
+        s1 = Seqr(staff)
         if self.clef:
             Clef(self.clef, s1)
         stub = self.assignMusic(s1, self.octave, self.transpose)

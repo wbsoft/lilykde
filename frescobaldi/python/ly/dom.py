@@ -760,6 +760,7 @@ class ContextType(Container):
     in \\with. If the \\with element is empty, it does not print anything.
     You should add one other music object to this.
     """
+    before, after = 1, 1
     ctype = None
     
     def __init__(self, cid=None, new=True, parent=None):
@@ -859,7 +860,7 @@ class ContextProperty(Leaf):
             return self.prop
 
 
-class InputMode(Statement):
+class InputMode(StatementEnclosed):
     """
     The abstract base class for input modes such as lyricmode/lyrics,
     chordmode/chords etc.
