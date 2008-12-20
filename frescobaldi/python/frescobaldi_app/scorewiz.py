@@ -40,12 +40,19 @@ def config(group=None):
     return c
 
 
+def onSignal(obj, signalName):
+    """ decorator to easily add connect a Qt signal to a Python slot."""
+    def decorator(func):
+        QObject.connect(obj, SIGNAL(signalName), func)
+        return func
+    return decorator
 
 
 class ScoreWizard(KPageDialog):
-    
-    def __init__(self, parent):
-        KPageDialog.__init__(self, parent)
+
+    def __init__(self, mainwin):
+        KPageDialog.__init__(self, mainwin)
+        self.mainwin = mainwin
         self.setFaceType(KPageDialog.Tabbed)
         self.setButtons(KPageDialog.ButtonCode(
             KPageDialog.Ok | KPageDialog.Cancel | KPageDialog.Default))
@@ -56,14 +63,18 @@ class ScoreWizard(KPageDialog):
         self.settings = Settings(self)
         self.loadCompletions()
         self.restoreDialogSize(config("dialogsize"))
-        QObject.connect(self, SIGNAL("defaultClicked()"), self.slotDefault)
-        
+        @onSignal(self, "defaultClicked()")
+        def default():
+            self.titles.default()
+            self.parts.default()
+            self.settings.default()
+
     def complete(self, widget, name=None):
         """ Save the completions of the specified widget """
         if not name:
             name = widget.objectName()
         self.completableWidgets[name] = widget
-        
+
     def saveCompletions(self):
         """ Saves completion items for all lineedits. """
         conf = config("completions")
@@ -73,7 +84,7 @@ class ScoreWizard(KPageDialog):
             if len(text) > 1 and text not in items:
                 items.append(text)
             conf.writeEntry(name, items)
-            
+
     def loadCompletions(self):
         """ Loads the completion data from the config. """
         conf = config("completions")
@@ -81,21 +92,16 @@ class ScoreWizard(KPageDialog):
             c = widget.completionObject()
             c.setOrder(KCompletion.Sorted)
             c.setItems(conf.readEntry(name, QStringList()))
-        
+
     def done(self, result):
         self.saveDialogSize(config("dialogsize"))
         self.saveCompletions()
         self.settings.saveConfig()
         if result:
-            Builder(self)
+            self.mainwin.view().insertText(Builder(self).build())
         KPageDialog.done(self, result)
-        
-    def slotDefault(self):
-        self.titles.default()
-        self.parts.default()
-        self.settings.default()
-        
-        
+
+
 class Titles(QWidget):
     """
     A widget where users can fill in all the titles that are put
@@ -111,14 +117,14 @@ class Titles(QWidget):
         t.setSearchPaths(KGlobal.dirs().findDirs("appdata", "pics"))
         t.setOpenLinks(False)
         t.setOpenExternalLinks(False)
-        
+
         # ensure that the full HTML example page is displayed
         t.setContentsMargins(2, 2, 2, 2)
         t.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         t.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        QObject.connect(t.document().documentLayout(),
-            SIGNAL("documentSizeChanged(QSizeF)"), 
-            lambda size: t.setMinimumSize(size.toSize()+QSize(4, 4)))
+        @onSignal(t.document().documentLayout(), "documentSizeChanged(QSizeF)")
+        def resize(size):
+            t.setMinimumSize(size.toSize() + QSize(4, 4)
 
         headers = ly.headers(i18n)
         msg = i18n("Click to enter a value.")
@@ -130,7 +136,9 @@ class Titles(QWidget):
                 for k, v in headers))
         t.setHtml(html)
         l.addWidget(t)
-        QObject.connect(t, SIGNAL("anchorClicked(QUrl)"), self.focusEntry)
+        @onSignal(t, "anchorClicked(QUrl)")
+        def focusEntry(qurl):
+            self.findChild(KLineEdit, qurl.toString()).setFocus()
 
         g = QGridLayout()
         g.setVerticalSpacing(1)
@@ -147,37 +155,131 @@ class Titles(QWidget):
             # set completion items
             parent.complete(e)
 
-    def focusEntry(self, qurl):
-        self.findChild(KLineEdit, qurl.toString()).setFocus()
-        
+
     def default(self):
-        """ Set various items to their default state """
+        """ Clear the text entries. """
         for w in self.findChildren(KLineEdit):
             w.clear()
-        
+
     def headers(self):
-        """ Return the user-entered headers. """
+        """ Iterate over the user-entered headers (name, value) """
         for h in ly.headerNames:
             yield h, unicode(self.findChild(KLineEdit, h).text())
-            
-    
+
+
 class Parts(QSplitter):
     """
     The widget where users can select parts and adjust their settings.
     """
     def __init__(self, parent):
         QSplitter.__init__(self, parent)
-        p = parent.addPage(self, i18n("Parts"))
+        parent.addPage(self, i18n("Parts"))
 
+        # The part types overview widget.
+        v = KVBox()
+        self.addWidget(v)
+        QLabel('<b>%s</b>' % i18n("Available parts:"), v)
+        all = QTreeWidget(v)
+        addButton = KPushButton(KStandardGuiItem.add(), v)
+        addButton.setToolTip(i18n("Add selected part to your score."))
+
+        # The listbox with selected parts
+        v = KVBox()
+        self.addWidget(v)
+        QLabel('<b>%s</b>' % i18n("Score:"), v)
+        score = QListWidget(v)
+        self.score = score  # so the partList method can find us
+        h = KHBox(v)
+        removeButton = KPushButton(KStandardGuiItem.remove(), h)
+        upButton = QToolButton(KIcon("go-up"), h)       # TODO: check icon
+        downButton = QToolButton(KIcon("go-down"), h)   # TODO: check icon
+
+        # The StackedWidget with settings
+        part = QStackedWidget()
+        self.addWidget(part)
+
+        all.setSelectionMode(QTreeWidget.ExtendedSelection)
+        all.setRootIsDecorated(False)
+        score.setSelectionMode(QListWidget.ExtendedSelection)
+
+        class PartItem(QListWidgetItem):
+            """
+            A part from the score, instantiating a config widget as well.
+            """
+            def __init__(self, partClass):
+                name = partClass.name() # partClass.name is a ki18n object
+                QListWidgetItem.__init__(score, name)
+                self.w = QGroupBox(part, name)
+                self.part = partClass()
+                self.part.widgets(QVBoxLayout(self.w))
+                if score.count() == 1:
+                    score.setCurrentRow(0)
+                    self.setSelected(True)
+
+            def showSettingsWidget(self):
+                part.setCurrentWidget(self.w)
+
+            def remove(self):
+                sip.delete(self.w)
+                sip.delete(self) # TODO: check if necessary
+
+        @onSignal(all, "itemDoubleClicked(QTreeWidgetItem*, int)")
+        def addPart(item, col):
+            PartItem(item.partClass))
+
+        @onSignal(all, "itemClicked(QTreeWidgetItem*, int)")
+        def toggleExpand(item, col):
+            item.setExpanded(not item.isExpanded()))
+
+        @onSignal(addButton, "clicked()")
+        def addSelectedParts():
+            for item in all.selectedItems():
+                PartItem(item.partClass)
+
+        @onSignal(removeButton, "clicked()")
+        def removeSelectedParts():
+            for item in score.selectedItems():
+                item.remove()
+
+        @onSignal(upButton, "clicked()")
+        def moveUp():
+            """ Move selected parts up. """
+            for row in range(1, score.count()):
+                if score.item(row).isSelected():
+                    item = score.takeItem(row)
+                    score.insertItem(row - 1, item)
+
+        @onSignal(downButton, "clicked()")
+        def moveDown():
+            """ Move selected parts down. """
+            for row in range(score.count() - 1, -1, -1):
+                if score.item(row).isSelected():
+                    item = score.takeItem(row)
+                    score.insertItem(row + 1, item)
+
+        @onSignal(score, "currentItemChanged(QListWidgetItem*, QListWidgetItem*)")
+        def showItem(cur, prev):
+            cur.showSettingsWidget()
+
+        from frescobaldi_app.parts import categories
+        for name, parts in categories():
+            group = QTreeWidgetItem(self.all, [name])
+            group.setFlags(Qt.ItemIsEnabled)
+            group.setExpanded(True)
+            for part in parts:
+                p = QTreeWidgetItem(group, [part.name()])
+                p.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+                p.partClass = part
 
     def default(self):
-        """ Set various items to their default state """
-        pass # TODO: implement
-    
+        """ Clear the score """
+        while self.score.count():
+            self.score.item(0).remove()
+
     def partList(self):
-        """Return configured part objects """
-        return [PartBase()] # TODO: implement dialog
-        
+        """ Return user-configured part objects """
+        return [self.score.item(row).part for row in range(self.score.count())]
+
 
 class Settings(QWidget):
     """
@@ -185,7 +287,7 @@ class Settings(QWidget):
     """
     def __init__(self, parent):
         QWidget.__init__(self, parent)
-        p = parent.addPage(self, i18n("Score settings"))
+        parent.addPage(self, i18n("Score settings"))
 
         h = QHBoxLayout(self)
         v = QVBoxLayout()
@@ -194,7 +296,7 @@ class Settings(QWidget):
         v.addWidget(score)
         lily =  QGroupBox(i18n("LilyPond"))
         v.addWidget(lily)
-        
+
         v = QVBoxLayout()
         h.addLayout(v)
         prefs = QGroupBox(i18n("General preferences"))
@@ -286,11 +388,20 @@ class Settings(QWidget):
         self.lylang.addItems([l.title() for l in self.languageNames])
         h.setToolTip(i18n(
             "The LilyPond language you want to use for the pitch names."))
-        QObject.connect(self.lylang,
-            SIGNAL("currentIndexChanged(const QString&)"),
-            self.slotLanguageChanged)
-        self.slotLanguageChanged('') # init with default
-        
+        @onSignal(self.lylang, "currentIndexChanged(const QString&)")
+        def slotLanguageChanged(lang):
+            """ Change the LilyPond language, affects key names """
+            lang = unicode(lang).lower()    # can be QString
+            if lang not in self.languageNames:
+                lang = 'nederlands'
+            index = self.key.currentIndex()
+            if index == -1:
+                index = 0
+            self.key.clear()
+            self.key.addItems(ly.keyNames[lang])
+            self.key.setCurrentIndex(index)
+        slotLanguageChanged('') # init with default
+
         h = KHBox()
         v.addWidget(h)
         l = QLabel(i18n("Version:"), h)
@@ -339,14 +450,15 @@ class Settings(QWidget):
         self.paperLandscape = QCheckBox(i18n("Landscape"), h)
         self.paper.addItem(i18n("Default"))
         self.paper.addItems(paperSizes)
-        QObject.connect(self.paper, SIGNAL("activated(int)"),
-            lambda i: self.paperLandscape.setEnabled(bool(i)))
+        @onSignal(self.paper, "activated(int)")
+        def checkLandscape(i):
+            self.paperLandscape.setEnabled(bool(i)))
 
         # Instrument names
         instr.setCheckable(True)
         self.instr = instr
         v = QVBoxLayout(instr)
-        
+
         h = KHBox()
         v.addWidget(h)
         l = QLabel(i18n("First system:"), h)
@@ -394,7 +506,7 @@ class Settings(QWidget):
         g.writeEntry('first', ['short', 'long'][self.instrFirst.currentIndex()])
         g.writeEntry('other', ['short', 'long', 'none'][self.instrOther.currentIndex()])
         g.writeEntry('lang', ['italian', 'english', 'translated'][self.instrLang.currentIndex()])
-        
+
     def loadConfig(self):
         conf = config()
         self.setLanguage(conf.readEntry('language', 'default'))
@@ -448,76 +560,76 @@ class Settings(QWidget):
         self.instrOther.setCurrentIndex(2)
         self.instrLang.setCurrentIndex(0)
         self.instr.setChecked(True)
-        
-    def slotLanguageChanged(self, lang):
-        """ Change the LilyPond language, affects key names """
-        lang = unicode(lang).lower()    # can be QString
-        if lang not in self.languageNames:
-            lang = 'nederlands'
-        index = self.key.currentIndex()
-        if index == -1:
-            index = 0
-        self.key.clear()
-        self.key.addItems(ly.keyNames[lang])
-        self.key.setCurrentIndex(index)
-        
+
     def getLanguage(self):
         """ Return the configured LilyPond pitch language, '' for default. """
         if self.lylang.currentIndex():
             return self.languageNames[self.lylang.currentIndex() - 2]
         else:
             return ''
-    
+
     def setLanguage(self, lang):
         """ Sets the language combobox to the specified language """
         if lang not in self.languageNames:
             self.lylang.setCurrentIndex(0)
         else:
             self.lylang.setCurrentIndex(self.languageNames.index(lang) + 2)
-            
+
 
 class Builder(object):
     """
     Builds a LilyPond document, based on the preferences from the ScoreWizard.
     The builder reads settings from the ScoreWizard, and is thus tightly
     integrated with the ScoreWizard.
-    
-    Interacts also with the parts. The parts (in parts.py) may only use a few 
+
+    Interacts also with the parts. The parts (in parts.py) may only use a few
     functions, and should not interact with the Wizard directly!
-    
+
     Parts may interact with:
-    
+
     lilypondVersion     a tuple like (2, 11, 64) describing the LilyPond the
                         document is built for.
-                        
-    setInstrumentNames  to set instrument names for a node
-    
+
+    getInstrumentNames  to translate instrument names
+
+    setInstrumentNames  to translate and set instrument names for a node
+
     setMidiInstrument   to set the Midi instrument for a node
     """
     def __init__(self, wizard):
         self.wizard = wizard
-        
+
+    def build(self):
         s = self.wizard.settings # easily access the settings tab.
-        
+
         doc = ly.dom.Document()
-        
+
         printer = ly.dom.Printer()
         printer.indentString = "  " # FIXME get current indent-width somehow...
         printer.typographicalQuotes = s.typq.isChecked()
-        
+
+        # instrument names language:
+        i = s.instrLang.currentIndex()
+        lang = KGlobal.locale()
+        self.translateInstrumentNames = lambda names: unicode(names.toString(lang))
+        if i == 0:          # italian
+            lang = KLocale("frescobaldi", "it")
+        elif i == 1:        # english
+            lang = KLocale("frescobaldi", "en")
+
         # version:
         version = unicode(s.lyversion.currentText())
         ly.dom.Version(version, doc)
         ly.dom.BlankLine(doc)
         self.lilypondVersion = tuple(map(int, re.findall('\\d+', version)))
-        
+
         # pitch language:
         language = s.getLanguage()
         if language:
             printer.language = language
             ly.dom.Text('\\include "%s.ly"' % language, doc)
             ly.dom.BlankLine(doc)
-        
+
         # header:
         h = ly.dom.Header()
         for name, value in self.wizard.titles.headers():
@@ -529,7 +641,7 @@ class Builder(object):
         if len(h):
             doc.append(h)
             ly.dom.BlankLine(doc)
-        
+
         # paper size:
         if s.paper.currentIndex():
             ly.dom.Scheme('(set-paper-size "%s"%s)' % (
@@ -537,14 +649,14 @@ class Builder(object):
                     s.paperLandscape.isChecked() and " 'landscape" or ""),
                 ly.dom.Paper(doc)).after = 1
             ly.dom.BlankLine(doc)
-        
+
         # get the part list
         parts = self.wizard.parts.partList()
         if parts:
             self.buildScore(doc, parts)
-            
-        # Finally, print out
-        self.wizard.parent().view().insertText(printer.indent(doc))
+
+        # Finally, return the rendered document
+        return printer.indent(doc)
 
     def buildScore(self, doc, partList):
         """ Creates a LilyPond score based on parts in partList """
@@ -552,7 +664,7 @@ class Builder(object):
 
         # a global = {  } construct setting key and time sig, etc.
         g = ly.dom.Seq(ly.dom.Assignment('global'))
-        
+
         # First find out if we need to define a tempoMark section.
         midi = s.midi.isChecked()
         tempoText = unicode(s.tempoInd.text())
@@ -615,11 +727,11 @@ class Builder(object):
                     part.num = num + 1
             else:
                 t[0].num = 0
-                
+
         # let each part build the LilyPond output
         for part in partList:
             part.build(self)
-            
+
         # check for name collisions in assignment identifiers
         refs = {}
         for part in partList:
@@ -630,8 +742,8 @@ class Builder(object):
         for reflist in refs.values():
             if len(reflist) > 1:
                 for ref, part in reflist:
-                    ref.name += part.identifier()
-        
+                    ref.name += part.identifier(lowerFirst=False)
+
         # collect all assignments
         for part in partList:
             for a in part.assignments:
@@ -644,10 +756,10 @@ class Builder(object):
         for part in partList:
             for n in part.nodes:
                 sim.append(n)
-    
+
         lay = ly.dom.Layout(score)
         if s.barnum.isChecked():
-            ly.dom.Line('\\remove "Bar_number_engraver"', 
+            ly.dom.Line('\\remove "Bar_number_engraver"',
                 ly.dom.Context('Score', lay))
         if midi:
             mid = ly.dom.Midi(score)
@@ -656,37 +768,43 @@ class Builder(object):
                 val = int(val) * mul
                 ly.dom.Context('Score', mid)['tempoWholesPerMinute'] = \
                     ly.dom.Scheme("(ly:make-moment %s %s)" % (val, base))
-                
+
     ##
     # The following functions are to be used by the parts.
     ##
-    
-    def setInstrumentNames(self, node, instrumentNames, num=0):
+
+    def getInstrumentNames(self, names, num=0):
         """
-        Add instrument names to the given node, which should be of 
-        ly.dom.ContextType.
-        
-        instrumentNames should be a three-tuple containing the names in
-        (italian, english, translated) form.
-        
-        If num > 0, it is added to the instrument name (e.g. Violine II)
-        
-        Each instrument name is a string with a pipe symbol separating the
+        Returns a tuple (longname, shortname).
+
+        names is a ki18n string with a pipe symbol separating the
         long and the short instrument name. (This way the abbreviated
         instrument names remain translatable).
+
+        If num > 0, it is added to the instrument name (e.g. Violine II)
         """
-        s = self.wizard.settings
-        if not s.instr.isChecked():
-            return
-        names = instrumentNames[s.instrLang.currentIndex()].split('|')
+        names = self.translateInstrumentNames(names).split("|")
         if num:
             names = [name + " " + ly.romanize(num) for name in names]
-        # add instrument_name_engraver if necessary
-        ly.dom.addInstrumentNameEngraverIfNecessary(node)
-        w = node.getWith()
-        w['instrumentName'] = names[s.instrFirst.currentIndex()]
-        if self.instrumentNamesOther < 2:
-            w['shortInstrumentName'] = names[s.instrOther.currentIndex()]
+        return names
+
+    def setInstrumentNames(self, node, names, num=0):
+        """
+        Add instrument names to the given node, which should be of
+        ly.dom.ContextType.
+
+        For instrumentNames and num, see getInstrumentNames.
+        (instrumentNames may also be a tuple of ly.dom.LyNode objects.)
+        """
+        s = self.wizard.settings
+        if s.instr.isChecked():
+            if not isinstance(names, (tuple, list)):
+                names = self.getInstrumentNames(names, num)
+            ly.dom.addInstrumentNameEngraverIfNecessary(node)
+            w = node.getWith()
+            w['instrumentName'] = names[s.instrFirst.currentIndex()]
+            if s.instrOther.currentIndex() < 2:
+                w['shortInstrumentName'] = names[s.instrOther.currentIndex()]
 
     def setMidiInstrument(self, node, midiInstrument):
         """
@@ -703,51 +821,51 @@ class PartBase(object):
     Classes provide basic information.
     Instances provide a settings widget and can create LilyPond output.
     """
-    
-    @staticmethod
-    def translatedPartName():
-        """ The name of our part type in the dialog """
-        return "unnamed"
-        
-    @classmethod
-    def internalPartName(cls):
-        """ The name of our part type in the LilyPond output """
-        return cls.__name__
-    
+
+    # The name of our part type in the dialog, mark for translation using ki18n!
+    name = "unnamed"
+
     def __init__(self):
         self.num = 0
         self.assignments = []
         self.nodes = []
-    
-    def title(self):
-        """ Returns a title, usable as instrument name. """
-        title = self.translatedPartName()
-        if self.num:
-            title = "%s %s" % (title, ly.romanize(self.num))
-        return title
-        
-    def identifier(self):
-        """ Returns an untranslated name, usable as LilyPond identifier """
-        name =  self.internalPartName()
+
+    @classmethod
+    def name(cls):
+        """
+        Return the translated part name.
+        You should not override this method, but set the part name as an ki18n
+        object in the _name class attribute.
+        """
+        return cls._name.toString()
+
+    def identifier(self, lowerFirst=True):
+        """
+        Returns an untranslated name, usable as LilyPond identifier,
+        with the first letter lowered by default.
+        """
+        name = self.__class__.__name__
+        if lowerFirst:
+            name = name[0].lower() + name[1:]
         if self.num:
             name += ly.romanize(self.num)
         return name
-        
+
     def widgets(self, layout):
         """
         Reimplement this method to add widgets with settings
-        to the give layout.
+        to the given layout.
         """
         layout.addWidget(QLabel('(%s)' % i18n("No settings available.")))
-        
+
     def build(self, builder):
         """
-        May add assignments and created nodes to respectively 
+        May add assignments and created nodes to respectively
         self.assignments and self.nodes.
         builder is a Builder instance providing access to users settings.
         """
         pass
-    
+
 
 titles_html = r"""
 <html><head><style type='text/css'>
