@@ -761,6 +761,7 @@ class ContextType(Container):
     You should add one other music object to this.
     """
     before, after = 1, 1
+    isAtom = True
     ctype = None
     
     def __init__(self, cid=None, new=True, parent=None):

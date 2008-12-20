@@ -370,6 +370,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             "pdf", i18n("PDF Preview"), "application-pdf",
             dock=kateshell.mainwindow.Right)
         listeners[mainwin.app.activeChanged].append(self.sync)
+        self._currentUrl = None
             
     def sync(self, doc):
         pass
@@ -384,7 +385,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
                 "show_leftpanel").isChecked())
             QObject.connect(a, SIGNAL("triggered()"), lambda:
                 self.part.actionCollection().action("show_leftpanel").toggle())
-            a = m.addAction(i18n("Show PDF minibar"))
+            a = m.addAction(i18n("Show PDF minipager"))
             a.setCheckable(True)
             w = self._okularMiniBar()
             a.setChecked(w.isVisibleTo(w.parent()))
@@ -393,7 +394,9 @@ class PDFTool(kateshell.mainwindow.KPartTool):
     
     def openUrl(self, url):
         self.show()
-        super(PDFTool, self).openUrl(url)
+        if url != self._currentUrl:
+            super(PDFTool, self).openUrl(url)
+            self._currentUrl = url
 
     def _okularMiniBar(self):
         """ get the okular miniBar """

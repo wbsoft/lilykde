@@ -188,7 +188,7 @@ class TablaturePart(SingleVoicePart):
             p = StaffGroup()
             s = Sim(p)
             s.append(tab)
-            s = Seqr(Staff(s))
+            s = Seqr(Staff(parent=s))
             builder.setMidiInstrument(s.parent(), self.midiInstrument)
             if self.clef:
                 Clef(self.clef, s)
@@ -757,15 +757,15 @@ class LeadSheet(VocalPart, Chords):
             #TODO: instrument names ?
             #TODO: different midi instrument for voice and accompaniment ?
             s = Sim(p)
-            mel = Sim(Staff(s))
-            v1 = Voice(mel)
+            mel = Sim(Staff(parent=s))
+            v1 = Voice(parent=mel)
             s1 = Seq(v1)
             Line('\\voiceOne', s1)
             self.assignMusic(s1, 1, name='melody')
-            s2 = Seq(Voice(mel))
+            s2 = Seq(Voice(parent=mel))
             Line('\\voiceTwo', s2)
             self.assignMusic(s2, 0, name='accRight')
-            acc = Seq(Staff(s))
+            acc = Seq(Staff(parent=s))
             Clef('bass', acc)
             self.assignMusic(acc, -1, name='accLeft')
             if self.ambitus.isChecked():
@@ -886,7 +886,7 @@ class Choir(VocalPart):
             # sort the letters in order SATB
             staff = ''.join(i * staff.count(i) for i in 'SATB')
             # Create the staff for the voices
-            s = Staff(choir)
+            s = Staff(parent=choir)
             builder.setMidiInstrument(s, self.midiInstrument)
             # Build lists of the voices and their instrument names
             instrNames, voices = [], []
@@ -947,7 +947,7 @@ class Choir(VocalPart):
                 else:
                     # otherwise create explicit Voice and Lyrics contexts.
                     vname = name + str(num or '')
-                    v = Seqr(Voice(vname, mus))
+                    v = Seqr(Voice(vname, parent=mus))
                     self.assignMusic(v, octave, name=mname)
                     if not (self.lyrAllSame.isChecked() and not toGo):
                         for verse in stanzas:
@@ -955,7 +955,7 @@ class Choir(VocalPart):
                                 (LyricsTo(vname, Lyrics(choir)), lyrName, verse))
 
                 if self.ambitus.isChecked():
-                    Line(s.getWith(), '\\consists "Ambitus_engraver"')
+                    Line('\\consists "Ambitus_engraver"', s.getWith())
             else:
                 # There is more than one voice in the staff.
                 # Determine their order (\voiceOne, \voiceTwo etc.)
@@ -983,14 +983,13 @@ class Choir(VocalPart):
                 for (name, num, octave), vnum in zip(voices, order):
                     mname = name + (num and ly.nums(num) or '')
                     vname = name + str(num or '')
-                    v = Voice(vname, mus)
+                    v = Voice(vname, parent=mus)
                     # Add ambitus to voice, move to the right if necessary
                     if self.ambitus.isChecked():
-                        Line(v.getWith(), '\\consists "Ambitus_engraver"')
+                        Line('\\consists "Ambitus_engraver"', v.getWith())
                         if vnum > 1:
-                            Line(v.getWith(),
-                                "\\override Ambitus #'X-offset = #%s" %
-                                ((vnum - 1) * 2.0))
+                            Line("\\override Ambitus #'X-offset = #%s" %
+                                 ((vnum - 1) * 2.0), v.getWith())
                     v = Seq(v)
                     Text('\\voice' + ly.nums(vnum), v)
                     self.assignMusic(v, octave, name=mname)

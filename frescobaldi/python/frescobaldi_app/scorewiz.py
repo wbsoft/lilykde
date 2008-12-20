@@ -236,7 +236,8 @@ class Parts(QSplitter):
 
         @onSignal(allParts, "itemDoubleClicked(QTreeWidgetItem*, int)")
         def addPart(item, col):
-            PartItem(item.partClass)
+            if hasattr(item, "partClass"):
+                PartItem(item.partClass)
 
         @onSignal(allParts, "itemClicked(QTreeWidgetItem*, int)")
         def toggleExpand(item, col):
@@ -252,7 +253,21 @@ class Parts(QSplitter):
             for item in score.selectedItems():
                 item.remove()
 
+        def keepSel(func):
+            """
+            Restore the selection and current element after reordering parts.
+            """
+            def decorator():
+                selItems = score.selectedItems()
+                curItem = score.currentItem()
+                func()
+                score.setCurrentItem(curItem)
+                for i in selItems:
+                    i.setSelected(True)
+            return decorator
+            
         @onSignal(upButton, "clicked()")
+        @keepSel
         def moveUp():
             """ Move selected parts up. """
             for row in range(1, score.count()):
@@ -261,6 +276,7 @@ class Parts(QSplitter):
                     score.insertItem(row - 1, item)
 
         @onSignal(downButton, "clicked()")
+        @keepSel
         def moveDown():
             """ Move selected parts down. """
             for row in range(score.count() - 1, -1, -1):
@@ -732,7 +748,7 @@ class Builder(object):
         # number instances of the same type (Choir I and Choir II, etc.)
         types = {}
         for part in partList:
-            types.setdefault(part.__class__.__name__, []).append(part)
+            types.setdefault(part.__class__, []).append(part)
         for t in types.values():
             if len(t) > 1:
                 for num, part in enumerate(t):
@@ -836,6 +852,9 @@ class PartBase(object):
 
     # The name of our part type in the dialog, mark for translation using ki18n!
     _name = "unnamed"
+    
+    def __init__(self):
+        self.num = 0
 
     def run(self, builder):
         """
@@ -844,7 +863,6 @@ class PartBase(object):
         method. You should not reimplement this method, but rather the
         build method.
         """
-        self.num = 0
         self.assignments = []
         self.nodes = []
         self.build(builder)
