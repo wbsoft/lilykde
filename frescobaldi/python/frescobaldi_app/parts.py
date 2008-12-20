@@ -463,9 +463,10 @@ class Banjo(TablaturePart):
         (ki18n("Open D-tuning (aDF#AD)"), 'banjo-open-d-tuning'),
         (ki18n("Open Dm-tuning (aDFAD)"), 'banjo-open-dm-tuning'),
     )
-    def widgetsTuning(self, p):
-        super(Banjo, self).widgetsTuning(p)
-        self.fourStrings = QCheckBox(i18n("Four strings (instead of five)"), p)
+    def widgetsTuning(self, layout):
+        super(Banjo, self).widgetsTuning(layout)
+        self.fourStrings = QCheckBox(i18n("Four strings (instead of five)"))
+        layout.addWidget(self.fourStrings)
 
     def slotTabEnable(self, enable):
         super(Banjo, self).slotTabEnable(enable)

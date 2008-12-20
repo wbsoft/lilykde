@@ -270,7 +270,8 @@ class Parts(QSplitter):
 
         @onSignal(score, "currentItemChanged(QListWidgetItem*, QListWidgetItem*)")
         def showItem(cur, prev):
-            cur.showSettingsWidget()
+            if cur:
+                cur.showSettingsWidget()
 
         from frescobaldi_app.parts import categories
         for name, parts in categories():
