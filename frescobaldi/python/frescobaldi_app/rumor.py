@@ -120,7 +120,30 @@ class RumorPanel(QWidget):
         l.setBuddy(self.keysig)
         layout.addWidget(l, 2, 1)
 
+        hb = QHBoxLayout()
+        layout.addLayout(hb, 2, 3)
 
+        # Timidity button
+        self.timidity = TimidityButton(self)
+        hb.addWidget(self.timidity)
+
+        # Button 'More Settings'
+        sb = QPushButton(i18n("Configure..."))
+        sb.setToolTip(i18n("Adjust more settings, like MIDI input and output."))
+        QObject.connect(sb, SIGNAL("clicked()"), lambda: RumorSettings(self))
+        hb.addWidget(sb)
+
+        # Save Button
+        sb = QPushButton(i18n("Save"))
+        sb.setToolTip(i18n("Set these settings as default."))
+        QObject.connect(sb, SIGNAL("clicked()"), self.saveSettings)
+        hb.addWidget(sb)
+
+
+    def saveSettings(self):
+        pass # TODO: implement
+        
+        
 class RumorButton(ProcessButton):
     def __init__(self, *args):
         super(RumorButton, self).__init__(*args)
@@ -129,5 +152,13 @@ class RumorButton(ProcessButton):
         self.setToolTip(i18n("Start or stop Rumor MIDI-recording."))
         
         
+
+class TimidityButton(ProcessButton):
+    def __init__(self, *args):
+        super(TimidityButton, self).__init__(*args)
+        self.setText(i18n("TiMidity"))
+        self.setToolTip(i18n("Start or stop the TiMidity ALSA MIDI client."))
+        self.setIcon(KIcon("media-playback-start"))
+
 
 
