@@ -160,5 +160,15 @@ class TimidityButton(ProcessButton):
         self.setToolTip(i18n("Start or stop the TiMidity ALSA MIDI client."))
         self.setIcon(KIcon("media-playback-start"))
 
+    def initializeProcess(self, p):
+        cmd, err = KShell.splitArgs(config("commands").readEntry("timidity",
+            default_timidity_command))
+        p.setProgram(cmd)
 
 
+
+def config(group="rumor"):
+    return KGlobal.config().group(group)
+
+
+default_timidity_command = "timidity -iA -B2,8 -Os -EFreverb=0"
