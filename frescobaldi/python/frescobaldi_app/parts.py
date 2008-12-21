@@ -1008,7 +1008,7 @@ class Choir(VocalPart):
                     # give the staff a suitable name, and use alignAboveContext
                     # to align the Lyrics above the staff.
                     if above:
-                        s.cid = ContextId(staffName)
+                        s.cid = Reference(staffName)
                     for verse in stanzas:
                         l = Lyrics(parent=choir)
                         if above:

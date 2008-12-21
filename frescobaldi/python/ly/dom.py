@@ -331,11 +331,6 @@ class Reference(object):
         return self.name
 
 
-class ContextId(Reference):
-    def __unicode__(self):
-        return '"%s"' % self.name
-
-
 class Named(object):
     """
     Mixin to print a \\name before the contents of the container.
@@ -775,7 +770,7 @@ class ContextType(Container):
         res.append(self.ctype or self.__class__.__name__)
         if self.cid:
             res.append("=")
-            res.append(unicode(self.cid))
+            res.append(printer.quoteString(unicode(self.cid)))
         res.append(super(ContextType, self).ly(printer))
         return " ".join(res)
         
@@ -888,14 +883,18 @@ class AddLyrics(InputLyrics):
 
 
 class LyricsTo(LyricMode):
-    @property
-    def name(self):
-        return 'lyricsto %s' % unicode(self.cid)
+    name = 'lyricsto'
     
     def __init__(self, cid, parent=None):
         super(LyricsTo, self).__init__(parent)
         self.cid = cid
-
+    
+    def ly(self, printer):
+        res = ["\\%s" % self.name]
+        res.append(printer.quoteString(unicode(self.cid)))
+        res.append(super(Named, self).ly(printer))
+        return " ".join(res)
+        
 
 class Pitch(Leaf):
     """
