@@ -54,9 +54,15 @@ class Part(frescobaldi_app.scorewiz.PartBase):
             nameref = Reference(self.identifier())
         elif not isinstance(nameref, Reference):
             nameref = Reference(nameref)
-        a = Assignment(nameref)
-        a.append(stub)
-        self.assignments.append(a)
+        # handle multiple references to the same assignment
+        for a in self.assignments:
+            if a.name.name == nameref.name:
+                nameref = a.name
+                break
+        else:
+            a = Assignment(nameref)
+            a.append(stub)
+            self.assignments.append(a)
         Identifier(nameref, node)
 
     def assignMusic(self, node, octave, transpose=None, name=None):
