@@ -107,7 +107,7 @@ class Node(object):
         self._children.remove(node)
         node._parent = None
 
-    def replace(self, what, node):
+    def replace(self, where, node):
         """
         Replace child at index or specified node with a replacement node.
         """

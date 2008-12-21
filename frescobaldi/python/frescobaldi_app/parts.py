@@ -906,7 +906,7 @@ class Choir(VocalPart):
                 # There is only one voice in the staff. Just set the instrument
                 # name directly in the staff.
                 name, num = instrNames[0]
-                builder.setInstrumentNames(p, name, num)
+                builder.setInstrumentNames(s, name, num)
                 # if *all* staves have only one voice, addlyrics is used.
                 # In that case, don't remove the braces.
                 mus = maxLen == 1 and Seq(s) or Seqr(s)
