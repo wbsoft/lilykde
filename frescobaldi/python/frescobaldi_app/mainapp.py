@@ -124,6 +124,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         LogTool(self)
         PDFTool(self)
         QuickInsertTool(self)
+        RumorTool(self)
         
         self.jobs = {}
         listeners[app.activeChanged].append(self.updateJobActions)
@@ -454,5 +455,16 @@ class LogTool(kateshell.mainwindow.Tool):
                     self.dock()
                 self.hide()
 
+
+class RumorTool(kateshell.mainwindow.Tool):
+    def __init__(self, mainwin):
+        kateshell.mainwindow.Tool.__init__(self, mainwin,
+            "rumor", i18n("Rumor"), "text-x-lilypond",
+            dock=kateshell.mainwindow.Bottom,
+            factory=self.factory)
+            
+    def factory(self):
+        import frescobaldi_app.rumor
+        return frescobaldi_app.rumor.RumorPanel(self)
 
 
