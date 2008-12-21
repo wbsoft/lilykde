@@ -108,13 +108,13 @@
   <Separator />
   <Action name="file_close" />
   <Separator />
-  <Action name="lilypond_runner" />
-  <Separator />
   <DefineGroup name="edit_operations" />
   <Separator />
   <DefineGroup name="find_operations" />
   <Separator />
   <DefineGroup name="zoom_operations" />
+  <Separator />
+  <Action name="lilypond_runner" />
 </ToolBar>
 
 <Menu name="ktexteditor_popup" noMerge="1">
