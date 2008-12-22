@@ -45,18 +45,20 @@ class TapButton(QPushButton):
         self.setToolTip(i18n("Click this button a few times to set the tempo."))
 
 
-class ProcessButton(QPushButton):
+class ProcessButtonBase(object):
     """
-    A Pushbutton that starts a process when clicked, and stops it when
+    to be subclassed together with a QPushButton or a QToolButton
+    A button that starts a process when clicked, and stops it when
     clicked again.
     """
     def __init__(self, *args):
-        QPushButton.__init__(self, *args)
+        super(ProcessButtonBase, self).__init__(*args)
         self.setCheckable(True)
         self._p = KProcess()
         @onSignal(self, "clicked()")
         def clicked():
             if self.isRunning():
+                self.setChecked(True) # keep pressed down
                 self.stop()
             else:
                 self.start()
@@ -79,29 +81,53 @@ class ProcessButton(QPushButton):
         @onSignal(p, "started()")
         def started():
             self.setChecked(True)
-        QObject.connect(p, SIGNAL("readyRead()"), self.readOutput)
-        QObject.connect(p, SIGNAL("readyReadStandardError"), self.readStderr)
-        QObject.connect(p, SIGNAL("readyReadStandardOutput"), self.readStdout)
+            self.started()
+        @onSignal(p, "readyRead()")
+        def readOutput():
+            self.readOutput(self._p.readAll())
+        @onSignal(p, "readyReadStandardError")
+        def readStderr():
+            self.readStderr(self._p.readAllStandardError())
+        @onSignal(p, "readyReadStandardOutput")
+        def readStdout():
+            self.readStdout(self._p.readAllStandardOutput())
         self.initializeProcess(p)
         p.start()
         
     def stop(self):
-        if self.isRunning():
-            self._p.terminate()
+        """ Abort the running process """
+        self._p.terminate()
+    
+    def process(self):
+        """ Return the current KProcess instance. """
+        return self._p
+    
+    def started(self):
+        """ Called when the process really has been started. """
+        pass
     
     def finished(self, exitCode, exitStatus):
+        """ Called when the process has finished. """
         pass
     
     def error(self, errorCode):
+        """ Called when there was an error. """
         pass
     
-    def readOutput(self):
+    def writeInput(self, text):
+        """ Call to write input to the running process """
+        self._p.write(text)
+        
+    def readOutput(self, qbytearray):
+        """ Called with the read output if available. """
         pass
     
-    def readStderr(self):
+    def readStderr(self, qbytearray):
+        """ Called with the read standard error if available. """
         pass
     
-    def readStdout(self):
+    def readStdout(self, qbytearray):
+        """ Called with the read standard output if available. """
         pass
     
     def initializeProcess(self, p):

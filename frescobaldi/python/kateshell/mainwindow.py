@@ -315,6 +315,26 @@ class MainWindow(KParts.MainWindow):
         # write them back
         config().sync()
 
+    def currentLine(self):
+        """
+        Convenience method to get the current line number of the cursor.
+        """
+        return self.view().cursorPosition().line()
+        
+    def currentColumn(self):
+        """
+        Convenience method to get the current column number of the cursor.
+        """
+        return self.view().cursorPosition().column()
+
+    def currentLineText(self):
+        """
+        Returns the text of the current line.
+        """
+        v = self.view()
+        d = v.document()
+        return unicode(d.line(v.cursorPosition().line()))
+
     def selectionText(self, warn=True):
         """
         Convenience method for accessing the current document.
