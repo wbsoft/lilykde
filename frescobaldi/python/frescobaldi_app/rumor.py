@@ -148,7 +148,6 @@ class RumorPanel(QWidget):
             msg = unicode(e)
             self.showMessage(i18n("Could not find Rumor: %1", msg), 5000)
 
-
     def saveSettings(self):
         conf = config("rumor")
         conf.writeEntry("tempo", QVariant(self.tempo.tempo()))
