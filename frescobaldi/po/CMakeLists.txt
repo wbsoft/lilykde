@@ -1,4 +1,5 @@
-find_package(Gettext REQUIRED)
-
-#file(GLOB _po_files *.po)
-gettext_create_translations(frescobaldi.pot ALL nl.po)
+find_package(Gettext)
+if(GETTEXT_FOUND)
+  file(GLOB _po_files *.po)
+  gettext_create_translations(frescobaldi.pot ALL ${_po_files})
+endif(GETTEXT_FOUND)
