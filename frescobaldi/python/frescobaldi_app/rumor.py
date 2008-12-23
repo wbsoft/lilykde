@@ -327,6 +327,7 @@ class RumorButton(ProcessButtonBase, QToolButton):
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
         self.setToolTip(i18n("Start or stop Rumor MIDI-recording."))
         self.panel = panel
+        self._lastkey = None
         
     def initializeProcess(self, p):
         rumor = config("commands").readEntry("rumor", "rumor")
@@ -374,7 +375,12 @@ class RumorButton(ProcessButtonBase, QToolButton):
                 self.panel.mainwin.view().insertText('\n' + self.panel.indent)
                 return True
             elif not ev.isAutoRepeat() and not ev.text().isEmpty():
-                self.writeInput(ev.text().toLocal8Bit())
+                key = ev.text()
+                if key == " " or key != self._lastkey:
+                    self._lastkey = key
+                else:
+                    key.prepend(" ")
+                self.writeInput(key.toLocal8Bit())
                 return True
         return False
 
