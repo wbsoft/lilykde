@@ -31,6 +31,7 @@ import ly
 from ly.dom import *
 import frescobaldi_app.scorewiz
 
+I18N_NOOP = lambda s: s
 
 # Base classes for the part types in this file.
 # (For the real part type classes see below.)
@@ -400,13 +401,13 @@ class BassFigures(Part):
 
 class Violin(StringPart):
     _name = ki18n("Violin")
-    instrumentNames = ki18n("Violin|Vl.")
+    instrumentNames = I18N_NOOP("Violin|Vl.")
     midiInstrument = 'violin'
 
 
 class Viola(StringPart):
     _name = ki18n("Viola")
-    instrumentNames = ki18n("Viola|Vla.")
+    instrumentNames = I18N_NOOP("Viola|Vla.")
     midiInstrument = 'viola'
     clef = 'alto'
     octave = 0
@@ -414,7 +415,7 @@ class Viola(StringPart):
 
 class Cello(StringPart):
     _name = ki18n("Cello")
-    instrumentNames = ki18n("Cello|Cl.")
+    instrumentNames = I18N_NOOP("Cello|Cl.")
     midiInstrument = 'cello'
     clef = 'bass'
     octave = -1
@@ -422,7 +423,7 @@ class Cello(StringPart):
 
 class Contrabass(StringPart):
     _name = ki18n("Contrabass")
-    instrumentNames = ki18n("Contrabass|Cb.")
+    instrumentNames = I18N_NOOP("Contrabass|Cb.")
     midiInstrument = 'contrabass'
     clef = 'bass'
     octave = -1
@@ -430,7 +431,7 @@ class Contrabass(StringPart):
 
 class BassoContinuo(Cello):
     _name = ki18n("Basso continuo")
-    instrumentNames = ki18n("Basso Continuo|B.c.")
+    instrumentNames = I18N_NOOP("Basso Continuo|B.c.")
 
     def build(self, builder):
         s = Staff()
@@ -451,7 +452,7 @@ class BassoContinuo(Cello):
 
 class Mandolin(TablaturePart):
     _name = ki18n("Mandolin")
-    instrumentNames = ki18n("Mandolin|Mdl.")
+    instrumentNames = I18N_NOOP("Mandolin|Mdl.")
     midiInstrument = 'acoustic guitar (steel)'
     tunings = (
         (ki18n("Mandolin tuning"), 'mandolin-tuning'),
@@ -460,7 +461,7 @@ class Mandolin(TablaturePart):
 
 class Banjo(TablaturePart):
     _name = ki18n("Banjo")
-    instrumentNames = ki18n("Banjo|Bj.")
+    instrumentNames = I18N_NOOP("Banjo|Bj.")
     midiInstrument = 'banjo'
     tabFormat = 'fret-number-tablature-format-banjo'
     tunings = (
@@ -490,7 +491,7 @@ class Banjo(TablaturePart):
 
 class ClassicalGuitar(TablaturePart):
     _name = ki18n("Classical guitar")
-    instrumentNames = ki18n("Guitar|Gt.")
+    instrumentNames = I18N_NOOP("Guitar|Gt.")
     midiInstrument = 'acoustic guitar (nylon)'
     transpose = (-1, 0, 0)
     tunings = (
@@ -501,13 +502,13 @@ class ClassicalGuitar(TablaturePart):
 
 class JazzGuitar(ClassicalGuitar):
     _name = ki18n("Jazz guitar")
-    instrumentNames = ki18n("Jazz guitar|J.Gt.")
+    instrumentNames = I18N_NOOP("Jazz guitar|J.Gt.")
     midiInstrument = 'electric guitar (jazz)'
 
 
 class Bass(TablaturePart):
     _name = ki18n("Bass")
-    instrumentNames = ki18n("Bass|Bs.")  #FIXME
+    instrumentNames = I18N_NOOP("Bass|Bs.")  #FIXME
     midiInstrument = 'acoustic bass'
     transpose = (-1, 0, 0)
     clef = 'bass'
@@ -519,13 +520,13 @@ class Bass(TablaturePart):
 
 class ElectricBass(Bass):
     _name = ki18n("Electric bass")
-    instrumentNames = ki18n("Electric bass|E.Bs.")
+    instrumentNames = I18N_NOOP("Electric bass|E.Bs.")
     midiInstrument = 'electric bass (finger)'
 
 
 class Harp(KeyboardPart):
     _name = ki18n("Harp")
-    instrumentNames = ki18n("Harp|Hp.")
+    instrumentNames = I18N_NOOP("Harp|Hp.")
     midiInstrument = 'harp'
 
     def build(self, builder):
@@ -545,47 +546,47 @@ class Harp(KeyboardPart):
 
 class Flute(WoodWindPart):
     _name = ki18n("Flute")
-    instrumentNames = ki18n("Flute|Fl.")
+    instrumentNames = I18N_NOOP("Flute|Fl.")
     midiInstrument = 'flute'
 
 
 class Piccolo(WoodWindPart):
     _name = ki18n("Piccolo")
-    instrumentNames = ki18n("Piccolo|Pic.")
+    instrumentNames = I18N_NOOP("Piccolo|Pic.")
     midiInstrument = 'piccolo'
     transpose = (1, 0, 0)
 
 
 class BassFlute(WoodWindPart):
     _name = ki18n("Bass flute")
-    instrumentNames = ki18n("Bass flute|Bfl.")
+    instrumentNames = I18N_NOOP("Bass flute|Bfl.")
     midiInstrument = 'flute'
     transpose = (-1, 4, 0)
 
 
 class Oboe(WoodWindPart):
     _name = ki18n("Oboe")
-    instrumentNames = ki18n("Oboe|Ob.")
+    instrumentNames = I18N_NOOP("Oboe|Ob.")
     midiInstrument = 'oboe'
 
 
 class OboeDAmore(WoodWindPart):
     _name = ki18n("Oboe d'Amore")
-    instrumentNames = ki18n("Oboe d'amore|Ob.d'am.")
+    instrumentNames = I18N_NOOP("Oboe d'amore|Ob.d'am.")
     midiInstrument = 'oboe'
     transpose = (-1, 5, 0)
 
 
 class EnglishHorn(WoodWindPart):
     _name = ki18n("English Horn")
-    instrumentNames = ki18n("English horn|Eng.h.")
+    instrumentNames = I18N_NOOP("English horn|Eng.h.")
     midiInstrument = 'english horn'
     transpose = (-1, 3, 0)
 
 
 class Bassoon(WoodWindPart):
     _name = ki18n("Bassoon")
-    instrumentNames = ki18n("Bassoon|Bn.")
+    instrumentNames = I18N_NOOP("Bassoon|Bn.")
     midiInstrument = 'bassoon'
     clef = 'bass'
     octave = -1
@@ -593,7 +594,7 @@ class Bassoon(WoodWindPart):
 
 class ContraBassoon(WoodWindPart):
     _name = ki18n("Contrabassoon")
-    instrumentNames = ki18n("Contrabassoon|C.Bn.")
+    instrumentNames = I18N_NOOP("Contrabassoon|C.Bn.")
     midiInstrument = 'bassoon'
     transpose = (-1, 0, 0)
     clef = 'bass'
@@ -602,75 +603,75 @@ class ContraBassoon(WoodWindPart):
 
 class Clarinet(WoodWindPart):
     _name = ki18n("Clarinet")
-    instrumentNames = ki18n("Clarinet|Cl.")
+    instrumentNames = I18N_NOOP("Clarinet|Cl.")
     midiInstrument = 'clarinet'
     transpose = (-1, 6, -1)
 
 
 class SopraninoSax(WoodWindPart):
     _name = ki18n("Sopranino Sax")
-    instrumentNames = ki18n("Sopranino Sax|SiSx.")
+    instrumentNames = I18N_NOOP("Sopranino Sax|SiSx.")
     midiInstrument = 'soprano sax'
     transpose = (0, 2, -1)    # es'
 
 
 class SopranoSax(WoodWindPart):
     _name = ki18n("Soprano Sax")
-    instrumentNames = ki18n("Soprano Sax|SoSx.")
+    instrumentNames = I18N_NOOP("Soprano Sax|SoSx.")
     midiInstrument = 'soprano sax'
     transpose = (-1, 6, -1)   # bes
 
 
 class AltoSax(WoodWindPart):
     _name = ki18n("Alto Sax")
-    instrumentNames = ki18n("Alto Sax|ASx.")
+    instrumentNames = I18N_NOOP("Alto Sax|ASx.")
     midiInstrument = 'alto sax'
     transpose = (-1, 2, -1)   # es
 
 
 class TenorSax(WoodWindPart):
     _name = ki18n("Tenor Sax")
-    instrumentNames = ki18n("Tenor Sax|TSx.")
+    instrumentNames = I18N_NOOP("Tenor Sax|TSx.")
     midiInstrument = 'tenor sax'
     transpose = (-2, 6, -1)   # bes,
 
 
 class BaritoneSax(WoodWindPart):
     _name = ki18n("Baritone Sax")
-    instrumentNames = ki18n("Baritone Sax|BSx.")
+    instrumentNames = I18N_NOOP("Baritone Sax|BSx.")
     midiInstrument = 'baritone sax'
     transpose = (-2, 2, -1)   # es,
 
 
 class BassSax(WoodWindPart):
     _name = ki18n("Bass Sax")
-    instrumentNames = ki18n("Bass Sax|BsSx.")
+    instrumentNames = I18N_NOOP("Bass Sax|BsSx.")
     midiInstrument = 'baritone sax'
     transpose = (-3, 6, -1)   # bes,,
 
 
 class SopranoRecorder(WoodWindPart):
     _name = ki18n("Soprano recorder")
-    instrumentNames = ki18n("Soprano recorder|S.rec.")
+    instrumentNames = I18N_NOOP("Soprano recorder|S.rec.")
     midiInstrument = 'recorder'
     transpose = (1, 0, 0)
 
 
 class AltoRecorder(WoodWindPart):
     _name = ki18n("Alto recorder")
-    instrumentNames = ki18n("Alto recorder|A.rec.")
+    instrumentNames = I18N_NOOP("Alto recorder|A.rec.")
     midiInstrument = 'recorder'
 
 
 class TenorRecorder(WoodWindPart):
     _name = ki18n("Tenor recorder")
-    instrumentNames = ki18n("Tenor recorder|T.rec.")
+    instrumentNames = I18N_NOOP("Tenor recorder|T.rec.")
     midiInstrument = 'recorder'
 
 
 class BassRecorder(WoodWindPart):
     _name = ki18n("Bass recorder")
-    instrumentNames = ki18n("Bass recorder|B.rec.")
+    instrumentNames = I18N_NOOP("Bass recorder|B.rec.")
     midiInstrument = 'recorder'
     clef = 'bass'
     octave = -1
@@ -678,26 +679,26 @@ class BassRecorder(WoodWindPart):
 
 class HornF(BrassPart):
     _name = ki18n("Horn in F")
-    instrumentNames = ki18n("Horn in F|Hn.F.")
+    instrumentNames = I18N_NOOP("Horn in F|Hn.F.")
     midiInstrument = 'french horn'
     transpose = (-1, 3, 0)
 
 
 class TrumpetC(BrassPart):
     _name = ki18n("Trumpet in C")
-    instrumentNames = ki18n("Trumpet in C|Tr.C")
+    instrumentNames = I18N_NOOP("Trumpet in C|Tr.C")
     midiInstrument = 'trumpet'
 
 
 class TrumpetBb(TrumpetC):
     _name = ki18n("Trumpet in Bb")
-    instrumentNames = ki18n("Trumpet in Bb|Tr.Bb")
+    instrumentNames = I18N_NOOP("Trumpet in Bb|Tr.Bb")
     transpose = (-1, 6, -1)
 
 
 class Trombone(BrassPart):
     _name = ki18n("Trombone")
-    instrumentNames = ki18n("Trombone|Trb.")
+    instrumentNames = I18N_NOOP("Trombone|Trb.")
     midiInstrument = 'trombone'
     clef = 'bass'
     octave = -1
@@ -705,14 +706,14 @@ class Trombone(BrassPart):
 
 class Tuba(BrassPart):
     _name = ki18n("Tuba")
-    instrumentNames = ki18n("Tuba|Tb.")
+    instrumentNames = I18N_NOOP("Tuba|Tb.")
     midiInstrument = 'tuba'
     transpose = (-2, 6, -1)
 
 
 class BassTuba(BrassPart):
     _name = ki18n("Bass Tuba")
-    instrumentNames = ki18n("Bass Tuba|B.Tb.")
+    instrumentNames = I18N_NOOP("Bass Tuba|B.Tb.")
     midiInstrument = 'tuba'
     transpose = (-2, 0, 0)
     clef = 'bass'
@@ -721,30 +722,30 @@ class BassTuba(BrassPart):
 
 class SopranoVoice(VocalSoloPart):
     _name = ki18n("Soprano")
-    instrumentNames = ki18n("Soprano|S.")
+    instrumentNames = I18N_NOOP("Soprano|S.")
 
 
 class MezzoSopranoVoice(VocalSoloPart):
     _name = ki18n("Mezzo soprano")
-    instrumentNames = ki18n("Mezzo-soprano|Ms.")
+    instrumentNames = I18N_NOOP("Mezzo-soprano|Ms.")
 
 
 class AltoVoice(VocalSoloPart):
     _name = ki18n("Alto")
-    instrumentNames = ki18n("Alto|A.")
+    instrumentNames = I18N_NOOP("Alto|A.")
     octave = 0
 
 
 class TenorVoice(VocalSoloPart):
     _name = ki18n("Tenor")
-    instrumentNames = ki18n("Tenor|T.")
+    instrumentNames = I18N_NOOP("Tenor|T.")
     octave = 0
     clef = 'treble_8'
 
 
 class BassVoice(VocalSoloPart):
     _name = ki18n("Bass")
-    instrumentNames = ki18n("Bass|B.")
+    instrumentNames = I18N_NOOP("Bass|B.")
     octave = -1
     clef = 'bass'
 
@@ -882,7 +883,7 @@ class Choir(VocalPart):
         # print main instrumentName if there are more choirs, and we
         # have more than one staff.
         if len(splitStaves) > 1 and self.num:
-            builder.setInstrumentNames(p, ki18n("Choir|Ch."), self.num)
+            builder.setInstrumentNames(p, I18N_NOOP("Choir|Ch."), self.num)
         count = dict.fromkeys('SATB', 0)  # dict with count of parts.
         toGo = len(splitStaves)
         maxLen = max(map(len, splitStaves))
@@ -1029,25 +1030,25 @@ class Choir(VocalPart):
 
 class Piano(KeyboardPart):
     _name = ki18n("Piano")
-    instrumentNames = ki18n("Piano|Pno.")
+    instrumentNames = I18N_NOOP("Piano|Pno.")
     midiInstrument = 'acoustic grand'
 
 
 class Harpsichord(KeyboardPart):
     _name = ki18n("Harpsichord")
-    instrumentNames = ki18n("Harpsichord|Hs.")
+    instrumentNames = I18N_NOOP("Harpsichord|Hs.")
     midiInstrument = 'harpsichord'
 
 
 class Clavichord(KeyboardPart):
     _name = ki18n("Clavichord")
-    instrumentNames = ki18n("Clavichord|Clv.")
+    instrumentNames = I18N_NOOP("Clavichord|Clv.")
     midiInstrument = 'clav'
 
 
 class Organ(KeyboardPart):
     _name = ki18n("Organ")
-    instrumentNames = ki18n("Organ|Org.")
+    instrumentNames = I18N_NOOP("Organ|Org.")
     midiInstrument = 'church organ'
 
     def widgets(self, layout):
@@ -1072,13 +1073,13 @@ class Organ(KeyboardPart):
 
 class Celesta(KeyboardPart):
     _name = ki18n("Celesta")
-    instrumentNames = ki18n("Celesta|Cel.")
+    instrumentNames = I18N_NOOP("Celesta|Cel.")
     midiInstrument = 'celesta'
 
 
 class Timpani(PitchedPercussionPart):
     _name = ki18n("Timpani")
-    instrumentNames = ki18n("Timpani|Tmp.")
+    instrumentNames = I18N_NOOP("Timpani|Tmp.")
     midiInstrument = 'timpani'
     clef = 'bass'
     octave = -1
@@ -1086,37 +1087,37 @@ class Timpani(PitchedPercussionPart):
 
 class Xylophone(PitchedPercussionPart):
     _name = ki18n("Xylophone")
-    instrumentNames = ki18n("Xylophone|Xyl.")
+    instrumentNames = I18N_NOOP("Xylophone|Xyl.")
     midiInstrument = 'xylophone'
 
 
 class Marimba(PitchedPercussionPart):
     _name = ki18n("Marimba")
-    instrumentNames = ki18n("Marimba|Mar.")
+    instrumentNames = I18N_NOOP("Marimba|Mar.")
     midiInstrument = 'marimba'
 
 
 class Vibraphone(PitchedPercussionPart):
     _name = ki18n("Vibraphone")
-    instrumentNames = ki18n("Vibraphone|Vib.")
+    instrumentNames = I18N_NOOP("Vibraphone|Vib.")
     midiInstrument = 'vibraphone'
 
 
 class TubularBells(PitchedPercussionPart):
     _name = ki18n("Tubular bells")
-    instrumentNames = ki18n("Tubular bells|Tub.")
+    instrumentNames = I18N_NOOP("Tubular bells|Tub.")
     midiInstrument = 'tubular bells'
 
 
 class Glockenspiel(PitchedPercussionPart):
     _name = ki18n("Glockenspiel")
-    instrumentNames = ki18n("Glockenspiel|Gls.")
+    instrumentNames = I18N_NOOP("Glockenspiel|Gls.")
     midiInstrument = 'glockenspiel'
 
 
 class Drums(Part):
     _name = ki18n("Drums")
-    instrumentNames = ki18n("Drums|Dr.")
+    instrumentNames = I18N_NOOP("Drums|Dr.")
 
     def assignDrums(self, node, name):
         s = DrumMode()

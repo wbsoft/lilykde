@@ -510,11 +510,14 @@ class Settings(QWidget):
         l = QLabel(i18n("Language:"), h)
         self.instrLang = QComboBox(h)
         l.setBuddy(self.instrLang)
-        self.instrLang.addItems((i18n("Italian"), i18n("English"), i18n("Your language")))
-        h.setToolTip(i18n(
-            "Whether you want instrument names to be standard Italian "
-            "(like 'Organo' for 'Organ'), English or in your own language."))
+        self.instrLang.addItems((i18n("Default"), KGlobal.locale().languageCodeToName("en")))
+        h.setToolTip(i18n("Which language to use for the instrument names."))
 
+        langs = KGlobal.dirs().findAllResources("locale", "*/LC_MESSAGES/frescobaldi.mo")
+        self.instrLanguages = list(sorted(unicode(lang).split('/')[-3] for lang in langs))
+        self.instrLang.addItems([KGlobal.locale().languageCodeToName(lang)
+                for lang in self.instrLanguages])
+        
         self.default()
         self.loadConfig()
 
@@ -533,7 +536,7 @@ class Settings(QWidget):
         g.writeEntry('show', QVariant(self.instr.isChecked()))
         g.writeEntry('first', ['long', 'short'][self.instrFirst.currentIndex()])
         g.writeEntry('other', ['long', 'short', 'none'][self.instrOther.currentIndex()])
-        g.writeEntry('lang', ['italian', 'english', 'translated'][self.instrLang.currentIndex()])
+        g.writeEntry('lang', (['default', 'english'] + self.instrLanguages)[self.instrLang.currentIndex()])
 
     def loadConfig(self):
         conf = config()
@@ -560,7 +563,7 @@ class Settings(QWidget):
 
         first = readconf('first', ['long', 'short'], 0)
         other = readconf('other', ['long', 'short', 'none'], 2)
-        lang = readconf('lang', ['italian', 'english', 'translated'], 0)
+        lang = readconf('lang', ['default', 'english'] + self.instrLanguages, 0)
 
         self.instrFirst.setCurrentIndex(first)
         self.instrOther.setCurrentIndex(other)
@@ -637,17 +640,18 @@ class Builder(object):
         printer.typographicalQuotes = s.typq.isChecked()
 
         # instrument names language:
+        self.translate = lambda s: s    # english (untranslated)
         i = s.instrLang.currentIndex()
-        if i == 0:          # italian
-            self.locale = KLocale("frescobaldi", "it")
-            print "using italian instrnames"#DEBUG
-        elif i == 1:        # english
-            self.locale = KLocale("frescobaldi", "en")
-            print "using english instrnames"#DEBUG
-        else:
-            self.locale = KGlobal.locale()
-            print "using dutch instrnames"#DEBUG
-        
+        if i == 0:                      # default (translated)
+            self.translate = lambda s: unicode(i18n(s))
+        elif i >= 2:                    # other translation
+            try:
+                import gettext
+                self.translate = gettext.GNUTranslations(open(unicode(
+                  KGlobal.dirs().findResource("locale", s.instrLanguages[i-2] +
+                    "/LC_MESSAGES/frescobaldi.mo")))).ugettext
+            except IOError:
+                pass
         # version:
         version = unicode(s.lyversion.currentText())
         ly.dom.Version(version, doc)
@@ -814,7 +818,7 @@ class Builder(object):
 
         If num > 0, it is added to the instrument name (e.g. Violine II)
         """
-        names = unicode(names.toString(self.instrLocale())).split("|")
+        names = self.translate(names).split("|")
         if num:
             names = [name + " " + ly.romanize(num) for name in names]
         return names
