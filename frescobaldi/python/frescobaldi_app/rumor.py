@@ -422,28 +422,34 @@ class RumorSettings(KDialog):
         self.olist, otitles = map(list, zip(*o))
 
         # input
-        layout.addWidget(QLabel(i18n("MIDI input:")), 1, 0)
+        l = QLabel(i18n("MIDI input:"))
+        layout.addWidget(l, 1, 0)
         self.ibut = QComboBox()
         self.ibut.addItems(ititles)
         self.ibut.setToolTip(i18n("MIDI input to use. Choose 'Keyboard' if "
             "you want to play on the keyboard of your computer."))
         layout.addWidget(self.ibut, 1, 1)
-
+        l.setBuddy(self.ibut)
+        
         # output
-        layout.addWidget(QLabel(i18n("MIDI output:")), 2, 0)
+        l = QLabel(i18n("MIDI output:"))
+        layout.addWidget(l, 2, 0)
         self.obut = QComboBox()
         self.obut.addItems(otitles)
         self.obut.setToolTip(i18n("MIDI output to use."))
         layout.addWidget(self.obut, 2, 1)
-
+        l.setBuddy(self.obut)
+        
         # Language
-        layout.addWidget(QLabel(i18n("Language:")), 3, 0)
+        l = QLabel(i18n("Language:"))
+        layout.addWidget(l, 3, 0)
         self.lang = QComboBox()
         self.lang.addItems((
             AUTO(), 'ne', 'en', 'en-short', 'de', 'no', 'sv', 'it', 'ca', 'es'))
         self.lang.setToolTip(i18n("The LilyPond language you want Rumor to "
             "output the pitches in."))
         layout.addWidget(self.lang, 3, 1)
+        l.setBuddy(self.lang)
 
         hb = QHBoxLayout()
         layout.addLayout(hb, 4, 0, 1, 2)
