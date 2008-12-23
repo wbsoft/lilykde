@@ -18,5 +18,6 @@ install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/frescobaldi DESTINATION ${BIN_INSTA
 add_subdirectory(python)
 add_subdirectory(data)
 add_subdirectory(pics)
+add_subdirectory(po)
 
 install(DIRECTORY rumor DESTINATION ${APP_DIR})
