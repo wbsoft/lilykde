@@ -276,6 +276,17 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         @self.onSelAction(i18n("Remove hyphenation"), keepSelection=False)
         def lyrics_dehyphen(text):
             return text.replace(' -- ', '')
+            
+        # Other actions
+        @self.onAction(i18n("Insert LilyPond version"))
+        def version_insert():
+            import frescobaldi_app.version
+            frescobaldi_app.version.insertVersion(self)
+            
+        @self.onAction(i18n("Update with convert-ly"))
+        def version_convert_ly():
+            import frescobaldi_app.version
+            frescobaldi_app.version.convertLy(self)
 
     def createLilyPondJob(self, doc, preview=True):
         if doc not in self.jobs:
