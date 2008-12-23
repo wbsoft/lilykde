@@ -77,9 +77,6 @@ def findDicts():
         for p in paths() if os.path.isdir(p)
             for f in glob(os.path.join(p, 'hyph_*.dic')) if os.path.isfile(f))
 
-    # present the user with human readable language names
-    all_languages = KConfig("all_languages", KConfig.CascadeConfig, "locale")
-
     # default to the users current locale if not used before
     defaultlang = None
 
@@ -91,7 +88,7 @@ def findDicts():
         lang = os.path.basename(dic)[5:-4]
         # find a human readable name belonging to the language code
         for i in lang, lang.split('_')[0]:
-            name = all_languages.group(i).readEntry("Name")
+            name = KGlobal.locale().languageCodeToName(i)
             if name:
                 name = u'%s (%s)' % (name, lang)
                 hyphdicts[name] = dic
