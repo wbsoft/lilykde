@@ -191,7 +191,7 @@ class RumorPanel(QWidget):
             d.text(KTextEditor.Range(0, 0, cursor.line(), cursor.column())))
         
         # Language
-        lang = conf.readEntry("language", "auto")
+        lang = unicode(conf.readEntry("language", "auto"))
         if lang not in (
                 'ne', 'en', 'en-short', 'de', 'no', 'sv', 'it', 'ca', 'es'):
             # determine lily language from document
