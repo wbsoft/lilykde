@@ -28,7 +28,9 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
+from PyKDE4.ktexteditor import KTextEditor
 
+import ly.key
 from frescobaldi_app.widgets import ProcessButtonBase, TempoControl
 
 class RumorPanel(QWidget):
@@ -176,21 +178,126 @@ class RumorPanel(QWidget):
         also set some state variables in self from configuration.
         
         """
+        conf = config("rumor")
+        args = []
+        # indent of current line
         self.indent = re.match(r'\s*',
             self.mainwin.currentLineText()[:self.mainwin.currentColumn()]
             ).group()
-
-        self.noBarlines = False
+        # text from start to cursor
+        v = self.mainwin.view()
+        d, cursor = v.document(), v.cursorPosition()
+        text = unicode(
+            d.text(KTextEditor.Range(0, 0, cursor.line(), cursor.column())))
         
-        self.keyboardEmu = True
-    
+        # Language
+        lang = conf.readEntry("language", "auto")
+        if lang not in (
+                'ne', 'en', 'en-short', 'de', 'no', 'sv', 'it', 'ca', 'es'):
+            # determine lily language from document
+            m = re.compile(r'.*\\include\s*"('
+                "nederlands|english|deutsch|norsk|svenska|suomi|"
+                "italiano|catalan|espanol|portuges|vlaams"
+                r')\.ly"', re.DOTALL).match(text)
+            if m:
+                lang = m.group(1)[:2]
+                if lang == "po": lang = "es"
+                elif lang == "su": lang = "de"
+                elif lang == "en" and not re.match(
+                        r'\b[a-g](flat|sharp)\b', text):
+                    lang == "en-short"
+                elif lang == "vl":
+                    # "vlaams" is not supported by Rumor
+                    # TODO: rewrite the pitches output by Rumor :-)
+                    lang == "it"
+            else:
+                lang = "ne" # the default
+        args.append("--lang=%s" % lang)
 
-        args = []
-    
-    
+        # Step recording?
+        if self.step.isChecked():
+            args.append("--flat")
+        else:
+            # No, set tempo, quantization and meter
+            args.append("--tempo=%d" % self.tempo.tempo())
+            args.append("--grain=%s" % self.quantize.currentText())
+            meter = autofy(self.meter.currentText())
+            if meter == "auto":
+                # determine from document - find the latest \time command:
+                m = re.compile(r'.*\\time\s*(\d+/(1|2|4|8|16|32|64|128))(?!\d)',
+                    re.DOTALL).match(text)
+                if m:
+                    meter = m.group(1)
+                else:
+                    meter = '4/4'
+            args.append("--meter=%s" % meter)
+
+        # Key signature
+        acc = autofy(self.keysig.currentText())
+        if acc == "auto":
+            # Determine key signature from document.
+            m = re.compile(
+                r'.*\\key\s+(' + '|'.join(ly.key.key2num[lang].keys()) + r')\s*\\'
+                r'(major|minor|(ion|dor|phryg|(mixo)?lyd|aeol|locr)ian)\b',
+                re.DOTALL).match(text)
+            if m:
+                pitch, mode = m.group(1,2)
+                acc = ly.key.key2num[lang][pitch] + modes[mode]
+            else:
+                acc = 0
+        else:
+            acc == int(acc)
+        acc += 2    # use sharps for half tones leading to second, fifth, sixth
+        args.append("--key=%s" % ly.key.num2key[lang][bound(acc, -8, 12)])
+
+        # Monophonic input?
+        if self.mono.isChecked():
+            args.append("--no-chords")
+
+        # Absolute pitches?
+        if conf.readEntry("absolute pitches", QVariant(False)).toBool():
+            args.append("--absolute-pitches")
+
+        # Explicit durations?
+        if conf.readEntry("explicit durations", QVariant(False)).toBool():
+            args.append("--explicit-durations")
+
+        # No barlines?
+        self.noBarlines = conf.readEntry("no barlines", QVariant(False)).toBool()
+
+        # No dots?
+        if conf.readEntry("no dots", QVariant(False)).toBool():
+            args.append("--no-dots")
+
+        # Legato?
+        if conf.readEntry("legato", QVariant(False)).toBool():
+            args.append("--legato")
+
+        # Strip rests?
+        if conf.readEntry("strip rests", QVariant(False)).toBool():
+            args.append("--strip")
+
+        # Guile scripts?
+        scripts = map(unicode, conf.readEntry("scripts", ()))
+        if scripts:
+            paths = dict((os.path.basename(path), path) for path in rumorScripts())
+            for s in scripts:
+                if s in paths:
+                    args.append("--script=%s" % paths[s])
+
+        # input/output
+        i = unicode(conf.readEntry("midi in", "oss:1"))
+        o = unicode(conf.readEntry("midi out", "oss:1"))
+        if o.startswith('oss:'):
+            args.append("--oss=%s" % o.split(":")[1])
+        elif re.match(r"\d", o) and re.match(r"\d", i):
+            args.append("--alsa=%s,%s" % (i, o))
+        elif re.match(r"\d", o):
+            args.append("--alsa=%s" % o)
+        self.keyboardEmu = i == "keyboard"
+
         if self.keyboardEmu:
             args.append("--kbd")
-            
         return args
     
     def insertRumorOutput(self, text):
@@ -204,7 +311,6 @@ class RumorPanel(QWidget):
         text = text.replace('\n', '\n' + self.indent)
         self.mainwin.view().insertText(text)
         
-
         
 class RumorButton(ProcessButtonBase, QToolButton):
     def __init__(self, panel):
@@ -217,11 +323,13 @@ class RumorButton(ProcessButtonBase, QToolButton):
         self.panel = panel
         
     def initializeProcess(self, p):
-        runpty = KGlobal.dirs().findResource("appdata", "lib/runpty.py")
         rumor = config("commands").readEntry("rumor", "rumor")
-        cmd = [sys.executable, runpty, rumor]
-        args = self.panel.getRumorArguments()
-        p.setProgram(cmd + args)
+        cmd = [rumor] + self.panel.getRumorArguments()
+        if self.panel.keyboardEmu:
+            # Run Rumor in a pty when keyboard input is used.
+            runpty = KGlobal.dirs().findResource("appdata", "lib/runpty.py")
+            cmd[0:0] = [sys.executable, runpty]
+        p.setProgram(cmd)
         p.setOutputChannelMode(KProcess.OnlyStdoutChannel)
         
     def started(self):
@@ -231,6 +339,10 @@ class RumorButton(ProcessButtonBase, QToolButton):
         if self.panel.keyboardEmu:
             self.panel.setFocus()
             
+    def stop(self):
+        # Rumor wants to be killed with SIGINT
+        os.kill(self.process().pid(), 2)
+        
     def readOutput(self, text):
         self.panel.insertRumorOutput(unicode(text))
 
@@ -260,7 +372,6 @@ class RumorButton(ProcessButtonBase, QToolButton):
                 return True
         return False
 
-    
             
 class TimidityButton(ProcessButtonBase, QPushButton):
     def __init__(self, *args):
@@ -276,7 +387,6 @@ class TimidityButton(ProcessButtonBase, QPushButton):
             p.setProgram(cmd)
         else:
             pass # TODO: warn user about incorrect command
-
 
 
 class RumorSettings(KDialog):
@@ -415,9 +525,7 @@ class RumorSettings(KDialog):
         # Guile scripts
         self.scripts.clear()
         scripts = conf.readEntry("scripts", ())
-        rumorScripts = KGlobal.dirs().findAllResources("appdata", "rumor/*")
-        for path in rumorScripts:
-            path = unicode(path)
+        for path in rumorScripts():
             name = os.path.basename(path)
             try:
                 desc = open(path).readline().strip()
@@ -485,11 +593,15 @@ def getOSSnrMIDIs():
     except:
         return 0
 
-    
+def rumorScripts():
+    return map(unicode, KGlobal.dirs().findAllResources("appdata", "rumor/*"))
 
 def config(group="rumor"):
     return KGlobal.config().group(group)
 
+def bound(x, minValue, maxValue):
+    """ Clips x according to the boundaries minValue and maxValue """
+    return max(minValue, min(maxValue, x))
 
 AUTO = lambda: unicode(i18n("Auto"))
 autofy = lambda s: s == AUTO() and "auto" or s

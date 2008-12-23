@@ -21,9 +21,6 @@
 Runs a program within a PTY.
 Some ideas were taken from the pty module, but I don't want
 to connect stderr and I implement some signal handling.
-
-A special case for Rumor is that SIGINT and SIGTERM
-both terminate the inner process with SIGINT.
 """
 
 import sys, os, tty, pty, signal, select, subprocess
@@ -34,9 +31,8 @@ master, slave = pty.openpty()
 p = subprocess.Popen(sys.argv[1:],
     stdin = slave, stdout = slave, close_fds = True)
 
-# Terminate Rumor with signal 2
-def terminate(signum, frame):
-    os.kill(p.pid, signal.SIGINT)
+def terminate(signalnum, frame):
+    os.kill(p.pid, signalnum)
 signal.signal(signal.SIGINT, terminate)
 signal.signal(signal.SIGTERM, terminate)
 
