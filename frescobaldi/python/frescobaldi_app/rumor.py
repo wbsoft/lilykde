@@ -145,7 +145,8 @@ class RumorPanel(QWidget):
             v = Popen([cmd, '--version'], stdout=PIPE).communicate()[0].strip()
             self.showMessage(i18n("Found rumor version %1.", v), 5000)
         except OSError, e:
-            self.showMessage(i18n("Could not find Rumor: %1", e), 5000)
+            msg = unicode(e)
+            self.showMessage(i18n("Could not find Rumor: %1", msg), 5000)
 
 
     def saveSettings(self):
