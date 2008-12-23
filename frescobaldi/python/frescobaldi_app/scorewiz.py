@@ -636,15 +636,6 @@ class Builder(object):
         printer.indentString = "  " # FIXME get current indent-width somehow...
         printer.typographicalQuotes = s.typq.isChecked()
 
-        # instrument names language:
-        i = s.instrLang.currentIndex()
-        lang = KGlobal.locale()
-        self.translateInstrumentNames = lambda names: unicode(names.toString(lang))
-        if i == 0:          # italian
-            lang = KLocale("frescobaldi", "it")
-        elif i == 1:        # english
-            lang = KLocale("frescobaldi", "en")
-
         # version:
         version = unicode(s.lyversion.currentText())
         ly.dom.Version(version, doc)
@@ -797,6 +788,18 @@ class Builder(object):
                 ly.dom.Context('Score', mid)['tempoWholesPerMinute'] = \
                     ly.dom.Scheme("(ly:make-moment %s %s)" % (val, base))
 
+    def instrLocale(self):
+        """
+        Return a new KLocale for the instrument name language.
+        """
+        i = self.wizard.settings.instrLang.currentIndex()
+        if i == 0:          # italian
+            return KLocale("frescobaldi", "it")
+        elif i == 1:        # english
+            return KLocale("frescobaldi", "en_US")
+        else:
+            return KGlobal.locale()
+    
     ##
     # The following functions are to be used by the parts.
     ##
@@ -811,7 +814,7 @@ class Builder(object):
 
         If num > 0, it is added to the instrument name (e.g. Violine II)
         """
-        names = self.translateInstrumentNames(names).split("|")
+        names = unicode(names.toString(self.instrLocale())).split("|")
         if num:
             names = [name + " " + ly.romanize(num) for name in names]
         return names
