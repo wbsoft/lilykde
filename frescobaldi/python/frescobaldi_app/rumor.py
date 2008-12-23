@@ -141,7 +141,6 @@ class RumorPanel(QWidget):
 
 
     def saveSettings(self):
-        """ Saves the settings to lilykderc """
         conf = config("rumor")
         conf.writeEntry("tempo", QVariant(self.tempo.tempo()))
         conf.writeEntry("quantize", self.quantize.currentText())
@@ -153,7 +152,6 @@ class RumorPanel(QWidget):
         self.showMessage(i18n("Settings have been saved."), 1000)
 
     def loadSettings(self):
-        """ Loads the settings from lilykderc """
         conf = config("rumor")
         self.tempo.setTempo(conf.readEntry("tempo", QVariant(100)).toInt()[0])
         setComboBox(self.quantize, conf.readEntry("quantize", "16"))
