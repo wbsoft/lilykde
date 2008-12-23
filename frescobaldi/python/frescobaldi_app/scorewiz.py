@@ -652,6 +652,7 @@ class Builder(object):
                     "/LC_MESSAGES/frescobaldi.mo")))).ugettext
             except IOError:
                 pass
+            
         # version:
         version = unicode(s.lyversion.currentText())
         ly.dom.Version(version, doc)
