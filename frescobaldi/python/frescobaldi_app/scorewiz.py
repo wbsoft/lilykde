@@ -636,6 +636,18 @@ class Builder(object):
         printer.indentString = "  " # FIXME get current indent-width somehow...
         printer.typographicalQuotes = s.typq.isChecked()
 
+        # instrument names language:
+        i = s.instrLang.currentIndex()
+        if i == 0:          # italian
+            self.locale = KLocale("frescobaldi", "it")
+            print "using italian instrnames"#DEBUG
+        elif i == 1:        # english
+            self.locale = KLocale("frescobaldi", "en")
+            print "using english instrnames"#DEBUG
+        else:
+            self.locale = KGlobal.locale()
+            print "using dutch instrnames"#DEBUG
+        
         # version:
         version = unicode(s.lyversion.currentText())
         ly.dom.Version(version, doc)
@@ -788,18 +800,6 @@ class Builder(object):
                 ly.dom.Context('Score', mid)['tempoWholesPerMinute'] = \
                     ly.dom.Scheme("(ly:make-moment %s %s)" % (val, base))
 
-    def instrLocale(self):
-        """
-        Return a new KLocale for the instrument name language.
-        """
-        i = self.wizard.settings.instrLang.currentIndex()
-        if i == 0:          # italian
-            return KLocale("frescobaldi", "it")
-        elif i == 1:        # english
-            return KLocale("frescobaldi", "en_US")
-        else:
-            return KGlobal.locale()
-    
     ##
     # The following functions are to be used by the parts.
     ##
