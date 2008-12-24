@@ -20,4 +20,6 @@ add_subdirectory(data)
 add_subdirectory(pics)
 add_subdirectory(po)
 
-install(DIRECTORY rumor DESTINATION ${APP_DIR})
+install(DIRECTORY rumor
+        DESTINATION ${APP_DIR}
+        PATTERN .* EXCLUDE)
