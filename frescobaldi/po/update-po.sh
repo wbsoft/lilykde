@@ -4,6 +4,7 @@
 xgettext --keyword=i18n --keyword=ki18n --keyword=I18N_NOOP \
     --output=frescobaldi.pot \
     --language=python \
+    dummy.py \
     ../frescobaldi.py \
     ../python/*.py \
     ../python/ly/*.py \

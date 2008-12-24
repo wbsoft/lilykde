@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-24 00:06+0100\n"
+"POT-Creation-Date: 2008-12-24 07:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,23 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../frescobaldi.py:32
+#: dummy.py:5
+msgid "&amp;Document"
+msgstr ""
+
+#: dummy.py:6
+msgid "&amp;Lyrics"
+msgstr ""
+
+#: dummy.py:7
+msgid "&amp;Rhythm"
+msgstr ""
+
+#: dummy.py:10 ../frescobaldi.py:32
 msgid "Frescobaldi"
 msgstr ""
 
-#: ../frescobaldi.py:34
+#: dummy.py:11 ../frescobaldi.py:34
 msgid "LilyPond Music Editor"
 msgstr ""
 
@@ -380,11 +392,11 @@ msgstr ""
 msgid "Could not load %1"
 msgstr ""
 
-#: ../python/frescobaldi_app/hyphen.py:125
+#: ../python/frescobaldi_app/hyphen.py:122
 msgid "Language selection"
 msgstr ""
 
-#: ../python/frescobaldi_app/hyphen.py:128
+#: ../python/frescobaldi_app/hyphen.py:125
 msgid "Please select a language:"
 msgstr ""
 
@@ -1798,11 +1810,11 @@ msgstr ""
 msgid "Which language to use for the instrument names."
 msgstr ""
 
-#: ../python/frescobaldi_app/scorewiz.py:674
+#: ../python/frescobaldi_app/scorewiz.py:675
 msgid "Remove default LilyPond tagline"
 msgstr ""
 
-#: ../python/frescobaldi_app/scorewiz.py:903
+#: ../python/frescobaldi_app/scorewiz.py:904
 msgid "No settings available."
 msgstr ""
 
