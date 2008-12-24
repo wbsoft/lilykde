@@ -2,9 +2,9 @@
 # to translate in .rc and .desktop files
 
 # frescobaldiui.rc :
-i18n("&amp;Document")
-i18n("&amp;Lyrics")
-i18n("&amp;Rhythm")
+i18n("&Document")
+i18n("&Lyrics")
+i18n("&Rhythm")
 
 # frescobaldi.desktop :
 i18n("Frescobaldi")
