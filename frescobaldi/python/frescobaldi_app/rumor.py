@@ -37,7 +37,6 @@ class RumorPanel(QWidget):
     def __init__(self, tool):
         QWidget.__init__(self)
         self.mainwin = tool.mainwin
-        self._rumorSettings = None
         
         layout = QGridLayout(self)
         
@@ -128,7 +127,8 @@ class RumorPanel(QWidget):
         # Button 'More Settings'
         sb = QPushButton(i18n("Configure..."))
         sb.setToolTip(i18n("Adjust more settings, like MIDI input and output."))
-        QObject.connect(sb, SIGNAL("clicked()"), self.showRumorSettings)
+        QObject.connect(sb, SIGNAL("clicked()"),
+            lambda: RumorSettings(self.mainwin).exec_())
         hb.addWidget(sb)
 
         # Save Button
@@ -170,11 +170,6 @@ class RumorPanel(QWidget):
         if conf.readEntry("timidity", QVariant(False)).toBool():
             self.timidity.start()
 
-    def showRumorSettings(self):
-        if not self._rumorSettings:
-            self._rumorSettings = RumorSettings(self.mainwin)
-        self._rumorSettings.show()
-        
     def showMessage(self, msg, timeout=0):
         self.mainwin.statusBar().showMessage(msg, timeout)
 
@@ -408,7 +403,6 @@ class RumorSettings(KDialog):
     def __init__(self, mainwin):
         KDialog.__init__(self, mainwin)
         self.setCaption(i18n("Rumor Settings"))
-        self.setModal(True)
         self.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel))
 
         layout = QGridLayout(self.mainWidget())
