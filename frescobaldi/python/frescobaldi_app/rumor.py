@@ -403,7 +403,6 @@ class RumorSettings(KDialog):
     def __init__(self, mainwin):
         KDialog.__init__(self, mainwin)
         self.setCaption(i18n("Rumor Settings"))
-        self.setModal(True)
         self.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel))
 
         layout = QGridLayout(self.mainWidget())
@@ -506,7 +505,6 @@ class RumorSettings(KDialog):
         layout.addWidget(self.scripts, 7, 0, 1, 2)
         
         self.loadSettings()
-        self.show()
 
     def done(self, result):
         if result:
