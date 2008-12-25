@@ -393,7 +393,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         self._currentUrl = None
         self._sync = True
         # We open urls with a timer otherwise Okular is called 
-        # too often when the user switches documents too fast.
+        # too quickly when the user switches documents too fast.
         self._timer = QTimer()
         self._timer.setSingleShot(True)
         self._timer.setInterval(200)
