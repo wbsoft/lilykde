@@ -706,6 +706,10 @@ class KPartTool(Tool):
             i18n("Could not load %1", "<br/><b><tt>%s</tt></b><br/>" %
                 self._partlibrary))
 
+    def delete(self):
+        super(KPartTool, self).delete()
+        sip.delete(self.part)
+        
     def slotDestroyed(self):
         self.part = None
         self.widget = None
