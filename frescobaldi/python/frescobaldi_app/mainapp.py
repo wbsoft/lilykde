@@ -392,6 +392,15 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         listeners[mainwin.app.activeChanged].append(self.sync)
         self._currentUrl = None
         self._sync = True
+        # We open urls with a timer otherwise Okular is called 
+        # too often when the user switches documents too fast.
+        self._timer = QTimer()
+        self._timer.setSingleShot(True)
+        self._timer.setInterval(200)
+        def timeoutFunc():
+            if self._currentUrl:
+                super(PDFTool, self).openUrl(self._currentUrl)
+        QObject.connect(self._timer, SIGNAL("timeout()"), timeoutFunc)
             
     def sync(self, doc):
         if self._sync:
@@ -427,8 +436,8 @@ class PDFTool(kateshell.mainwindow.KPartTool):
     def openUrl(self, url):
         self.show()
         if url != self._currentUrl:
-            super(PDFTool, self).openUrl(url)
             self._currentUrl = url
+            self._timer.start()
 
     def _okularMiniBar(self):
         """ get the okular miniBar """
