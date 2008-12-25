@@ -17,7 +17,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, re, sip
+import glob, os, re, sip
 from dbus.service import method
 
 from PyQt4.QtCore import *
@@ -107,12 +107,20 @@ class Document(kateshell.app.Document):
             return {}
         return dict(_variables_re.findall(self.text()))
     
-    def hasUpdated(self, ext):
+    def updatedFiles(self, ext):
         """
         return true if this document has one or more LilyPond-generated
         outputs with the given extension that are up-to-date.
         """
-        return True # FIXME implement
+        if self.doc:
+            lyfile = self.localPath()
+            if lyfile and os.path.exists(lyfile):
+                basename = os.path.splitext(lyfile)[0]
+                files = glob.glob(basename + "." + ext)
+                files += glob.glob(basename + "?*." + ext)
+                return [f for f in files
+                    if os.path.getmtime(f) >= os.path.getmtime(lyfile)]
+        return ()
 
 
 class MainWindow(kateshell.mainwindow.MainWindow):
@@ -383,9 +391,16 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             dock=kateshell.mainwindow.Right)
         listeners[mainwin.app.activeChanged].append(self.sync)
         self._currentUrl = None
+        self._sync = True
             
     def sync(self, doc):
-        pass
+        if self._sync:
+            pdfs = doc.updatedFiles("pdf")
+            if pdfs:
+                self.openUrl(pdfs[0])
+    
+    def toggleSync(self):
+        self._sync = not self._sync
     
     def contextMenu(self):
         m = super(PDFTool, self).contextMenu()
@@ -402,6 +417,11 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             w = self._okularMiniBar()
             a.setChecked(w.isVisibleTo(w.parent()))
             QObject.connect(a, SIGNAL("triggered()"), self.toggleMiniBar)
+        m.addSeparator()
+        a = m.addAction(i18n("S&ynchronize Preview with Current Document"))
+        a.setCheckable(True)
+        a.setChecked(self._sync)
+        QObject.connect(a, SIGNAL("triggered()"), self.toggleSync)
         return m
     
     def openUrl(self, url):
