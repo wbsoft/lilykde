@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.4)
 project(frescobaldi)
-set(VERSION "0.1")
+set(VERSION "0.7")
 
 # Find our own modules
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})

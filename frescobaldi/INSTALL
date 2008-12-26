@@ -1,12 +1,28 @@
 The recommended way to install Frescobaldi (from the frescobaldi directory) is:
 
 
-mkdir build
+mkdir build	# (not needed when you use a release tarball)
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=$(kde4-config --exec-prefix)
 make
 make install
 
+* If you install Frescobaldi from svn, you need LilyPond and ImageMagick to
+  create the icons, and GNU Gettext to create the translations
 
-Frescobaldi depends on KDE4, Python>=2.4 and PyKDE4.
-Other useful programs are LilyPond (of course!), Rumor, PDFTK, timidity++, etc.
+* If you install Frescobaldi from a release tarball, the build directory already
+  contains prebuilt icons and .mo files (translations)
+
+
+Frescobaldi depends on:
+  KDE4
+  Qt >= 4.4
+  Python >= 2.4
+  PyQt4
+  PyKDE4.
+  lilypond-kde4 (from http://lilykde.googlecode.com/)
+
+Other useful programs are:
+  LilyPond (of course!) http://lilypond.org/
+  Rumor                 http://www.volny.cz/smilauer/rumor/
+  a MIDI player like timidity++, etc.
