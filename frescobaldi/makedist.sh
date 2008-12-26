@@ -18,21 +18,17 @@ cd "$pkg"
 cd po
 ./update-po.sh
 cd ..
-# create build tree and make Lily pics and po files
-mkdir build
-cd build
-cmake .. || die "cmake in export failed"
-make -C po || die "make failed in po/"
-make -C pics || die "make failed in pics/"
-# remove most cmake generated files
-find . -maxdepth 2 \
-  \( -type d -a -name CMakeFiles \) \
-  -o -name cmake*.cmake \
-  -o -name CMakeCache.txt \
-  -o -name Makefile \
-  | xargs rm -fr
-rm -f frescobaldi data python
-cd ../..
+mkdir build2
+cd build2
+cmake .. || die "cmake failed"
+make || die "make failed"
+# create clean build dir and copy over .png and .mo files
+cd ..
+mkdir build build/po build/pics
+cp -a build2/po/*.mo build/po/
+cp -a build2/pics/*.png build/pics/
+rm -fr build2
+cd ..
 tar zcf $pkg.tar.gz $pkg || die "making tarball failed"
 rm -fr $pkg 
 echo Done.
