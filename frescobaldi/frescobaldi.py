@@ -42,8 +42,8 @@ aboutData = KAboutData(appName, catalog, programName, version, description,
     license, copyright, text, homepage, bugs)
 
 aboutData.setTranslator(
-    ki18nc("NAME OF TRANSLATORS", "Your names"),
-    ki18nc("EMAIL OF TRANSLATORS", "Your emails"))
+    ki18nc("NAME OF TRANSLATORS", "Your name"),
+    ki18nc("EMAIL OF TRANSLATORS", "i18n@frescobaldi.org"))
  
 KCmdLineArgs.init(sys.argv, aboutData)
 
