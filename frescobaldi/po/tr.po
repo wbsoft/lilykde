@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2008-12-25 21:28+0100\n"
+"POT-Creation-Date: 2008-12-26 18:15+0100\n"
 "PO-Revision-Date: 2008-10-26 15:22+0200\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
@@ -16,6 +16,53 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: KBabel 1.11.4\n"
+
+#: ../frescobaldi.py:32 dummy.py:10
+msgid "Frescobaldi"
+msgstr ""
+
+#: ../frescobaldi.py:34 dummy.py:11
+#, fuzzy
+msgid "LilyPond Music Editor"
+msgstr "Çevrilecek LilyPond dosyaları"
+
+#: ../frescobaldi.py:36
+msgid "Copyright (c) 2008, Wilbert Berendsen"
+msgstr ""
+
+#: ../frescobaldi.py:45
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Server Acim"
+
+#: ../frescobaldi.py:46
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+
+#: ../frescobaldi.py:51
+msgid "Session to start"
+msgstr ""
+
+#: ../frescobaldi.py:52
+msgid "Start a new instance"
+msgstr ""
+
+#: ../frescobaldi.py:53
+msgid "Encoding to use"
+msgstr ""
+
+#: ../frescobaldi.py:54
+msgid "Line number to go to, starting at 1"
+msgstr ""
+
+#: ../frescobaldi.py:55
+msgid "Column to go to, starting at 0"
+msgstr ""
+
+#: ../frescobaldi.py:56
+msgid "LilyPond files to open, may also be textedit URLs"
+msgstr ""
 
 #: dummy.py:5
 msgid "&Document"
@@ -30,43 +77,6 @@ msgstr "Şarkı Sözleri"
 #, fuzzy
 msgid "&Rhythm"
 msgstr "Ritm"
-
-#: dummy.py:10 ../frescobaldi.py:32
-msgid "Frescobaldi"
-msgstr ""
-
-#: dummy.py:11 ../frescobaldi.py:34
-#, fuzzy
-msgid "LilyPond Music Editor"
-msgstr "Çevrilecek LilyPond dosyaları"
-
-#: ../frescobaldi.py:36
-msgid "Copyright (c) 2008, Wilbert Berendsen"
-msgstr ""
-
-#: ../frescobaldi.py:47
-msgid "Session to start"
-msgstr ""
-
-#: ../frescobaldi.py:48
-msgid "Start a new instance"
-msgstr ""
-
-#: ../frescobaldi.py:49
-msgid "Encoding to use"
-msgstr ""
-
-#: ../frescobaldi.py:50
-msgid "Line number to go to, starting at 1"
-msgstr ""
-
-#: ../frescobaldi.py:51
-msgid "Column to go to, starting at 0"
-msgstr ""
-
-#: ../frescobaldi.py:52
-msgid "LilyPond files to open, may also be textedit URLs"
-msgstr ""
 
 #: ../python/ly/__init__.py:62
 msgid "Dedication"

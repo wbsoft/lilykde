@@ -20,8 +20,8 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 import sys
-from PyKDE4.kdecore import (
-    KAboutData, KCmdLineArgs, KCmdLineOptions, KLocalizedString, ki18n)
+from PyKDE4.kdecore import (ki18n, ki18nc,
+    KAboutData, KCmdLineArgs, KCmdLineOptions, KLocalizedString)
 
 # Find our own Python modules and packages
 sys.path.insert(0, "@MODULE_DIR@")
@@ -41,6 +41,10 @@ bugs = "info@frescobaldi.org"
 aboutData = KAboutData(appName, catalog, programName, version, description,
     license, copyright, text, homepage, bugs)
 
+aboutData.setTranslator(
+    ki18nc("NAME OF TRANSLATORS", "Your names"),
+    ki18nc("EMAIL OF TRANSLATORS", "Your emails"))
+ 
 KCmdLineArgs.init(sys.argv, aboutData)
 
 options = KCmdLineOptions()

@@ -6,14 +6,16 @@ email=$(sed -n 's/^bugs\s*=\s*"\(.*\)".*/\1/p' ../frescobaldi.py)
 
 # Update pot file:
 xgettext \
+    --language=python \
+    --output=frescobaldi.pot \
     --package-name="$package" \
     --package-version="$version" \
     --msgid-bugs-address="$email" \
-    --keyword=i18n --keyword=ki18n --keyword=I18N_NOOP \
-    --output=frescobaldi.pot \
-    --language=python \
-    dummy.py \
+    -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3 \
+    -kki18n:1 -kki18nc:1c,2 -kki18np:1,2 -kki18ncp:1c,2,3 \
+    -kI18N_NOOP:1 -kI18N_NOOP2:1c,2 \
     ../frescobaldi.py \
+    dummy.py \
     ../python/*.py \
     ../python/ly/*.py \
     ../python/kateshell/*.py \
