@@ -1,5 +1,5 @@
 Source: lilypond-kde4
-Section: editors
+Section: utils
 Priority: optional
 Maintainer: Wilbert Berendsen <info@wilbertberendsen.nl>
 Standards-Version: 3.8.0.1ubuntu2
@@ -7,8 +7,11 @@ Build-Depends: kdelibs5-dev
 
 Package: lilypond-kde4
 Architecture: any
-Depends: kdebase-runtime, kdelibs5, libstdc++6, libqt4-dbus, libqtcore4, libqtgui4
+Depends: libqt4-dbus kdelibs5
 Recommends: lilypond
-Description: LilyPond music editor for KDE4.
- Frescobaldi is a LilyPond sheet music editor for KDE4.
- It aims to be powerful, yet lightweight and easy to use.
+Description: Utilities for working with LilyPond in KDE4.
+ A base package for KDE 4.1 or higher containing a KatePart indent script, icons
+ and a powerful textedit protocol handler.  The textedit protocol handler opens
+ the preferred editor application when you click on notes in the LilyPond PDF
+ output, but it can also directly interact with specialized LilyPond editing
+ apps.
