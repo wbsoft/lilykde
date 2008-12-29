@@ -2,12 +2,12 @@ Source: lilypond-kde4
 Section: utils
 Priority: optional
 Maintainer: Wilbert Berendsen <info@wilbertberendsen.nl>
-Standards-Version: 3.8.0.1ubuntu2
+Standards-Version: 3.8.0
 Build-Depends: kdelibs5-dev
 
 Package: lilypond-kde4
 Architecture: any
-Depends: libqt4-dbus kdelibs5
+Depends: libqt4-dbus, kdelibs5
 Recommends: lilypond
 Description: Utilities for working with LilyPond in KDE4.
  A base package for KDE 4.1 or higher containing a KatePart indent script, icons
