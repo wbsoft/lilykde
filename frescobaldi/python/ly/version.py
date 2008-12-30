@@ -39,7 +39,8 @@ class LilyPondVersion(object):
 def getVersion(text):
     """
     Determine the version of a LilyPond document.
+    Always returns a three-tuple, truncating or padding with zero's
     """
     match = re.search(r'\\version\s*".*?"', text)
     if match:
-        return tuple(map(int, re.findall('\\d+', match.group())))
+        return tuple((map(int, re.findall('\\d+', match.group())) + [0, 0, 0])[:3])

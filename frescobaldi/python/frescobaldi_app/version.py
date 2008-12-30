@@ -67,7 +67,7 @@ def convertLy(mainwin):
             "Can't determine the version of LilyPond. "
             "Please check your LilyPond installation."))
     elif docVersion >= lilyVersion:
-        KMessageBox.sorry(mainwin, i18n(
+        KMessageBox.information(mainwin, i18n(
             "This LilyPond document is already up-to-date."))
     else:
         # Ok, let's run convert-ly.

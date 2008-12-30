@@ -187,7 +187,7 @@ class MainApp(DBusItem):
         self.history.append(doc)
         listeners.call(self.activeChanged, doc)
         
-
+        
 class Document(DBusItem):
     """
     A loaded (LilyPond) text document.
@@ -215,6 +215,8 @@ class Document(DBusItem):
         self.app.addDocument(self)
         listeners.add(self.updateCaption, self.updateStatus, self.updateSelection,
             self.close)
+        # track filename in recently opened files
+        self.app.mainwin.addToRecentFiles(url)
 
     def materialize(self):
         """ Really load the document, create doc and view etc. """
@@ -234,6 +236,9 @@ class Document(DBusItem):
         if self._cursor is not None:
             self.view.setCursorPosition(KTextEditor.Cursor(*self._cursor))
 
+        QObject.connect(self.doc,
+            SIGNAL("documentUrlChanged(KTextEditor::Document*)"),
+            lambda: self.app.mainwin.addToRecentFiles(self.url()))
         for s in ("documentUrlChanged(KTextEditor::Document*)",
                   "modifiedChanged(KTextEditor::Document*)"):
             QObject.connect(self.doc, SIGNAL(s), self.updateCaption)

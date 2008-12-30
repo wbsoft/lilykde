@@ -290,8 +290,17 @@ class MainWindow(KParts.MainWindow):
             self, i18n("Open File"))
         for url in res.URLs:
             if url != '':
-                if self.app.openUrl(url.url(), res.encoding):
-                    self.openRecent.addUrl(url)
+                self.app.openUrl(url.url(), res.encoding)
+    
+    def addToRecentFiles(self, url):
+        """
+        Add url to recently opened files.
+        (Called by app.openUrl)
+        """
+        if url:
+            url = KUrl(url)
+            if url and url not in self.openRecent.urls():
+                self.openRecent.addUrl(url)
     
     @pyqtSignature("KUrl")
     def slotOpenRecent(self, kurl):
