@@ -287,14 +287,8 @@ class MainWindow(KParts.MainWindow):
 
     def openDocument(self):
         """ Open an existing document. """
-        # take directory from current document, if any
-        path = self.currentDocument() and self.currentDocument().localPath()
-        if path and os.path.isdir(os.path.dirname(path)):
-            path = os.path.dirname(path)
-        else:
-            path = ''
         res = KEncodingFileDialog.getOpenUrlsAndEncoding(
-            self.app.defaultEncoding, path,
+            self.app.defaultEncoding, self.currentDocument().url(),
             '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
             self, i18n("Open File"))
         for url in res.URLs:
