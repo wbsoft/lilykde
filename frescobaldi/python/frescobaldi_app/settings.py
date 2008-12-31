@@ -26,21 +26,29 @@ from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 
+from frescobaldi_app.widgets import ExecLineEdit, ExecArgsLineEdit
+
+from frescobaldi_app.rumor import default_timidity_command
+
 class SettingsDialog(KPageDialog):
     def __init__(self, mainwin):
         KPageDialog.__init__(self, mainwin)
         self.mainwin = mainwin
         self.setFaceType(KPageDialog.Tree)
-        self.setButtons(KPageDialog.ButtonCode(KPageDialog.Apply | KPageDialog.Ok | KPageDialog.Cancel))
+        self.setButtons(KPageDialog.ButtonCode(
+            KPageDialog.Default | KPageDialog.Apply |
+            KPageDialog.Ok | KPageDialog.Cancel))
         self.setCaption(i18n("Configure"))
         self.setDefaultButton(KPageDialog.Ok)
         self.enableButton(KPageDialog.Apply, False)
         QObject.connect(self, SIGNAL("applyClicked()"), self.applyClicked)
-        
+        QObject.connect(self, SIGNAL("defaultClicked()"), self.defaultClicked)
         self.pages = [
-            # TODO: our own pages
-            EditorComponent(self)
+            GeneralPreferences(self),
+            Commands(self),
+            EditorComponent(self),
         ]
+        self.loadSettings()
         
     def changed(self, changed=True):
         self.enableButton(KPageDialog.Apply, changed)
@@ -54,6 +62,11 @@ class SettingsDialog(KPageDialog):
         self.saveSettings()
         self.changed(False)
 
+    def defaultClicked(self):
+        for page in self.pages:
+            page.defaults()
+        self.changed()
+            
     def loadSettings(self):
         for page in self.pages:
             page.loadSettings()
@@ -79,6 +92,9 @@ class EditorComponent(object):
             item.setHeader(editor.configPageFullName(i))
             item.setIcon(editor.configPageIcon(i))
 
+    def defaults(self):
+        pass # not available
+        
     def loadSettings(self):
         pass # not necessary
         
@@ -86,4 +102,101 @@ class EditorComponent(object):
         for page in self.editorPages:
             page.apply()
             
-    
+
+class GeneralPreferences(KVBox):
+    def __init__(self, dialog):
+        KVBox.__init__(self, dialog)
+        item = dialog.addPage(self, i18n("General Preferences"))
+        item.setHeader(i18n("General Frescobaldi Preferences"))
+        item.setIcon(KIcon("configure"))
+        
+        self.checks = []
+        for title, name, default in (
+            (i18n("Save document when LilyPond is run"),
+                "save on run", False),
+            (i18n("Let LilyPond delete intermediate output files"),
+                "delete intermediate files", True),
+        ):
+            b = QCheckBox(title, self)
+            QObject.connect(b, SIGNAL("clicked()"), dialog.changed)
+            self.checks.append((b, name, default))
+        self.layout().addStretch(1)
+
+    def defaults(self):
+        for widget, name, default in self.checks:
+            widget.setChecked(default)
+            
+    def loadSettings(self):
+        conf = config("preferences")
+        for widget, name, default in self.checks:
+            widget.setChecked(conf.readEntry(name, QVariant(default)).toBool())
+
+    def saveSettings(self):
+        conf = config("preferences")
+        for widget, name, default in self.checks:
+            conf.writeEntry(name, QVariant(widget.isChecked()))
+
+
+class Commands(QWidget):
+    """
+    Settings regarding commands of lilypond and associated programs
+    """
+    def __init__(self, dialog):
+        QWidget.__init__(self, dialog)
+        item = dialog.addPage(self, i18n("Commands"))
+        item.setHeader(i18n("Commands for programs used by Frescobaldi"))
+        item.setIcon(KIcon("utilities-terminal"))
+        
+        layout = QGridLayout(self)
+        self.commands = []
+        for name, default, title, lineedit, tooltip in (
+            ('lilypond', 'lilypond', "LilyPond:", ExecLineEdit,
+                i18n("Name or full path of the LilyPond program.")),
+            ('convert-ly', 'convert-ly', "Convert-ly:", ExecLineEdit,
+                i18n("Name or full path of the convert-ly program.")),
+            ('lpr', 'lpr', i18n("Printcommand:"), ExecArgsLineEdit,
+                i18n("Command to print a PDF file, for example lpr or "
+                  "kprinter. You may add some arguments, e.g. "
+                  "lpr -P myprinter.")),
+            ('rumor', 'rumor', "Rumor:", ExecLineEdit,
+                i18n("Name or full path of the Rumor program.")),
+            ('aconnect', 'aconnect', "Aconnect:", ExecLineEdit,
+                i18n("Name or full path of the aconnect program (part of ALSA, "
+                  "for MIDI input and playback using Rumor).")),
+            ('timidity', default_timidity_command, "Timidity:",
+                ExecArgsLineEdit,
+                i18n("Full command to start Timidity (or any other program) "
+                  "as an ALSA MIDI client.")),
+        ):
+            label = QLabel(title)
+            widget = lineedit()
+            QObject.connect(widget, SIGNAL("textEdited(const QString&)"),
+                lambda: dialog.changed())
+            label.setBuddy(widget)
+            label.setToolTip(tooltip)
+            widget.setToolTip(tooltip)
+            layout.addWidget(label, len(self.commands), 0)
+            layout.addWidget(widget, len(self.commands), 1)
+            self.commands.append((widget, name, default))
+        layout.setRowStretch(len(self.commands), 1)
+        
+    def defaults(self):
+        for widget, name, default in self.commands:
+            widget.setText(default)
+
+    def loadSettings(self):
+        conf = config("commands")
+        for widget, name, default in self.commands:
+            widget.setText(conf.readEntry(name, default))
+
+    def saveSettings(self):
+        conf = config("commands")
+        for widget, name, default in self.commands:
+            if widget.text():
+                conf.writeEntry(name, widget.text())
+
+
+
+
+def config(group):
+    return KGlobal.config().group(group)

@@ -21,6 +21,7 @@
 Some special widgets
 """
 
+import os
 from time import time
 
 from PyQt4.QtCore import *
@@ -177,6 +178,37 @@ class TempoControl(object):
         self.spinbox.setValue(value)
 
 
+class ExecLineEdit(QLineEdit):
+    """
+    A QLineEdit to enter a filename or path.
+    The background changes to red if the entered path is not an
+    executable command.
+    """
+    def __init__(self, *args):
+        QLineEdit.__init__(self, *args)
+        QObject.connect(self, SIGNAL("textChanged(const QString&)"),
+            self._checkexec)
+
+    def _get(self, filename):
+        return unicode(filename)
+
+    def _checkexec(self, filename):
+        if not findexe(self._get(filename)):
+            self.setStyleSheet("QLineEdit { background-color: #FAA }")
+        else:
+            self.setStyleSheet("")
+
+
+class ExecArgsLineEdit(ExecLineEdit):
+    """
+    An ExecLineEdit that allows arguments in the command string.
+    """
+    def _get(self, filename):
+        return unicode(filename).split()[0]
+
+
+
+# utility functions used by above classes:
 
 def onSignal(obj, signalName):
     """ decorator to easily add connect a Qt signal to a Python slot."""
@@ -184,3 +216,22 @@ def onSignal(obj, signalName):
         QObject.connect(obj, SIGNAL(signalName), func)
         return func
     return decorator
+
+def isexe(path):
+    """
+    Return path if it is an executable file, otherwise False
+    """
+    return os.access(path, os.X_OK) and path
+
+def findexe(filename):
+    """
+    Look up a filename in the system PATH, and return the full
+    path if it can be found. If the path is absolute, return it
+    unless it is not an executable file.
+    """
+    if os.path.isabs(os.path.expanduser(filename)):
+        return isexe(os.path.expanduser(filename))
+    for p in os.environ.get("PATH", os.defpath).split(os.pathsep):
+        if isexe(os.path.join(p, filename)):
+            return os.path.join(p, filename)
+    return False
