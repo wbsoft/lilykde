@@ -195,10 +195,6 @@ class Commands(QWidget):
         layout.addWidget(l, layout.rowCount(), 0, 1, 2)
         layout.addWidget(self.hyphenPaths, layout.rowCount(), 0, 1, 2)
 
-        # add stretch
-        layout.setRowStretch(layout.rowCount(), 1)
-        
-        
     def setHyphenPaths(self, paths):
         # disconnect first; unfortunately QTextEdit has no textEdited signal...
         QObject.disconnect(self.hyphenPaths, SIGNAL("textChanged()"),
