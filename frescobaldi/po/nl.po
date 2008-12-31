@@ -2,20 +2,20 @@
 # Header entry was created by KBabel!
 #
 # Wilbert Berendsen <wbsoft@xs4all.nl>, 2008.
-#, fuzzy
+# Wilbert Berendsen <info@wilbertberendsen.nl>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2008-12-31 18:20+0100\n"
-"PO-Revision-Date: 2008-10-26 00:34+0200\n"
-"Last-Translator: Wilbert Berendsen <wbsoft@xs4all.nl>\n"
-"Language-Team: Nederlands <kde-i18n-nl@kde.org>\n"
+"POT-Creation-Date: 2008-12-31 20:23+0100\n"
+"PO-Revision-Date: 2008-12-31 20:24+0100\n"
+"Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
+"Language-Team: Dutch <kde-i18n-doc@lists.kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "#-#-#-#-#  nl.po (nl)  #-#-#-#-#\n"
-"X-Generator: KBabel 1.11.4\n"
+"X-Generator: Lokalize 0.2\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: ../frescobaldi.py:32 dummy.py:10
@@ -356,51 +356,55 @@ msgstr "Bovenste zijbalk"
 msgid "Bottom Sidebar"
 msgstr "Onderste zijbalk"
 
-#: ../python/kateshell/mainwindow.py:245
+#: ../python/kateshell/mainwindow.py:158
+msgid "Show Path"
+msgstr "Pad tonen"
+
+#: ../python/kateshell/mainwindow.py:250
 msgid "modified"
 msgstr "gewijzigd"
 
-#: ../python/kateshell/mainwindow.py:254
+#: ../python/kateshell/mainwindow.py:259
 msgid "Line: %1 Col: %2"
 msgstr "Regel: %1 Kol: %2"
 
-#: ../python/kateshell/mainwindow.py:257
+#: ../python/kateshell/mainwindow.py:267
 msgid "BLOCK"
 msgstr "BLOK"
 
-#: ../python/kateshell/mainwindow.py:257
+#: ../python/kateshell/mainwindow.py:267
 msgid "Block selection mode"
 msgstr "Blokselectiemodus"
 
-#: ../python/kateshell/mainwindow.py:259
+#: ../python/kateshell/mainwindow.py:269
 msgid "LINE"
 msgstr "REGEL"
 
-#: ../python/kateshell/mainwindow.py:259
+#: ../python/kateshell/mainwindow.py:269
 msgid "Line selection mode"
 msgstr "Regelselectiemodus"
 
-#: ../python/kateshell/mainwindow.py:289
+#: ../python/kateshell/mainwindow.py:298
 msgid "All Files"
 msgstr "Alle bestanden"
 
-#: ../python/kateshell/mainwindow.py:290
+#: ../python/kateshell/mainwindow.py:299
 msgid "Open File"
 msgstr "Bestand openen"
 
-#: ../python/kateshell/mainwindow.py:358
+#: ../python/kateshell/mainwindow.py:375
 msgid "Please select some text first."
 msgstr "Selecteer eerst de tekst waarop u de functie wilt toepassen."
 
-#: ../python/kateshell/mainwindow.py:684
+#: ../python/kateshell/mainwindow.py:701
 msgid "Move To"
 msgstr "Verplaatsen naar"
 
-#: ../python/kateshell/mainwindow.py:691
+#: ../python/kateshell/mainwindow.py:708
 msgid "Undock"
 msgstr "Losmaken"
 
-#: ../python/kateshell/mainwindow.py:715
+#: ../python/kateshell/mainwindow.py:732
 msgid "Could not load %1"
 msgstr "Kan %1 niet laden"
 
@@ -2346,3 +2350,4 @@ msgstr "Het tempo in tellen per minuut."
 
 #~ msgid "Your language"
 #~ msgstr "Uw eigen taal"
+

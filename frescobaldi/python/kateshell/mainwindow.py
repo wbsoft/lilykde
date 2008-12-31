@@ -17,7 +17,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import sip
+import os, sip
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -143,6 +143,7 @@ class MainWindow(KParts.MainWindow):
         QObject.connect(self.docGroup, SIGNAL("triggered(QAction*)"),
             lambda a: a.doc.setActive())
         
+        self.loadSettings()
         self.show()
         
     def setupActions(self):
@@ -154,13 +155,14 @@ class MainWindow(KParts.MainWindow):
         self.act('file_quit', KStandardAction.Quit, self.app.quit)
         self.act('doc_back', KStandardAction.Back, self.app.back)
         self.act('doc_forward', KStandardAction.Forward, self.app.forward)
-        
+        self.showPath = self.act('settings_show_full_path', i18n("Show Path"),
+            lambda: self.updateCaption(self.currentDocument()))
+        self.showPath.setCheckable(True)
         # recent files.
         self.openRecent = KStandardAction.openRecent(
             self, SLOT("slotOpenRecent(KUrl)"), self)
         self.actionCollection().addAction(
             self.openRecent.objectName(), self.openRecent)
-        self.openRecent.loadEntries(config("recent files"))
         
     def act(self, name, texttype, func,
             icon=None, tooltip=None, whatsthis=None, key=None):
@@ -241,31 +243,32 @@ class MainWindow(KParts.MainWindow):
             return self._currentDoc
             
     def updateCaption(self, doc):
+        name = self.showPath.isChecked() and doc.url() or doc.documentName()
+        if len(name) > 72:
+            name = '...' + name[-69:]
         if doc.isModified():
-            self.setCaption(doc.documentName() + " [%s]" % i18n("modified"))
+            self.setCaption(name + " [%s]" % i18n("modified"))
             self.sb_modified.setPixmap(KIcon("document-properties").pixmap(16))
         else:
-            self.setCaption(doc.documentName())
+            self.setCaption(name)
             self.sb_modified.setPixmap(QPixmap())
     
     def updateStatusBar(self, doc):
         pos = doc.view.cursorPositionVirtual()
         line, col = pos.line()+1, pos.column()
         self.sb_linecol.setText(i18n("Line: %1 Col: %2", line, col))
-        
-        if doc.view.blockSelection():
-            t, w = i18n("BLOCK"), i18n("Block selection mode")
-        else:
-            t, w = i18n("LINE"), i18n("Line selection mode")
-        self.sb_selmode.setText(" %s " % t)
-        self.sb_selmode.setToolTip(w)
-        
         self.sb_insmode.setText(doc.view.viewMode())
 
     def updateSelection(self, doc):
         enable = doc.view.selection()
         for a in self._selectionActions:
             a.setEnabled(enable)
+        if doc.view.blockSelection():
+            text, tip = i18n("BLOCK"), i18n("Block selection mode")
+        else:
+            text, tip = i18n("LINE"), i18n("Line selection mode")
+        self.sb_selmode.setText(" %s " % text)
+        self.sb_selmode.setToolTip(tip)
 
     def populateDocMenu(self):
         for a in self.docGroup.actions():
@@ -284,8 +287,14 @@ class MainWindow(KParts.MainWindow):
 
     def openDocument(self):
         """ Open an existing document. """
+        # take directory from current document, if any
+        path = self.currentDocument() and self.currentDocument().localPath()
+        if path and os.path.isdir(os.path.dirname(path)):
+            path = os.path.dirname(path)
+        else:
+            path = ''
         res = KEncodingFileDialog.getOpenUrlsAndEncoding(
-            self.app.defaultEncoding, QString(),
+            self.app.defaultEncoding, path,
             '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
             self, i18n("Open File"))
         for url in res.URLs:
@@ -317,10 +326,18 @@ class MainWindow(KParts.MainWindow):
         # save some settings
         self.saveSettings()
         return True
+        
+    def loadSettings(self):
+        """ Load some settings from our configfile. """
+        self.openRecent.loadEntries(config("recent files"))
+        self.showPath.setChecked(config().readEntry("show full path",
+            QVariant(False)).toBool())
 
     def saveSettings(self):
         """ Store settings in our configfile. """
         self.openRecent.saveEntries(config("recent files"))
+        config().writeEntry("show full path",
+            QVariant(self.showPath.isChecked()))
         # write them back
         config().sync()
 
