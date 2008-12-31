@@ -3,17 +3,23 @@
 # This file is distributed under the same license as the LilyKde package.
 # Serj Poltavski
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2008-12-26 18:44+0100\n"
+"POT-Creation-Date: 2008-12-31 18:28+0100\n"
 "PO-Revision-Date: 2008-07-06 11:34+0400\n"
 "Last-Translator: Сергей Полтавский\n"
 "Language-Team:  <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"#-#-#-#-#  ru.po (ru)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: KBabel 1.11.4\n"
+"#-#-#-#-#  ru.po (ru)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: KBabel 1.11.4\n"
@@ -339,7 +345,7 @@ msgstr ""
 msgid "Right toe"
 msgstr "Right toe"
 
-#: ../python/kateshell/app.py:300
+#: ../python/kateshell/app.py:305
 #, fuzzy
 msgid "Untitled"
 msgstr "Заголовок 2"
@@ -395,19 +401,19 @@ msgstr ""
 msgid "Open File"
 msgstr "Открыть PDF"
 
-#: ../python/kateshell/mainwindow.py:349
+#: ../python/kateshell/mainwindow.py:358
 msgid "Please select some text first."
 msgstr "Сначала, выберите текст."
 
-#: ../python/kateshell/mainwindow.py:675
+#: ../python/kateshell/mainwindow.py:684
 msgid "Move To"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:682
+#: ../python/kateshell/mainwindow.py:691
 msgid "Undock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:706
+#: ../python/kateshell/mainwindow.py:715
 #, fuzzy
 msgid "Could not load %1"
 msgstr "Невозможно запустить LilyPond: %s"
@@ -475,37 +481,37 @@ msgstr ""
 msgid "LilyPond files"
 msgstr "LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:146
+#: ../python/frescobaldi_app/mainapp.py:155
 #: ../python/frescobaldi_app/scorewiz.py:325
 msgid "LilyPond"
 msgstr "LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:156
+#: ../python/frescobaldi_app/mainapp.py:165
 msgid "Setup New Score..."
 msgstr "Новая партитура"
 
-#: ../python/frescobaldi_app/mainapp.py:164
+#: ../python/frescobaldi_app/mainapp.py:173
 msgid "Run LilyPond (preview)"
 msgstr "Запустить LilyPond (просмотр)"
 
-#: ../python/frescobaldi_app/mainapp.py:168
+#: ../python/frescobaldi_app/mainapp.py:177
 msgid "Run LilyPond (publish)"
 msgstr "Запустить LilyPond (публикация)"
 
-#: ../python/frescobaldi_app/mainapp.py:175
+#: ../python/frescobaldi_app/mainapp.py:184
 #, fuzzy
 msgid "There is already a LilyPond job running for this document."
 msgstr "Версия LilyPond используемая для текущего документа."
 
-#: ../python/frescobaldi_app/mainapp.py:177
+#: ../python/frescobaldi_app/mainapp.py:186
 msgid "Already Running"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:180
+#: ../python/frescobaldi_app/mainapp.py:189
 msgid "Your document currently has no filename, please save first."
 msgstr "У документа нет имени файла, сохраните его сначала."
 
-#: ../python/frescobaldi_app/mainapp.py:184
+#: ../python/frescobaldi_app/mainapp.py:193
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -513,75 +519,75 @@ msgstr ""
 "Извините, еще нет поддержки удаленных файлов.\n"
 "Сохраните Ваш документ локально."
 
-#: ../python/frescobaldi_app/mainapp.py:191
+#: ../python/frescobaldi_app/mainapp.py:200
 msgid "Your document has been modified, please save first."
 msgstr "Документ был изменен, необходимо сохранить его."
 
-#: ../python/frescobaldi_app/mainapp.py:195
+#: ../python/frescobaldi_app/mainapp.py:204
 msgid "Interrupt LilyPond Job"
 msgstr "Прервать текущее задание"
 
-#: ../python/frescobaldi_app/mainapp.py:202
+#: ../python/frescobaldi_app/mainapp.py:211
 msgid "Double durations"
 msgstr "Увеличить длительности в 2 раза"
 
-#: ../python/frescobaldi_app/mainapp.py:203
+#: ../python/frescobaldi_app/mainapp.py:212
 msgid "Double all the durations in the selection."
 msgstr "Увеличивает длительности в 2 раза в выделенном фрагменте"
 
-#: ../python/frescobaldi_app/mainapp.py:208
+#: ../python/frescobaldi_app/mainapp.py:217
 msgid "Halve durations"
 msgstr "Уменьшить длительности в 2 раза"
 
-#: ../python/frescobaldi_app/mainapp.py:209
+#: ../python/frescobaldi_app/mainapp.py:218
 msgid "Halve all the durations in the selection."
 msgstr "Уменьшает длительности в 2 раза в выделенном фрагменте."
 
-#: ../python/frescobaldi_app/mainapp.py:214
+#: ../python/frescobaldi_app/mainapp.py:223
 msgid "Dot durations"
 msgstr "Добавить точки к длительностям"
 
-#: ../python/frescobaldi_app/mainapp.py:215
+#: ../python/frescobaldi_app/mainapp.py:224
 msgid "Add a dot to all the durations in the selection."
 msgstr "Добавляет точки ко всем длительностям в выделенном фрагменте."
 
-#: ../python/frescobaldi_app/mainapp.py:220
+#: ../python/frescobaldi_app/mainapp.py:229
 msgid "Undot durations"
 msgstr "Удалить точки у длительностей"
 
-#: ../python/frescobaldi_app/mainapp.py:221
+#: ../python/frescobaldi_app/mainapp.py:230
 msgid "Remove one dot from all the durations in the selection."
 msgstr "Удаляет одну точку у всех длительностей в выделенном фрагменте."
 
-#: ../python/frescobaldi_app/mainapp.py:226
+#: ../python/frescobaldi_app/mainapp.py:235
 msgid "Remove scaling"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:227
+#: ../python/frescobaldi_app/mainapp.py:236
 msgid "Remove all scaling (*n/m) from the durations in the selection."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:232
+#: ../python/frescobaldi_app/mainapp.py:241
 msgid "Remove durations"
 msgstr "Удалить длительности"
 
-#: ../python/frescobaldi_app/mainapp.py:233
+#: ../python/frescobaldi_app/mainapp.py:242
 msgid "Remove all durations from the selection."
 msgstr "Удаляет все длительности в выделенном фрагменте."
 
-#: ../python/frescobaldi_app/mainapp.py:238
+#: ../python/frescobaldi_app/mainapp.py:247
 msgid "Make implicit"
 msgstr "Сделать длительности неявными"
 
-#: ../python/frescobaldi_app/mainapp.py:239
+#: ../python/frescobaldi_app/mainapp.py:248
 msgid "Make durations implicit (remove repeated durations)."
 msgstr "Делает длительности неявными (удаляет повторяющиеся длительности)"
 
-#: ../python/frescobaldi_app/mainapp.py:244
+#: ../python/frescobaldi_app/mainapp.py:253
 msgid "Make explicit"
 msgstr "Сделать длительности явными"
 
-#: ../python/frescobaldi_app/mainapp.py:245
+#: ../python/frescobaldi_app/mainapp.py:254
 #, fuzzy
 msgid ""
 "Make durations explicit (add duration to every note, even if it is the same "
@@ -590,95 +596,95 @@ msgstr ""
 "Добавлять длительность после каждой ноты, даже если она совпадает с "
 "предыдущей."
 
-#: ../python/frescobaldi_app/mainapp.py:253
+#: ../python/frescobaldi_app/mainapp.py:262
 #, fuzzy
 msgid "Apply rhythm..."
 msgstr "Применить ритм"
 
-#: ../python/frescobaldi_app/mainapp.py:254
+#: ../python/frescobaldi_app/mainapp.py:263
 msgid "Apply an entered rhythm to the selected music."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:257
+#: ../python/frescobaldi_app/mainapp.py:266
 #, fuzzy
 msgid "Apply Rhythm"
 msgstr "Применить ритм"
 
-#: ../python/frescobaldi_app/mainapp.py:262
+#: ../python/frescobaldi_app/mainapp.py:271
 msgid "Enter a rhythm:"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:267
+#: ../python/frescobaldi_app/mainapp.py:276
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr ""
 "Введите ритм, используя пробел в качестве разделителя длительностей, "
 "например, 8 16 8 4 8"
 
-#: ../python/frescobaldi_app/mainapp.py:279
+#: ../python/frescobaldi_app/mainapp.py:288
 msgid "Hyphenate Lyrics Text"
 msgstr "Расставить переносы в тексте"
 
-#: ../python/frescobaldi_app/mainapp.py:284
+#: ../python/frescobaldi_app/mainapp.py:293
 msgid "Remove hyphenation"
 msgstr "Удалить переносы"
 
-#: ../python/frescobaldi_app/mainapp.py:289
+#: ../python/frescobaldi_app/mainapp.py:298
 #, fuzzy
 msgid "Insert LilyPond version"
 msgstr "Вставить версию LilyPond (%s)"
 
-#: ../python/frescobaldi_app/mainapp.py:294
+#: ../python/frescobaldi_app/mainapp.py:303
 msgid "Update with convert-ly"
 msgstr "Обновить с помощью convert-ly"
 
-#: ../python/frescobaldi_app/mainapp.py:331
+#: ../python/frescobaldi_app/mainapp.py:346
 msgid "Abort the running LilyPond process"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:334
+#: ../python/frescobaldi_app/mainapp.py:349
 #, fuzzy
 msgid "Run LilyPond in preview mode"
 msgstr "Запустить LilyPond (просмотр)"
 
-#: ../python/frescobaldi_app/mainapp.py:346
+#: ../python/frescobaldi_app/mainapp.py:361
 #, fuzzy
 msgid "Terminal"
 msgstr "Трель"
 
-#: ../python/frescobaldi_app/mainapp.py:376
+#: ../python/frescobaldi_app/mainapp.py:391
 msgid "S&ynchronize Terminal with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:390
+#: ../python/frescobaldi_app/mainapp.py:405
 #, fuzzy
 msgid "PDF Preview"
 msgstr "Отправить PDF (просмотр) по E-mail"
 
-#: ../python/frescobaldi_app/mainapp.py:418
+#: ../python/frescobaldi_app/mainapp.py:433
 msgid "Show PDF Navigation Panel"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:424
+#: ../python/frescobaldi_app/mainapp.py:439
 msgid "Show PDF minipager"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:430
+#: ../python/frescobaldi_app/mainapp.py:445
 msgid "S&ynchronize Preview with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:457
+#: ../python/frescobaldi_app/mainapp.py:472
 msgid "Quick Insert"
 msgstr "Быстрая вставка"
 
-#: ../python/frescobaldi_app/mainapp.py:469
+#: ../python/frescobaldi_app/mainapp.py:484
 msgid "LilyPond Log"
 msgstr "LilyPond журнал"
 
-#: ../python/frescobaldi_app/mainapp.py:473
+#: ../python/frescobaldi_app/mainapp.py:488
 msgid "no log"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:502
+#: ../python/frescobaldi_app/mainapp.py:517
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -1898,6 +1904,94 @@ msgstr "Удалить строку LilyPond по умолчанию"
 msgid "No settings available."
 msgstr "Настройки недоступны."
 
+#: ../python/frescobaldi_app/settings.py:42
+#, fuzzy
+msgid "Configure"
+msgstr "Настройка..."
+
+#: ../python/frescobaldi_app/settings.py:82
+msgid "Editor Component"
+msgstr ""
+
+#: ../python/frescobaldi_app/settings.py:83
+msgid "Editor Component Options"
+msgstr ""
+
+#: ../python/frescobaldi_app/settings.py:110
+#, fuzzy
+msgid "General Preferences"
+msgstr "Общие настройки"
+
+#: ../python/frescobaldi_app/settings.py:111
+#, fuzzy
+msgid "General Frescobaldi Preferences"
+msgstr "Общие настройки"
+
+#: ../python/frescobaldi_app/settings.py:116
+msgid "Save document when LilyPond is run"
+msgstr "Сохранять документ перед запуском LilyPond"
+
+#: ../python/frescobaldi_app/settings.py:118
+msgid "Let LilyPond delete intermediate output files"
+msgstr "Удалить служебные файлы LilyPond."
+
+#: ../python/frescobaldi_app/settings.py:148
+#, fuzzy
+msgid "Paths"
+msgstr "Инструменты"
+
+#: ../python/frescobaldi_app/settings.py:149
+msgid "Paths to programs or data used by Frescobaldi"
+msgstr ""
+
+#: ../python/frescobaldi_app/settings.py:158
+msgid "Name or full path of the LilyPond program."
+msgstr "Имя или полный путь к программе LilyPond"
+
+#: ../python/frescobaldi_app/settings.py:160
+msgid "Name or full path of the convert-ly program."
+msgstr "Имя или полный путь к программе convert-ly"
+
+#: ../python/frescobaldi_app/settings.py:161
+msgid "Printcommand:"
+msgstr "Команда печати:"
+
+#: ../python/frescobaldi_app/settings.py:162
+msgid ""
+"Command to print a PDF file, for example lpr or kprinter. You may add some "
+"arguments, e.g. lpr -P myprinter."
+msgstr ""
+"Команда печати PDF файла, например, lpr или kprinter. Вы можете добавить "
+"дополнительные аргументы, напр. lpr -P myprinter"
+
+#: ../python/frescobaldi_app/settings.py:166
+msgid "Name or full path of the Rumor program."
+msgstr "Имя или полный путь к программе Rumor."
+
+#: ../python/frescobaldi_app/settings.py:168
+msgid ""
+"Name or full path of the aconnect program (part of ALSA, for MIDI input and "
+"playback using Rumor)."
+msgstr ""
+"Имя или полный путь к программе aconnect (часть пакета ALSA, для ввода и "
+"воспроизведения MIDI, используя Rumor)"
+
+#: ../python/frescobaldi_app/settings.py:172
+msgid ""
+"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgstr ""
+"Полная команда запуска TiMidity или другой программы MIDI-клиента ALSA."
+
+#: ../python/frescobaldi_app/settings.py:188
+msgid ""
+"Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
+"KOffice, etc, one per line. If you leave out the starting slash, the "
+"prefixes from the KDEDIRS environment variable are prepended."
+msgstr ""
+"Пути поиска словарей для переносов слов от OpenOffice.org, Scribus, KOffice "
+"и т.д., по одному на строку. Если опустить начальный слеш, префиксы из "
+"KDEDIRS переменных окружения будут добавлены."
+
 #: ../python/frescobaldi_app/version.py:40
 msgid "Your document has already a LilyPond version statement."
 msgstr "Ваш документ уже содержит сведения о версии LilyPond"
@@ -1949,21 +2043,17 @@ msgstr ""
 msgid "Could not start convert-ly: %1"
 msgstr " Невозможно запустить convert-ly: %s"
 
-#: ../python/frescobaldi_app/widgets.py:39
+#: ../python/frescobaldi_app/widgets.py:40
 msgid "Tap"
 msgstr ""
 
-#: ../python/frescobaldi_app/widgets.py:45
+#: ../python/frescobaldi_app/widgets.py:46
 msgid "Click this button a few times to set the tempo."
 msgstr "Кликните по кнопке несколько раз, чтобы установить темп"
 
-#: ../python/frescobaldi_app/widgets.py:153
+#: ../python/frescobaldi_app/widgets.py:154
 msgid "The tempo in beats per minute."
 msgstr "Темп в ударах в минуту."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Set this to your name"
-#~ msgstr "Сергей Полтавский"
 
 #~ msgid ""
 #~ "A LilyPond Kate/Pate plugin.\n"
@@ -2015,52 +2105,11 @@ msgstr "Темп в ударах в минуту."
 #~ msgid "Commands"
 #~ msgstr "Комманды"
 
-#~ msgid "Name or full path of the LilyPond program."
-#~ msgstr "Имя или полный путь к программе LilyPond"
-
-#~ msgid "Name or full path of the convert-ly program."
-#~ msgstr "Имя или полный путь к программе convert-ly"
-
-#~ msgid "Printcommand:"
-#~ msgstr "Команда печати:"
-
-#~ msgid ""
-#~ "Command to print a PDF file, for example lpr or kprinter. You may add "
-#~ "some arguments, e.g. lpr -P myprinter."
-#~ msgstr ""
-#~ "Команда печати PDF файла, например, lpr или kprinter. Вы можете добавить "
-#~ "дополнительные аргументы, напр. lpr -P myprinter"
-
-#~ msgid "Name or full path of the Rumor program."
-#~ msgstr "Имя или полный путь к программе Rumor."
-
-#~ msgid ""
-#~ "Name or full path of the aconnect program (part of ALSA, for MIDI input "
-#~ "and playback using Rumor)."
-#~ msgstr ""
-#~ "Имя или полный путь к программе aconnect (часть пакета ALSA, для ввода и "
-#~ "воспроизведения MIDI, используя Rumor)"
-
-#~ msgid ""
-#~ "Full command to start Timidity (or any other program) as an ALSA MIDI "
-#~ "client."
-#~ msgstr ""
-#~ "Полная команда запуска TiMidity или другой программы MIDI-клиента ALSA."
-
 #~ msgid "Name or full path of the pdftk program (see %s)."
 #~ msgstr "Имя или полный путь к программе pdftk (%s)"
 
 #~ msgid "Hyphenation"
 #~ msgstr "Переносы"
-
-#~ msgid ""
-#~ "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
-#~ "KOffice, etc, one per line. If you leave out the starting slash, the "
-#~ "prefixes from the KDEDIRS environment variable are prepended."
-#~ msgstr ""
-#~ "Пути поиска словарей для переносов слов от OpenOffice.org, Scribus, "
-#~ "KOffice и т.д., по одному на строку. Если опустить начальный слеш, "
-#~ "префиксы из KDEDIRS переменных окружения будут добавлены."
 
 #~ msgid "Actions"
 #~ msgstr "Действия"
@@ -2080,12 +2129,6 @@ msgstr "Темп в ударах в минуту."
 
 #~ msgid "Clear log before LilyPond is started"
 #~ msgstr "Очистить журнал перед запуском LilyPond"
-
-#~ msgid "Save document when LilyPond is run"
-#~ msgstr "Сохранять документ перед запуском LilyPond"
-
-#~ msgid "Let LilyPond delete intermediate output files"
-#~ msgstr "Удалить служебные файлы LilyPond."
 
 #~ msgid "Force reload of PDF preview when LilyPond has run"
 #~ msgstr "Обновлять PDF просмотр после запуска LilyPond"
@@ -2219,3 +2262,89 @@ msgstr "Темп в ударах в минуту."
 
 #~ msgid "LilyKDE servicemenu helper"
 #~ msgstr "помощник по сервисменю LilyKDE"
+
+#~ msgid "LilyPond [$filename] starting ($mode)..."
+#~ msgstr "Запуск LilyPond [$filename] ($mode)..."
+
+#~ msgid "Could not start LilyPond."
+#~ msgstr "Невозможно запустить LilyPond"
+
+#~ msgid "LilyPond [$filename] exited with return code $retcode."
+#~ msgstr "Программа LilyPond [$filename] завершилась с кодом $retcode."
+
+#~ msgid "LilyPond [$filename] finished."
+#~ msgstr "LilyPond [$filename] завершен."
+
+#~ msgid "Insert LilyPond version (%s)"
+#~ msgstr "Вставить версию LilyPond (%s)"
+
+#~ msgid "Could not start LilyPond: %s"
+#~ msgstr "Невозможно запустить LilyPond: %s"
+
+#~ msgid ""
+#~ "The document has been processed with convert-ly, but remained unchanged. "
+#~ "This is the message given by convert-ly: %s"
+#~ msgstr ""
+#~ "Докумен был обработан при помощи convert-ly, но остался неизменным. "
+#~ "Сообщение от convert-ly: %s"
+
+#~ msgid "Could not start convert-ly: %s"
+#~ msgstr " Невозможно запустить convert-ly: %s"
+
+#~ msgid "Start or stop Rumor"
+#~ msgstr "Запустить или остановить Rumor"
+
+#~ msgid ""
+#~ "The meter to use. Leave 'Auto' to let LilyKDE determine the meter from "
+#~ "the LilyPond document."
+#~ msgstr ""
+#~ "Используемый метр. Оставьте Auto, чтобы LilyKDE определил метр исходя из "
+#~ "LilyPond документа."
+
+#~ msgid ""
+#~ "The number of accidentals. A negative number designates flats. Leave "
+#~ "'Auto' to let LilyKDE determine the key signature from the LilyPond "
+#~ "document."
+#~ msgstr ""
+#~ "Количество ключевых знаков. Отрицательное число означает бемоли. Оставьте "
+#~ "\"Автоматически\", чтобы LilyPond определил их из документа."
+
+#~ msgid "Found rumor version $version."
+#~ msgstr "Найдена версия Rumor $version"
+
+#~ msgid "Could not find Rumor: %s"
+#~ msgstr "Невозможно найти Rumor: %s"
+
+#~ msgid "OSS device %d"
+#~ msgstr "OSS устройство %d"
+
+#~ msgid ""
+#~ "Here you can select which Guile scripts you want Rumor to load. You can "
+#~ "add your own scripts by putting them in %s. If the first line of your "
+#~ "script starts with a semicolon (;) that line will be shown as description."
+#~ msgstr ""
+#~ "Здесь Вы можете выбрать, какие Guile-скрипты должен загружать Rumor. Вы "
+#~ "можете добавить собственные скрипты в %s. Если первая строка Вашего "
+#~ "скрипта начинается с точки с запятой (;), она будет показана как описание."
+
+#~ msgid "Use no, short or long instrument names before the next systems."
+#~ msgstr "Не показывать имен инструментов перед остальными системами."
+
+#~ msgid "Open PDF"
+#~ msgstr "Открыть PDF"
+
+#~ msgid "Email PDF (preview)"
+#~ msgstr "Отправить PDF (просмотр) по E-mail"
+
+#~ msgid "Rhythm"
+#~ msgstr "Ритм"
+
+#~ msgid "Apply rhythm"
+#~ msgstr "Применить ритм"
+
+#~ msgid "LilyPond files to convert"
+#~ msgstr "Файлы LilyPond для конвертирования"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Set this to your name"
+#~ msgstr "Сергей Полтавский"
