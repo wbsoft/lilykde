@@ -94,6 +94,15 @@ class Document(kateshell.app.Document):
             return "frescobaldi"
         return super(Document, self).documentIcon()
     
+    def materialize(self):
+        super(Document, self).materialize()
+        # delete some actions from the view before plugging in GUI
+        # trick found in kateviewmanager.cpp
+        for name in "set_confdlg", "editor_options":
+            action = self.view.actionCollection().action(name)
+            if action:
+                sip.delete(action)
+        
     def variables(self):
         """
         Returns a dictionary with variables put in specially formatted LilyPond
@@ -296,6 +305,12 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             import frescobaldi_app.version
             frescobaldi_app.version.convertLy(self)
 
+        # Settings
+        @self.onAction(KStandardAction.Preferences)
+        def settings_configure():
+            import frescobaldi_app.settings
+            frescobaldi_app.settings.SettingsDialog(self).show()
+            
     def createLilyPondJob(self, doc, preview=True):
         if doc not in self.jobs:
             from frescobaldi_app.runlily import Ly2PDF
