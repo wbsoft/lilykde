@@ -28,7 +28,8 @@ from PyKDE4.kdeui import *
 
 from frescobaldi_app.widgets import ExecLineEdit, ExecArgsLineEdit
 
-from frescobaldi_app.rumor import default_timidity_command
+# these modules provide their own default settings
+import frescobaldi_app.rumor, frescobaldi_app.hyphen
 
 class SettingsDialog(KPageDialog):
     def __init__(self, mainwin):
@@ -143,11 +144,14 @@ class Commands(QWidget):
     """
     def __init__(self, dialog):
         QWidget.__init__(self, dialog)
-        item = dialog.addPage(self, i18n("Commands"))
-        item.setHeader(i18n("Commands for programs used by Frescobaldi"))
+        self.dialog = dialog
+        item = dialog.addPage(self, i18n("Paths"))
+        item.setHeader(i18n("Paths to programs or data used by Frescobaldi"))
         item.setIcon(KIcon("utilities-terminal"))
         
         layout = QGridLayout(self)
+        
+        # commands
         self.commands = []
         for name, default, title, lineedit, tooltip in (
             ('lilypond', 'lilypond', "LilyPond:", ExecLineEdit,
@@ -163,8 +167,8 @@ class Commands(QWidget):
             ('aconnect', 'aconnect', "Aconnect:", ExecLineEdit,
                 i18n("Name or full path of the aconnect program (part of ALSA, "
                   "for MIDI input and playback using Rumor).")),
-            ('timidity', default_timidity_command, "Timidity:",
-                ExecArgsLineEdit,
+            ('timidity', frescobaldi_app.rumor.default_timidity_command,
+                "Timidity:", ExecArgsLineEdit,
                 i18n("Full command to start Timidity (or any other program) "
                   "as an ALSA MIDI client.")),
         ):
@@ -178,25 +182,56 @@ class Commands(QWidget):
             layout.addWidget(label, len(self.commands), 0)
             layout.addWidget(widget, len(self.commands), 1)
             self.commands.append((widget, name, default))
-        layout.setRowStretch(len(self.commands), 1)
+        
+        # hyphen paths
+        l = QLabel(i18n(
+            "Paths to search for hyphenation dictionaries of OpenOffice.org, "
+            "Scribus, KOffice, etc, one per line. "
+            "If you leave out the starting slash, the prefixes from the "
+            "KDEDIRS environment variable are prepended."))
+        l.setWordWrap(True)
+        self.hyphenPaths = QTextEdit()
+        l.setBuddy(self.hyphenPaths)
+        layout.addWidget(l, layout.rowCount(), 0, 1, 2)
+        layout.addWidget(self.hyphenPaths, layout.rowCount(), 0, 1, 2)
+
+        # add stretch
+        layout.setRowStretch(layout.rowCount(), 1)
+        
+        
+    def setHyphenPaths(self, paths):
+        # disconnect first; unfortunately QTextEdit has no textEdited signal...
+        QObject.disconnect(self.hyphenPaths, SIGNAL("textChanged()"),
+            self.dialog.changed)
+        self.hyphenPaths.setPlainText('\n'.join(unicode(p) for p in paths))
+        QObject.connect(self.hyphenPaths, SIGNAL("textChanged()"),
+            self.dialog.changed)
         
     def defaults(self):
         for widget, name, default in self.commands:
             widget.setText(default)
-
+        self.setHyphenPaths(frescobaldi_app.hyphen.defaultPaths)
+        
     def loadSettings(self):
         conf = config("commands")
         for widget, name, default in self.commands:
             widget.setText(conf.readEntry(name, default))
+        paths = config("hyphenation").readEntry("paths",
+            frescobaldi_app.hyphen.defaultPaths)
+        self.setHyphenPaths(paths)
 
     def saveSettings(self):
         conf = config("commands")
         for widget, name, default in self.commands:
             if widget.text():
                 conf.writeEntry(name, widget.text())
-
-
+        paths = [p for p in unicode(self.hyphenPaths.toPlainText()).splitlines()
+            if p]
+        config("hyphenation").writeEntry("paths", paths)
+        # reload the table of hyphenation dictionaries
+        frescobaldi_app.hyphen.findDicts()
 
 
 def config(group):
     return KGlobal.config().group(group)
+

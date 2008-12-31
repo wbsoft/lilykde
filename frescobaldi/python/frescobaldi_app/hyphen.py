@@ -62,7 +62,7 @@ def findDicts():
             if 'KDEDIR' in os.environ:
                 prefixes.append(os.environ['KDEDIR'])
         # if the path is not absolute, add it to all prefixes.
-        for path in conf.readEntry("paths", ()) or defaultPaths:
+        for path in conf.readEntry("paths", defaultPaths):
             path = unicode(path)
             if os.path.isabs(path):
                 yield path
