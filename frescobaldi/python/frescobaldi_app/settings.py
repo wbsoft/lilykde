@@ -25,36 +25,26 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
-from PyKDE4.ktexteditor import KTextEditor
 
 class SettingsDialog(KPageDialog):
     def __init__(self, mainwin):
         KPageDialog.__init__(self, mainwin)
+        self.mainwin = mainwin
         self.setFaceType(KPageDialog.Tree)
         self.setButtons(KPageDialog.ButtonCode(KPageDialog.Apply | KPageDialog.Ok | KPageDialog.Cancel))
         self.setCaption(i18n("Configure"))
         self.setDefaultButton(KPageDialog.Ok)
-        def changed():
-            self.enableButton(KPageDialog.Apply, True)
         self.enableButton(KPageDialog.Apply, False)
         QObject.connect(self, SIGNAL("applyClicked()"), self.applyClicked)
         
-        # TODO: our own pages
+        self.pages = [
+            # TODO: our own pages
+            EditorComponent(self)
+        ]
         
-        # Get the KTextEditor config pages.
-        editorItem = self.addPage(QWidget(), i18n("Editor Component"))
-        editorItem.setHeader(i18n("Editor Component Options"))
-        editorItem.setIcon(KIcon("accessories-text-editor"))
-        self.editorPages = []
-        editor = mainwin.app.editor
-        for i in range(editor.configPages()):
-            cPage = editor.configPage(i, self)
-            QObject.connect(cPage, SIGNAL("changed()"), changed)
-            self.editorPages.append(cPage)
-            item = self.addSubPage(editorItem, cPage, editor.configPageName(i))
-            item.setHeader(editor.configPageFullName(i))
-            item.setIcon(editor.configPageIcon(i))
-
+    def changed(self, changed=True):
+        self.enableButton(KPageDialog.Apply, changed)
+        
     def done(self, result):
         if result:
             self.saveSettings()
@@ -62,15 +52,38 @@ class SettingsDialog(KPageDialog):
         
     def applyClicked(self):
         self.saveSettings()
-        self.enableButton(KPageDialog.Apply, False)
+        self.changed(False)
 
     def loadSettings(self):
-        pass # TODO: implement
+        for page in self.pages:
+            page.loadSettings()
         
     def saveSettings(self):
-        # TODO: own settings:
+        for page in self.pages:
+            page.saveSettings()
+            
+
+class EditorComponent(object):
+    def __init__(self, dialog):
+        editorItem = dialog.addPage(QWidget(), i18n("Editor Component"))
+        editorItem.setHeader(i18n("Editor Component Options"))
+        editorItem.setIcon(KIcon("accessories-text-editor"))
+        self.editorPages = []
+        editor = dialog.mainwin.app.editor
+        # Get the KTextEditor config pages.
+        for i in range(editor.configPages()):
+            cPage = editor.configPage(i, dialog)
+            QObject.connect(cPage, SIGNAL("changed()"), dialog.changed)
+            self.editorPages.append(cPage)
+            item = dialog.addSubPage(editorItem, cPage, editor.configPageName(i))
+            item.setHeader(editor.configPageFullName(i))
+            item.setIcon(editor.configPageIcon(i))
+
+    def loadSettings(self):
+        pass # not necessary
         
-        # KTextEditor settings
+    def saveSettings(self):
         for page in self.editorPages:
             page.apply()
             
+    
