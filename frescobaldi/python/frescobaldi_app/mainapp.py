@@ -356,11 +356,11 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
     _partlibrary = "libkonsolepart"
     
     def __init__(self, mainwin):
-        self._sync = False
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "konsole", i18n("Terminal"), "terminal",
             dock=kateshell.mainwindow.Bottom)
         listeners[mainwin.app.activeChanged].append(self.sync)
+        self._sync = self.config().readEntry("sync", QVariant(False)).toBool()
             
     def partFactory(self):
         w = super(KonsoleTool, self).partFactory()
@@ -397,6 +397,9 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
     def toggleSync(self):
         self._sync = not self._sync
 
+    def saveSettings(self):
+        self.config().writeEntry("sync", QVariant(self._sync))
+        
 
 class PDFTool(kateshell.mainwindow.KPartTool):
     _partlibrary = "okularpart"
@@ -406,7 +409,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             dock=kateshell.mainwindow.Right)
         listeners[mainwin.app.activeChanged].append(self.sync)
         self._currentUrl = None
-        self._sync = True
+        self._sync = self.config().readEntry("sync", QVariant(True)).toBool()
         # We open urls with a timer otherwise Okular is called 
         # too quickly when the user switches documents too fast.
         self._timer = QTimer()
@@ -416,7 +419,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             if self._currentUrl:
                 super(PDFTool, self).openUrl(self._currentUrl)
         QObject.connect(self._timer, SIGNAL("timeout()"), timeoutFunc)
-            
+    
     def sync(self, doc):
         if self._sync:
             pdfs = doc.updatedFiles("pdf")
@@ -465,7 +468,23 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         else:
             w.show()
 
+    def partLoaded(self):
+        conf = self.config()
+        if not conf.readEntry("minipager", QVariant(True)).toBool():
+            self._okularMiniBar().hide()
+        self.part.actionCollection().action("show_leftpanel").setChecked(
+            conf.readEntry("leftpanel", QVariant(False)).toBool())
 
+    def saveSettings(self):
+        conf = self.config()
+        if self.part:
+            w = self._okularMiniBar()
+            conf.writeEntry("minipager", QVariant(w.isVisibleTo(w.parent())))
+            conf.writeEntry("leftpanel", QVariant(
+                self.part.actionCollection().action("show_leftpanel").isChecked()))
+        conf.writeEntry("sync", QVariant(self._sync))
+        
+        
 class QuickInsertTool(kateshell.mainwindow.Tool):
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,

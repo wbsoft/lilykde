@@ -332,6 +332,9 @@ class MainWindow(KParts.MainWindow):
         self.openRecent.saveEntries(config("recent files"))
         config().writeEntry("show full path",
             QVariant(self.showPath.isChecked()))
+        # also all the tools:
+        for tool in self.tools.itervalues():
+            tool.saveSettings()
         # write them back
         config().sync()
 
@@ -582,6 +585,10 @@ class Tool(object):
         self.setIcon(icon)
         self.setDock(dock)
         Tool.__instance_counter += 1
+    
+    def config(self):
+        """ Return a suitable configgroup for our settings. """
+        return config("tool_%s" % self.name)
         
     def delete(self):
         """ Completely remove our tool """
@@ -701,9 +708,14 @@ class Tool(object):
             m.addSeparator()
         a = m.addAction(KIcon("tab-detach"), i18n("Undock"))
         QObject.connect(a, SIGNAL("triggered()"), self.undock)
-        
         return m
-        
+
+    def saveSettings(self):
+        """
+        Use this to save settings for your tool.
+        """
+        pass
+    
 
 class KPartTool(Tool):
     def __init__(self, mainwin, name, title="", icon="",
@@ -721,11 +733,16 @@ class KPartTool(Tool):
             if part:
                 self.part = part
                 QObject.connect(part, SIGNAL("destroyed()"), self.slotDestroyed)
+                QTimer.singleShot(0, self.partLoaded)
                 return part.widget()
         return QLabel("<center>%s</center>" %
             i18n("Could not load %1", "<br/><b><tt>%s</tt></b><br/>" %
                 self._partlibrary))
 
+    def partLoaded(self):
+        """ Called when part is loaded. Use this to apply settings, etc."""
+        pass
+    
     def delete(self):
         super(KPartTool, self).delete()
         sip.delete(self.part)
