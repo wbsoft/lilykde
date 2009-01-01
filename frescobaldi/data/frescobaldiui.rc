@@ -93,6 +93,9 @@
     <Action name="settings_show_statusbar" />
     <Action name="settings_show_full_path" />
     <Separator />
+    <Menu name="tools_toolviews"><text>&amp;Tool Views</text>
+    </Menu>
+    <Separator />
     <Action name="options_configure_keybinding"/>
     <Action name="set_configure_toolbars"/>
     <Action name="settings_configure" />

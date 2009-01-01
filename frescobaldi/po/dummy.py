@@ -5,6 +5,7 @@
 i18n("&Document")
 i18n("&Lyrics")
 i18n("&Rhythm")
+i18n("&Tool Views")
 
 # frescobaldi.desktop :
 i18n("Frescobaldi")

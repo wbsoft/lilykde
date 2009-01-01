@@ -143,6 +143,11 @@ class MainWindow(KParts.MainWindow):
         QObject.connect(self.docGroup, SIGNAL("triggered(QAction*)"),
             lambda a: a.doc.setActive())
         
+        # Tool Views menu
+        self.toolViewsMenu = self.factory().container("tools_toolviews", self)
+        QObject.connect(self.toolViewsMenu, SIGNAL("aboutToShow()"),
+            self.populateToolViewsMenu)
+        
         self.loadSettings()
         self.show()
         
@@ -284,6 +289,20 @@ class MainWindow(KParts.MainWindow):
                 a.setChecked(True)
             self.docGroup.addAction(a)
             self.docMenu.addAction(a)
+
+    def populateToolViewsMenu(self):
+        m = self.toolViewsMenu
+        m.clear()
+        for tool in self.tools.itervalues():
+            title = m.addTitle(tool.title())
+            count = len(m.children())
+            if not tool.isDocked():
+                a = m.addAction(KIcon("tab-detach"), i18n("Dock"))
+                QObject.connect(a, SIGNAL("triggered()"), tool.dock)
+            tool.addMenuActions(m)
+            # remove title if the tool did not add any menu items
+            if count == len(m.children()):
+                sip.delete(title)
 
     def openDocument(self):
         """ Open an existing document. """
@@ -629,6 +648,9 @@ class Tool(object):
 
     def isActive(self):
         return self._active
+    
+    def isDocked(self):
+        return self._docked
         
     def materialize(self):
         if self.widget is None:
@@ -666,6 +688,7 @@ class Tool(object):
         """ Dock and close the dialog window """
         if self._docked:
             return
+        self._dialog.hide()
         self._docked = True
         self._dock.addTool(self)
         
