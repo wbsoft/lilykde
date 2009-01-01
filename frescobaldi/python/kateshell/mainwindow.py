@@ -570,7 +570,7 @@ class DockDialog(QDialog):
         title = KDialog.makeStandardCaption(self.tool.title(), self,
             KDialog.HIGCompliantCaption)
         self.setWindowTitle(title)
-        self.setWindowIcon(QIcon(self.tool.icon()))
+        self.setWindowIcon(self.tool.icon())
 
     def keyPressEvent(self, e):
         if e.key() != Qt.Key_Escape:
