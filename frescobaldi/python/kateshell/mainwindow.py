@@ -248,7 +248,7 @@ class MainWindow(KParts.MainWindow):
             return self._currentDoc
             
     def updateCaption(self, doc):
-        name = self.showPath.isChecked() and doc.url() or doc.documentName()
+        name = self.showPath.isChecked() and doc.prettyUrl() or doc.documentName()
         if len(name) > 72:
             name = '...' + name[-69:]
         if doc.isModified():

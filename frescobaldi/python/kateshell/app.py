@@ -280,13 +280,21 @@ class Document(DBusItem):
         else:
             self._encoding = encoding
 
-    @method(iface, in_signature='', out_signature='s')
     def url(self):
         """Returns the URL of this document"""
         if self.doc:
             return unicode(self.doc.url().url())
         else:
             return self._url
+            
+    @method(iface, in_signature='', out_signature='s')
+    def prettyUrl(self):
+        """Returns a printable, pretty URL for this document."""
+        if self.doc:
+            kurl = self.doc.url()
+        else:
+            kurl = KUrl(self._url)
+        return unicode(kurl.prettyUrl())
 
     @method(iface, in_signature='', out_signature='s')
     def localPath(self):
