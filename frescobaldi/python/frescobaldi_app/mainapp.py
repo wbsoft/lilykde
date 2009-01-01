@@ -385,14 +385,12 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
             # FIXME This does not work currently.
             self.openUrl(doc.doc.url().directory())
 
-    def contextMenu(self):
-        m = super(KonsoleTool, self).contextMenu()
+    def addMenuActions(self, m):
         m.addSeparator()
         a = m.addAction(i18n("S&ynchronize Terminal with Current Document"))
         a.setCheckable(True)
         a.setChecked(self._sync)
         QObject.connect(a, SIGNAL("triggered()"), self.toggleSync)
-        return m
         
     def toggleSync(self):
         self._sync = not self._sync
@@ -429,8 +427,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
     def toggleSync(self):
         self._sync = not self._sync
     
-    def contextMenu(self):
-        m = super(PDFTool, self).contextMenu()
+    def addMenuActions(self, m):
         if self.part:
             m.addSeparator()
             a = m.addAction(i18n("Show PDF Navigation Panel"))
@@ -449,7 +446,6 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         a.setCheckable(True)
         a.setChecked(self._sync)
         QObject.connect(a, SIGNAL("triggered()"), self.toggleSync)
-        return m
     
     def openUrl(self, url):
         self.show()
