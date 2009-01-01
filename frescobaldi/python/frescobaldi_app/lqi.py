@@ -33,6 +33,7 @@ class ToolBox(QToolBox):
         QToolBox.__init__(self)
         self.mainwin = tool.mainwin
         Articulations(self)
+        self.setMinimumWidth(self.sizeHint().width())
 
 
 class Lqi(QWidget):
