@@ -61,8 +61,8 @@ int main(int argc, char **argv)
   if (args->count() != 1)
     KCmdLineArgs::usageError(i18n("Please specify exactly one textedit URL."));
   KUrl uri = args->url(0);
+  // LilyPond always encodes filenames in UTF8 encoding so decode them.
   QString decodedPath = QString::fromUtf8(uri.path().toLatin1());
-  uri.setPath(decodedPath);
   QRegExp rx("(/.*[^/]):(\\d+):(\\d+):(\\d+)");
   if (uri.protocol() != "textedit" or !rx.exactMatch(decodedPath))
     KCmdLineArgs::usageError(i18n("Not a valid textedit URL: %1", uri.url()));
