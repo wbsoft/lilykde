@@ -5,21 +5,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Valentin Villenave <v.villenave@gmail.com>, 2008.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2008-12-31 20:23+0100\n"
+"POT-Creation-Date: 2009-01-01 07:29+0100\n"
 "PO-Revision-Date: 2008-04-11 16:36+0200\n"
 "Last-Translator: Valentin Villenave <v.villenave@gmail.com>\n"
 "Language-Team: France <kde-i18n-fr@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"#-#-#-#-#  fr.po (nl)  #-#-#-#-#\n"
-"X-Generator: KBabel 1.11.4\n"
-"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 "#-#-#-#-#  fr.po (nl)  #-#-#-#-#\n"
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
@@ -76,14 +72,12 @@ msgid "&Document"
 msgstr ""
 
 #: dummy.py:6
-#, fuzzy
 msgid "&Lyrics"
-msgstr "Paroles"
+msgstr "&Paroles"
 
 #: dummy.py:7
-#, fuzzy
 msgid "&Rhythm"
-msgstr "Rythme"
+msgstr "&Rythme"
 
 #: ../python/ly/__init__.py:62
 msgid "Dedication"
@@ -397,28 +391,28 @@ msgstr ""
 msgid "Line selection mode"
 msgstr "Sélection de la langue"
 
-#: ../python/kateshell/mainwindow.py:298
+#: ../python/kateshell/mainwindow.py:292
 msgid "All Files"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:299
+#: ../python/kateshell/mainwindow.py:293
 #, fuzzy
 msgid "Open File"
 msgstr "Ouvrir PDF"
 
-#: ../python/kateshell/mainwindow.py:375
+#: ../python/kateshell/mainwindow.py:372
 msgid "Please select some text first."
 msgstr "Sélectionnez d'abord du texte."
 
-#: ../python/kateshell/mainwindow.py:701
+#: ../python/kateshell/mainwindow.py:702
 msgid "Move To"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:708
+#: ../python/kateshell/mainwindow.py:709
 msgid "Undock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:732
+#: ../python/kateshell/mainwindow.py:739
 #, fuzzy
 msgid "Could not load %1"
 msgstr "LilyPond n'a pu être lancé : %s"
@@ -598,16 +592,14 @@ msgid ""
 msgstr "Rendre les durées explicites (ajouter une durée à chaque note)."
 
 #: ../python/frescobaldi_app/mainapp.py:262
-#, fuzzy
 msgid "Apply rhythm..."
-msgstr "Appliquer un rythme"
+msgstr "Appliquer un rythme..."
 
 #: ../python/frescobaldi_app/mainapp.py:263
 msgid "Apply an entered rhythm to the selected music."
 msgstr ""
 
 #: ../python/frescobaldi_app/mainapp.py:266
-#, fuzzy
 msgid "Apply Rhythm"
 msgstr "Appliquer un rythme"
 
@@ -628,9 +620,8 @@ msgid "Remove hyphenation"
 msgstr "Réunir les syllabes des paroles"
 
 #: ../python/frescobaldi_app/mainapp.py:298
-#, fuzzy
 msgid "Insert LilyPond version"
-msgstr "Employez la version (%s) de LilyPond"
+msgstr "Employez la version de LilyPond"
 
 #: ../python/frescobaldi_app/mainapp.py:303
 msgid "Update with convert-ly"
@@ -645,7 +636,7 @@ msgstr ""
 msgid "Run LilyPond in preview mode"
 msgstr "Lancer LilyPond (aperçu)"
 
-#: ../python/frescobaldi_app/mainapp.py:361
+#: ../python/frescobaldi_app/mainapp.py:360
 #, fuzzy
 msgid "Terminal"
 msgstr "Trille"
@@ -654,37 +645,37 @@ msgstr "Trille"
 msgid "S&ynchronize Terminal with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:405
+#: ../python/frescobaldi_app/mainapp.py:408
 #, fuzzy
 msgid "PDF Preview"
 msgstr "Envoyer PDF (aperçu)"
 
-#: ../python/frescobaldi_app/mainapp.py:433
+#: ../python/frescobaldi_app/mainapp.py:436
 #, fuzzy
 msgid "Show PDF Navigation Panel"
 msgstr "Afficher/Masquer le panneau de navigation PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:439
+#: ../python/frescobaldi_app/mainapp.py:442
 msgid "Show PDF minipager"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:445
+#: ../python/frescobaldi_app/mainapp.py:448
 msgid "S&ynchronize Preview with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:472
+#: ../python/frescobaldi_app/mainapp.py:491
 msgid "Quick Insert"
 msgstr "Insertion rapide"
 
-#: ../python/frescobaldi_app/mainapp.py:484
+#: ../python/frescobaldi_app/mainapp.py:503
 msgid "LilyPond Log"
 msgstr "Messages de LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:488
+#: ../python/frescobaldi_app/mainapp.py:507
 msgid "no log"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:517
+#: ../python/frescobaldi_app/mainapp.py:536
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -1433,13 +1424,12 @@ msgid "Special"
 msgstr "Spécial"
 
 #: ../python/frescobaldi_app/rumor.py:69
-#, fuzzy
 msgid ""
 "The meter to use. Leave 'Auto' to let Frescobaldi determine the meter from "
 "the LilyPond document."
 msgstr ""
-"Chiffre de mesure. Laissez \"Auto\" pour que LilyKDE le détermine à partir "
-"du document LilyPond."
+"Chiffre de mesure. Laissez \"Auto\" pour que Frescobaldi le détermine à "
+"partir du document LilyPond."
 
 #: ../python/frescobaldi_app/rumor.py:76
 msgid "Quantize:"
@@ -1466,13 +1456,12 @@ msgid "Record monophonic input, without chords."
 msgstr "Enregistrer du code LilyPond monophonique, sans accords."
 
 #: ../python/frescobaldi_app/rumor.py:104
-#, fuzzy
 msgid ""
 "The number of accidentals. A negative number designates flats. Leave 'Auto' "
 "to let Frescobaldi determine the key signature from the LilyPond document."
 msgstr ""
 "Nombre d'altérations (un nombre négatif désigne des bémols). Laissez \"Auto"
-"\", pour que LilyKDE le détermine à partir du document."
+"\", pour que Frescobaldi le détermine à partir du document."
 
 #: ../python/frescobaldi_app/rumor.py:110
 msgid "Tempo:"
@@ -1503,14 +1492,12 @@ msgid "Set these settings as default."
 msgstr "Enregistrer ces réglages en tant que défaut."
 
 #: ../python/frescobaldi_app/rumor.py:146
-#, fuzzy
 msgid "Found rumor version %1."
-msgstr "Trouvé Rumor $version."
+msgstr "Trouvé Rumor %1."
 
 #: ../python/frescobaldi_app/rumor.py:149
-#, fuzzy
 msgid "Could not find Rumor: %1"
-msgstr "Impossible de trouver Rumor: %s"
+msgstr "Impossible de trouver Rumor: %1"
 
 #: ../python/frescobaldi_app/rumor.py:160
 msgid "Settings have been saved."
@@ -1546,9 +1533,8 @@ msgid "Rumor Settings"
 msgstr "Réglages de Rumor"
 
 #: ../python/frescobaldi_app/rumor.py:411
-#, fuzzy
 msgid "OSS device %1"
-msgstr "Périphérique OSS %d"
+msgstr "Périphérique OSS %1"
 
 #: ../python/frescobaldi_app/rumor.py:413
 msgid "Keyboard"
@@ -1656,14 +1642,13 @@ msgstr ""
 "Regarder \"Qu'est-ce que c'est\" pour plus d'informations."
 
 #: ../python/frescobaldi_app/rumor.py:501
-#, fuzzy
 msgid ""
 "Here you can select which Guile scripts you want Rumor to load. You can add "
 "your own scripts by putting them in %1. If the first line of your script "
 "starts with a semicolon (;) that line will be shown as description."
 msgstr ""
 "Sélectionnez ici des scripts Guile que vous voulez charger dans Rumor. Vous "
-"pouvez ajouter vos propres scripts dans %s. Si la première ligne de votre "
+"pouvez ajouter vos propres scripts dans %1. Si la première ligne de votre "
 "script commence par un point-virgule (;), cette ligne sera affichée comme "
 "description."
 
@@ -1680,24 +1665,20 @@ msgid "publish mode"
 msgstr "publication"
 
 #: ../python/frescobaldi_app/runlily.py:73
-#, fuzzy
 msgid "LilyPond [%1] starting (%2)...\n"
-msgstr "LilyPond [$filename] : lancement ($mode)..."
+msgstr "LilyPond [%1] : lancement (%2)...\n"
 
 #: ../python/frescobaldi_app/runlily.py:79
-#, fuzzy
 msgid "LilyPond [%1] exited with return code %2."
-msgstr "LilyPond [$filename] : interruption avec le code $retcode."
+msgstr "LilyPond [%1] : interruption avec le code %2."
 
 #: ../python/frescobaldi_app/runlily.py:82
-#, fuzzy
 msgid "LilyPond [%1] exited with exit status %2."
-msgstr "LilyPond [$filename] : interruption avec le code $retcode."
+msgstr "LilyPond [%1] : interruption avec le code %2."
 
 #: ../python/frescobaldi_app/runlily.py:85
-#, fuzzy
 msgid "LilyPond [%1] finished."
-msgstr "LilyPond [$filename] : traitement achevé."
+msgstr "LilyPond [%1] : traitement achevé."
 
 #: ../python/frescobaldi_app/runlily.py:95
 msgid "Could not start LilyPond. Please check path and permissions."
@@ -1906,9 +1887,8 @@ msgid "No settings available."
 msgstr "Pas de réglages possibles."
 
 #: ../python/frescobaldi_app/settings.py:42
-#, fuzzy
 msgid "Configure"
-msgstr "Réglages..."
+msgstr "Réglages"
 
 #: ../python/frescobaldi_app/settings.py:82
 msgid "Editor Component"
@@ -1919,7 +1899,6 @@ msgid "Editor Component Options"
 msgstr ""
 
 #: ../python/frescobaldi_app/settings.py:110
-#, fuzzy
 msgid "General Preferences"
 msgstr "Préférences générales"
 
@@ -2034,18 +2013,16 @@ msgstr ""
 "des modifications manuelles."
 
 #: ../python/frescobaldi_app/version.py:91
-#, fuzzy
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
 "This is the message given by convert-ly: %1"
 msgstr ""
 "Ce document a été traité par convert-ly, mais n'a subi aucun changement. "
-"Voici le message rapporté par convert-ly : %s"
+"Voici le message rapporté par convert-ly : %1"
 
 #: ../python/frescobaldi_app/version.py:96
-#, fuzzy
 msgid "Could not start convert-ly: %1"
-msgstr "Impossible de lancer convert-ly : %s"
+msgstr "Impossible de lancer convert-ly : %1"
 
 #: ../python/frescobaldi_app/widgets.py:40
 msgid "Tap"

@@ -3,21 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Server Acim <sacim@kde.org.tr>, 2008.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2008-12-31 20:23+0100\n"
+"POT-Creation-Date: 2009-01-01 07:29+0100\n"
 "PO-Revision-Date: 2008-10-26 15:22+0200\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"#-#-#-#-#  tr.po (tr)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: KBabel 1.11.4\n"
 "#-#-#-#-#  tr.po (tr)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: KBabel 1.11.4\n"
@@ -79,9 +75,8 @@ msgid "&Lyrics"
 msgstr "Şarkı Sözleri"
 
 #: dummy.py:7
-#, fuzzy
 msgid "&Rhythm"
-msgstr "Ritm"
+msgstr "&Ritm"
 
 #: ../python/ly/__init__.py:62
 msgid "Dedication"
@@ -395,28 +390,28 @@ msgstr ""
 msgid "Line selection mode"
 msgstr "Dil Seçimi"
 
-#: ../python/kateshell/mainwindow.py:298
+#: ../python/kateshell/mainwindow.py:292
 msgid "All Files"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:299
+#: ../python/kateshell/mainwindow.py:293
 #, fuzzy
 msgid "Open File"
 msgstr "PDF aç"
 
-#: ../python/kateshell/mainwindow.py:375
+#: ../python/kateshell/mainwindow.py:372
 msgid "Please select some text first."
 msgstr "Lütfen önce bir metin seçiniz."
 
-#: ../python/kateshell/mainwindow.py:701
+#: ../python/kateshell/mainwindow.py:702
 msgid "Move To"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:708
+#: ../python/kateshell/mainwindow.py:709
 msgid "Undock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:732
+#: ../python/kateshell/mainwindow.py:739
 #, fuzzy
 msgid "Could not load %1"
 msgstr "LilyPond başlatılamadı: %s"
@@ -597,16 +592,14 @@ msgstr ""
 "süre ekle)"
 
 #: ../python/frescobaldi_app/mainapp.py:262
-#, fuzzy
 msgid "Apply rhythm..."
-msgstr "Ritm uygula"
+msgstr "Ritm uygula..."
 
 #: ../python/frescobaldi_app/mainapp.py:263
 msgid "Apply an entered rhythm to the selected music."
 msgstr ""
 
 #: ../python/frescobaldi_app/mainapp.py:266
-#, fuzzy
 msgid "Apply Rhythm"
 msgstr "Ritm uygula"
 
@@ -628,9 +621,8 @@ msgid "Remove hyphenation"
 msgstr "Tirelemeyi kaldır"
 
 #: ../python/frescobaldi_app/mainapp.py:298
-#, fuzzy
 msgid "Insert LilyPond version"
-msgstr "LilyPond Sürümünü ekle (%s)"
+msgstr "LilyPond Sürümünü ekle"
 
 #: ../python/frescobaldi_app/mainapp.py:303
 msgid "Update with convert-ly"
@@ -645,7 +637,7 @@ msgstr ""
 msgid "Run LilyPond in preview mode"
 msgstr "LilyPond'u çalıştır (önizleme)"
 
-#: ../python/frescobaldi_app/mainapp.py:361
+#: ../python/frescobaldi_app/mainapp.py:360
 #, fuzzy
 msgid "Terminal"
 msgstr "Trill"
@@ -654,37 +646,37 @@ msgstr "Trill"
 msgid "S&ynchronize Terminal with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:405
+#: ../python/frescobaldi_app/mainapp.py:408
 #, fuzzy
 msgid "PDF Preview"
 msgstr "PDF'yi e-posta ile gönder (önizleme)"
 
-#: ../python/frescobaldi_app/mainapp.py:433
+#: ../python/frescobaldi_app/mainapp.py:436
 #, fuzzy
 msgid "Show PDF Navigation Panel"
 msgstr "PDF izleme panosunu bağla"
 
-#: ../python/frescobaldi_app/mainapp.py:439
+#: ../python/frescobaldi_app/mainapp.py:442
 msgid "Show PDF minipager"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:445
+#: ../python/frescobaldi_app/mainapp.py:448
 msgid "S&ynchronize Preview with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:472
+#: ../python/frescobaldi_app/mainapp.py:491
 msgid "Quick Insert"
 msgstr "Hızılı Ekle"
 
-#: ../python/frescobaldi_app/mainapp.py:484
+#: ../python/frescobaldi_app/mainapp.py:503
 msgid "LilyPond Log"
 msgstr "LilyPond Günlüğü"
 
-#: ../python/frescobaldi_app/mainapp.py:488
+#: ../python/frescobaldi_app/mainapp.py:507
 msgid "no log"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:517
+#: ../python/frescobaldi_app/mainapp.py:536
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -1433,12 +1425,11 @@ msgid "Special"
 msgstr "Özel"
 
 #: ../python/frescobaldi_app/rumor.py:69
-#, fuzzy
 msgid ""
 "The meter to use. Leave 'Auto' to let Frescobaldi determine the meter from "
 "the LilyPond document."
 msgstr ""
-"Kullanılacak ölçü. LilyKDE'nin Liypond belgesinden yola çıkarak ölçüyü "
+"Kullanılacak ölçü. Frescobaldi'nin Lilypond belgesinden yola çıkarak ölçüyü "
 "belirlemesi için Otomatik ayarını olduğu gibi bırakın."
 
 #: ../python/frescobaldi_app/rumor.py:76
@@ -1471,9 +1462,9 @@ msgid ""
 "The number of accidentals. A negative number designates flats. Leave 'Auto' "
 "to let Frescobaldi determine the key signature from the LilyPond document."
 msgstr ""
-"Arızaların sayısı. Eksi numara bemolleri nitelendirir. LilyKDE'nin Lilypond "
-"belgesinden yola çıkarak tonu ayarlaması için Otomatik seçeneğini olduğu "
-"gibi bırakın."
+"Arızaların sayısı. Eksi numara bemolleri nitelendirir. Frescobaldi'nin "
+"Lilypond belgesinden yola çıkarak tonu ayarlaması için Otomatik seçeneğini "
+"olduğu gibi bırakın."
 
 #: ../python/frescobaldi_app/rumor.py:110
 msgid "Tempo:"
@@ -1504,14 +1495,12 @@ msgid "Set these settings as default."
 msgstr "Bu ayarları öntanımlı olarak ayarlayın."
 
 #: ../python/frescobaldi_app/rumor.py:146
-#, fuzzy
 msgid "Found rumor version %1."
-msgstr "Rumor sürümü bulundu $version."
+msgstr "Rumor sürümü bulundu %1."
 
 #: ../python/frescobaldi_app/rumor.py:149
-#, fuzzy
 msgid "Could not find Rumor: %1"
-msgstr "Rumor bulunamadı: %s"
+msgstr "Rumor bulunamadı: %1"
 
 #: ../python/frescobaldi_app/rumor.py:160
 msgid "Settings have been saved."
@@ -1547,9 +1536,8 @@ msgid "Rumor Settings"
 msgstr "Rumor Ayarları"
 
 #: ../python/frescobaldi_app/rumor.py:411
-#, fuzzy
 msgid "OSS device %1"
-msgstr "OSS aygıtı %d"
+msgstr "OSS aygıtı %1"
 
 #: ../python/frescobaldi_app/rumor.py:413
 msgid "Keyboard"
@@ -1656,14 +1644,13 @@ msgstr ""
 "Daha fazla bilgi için \"Bu Nedir\"i seçiniz."
 
 #: ../python/frescobaldi_app/rumor.py:501
-#, fuzzy
 msgid ""
 "Here you can select which Guile scripts you want Rumor to load. You can add "
 "your own scripts by putting them in %1. If the first line of your script "
 "starts with a semicolon (;) that line will be shown as description."
 msgstr ""
 "Buradan Rumor'un yüklemesini istediğiniz Guile betiklerini seçebilirsiniz. "
-"Kendi betiklerinizi onlara %s işaretini koyarak ekleyebilirsiniz. Eğer "
+"Kendi betiklerinizi onlara %1 işaretini koyarak ekleyebilirsiniz. Eğer "
 "betiğinizin ilk satırı bir noktalı virgül ile (;) başlarsa, bu satır "
 "tanımlama olarak gösterilecektir."
 
@@ -1680,24 +1667,20 @@ msgid "publish mode"
 msgstr "yayınlama kipi"
 
 #: ../python/frescobaldi_app/runlily.py:73
-#, fuzzy
 msgid "LilyPond [%1] starting (%2)...\n"
-msgstr "LilyPond [$filename] başlıyor ($mode)..."
+msgstr "LilyPond [%1] başlıyor (%2)...\n"
 
 #: ../python/frescobaldi_app/runlily.py:79
-#, fuzzy
 msgid "LilyPond [%1] exited with return code %2."
-msgstr "LilyPond [$filename] dönüş koduyla çıktı $retcode."
+msgstr "LilyPond [%1] dönüş koduyla çıktı %2."
 
 #: ../python/frescobaldi_app/runlily.py:82
-#, fuzzy
 msgid "LilyPond [%1] exited with exit status %2."
-msgstr "LilyPond [$filename] dönüş koduyla çıktı $retcode."
+msgstr "LilyPond [%1] dönüş koduyla çıktı %2."
 
 #: ../python/frescobaldi_app/runlily.py:85
-#, fuzzy
 msgid "LilyPond [%1] finished."
-msgstr "LilyPond [$filename] tamamlandı."
+msgstr "LilyPond [%1] tamamlandı."
 
 #: ../python/frescobaldi_app/runlily.py:95
 msgid "Could not start LilyPond. Please check path and permissions."
@@ -1907,9 +1890,8 @@ msgid "No settings available."
 msgstr "Hiç bir ayarlama yapılamaz."
 
 #: ../python/frescobaldi_app/settings.py:42
-#, fuzzy
 msgid "Configure"
-msgstr "Yapılandır..."
+msgstr "Yapılandır"
 
 #: ../python/frescobaldi_app/settings.py:82
 msgid "Editor Component"
@@ -2033,18 +2015,16 @@ msgstr ""
 "bloğunda bulacaksınız. Bazı kısımları yine de elle düzenlemeniz gerekebilir."
 
 #: ../python/frescobaldi_app/version.py:91
-#, fuzzy
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
 "This is the message given by convert-ly: %1"
 msgstr ""
 "Belge, convert-ly ile işlenmiş, ancak değiştirilmeden kalmış. Bu ileti "
-"convert-ly tarafından hazırlanmıştır:%s"
+"convert-ly tarafından hazırlanmıştır: %1"
 
 #: ../python/frescobaldi_app/version.py:96
-#, fuzzy
 msgid "Could not start convert-ly: %1"
-msgstr "convert-ly başlatılamadı: %s"
+msgstr "convert-ly başlatılamadı: %1"
 
 #: ../python/frescobaldi_app/widgets.py:40
 msgid "Tap"
