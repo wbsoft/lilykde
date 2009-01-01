@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-01 13:36+0100\n"
+"POT-Creation-Date: 2009-01-01 14:20+0100\n"
 "PO-Revision-Date: 2008-04-11 16:36+0200\n"
 "Last-Translator: Valentin Villenave <v.villenave@gmail.com>\n"
 "Language-Team: France <kde-i18n-fr@kde.org>\n"
@@ -399,28 +399,33 @@ msgstr "Sélection de la langue"
 msgid "Dock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:311
+#: ../python/kateshell/mainwindow.py:303
+#, fuzzy
+msgid "Show"
+msgstr "Court"
+
+#: ../python/kateshell/mainwindow.py:314
 msgid "All Files"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:312
+#: ../python/kateshell/mainwindow.py:315
 #, fuzzy
 msgid "Open File"
 msgstr "Ouvrir PDF"
 
-#: ../python/kateshell/mainwindow.py:391
+#: ../python/kateshell/mainwindow.py:394
 msgid "Please select some text first."
 msgstr "Sélectionnez d'abord du texte."
 
-#: ../python/kateshell/mainwindow.py:726
+#: ../python/kateshell/mainwindow.py:729
 msgid "Move To"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:733
+#: ../python/kateshell/mainwindow.py:736
 msgid "Undock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:770
+#: ../python/kateshell/mainwindow.py:773
 #, fuzzy
 msgid "Could not load %1"
 msgstr "LilyPond n'a pu être lancé : %s"

@@ -294,11 +294,14 @@ class MainWindow(KParts.MainWindow):
         m = self.toolViewsMenu
         m.clear()
         for tool in self.tools.itervalues():
-            title = m.addTitle(tool.title())
+            title = m.addTitle(tool.icon(), tool.title())
             count = len(m.children())
             if not tool.isDocked():
                 a = m.addAction(KIcon("tab-detach"), i18n("Dock"))
                 QObject.connect(a, SIGNAL("triggered()"), tool.dock)
+            elif not tool.isActive():
+                a = m.addAction(i18n("Show"))
+                QObject.connect(a, SIGNAL("triggered()"), tool.show)
             tool.addMenuActions(m)
             # remove title if the tool did not add any menu items
             if count == len(m.children()):
@@ -433,7 +436,7 @@ class TabBar(KMultiTabBar):
         self._tabs = {}
         
     def addTool(self, tool):
-        self.appendTab(tool.icon(), tool._id, tool.title())
+        self.appendTab(tool.icon().pixmap(16), tool._id, tool.title())
         self._tabs[tool] = tool._id
         tab = self.tab(tool._id)
         tab.setFocusPolicy(Qt.NoFocus)
@@ -696,7 +699,7 @@ class Tool(object):
         return self._icon
         
     def setIcon(self, icon):
-        self._icon = icon and KIcon(icon).pixmap(16) or KIcon()
+        self._icon = icon and KIcon(icon) or KIcon()
         self.updateState()
 
     def title(self):

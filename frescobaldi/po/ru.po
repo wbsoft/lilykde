@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-01 13:36+0100\n"
+"POT-Creation-Date: 2009-01-01 14:20+0100\n"
 "PO-Revision-Date: 2008-07-06 11:34+0400\n"
 "Last-Translator: Сергей Полтавский\n"
 "Language-Team:  <ru@li.org>\n"
@@ -397,28 +397,33 @@ msgstr "Выбор языка"
 msgid "Dock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:311
+#: ../python/kateshell/mainwindow.py:303
+#, fuzzy
+msgid "Show"
+msgstr "Короткий"
+
+#: ../python/kateshell/mainwindow.py:314
 msgid "All Files"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:312
+#: ../python/kateshell/mainwindow.py:315
 #, fuzzy
 msgid "Open File"
 msgstr "Открыть PDF"
 
-#: ../python/kateshell/mainwindow.py:391
+#: ../python/kateshell/mainwindow.py:394
 msgid "Please select some text first."
 msgstr "Сначала, выберите текст."
 
-#: ../python/kateshell/mainwindow.py:726
+#: ../python/kateshell/mainwindow.py:729
 msgid "Move To"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:733
+#: ../python/kateshell/mainwindow.py:736
 msgid "Undock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:770
+#: ../python/kateshell/mainwindow.py:773
 msgid "Could not load %1"
 msgstr "Невозможно запустить LilyPond: %1"
 
