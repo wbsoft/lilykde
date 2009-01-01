@@ -18,6 +18,7 @@
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <kurl.h>
 #include <kmimetypetrader.h>
 #include <kapplication.h>
 #include <kstartupinfo.h>
@@ -59,11 +60,12 @@ int main(int argc, char **argv)
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   if (args->count() != 1)
     KCmdLineArgs::usageError(i18n("Please specify exactly one textedit URL."));
-  QString uri = args->arg(0);
-  QString decodedUri = QString::fromUtf8(QByteArray::fromPercentEncoding(uri.toLocal8Bit()));
-  QRegExp rx("textedit:/{,2}(/(?!/).*[^/]):(\\d+):(\\d+):(\\d+)");
-  if (!rx.exactMatch(decodedUri))
-    KCmdLineArgs::usageError(i18n("Not a valid textedit URL: %1", uri));
+  KUrl uri = args->url(0);
+  QString decodedPath = QString::fromUtf8(uri.path().toLatin1());
+  uri.setPath(decodedPath);
+  QRegExp rx("(/.*[^/]):(\\d+):(\\d+):(\\d+)");
+  if (uri.protocol() != "textedit" or !rx.exactMatch(decodedPath))
+    KCmdLineArgs::usageError(i18n("Not a valid textedit URL: %1", uri.url()));
   
   /*
    * We have a valid uri. Now find the preferred app/service to run.
@@ -91,7 +93,7 @@ int main(int argc, char **argv)
 	  "org.lilypond.TextEdit", "openTextEditUrl");
 	
         QList<QVariant> dbusargs;
-        dbusargs.append(uri);
+        dbusargs.append(uri.url());
         m.setArguments(dbusargs);
 	
         QDBusConnection::sessionBus().call (m);
@@ -141,7 +143,7 @@ int main(int argc, char **argv)
 
   QStringList cmd;
   if (acceptsTextEditUrl)
-    cmd << editor << uri;
+    cmd << editor << uri.url();
   else
   {
     /*
