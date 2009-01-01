@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-01 07:29+0100\n"
+"POT-Creation-Date: 2009-01-01 13:36+0100\n"
 "PO-Revision-Date: 2008-12-31 20:24+0100\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@lists.kde.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "X-Generator: Lokalize 0.2\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: ../frescobaldi.py:32 dummy.py:10
+#: ../frescobaldi.py:32 dummy.py:11
 msgid "Frescobaldi"
 msgstr "Frescobaldi"
 
-#: ../frescobaldi.py:34 dummy.py:11
+#: ../frescobaldi.py:34 dummy.py:12
 msgid "LilyPond Music Editor"
 msgstr "Muziek-editor voor LilyPond"
 
@@ -75,6 +75,10 @@ msgstr "&Liedteksten"
 #: dummy.py:7
 msgid "&Rhythm"
 msgstr "&Ritme"
+
+#: dummy.py:8
+msgid "&Tool Views"
+msgstr "&Gereedschapsweergaven"
 
 #: ../python/ly/__init__.py:62
 msgid "Dedication"
@@ -356,55 +360,59 @@ msgstr "Bovenste zijbalk"
 msgid "Bottom Sidebar"
 msgstr "Onderste zijbalk"
 
-#: ../python/kateshell/mainwindow.py:158
+#: ../python/kateshell/mainwindow.py:163
 msgid "Show Path"
 msgstr "Pad tonen"
 
-#: ../python/kateshell/mainwindow.py:250
+#: ../python/kateshell/mainwindow.py:255
 msgid "modified"
 msgstr "gewijzigd"
 
-#: ../python/kateshell/mainwindow.py:259
+#: ../python/kateshell/mainwindow.py:264
 msgid "Line: %1 Col: %2"
 msgstr "Regel: %1 Kol: %2"
 
-#: ../python/kateshell/mainwindow.py:267
+#: ../python/kateshell/mainwindow.py:272
 msgid "BLOCK"
 msgstr "BLOK"
 
-#: ../python/kateshell/mainwindow.py:267
+#: ../python/kateshell/mainwindow.py:272
 msgid "Block selection mode"
 msgstr "Blokselectiemodus"
 
-#: ../python/kateshell/mainwindow.py:269
+#: ../python/kateshell/mainwindow.py:274
 msgid "LINE"
 msgstr "REGEL"
 
-#: ../python/kateshell/mainwindow.py:269
+#: ../python/kateshell/mainwindow.py:274
 msgid "Line selection mode"
 msgstr "Regelselectiemodus"
 
-#: ../python/kateshell/mainwindow.py:292
+#: ../python/kateshell/mainwindow.py:300
+msgid "Dock"
+msgstr "Vastmaken"
+
+#: ../python/kateshell/mainwindow.py:311
 msgid "All Files"
 msgstr "Alle bestanden"
 
-#: ../python/kateshell/mainwindow.py:293
+#: ../python/kateshell/mainwindow.py:312
 msgid "Open File"
 msgstr "Bestand openen"
 
-#: ../python/kateshell/mainwindow.py:372
+#: ../python/kateshell/mainwindow.py:391
 msgid "Please select some text first."
 msgstr "Selecteer eerst de tekst waarop u de functie wilt toepassen."
 
-#: ../python/kateshell/mainwindow.py:702
+#: ../python/kateshell/mainwindow.py:726
 msgid "Move To"
 msgstr "Verplaatsen naar"
 
-#: ../python/kateshell/mainwindow.py:709
+#: ../python/kateshell/mainwindow.py:733
 msgid "Undock"
 msgstr "Losmaken"
 
-#: ../python/kateshell/mainwindow.py:739
+#: ../python/kateshell/mainwindow.py:770
 msgid "Could not load %1"
 msgstr "Kan %1 niet laden"
 
@@ -630,39 +638,39 @@ msgstr "LilyPond starten (vooruitblik)"
 msgid "Terminal"
 msgstr "Terminal"
 
-#: ../python/frescobaldi_app/mainapp.py:391
+#: ../python/frescobaldi_app/mainapp.py:390
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "Terminal met huidig document s&ynchroniseren"
 
-#: ../python/frescobaldi_app/mainapp.py:408
+#: ../python/frescobaldi_app/mainapp.py:406
 msgid "PDF Preview"
 msgstr "PDF vooruitblik"
 
-#: ../python/frescobaldi_app/mainapp.py:436
+#: ../python/frescobaldi_app/mainapp.py:433
 msgid "Show PDF Navigation Panel"
 msgstr "PDF-navigatiepaneel tonen"
 
-#: ../python/frescobaldi_app/mainapp.py:442
+#: ../python/frescobaldi_app/mainapp.py:439
 msgid "Show PDF minipager"
 msgstr "PDF-minipager tonen"
 
-#: ../python/frescobaldi_app/mainapp.py:448
+#: ../python/frescobaldi_app/mainapp.py:445
 msgid "S&ynchronize Preview with Current Document"
 msgstr "Vooruitblik met huidig document s&ynchroniseren"
 
-#: ../python/frescobaldi_app/mainapp.py:491
+#: ../python/frescobaldi_app/mainapp.py:487
 msgid "Quick Insert"
 msgstr "Quick Insert"
 
-#: ../python/frescobaldi_app/mainapp.py:503
+#: ../python/frescobaldi_app/mainapp.py:499
 msgid "LilyPond Log"
 msgstr "LilyPond-uitvoer"
 
-#: ../python/frescobaldi_app/mainapp.py:507
+#: ../python/frescobaldi_app/mainapp.py:503
 msgid "no log"
 msgstr "geen log"
 
-#: ../python/frescobaldi_app/mainapp.py:536
+#: ../python/frescobaldi_app/mainapp.py:532
 msgid "Rumor"
 msgstr "Rumor"
 

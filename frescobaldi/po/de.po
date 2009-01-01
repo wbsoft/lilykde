@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.0\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-01 07:29+0100\n"
+"POT-Creation-Date: 2009-01-01 13:36+0100\n"
 "PO-Revision-Date: 2008-11-19 22:36+0100\n"
 "Last-Translator: Henrik Evers <henrik.evers@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "#-#-#-#-#  de.po (frescobaldi 0.7.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../frescobaldi.py:32 dummy.py:10
+#: ../frescobaldi.py:32 dummy.py:11
 msgid "Frescobaldi"
 msgstr ""
 
-#: ../frescobaldi.py:34 dummy.py:11
+#: ../frescobaldi.py:34 dummy.py:12
 #, fuzzy
 msgid "LilyPond Music Editor"
 msgstr "LilyPont files, die konvertiert werden"
@@ -75,6 +75,10 @@ msgstr "&Text"
 #: dummy.py:7
 msgid "&Rhythm"
 msgstr "&Rhythmus"
+
+#: dummy.py:8
+msgid "&Tool Views"
+msgstr ""
 
 #: ../python/ly/__init__.py:62
 msgid "Dedication"
@@ -362,57 +366,61 @@ msgstr ""
 msgid "Bottom Sidebar"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:158
+#: ../python/kateshell/mainwindow.py:163
 msgid "Show Path"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:250
+#: ../python/kateshell/mainwindow.py:255
 msgid "modified"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:259
+#: ../python/kateshell/mainwindow.py:264
 msgid "Line: %1 Col: %2"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:267
+#: ../python/kateshell/mainwindow.py:272
 msgid "BLOCK"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:267
+#: ../python/kateshell/mainwindow.py:272
 msgid "Block selection mode"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:269
+#: ../python/kateshell/mainwindow.py:274
 msgid "LINE"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:269
+#: ../python/kateshell/mainwindow.py:274
 #, fuzzy
 msgid "Line selection mode"
 msgstr "Sprach-Auswahl"
 
-#: ../python/kateshell/mainwindow.py:292
+#: ../python/kateshell/mainwindow.py:300
+msgid "Dock"
+msgstr ""
+
+#: ../python/kateshell/mainwindow.py:311
 msgid "All Files"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:293
+#: ../python/kateshell/mainwindow.py:312
 #, fuzzy
 msgid "Open File"
 msgstr "Öffne PDF"
 
-#: ../python/kateshell/mainwindow.py:372
+#: ../python/kateshell/mainwindow.py:391
 msgid "Please select some text first."
 msgstr "Bitte wählen Sie zuerst Text aus."
 
-#: ../python/kateshell/mainwindow.py:702
+#: ../python/kateshell/mainwindow.py:726
 msgid "Move To"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:709
+#: ../python/kateshell/mainwindow.py:733
 msgid "Undock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:739
+#: ../python/kateshell/mainwindow.py:770
 #, fuzzy
 msgid "Could not load %1"
 msgstr "Konnte LilyPond nicht starten: %s"
@@ -642,40 +650,40 @@ msgstr "LilyPond läuft (Vorschau)"
 msgid "Terminal"
 msgstr "Triller"
 
-#: ../python/frescobaldi_app/mainapp.py:391
+#: ../python/frescobaldi_app/mainapp.py:390
 msgid "S&ynchronize Terminal with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:408
+#: ../python/frescobaldi_app/mainapp.py:406
 #, fuzzy
 msgid "PDF Preview"
 msgstr "Verschicke PDF (Vorschau) per Email"
 
-#: ../python/frescobaldi_app/mainapp.py:436
+#: ../python/frescobaldi_app/mainapp.py:433
 msgid "Show PDF Navigation Panel"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:442
+#: ../python/frescobaldi_app/mainapp.py:439
 msgid "Show PDF minipager"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:448
+#: ../python/frescobaldi_app/mainapp.py:445
 msgid "S&ynchronize Preview with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:491
+#: ../python/frescobaldi_app/mainapp.py:487
 msgid "Quick Insert"
 msgstr "Schnell einfügen"
 
-#: ../python/frescobaldi_app/mainapp.py:503
+#: ../python/frescobaldi_app/mainapp.py:499
 msgid "LilyPond Log"
 msgstr "LilyPond-Log"
 
-#: ../python/frescobaldi_app/mainapp.py:507
+#: ../python/frescobaldi_app/mainapp.py:503
 msgid "no log"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:536
+#: ../python/frescobaldi_app/mainapp.py:532
 msgid "Rumor"
 msgstr "Rumor"
 

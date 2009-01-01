@@ -685,7 +685,7 @@ class Tool(object):
         self.widget.show()
 
     def dock(self):
-        """ Dock and close the dialog window """
+        """ Dock and hide the dialog window """
         if self._docked:
             return
         self._dialog.hide()

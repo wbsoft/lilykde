@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-01 07:29+0100\n"
+"POT-Creation-Date: 2009-01-01 13:36+0100\n"
 "PO-Revision-Date: 2008-10-26 15:22+0200\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../frescobaldi.py:32 dummy.py:10
+#: ../frescobaldi.py:32 dummy.py:11
 msgid "Frescobaldi"
 msgstr ""
 
-#: ../frescobaldi.py:34 dummy.py:11
+#: ../frescobaldi.py:34 dummy.py:12
 #, fuzzy
 msgid "LilyPond Music Editor"
 msgstr "Çevrilecek LilyPond dosyaları"
@@ -77,6 +77,10 @@ msgstr "Şarkı Sözleri"
 #: dummy.py:7
 msgid "&Rhythm"
 msgstr "&Ritm"
+
+#: dummy.py:8
+msgid "&Tool Views"
+msgstr ""
 
 #: ../python/ly/__init__.py:62
 msgid "Dedication"
@@ -361,57 +365,61 @@ msgstr ""
 msgid "Bottom Sidebar"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:158
+#: ../python/kateshell/mainwindow.py:163
 msgid "Show Path"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:250
+#: ../python/kateshell/mainwindow.py:255
 msgid "modified"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:259
+#: ../python/kateshell/mainwindow.py:264
 msgid "Line: %1 Col: %2"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:267
+#: ../python/kateshell/mainwindow.py:272
 msgid "BLOCK"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:267
+#: ../python/kateshell/mainwindow.py:272
 msgid "Block selection mode"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:269
+#: ../python/kateshell/mainwindow.py:274
 msgid "LINE"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:269
+#: ../python/kateshell/mainwindow.py:274
 #, fuzzy
 msgid "Line selection mode"
 msgstr "Dil Seçimi"
 
-#: ../python/kateshell/mainwindow.py:292
+#: ../python/kateshell/mainwindow.py:300
+msgid "Dock"
+msgstr ""
+
+#: ../python/kateshell/mainwindow.py:311
 msgid "All Files"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:293
+#: ../python/kateshell/mainwindow.py:312
 #, fuzzy
 msgid "Open File"
 msgstr "PDF aç"
 
-#: ../python/kateshell/mainwindow.py:372
+#: ../python/kateshell/mainwindow.py:391
 msgid "Please select some text first."
 msgstr "Lütfen önce bir metin seçiniz."
 
-#: ../python/kateshell/mainwindow.py:702
+#: ../python/kateshell/mainwindow.py:726
 msgid "Move To"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:709
+#: ../python/kateshell/mainwindow.py:733
 msgid "Undock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:739
+#: ../python/kateshell/mainwindow.py:770
 #, fuzzy
 msgid "Could not load %1"
 msgstr "LilyPond başlatılamadı: %s"
@@ -642,41 +650,41 @@ msgstr "LilyPond'u çalıştır (önizleme)"
 msgid "Terminal"
 msgstr "Trill"
 
-#: ../python/frescobaldi_app/mainapp.py:391
+#: ../python/frescobaldi_app/mainapp.py:390
 msgid "S&ynchronize Terminal with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:408
+#: ../python/frescobaldi_app/mainapp.py:406
 #, fuzzy
 msgid "PDF Preview"
 msgstr "PDF'yi e-posta ile gönder (önizleme)"
 
-#: ../python/frescobaldi_app/mainapp.py:436
+#: ../python/frescobaldi_app/mainapp.py:433
 #, fuzzy
 msgid "Show PDF Navigation Panel"
 msgstr "PDF izleme panosunu bağla"
 
-#: ../python/frescobaldi_app/mainapp.py:442
+#: ../python/frescobaldi_app/mainapp.py:439
 msgid "Show PDF minipager"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:448
+#: ../python/frescobaldi_app/mainapp.py:445
 msgid "S&ynchronize Preview with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:491
+#: ../python/frescobaldi_app/mainapp.py:487
 msgid "Quick Insert"
 msgstr "Hızılı Ekle"
 
-#: ../python/frescobaldi_app/mainapp.py:503
+#: ../python/frescobaldi_app/mainapp.py:499
 msgid "LilyPond Log"
 msgstr "LilyPond Günlüğü"
 
-#: ../python/frescobaldi_app/mainapp.py:507
+#: ../python/frescobaldi_app/mainapp.py:503
 msgid "no log"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:536
+#: ../python/frescobaldi_app/mainapp.py:532
 msgid "Rumor"
 msgstr "Rumor"
 
