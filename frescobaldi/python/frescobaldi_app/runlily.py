@@ -58,10 +58,6 @@ class Ly2PDF(object):
             cmd.append("-ddelete-intermediate-files")
         cmd += ["-o", self.basename, self.lyfile_arg]
         
-        # encode arguments correctly
-        enc = sys.getfilesystemencoding() or 'utf-8'
-        cmd = [unicode(a).encode(enc) for a in cmd]
-        
         self.p.setProgram(cmd)
         QObject.connect(self.p, SIGNAL("finished(int, QProcess::ExitStatus)"),
                         self.finished)
@@ -70,7 +66,7 @@ class Ly2PDF(object):
         
         self.log.clear()
         mode = unicode(preview and i18n("preview mode") or i18n("publish mode"))
-        self.log.writeMsg(i18n("LilyPond [%1] starting (%2)...\n", self.lyfile_arg, mode))
+        self.log.writeLine(i18n("LilyPond [%1] starting (%2)...", self.lyfile_arg, mode))
         self.startTime = time.time()
         self.p.start()
         
@@ -111,7 +107,7 @@ class Ly2PDF(object):
         self.p.terminate()
 
     def readOutput(self):
-        text = unicode(self.p.readAllStandardOutput())
+        text = str(self.p.readAllStandardOutput()).decode('utf-8')
         parts = _ly_message_re.split(text)
         # parts has an odd length(1, 6, 11 etc)
         # message, <url, path, line, col, message> etc.
@@ -165,6 +161,9 @@ class LogWidget(QTextBrowser):
             self.write('\n', format)
         self.write(text, format)
 
+    def writeLine(self, text, format='msg'):
+        self.writeMsg(text + '\n', format)
+        
     def writeUrl(self, text, href, tooltip=None, format='url'):
         f = self.formats[format]
         f.setAnchorHref(href)
