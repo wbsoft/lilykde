@@ -99,11 +99,11 @@ class MainApp(DBusItem):
             encoding = self.defaultEncoding
         # If there is only one document open and it is empty, nameless and
         # unmodified, close it.
-        close0 = (url and len(self.documents) == 1
+        close0 = (not url.isEmpty() and len(self.documents) == 1
             and not self.documents[0].isModified()
-            and not self.documents[0].url()
+            and self.documents[0].url().isEmpty()
             and self.documents[0].isEmpty())
-        d = (url and self.findDocument(url)
+        d = (not url.isEmpty() and self.findDocument(url)
             or self.createDocument(url, encoding))
         d.setActive()
         if close0:
