@@ -45,8 +45,7 @@ class Ly2PDF(object):
         if ly:
             lyfile = os.path.join(os.path.dirname(lyfile), ly)
         self.basename = os.path.splitext(lyfile)[0]
-        self.lyfile_arg = os.path.basename(lyfile)
-        self.directory = os.path.dirname(lyfile)
+        self.directory, self.lyfile_arg = os.path.split(lyfile)
 
         self.p = KProcess()
         self.p.setOutputChannelMode(KProcess.MergedChannels)
@@ -56,7 +55,7 @@ class Ly2PDF(object):
         if config("preferences").readEntry("delete intermediate files",
                                            QVariant(True)).toBool():
             cmd.append("-ddelete-intermediate-files")
-        cmd += ["-o", self.basename, self.lyfile_arg]
+        cmd.append(self.lyfile_arg)
         
         self.p.setProgram(cmd)
         QObject.connect(self.p, SIGNAL("finished(int, QProcess::ExitStatus)"),

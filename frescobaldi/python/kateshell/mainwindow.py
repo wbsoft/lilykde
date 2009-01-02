@@ -791,5 +791,6 @@ class KPartTool(Tool):
                 self._dialog.done(0)
         
     def openUrl(self, url):
+        """ Expects KUrl."""
         if self.part:
-            self.part.openUrl(KUrl(url))
+            self.part.openUrl(url)

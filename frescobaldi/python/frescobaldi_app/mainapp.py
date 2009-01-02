@@ -325,7 +325,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                 listeners[doc.close].remove(self.abortLilyPondJob)
                 pdfs = self.jobs[doc].updatedFiles("pdf")
                 if pdfs and "pdf" in self.tools:
-                    self.tools["pdf"].openUrl(pdfs[0])
+                    self.tools["pdf"].openUrl(KUrl(pdfs[0]))
                 del self.jobs[doc]
                 self.updateJobActions()
             listeners[doc.close].append(self.abortLilyPondJob)
@@ -367,7 +367,10 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
         w = super(KonsoleTool, self).partFactory()
         if self.part:
             d = self.mainwin.currentDocument()
-            url = d and d.url() or os.getcwd()
+            if d and not d.url().isEmpty():
+                url = d.url()
+            else:
+                url = KUrl.fromPath(os.getcwd())
             self.openUrl(url)
         return w
 
@@ -382,9 +385,9 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
 
     def sync(self, doc):
         if (self.part and self._sync
-            and doc and doc.doc and not doc.doc.url().isEmpty()):
+            and doc and doc.doc and not doc.url().isEmpty()):
             # FIXME This does not work currently.
-            self.openUrl(doc.doc.url().directory())
+            self.openUrl(doc.url().directory())
 
     def addMenuActions(self, m):
         m.addSeparator()
@@ -423,7 +426,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         if self._sync:
             pdfs = doc.updatedFiles("pdf")
             if pdfs:
-                self.openUrl(pdfs[0])
+                self.openUrl(KUrl(pdfs[0]))
     
     def toggleSync(self):
         self._sync = not self._sync
@@ -449,6 +452,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         QObject.connect(a, SIGNAL("triggered()"), self.toggleSync)
     
     def openUrl(self, url):
+        """ Expects KUrl."""
         self.show()
         if url != self._currentUrl:
             self._currentUrl = url
