@@ -116,7 +116,7 @@ class Ly2PDF(object):
             self.log.show() # warnings or errors will be printed
         while len(parts[:5]) == 5:
             url, path, line, col, msg = parts[:5]
-            path = os.path.join(self.directory, path)
+            path = os.path.join(self.directory, path).encode('utf-8')
             line = int(line or "1") or 1
             col = int(col or "0")
             href = "textedit://%s:%d:%d:%d" % (path, line, col, col)
