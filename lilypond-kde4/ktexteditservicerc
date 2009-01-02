@@ -21,3 +21,4 @@ gedit=gedit +{line} {file}
 nedit=nc -noask +{line} {file}
 emacs=emacsclient --no-wait +{line}:{col} {file}
 jedit=jedit -reuseview {file} +line:{line},{col1}
+scite=scite {file} -goto:{line},{col1}
