@@ -310,27 +310,26 @@ class MainWindow(KParts.MainWindow):
     def openDocument(self):
         """ Open an existing document. """
         res = KEncodingFileDialog.getOpenUrlsAndEncoding(
-            self.app.defaultEncoding, self.currentDocument().url(),
+            self.app.defaultEncoding, self.currentDocument().url().url(),
             '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
             self, i18n("Open File"))
         for url in res.URLs:
-            if url != '':
-                self.app.openUrl(url.url(), res.encoding)
+            if not url.isEmpty():
+                self.app.openUrl(url, res.encoding)
     
     def addToRecentFiles(self, url):
         """
         Add url to recently opened files.
         (Called by app.openUrl)
         """
-        if url:
-            url = KUrl(url)
-            if url and url not in self.openRecent.urls():
+        if not url.isEmpty():
+            if url not in self.openRecent.urls():
                 self.openRecent.addUrl(url)
     
     @pyqtSignature("KUrl")
-    def slotOpenRecent(self, kurl):
+    def slotOpenRecent(self, url):
         """ Called by the open recent files action """
-        self.app.openUrl(kurl.url())
+        self.app.openUrl(url)
 
     def queryClose(self):
         """ Quit the application, also called by closing the window """

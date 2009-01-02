@@ -53,19 +53,20 @@ class MainApp(kateshell.app.MainApp):
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
 
     def openUrl(self, url, encoding=None):
-        # The URL can be python string, dbus string or QString
-        url = unicode(url)
+        # The URL can be python string, dbus string or QString or KUrl
+        if not isinstance(url, KUrl):
+            url = KUrl(url)
         nav = False
-        if url.startswith("textedit:"):
-            m = re.match(r"textedit:/{,2}(/[^/].*):(\d+):(\d+):(\d+)$", url)
-            if m:
+        if url.protocol() == "textedit":
+            parts = unicode(url.path()).rsplit(":", 3)
+            if len(parts) > 2:
                 # We have a valid textedit:/ uri.
-                path, (line, char, col) = m.group(1), map(int, m.group(2,3,4))
-                url = "file://" + path
+                url = KUrl.fromPath(parts[0].encode('latin1').decode("utf-8"))
+                line, char = map(int, parts[1:3])
                 nav = True
             else:
                 # We can't open malformed textedit urls
-                url = ""
+                url = KUrl()
         d = kateshell.app.MainApp.openUrl(self, url, encoding)
         if nav:
             d.setCursorPosition(line, char)
@@ -83,7 +84,7 @@ class MainApp(kateshell.app.MainApp):
         """ use our own MainWindow """
         return MainWindow(self)
 
-    def createDocument(self, url="", encoding=None):
+    def createDocument(self, url=None, encoding=None):
         return Document(self, url, encoding)
 
 
@@ -184,11 +185,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                     i18n("There is already a LilyPond job running "
                             "for this document."),
                     i18n("Already Running"))
-            elif not d.url():
+            elif d.url().isEmpty():
                 return KMessageBox.sorry(self, i18n(
                     "Your document currently has no filename, "
                     "please save first."))
-            elif not d.url().startswith("file:/"):
+            elif not d.url().protocol() == "file":
                 return KMessageBox.sorry(self, i18n(
                     "Sorry, support for remote files is not yet implemented.\n"
                     "Please save your document to a local file."))

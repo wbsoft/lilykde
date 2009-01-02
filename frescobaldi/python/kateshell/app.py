@@ -93,6 +93,8 @@ class MainApp(DBusItem):
     
     @method(iface, in_signature='ss', out_signature='o')
     def openUrl(self, url, encoding=None):
+        if not isinstance(url, KUrl):
+            url = KUrl(url)
         if not encoding:
             encoding = self.defaultEncoding
         # If there is only one document open and it is empty, nameless and
@@ -135,6 +137,8 @@ class MainApp(DBusItem):
         """
         Returns true is the specified URL is opened by the current application
         """
+        if not isinstance(url, KUrl):
+            url = KUrl(url)
         return bool(self.findDocument(url))
         
     @method(iface, in_signature='', out_signature='o')
@@ -202,6 +206,9 @@ class Document(DBusItem):
         path = "/Document/%d" % Document.__instance_counter
         DBusItem.__init__(self, app.serviceName, path)
 
+        if not isinstance(url, KUrl):
+            url = KUrl(url)
+
         self.app = app
 
         self.doc = None         # this is going to hold the KTextEditor doc
@@ -228,8 +235,8 @@ class Document(DBusItem):
 
         self.app.mainwin.addDoc(self)
 
-        if self._url:
-            self.doc.openUrl(KUrl(self._url))
+        if not self._url.isEmpty():
+            self.doc.openUrl(self._url)
         elif self.app.defaultHighlightingMode:
             self.doc.setHighlightingMode(self.app.defaultHighlightingMode)
 
@@ -255,9 +262,11 @@ class Document(DBusItem):
             self.doc.save()
             
     def openUrl(self, url):
+        if not isinstance(url, KUrl):
+            url = KUrl(url)
         self._url = url
         if self.doc:
-            self.doc.openUrl(KUrl(url))
+            self.doc.openUrl(url)
     
     def updateCaption(self):
         """ Called when name or modifiedstate changes """
@@ -283,27 +292,18 @@ class Document(DBusItem):
     def url(self):
         """Returns the URL of this document"""
         if self.doc:
-            return unicode(self.doc.url().url())
+            return self.doc.url()
         else:
             return self._url
             
     @method(iface, in_signature='', out_signature='s')
     def prettyUrl(self):
         """Returns a printable, pretty URL for this document."""
-        if self.doc:
-            kurl = self.doc.url()
-        else:
-            kurl = KUrl(self._url)
-        return unicode(kurl.prettyUrl())
-
+        return unicode(self.url().prettyUrl())
+        
     @method(iface, in_signature='', out_signature='s')
     def localPath(self):
-        if self.doc:
-            return unicode(self.doc.url().toLocalFile())
-        elif self._url:
-            return unicode(KUrl(self._url).toLocalFile())
-        else:
-            return ""
+        return unicode(self.url().toLocalFile())
 
     @method(iface, in_signature='', out_signature='s')
     def documentName(self):
@@ -381,6 +381,5 @@ class Document(DBusItem):
         self.remove_from_connection() # remove our exported D-Bus object
         self.app.removeDocument(self)
         return True
-
 
 
