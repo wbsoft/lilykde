@@ -21,6 +21,7 @@
 import dbus
 from PyQt4.QtCore import QString
 from PyKDE4.kdecore import KUrl
+from PyKDE4.kdeui import KStartupInfo
 
 # interface for our object types (MainApp and Document)
 DBUS_IFACE_PREFIX = 'org.frescobaldi.kateshell.'
@@ -37,6 +38,7 @@ def runningApp(servicePrefix):
     for name in bus.list_names():
         if name.startswith(servicePrefix):
             print "Found running instance:", name # DEBUG
+            KStartupInfo.appStarted()
             return Proxy(bus.get_object(name, '/MainApp'))
     return False
 
