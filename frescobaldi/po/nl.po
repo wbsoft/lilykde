@@ -2,13 +2,13 @@
 # Header entry was created by KBabel!
 #
 # Wilbert Berendsen <wbsoft@xs4all.nl>, 2008.
-# Wilbert Berendsen <info@wilbertberendsen.nl>, 2008.
+# Wilbert Berendsen <info@wilbertberendsen.nl>, 2008, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-02 20:38+0100\n"
-"PO-Revision-Date: 2008-12-31 20:24+0100\n"
+"POT-Creation-Date: 2009-01-03 21:50+0100\n"
+"PO-Revision-Date: 2009-01-03 21:53+0100\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@lists.kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,11 +18,11 @@ msgstr ""
 "X-Generator: Lokalize 0.2\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: ../frescobaldi.py:32 dummy.py:11
+#: ../frescobaldi.py:32 dummy.py:12
 msgid "Frescobaldi"
 msgstr "Frescobaldi"
 
-#: ../frescobaldi.py:34 dummy.py:12
+#: ../frescobaldi.py:34 dummy.py:13
 msgid "LilyPond Music Editor"
 msgstr "Muziek-editor voor LilyPond"
 
@@ -79,6 +79,10 @@ msgstr "&Ritme"
 #: dummy.py:8
 msgid "&Tool Views"
 msgstr "&Gereedschapsweergaven"
+
+#: dummy.py:9
+msgid "&Generated Files"
+msgstr "&Aangemaakte bestanden"
 
 #: ../python/ly/__init__.py:62
 msgid "Dedication"
@@ -420,6 +424,57 @@ msgstr "Losmaken"
 msgid "Could not load %1"
 msgstr "Kan %1 niet laden"
 
+#: ../python/frescobaldi_app/actions.py:51
+msgid "Open %1 in external viewer"
+msgstr "%1 openen in externe viewer"
+
+#: ../python/frescobaldi_app/actions.py:54
+msgid "Print %1"
+msgstr "%1 afdrukken"
+
+#: ../python/frescobaldi_app/actions.py:62
+msgid "Play %1"
+msgstr "%1 afspelen"
+
+#: ../python/frescobaldi_app/actions.py:91
+msgid "Open PDF"
+msgstr "PDF weergeven"
+
+#: ../python/frescobaldi_app/actions.py:92
+msgid "Print"
+msgstr "Afdrukken"
+
+#: ../python/frescobaldi_app/actions.py:94
+msgid "Play MIDI"
+msgstr "MIDI afspelen"
+
+#: ../python/frescobaldi_app/actions.py:96
+#: ../python/frescobaldi_app/mainapp.py:320
+msgid "Email..."
+msgstr "Verzenden..."
+
+#: ../python/frescobaldi_app/actions.py:119
+msgid "Printing failed: %1"
+msgstr "Het afdrukken is mislukt: %1"
+
+#: ../python/frescobaldi_app/actions.py:122
+msgid "The document has been sent to the printer."
+msgstr "Het document is naar de printer gestuurd."
+
+#: ../python/frescobaldi_app/actions.py:125
+msgid ""
+"Printing failed: %1\n"
+"\n"
+"The print command %2 does probably not exist. Please check your settings."
+msgstr ""
+"Het afdrukken is mislukt: %1\n"
+"\n"
+"Het printcommando %2 bestaat waarschijnlijk niet. Controleer uw instellingen."
+
+#: ../python/frescobaldi_app/actions.py:130
+msgid "The print command contains errors. Please check your settings."
+msgstr "Het printcommando bevat fouten. Controleer uw instellingen."
+
 #: ../python/frescobaldi_app/hyphen.py:122
 msgid "Language selection"
 msgstr "Taalkeuze"
@@ -476,40 +531,40 @@ msgstr ""
 "Als u eerst muziek selecteert, wordt het articulatie-teken aan alle noten in "
 "de selectie toegevoegd."
 
-#: ../python/frescobaldi_app/mainapp.py:48
+#: ../python/frescobaldi_app/mainapp.py:43
 msgid "LilyPond files"
 msgstr "LilyPond-bestanden"
 
-#: ../python/frescobaldi_app/mainapp.py:156
+#: ../python/frescobaldi_app/mainapp.py:163
 #: ../python/frescobaldi_app/scorewiz.py:325
 msgid "LilyPond"
 msgstr "LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:166
+#: ../python/frescobaldi_app/mainapp.py:173
 msgid "Setup New Score..."
 msgstr "Nieuwe partituur maken..."
 
-#: ../python/frescobaldi_app/mainapp.py:174
+#: ../python/frescobaldi_app/mainapp.py:181
 msgid "Run LilyPond (preview)"
 msgstr "LilyPond starten (vooruitblik)"
 
-#: ../python/frescobaldi_app/mainapp.py:178
+#: ../python/frescobaldi_app/mainapp.py:185
 msgid "Run LilyPond (publish)"
 msgstr "LilyPond starten (publiceren)"
 
-#: ../python/frescobaldi_app/mainapp.py:185
+#: ../python/frescobaldi_app/mainapp.py:192
 msgid "There is already a LilyPond job running for this document."
 msgstr "Er is reeds een LilyPond-proces actief voor dit document."
 
-#: ../python/frescobaldi_app/mainapp.py:187
+#: ../python/frescobaldi_app/mainapp.py:194
 msgid "Already Running"
 msgstr "Reeds actief"
 
-#: ../python/frescobaldi_app/mainapp.py:190
+#: ../python/frescobaldi_app/mainapp.py:197
 msgid "Your document currently has no filename, please save first."
 msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
 
-#: ../python/frescobaldi_app/mainapp.py:194
+#: ../python/frescobaldi_app/mainapp.py:201
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -517,75 +572,75 @@ msgstr ""
 "Helaas, netwerkbestanden worden nog niet ondersteund.\n"
 "Gelieve uw document naar een locaal bestand op te slaan."
 
-#: ../python/frescobaldi_app/mainapp.py:201
+#: ../python/frescobaldi_app/mainapp.py:208
 msgid "Your document has been modified, please save first."
 msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
 
-#: ../python/frescobaldi_app/mainapp.py:205
+#: ../python/frescobaldi_app/mainapp.py:212
 msgid "Interrupt LilyPond Job"
 msgstr "LilyPond-taak afbreken"
 
-#: ../python/frescobaldi_app/mainapp.py:212
+#: ../python/frescobaldi_app/mainapp.py:219
 msgid "Double durations"
 msgstr "Tijdsduur verdubbelen"
 
-#: ../python/frescobaldi_app/mainapp.py:213
+#: ../python/frescobaldi_app/mainapp.py:220
 msgid "Double all the durations in the selection."
 msgstr "Alle nootlengtes in de selectie verdubbelen."
 
-#: ../python/frescobaldi_app/mainapp.py:218
+#: ../python/frescobaldi_app/mainapp.py:225
 msgid "Halve durations"
 msgstr "Tijdsduur halveren"
 
-#: ../python/frescobaldi_app/mainapp.py:219
+#: ../python/frescobaldi_app/mainapp.py:226
 msgid "Halve all the durations in the selection."
 msgstr "Alle nootlengtes in de selectie halveren."
 
-#: ../python/frescobaldi_app/mainapp.py:224
+#: ../python/frescobaldi_app/mainapp.py:231
 msgid "Dot durations"
 msgstr "Punt toevoegen"
 
-#: ../python/frescobaldi_app/mainapp.py:225
+#: ../python/frescobaldi_app/mainapp.py:232
 msgid "Add a dot to all the durations in the selection."
 msgstr "Een punt toevoegen aan alle noten in de selectie."
 
-#: ../python/frescobaldi_app/mainapp.py:230
+#: ../python/frescobaldi_app/mainapp.py:237
 msgid "Undot durations"
 msgstr "Punt verwijderen"
 
-#: ../python/frescobaldi_app/mainapp.py:231
+#: ../python/frescobaldi_app/mainapp.py:238
 msgid "Remove one dot from all the durations in the selection."
 msgstr "Een punt verwijderen van alle noten in de selectie."
 
-#: ../python/frescobaldi_app/mainapp.py:236
+#: ../python/frescobaldi_app/mainapp.py:243
 msgid "Remove scaling"
 msgstr "Schaling verwijderen"
 
-#: ../python/frescobaldi_app/mainapp.py:237
+#: ../python/frescobaldi_app/mainapp.py:244
 msgid "Remove all scaling (*n/m) from the durations in the selection."
 msgstr "Alle schaling (*n/m) verwijderen van de nootlengtes in de selectie."
 
-#: ../python/frescobaldi_app/mainapp.py:242
+#: ../python/frescobaldi_app/mainapp.py:249
 msgid "Remove durations"
 msgstr "Tijdsduur verwijderen"
 
-#: ../python/frescobaldi_app/mainapp.py:243
+#: ../python/frescobaldi_app/mainapp.py:250
 msgid "Remove all durations from the selection."
 msgstr "De volledige tijdsduur-informatie verwijderen uit de selectie."
 
-#: ../python/frescobaldi_app/mainapp.py:248
+#: ../python/frescobaldi_app/mainapp.py:255
 msgid "Make implicit"
 msgstr "Impliciet maken"
 
-#: ../python/frescobaldi_app/mainapp.py:249
+#: ../python/frescobaldi_app/mainapp.py:256
 msgid "Make durations implicit (remove repeated durations)."
 msgstr "Tijdsduren impliciet maken (herhaalde lengtes verwijderen)."
 
-#: ../python/frescobaldi_app/mainapp.py:254
+#: ../python/frescobaldi_app/mainapp.py:261
 msgid "Make explicit"
 msgstr "Expliciet maken"
 
-#: ../python/frescobaldi_app/mainapp.py:255
+#: ../python/frescobaldi_app/mainapp.py:262
 msgid ""
 "Make durations explicit (add duration to every note, even if it is the same "
 "as the preceding note)."
@@ -593,88 +648,92 @@ msgstr ""
 "De toonduur na elke noot weergeven, ook als deze hetzelfde is als de vorige "
 "noot."
 
-#: ../python/frescobaldi_app/mainapp.py:263
+#: ../python/frescobaldi_app/mainapp.py:270
 msgid "Apply rhythm..."
 msgstr "Ritme toepassen..."
 
-#: ../python/frescobaldi_app/mainapp.py:264
+#: ../python/frescobaldi_app/mainapp.py:271
 msgid "Apply an entered rhythm to the selected music."
 msgstr "Een ingevoerd ritme op de geselecteerde muziek toepassen."
 
-#: ../python/frescobaldi_app/mainapp.py:267
+#: ../python/frescobaldi_app/mainapp.py:274
 msgid "Apply Rhythm"
 msgstr "Ritme toepassen"
 
-#: ../python/frescobaldi_app/mainapp.py:272
+#: ../python/frescobaldi_app/mainapp.py:279
 msgid "Enter a rhythm:"
 msgstr "Voer een ritme in:"
 
-#: ../python/frescobaldi_app/mainapp.py:277
+#: ../python/frescobaldi_app/mainapp.py:284
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr ""
 "Voer een ritme in met nootlengtes en spaties ertussen (bijv. 8. 16 8 4 8)"
 
-#: ../python/frescobaldi_app/mainapp.py:289
+#: ../python/frescobaldi_app/mainapp.py:296
 msgid "Hyphenate Lyrics Text"
 msgstr "Liedteksten afbreken"
 
-#: ../python/frescobaldi_app/mainapp.py:294
+#: ../python/frescobaldi_app/mainapp.py:301
 msgid "Remove hyphenation"
 msgstr "Liedtekst-afbreking verwijderen"
 
-#: ../python/frescobaldi_app/mainapp.py:299
+#: ../python/frescobaldi_app/mainapp.py:306
 msgid "Insert LilyPond version"
 msgstr "LilyPond-versie invoegen"
 
-#: ../python/frescobaldi_app/mainapp.py:304
+#: ../python/frescobaldi_app/mainapp.py:311
 msgid "Update with convert-ly"
 msgstr "Bijwerken met convert-ly"
 
-#: ../python/frescobaldi_app/mainapp.py:347
+#: ../python/frescobaldi_app/mainapp.py:316
+msgid "Open Current Folder"
+msgstr "Huidige map openen"
+
+#: ../python/frescobaldi_app/mainapp.py:364
 msgid "Abort the running LilyPond process"
 msgstr "Het actieve LilyPond-proces afbreken"
 
-#: ../python/frescobaldi_app/mainapp.py:350
+#: ../python/frescobaldi_app/mainapp.py:367
 msgid "Run LilyPond in preview mode"
 msgstr "LilyPond starten (vooruitblik)"
 
-#: ../python/frescobaldi_app/mainapp.py:361
+#: ../python/frescobaldi_app/mainapp.py:389
 msgid "Terminal"
 msgstr "Terminal"
 
-#: ../python/frescobaldi_app/mainapp.py:394
+#: ../python/frescobaldi_app/mainapp.py:422
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "Terminal met huidig document s&ynchroniseren"
 
-#: ../python/frescobaldi_app/mainapp.py:410
+#: ../python/frescobaldi_app/mainapp.py:438
 msgid "PDF Preview"
 msgstr "PDF vooruitblik"
 
-#: ../python/frescobaldi_app/mainapp.py:437
+#: ../python/frescobaldi_app/mainapp.py:465
 msgid "Show PDF Navigation Panel"
 msgstr "PDF-navigatiepaneel tonen"
 
-#: ../python/frescobaldi_app/mainapp.py:443
+#: ../python/frescobaldi_app/mainapp.py:471
 msgid "Show PDF minipager"
 msgstr "PDF-minipager tonen"
 
-#: ../python/frescobaldi_app/mainapp.py:449
+#: ../python/frescobaldi_app/mainapp.py:477
 msgid "S&ynchronize Preview with Current Document"
 msgstr "Vooruitblik met huidig document s&ynchroniseren"
 
-#: ../python/frescobaldi_app/mainapp.py:492
+#: ../python/frescobaldi_app/mainapp.py:520
 msgid "Quick Insert"
 msgstr "Quick Insert"
 
-#: ../python/frescobaldi_app/mainapp.py:504
+#: ../python/frescobaldi_app/mainapp.py:532
 msgid "LilyPond Log"
 msgstr "LilyPond-uitvoer"
 
-#: ../python/frescobaldi_app/mainapp.py:508
+#: ../python/frescobaldi_app/mainapp.py:536
 msgid "no log"
 msgstr "geen log"
 
-#: ../python/frescobaldi_app/mainapp.py:537
+#: ../python/frescobaldi_app/mainapp.py:565
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -1655,47 +1714,47 @@ msgstr ""
 msgid "Auto"
 msgstr "Auto"
 
-#: ../python/frescobaldi_app/runlily.py:67
+#: ../python/frescobaldi_app/runlily.py:70
 msgid "preview mode"
 msgstr "vooruitblik"
 
-#: ../python/frescobaldi_app/runlily.py:67
+#: ../python/frescobaldi_app/runlily.py:70
 msgid "publish mode"
 msgstr "publiceren"
 
-#: ../python/frescobaldi_app/runlily.py:68
+#: ../python/frescobaldi_app/runlily.py:71
 msgid "LilyPond [%1] starting (%2)..."
 msgstr "LilyPond [%1] wordt gestart (%2)..."
 
-#: ../python/frescobaldi_app/runlily.py:74
+#: ../python/frescobaldi_app/runlily.py:77
 msgid "LilyPond [%1] exited with return code %2."
 msgstr "LilyPond [%1] stopte met foutcode %2."
 
-#: ../python/frescobaldi_app/runlily.py:77
+#: ../python/frescobaldi_app/runlily.py:80
 msgid "LilyPond [%1] exited with exit status %2."
 msgstr "LilyPond [%1] stopte met status %2."
 
-#: ../python/frescobaldi_app/runlily.py:80
+#: ../python/frescobaldi_app/runlily.py:83
 msgid "LilyPond [%1] finished."
 msgstr "LilyPond [%1] voltooid."
 
-#: ../python/frescobaldi_app/runlily.py:90
+#: ../python/frescobaldi_app/runlily.py:93
 msgid "Could not start LilyPond. Please check path and permissions."
 msgstr "Kon LilyPond niet starten. Controleer uw installatie."
 
-#: ../python/frescobaldi_app/runlily.py:92
+#: ../python/frescobaldi_app/runlily.py:95
 msgid "LilyPond crashed."
 msgstr "LilyPond is gecrashed."
 
-#: ../python/frescobaldi_app/runlily.py:94
+#: ../python/frescobaldi_app/runlily.py:97
 msgid "Could not read from the LilyPond process."
 msgstr "Kan de uitvoer van het LilyPond-proces niet lezen."
 
-#: ../python/frescobaldi_app/runlily.py:96
+#: ../python/frescobaldi_app/runlily.py:99
 msgid "An unknown error occured."
 msgstr "Er is een onbekende fout opgetreden."
 
-#: ../python/frescobaldi_app/runlily.py:122
+#: ../python/frescobaldi_app/runlily.py:125
 msgid "Click to edit this file"
 msgstr "Klik om dit bestand te bewerken"
 
@@ -2239,21 +2298,12 @@ msgstr "Het tempo in tellen per minuut."
 #~ msgid "Return code: %i"
 #~ msgstr "Foutcode: %i"
 
-#~ msgid "Open folder"
-#~ msgstr "Map openen"
-
 #~ msgid "Open the folder containing the LilyPond and PDF documents."
 #~ msgstr "Map met de LilyPond- en PDF-documenten openen."
-
-#~ msgid "Open PDF"
-#~ msgstr "PDF weergeven"
 
 #~ msgid "Open the generated PDF file with the default PDF viewer."
 #~ msgstr ""
 #~ "Het aangemaakte PDF-bestand met het standaard weergaveprogramma bekijken."
-
-#~ msgid "Print"
-#~ msgstr "Afdrukken"
 
 #~ msgid ""
 #~ "Print the PDF using the print command set in the Commands settings page."
@@ -2265,9 +2315,6 @@ msgstr "Het tempo in tellen per minuut."
 
 #~ msgid "Attach the PDF to an email message."
 #~ msgstr "Het PDF-bestand bij een e-mailbericht voegen."
-
-#~ msgid "Play MIDI"
-#~ msgstr "MIDI afspelen"
 
 #~ msgid ""
 #~ "Play the generated MIDI files using the default MIDI player (Timidity++ "
@@ -2283,12 +2330,6 @@ msgstr "Het tempo in tellen per minuut."
 #~ msgstr ""
 #~ "De LilyPond bronbestanden in de gepubliceerde PDF inbedden (gebruikmakend "
 #~ "van pdftk)."
-
-#~ msgid "Printing failed: %s"
-#~ msgstr "Het afdrukken is mislukt: %s"
-
-#~ msgid "The document has been sent to the printer."
-#~ msgstr "Het document is naar de printer gestuurd."
 
 #~ msgid ""
 #~ "This PDF has been created with point-and-click urls (preview mode), which "
@@ -2362,3 +2403,4 @@ msgstr "Het tempo in tellen per minuut."
 
 #~ msgid "Your language"
 #~ msgstr "Uw eigen taal"
+
