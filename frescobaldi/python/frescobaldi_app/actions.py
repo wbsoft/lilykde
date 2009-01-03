@@ -95,7 +95,7 @@ class ActionManager(object):
         if updatedFiles():
             a = bar.addAction(KIcon("mail-send"), i18n("Email..."))
             QObject.connect(a, SIGNAL("triggered()"), lambda:
-                self.email(updatedFiles))
+                self.email(updatedFiles, log.preview))
         
         if len(bar.actions()) > 0:
             log.checkScroll(bar.show)
@@ -144,9 +144,11 @@ class ActionManager(object):
         url.adjustPath(KUrl.RemoveTrailingSlash)
         sip.transferto(KRun(url, self.mainwin), None) # C++ will delete it
 
-    def email(self, updatedFiles):
+    def email(self, updatedFiles, warnpreview=False):
         """
         Collects updated files and provides a nice dialog to send them.
+        If warnpreview, the user is warned because he/she would send a PDF
+        with point-and-click links in it. The PDFs are MUCH larger in that case.
         """
         pass # TODO: implement
         

@@ -40,6 +40,8 @@ class Ly2PDF(object):
         listeners.add(self.finished)
 
         self.log = log
+        # save this so the log knows if we built a PDF with point and click:
+        self.log.preview = preview      
 
         lyfile = doc.localPath()
         lvars = doc.variables()
@@ -138,6 +140,7 @@ class LogWidget(QFrame):
         QFrame.__init__(self, tool.widget)
         self.tool = tool
         self.doc = doc
+        self.preview = False # this is used by Ly2PDF and the ActionManager
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
