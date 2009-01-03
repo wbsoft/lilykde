@@ -78,7 +78,7 @@ class ActionManager(object):
                     QObject.connect(a, SIGNAL("triggered()"),
                         lambda item=items[0]: func(item))
                 else:
-                    menu = QMenu()
+                    menu = QMenu(bar.widgetForAction(a))
                     a.setMenu(menu)
                     bar.widgetForAction(a).setPopupMode(QToolButton.InstantPopup)
                     sip.transferto(menu, None) # let C++ take ownership

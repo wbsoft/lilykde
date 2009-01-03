@@ -19,7 +19,7 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
-import glob, os, re, sys, time
+import os, re, time
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
