@@ -24,6 +24,7 @@ import glob, os, re, sys, time
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
+from PyKDE4.kdeui import *
 
 from kateshell.mainwindow import listeners
 
@@ -98,6 +99,7 @@ class Ly2PDF(object):
         QTimer.singleShot(0, self.bye)
         
     def bye(self):
+        self.log.updateActions(self)
         listeners.call(self.finished)
         listeners.remove(self.finished)
 
@@ -131,32 +133,53 @@ class Ly2PDF(object):
         files = glob.glob(self.basename + "." + ext)
         files += glob.glob(self.basename + "?*." + ext)
         return [f for f in files if os.path.getmtime(f) >= self.startTime]
-        
 
-class LogWidget(QTextBrowser):
+
+class LogWidget(QWidget):
     def __init__(self, tool, doc):
-        QTextEdit.__init__(self, tool.widget)
+        QWidget.__init__(self, tool.widget)
         self.tool = tool
         self.doc = doc
-        self.setFocusPolicy(Qt.NoFocus)
-        self.setOpenLinks(False)
-        self.setOpenExternalLinks(False)
-        QObject.connect(self, SIGNAL("anchorClicked(QUrl)"), self.anchorClicked)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+        self.textBrowser = QTextBrowser(self)
+        self.textBrowser.setFocusPolicy(Qt.NoFocus)
+        self.textBrowser.setOpenLinks(False)
+        self.textBrowser.setOpenExternalLinks(False)
+        QObject.connect(self.textBrowser, SIGNAL("anchorClicked(QUrl)"),
+            self.anchorClicked)
         self.formats = textFormats()
-       
-    def write(self, text, format='log'):
-        self.setCurrentCharFormat(self.formats[format])
-        sb = self.verticalScrollBar()
+        layout.addWidget(self.textBrowser)
+        self.actionBar = ActionBar(self)
+        layout.addWidget(self.actionBar)
+        self.actionBar.hide()
+    
+    def clear(self):
+        self.textBrowser.clear()
+        self.actionBar.clear()
+        self.actionBar.hide()
+    
+    def checkScroll(self, func):
+        """
+        Checks if we were scrolled to the bottom, calls func and then
+        again makes sure to scroll to the bottom, if we were.
+        """
+        sb = self.textBrowser.verticalScrollBar()
         # were we scrolled to the bottom?
         bottom = sb.value() == sb.maximum()
-        self.insertPlainText(text)
+        func()
         # if yes, keep it that way.
         if bottom:
             sb.setValue(sb.maximum())
+        
+    def write(self, text, format='log'):
+        self.textBrowser.setCurrentCharFormat(self.formats[format])
+        self.checkScroll(lambda: self.textBrowser.insertPlainText(text))
 
     def writeMsg(self, text, format='msg'):
         # start on a new line if necessary
-        if self.textCursor().columnNumber() > 0:
+        if self.textBrowser.textCursor().columnNumber() > 0:
             self.write('\n', format)
         self.write(text, format)
 
@@ -178,6 +201,42 @@ class LogWidget(QTextBrowser):
     def anchorClicked(self, url):
         url = unicode(url.toString())
         self.doc.app.openUrl(url)
+
+    def updateActions(self, job):
+        """
+        Updates the list of actions that are possible after this LilyPond
+        run. If any files are updated, a button or menu is created and
+        the action bar is shown.
+        The job object should have a method updatedFiles(ext) to get the
+        files that were updated by that job.
+        """
+        if self.actionBar.updateActions(job):
+            self.checkScroll(self.actionBar.show)
+        
+
+class ActionBar(QToolBar):
+    def __init__(self, parent):
+        QToolBar.__init__(self, parent)
+        self.setFloatable(False)
+        self.setMovable(False)
+        self.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        self.setIconSize(QSize(16, 16))
+        
+    def updateActions(self, job):
+        """
+        Updates the list of actions that are possible after this LilyPond
+        run. If any files are updated, a suitable button or menu is created.
+        The job object should have a method updatedFiles(ext) to get the
+        files that were updated by that job.
+        Returns True if there are any actions.
+        """
+        self.clear()
+        pdfs = job.updatedFiles("pdf")
+        if pdfs:
+            a = self.addAction(KIcon("application-pdf"), i18n("Open PDF"))
+        
+        return bool(len(self.actions()))
+        
 
 
 def textFormats():
