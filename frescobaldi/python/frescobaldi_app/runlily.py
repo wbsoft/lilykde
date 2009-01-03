@@ -135,9 +135,9 @@ class Ly2PDF(object):
         return [f for f in files if os.path.getmtime(f) >= self.startTime]
 
 
-class LogWidget(QWidget):
+class LogWidget(QFrame):
     def __init__(self, tool, doc):
-        QWidget.__init__(self, tool.widget)
+        QFrame.__init__(self, tool.widget)
         self.tool = tool
         self.doc = doc
         layout = QVBoxLayout(self)
@@ -154,6 +154,9 @@ class LogWidget(QWidget):
         self.actionBar = ActionBar(self)
         layout.addWidget(self.actionBar)
         self.actionBar.hide()
+        # frame style:
+        self.setFrameStyle(self.textBrowser.frameStyle())
+        self.textBrowser.setFrameStyle(QFrame.NoFrame)
     
     def clear(self):
         self.textBrowser.clear()
@@ -221,6 +224,7 @@ class ActionBar(QToolBar):
         self.setMovable(False)
         self.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
         self.setIconSize(QSize(16, 16))
+        self.layout().setContentsMargins(0, 0, 0, 0)
         
     def updateActions(self, job):
         """

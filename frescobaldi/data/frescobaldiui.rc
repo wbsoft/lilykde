@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="frescobaldi" version="2">
+<kpartgui name="frescobaldi" version="3">
 
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -8,6 +8,7 @@
 
     <Action name="file_open"/>
     <Action name="file_open_recent"/>
+    <Action name="file_open_current_folder"/>
     <Separator/>
 
     <DefineGroup name="save_merge" append="save_merge" />
@@ -54,6 +55,9 @@
     <Action name="lilypond_run_preview"/>
     <Action name="lilypond_run_publish"/>
     <Action name="lilypond_abort"/>
+    <Menu name="lilypond_actions"><text>&amp;Generated Files</text>
+      <Action name="actions_email"/>
+    </Menu>
     <Separator />
     <Menu name="lilypond_edit_rhythm"><text>&amp;Rhythm</text>
       <Action name="durations_double"/>

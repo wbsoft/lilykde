@@ -299,7 +299,7 @@ class Document(DBusItem):
     @method(iface, in_signature='', out_signature='s')
     def prettyUrl(self):
         """Returns a printable, pretty URL for this document."""
-        return unicode(self.url().prettyUrl())
+        return unicode(self.url().pathOrUrl())
         
     @method(iface, in_signature='', out_signature='s')
     def localPath(self):

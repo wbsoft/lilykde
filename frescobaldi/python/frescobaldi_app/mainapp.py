@@ -39,6 +39,14 @@ _variables_re = re.compile(r'^%%([a-z]+(?:-[a-z]+)*):[ \t]*(.+?)[ \t]*$', re.M)
 def config(group="preferences"):
     return KGlobal.config().group(group)
     
+# quick connect helper functino
+def onSignal(obj, signalName):
+    """ decorator to easily add connect a Qt signal to a Python slot."""
+    def decorator(func):
+        QObject.connect(obj, SIGNAL(signalName), func)
+        return func
+    return decorator
+
 
 class MainApp(kateshell.app.MainApp):
     """ A Frescobaldi application instance """
@@ -130,7 +138,7 @@ class Document(kateshell.app.Document):
                 files += glob.glob(basename + "?*." + ext)
                 return [f for f in files
                     if os.path.getmtime(f) >= os.path.getmtime(lyfile)]
-        return ()
+        return []
 
 
 class MainWindow(kateshell.mainwindow.MainWindow):
@@ -147,6 +155,12 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         self.jobs = {}
         listeners[app.activeChanged].append(self.updateJobActions)
         
+        # Generated files actions:
+        self.generatedFilesMenu = self.factory().container(
+            "lilypond_actions", self)
+        QObject.connect(self.generatedFilesMenu, SIGNAL("aboutToShow()"),
+            self.populateGeneratedFilesMenu)
+            
         self._scorewiz = None
 
     def setupActions(self):
@@ -306,6 +320,20 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             import frescobaldi_app.version
             frescobaldi_app.version.convertLy(self)
 
+        @self.onAction(i18n("Open Current Folder"), "document-open-folder")
+        def file_open_current_folder():
+            if self.currentDocument().url().isEmpty():
+                url = KUrl.fromPath(os.getcwd())
+            else:
+                url = KUrl(self.currentDocument().url().resolved(KUrl('.')))
+                url.adjustPath(KUrl.RemoveTrailingSlash)
+            from PyKDE4.kio import KRun
+            sip.transferto(KRun(url, self), None) # C++ will delete it
+    
+        @self.onAction(i18n("Email..."), "mail-send")
+        def actions_email():
+            pass # TODO: implement
+            
         # Settings
         @self.onAction(KStandardAction.Preferences)
         def settings_configure():
@@ -350,7 +378,63 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             tip = i18n("Run LilyPond in preview mode")
         act("lilypond_runner").setIcon(KIcon(icon))
         act("lilypond_runner").setToolTip(tip)
-            
+
+    def populateGeneratedFilesMenu(self):
+        m = self.generatedFilesMenu
+        for action in m.actions():
+            if action.objectName() != "actions_email":
+                sip.delete(action)
+        d = self.currentDocument()
+        if not d:
+            return
+        m.addSeparator()
+        # PDFs
+        pdfs = d.updatedFiles("pdf")
+        for pdf in pdfs:
+            name = '"%s"' % os.path.basename(pdf)
+            a = m.addAction(KIcon("application-pdf"),
+                i18n("Open %1 in external viewer", name))
+            @onSignal(a, "triggered()")
+            def open_pdf(pdf=pdf):
+                from PyKDE4.kio import KRun
+                sip.transferto(KRun(KUrl.fromPath(pdf), self), None)
+            a = m.addAction(KIcon("document-print"), i18n("Print %1", name))
+            @onSignal(a, "triggered()")
+            def print_pdf(pdf=pdf):
+                cmd, err = KShell.splitArgs(
+                    config("commands").readEntry("lpr", "lpr"))
+                if err == KShell.NoError:
+                    cmd = [unicode(arg) for arg in cmd]
+                    cmd.append(pdf)
+                    from subprocess import Popen, PIPE
+                    try:
+                        p = Popen(cmd, stderr=PIPE)
+                        if p.wait() != 0:
+                            KMessageBox.error(self,
+                                i18n("Printing failed: %1", p.stderr.read()))
+                        else:
+                            KMessageBox.information(self,
+                                i18n("The document has been sent to the printer."))
+                    except OSError, e:
+                        KMessageBox.error(self, i18n(
+                            "Printing failed: %1\n\nThe print command %2 does "
+                            "probably not exist. Please check your settings.",
+                            unicode(e), cmd[0]))
+                else:
+                    KMessageBox.error(self,
+                        i18n("The print command contains errors. "
+                             "Please check your settings."))
+            m.addSeparator()
+        # MIDIs
+        midis = d.updatedFiles("mid*")
+        for midi in midis:
+            name = '"%s"' % os.path.basename(midi)
+            a = m.addAction(KIcon("media-playback-start"), i18n("Play %1", name))
+            @onSignal(a, "triggered()")
+            def open_pdf(midi=midi):
+                from PyKDE4.kio import KRun
+                sip.transferto(KRun(KUrl.fromPath(midi), self), None)
+        
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):
     """ A tool embedding a Konsole """
