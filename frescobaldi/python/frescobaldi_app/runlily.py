@@ -27,6 +27,7 @@ from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 
 from kateshell.mainwindow import listeners
+import frescobaldi_app.mainapp
 
 def config(group):
     return KGlobal.config().group(group)
@@ -45,6 +46,7 @@ class Ly2PDF(object):
         ly = lvars.get(preview and 'master-preview' or 'master-publish') or lvars.get('master')
         if ly:
             lyfile = os.path.join(os.path.dirname(lyfile), ly)
+        self.lyfile = lyfile
         self.basename = os.path.splitext(lyfile)[0]
         self.directory, self.lyfile_arg = os.path.split(lyfile)
 
@@ -99,7 +101,6 @@ class Ly2PDF(object):
         QTimer.singleShot(0, self.bye)
         
     def bye(self):
-        self.log.updateActions(self)
         listeners.call(self.finished)
         listeners.remove(self.finished)
 
@@ -125,14 +126,11 @@ class Ly2PDF(object):
             self.log.write(msg)
             del parts[:5]
     
-    def updatedFiles(self, ext="*"):
+    def updatedFiles(self):
         """
-        Returns a list of files updated by this process, with given
-        extension.
+        Returns a function that can list updated files based on extension.
         """
-        files = glob.glob(self.basename + "." + ext)
-        files += glob.glob(self.basename + "?*." + ext)
-        return [f for f in files if os.path.getmtime(f) >= self.startTime]
+        return frescobaldi_app.mainapp.updatedFiles(self.lyfile, self.startTime)
 
 
 class LogWidget(QFrame):
@@ -151,7 +149,12 @@ class LogWidget(QFrame):
             self.anchorClicked)
         self.formats = textFormats()
         layout.addWidget(self.textBrowser)
-        self.actionBar = ActionBar(self)
+        self.actionBar = QToolBar(self)
+        self.actionBar.setFloatable(False)
+        self.actionBar.setMovable(False)
+        self.actionBar.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        self.actionBar.setIconSize(QSize(16, 16))
+        self.actionBar.layout().setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self.actionBar)
         self.actionBar.hide()
         # frame style:
@@ -205,43 +208,6 @@ class LogWidget(QFrame):
         url = unicode(url.toString())
         self.doc.app.openUrl(url)
 
-    def updateActions(self, job):
-        """
-        Updates the list of actions that are possible after this LilyPond
-        run. If any files are updated, a button or menu is created and
-        the action bar is shown.
-        The job object should have a method updatedFiles(ext) to get the
-        files that were updated by that job.
-        """
-        if self.actionBar.updateActions(job):
-            self.checkScroll(self.actionBar.show)
-        
-
-class ActionBar(QToolBar):
-    def __init__(self, parent):
-        QToolBar.__init__(self, parent)
-        self.setFloatable(False)
-        self.setMovable(False)
-        self.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        self.setIconSize(QSize(16, 16))
-        self.layout().setContentsMargins(0, 0, 0, 0)
-        
-    def updateActions(self, job):
-        """
-        Updates the list of actions that are possible after this LilyPond
-        run. If any files are updated, a suitable button or menu is created.
-        The job object should have a method updatedFiles(ext) to get the
-        files that were updated by that job.
-        Returns True if there are any actions.
-        """
-        self.clear()
-        pdfs = job.updatedFiles("pdf")
-        if pdfs:
-            a = self.addAction(KIcon("application-pdf"), i18n("Open PDF"))
-        
-        return bool(len(self.actions()))
-        
-
 
 def textFormats():
     """ Return a dict with text formats """
@@ -264,3 +230,4 @@ def textFormats():
     msgerr.setForeground(QBrush(QColor("red")))
     
     return locals()
+

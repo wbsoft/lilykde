@@ -35,19 +35,6 @@ from kateshell.mainwindow import listeners
 _variables_re = re.compile(r'^%%([a-z]+(?:-[a-z]+)*):[ \t]*(.+?)[ \t]*$', re.M)
 
 
-# Easily get our global config
-def config(group="preferences"):
-    return KGlobal.config().group(group)
-    
-# quick connect helper functino
-def onSignal(obj, signalName):
-    """ decorator to easily add connect a Qt signal to a Python slot."""
-    def decorator(func):
-        QObject.connect(obj, SIGNAL(signalName), func)
-        return func
-    return decorator
-
-
 class MainApp(kateshell.app.MainApp):
     """ A Frescobaldi application instance """
     
@@ -125,21 +112,15 @@ class Document(kateshell.app.Document):
             return {}
         return dict(_variables_re.findall(self.text()))
     
-    def updatedFiles(self, ext):
+    def updatedFiles(self):
         """
-        return true if this document has one or more LilyPond-generated
-        outputs with the given extension that are up-to-date.
+        Returns a function that can list updated files based on extension.
         """
-        if self.doc:
-            lyfile = self.localPath()
-            if lyfile and os.path.exists(lyfile):
-                basename = os.path.splitext(lyfile)[0]
-                files = glob.glob(basename + "." + ext)
-                files += glob.glob(basename + "?*." + ext)
-                return [f for f in files
-                    if os.path.getmtime(f) >= os.path.getmtime(lyfile)]
-        return []
-
+        if not self.url().isEmpty():
+            return updatedFiles(self.localPath())
+        else:
+            return lambda ext=None: []
+            
 
 class MainWindow(kateshell.mainwindow.MainWindow):
     """ Our customized Frescobaldi MainWindow """
@@ -161,8 +142,20 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         QObject.connect(self.generatedFilesMenu, SIGNAL("aboutToShow()"),
             self.populateGeneratedFilesMenu)
             
-        self._scorewiz = None
+        self._scoreWizard = None
+        self._actionManager = None
 
+    def actionManager(self):
+        """
+        Returns the ActionManager, managing actions that can be performed
+        on files creating by LilyPond.
+        """
+        # lazy instantiation
+        if not self._actionManager:
+            import frescobaldi_app.actions
+            self._actionManager = frescobaldi_app.actions.ActionManager(self)
+        return self._actionManager
+        
     def setupActions(self):
         super(MainWindow, self).setupActions()
         
@@ -179,10 +172,10 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         # Score wizard
         @self.onAction(i18n("Setup New Score..."), "text-x-lilypond")
         def lilypond_score_wizard():
-            if not self._scorewiz:
+            if not self._scoreWizard:
                 from frescobaldi_app.scorewiz import ScoreWizard
-                self._scorewiz = ScoreWizard(self)
-            self._scorewiz.show()
+                self._scoreWizard = ScoreWizard(self)
+            self._scoreWizard.show()
         
         # run LilyPond actions
         @self.onAction(i18n("Run LilyPond (preview)"), "document-preview")
@@ -322,17 +315,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
 
         @self.onAction(i18n("Open Current Folder"), "document-open-folder")
         def file_open_current_folder():
-            if self.currentDocument().url().isEmpty():
-                url = KUrl.fromPath(os.getcwd())
-            else:
-                url = KUrl(self.currentDocument().url().resolved(KUrl('.')))
-                url.adjustPath(KUrl.RemoveTrailingSlash)
-            from PyKDE4.kio import KRun
-            sip.transferto(KRun(url, self), None) # C++ will delete it
+            self.actionManager().openDirectory()
     
         @self.onAction(i18n("Email..."), "mail-send")
         def actions_email():
-            pass # TODO: implement
+            self.actionManager().email(self.currentDocument().updatedFiles())
             
         # Settings
         @self.onAction(KStandardAction.Preferences)
@@ -351,9 +338,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             self.updateJobActions()
             def finished():
                 listeners[doc.close].remove(self.abortLilyPondJob)
-                pdfs = self.jobs[doc].updatedFiles("pdf")
+                result = self.jobs[doc].updatedFiles()
+                pdfs = result("pdf")
                 if pdfs and "pdf" in self.tools:
                     self.tools["pdf"].openUrl(KUrl(pdfs[0]))
+                self.actionManager().addActionsToLog(result, log)
                 del self.jobs[doc]
                 self.updateJobActions()
             listeners[doc.close].append(self.abortLilyPondJob)
@@ -380,60 +369,15 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         act("lilypond_runner").setToolTip(tip)
 
     def populateGeneratedFilesMenu(self):
-        m = self.generatedFilesMenu
-        for action in m.actions():
+        menu = self.generatedFilesMenu
+        for action in menu.actions():
             if action.objectName() != "actions_email":
                 sip.delete(action)
-        d = self.currentDocument()
-        if not d:
+        doc = self.currentDocument()
+        if not doc:
             return
-        m.addSeparator()
-        # PDFs
-        pdfs = d.updatedFiles("pdf")
-        for pdf in pdfs:
-            name = '"%s"' % os.path.basename(pdf)
-            a = m.addAction(KIcon("application-pdf"),
-                i18n("Open %1 in external viewer", name))
-            @onSignal(a, "triggered()")
-            def open_pdf(pdf=pdf):
-                from PyKDE4.kio import KRun
-                sip.transferto(KRun(KUrl.fromPath(pdf), self), None)
-            a = m.addAction(KIcon("document-print"), i18n("Print %1", name))
-            @onSignal(a, "triggered()")
-            def print_pdf(pdf=pdf):
-                cmd, err = KShell.splitArgs(
-                    config("commands").readEntry("lpr", "lpr"))
-                if err == KShell.NoError:
-                    cmd = [unicode(arg) for arg in cmd]
-                    cmd.append(pdf)
-                    from subprocess import Popen, PIPE
-                    try:
-                        p = Popen(cmd, stderr=PIPE)
-                        if p.wait() != 0:
-                            KMessageBox.error(self,
-                                i18n("Printing failed: %1", p.stderr.read()))
-                        else:
-                            KMessageBox.information(self,
-                                i18n("The document has been sent to the printer."))
-                    except OSError, e:
-                        KMessageBox.error(self, i18n(
-                            "Printing failed: %1\n\nThe print command %2 does "
-                            "probably not exist. Please check your settings.",
-                            unicode(e), cmd[0]))
-                else:
-                    KMessageBox.error(self,
-                        i18n("The print command contains errors. "
-                             "Please check your settings."))
-            m.addSeparator()
-        # MIDIs
-        midis = d.updatedFiles("mid*")
-        for midi in midis:
-            name = '"%s"' % os.path.basename(midi)
-            a = m.addAction(KIcon("media-playback-start"), i18n("Play %1", name))
-            @onSignal(a, "triggered()")
-            def open_pdf(midi=midi):
-                from PyKDE4.kio import KRun
-                sip.transferto(KRun(KUrl.fromPath(midi), self), None)
+        menu.addSeparator()
+        self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
         
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):
@@ -507,8 +451,8 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         QObject.connect(self._timer, SIGNAL("timeout()"), timeoutFunc)
     
     def sync(self, doc):
-        if self._sync:
-            pdfs = doc.updatedFiles("pdf")
+        if self._sync and not doc.url().isEmpty():
+            pdfs = doc.updatedFiles()("pdf")
             if pdfs:
                 self.openUrl(KUrl(pdfs[0]))
     
@@ -627,3 +571,28 @@ class RumorTool(kateshell.mainwindow.Tool):
         return frescobaldi_app.rumor.RumorPanel(self)
 
 
+
+# Easily get our global config
+def config(group="preferences"):
+    return KGlobal.config().group(group)
+    
+
+# determine updated files by a LilyPond process.
+def updatedFiles(lyfile, reftime=None):
+    """
+    Return a generator that can list updated files belonging to
+    LilyPond document lyfile.
+    Calling the generator with some extension
+    returns files newer than lyfile, with that extension.
+    """
+    if reftime is None:
+        reftime = os.path.getmtime(lyfile)
+    basename = os.path.splitext(lyfile)[0]
+    def generatorfunc(ext = "*"):
+        files = (
+            glob.glob(basename + "." + ext) +
+            glob.glob(basename + "-[0-9]*." + ext) +
+            glob.glob(basename + "-?*-[0-9]*." + ext))
+        return [f for f in files if os.path.getmtime(f) >= reftime]
+    return generatorfunc
+    
