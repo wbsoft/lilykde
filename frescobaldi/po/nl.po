@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
 "POT-Creation-Date: 2009-01-04 20:36+0100\n"
-"PO-Revision-Date: 2009-01-03 21:53+0100\n"
+"PO-Revision-Date: 2009-01-04 23:11+0100\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@lists.kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -477,29 +477,30 @@ msgstr "Het printcommando bevat fouten. Controleer uw instellingen."
 
 #: ../python/frescobaldi_app/actions.py:159
 msgid "There are no files to send via email."
-msgstr ""
+msgstr "Er zijn geen bestanden om te verzenden."
 
 #: ../python/frescobaldi_app/actions.py:160
 msgid "No files to send"
-msgstr ""
+msgstr "Geen bestanden te verzenden"
 
 #: ../python/frescobaldi_app/actions.py:167
 msgid "Email documents"
-msgstr ""
+msgstr "Documenten verzenden"
 
 #: ../python/frescobaldi_app/actions.py:171
-#, fuzzy
 msgid "Please select the files you want to send:"
-msgstr "Selecteer een taal:"
+msgstr "Selecteer de bestanden die u wilt verzenden:"
 
 #: ../python/frescobaldi_app/actions.py:176
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document).  Also LilyPond files included by the source document are shown."
 msgstr ""
+"Dit zijn de bestanden die up-to-date zijn (later gewijzigd dan het LilyPond "
+"brondocument). Ook LilyPond-bestanden die door het brondocument "
+"ge\"include\"t worden zijn hier weergegeven."
 
 #: ../python/frescobaldi_app/actions.py:186
-#, fuzzy
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -511,15 +512,19 @@ msgid_plural ""
 "to rebuild the files in publish mode, because then the PDF files are much "
 "smaller."
 msgstr[0] ""
-"Dit PDF-bestand is aangemaakt met \"point-and-click\" URLs (vooruitblik), "
-"waardoor het bestand veel groter dan noodzakelijk is. Het is beter om "
-"documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
-"kleiner zijn. Toch doorgaan?"
+"Let op: Dit PDF-bestand is aangemaakt met ingebedde \"point-and-click\" URLs "
+"(vooruitblik), "
+"waardoor het bestand veel groter is dan noodzakelijk. Het is beter om het "
+"document "
+"opnieuw aan te maken via de optie 'publiceren', zodat het PDF-bestand veel "
+"kleiner is."
 msgstr[1] ""
-"Dit PDF-bestand is aangemaakt met \"point-and-click\" URLs (vooruitblik), "
-"waardoor het bestand veel groter dan noodzakelijk is. Het is beter om "
-"documenten te mailen zonder de \"point-and-click\" URLs, omdat deze veel "
-"kleiner zijn. Toch doorgaan?"
+"Let op: Deze PDF-bestanden zijn aangemaakt met \"point-and-click\" URLs "
+"(vooruitblik), "
+"waardoor de bestanden veel groter zijn dan noodzakelijk. Het is beter om de "
+"documenten "
+"opnieuw aan te maken via de optie 'publiceren', zodat de PDF-bestanden veel "
+"kleiner zijn."
 
 #: ../python/frescobaldi_app/hyphen.py:122
 msgid "Language selection"
@@ -2438,3 +2443,4 @@ msgstr "Het tempo in tellen per minuut."
 
 #~ msgid "Your language"
 #~ msgstr "Uw eigen taal"
+
