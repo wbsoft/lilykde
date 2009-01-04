@@ -100,3 +100,8 @@ chord_rest = re.compile(
 finddurs = re.compile(duration)
 
 lyric_word = re.compile(r'[^\W0-9_]+', re.U)
+
+include_file = re.compile(r'\\include\s*"([^"]+)"')
+
+# does not take percent signs inside quoted strings into account
+all_comments = re.compile(r'%.*?\n|%\{.*?%\}')

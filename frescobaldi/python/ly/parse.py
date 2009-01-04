@@ -22,6 +22,7 @@ General functions that parse LilyPond document text.
 """
 
 import os, re
+import ly.rx
 
 def findIncludeFiles(lyfile, basedir=None, files=None):
     """
@@ -35,7 +36,10 @@ def findIncludeFiles(lyfile, basedir=None, files=None):
     if os.access(lyfile, os.R_OK):
         files.add(lyfile)
         directory = os.path.dirname(lyfile)
-        for f in re.findall(r'\\include\s*"([^"]+)"', file(lyfile).read()):
+        # read the file and delete the comments.
+        text = file(lyfile).read()
+        text = ly.rx.all_comments.sub('', text)
+        for f in ly.rx.include_file.findall(text):
             # old include (relative to master file)
             findIncludeFiles(os.path.join(basedir, f), basedir, files)
             # new, recursive, relative include

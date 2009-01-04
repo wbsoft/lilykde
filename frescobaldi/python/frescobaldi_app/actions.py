@@ -167,11 +167,38 @@ class EmailDialog(KDialog):
         self.setCaption(i18n("Email documents"))
         self.showButtonSeparator(True)
         b = KVBox(self)
+        b.setSpacing(4)
         QLabel(i18n("Please select the files you want to send:"), b)
         fileList = QListWidget(b)
-        fileList.setSelectionMode(QAbstractItemView.MultiSelection)
+        fileList.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        fileList.setIconSize(QSize(22, 22))
+        fileList.setWhatsThis(i18n(
+            "These are the files that are up-to-date (i.e. newer than "
+            "the LilyPond source document).  Also LilyPond files included "
+            "by the source document are shown."))
+        
+        lyFiles = ly.parse.findIncludeFiles(updatedFiles.lyfile)
+        pdfFiles = updatedFiles("pdf")
+        midiFiles = updatedFiles("mid*")
+        
+        if warnpreview and pdfFiles:
+            l = QLabel(i18np(
+                "Note: this PDF file has been created with "
+                "embedded point-and-click URLs (preview mode), which "
+                "increases the file size dramatically. "
+                "Please consider to rebuild the file in publish mode, "
+                "because then the PDF file is much smaller.",
+                "Note: these PDF files have been created with "
+                "embedded point-and-click URLs (preview mode), which "
+                "increases the file size dramatically. "
+                "Please consider to rebuild the files in publish mode, "
+                "because then the PDF files are much smaller.",
+                len(pdfFiles)), b)
+            l.setWordWrap(True)
+        
         self.fileList = fileList
         self.setMainWidget(b)
+        self.resize(450, 300)
         
         basedir = os.path.dirname(updatedFiles.lyfile)
         exts = config("general").readEntry("email_extensions", [".pdf"])
@@ -191,11 +218,11 @@ class EmailDialog(KDialog):
                 return KUrl.fromPath(self.fileName).url()
                 
         # insert the files
-        for lyfile in ly.parse.findIncludeFiles(updatedFiles.lyfile):
+        for lyfile in lyFiles:
             Item("text-x-lilypond", lyfile)
-        for pdf in updatedFiles("pdf"):
+        for pdf in pdfFiles:
             Item("application-pdf", pdf)
-        for midi in updatedFiles("mid*"):
+        for midi in midiFiles:
             Item("audio-midi", midi)
         
     def done(self, result):
