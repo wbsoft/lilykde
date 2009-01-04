@@ -24,25 +24,24 @@ General functions that parse LilyPond document text.
 import os, re
 import ly.rx
 
-def findIncludeFiles(lyfile, basedir=None, files=None):
+def findIncludeFiles(lyfile):
     """
-    A generator that finds files included by the document in lyfile.
-    You should leave basedir and files to None, as it will be used
-    to remember the base directory in recursive calls.
+    Finds files included by the document in lyfile.
     """
-    if files is None:
-        files = set()
-        basedir = os.path.dirname(lyfile)
-    if os.access(lyfile, os.R_OK):
-        files.add(lyfile)
-        directory = os.path.dirname(lyfile)
-        # read the file and delete the comments.
-        text = file(lyfile).read()
-        text = ly.rx.all_comments.sub('', text)
-        for f in ly.rx.include_file.findall(text):
-            # old include (relative to master file)
-            findIncludeFiles(os.path.join(basedir, f), basedir, files)
-            # new, recursive, relative include
-            if directory != basedir:
-                findIncludeFiles(os.path.join(directory, f), basedir, files)
+    files = set()
+    basedir = os.path.dirname(lyfile)
+    
+    def find(lyfile):
+        if os.access(lyfile, os.R_OK):
+            files.add(lyfile)
+            directory = os.path.dirname(lyfile)
+            # read the file and delete the comments.
+            text = ly.rx.all_comments.sub('', file(lyfile).read())
+            for f in ly.rx.include_file.findall(text):
+                # old include (relative to master file)
+                find(os.path.join(basedir, f))
+                # new, recursive, relative include
+                if directory != basedir:
+                    find(os.path.join(directory, f))
+    find(lyfile)
     return files
