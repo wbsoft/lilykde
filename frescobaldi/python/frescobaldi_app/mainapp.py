@@ -116,10 +116,7 @@ class Document(kateshell.app.Document):
         """
         Returns a function that can list updated files based on extension.
         """
-        if not self.url().isEmpty():
-            return updatedFiles(self.localPath())
-        else:
-            return lambda ext=None: []
+        return updatedFiles(self.localPath())
             
 
 class MainWindow(kateshell.mainwindow.MainWindow):
@@ -585,14 +582,19 @@ def updatedFiles(lyfile, reftime=None):
     Calling the generator with some extension
     returns files newer than lyfile, with that extension.
     """
-    if reftime is None:
-        reftime = os.path.getmtime(lyfile)
-    basename = os.path.splitext(lyfile)[0]
-    def generatorfunc(ext = "*"):
-        files = (
-            glob.glob(basename + "." + ext) +
-            glob.glob(basename + "-[0-9]*." + ext) +
-            glob.glob(basename + "-?*-[0-9]*." + ext))
-        return [f for f in files if os.path.getmtime(f) >= reftime]
+    if lyfile and os.path.exists(lyfile):
+        if reftime is None:
+            reftime = os.path.getmtime(lyfile)
+        basename = os.path.splitext(lyfile)[0]
+        def generatorfunc(ext = "*"):
+            files = (
+                glob.glob(basename + "." + ext) +
+                glob.glob(basename + "-[0-9]*." + ext) +
+                glob.glob(basename + "-?*-[0-9]*." + ext))
+            return [f for f in files if os.path.getmtime(f) >= reftime]
+    else:
+        def generatorfunc(ext=None):
+            return []
+    generatorfunc.lyfile = lyfile
     return generatorfunc
     

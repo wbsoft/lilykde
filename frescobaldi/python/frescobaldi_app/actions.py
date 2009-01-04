@@ -150,7 +150,27 @@ class ActionManager(object):
         If warnpreview, the user is warned because he/she would send a PDF
         with point-and-click links in it. The PDFs are MUCH larger in that case.
         """
-        pass # TODO: implement
+        if os.path.exists(updatedFiles.lyfile):
+            EmailDialog(self.mainwin, updatedFiles, warnpreview).exec_()
+        else:
+            KMessageBox.sorry(self.mainwin,
+                i18n("There are no files to send via email."),
+                i18n("No files to send"))
+                
         
+class EmailDialog(KDialog):
+    def __init__(self, parent, updatedFiles, warnpreview):
+        KDialog.__init__(self, parent)
+        self.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel))
+        self.setCaption(i18n("Email documents"))
+        
+    def done(self, result):
+        if result:
+            self.sendEmail()
+        KDialog.done(self, result)
+        
+    def sendEmail(self):
+        """ Now do it. """
+        pass # TODO: implement
         
         
