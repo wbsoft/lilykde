@@ -170,12 +170,25 @@ class EmailDialog(KDialog):
         QLabel(i18n("Please select the files you want to send:"), b)
         fileList = QListWidget(b)
         fileList.setSelectionMode(QAbstractItemView.MultiSelection)
+        self.fileList = fileList
         self.setMainWidget(b)
+        
+        basedir = os.path.dirname(updatedFiles.lyfile)
+        exts = config("general").readEntry("email_extensions", [".pdf"])
         
         class Item(QListWidgetItem):
             def __init__(self, icon, fileName):
-                QListWidgetItem.__init__(self, KIcon(icon), fileName, fileList)
-                
+                directory, name = os.path.split(fileName)
+                if directory != basedir:
+                    name += " (%s)" % directory
+                QListWidgetItem.__init__(self, KIcon(icon), name, fileList)
+                self.fileName = fileName
+                self.ext = os.path.splitext(fileName)[1]
+                if self.ext in exts:
+                    self.setSelected(True)
+
+            def url(self):
+                return KUrl.fromPath(self.fileName).url()
                 
         # insert the files
         for lyfile in ly.parse.findIncludeFiles(updatedFiles.lyfile):
@@ -184,15 +197,20 @@ class EmailDialog(KDialog):
             Item("application-pdf", pdf)
         for midi in updatedFiles("mid*"):
             Item("audio-midi", midi)
-            
         
     def done(self, result):
         if result:
+            # Save selected extensions to preselect next time.
+            exts = set(item.ext for item in self.fileList.selectedItems())
+            config("general").writeEntry("email_extensions", list(exts))
             self.sendEmail()
         KDialog.done(self, result)
         
     def sendEmail(self):
         """ Now do it. """
-        pass # TODO: implement
+        urls = [item.url() for item in self.fileList.selectedItems()]
+        to, cc, bcc, subject, body, msgfile = '', '', '', '', '', ''
+        KToolInvocation.invokeMailer(to, cc, bcc, subject, body, msgfile, urls)
+        
         
         
