@@ -163,6 +163,7 @@ class EmailDialog(KDialog):
         KDialog.__init__(self, parent)
         self.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel))
         self.setCaption(i18n("Email documents"))
+        self.showButtonSeparator(True)
         
     def done(self, result):
         if result:
