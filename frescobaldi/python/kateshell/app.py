@@ -116,17 +116,11 @@ class MainApp(DBusItem):
         d.setActive()
         return d
 
-    @method(iface, in_signature='', out_signature='', sender_keyword="sender")
     def run(self, sender=None):
         """
-        Is called by a remote app after new documents are opened.
-        Currently need not to do anything.
-        
-        If we are the caller ourselves, enter the KDE event loop.
+        Last minute setup and enter the KDE event loop.
+        At the very last, instantiates one empty doc if nothing loaded yet.
         """
-        if sender is not None:
-            return
-        # At the very last, instantiate one empty doc if nothing loaded yet.
         if len(self.documents) == 0:
             self.createDocument().setActive()
         self.kapp.exec_()

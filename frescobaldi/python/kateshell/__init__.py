@@ -21,12 +21,11 @@
 import dbus
 from PyQt4.QtCore import QString
 from PyKDE4.kdecore import KUrl
-from PyKDE4.kdeui import KStartupInfo
 
 # interface for our object types (MainApp and Document)
 DBUS_IFACE_PREFIX = 'org.frescobaldi.kateshell.'
 
-def runningApp(servicePrefix):
+def runningApp(servicePrefix, pid=None):
     """
     Returns a proxy object for an instance of our app running on the DBus
     session bus, if it is there, or False if none.
@@ -35,13 +34,16 @@ def runningApp(servicePrefix):
     like a local one.
     """
     bus = dbus.SessionBus(private=True)
-    for name in bus.list_names():
-        if name.startswith(servicePrefix):
-            print "Found running instance:", name # DEBUG
-            KStartupInfo.appStarted()
-            return Proxy(bus.get_object(name, '/MainApp'))
+    names = [n for n in bus.list_names() if n.startswith(servicePrefix)]
+    if names:
+        if pid and "%s%s" % (servicePrefix, pid) in names:
+            name = "%s%s" % (servicePrefix, pid)
+        else:
+            name = names[0]
+        print "Found running instance:", name
+        return Proxy(bus.get_object(name, '/MainApp'))
     return False
-
+    
 def newApp(servicePrefix):
     from kateshell.app import MainApp
     return MainApp(servicePrefix)
@@ -91,4 +93,9 @@ class Proxy(object):
                     return res
                 return proxy_func
         return getattr(self.obj, attr)
+    
+    def run(self):
+        """ cancel the startup notification """
+        import PyKDE4.kdeui
+        PyKDE4.kdeui.KStartupInfo.appStarted()
 

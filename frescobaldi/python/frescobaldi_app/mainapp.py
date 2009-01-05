@@ -35,17 +35,33 @@ from kateshell.mainwindow import listeners
 _variables_re = re.compile(r'^%%([a-z]+(?:-[a-z]+)*):[ \t]*(.+?)[ \t]*$', re.M)
 
 
+def lazy(func):
+    """
+    A decorator that only performs the function call the first time,
+    caches the return value, and returns that next time.
+    The argments tuple should be hashable.
+    """
+    cache = {}
+    def loader(*args):
+        if args not in cache:
+            cache[args] = func(*args)
+        return cache[args]
+    return loader
+
+
 class MainApp(kateshell.app.MainApp):
     """ A Frescobaldi application instance """
     
     defaultEncoding = 'UTF-8'
     defaultHighlightingMode = "LilyPond"
-    fileTypes = ["*.ly *.ily *.lyi|%s" % i18n("LilyPond files")]
     
     def __init__(self, servicePrefix):
         kateshell.app.MainApp.__init__(self, servicePrefix)
+        # just set now because we are translated
+        self.fileTypes = ["*.ly *.ily *.lyi|%s" % i18n("LilyPond files")]
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
+        os.environ["FRESCOBALDI_PID"] = str(os.getpid())
 
     def openUrl(self, url, encoding=None):
         # The URL can be python string, dbus string or QString or KUrl
@@ -139,19 +155,23 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         QObject.connect(self.generatedFilesMenu, SIGNAL("aboutToShow()"),
             self.populateGeneratedFilesMenu)
             
-        self._scoreWizard = None
-        self._actionManager = None
-
+    @lazy
     def actionManager(self):
         """
         Returns the ActionManager, managing actions that can be performed
         on files creating by LilyPond.
         """
-        # lazy instantiation
-        if not self._actionManager:
-            import frescobaldi_app.actions
-            self._actionManager = frescobaldi_app.actions.ActionManager(self)
-        return self._actionManager
+        import frescobaldi_app.actions
+        return frescobaldi_app.actions.ActionManager(self)
+        
+    @lazy
+    def scoreWizard(self):
+        import frescobaldi_app.scorewiz
+        return frescobaldi_app.scorewiz.ScoreWizard(self)
+    
+    @lazy
+    def applyRhythmDialog(self):
+        return ApplyRhythmDialog(self)
         
     def setupActions(self):
         super(MainWindow, self).setupActions()
@@ -169,10 +189,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         # Score wizard
         @self.onAction(i18n("Setup New Score..."), "text-x-lilypond")
         def lilypond_score_wizard():
-            if not self._scoreWizard:
-                from frescobaldi_app.scorewiz import ScoreWizard
-                self._scoreWizard = ScoreWizard(self)
-            self._scoreWizard.show()
+            self.scoreWizard().show()
         
         # run LilyPond actions
         @self.onAction(i18n("Run LilyPond (preview)"), "document-preview")
@@ -262,33 +279,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             import ly.duration
             return ly.duration.makeExplicit(text)
             
-        self._savedRhythms = set() # for the completionObject
-            
         @self.onSelAction(i18n("Apply rhythm..."),
             tooltip=i18n("Apply an entered rhythm to the selected music."))
         def durations_apply_rhythm(text):
-            d = KDialog(self)
-            d.setCaption(i18n("Apply Rhythm"))
-            d.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Apply | KDialog.Cancel))
-            d.setModal(True)
-            v = KVBox(d)
-            d.setMainWidget(v)
-            QLabel(i18n("Enter a rhythm:"), v)
-            edit = KLineEdit(v)
-            edit.completionObject().setItems(list(self._savedRhythms))
-            edit.setFocus()
-            edit.setToolTip(i18n(
-                "Enter a rhythm using space separated duration values "
-                "(e.g. 8. 16 8 4 8)"))
-            def applyTheRhythm():
-                rhythm = unicode(edit.text())
-                self._savedRhythms.add(rhythm)
-                import ly.duration
-                self.replaceSelectionWith(ly.duration.applyRhythm(text, rhythm))
-            QObject.connect(d, SIGNAL("applyClicked()"), applyTheRhythm)
-            QObject.connect(d, SIGNAL("okClicked()"), applyTheRhythm)
-            d.show()
-
+            self.applyRhythmDialog().edit(text)
+        
         # Setup lyrics hyphen and de-hyphen action
         @self.onSelAction(i18n("Hyphenate Lyrics Text"), keepSelection=False)
         def lyrics_hyphen(text):
@@ -376,6 +371,36 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         menu.addSeparator()
         self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
         
+
+class ApplyRhythmDialog(KDialog):
+    def __init__(self, mainwin):
+        KDialog.__init__(self, mainwin)
+        self.setCaption(i18n("Apply Rhythm"))
+        self.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Apply | KDialog.Cancel))
+        self.setModal(True)
+        v = KVBox(self)
+        v.setSpacing(4)
+        self.setMainWidget(v)
+        QLabel(i18n("Enter a rhythm:"), v)
+        self.lineedit = KLineEdit(v)
+        self.lineedit.setToolTip(i18n(
+            "Enter a rhythm using space separated duration values "
+            "(e.g. 8. 16 8 4 8)"))
+        QObject.connect(self, SIGNAL("applyClicked()"), self.doApply)
+        QObject.connect(self, SIGNAL("okClicked()"), self.doApply)
+
+    def doApply(self):
+        import ly.duration
+        self.lineedit.completionObject().addItem(self.lineedit.text())
+        self.parent().replaceSelectionWith(ly.duration.applyRhythm(
+            self.text, unicode(self.lineedit.text())))
+
+    def edit(self, text):
+        self.text = text
+        self.show()
+        self.lineedit.setFocus()
+        self.lineedit.selectAll()
+
 
 class KonsoleTool(kateshell.mainwindow.KPartTool):
     """ A tool embedding a Konsole """

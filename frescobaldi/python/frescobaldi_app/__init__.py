@@ -21,12 +21,13 @@
 Bootstrap application logic for the Frescobaldi editor.
 """
 
-import kateshell
+import os, kateshell
 
 DBUS_PREFIX = "org.frescobaldi.main-"
 
 def runningApp():
-    return kateshell.runningApp(DBUS_PREFIX)
+    pid = os.environ.get("FRESCOBALDI_PID", "")
+    return kateshell.runningApp(DBUS_PREFIX, pid)
 
 def newApp():
     from frescobaldi_app import mainapp
