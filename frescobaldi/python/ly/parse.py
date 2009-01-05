@@ -21,8 +21,7 @@
 General functions that parse LilyPond document text.
 """
 
-import os, re
-import ly.rx
+import os, ly.rx
 
 def findIncludeFiles(lyfile):
     """
