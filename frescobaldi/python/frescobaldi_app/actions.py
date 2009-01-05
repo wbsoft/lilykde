@@ -94,12 +94,11 @@ class ActionManager(object):
         make_action(pdfs, self.printPDF, "document-print", i18n("Print"))
         make_action(updatedFiles("mid*"), self.openFile, "media-playback-start",
             i18n("Play MIDI"))
-        if updatedFiles():
+        # if any actions were added, also add the email action and show.
+        if len(bar.actions()) > 0:
             a = bar.addAction(KIcon("mail-send"), i18n("Email..."))
             QObject.connect(a, SIGNAL("triggered()"), lambda:
                 self.email(updatedFiles, log.preview))
-        
-        if len(bar.actions()) > 0:
             log.checkScroll(bar.show)
         
     def openFile(self, fileName):
