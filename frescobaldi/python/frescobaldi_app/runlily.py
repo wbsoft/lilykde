@@ -208,7 +208,6 @@ class LogWidget(QFrame):
         self.tool.show()
 
     def anchorClicked(self, url):
-        url = unicode(url.toString())
         self.doc.app.openUrl(url)
 
 
