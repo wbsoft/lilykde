@@ -50,6 +50,10 @@ class SettingsDialog(KPageDialog):
             EditorComponent(self),
         ]
         self.loadSettings()
+        # make icons in tree somewhat larger
+        tree = self.findChild(QTreeView)
+        if tree:
+            tree.setIconSize(QSize(22, 22))
         
     def changed(self, changed=True):
         self.enableButton(KPageDialog.Apply, changed)
