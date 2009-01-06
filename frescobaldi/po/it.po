@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-05 19:39+0100\n"
+"POT-Creation-Date: 2009-01-06 12:11+0100\n"
 "PO-Revision-Date: 2008-11-12 00:50+0100\n"
 "Last-Translator: Gianluca D'Orazio <gianluca.dorazio@gmail.com>\n"
 "Language-Team: Italiano\n"
@@ -1804,21 +1804,16 @@ msgstr "LilyPond [%1] è uscito con il codice %2."
 msgid "LilyPond [%1] finished."
 msgstr "LilyPond [%1] terminato."
 
-#: ../python/frescobaldi_app/runlily.py:95
+#: ../python/frescobaldi_app/runlily.py:94
 msgid "Could not start LilyPond. Please check path and permissions."
 msgstr ""
 
 #: ../python/frescobaldi_app/runlily.py:97
 #, fuzzy
-msgid "LilyPond crashed."
-msgstr "LilyPond"
-
-#: ../python/frescobaldi_app/runlily.py:99
-#, fuzzy
 msgid "Could not read from the LilyPond process."
 msgstr "Impossibile avviare LilyPond."
 
-#: ../python/frescobaldi_app/runlily.py:101
+#: ../python/frescobaldi_app/runlily.py:100
 msgid "An unknown error occured."
 msgstr ""
 
@@ -2167,6 +2162,10 @@ msgstr "Fare clic a tempo su questo pulsante per impostare la velocità."
 #: ../python/frescobaldi_app/widgets.py:154
 msgid "The tempo in beats per minute."
 msgstr "Il tempo in battiti al minuto."
+
+#, fuzzy
+#~ msgid "LilyPond crashed."
+#~ msgstr "LilyPond"
 
 #~ msgid ""
 #~ "A LilyPond Kate/Pate plugin.\n"

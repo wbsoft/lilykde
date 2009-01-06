@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-05 19:39+0100\n"
+"POT-Creation-Date: 2009-01-06 12:11+0100\n"
 "PO-Revision-Date: 2009-01-04 23:11+0100\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@lists.kde.org>\n"
@@ -1785,19 +1785,15 @@ msgstr "LilyPond [%1] stopte met status %2."
 msgid "LilyPond [%1] finished."
 msgstr "LilyPond [%1] voltooid."
 
-#: ../python/frescobaldi_app/runlily.py:95
+#: ../python/frescobaldi_app/runlily.py:94
 msgid "Could not start LilyPond. Please check path and permissions."
 msgstr "Kon LilyPond niet starten. Controleer uw installatie."
 
 #: ../python/frescobaldi_app/runlily.py:97
-msgid "LilyPond crashed."
-msgstr "LilyPond is gecrashed."
-
-#: ../python/frescobaldi_app/runlily.py:99
 msgid "Could not read from the LilyPond process."
 msgstr "Kan de uitvoer van het LilyPond-proces niet lezen."
 
-#: ../python/frescobaldi_app/runlily.py:101
+#: ../python/frescobaldi_app/runlily.py:100
 msgid "An unknown error occured."
 msgstr "Er is een onbekende fout opgetreden."
 
@@ -2135,6 +2131,9 @@ msgstr "Klik een paar keer op deze knop om het tempo in te stellen."
 #: ../python/frescobaldi_app/widgets.py:154
 msgid "The tempo in beats per minute."
 msgstr "Het tempo in tellen per minuut."
+
+#~ msgid "LilyPond crashed."
+#~ msgstr "LilyPond is gecrashed."
 
 #~ msgid ""
 #~ "A LilyPond Kate/Pate plugin.\n"
