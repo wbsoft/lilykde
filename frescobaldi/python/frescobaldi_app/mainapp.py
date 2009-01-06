@@ -525,7 +525,11 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             self._okularMiniBar().hide()
         self.part.actionCollection().action("show_leftpanel").setChecked(
             conf.readEntry("leftpanel", QVariant(False)).toBool())
-
+        # change shortcut context for actions that conflict with Kate's
+        for action in "view_scroll_up", "view_scroll_down":
+            self.part.actionCollection().action(action).setShortcutContext(
+                Qt.WidgetShortcut)
+        
     def saveSettings(self):
         conf = self.config()
         if self.part:
