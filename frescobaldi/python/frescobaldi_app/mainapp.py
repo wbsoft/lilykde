@@ -103,7 +103,7 @@ class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """
     def documentIcon(self):
         if self in self.app.mainwin.jobs:
-            return "frescobaldi"
+            return "run-lilypond"
         return super(Document, self).documentIcon()
     
     def materialize(self):
@@ -177,7 +177,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         super(MainWindow, self).setupActions()
         
         # LilyPond runner toolbar icon
-        @self.onAction(i18n("LilyPond"), "frescobaldi")
+        @self.onAction(i18n("LilyPond"), "run-lilypond")
         def lilypond_runner():
             d = self.currentDocument()
             if d:
@@ -355,7 +355,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             icon = "process-stop"
             tip = i18n("Abort the running LilyPond process")
         else:
-            icon = "frescobaldi"
+            icon = "run-lilypond"
             tip = i18n("Run LilyPond in preview mode")
         act("lilypond_runner").setIcon(KIcon(icon))
         act("lilypond_runner").setToolTip(tip)
@@ -551,7 +551,7 @@ class QuickInsertTool(kateshell.mainwindow.Tool):
 class LogTool(kateshell.mainwindow.Tool):
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,
-            "log", i18n("LilyPond Log"), "help-about",
+            "log", i18n("LilyPond Log"), "run-lilypond",
             dock=kateshell.mainwindow.Bottom,
             widget=QStackedWidget())
         self.logs = {}
