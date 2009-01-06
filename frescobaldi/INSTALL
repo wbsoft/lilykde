@@ -17,8 +17,8 @@ make
 make install
 
 Frescobaldi depends on:
-- lilypond-kde4 (http://lilykde.googlecode.com/)
-- KDE4 4.1.2 or higher
+- lilypond-kde4 (http://lilykde.googlecode.com/) (not needed in KDE 4.2+)
+- KDE 4.1.2 or higher, esp. kdelibs, kdebase and Okular from kdegraphics
 - Qt 4.4
 - Python 2.4, 2.5 or 2.6
 - PyQt4
