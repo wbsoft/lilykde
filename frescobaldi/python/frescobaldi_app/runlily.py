@@ -89,18 +89,18 @@ class Ly2PDF(object):
     
     def error(self, errCode):
         """ Called when QProcess encounters an error """
-        def w(msg):
-            self.log.writeMsg(msg, "msgerr")
         if errCode == QProcess.FailedToStart:
-            w(i18n("Could not start LilyPond. Please check path and permissions."))
-        elif errCode == QProcess.Crashed:
-            w(i18n("LilyPond crashed."))
+            self.log.writeMsg(i18n(
+                "Could not start LilyPond. Please check path and permissions."),
+                "msgerr")
         elif errCode == QProcess.ReadError:
-            w(i18n("Could not read from the LilyPond process."))
-        else:
-            w(i18n("An unknown error occured."))
-        # Otherwise we delete ourselves during our event handler, crashing...
-        QTimer.singleShot(0, self.bye)
+            self.log.writeMsg(i18n("Could not read from the LilyPond process."),
+                "msgerr")
+        elif self.p.state() == QProcess.NotRunning:
+            self.log.writeMsg(i18n("An unknown error occured."), "msgerr")
+        if self.p.state() == QProcess.NotRunning:
+            # otherwise we delete ourselves during our event handler, crashing...
+            QTimer.singleShot(0, self.bye)
         
     def bye(self):
         listeners.call(self.finished)
