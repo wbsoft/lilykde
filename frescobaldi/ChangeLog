@@ -3,6 +3,10 @@ Changes in 0.7.2
 * New "Run LilyPond" icon (hand drawn in Inkscape, based on the LilyPond XPM)
 * Open Current Folder action
 * Actions to view or print PDF, play MIDI or email documents
+* Bugfixes:
+  * Fix shift-up and shift-down selection in editor while PDF is visible.
+  * don' t say LilyPond crashes if user terminates the process
+  * End startup notification if running instance found. 
 
 Changes in 0.7.1
 
