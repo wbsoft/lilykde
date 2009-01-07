@@ -56,9 +56,7 @@ endforeach(_mo)
 
 # LilyPond icons (generated from ../pics/*.ly)
 file(GLOB _png_files pics/*.png)
-foreach(_png ${_png_files})
-  install(FILES ${_png} DESTINATION ${APP_DIR}/pics)
-endforeach(_png)
+install(FILES ${_png_files} DESTINATION ${APP_DIR}/pics)
 EOF
 
 # Back to parent directory
