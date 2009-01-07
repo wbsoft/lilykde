@@ -4,10 +4,6 @@ cmake . -DCMAKE_INSTALL_PREFIX=$(kde4-config --exec-prefix)
 make
 make install
 
-To install Frescobaldi from this source package, you need LilyPond, ImageMagick
-and GNU Gettext. Those are used to build the icons with musical symbols and the
-translations.
-
 Out-of-source builds are also possible, e.g.:
 
 mkdir build
@@ -27,7 +23,14 @@ Frescobaldi depends on:
 You also need to install the corresponding -dev packages from the above to
 install Frescobaldi from this source package.
 
-Other useful programs are:
+If you install Frescobaldi from the SVN repository, you need LilyPond,
+ImageMagick and GNU Gettext. Those are used to build the icons with musical
+symbols and the translations. If you install Frescobaldi from a released
+tarball, those files have already been prebuilt. (In that case, a "prebuilt"
+directory is present. You can safely remove the "prebuilt" directory if you
+want to rebuild icons or change translations.)
+
+Some other useful programs are:
 - LilyPond (of course!) http://lilypond.org/
 - Rumor                 http://www.volny.cz/smilauer/rumor/
 - a MIDI player like timidity++, etc.
