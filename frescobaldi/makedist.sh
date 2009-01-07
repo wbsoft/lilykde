@@ -36,9 +36,9 @@ cp build/pics/*.png prebuilt/pics/
 
 # Put a CMakeLists.txt file in the prebuilt directory
 cat <<"EOF" > prebuilt/CMakeLists.txt
-# These are rules to install the prebuilt MO and PNG files
-# to make installing release tarballs easier.
-# This directory and its contents has been created by the
+# These are rules to install prebuilt MO and PNG files. This
+# has been done to make installing release tarballs easier.
+# This directory and its contents have been created by the
 # makedist.sh script, and are not part of the Frescobaldi
 # SVN repository. To rebuild these files just remove the
 # "prebuilt" directory and run cmake again.
