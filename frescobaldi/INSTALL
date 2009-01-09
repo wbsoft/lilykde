@@ -12,6 +12,13 @@ cmake .. -DCMAKE_INSTALL_PREFIX=$(kde4-config --exec-prefix)
 make
 make install
 
+If you install Frescobaldi from a released tarball, the LilyPond musical symbol
+icons in pics/ and the translations in po/ are already prebuilt.
+
+If you build Frescobaldi out-of-source (or if you install Frescobaldi from SVN),
+those icons and translations are regenerated. In that case  you need also 
+LilyPond, ImageMagick and GNU Gettext.
+
 Frescobaldi depends on:
 - lilypond-kde4 (http://lilykde.googlecode.com/) (not needed in KDE 4.2+)
 - KDE 4.1.2 or higher, esp. kdelibs, kdebase and Okular from kdegraphics
@@ -22,13 +29,6 @@ Frescobaldi depends on:
 
 You also need to install the corresponding -dev packages from the above to
 install Frescobaldi from this source package.
-
-If you install Frescobaldi from the SVN repository, you need LilyPond,
-ImageMagick and GNU Gettext. Those are used to build the icons with musical
-symbols and the translations. If you install Frescobaldi from a released
-tarball, those files have already been prebuilt. (In that case, a "prebuilt"
-directory is present. You can safely remove the "prebuilt" directory if you
-want to rebuild icons or change translations.)
 
 Some other useful programs are:
 - LilyPond (of course!) http://lilypond.org/
