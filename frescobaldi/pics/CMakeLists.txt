@@ -42,7 +42,7 @@ macro(lilypond_png_icon _lyfile)
         -gravity Center -crop 22x22+0+0
         +repage
         "${_outp}"
-    COMMAND /bin/rm "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
+    COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
     VERBATIM
   )
   list(APPEND all_pngs ${_outp})
@@ -71,7 +71,7 @@ macro(lilypond_png_image _lyfile_arg)
         -bordercolor transparent -border 3
         +repage
         "${_outp}"
-    COMMAND /bin/rm "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
+    COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
     VERBATIM
   )
   list(APPEND all_pngs ${_outp})
