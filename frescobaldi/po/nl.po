@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-06 23:45+0100\n"
+"POT-Creation-Date: 2009-01-09 15:41+0100\n"
 "PO-Revision-Date: 2009-01-04 23:11+0100\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@lists.kde.org>\n"
@@ -453,15 +453,15 @@ msgstr "MIDI afspelen"
 msgid "Email..."
 msgstr "Verzenden..."
 
-#: ../python/frescobaldi_app/actions.py:120
+#: ../python/frescobaldi_app/actions.py:122
 msgid "Printing failed: %1"
 msgstr "Het afdrukken is mislukt: %1"
 
-#: ../python/frescobaldi_app/actions.py:123
+#: ../python/frescobaldi_app/actions.py:125
 msgid "The document has been sent to the printer."
 msgstr "Het document is naar de printer gestuurd."
 
-#: ../python/frescobaldi_app/actions.py:126
+#: ../python/frescobaldi_app/actions.py:128
 msgid ""
 "Printing failed: %1\n"
 "\n"
@@ -471,27 +471,27 @@ msgstr ""
 "\n"
 "Het printcommando %2 bestaat waarschijnlijk niet. Controleer uw instellingen."
 
-#: ../python/frescobaldi_app/actions.py:131
+#: ../python/frescobaldi_app/actions.py:133
 msgid "The print command contains errors. Please check your settings."
 msgstr "Het printcommando bevat fouten. Controleer uw instellingen."
 
-#: ../python/frescobaldi_app/actions.py:158
+#: ../python/frescobaldi_app/actions.py:160
 msgid "There are no files to send via email."
 msgstr "Er zijn geen bestanden om te verzenden."
 
-#: ../python/frescobaldi_app/actions.py:159
+#: ../python/frescobaldi_app/actions.py:161
 msgid "No files to send"
 msgstr "Geen bestanden te verzenden"
 
-#: ../python/frescobaldi_app/actions.py:166
+#: ../python/frescobaldi_app/actions.py:168
 msgid "Email documents"
 msgstr "Documenten verzenden"
 
-#: ../python/frescobaldi_app/actions.py:170
+#: ../python/frescobaldi_app/actions.py:172
 msgid "Please select the files you want to send:"
 msgstr "Selecteer de bestanden die u wilt verzenden:"
 
-#: ../python/frescobaldi_app/actions.py:175
+#: ../python/frescobaldi_app/actions.py:177
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document).  Also LilyPond files included by the source document are shown."
@@ -500,7 +500,7 @@ msgstr ""
 "brondocument). Ook LilyPond-bestanden die door het brondocument ge\"include"
 "\"t worden zijn hier weergegeven."
 
-#: ../python/frescobaldi_app/actions.py:185
+#: ../python/frescobaldi_app/actions.py:187
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
