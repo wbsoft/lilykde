@@ -187,16 +187,16 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                     lilypond_run_preview()
 
         # Score wizard
-        @self.onAction(i18n("Setup New Score..."), "text-x-lilypond")
+        @self.onAction(i18n("Setup New Score..."), "text-x-lilypond", key="Ctrl+Shift+N")
         def lilypond_score_wizard():
             self.scoreWizard().show()
         
         # run LilyPond actions
-        @self.onAction(i18n("Run LilyPond (preview)"), "document-preview")
+        @self.onAction(i18n("Run LilyPond (preview)"), "run-lilypond", key="Ctrl+M")
         def lilypond_run_preview():
             lilypond_run_publish(True)
             
-        @self.onAction(i18n("Run LilyPond (publish)"), "system-run")
+        @self.onAction(i18n("Run LilyPond (publish)"), "run-lilypond")
         def lilypond_run_publish(preview=False):
             d = self.currentDocument()
             if not d:
@@ -285,7 +285,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             self.applyRhythmDialog().edit(text)
         
         # Setup lyrics hyphen and de-hyphen action
-        @self.onSelAction(i18n("Hyphenate Lyrics Text"), keepSelection=False)
+        @self.onSelAction(i18n("Hyphenate Lyrics Text"), keepSelection=False, key="Ctrl+L")
         def lyrics_hyphen(text):
             import frescobaldi_app.hyphen
             return frescobaldi_app.hyphen.hyphenate(text, self)
@@ -295,7 +295,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             return text.replace(' -- ', '')
             
         # Other actions
-        @self.onAction(i18n("Insert LilyPond version"))
+        @self.onAction(i18n("Insert LilyPond version"), key="Ctrl+Shift+V")
         def version_insert():
             import frescobaldi_app.version
             frescobaldi_app.version.insertVersion(self)
@@ -588,7 +588,7 @@ class LogTool(kateshell.mainwindow.Tool):
 class RumorTool(kateshell.mainwindow.Tool):
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,
-            "rumor", i18n("Rumor"), "text-x-lilypond",
+            "rumor", i18n("Rumor"), "media-record",
             dock=kateshell.mainwindow.Bottom,
             factory=self.factory)
             

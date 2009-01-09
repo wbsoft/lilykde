@@ -97,6 +97,8 @@ class ActionManager(object):
         # if any actions were added, also add the email action and show.
         if len(bar.actions()) > 0:
             a = bar.addAction(KIcon("mail-send"), i18n("Email..."))
+            a.setShortcut(QKeySequence("Ctrl+E"))
+            a.setToolTip("%s (%s)" % (a.toolTip(), a.shortcut().toString()))
             QObject.connect(a, SIGNAL("triggered()"), lambda:
                 self.email(updatedFiles, log.preview))
             log.checkScroll(bar.show)
