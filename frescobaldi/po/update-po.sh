@@ -16,11 +16,10 @@ xgettext \
     -kI18N_NOOP:1 -kI18N_NOOP2:1c,2 \
     ../frescobaldi.py \
     dummy.py \
-    ../python/*.py \
     ../python/ly/*.py \
     ../python/kateshell/*.py \
-    ../python/frescobaldi_app/*.py 
-
+    ../python/frescobaldi_app/*.py \
+    ../python/frescobaldi_app/scorewiz/*.py
 
 # Update po files:
 for po in *.po

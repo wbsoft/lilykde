@@ -39,13 +39,25 @@ def config(group=None):
         c = c.group(group)
     return c
 
-
 def onSignal(obj, signalName):
     """ decorator to easily add connect a Qt signal to a Python slot."""
     def decorator(func):
         QObject.connect(obj, SIGNAL(signalName), func)
         return func
     return decorator
+
+def lazy(func):
+    """
+    A decorator that only performs the function call the first time,
+    caches the return value, and returns that next time.
+    The argments tuple should be hashable.
+    """
+    cache = {}
+    def loader(*args):
+        if args not in cache:
+            cache[args] = func(*args)
+        return cache[args]
+    return loader
 
 
 class ScoreWizard(KPageDialog):
@@ -71,7 +83,12 @@ class ScoreWizard(KPageDialog):
             self.settings.default()
         @onSignal(self, "tryClicked()")
         def previewscore():
-            pass # TODO: implement
+            self.previewDialog().showPreview()
+    
+    @lazy
+    def previewDialog(self):
+        from frescobaldi_app.scorewiz import preview
+        return preview.PreviewDialog(self)
 
     def complete(self, widget, name=None):
         """ Save the completions of the specified widget """
@@ -299,7 +316,7 @@ class Parts(QSplitter):
             if cur:
                 cur.showSettingsWidget()
 
-        from frescobaldi_app.parts import categories
+        from frescobaldi_app.scorewiz.parts import categories
         for name, parts in categories():
             group = QTreeWidgetItem(allParts, [name])
             group.setFlags(Qt.ItemIsEnabled)

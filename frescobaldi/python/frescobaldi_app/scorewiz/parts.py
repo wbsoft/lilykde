@@ -18,7 +18,7 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 """
-Part types for the Score Wizard (scorewiz.py).
+Part types for the Score Wizard (scorewiz/__init__.py).
 In separate file to ease maintenance.
 """
 
