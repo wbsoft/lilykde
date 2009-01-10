@@ -48,7 +48,6 @@ def onSignal(obj, signalName):
 
 
 class ScoreWizard(KPageDialog):
-
     def __init__(self, mainwin):
         KPageDialog.__init__(self, mainwin)
         self.mainwin = mainwin
@@ -57,6 +56,7 @@ class ScoreWizard(KPageDialog):
             KPageDialog.Try |
             KPageDialog.Ok | KPageDialog.Cancel | KPageDialog.Default))
         self.setButtonIcon(KPageDialog.Try, KIcon("run-lilypond"))
+        self.enableButton(KPageDialog.Try, False)
         self.setCaption(i18n("Score Setup Wizard"))
         self.completableWidgets = {}
         self.titles = Titles(self)
@@ -72,7 +72,7 @@ class ScoreWizard(KPageDialog):
         @onSignal(self, "tryClicked()")
         def previewscore():
             self.previewDialog().showPreview()
-            
+        
     @lazy
     def previewDialog(self):
         from frescobaldi_app.scorewiz import preview
@@ -222,7 +222,7 @@ class Parts(QSplitter):
         self.setStretchFactor(0, 1)
         self.setStretchFactor(1, 1)
         self.setStretchFactor(2, 1)
-        self.setSizes((100,100,100))
+        self.setSizes((100, 100, 100))
 
         allParts.setSelectionMode(QTreeWidget.ExtendedSelection)
         allParts.setRootIsDecorated(False)
@@ -245,11 +245,14 @@ class Parts(QSplitter):
                 if score.count() == 1:
                     score.setCurrentRow(0)
                     self.setSelected(True)
+                parent.enableButton(KPageDialog.Try, True)
 
             def showSettingsWidget(self):
                 partSettings.setCurrentWidget(self.w)
 
             def remove(self):
+                if score.count() == 1:
+                    parent.enableButton(KPageDialog.Try, False)
                 sip.delete(self.w)
                 sip.delete(self) # TODO: check if necessary
 
