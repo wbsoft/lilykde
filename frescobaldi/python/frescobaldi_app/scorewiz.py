@@ -55,6 +55,7 @@ class ScoreWizard(KPageDialog):
         self.mainwin = mainwin
         self.setFaceType(KPageDialog.Tabbed)
         self.setButtons(KPageDialog.ButtonCode(
+            KPageDialog.Try |
             KPageDialog.Ok | KPageDialog.Cancel | KPageDialog.Default))
         self.setCaption(i18n("Score Setup Wizard"))
         self.completableWidgets = {}
@@ -68,6 +69,9 @@ class ScoreWizard(KPageDialog):
             self.titles.default()
             self.parts.default()
             self.settings.default()
+        @onSignal(self, "tryClicked()")
+        def previewscore():
+            pass # TODO: implement
 
     def complete(self, widget, name=None):
         """ Save the completions of the specified widget """
@@ -98,7 +102,13 @@ class ScoreWizard(KPageDialog):
         self.saveCompletions()
         self.settings.saveConfig()
         if result:
-            self.mainwin.view().insertText(Builder(self).build())
+            # Get the document as a ly.dom tree structure
+            doc = Builder(self).build()
+            # Printer converts the ly.dom structure to LilyPond text
+            printer = ly.dom.Printer()
+            printer.indentString = "  " # FIXME get indent-width somehow...
+            printer.typographicalQuotes = self.settings.typq.isChecked()
+            self.mainwin.view().insertText(printer.indent(doc))
         KPageDialog.done(self, result)
 
 
@@ -635,10 +645,6 @@ class Builder(object):
 
         doc = ly.dom.Document()
 
-        printer = ly.dom.Printer()
-        printer.indentString = "  " # FIXME get current indent-width somehow...
-        printer.typographicalQuotes = s.typq.isChecked()
-
         # instrument names language:
         self.translate = lambda s: s    # english (untranslated)
         i = s.instrLang.currentIndex()
@@ -691,8 +697,8 @@ class Builder(object):
         if parts:
             self.buildScore(doc, parts)
 
-        # Finally, return the rendered document
-        return printer.indent(doc)
+        # Finally, return the document
+        return doc
 
     def buildScore(self, doc, partList):
         """ Creates a LilyPond score based on parts in partList """
@@ -806,7 +812,7 @@ class Builder(object):
                     ly.dom.Scheme("(ly:make-moment %s %s)" % (val, base))
 
     ##
-    # The following functions are to be used by the parts.
+    # The following methods are to be used by the parts.
     ##
 
     def getInstrumentNames(self, names, num=0):
@@ -848,7 +854,6 @@ class Builder(object):
         """
         if self.wizard.settings.midi.isChecked():
             node.getWith()['midiInstrument'] = midiInstrument
-
 
 
 class PartBase(object):
