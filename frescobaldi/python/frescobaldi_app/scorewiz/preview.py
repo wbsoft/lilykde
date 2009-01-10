@@ -38,6 +38,7 @@ from frescobaldi_app.runlily import LogWidget, Ly2PDF
 
 class PreviewDialog(KDialog):
     def __init__(self, scorewiz):
+        listeners.add(self.close)
         self.scorewiz = scorewiz
         KDialog.__init__(self, scorewiz)
         self.setModal(True)
@@ -75,6 +76,7 @@ class PreviewDialog(KDialog):
         @onSignal(self, "finished()")
         def close():
             self.saveDialogSize(config("scorewiz").group("preview"))
+            listeners.call(self.close)
             if self.directory:
                 shutil.rmtree(self.directory)
         
@@ -93,8 +95,12 @@ class PreviewDialog(KDialog):
         # other stuff
         for a in doc.findChildren(ly.dom.Assignment, 1):
             stub = a[-1]
-            node = stub[-1]
-            ly.dom.Pitch(octave=-1, parent=node)
+            if isinstance(stub, ly.dom.LyricMode):
+                ly.dom.Text('He', parent=stub)
+            elif isinstance(stub, ly.dom.Relative):
+                node = stub[-1]
+                ly.dom.Pitch(octave=-1, parent=node)
+                
         
         # write the doc to a temporary file and run LilyPond
         lyfile = os.path.join(self.directory, 'preview.ly')
@@ -106,9 +112,11 @@ class PreviewDialog(KDialog):
         # Now run LilyPond
         job = Ly2PDF(lyfile, self.log)
         def finished():
+            listeners[self.close].remove(job.abort)
             pdfs = job.updatedFiles()("pdf")
             if pdfs:
                 self.openPDF(pdfs[0])
+        listeners[self.close].append(job.abort)
         listeners[job.finished].append(finished)
     
     def openPDF(self, fileName):
