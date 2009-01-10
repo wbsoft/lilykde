@@ -35,19 +35,15 @@ def config(group):
 # to find filenames with line:col pairs in LilyPond output
 _ly_message_re = re.compile(r"^((.*?):(\d+)(?::(\d+))?)(?=:)", re.M)
 
+
 class Ly2PDF(object):
-    def __init__(self, doc, log, preview):
+    preview = False
+    def __init__(self, lyfile, log):
         listeners.add(self.finished)
-
-        self.log = log
         # save this so the log knows if we built a PDF with point and click:
-        self.log.preview = preview      
-
-        lyfile = doc.localPath()
-        lvars = doc.variables()
-        ly = lvars.get(preview and 'master-preview' or 'master-publish') or lvars.get('master')
-        if ly:
-            lyfile = os.path.join(os.path.dirname(lyfile), ly)
+        log.preview = self.preview
+        self.log = log
+        
         self.lyfile = lyfile
         self.basename = os.path.splitext(lyfile)[0]
         self.directory, self.lyfile_arg = os.path.split(lyfile)
@@ -56,7 +52,7 @@ class Ly2PDF(object):
         self.p.setOutputChannelMode(KProcess.MergedChannels)
         self.p.setWorkingDirectory(self.directory)
         cmd = [config("commands").readEntry("lilypond", "lilypond"), "--pdf"]
-        cmd.append(preview and "-dpoint-and-click" or "-dno-point-and-click")
+        cmd.append(self.preview and "-dpoint-and-click" or "-dno-point-and-click")
         if config("preferences").readEntry("delete intermediate files",
                                            QVariant(True)).toBool():
             cmd.append("-ddelete-intermediate-files")
@@ -69,7 +65,7 @@ class Ly2PDF(object):
         QObject.connect(self.p, SIGNAL("readyRead()"), self.readOutput)
         
         self.log.clear()
-        mode = unicode(preview and i18n("preview mode") or i18n("publish mode"))
+        mode = unicode(self.preview and i18n("preview mode") or i18n("publish mode"))
         self.log.writeLine(i18n("LilyPond [%1] starting (%2)...", self.lyfile_arg, mode))
         self.startTime = time.time()
         self.p.start()
@@ -135,11 +131,20 @@ class Ly2PDF(object):
         return frescobaldi_app.mainapp.updatedFiles(self.lyfile, self.startTime)
 
 
+class LyDoc2PDF(Ly2PDF):
+    def __init__(self, doc, log, preview):
+        self.preview = preview
+        lyfile = doc.localPath()
+        lvars = doc.variables()
+        ly = lvars.get(preview and 'master-preview' or 'master-publish') or lvars.get('master')
+        if ly:
+            lyfile = os.path.join(os.path.dirname(lyfile), ly)
+        super(LyDoc2PDF, self).__init__(lyfile, log)
+        
+
 class LogWidget(QFrame):
-    def __init__(self, tool, doc):
-        QFrame.__init__(self, tool.widget)
-        self.tool = tool
-        self.doc = doc
+    def __init__(self, parent=None):
+        QFrame.__init__(self, parent)
         self.preview = False # this is used by Ly2PDF and the ActionManager
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -148,8 +153,6 @@ class LogWidget(QFrame):
         self.textBrowser.setFocusPolicy(Qt.NoFocus)
         self.textBrowser.setOpenLinks(False)
         self.textBrowser.setOpenExternalLinks(False)
-        QObject.connect(self.textBrowser, SIGNAL("anchorClicked(QUrl)"),
-            self.anchorClicked)
         self.formats = textFormats()
         layout.addWidget(self.textBrowser)
         self.actionBar = QToolBar(self)
@@ -195,13 +198,22 @@ class LogWidget(QFrame):
     def writeLine(self, text, format='msg'):
         self.writeMsg(text + '\n', format)
         
-    def writeUrl(self, text, href, tooltip=None, format='url'):
-        f = self.formats[format]
-        f.setAnchorHref(href)
-        if tooltip:
-            f.setToolTip(tooltip)
+    def writeUrl(self, text, href, tooltip=None, format='log'):
         self.write(text, format)
 
+
+class Log(LogWidget):
+    """
+    A more advanced version of the logwidget, designed for embedding
+    in a tool.
+    """
+    def __init__(self, tool, doc):
+        self.tool = tool
+        self.doc = doc
+        LogWidget.__init__(self, tool.widget)
+        QObject.connect(self.textBrowser, SIGNAL("anchorClicked(QUrl)"),
+            self.anchorClicked)
+    
     def show(self):
         """ Really show our log, e.g. when there are errors """
         self.tool.showLog(self.doc)
@@ -209,6 +221,13 @@ class LogWidget(QFrame):
 
     def anchorClicked(self, url):
         self.doc.app.openUrl(url)
+
+    def writeUrl(self, text, href, tooltip=None, format='url'):
+        f = self.formats[format]
+        f.setAnchorHref(href)
+        if tooltip:
+            f.setToolTip(tooltip)
+        self.write(text, format)
 
 
 def textFormats():

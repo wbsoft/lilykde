@@ -31,7 +31,7 @@ from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 
 from frescobaldi_app.widgets import TapButton
-
+from frescobaldi_app.mainapp import lazy
 
 def config(group=None):
     c = KGlobal.config().group("scorewiz")
@@ -45,19 +45,6 @@ def onSignal(obj, signalName):
         QObject.connect(obj, SIGNAL(signalName), func)
         return func
     return decorator
-
-def lazy(func):
-    """
-    A decorator that only performs the function call the first time,
-    caches the return value, and returns that next time.
-    The argments tuple should be hashable.
-    """
-    cache = {}
-    def loader(*args):
-        if args not in cache:
-            cache[args] = func(*args)
-        return cache[args]
-    return loader
 
 
 class ScoreWizard(KPageDialog):
@@ -85,12 +72,12 @@ class ScoreWizard(KPageDialog):
         @onSignal(self, "tryClicked()")
         def previewscore():
             self.previewDialog().showPreview()
-    
+            
     @lazy
     def previewDialog(self):
         from frescobaldi_app.scorewiz import preview
         return preview.PreviewDialog(self)
-
+        
     def complete(self, widget, name=None):
         """ Save the completions of the specified widget """
         if not name:
@@ -121,7 +108,7 @@ class ScoreWizard(KPageDialog):
         self.settings.saveConfig()
         if result:
             # Get the document as a ly.dom tree structure
-            doc = Builder(self).build()
+            doc = self.buildDocument()
             # Printer converts the ly.dom structure to LilyPond text
             printer = ly.dom.Printer()
             printer.indentString = "  " # FIXME get indent-width somehow...
@@ -129,6 +116,10 @@ class ScoreWizard(KPageDialog):
             self.mainwin.view().insertText(printer.indent(doc))
         KPageDialog.done(self, result)
 
+    def buildDocument(self):
+        """ Return a ly.dom tree of the document as built by the user. """
+        return Builder(self).build()
+        
 
 class Titles(QWidget):
     """

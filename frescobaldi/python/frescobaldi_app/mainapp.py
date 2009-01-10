@@ -321,12 +321,12 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             
     def createLilyPondJob(self, doc, preview=True):
         if doc not in self.jobs:
-            from frescobaldi_app.runlily import Ly2PDF
+            from frescobaldi_app.runlily import LyDoc2PDF
             # get a LogWidget
             log = self.tools["log"].createLog(doc)
             if config().readEntry("always show log", QVariant(True)).toBool():
                 log.show()
-            self.jobs[doc] = Ly2PDF(doc, log, preview)
+            self.jobs[doc] = LyDoc2PDF(doc, log, preview)
             self.updateJobActions()
             def finished():
                 listeners[doc.close].remove(self.abortLilyPondJob)
@@ -568,8 +568,8 @@ class LogTool(kateshell.mainwindow.Tool):
             
     def createLog(self, doc):
         if doc not in self.logs:
-            from frescobaldi_app.runlily import LogWidget
-            self.logs[doc] = LogWidget(self, doc)
+            from frescobaldi_app.runlily import Log
+            self.logs[doc] = Log(self, doc)
             self.widget.addWidget(self.logs[doc])
             listeners[doc.close].append(self.removeLog)
         self.showLog(doc)
