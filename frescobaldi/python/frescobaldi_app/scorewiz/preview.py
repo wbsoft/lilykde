@@ -90,6 +90,9 @@ class PreviewDialog(KDialog):
         printer = ly.dom.Printer()
         printer.indentString = "  " # FIXME get indent-width somehow...
         printer.typographicalQuotes = self.scorewiz.settings.typq.isChecked()
+        language = self.scorewiz.settings.getLanguage()
+        if language:
+            printer.language = language
 
         # iter over all the Assignments to add some example notes and
         # other stuff

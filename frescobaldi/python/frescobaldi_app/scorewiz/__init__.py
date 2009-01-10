@@ -113,6 +113,9 @@ class ScoreWizard(KPageDialog):
             printer = ly.dom.Printer()
             printer.indentString = "  " # FIXME get indent-width somehow...
             printer.typographicalQuotes = self.settings.typq.isChecked()
+            language = self.settings.getLanguage()
+            if language:
+                printer.language = language
             self.mainwin.view().insertText(printer.indent(doc))
         KPageDialog.done(self, result)
 
@@ -680,7 +683,6 @@ class Builder(object):
         # pitch language:
         language = s.getLanguage()
         if language:
-            printer.language = language
             ly.dom.Text('\\include "%s.ly"' % language, doc)
             ly.dom.BlankLine(doc)
 
