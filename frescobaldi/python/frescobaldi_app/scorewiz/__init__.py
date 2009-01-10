@@ -69,6 +69,7 @@ class ScoreWizard(KPageDialog):
         self.setButtons(KPageDialog.ButtonCode(
             KPageDialog.Try |
             KPageDialog.Ok | KPageDialog.Cancel | KPageDialog.Default))
+        self.setButtonIcon(KPageDialog.Try, KIcon("run-lilypond"))
         self.setCaption(i18n("Score Setup Wizard"))
         self.completableWidgets = {}
         self.titles = Titles(self)

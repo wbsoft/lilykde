@@ -37,8 +37,30 @@ class PreviewDialog(KDialog):
         self.setCaption(i18n("PDF Preview"))
         self.setButtons(KDialog.ButtonCode(KDialog.Close))
         
+        # Load Okular part
+        self.part = None
+        factory = KPluginLoader("okularpart").factory()
+        if factory:
+            part = factory.create(self)
+            if part:
+                self.setMainWidget(part.widget())
+                # hide mini pager
+                w = part.widget().findChild(QWidget, "miniBar")
+                if w:
+                    w.parent().hide()
+                # hide left panel
+                a = part.actionCollection().action("show_leftpanel")
+                if a and a.isChecked():
+                    a.toggle()
+                self.part = part
+        if not self.part:
+            self.setMainWidget(QLabel(i18n(
+                "Could not load okularpart. Please install Okular."), self))
+
+        self.setMinimumSize(QSize(480, 300))
         
     def showPreview(self):
-        # TODO: implement
+        if self.part:
+            pass # TODO: implement
         self.show()
 
