@@ -26,6 +26,6 @@ add_subdirectory(po)
 
 install(DIRECTORY 
         rumor
-	icons
+        icons
         DESTINATION ${APP_DIR}
         PATTERN .* EXCLUDE)
