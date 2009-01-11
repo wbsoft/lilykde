@@ -103,44 +103,34 @@ class PreviewDialog(KDialog):
             dur, num = 2, 4
         durs += [(dur, 0)] * num
         
+        def addItems(stub, generator):
+            gen = generator.next
+            for dur, dots in durs:
+                node = gen()
+                node.append(ly.dom.Duration(dur, dots))
+                stub.append(node)
+            
         lyrics = lyricsGen(len(durs)).next
         # iter over all the Assignments to add example notes etc.
         for a in doc.findChildren(ly.dom.Assignment, 1):
             stub = a[-1]
             if isinstance(stub, ly.dom.LyricMode):
-                ly.dom.Text(lyrics(), parent=stub)
+                stub.append(lyrics())
             elif isinstance(stub, ly.dom.Relative):
-                node = stub[-1]
-                pitch = pitchGen(keysig).next
-                for dur, dots in durs:
-                    chord = ly.dom.Chord(node)
-                    chord.append(pitch())
-                    chord.append(ly.dom.Duration(dur, dots))
+                addItems(stub[-1], pitchGen(keysig))
             elif isinstance(stub, ly.dom.ChordMode):
-                pitch = pitchGen(keysig).next
-                for dur, dots in durs[:5]:
-                    chord = ly.dom.Chord(stub)
-                    chord.append(pitch())
-                    chord.append(ly.dom.Duration(dur, dots))
+                addItems(stub, chordGen(keysig))
             elif isinstance(stub, ly.dom.FigureMode):
-                figure = figureGen().next
-                for dur, dots in durs:
-                    fig = ly.dom.TextDur(figure(), stub)
-                    fig.append(ly.dom.Duration(dur, dots))
+                addItems(stub, figureGen())
             elif isinstance(stub, ly.dom.DrumMode):
-                drum = drumGen().next
-                for dur, dots in durs:
-                    dr = ly.dom.TextDur(drum(), stub)
-                    dr.append(ly.dom.Duration(dur, dots))
+                addItems(stub, drumGen())
 
-        # write the doc to a temporary file and run LilyPond
+        # write the doc to a temporary file...
         lyfile = os.path.join(self.directory, 'preview.ly')
-        
         text = builder.ly(doc)
-        print text #DEBUG
         file(lyfile, 'w').write(text.encode('utf-8'))
         
-        # Now run LilyPond
+        # ... and run LilyPond.
         job = Ly2PDF(lyfile, self.log)
         def finished():
             listeners[self.close].remove(job.abort)
@@ -164,25 +154,34 @@ def pitchGen(startPitch):
     note = startPitch.note
     while True:
         for n in (note, note, (note + 9 ) % 7, (note + 8) % 7,
-                    note, (note + 11) % 7, note):
-            yield ly.dom.Pitch(-1, n, startPitch.alter)
+                  note, (note + 11) % 7, note):
+            chord = ly.dom.Chord()
+            ly.dom.Pitch(-1, n, startPitch.alter, parent=chord)
+            yield chord
+
+def chordGen(startPitch):
+    for n in pitchGen(startPitch):
+        yield n
+        for i in 1, 2, 3:
+            yield ly.dom.TextDur("\\skip")
         
 def lyricsGen(length):
     while True:
         for i in "ha", "hi", "ho", "he", "hu":
             result = [i]*length
             result[0] = result[0].title()
-            yield ' '.join(result)
+            yield ly.dom.Text(' '.join(result))
 
 def figureGen():
     while True:
         for i in 5, 6, 3, 8, 7:
-            yield "<%s>" % i
+            for s in "<%s>" % i, "\\skip", "\\skip":
+                yield ly.dom.TextDur(s)
             
 def drumGen():
     while True:
-        for i in "bd", "hh", "sn", "hh":
-            yield i
+        for s in "bd", "hh", "sn", "hh":
+            yield ly.dom.TextDur(s)
 
 
 # Easily get our global config
