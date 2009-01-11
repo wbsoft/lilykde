@@ -187,8 +187,8 @@ class TablaturePart(SingleVoicePart):
         self.setTunings(tab)
         s = Seqr(tab)
         ref = Reference(self.identifier())
-        self.assignMusic(s, self.octave, ref)
-        if i == 1:  # only a TabStaff
+        self.assignMusic(s, self.octave, name=ref)
+        if t == 1:  # only a TabStaff
             builder.setMidiInstrument(tab, self.midiInstrument)
             p = tab
         else:       # both TabStaff and normal staff
@@ -434,10 +434,10 @@ class BassoContinuo(Cello):
     instrumentNames = I18N_NOOP("Basso Continuo|B.c.")
 
     def build(self, builder):
-        s = Staff()
-        builder.setInstrumentNames(s, self.instrumentNames(), self.num)
-        builder.setMidiInstrument(s, self.midiInstrument)
-        s = Sim(s)
+        p = Staff()
+        builder.setInstrumentNames(p, self.instrumentNames, self.num)
+        builder.setMidiInstrument(p, self.midiInstrument)
+        s = Sim(p)
         Clef("bass", s)
         self.assignMusic(s, self.octave, self.transpose, 'bcMusic')
         b = FigureMode()
@@ -447,7 +447,7 @@ class BassoContinuo(Cello):
         LineComment(i18n("Figures follow here."), b)
         BlankLine(b)
         self.assign(s, b, 'bcFigures')
-        self.nodes.append(s)
+        self.nodes.append(p)
 
 
 class Mandolin(TablaturePart):
@@ -486,7 +486,7 @@ class Banjo(TablaturePart):
         else:
             tab.getWith()['stringTunings'] = Scheme(
                 '(four-string-banjo %s)' %
-                    self.tunings[self.tuningSel.currentItem()][1])
+                    self.tunings[self.tuningSel.currentIndex()][1])
 
 
 class ClassicalGuitar(TablaturePart):
@@ -1137,7 +1137,7 @@ class Drums(Part):
         else:
             self.assignDrums(s, 'drum')
         builder.setInstrumentNames(p, self.instrumentNames, self.num)
-        i = self.drumStyle.currentItem()
+        i = self.drumStyle.currentIndex()
         if i > 0:
             v = ('drums', 'timbales', 'congas', 'bongos', 'percussion')[i]
             p.getWith()['drumStyleTable'] = Scheme('%s-style' % v)
@@ -1147,6 +1147,7 @@ class Drums(Part):
             Line("\\override Stem #'stencil = ##f", p.getWith())
             Line("\\override Stem #'length = #3  %% %s"
                 % i18n("keep some distance."), p.getWith())
+        self.nodes.append(p)
 
     def widgets(self, layout):
         h = KHBox()

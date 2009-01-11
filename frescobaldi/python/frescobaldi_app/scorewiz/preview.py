@@ -22,7 +22,7 @@ Preview dialog for the Score Wizard (scorewiz/__init__.py).
 In separate file to ease maintenance.
 """
 
-import os, sip, shutil, tempfile
+import math, os, sip, shutil, tempfile
 import ly, ly.dom
 
 from PyQt4.QtCore import *
@@ -89,21 +89,50 @@ class PreviewDialog(KDialog):
         builder.midi = False # not needed
         doc = builder.document()
 
-        # create a list of durations for the example notes.
         keysig = doc.findChild(ly.dom.KeySignature) 
         timesig = doc.findChild(ly.dom.TimeSignature)
         partial = doc.findChild(ly.dom.Partial)
+        # create a list of durations for the example notes.
+        durs = []
+        if partial:
+            durs.append((partial.dur, partial.dots))
+        if timesig:
+            dur = int(math.log(int(timesig.beat), 2))
+            num = min(int(timesig.num)*2, 10)
+        else:
+            dur, num = 2, 4
+        durs += [(dur, 0)] * num
         
+        lyrics = lyricsGen(len(durs)).next
         # iter over all the Assignments to add example notes etc.
         for a in doc.findChildren(ly.dom.Assignment, 1):
             stub = a[-1]
             if isinstance(stub, ly.dom.LyricMode):
-                ly.dom.Text('He', parent=stub)
+                ly.dom.Text(lyrics(), parent=stub)
             elif isinstance(stub, ly.dom.Relative):
                 node = stub[-1]
-                ly.dom.Pitch(octave=-1, parent=node)
-                
-        
+                pitch = pitchGen(keysig).next
+                for dur, dots in durs:
+                    chord = ly.dom.Chord(node)
+                    chord.append(pitch())
+                    chord.append(ly.dom.Duration(dur, dots))
+            elif isinstance(stub, ly.dom.ChordMode):
+                pitch = pitchGen(keysig).next
+                for dur, dots in durs[:5]:
+                    chord = ly.dom.Chord(stub)
+                    chord.append(pitch())
+                    chord.append(ly.dom.Duration(dur, dots))
+            elif isinstance(stub, ly.dom.FigureMode):
+                figure = figureGen().next
+                for dur, dots in durs:
+                    fig = ly.dom.TextDur(figure(), stub)
+                    fig.append(ly.dom.Duration(dur, dots))
+            elif isinstance(stub, ly.dom.DrumMode):
+                drum = drumGen().next
+                for dur, dots in durs:
+                    dr = ly.dom.TextDur(drum(), stub)
+                    dr.append(ly.dom.Duration(dur, dots))
+
         # write the doc to a temporary file and run LilyPond
         lyfile = os.path.join(self.directory, 'preview.ly')
         
@@ -129,8 +158,32 @@ class PreviewDialog(KDialog):
             sip.transferto(
                 KRun(KUrl.fromPath(fileName), self.scorewiz.mainwin), None)
 
-       
+
+# Generators for different kinds of example input
+def pitchGen(startPitch):
+    note = startPitch.note
+    while True:
+        for n in (note, note, (note + 9 ) % 7, (note + 8) % 7,
+                    note, (note + 11) % 7, note):
+            yield ly.dom.Pitch(-1, n, startPitch.alter)
         
+def lyricsGen(length):
+    while True:
+        for i in "ha", "hi", "ho", "he", "hu":
+            result = [i]*length
+            result[0] = result[0].title()
+            yield ' '.join(result)
+
+def figureGen():
+    while True:
+        for i in 5, 6, 3, 8, 7:
+            yield "<%s>" % i
+            
+def drumGen():
+    while True:
+        for i in "bd", "hh", "sn", "hh":
+            yield i
+
 
 # Easily get our global config
 def config(group="preferences"):

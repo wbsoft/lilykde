@@ -411,6 +411,16 @@ class HandleVars(object):
         return QuotedString(obj)
 
 
+class AddDuration(object):
+    """ Mixin to add a duration (as child). """
+    def ly(self, printer):
+        s = super(AddDuration, self).ly(printer)
+        dur = self.findChild(Duration, 1)
+        if dur:
+            s += dur.ly(printer)
+        return s
+
+
 class LyNode(Node):
     """
     Base class for LilyPond objects, based on Node,
@@ -510,6 +520,11 @@ class Text(Leaf):
     
     def ly(self, printer):
         return self.text
+
+
+class TextDur(AddDuration, Text):
+    """ A text note with an optional duration as child. """
+    pass
 
 
 class Line(Text):
