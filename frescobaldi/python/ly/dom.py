@@ -234,26 +234,25 @@ class Node(object):
         Iterate over all the children, and their children, etc.
         Set depth to restrict the search to a certain depth, -1 is unrestricted.
         """
-        yield self
         if depth != 0:
             for i in self:
+                yield i
                 for j in i.iterDepthFirst(depth - 1):
                     yield j
-
-    def iterDepthLast(self, depth = -1, ring = 0):
+                
+    def iterDepthLast(self, depth = -1):
         """
         Iterate over the children in rings, depth last.
         Set depth to restrict the search to a certain depth, -1 is unrestricted.
-        Do not set ring in your invocation, it's used internally.
         """
-        if ring == 0:
-            yield self
-        if ring != depth:
-            for i in self:
+        children = self.children()
+        while children and depth:
+            depth -= 1
+            newchildren = []
+            for i in children:
                 yield i
-            for i in self:
-                for j in i.iterDepthLast(depth, ring + 1):
-                    yield j
+                newchildren.extend(i.children())
+            children = newchildren
 
     def findChildren(self, cls, depth = -1):
         """
@@ -264,6 +263,15 @@ class Node(object):
             if isinstance(node, cls):
                 yield node
 
+    def findChild(self, cls, depth = -1):
+        """
+        return the first descendant of the current node of
+        the class cls or a subclass, if there is any.
+        """
+        for node in self.iterDepthLast(depth):
+            if isinstance(node, cls):
+                return node
+    
     def findParent(self, cls):
         """
         find an ancestor of the given class
@@ -943,6 +951,23 @@ class Duration(Leaf):
         return s
 
 
+class Chord(Container):
+    """
+    A chord containing one of more Pitches and optionally one Duration.
+    This is a bit of a hack, awaiting real music object support.
+    """
+    def ly(self, printer):
+        pitches = list(self.findChildren(Pitch, 1))
+        if len(pitches) == 1:
+            s = pitches[0].ly(printer)
+        else:
+            s = "<%s>" % ' '.join(p.ly(printer) for p in pitches)
+        duration = self.findChild(Duration, 1)
+        if duration:
+            s += duration.ly(printer)
+        return s
+
+
 class Relative(Statement):
     """
     \\relative <pitch> music
@@ -993,6 +1018,15 @@ class TimeSignature(Leaf):
         return "\\time %i/%i" % (self.num, self.beat)
 
 
+class Partial(Named, Duration):
+    """
+    \\partial <duration>
+    You should add a Duration element
+    """
+    name = "partial"
+    before, after = 1, 1
+    
+    
 class Tempo(Leaf):
     """
     A tempo setting, like: \\tempo 4 = 100

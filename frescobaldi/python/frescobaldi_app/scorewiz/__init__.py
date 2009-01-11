@@ -775,8 +775,9 @@ class Builder(object):
             num, beat = map(int, match.group(1, 2))
             ly.dom.TimeSignature(num, beat, g).after = 1
         # partial
-        if s.pickup.currentIndex() > 0:
-            ly.dom.Line(r"\partial %s" % durations[s.pickup.currentIndex() - 1])
+        if s.pickup.currentIndex() > 1:
+            dur, dots = partialDurations[s.pickup.currentIndex() - 2]
+            ly.dom.Partial(dur, dots, parent=g)
 
         # Now on to the parts!
         # number instances of the same type (Choir I and Choir II, etc.)
@@ -969,5 +970,6 @@ a { text-decoration: none;}
 
 durations = ['16', '16.', '8', '8.', '4', '4.', '2', '2.', '1', '1.']
 midiDurations = ((16,1),(32,3),(8,1),(16,3),(4,1),(8,3),(2,1),(4,3),(1,1),(2,3))
+partialDurations = ((4,0),(4,1),(3,0),(3,1),(2,0),(2,1),(1,0),(1,1),(0,0),(0,1))
 
 paperSizes = ['a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17']

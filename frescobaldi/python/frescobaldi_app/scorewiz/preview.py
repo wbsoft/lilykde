@@ -89,8 +89,12 @@ class PreviewDialog(KDialog):
         builder.midi = False # not needed
         doc = builder.document()
 
-        # iter over all the Assignments to add some example notes and
-        # other stuff
+        # create a list of durations for the example notes.
+        keysig = doc.findChild(ly.dom.KeySignature) 
+        timesig = doc.findChild(ly.dom.TimeSignature)
+        partial = doc.findChild(ly.dom.Partial)
+        
+        # iter over all the Assignments to add example notes etc.
         for a in doc.findChildren(ly.dom.Assignment, 1):
             stub = a[-1]
             if isinstance(stub, ly.dom.LyricMode):
