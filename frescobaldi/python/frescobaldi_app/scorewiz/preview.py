@@ -85,14 +85,9 @@ class PreviewDialog(KDialog):
         self.show()
         self.stack.setCurrentWidget(self.log)
         
-        doc = self.scorewiz.buildDocument()
-        
-        printer = ly.dom.Printer()
-        printer.indentString = "  " # FIXME get indent-width somehow...
-        printer.typographicalQuotes = self.scorewiz.settings.typq.isChecked()
-        language = self.scorewiz.settings.getLanguage()
-        if language:
-            printer.language = language
+        builder = self.scorewiz.builder()
+        builder.midi = False # not needed
+        doc = builder.document()
 
         # iter over all the Assignments to add some example notes and
         # other stuff
@@ -108,7 +103,7 @@ class PreviewDialog(KDialog):
         # write the doc to a temporary file and run LilyPond
         lyfile = os.path.join(self.directory, 'preview.ly')
         
-        text = printer.indent(doc)
+        text = builder.ly(doc)
         print text #DEBUG
         file(lyfile, 'w').write(text.encode('utf-8'))
         
@@ -124,8 +119,8 @@ class PreviewDialog(KDialog):
     
     def openPDF(self, fileName):
         if self.part:
-            self.stack.setCurrentWidget(self.part.widget())
-            self.part.openUrl(KUrl.fromPath(fileName))
+            if self.part.openUrl(KUrl.fromPath(fileName)):
+                self.stack.setCurrentWidget(self.part.widget())
         else:
             sip.transferto(
                 KRun(KUrl.fromPath(fileName), self.scorewiz.mainwin), None)

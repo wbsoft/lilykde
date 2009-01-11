@@ -107,22 +107,13 @@ class ScoreWizard(KPageDialog):
         self.saveCompletions()
         self.settings.saveConfig()
         if result:
-            # Get the document as a ly.dom tree structure
-            doc = self.buildDocument()
-            # Printer converts the ly.dom structure to LilyPond text
-            printer = ly.dom.Printer()
-            printer.indentString = "  " # FIXME get indent-width somehow...
-            printer.typographicalQuotes = self.settings.typq.isChecked()
-            language = self.settings.getLanguage()
-            if language:
-                printer.language = language
-            self.mainwin.view().insertText(printer.indent(doc))
+            self.mainwin.view().insertText(self.builder().ly())
         KPageDialog.done(self, result)
 
-    def buildDocument(self):
-        """ Return a ly.dom tree of the document as built by the user. """
-        return Builder(self).build()
-        
+    def builder(self):
+        """ Return a Builder that mimics our settings """
+        return Builder(self)
+
 
 class Titles(QWidget):
     """
@@ -654,8 +645,24 @@ class Builder(object):
     """
     def __init__(self, wizard):
         self.wizard = wizard
-
-    def build(self):
+        self.midi = wizard.settings.midi.isChecked()
+        
+    def ly(self, doc=None):
+        """ Return LilyPond formatted output. """
+        return self.printer().indent(doc or self.document())
+        
+    def printer(self):
+        """ printer, that converts the ly.dom structure to LilyPond text. """
+        p = ly.dom.Printer()
+        p.indentString = "  " # FIXME get indent-width somehow...
+        p.typographicalQuotes = self.wizard.settings.typq.isChecked()
+        language = self.wizard.settings.getLanguage()
+        if language:
+            p.language = language
+        return p
+        
+    def document(self):
+        """ Get the document as a ly.dom tree structure """
         s = self.wizard.settings # easily access the settings tab.
 
         doc = ly.dom.Document()
@@ -722,7 +729,6 @@ class Builder(object):
         g = ly.dom.Seq(ly.dom.Assignment('global'))
 
         # First find out if we need to define a tempoMark section.
-        midi = s.midi.isChecked()
         tempoText = unicode(s.tempoInd.text())
         metro = s.metro.isChecked()
         dur = durations[s.metroDur.currentIndex()]
@@ -817,7 +823,7 @@ class Builder(object):
         if s.barnum.isChecked():
             ly.dom.Line('\\remove "Bar_number_engraver"',
                 ly.dom.Context('Score', lay))
-        if midi:
+        if self.midi:
             mid = ly.dom.Midi(score)
             if tempoText or not metro:
                 base, mul = midiDurations[s.metroDur.currentIndex()]
@@ -866,7 +872,7 @@ class Builder(object):
         """
         Sets the MIDI instrument for the node, if the user wants MIDI output.
         """
-        if self.wizard.settings.midi.isChecked():
+        if self.midi:
             node.getWith()['midiInstrument'] = midiInstrument
 
 
