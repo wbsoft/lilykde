@@ -37,6 +37,36 @@ class LilyPondVersion(object):
             self.versionString = ""
 
 
+def datadir(command = 'lilypond'):
+    """ Returns the data directory of the given lilypond binary """
+    
+    # First ask LilyPond itself.
+    try:
+        datadir = Popen((command, '-e',
+            "(display (ly:get-option 'datadir)) (newline) (exit)"),
+            stdout=PIPE).communicate()[0].strip()
+        if os.path.isabs(datadir) and os.path.isdir(datadir):
+            return datadir
+    except OSError:
+        pass
+    # Then find out by manipulating path.
+    if not os.path.isabs(command):
+        command = findexe(command)
+        if not command:
+            return False
+    # LilyPond is found. Go up to prefix and then into share/lilypond        
+    prefix = os.path.dirname(os.path.dirname(command))
+    dirs = ['current']
+    version = LilyPondVersion(command).versionString
+    if version:
+        dirs.append(version)
+    for suffix in dirs:
+        datadir = os.path.join(prefix, 'share', 'lilypond', suffix)
+        if os.path.isdir(datadir):
+            return datadir
+    return False
+    
+
 def getVersion(text):
     """
     Determine the version of a LilyPond document.
@@ -46,3 +76,25 @@ def getVersion(text):
     if match:
         return tuple((map(int, re.findall('\\d+', match.group())) + [0, 0, 0])[:3])
 
+
+
+# Utility functions.....
+def isexe(path):
+    """
+    Return path if it is an executable file, otherwise False
+    """
+    return os.access(path, os.X_OK) and path
+
+
+def findexe(filename):
+    """
+    Look up a filename in the system PATH, and return the full
+    path if it can be found. If the path is absolute, return it
+    unless it is not an executable file.
+    """
+    if os.path.isabs(os.path.expanduser(filename)):
+        return isexe(os.path.expanduser(filename))
+    for p in os.environ.get("PATH", os.defpath).split(os.pathsep):
+        if isexe(os.path.join(p, filename)):
+            return os.path.join(p, filename)
+    return False
