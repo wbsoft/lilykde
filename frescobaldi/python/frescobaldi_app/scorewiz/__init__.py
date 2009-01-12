@@ -741,13 +741,12 @@ class Builder(object):
             ly.dom.Line(
                 "\\once \\override Score.RehearsalMark "
                 "#'self-alignment-X = #LEFT", tm)
-            if self.lilypondVersion > (2, 11, 0):
-                ly.dom.Line(
-                    "\\once \\override Score.RehearsalMark "
-                    "#'break-align-symbols = #'(time-signature key-signature)", tm)
-                ly.dom.Line(
-                    "\\once \\override Staff.TimeSignature "
-                    "#'break-align-anchor-alignment = #LEFT", tm)
+            ly.dom.Line(
+                "\\once \\override Score.RehearsalMark "
+                "#'break-align-symbols = #'(time-signature key-signature)", tm)
+            ly.dom.Line(
+                "\\once \\override Staff.TimeSignature "
+                "#'break-align-anchor-alignment = #LEFT", tm)
             # Should we also display the metronome mark?
             m = ly.dom.MarkupEnclosed('bold', ly.dom.Markup(ly.dom.Mark(tm)))
             if metro:
