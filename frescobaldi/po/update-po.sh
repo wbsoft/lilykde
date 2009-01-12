@@ -17,9 +17,10 @@ xgettext \
     ../frescobaldi.py \
     dummy.py \
     ../python/ly/*.py \
-    ../python/kateshell/*.py \
+    ../python/kateshell/mainwindow.py \
     ../python/frescobaldi_app/*.py \
     ../python/frescobaldi_app/scorewiz/*.py
+#   ../python/kateshell/app.py is not needed, strings there are also in Katepart    
 
 # Update po files:
 for po in *.po
