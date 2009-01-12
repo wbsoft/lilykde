@@ -98,6 +98,9 @@ class MainApp(kateshell.app.MainApp):
     def createDocument(self, url=None, encoding=None):
         return Document(self, url, encoding)
 
+    def defaultDirectory(self):
+        return config().readPathEntry("default directory", "")
+        
 
 class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """

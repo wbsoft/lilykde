@@ -314,7 +314,8 @@ class MainWindow(KParts.MainWindow):
     def openDocument(self):
         """ Open an existing document. """
         res = KEncodingFileDialog.getOpenUrlsAndEncoding(
-            self.app.defaultEncoding, self.currentDocument().url().url(),
+            self.app.defaultEncoding,
+            self.currentDocument().url().url() or self.app.defaultDirectory(),
             '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
             self, i18n("Open File"))
         for url in res.URLs:

@@ -25,6 +25,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
+from PyKDE4.kio import KFile, KUrlRequester
 
 from frescobaldi_app.widgets import ExecLineEdit, ExecArgsLineEdit
 
@@ -187,6 +188,21 @@ class Commands(QWidget):
             layout.addWidget(widget, len(self.commands), 1)
             self.commands.append((widget, name, default))
         
+        # default directory
+        l = QLabel(i18n("Default directory:"))
+        self.folder = KUrlRequester()
+        l.setBuddy(self.folder)
+        row = layout.rowCount()
+        tooltip = i18n("The default folder for LilyPond documents "
+                       "(may be empty).")
+        l.setToolTip(tooltip)
+        self.folder.setToolTip(tooltip)
+        layout.addWidget(l, row, 0)
+        layout.addWidget(self.folder, row, 1)
+        self.folder.setMode(KFile.Mode(
+            KFile.Directory | KFile.ExistingOnly | KFile.LocalOnly))
+        self.folder.button().setIcon(KIcon("document-open-folder"))
+        
         # hyphen paths
         l = QLabel(i18n(
             "Paths to search for hyphenation dictionaries of OpenOffice.org, "
@@ -211,6 +227,7 @@ class Commands(QWidget):
         for widget, name, default in self.commands:
             widget.setText(default)
         self.setHyphenPaths(frescobaldi_app.hyphen.defaultPaths)
+        self.folder.setPath('')
         
     def loadSettings(self):
         conf = config("commands")
@@ -219,7 +236,14 @@ class Commands(QWidget):
         paths = config("hyphenation").readEntry("paths",
             frescobaldi_app.hyphen.defaultPaths)
         self.setHyphenPaths(paths)
-
+        changed = lambda arg: self.dialog.changed()
+        QObject.disconnect(self.folder, SIGNAL("textChanged(const QString&)"),
+            changed)
+        self.folder.setPath(config("preferences").readPathEntry(
+            "default directory", ""))
+        QObject.connect(self.folder, SIGNAL("textChanged(const QString&)"),
+            changed)
+        
     def saveSettings(self):
         conf = config("commands")
         for widget, name, default in self.commands:
@@ -230,6 +254,8 @@ class Commands(QWidget):
         config("hyphenation").writeEntry("paths", paths)
         # reload the table of hyphenation dictionaries
         frescobaldi_app.hyphen.findDicts()
+        config("preferences").writePathEntry("default directory",
+            self.folder.url().path())
 
 
 def config(group):

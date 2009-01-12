@@ -78,6 +78,8 @@ class MainApp(DBusItem):
 
 
         # restore session etc.
+    def defaultDirectory(self):
+        return ''
 
     def createMainWindow(self):
         return MainWindow(self)
@@ -272,7 +274,8 @@ class Document(DBusItem):
     def saveAs(self):
         if self.doc:
             res = KEncodingFileDialog.getSaveUrlAndEncoding(
-                self.doc.encoding(), self.url().url(),
+                self.doc.encoding(),
+                self.url().url() or self.app.defaultDirectory(),
                 '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
                 self.app.mainwin, i18n("Save File"))
             if not res.URLs:
