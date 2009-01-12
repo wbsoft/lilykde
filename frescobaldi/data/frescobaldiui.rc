@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="frescobaldi" version="3">
+<kpartgui name="frescobaldi" version="4">
 
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -12,6 +12,8 @@
     <Separator/>
 
     <DefineGroup name="save_merge" append="save_merge" />
+    <Action name="file_save"/>
+    <Action name="file_save_as"/>
     <Separator/>
 
     <DefineGroup name="revert_merge" append="revert_merge"/>
@@ -115,6 +117,8 @@
   <Action name="file_open" />
   <Separator />
   <DefineGroup name="file_operations" />
+  <Action name="file_save"/>
+  <Action name="file_save_as"/>
   <Separator />
   <DefineGroup name="print_merge" />
   <Separator />

@@ -157,6 +157,10 @@ class MainWindow(KParts.MainWindow):
         self.act('file_open', KStandardAction.Open, self.openDocument)
         self.act('file_close', KStandardAction.Close,
             lambda: self.app.activeDocument().close())
+        self.act('file_save', KStandardAction.Save,
+            lambda: self.app.activeDocument().save())
+        self.act('file_save_as', KStandardAction.SaveAs,
+            lambda: self.app.activeDocument().saveAs())
         self.act('file_quit', KStandardAction.Quit, self.app.quit)
         self.act('doc_back', KStandardAction.Back, self.app.back)
         self.act('doc_forward', KStandardAction.Forward, self.app.forward)

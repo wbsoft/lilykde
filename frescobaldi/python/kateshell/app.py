@@ -22,7 +22,8 @@ from dbus.service import method, signal
 
 from PyQt4.QtCore import QObject, SIGNAL
 from PyKDE4.kdecore import i18n, KGlobal, KUrl
-from PyKDE4.kdeui import KApplication
+from PyKDE4.kdeui import KApplication, KGuiItem, KMessageBox, KStandardGuiItem
+from PyKDE4.kio import KEncodingFileDialog
 from PyKDE4.ktexteditor import KTextEditor
 
 from kateshell import DBUS_IFACE_PREFIX
@@ -250,10 +251,42 @@ class Document(DBusItem):
             QObject.connect(self.view, SIGNAL(s), self.updateStatus)
         for s in ("selectionChanged(KTextEditor::View*)",):
             QObject.connect(self.view, SIGNAL(s), self.updateSelection)
+        
+        # delete some actions from the view before plugging in GUI
+        # trick found in kateviewmanager.cpp
+        for name in "file_save", "file_save_as":
+            action = self.view.actionCollection().action(name)
+            if action:
+                sip.delete(action)
     
+    @method(iface, in_signature='', out_signature='b')
     def save(self):
         if self.doc:
-            self.doc.save()
+            if self.url().isEmpty():
+                return self.saveAs()
+            else:
+                return self.doc.save()
+        return True
+        
+    @method(iface, in_signature='', out_signature='b')
+    def saveAs(self):
+        if self.doc:
+            res = KEncodingFileDialog.getSaveUrlAndEncoding(
+                self.doc.encoding(), self.url().url(),
+                '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
+                self.app.mainwin, i18n("Save File"))
+            if not res.URLs:
+                return False
+            url = res.URLs[0]
+            if (url.isLocalFile() and os.path.exists(url.path()) and
+                    KMessageBox.warningContinueCancel(self.app.mainwin,
+                    i18n("A file named \"%1\" already exists. "
+                         "Are you sure you want to overwrite it?", url.path()),
+                    i18n("Overwrite File?"), KGuiItem(i18n("&Overwrite"))) ==
+                    KMessageBox.Cancel):
+                return False
+            return self.doc.saveAs(url)
+        return True
             
     def openUrl(self, url):
         if not isinstance(url, KUrl):
@@ -362,8 +395,10 @@ class Document(DBusItem):
     def close(self, prompt=True):
         """Closes this document, returning true if closing succeeded."""
         if self.doc:
-            if not self.doc.closeUrl(prompt):
-                return False # cancel
+            if prompt and not self.queryClose():
+                return False
+            if not self.doc.closeUrl(False):
+                return False # closing did not succeed, but that'd be abnormal
             listeners.call(self.close, self) # before we are really deleted
             self.app.mainwin.removeDoc(self)
             sip.delete(self.view)
@@ -376,4 +411,23 @@ class Document(DBusItem):
         self.app.removeDocument(self)
         return True
 
-
+    def queryClose(self):
+        """ Ask user if document modified and saves if desired. """
+        # Many stuff copied from KatePart
+        if not self.doc or not self.isModified():
+            return True
+        res = KMessageBox.warningYesNoCancel(self.app.mainwin, i18n(
+            "The document \"%1\" has been modified.\n"
+            "Do you want to save your changes or discard them?",
+            self.documentName()), i18n("Close Document"),
+            KStandardGuiItem.save(), KStandardGuiItem.discard())
+        if res == KMessageBox.Yes:
+            if self.url().isEmpty():
+                self.saveAs()
+            else:
+                self.save()
+            return self.doc.waitSaveComplete()
+        elif res == KMessageBox.No:
+            return True
+        else: # cancel
+            return False
