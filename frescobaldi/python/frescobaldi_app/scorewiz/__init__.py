@@ -738,12 +738,16 @@ class Builder(object):
             tm = ly.dom.Enclosed(ly.dom.Assignment('tempoMark', doc))
             ly.dom.BlankLine(doc)
             ly.dom.Line('\\tempoMark', g)
-            for i in (
-                "self-alignment-X = #LEFT",
-                "break-align-symbols = #'(time-signature)",
-                "extra-offset = #'(-0.5 . 0)",
-                ):
-                ly.dom.Line(r"\once \override Score.RehearsalMark #'" + i, tm)
+            ly.dom.Line(
+                "\\once \\override Score.RehearsalMark "
+                "#'self-alignment-X = #LEFT", tm)
+            if self.lilypondVersion > (2, 11, 0):
+                ly.dom.Line(
+                    "\\once \\override Score.RehearsalMark "
+                    "#'break-align-symbols = #'(time-signature key-signature)", tm)
+                ly.dom.Line(
+                    "\\once \\override Staff.TimeSignature "
+                    "#'break-align-anchor-alignment = #LEFT", tm)
             # Should we also display the metronome mark?
             m = ly.dom.MarkupEnclosed('bold', ly.dom.Markup(ly.dom.Mark(tm)))
             if metro:
