@@ -281,7 +281,8 @@ class Document(DBusItem):
             if (url.isLocalFile() and os.path.exists(url.path()) and
                     KMessageBox.warningContinueCancel(self.app.mainwin,
                     i18n("A file named \"%1\" already exists. "
-                         "Are you sure you want to overwrite it?", url.path()),
+                         "Are you sure you want to overwrite it?",
+                         url.fileName()),
                     i18n("Overwrite File?"), KGuiItem(i18n("&Overwrite"))) ==
                     KMessageBox.Cancel):
                 return False
