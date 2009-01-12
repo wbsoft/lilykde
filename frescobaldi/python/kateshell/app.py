@@ -278,7 +278,7 @@ class Document(DBusItem):
             if not res.URLs:
                 return False
             url = res.URLs[0]
-            if (url.isLocalFile() and os.path.exists(url.path()) and
+            if (url.isLocalFile() and os.path.exists(unicode(url.path())) and
                     KMessageBox.warningContinueCancel(self.app.mainwin,
                     i18n("A file named \"%1\" already exists. "
                          "Are you sure you want to overwrite it?",
