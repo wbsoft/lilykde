@@ -143,7 +143,7 @@ class ActionManager(object):
         if directory is not None:
             url = KUrl(directory)
         elif self.mainwin.currentDocument().url().isEmpty():
-            url = KUrl.fromPath(os.getcwd())
+            url = KUrl.fromPath(self.mainwin.app.defaultDirectory() or os.getcwd())
         else:
             url = KUrl(self.mainwin.currentDocument().url().resolved(KUrl('.')))
         url.adjustPath(KUrl.RemoveTrailingSlash)
