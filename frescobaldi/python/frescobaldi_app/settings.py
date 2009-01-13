@@ -43,8 +43,7 @@ class SettingsDialog(KPageDialog):
             KPageDialog.Ok | KPageDialog.Cancel))
         self.setCaption(i18n("Configure"))
         self.setDefaultButton(KPageDialog.Ok)
-        self.enableButton(KPageDialog.Apply, False)
-        QObject.connect(self, SIGNAL("applyClicked()"), self.applyClicked)
+        QObject.connect(self, SIGNAL("applyClicked()"), self.saveSettings)
         QObject.connect(self, SIGNAL("defaultClicked()"), self.defaultClicked)
         self.pages = [
             GeneralPreferences(self),
@@ -65,22 +64,20 @@ class SettingsDialog(KPageDialog):
             self.saveSettings()
         KPageDialog.done(self, result)
         
-    def applyClicked(self):
-        self.saveSettings()
-        self.changed(False)
-
     def defaultClicked(self):
         for page in self.pages:
             page.defaults()
-        self.changed()
+        self.changed(True)
             
     def loadSettings(self):
         for page in self.pages:
             page.loadSettings()
+        self.changed(False)
         
     def saveSettings(self):
         for page in self.pages:
             page.saveSettings()
+        self.changed(False)
             
 
 class EditorComponent(object):
@@ -150,7 +147,6 @@ class Commands(QWidget):
     """
     def __init__(self, dialog):
         QWidget.__init__(self, dialog)
-        self.dialog = dialog
         item = dialog.addPage(self, i18n("Paths"))
         item.setHeader(i18n("Paths to programs or data used by Frescobaldi"))
         item.setIcon(KIcon("utilities-terminal"))
@@ -194,8 +190,8 @@ class Commands(QWidget):
         self.folder = KUrlRequester()
         l.setBuddy(self.folder)
         row = layout.rowCount()
-        tooltip = i18n("The default folder for your LilyPond documents "
-                       "(may be empty).")
+        tooltip = i18n(
+            "The default folder for your LilyPond documents (optional).")
         l.setToolTip(tooltip)
         self.folder.setToolTip(tooltip)
         layout.addWidget(l, row, 0)
@@ -203,6 +199,8 @@ class Commands(QWidget):
         self.folder.setMode(KFile.Mode(
             KFile.Directory | KFile.ExistingOnly | KFile.LocalOnly))
         self.folder.button().setIcon(KIcon("document-open-folder"))
+        QObject.connect(self.folder, SIGNAL("textChanged(const QString&)"),
+            lambda dummy: dialog.changed())
         
         # hyphen paths
         l = QLabel(i18n(
@@ -215,14 +213,11 @@ class Commands(QWidget):
         l.setBuddy(self.hyphenPaths)
         layout.addWidget(l, layout.rowCount(), 0, 1, 2)
         layout.addWidget(self.hyphenPaths, layout.rowCount(), 0, 1, 2)
+        QObject.connect(self.hyphenPaths, SIGNAL("textChanged()"),
+            dialog.changed)
 
     def setHyphenPaths(self, paths):
-        # disconnect first; unfortunately QTextEdit has no textEdited signal...
-        QObject.disconnect(self.hyphenPaths, SIGNAL("textChanged()"),
-            self.dialog.changed)
         self.hyphenPaths.setPlainText('\n'.join(unicode(p) for p in paths))
-        QObject.connect(self.hyphenPaths, SIGNAL("textChanged()"),
-            self.dialog.changed)
         
     def defaults(self):
         for widget, name, default in self.commands:
@@ -237,13 +232,8 @@ class Commands(QWidget):
         paths = config("hyphenation").readEntry("paths",
             frescobaldi_app.hyphen.defaultPaths)
         self.setHyphenPaths(paths)
-        changed = lambda arg: self.dialog.changed()
-        QObject.disconnect(self.folder, SIGNAL("textChanged(const QString&)"),
-            changed)
-        self.folder.setPath(config("preferences").readPathEntry(
-            "default directory", ""))
-        QObject.connect(self.folder, SIGNAL("textChanged(const QString&)"),
-            changed)
+        self.folder.setPath(
+            config("preferences").readPathEntry("default directory", ""))
         
     def saveSettings(self):
         conf = config("commands")

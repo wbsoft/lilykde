@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.0\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-13 12:15+0100\n"
+"POT-Creation-Date: 2009-01-13 13:37+0100\n"
 "PO-Revision-Date: 2008-11-19 22:36+0100\n"
 "Last-Translator: Henrik Evers <henrik.evers@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1073,53 +1073,53 @@ msgstr ""
 msgid "Configure"
 msgstr "Konfiguriere"
 
-#: ../python/frescobaldi_app/settings.py:88
+#: ../python/frescobaldi_app/settings.py:85
 msgid "Editor Component"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:89
+#: ../python/frescobaldi_app/settings.py:86
 msgid "Editor Component Options"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:116
+#: ../python/frescobaldi_app/settings.py:113
 msgid "General Preferences"
 msgstr "Generelle Einstellungen"
 
-#: ../python/frescobaldi_app/settings.py:117
+#: ../python/frescobaldi_app/settings.py:114
 #, fuzzy
 msgid "General Frescobaldi Preferences"
 msgstr "Generelle Einstellungen"
 
-#: ../python/frescobaldi_app/settings.py:122
+#: ../python/frescobaldi_app/settings.py:119
 msgid "Save document when LilyPond is run"
 msgstr "Dokument nach Ablauf von LilyPond speichern"
 
-#: ../python/frescobaldi_app/settings.py:124
+#: ../python/frescobaldi_app/settings.py:121
 msgid "Let LilyPond delete intermediate output files"
 msgstr "LilyPond die temporären Output-Dateien löschen lassen"
 
-#: ../python/frescobaldi_app/settings.py:154
+#: ../python/frescobaldi_app/settings.py:150
 #, fuzzy
 msgid "Paths"
 msgstr "Teile"
 
-#: ../python/frescobaldi_app/settings.py:155
+#: ../python/frescobaldi_app/settings.py:151
 msgid "Paths to programs or data used by Frescobaldi"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:164
+#: ../python/frescobaldi_app/settings.py:160
 msgid "Name or full path of the LilyPond program."
 msgstr "Name oder vollständiger Pfad des LilyPond-Programms."
 
-#: ../python/frescobaldi_app/settings.py:166
+#: ../python/frescobaldi_app/settings.py:162
 msgid "Name or full path of the convert-ly program."
 msgstr "Name oder vollständiger Pfad des convert-ly-Programms."
 
-#: ../python/frescobaldi_app/settings.py:167
+#: ../python/frescobaldi_app/settings.py:163
 msgid "Printcommand:"
 msgstr "Druckbefehl:"
 
-#: ../python/frescobaldi_app/settings.py:168
+#: ../python/frescobaldi_app/settings.py:164
 msgid ""
 "Command to print a PDF file, for example lpr or kprinter. You may add some "
 "arguments, e.g. lpr -P myprinter."
@@ -1127,11 +1127,11 @@ msgstr ""
 "Befehl, um ein PDF zu drucken, z.B. lpr oder kprinter. Sie können auch "
 "weitere Argumente hinzufügen, beispielsweise lpr -P meindrucker."
 
-#: ../python/frescobaldi_app/settings.py:172
+#: ../python/frescobaldi_app/settings.py:168
 msgid "Name or full path of the Rumor program."
 msgstr "Name oder vollständiger Pfad des Programms Rumor."
 
-#: ../python/frescobaldi_app/settings.py:174
+#: ../python/frescobaldi_app/settings.py:170
 msgid ""
 "Name or full path of the aconnect program (part of ALSA, for MIDI input and "
 "playback using Rumor)."
@@ -1139,22 +1139,22 @@ msgstr ""
 "Name oder vollständiger Pfad des Programms aconnect (Teil von ALSA, für MIDI-"
 "Input und Abspielen mit Rumor)."
 
-#: ../python/frescobaldi_app/settings.py:178
+#: ../python/frescobaldi_app/settings.py:174
 msgid ""
 "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Vollständiger Befehl zum Starten von Timidity (oder einem anderen Programm) "
 "als ALSA-MIDI-Client."
 
-#: ../python/frescobaldi_app/settings.py:193
+#: ../python/frescobaldi_app/settings.py:189
 msgid "Default directory:"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:197
-msgid "The default folder for your LilyPond documents (may be empty)."
+#: ../python/frescobaldi_app/settings.py:194
+msgid "The default folder for your LilyPond documents (optional)."
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:209
+#: ../python/frescobaldi_app/settings.py:207
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
