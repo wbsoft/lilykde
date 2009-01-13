@@ -423,7 +423,8 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
             if d and not d.url().isEmpty():
                 url = d.url()
             else:
-                url = KUrl.fromPath(os.getcwd())
+                url = KUrl.fromPath(
+                    self.mainwin.app.defaultDirectory() or os.getcwd())
             self.openUrl(url)
         return w
 
