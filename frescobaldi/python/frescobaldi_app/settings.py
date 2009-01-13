@@ -194,7 +194,7 @@ class Commands(QWidget):
         self.folder = KUrlRequester()
         l.setBuddy(self.folder)
         row = layout.rowCount()
-        tooltip = i18n("The default folder for LilyPond documents "
+        tooltip = i18n("The default folder for your LilyPond documents "
                        "(may be empty).")
         l.setToolTip(tooltip)
         self.folder.setToolTip(tooltip)
