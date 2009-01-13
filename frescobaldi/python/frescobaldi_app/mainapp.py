@@ -20,10 +20,11 @@
 import glob, os, re, sip
 from dbus.service import method
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyKDE4.kdecore import *
-from PyKDE4.kdeui import *
+from PyQt4.QtCore import QObject, QString, QTimer, QVariant, Qt, SIGNAL
+from PyQt4.QtGui import QLabel, QStackedWidget, QWidget
+from PyKDE4.kdecore import KGlobal, KUrl, i18n
+from PyKDE4.kdeui import (
+    KDialog, KIcon, KLineEdit, KMessageBox, KStandardAction, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 

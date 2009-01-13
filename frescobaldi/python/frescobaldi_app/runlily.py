@@ -21,10 +21,12 @@
 
 import os, re, time
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyKDE4.kdecore import *
-from PyKDE4.kdeui import *
+from PyQt4.QtCore import (
+    QObject, QProcess, QSize, QTimer, QUrl, QVariant, Qt, SIGNAL)
+from PyQt4.QtGui import (
+    QBrush, QColor, QFont, QFrame, QTextBrowser, QTextCharFormat, QToolBar,
+    QVBoxLayout)
+from PyKDE4.kdecore import KGlobal, KProcess, i18n
 
 from kateshell.mainwindow import listeners
 import frescobaldi_app.mainapp

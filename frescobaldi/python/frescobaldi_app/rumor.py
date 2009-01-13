@@ -24,10 +24,13 @@ Frescobaldi module to run Rumor
 import os, re, sys
 from subprocess import Popen, PIPE
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyKDE4.kdecore import *
-from PyKDE4.kdeui import *
+from PyQt4.QtCore import (
+    QEvent, QObject, QRegExp, QRegExpValidator, QSize, QVariant, Qt, SIGNAL)
+from PyQt4.QtGui import (
+    QCheckBox, QComboBox, QGridLayout, QHBoxLayout, QLabel, QPushButton,
+    QToolButton, QTreeWidget, QTreeWidgetItem, QWidget)
+from PyKDE4.kdecore import KGlobal, KProcess, KShell, i18n
+from PyKDE4.kdeui import KDialog, KIcon
 from PyKDE4.ktexteditor import KTextEditor
 
 import ly.key

@@ -21,10 +21,11 @@
 Config dialog
 """
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyKDE4.kdecore import *
-from PyKDE4.kdeui import *
+from PyQt4.QtCore import QObject, QSize, QString, QVariant, SIGNAL
+from PyQt4.QtGui import (
+    QCheckBox, QGridLayout, QLabel, QTextEdit, QTreeView, QWidget)
+from PyKDE4.kdecore import KGlobal, i18n
+from PyKDE4.kdeui import KIcon, KPageDialog, KVBox
 from PyKDE4.kio import KFile, KUrlRequester
 
 from frescobaldi_app.widgets import ExecLineEdit, ExecArgsLineEdit

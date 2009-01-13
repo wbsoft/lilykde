@@ -25,10 +25,16 @@ import os, re, sip, string, sys
 import ly, ly.dom, ly.version
 from rational import Rational
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyKDE4.kdecore import *
-from PyKDE4.kdeui import *
+from PyQt4.QtCore import (
+    QObject, QSize, QSizeF, QString, QStringList, QUrl, QVariant, Qt, SIGNAL)
+from PyQt4.QtGui import (
+    QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QLabel,
+    QListWidget, QListWidgetItem, QSplitter, QStackedWidget, QTextBrowser,
+    QToolButton, QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
+from PyKDE4.kdecore import KGlobal, i18n, ki18n
+from PyKDE4.kdeui import (
+    KCompletion, KHBox, KIcon, KLineEdit, KPageDialog, KPushButton,
+    KStandardGuiItem, KVBox)
 
 from frescobaldi_app.widgets import TapButton
 from frescobaldi_app.mainapp import lazy

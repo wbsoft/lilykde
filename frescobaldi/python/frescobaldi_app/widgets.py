@@ -24,8 +24,8 @@ Some special widgets
 import os
 from time import time
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import QObject, QProcess, QString, Qt, SIGNAL
+from PyQt4.QtGui import QLineEdit, QPushButton, QSlider, QSpinBox, QToolButton
 from PyKDE4.kdecore import i18n, KProcess
 
 

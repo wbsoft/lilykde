@@ -21,10 +21,11 @@
 
 import re
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyKDE4.kdecore import *
-from PyKDE4.kdeui import *
+from PyQt4.QtCore import QObject, QSize, SIGNAL
+from PyQt4.QtGui import (
+    QCheckBox, QComboBox, QGridLayout, QLabel, QToolBox, QToolButton, QWidget)
+from PyKDE4.kdecore import i18n
+from PyKDE4.kdeui import KHBox, KIcon
 
 import ly.articulation, ly.rx
 

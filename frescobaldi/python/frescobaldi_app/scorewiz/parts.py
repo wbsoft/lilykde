@@ -22,8 +22,10 @@ Part types for the Score Wizard (scorewiz/__init__.py).
 In separate file to ease maintenance.
 """
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import QObject, SIGNAL
+from PyQt4.QtGui import (
+    QCheckBox, QComboBox, QGroupBox, QLabel, QRadioButton, QSpinBox,
+    QVBoxLayout)
 from PyKDE4.kdecore import i18n, ki18n
 from PyKDE4.kdeui import KHBox, KVBox
 

@@ -25,8 +25,8 @@ In separate file to ease maintenance.
 import math, os, sip, shutil, tempfile
 import ly, ly.dom
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import QSize
+from PyQt4.QtGui import QStackedWidget, QWidget
 from PyKDE4.kdecore import KGlobal, KPluginLoader, KUrl, i18n
 from PyKDE4.kdeui import KDialog
 from PyKDE4.kio import KRun

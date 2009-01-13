@@ -19,13 +19,18 @@
 
 import os, sip
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyKDE4.kdecore import *
-from PyKDE4.kdeui import *
+from PyQt4.QtCore import (
+    QEvent, QObject, QTimer, QVariant, Qt, SIGNAL, SLOT, pyqtSignature)
+from PyQt4.QtGui import (
+    QAction, QActionGroup, QDialog, QLabel, QPixmap, QSplitter, QStackedWidget,
+    QVBoxLayout, QWidget)
+from PyKDE4.kdecore import KGlobal, KPluginLoader, KUrl, i18n
+from PyKDE4.kdeui import (
+    KAction, KDialog, KHBox, KIcon, KMenu, KMessageBox, KMultiTabBar, KShortcut,
+    KStandardAction, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
-from PyKDE4.kio import *
+from PyKDE4.kio import KEncodingFileDialog
 
 # Easily get our global config
 def config(group="kateshell"):
