@@ -104,9 +104,8 @@ class PreviewDialog(KDialog):
         durs += [(dur, 0)] * num
         
         def addItems(stub, generator):
-            gen = generator.next
             for dur, dots in durs:
-                node = gen()
+                node = generator.next()
                 node.append(ly.dom.Duration(dur, dots))
                 stub.append(node)
             
