@@ -5,16 +5,11 @@ set(VERSION "0.7.3")
 # Find our own modules
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
-# We need Python
-find_package(PythonInterp REQUIRED)
+# some Python macros
+include(Python)
 
 # Check if all required Python modules are present by running checkmodules.py
-execute_process(
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/checkmodules.py
-  ERROR_VARIABLE _error)
-if(_error)
-  message(FATAL_ERROR ${_error})
-endif(_error)
+python_test_script(${CMAKE_SOURCE_DIR}/checkmodules.py)
 
  # Where to install stuff, in separate module
 include(FindKDEInstallDirs)
