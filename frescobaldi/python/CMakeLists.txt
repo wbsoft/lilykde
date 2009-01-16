@@ -11,7 +11,7 @@ macro(install_python_directory _destination)
     add_custom_command(
       OUTPUT ${_pyc}
       COMMAND ${PYTHON_EXECUTABLE}
-      ARGS -c "import py_compile; py_compile.compile('${_py}', '${_pyc}')"
+      ARGS -c "import py_compile; py_compile.compile('${_py}', '${_pyc}', doraise=True)"
       COMMENT "Byte-compiling ${_rel}"
       DEPENDS ${_py}
       VERBATIM
