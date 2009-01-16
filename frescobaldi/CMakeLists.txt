@@ -5,13 +5,25 @@ set(VERSION "0.7.3")
 # Find our own modules
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
-# We need PyKDE4, which will find Python as well.
-find_package(PyKDE4 REQUIRED)
+# We need Python
+find_package(PythonInterp REQUIRED)
+
+# Check if all required Python modules are present by running checkmodules.py
+execute_process(
+  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/checkmodules.py
+  ERROR_VARIABLE _error)
+if(_error)
+  message(FATAL_ERROR ${_error})
+endif(_error)
+
+ # Where to install stuff, in separate module
+include(FindKDEInstallDirs)
 
 # Do not rebuild our MO's and icons if the build rules were changed.
 # Makes releasing prebuilt tarballs possible.
 set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
 
+# Set some install directories
 set(APP_DIR ${DATA_INSTALL_DIR}/${PROJECT_NAME})
 set(MODULE_DIR ${APP_DIR}/lib)
 
