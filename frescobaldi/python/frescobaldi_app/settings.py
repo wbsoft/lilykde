@@ -39,12 +39,13 @@ class SettingsDialog(KPageDialog):
         self.mainwin = mainwin
         self.setFaceType(KPageDialog.Tree)
         self.setButtons(KPageDialog.ButtonCode(
-            KPageDialog.Default | KPageDialog.Apply |
+            KPageDialog.Reset | KPageDialog.Default | KPageDialog.Apply |
             KPageDialog.Ok | KPageDialog.Cancel))
         self.setCaption(i18n("Configure"))
         self.setDefaultButton(KPageDialog.Ok)
         QObject.connect(self, SIGNAL("applyClicked()"), self.saveSettings)
         QObject.connect(self, SIGNAL("defaultClicked()"), self.defaultClicked)
+        QObject.connect(self, SIGNAL("resetClicked()"), self.loadSettings)
         self.pages = [
             GeneralPreferences(self),
             Commands(self),
