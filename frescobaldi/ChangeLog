@@ -1,11 +1,13 @@
 Changes in 0.7.3
 
-* Score Wizard: fix partial measure, tabstaff, basso continuo and drumstaff
 * Score Wizard: add Try button that shows score example
 * Save Dialog now also has LilyPond filetype filter and default extension
 * New option to set default directory for documents
 * Release tarballs now have prebuilt icons and translations
 * Default keyboard shortcuts have been added for most used actions
+* Bugfixes:
+  * Fix editor part not saving and loading settings
+  * Score Wizard: fix partial measure, tabstaff, basso continuo and drumstaff
 
 Changes in 0.7.2 -- January 7th, 2009
 
