@@ -75,7 +75,7 @@ class MainApp(DBusItem):
 
         # Get our beloved editor :-)
         self.editor = KTextEditor.EditorChooser.editor()
-
+        self.editor.readConfig()
 
         # restore session etc.
     def defaultDirectory(self):

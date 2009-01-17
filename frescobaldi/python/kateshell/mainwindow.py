@@ -366,6 +366,8 @@ class MainWindow(KParts.MainWindow):
         # also all the tools:
         for tool in self.tools.itervalues():
             tool.saveSettings()
+        # also the main editor object:
+        self.app.editor.writeConfig()
         # write them back
         config().sync()
 
