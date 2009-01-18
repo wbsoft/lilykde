@@ -588,8 +588,9 @@ def parseAconnect(channel):
         if m.group(1):
             client = m.group(1)
         elif client != "0":
-            port, name = m.group(2,3)
-            res.append(("%s:%s" % (client, port), name.strip()))
+            port = "%s:%s" % (client, m.group(2))
+            name = "%s (%s)" % (port, m.group(3).strip())
+            res.append((port, name))
     return res
 
 def getOSSnrMIDIs():
