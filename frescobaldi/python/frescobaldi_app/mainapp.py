@@ -110,8 +110,8 @@ class Document(kateshell.app.Document):
             return "run-lilypond"
         return super(Document, self).documentIcon()
     
-    def materialize(self):
-        super(Document, self).materialize()
+    def viewCreated(self):
+        super(Document, self).viewCreated()
         # delete some actions from the view before plugging in GUI
         # trick found in kateviewmanager.cpp
         for name in "set_confdlg", "editor_options":

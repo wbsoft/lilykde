@@ -260,6 +260,14 @@ class Document(DBusItem):
             action = self.view.actionCollection().action(name)
             if action:
                 sip.delete(action)
+        self.viewCreated()
+    
+    def viewCreated(self):
+        """
+        Implement this in subclasses to do things after the KTextEditor.View
+        for this document has materialized.
+        """
+        pass 
     
     @method(iface, in_signature='', out_signature='b')
     def save(self):
@@ -404,11 +412,13 @@ class Document(DBusItem):
             if not self.doc.closeUrl(False):
                 return False # closing did not succeed, but that'd be abnormal
             listeners.call(self.close, self) # before we are really deleted
+            self.aboutToClose()
             self.app.mainwin.removeDoc(self)
             sip.delete(self.view)
             sip.delete(self.doc)
         else:
             listeners.call(self.close, self) # probably never needed...
+            self.aboutToClose()
         listeners.remove(self.updateCaption, self.updateStatus, self.updateSelection,
             self.close)
         self.remove_from_connection() # remove our exported D-Bus object
@@ -435,3 +445,15 @@ class Document(DBusItem):
             return True
         else: # cancel
             return False
+
+    def aboutToClose(self):
+        """
+        Implement this if you want to save some last minute state, etc.
+        After calling this the view and document (if they have materialized)
+        will be deleted.
+        This method will also be called if the document never materialized.
+        So check if self.view really is a View before you do something with it.
+        """
+        pass
+    
+    
