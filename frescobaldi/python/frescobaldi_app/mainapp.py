@@ -20,9 +20,9 @@
 import glob, os, re, sip
 from dbus.service import method
 
-from PyQt4.QtCore import QObject, QString, QTimer, QVariant, Qt, SIGNAL
+from PyQt4.QtCore import QDate, QObject, QString, QTimer, QVariant, Qt, SIGNAL
 from PyQt4.QtGui import QLabel, QStackedWidget, QWidget
-from PyKDE4.kdecore import KGlobal, KUrl, i18n
+from PyKDE4.kdecore import KConfig, KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
     KDialog, KIcon, KLineEdit, KMessageBox, KStandardAction, KVBox)
 from PyKDE4.kparts import KParts
@@ -63,7 +63,8 @@ class MainApp(kateshell.app.MainApp):
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
         os.environ["FRESCOBALDI_PID"] = str(os.getpid())
-
+        self.metainfos = KConfig("metainfos", KConfig.NoGlobals, "appdata")
+        
     def openUrl(self, url, encoding=None):
         # The URL can be python string, dbus string or QString or KUrl
         if not isinstance(url, KUrl):
@@ -118,7 +119,69 @@ class Document(kateshell.app.Document):
             action = self.view.actionCollection().action(name)
             if action:
                 sip.delete(action)
+        self.loadState()
         
+    def aboutToClose(self):
+        self.saveState()
+        
+    def viewActions(self):
+        """
+        Iterate over the View actions for which the state could be saved.
+        """
+        if self.view:
+            for name in (
+                "view_word_wrap_marker", "view_border", "view_line_numbers",
+                "view_scrollbar_marks"):
+                action = self.view.actionCollection().action(name)
+                if action:
+                    yield name, action
+
+    def loadState(self):
+        if (not self.url().isEmpty() and 
+            self.app.metainfos.hasGroup(self.url().prettyUrl())):
+            group = self.app.metainfos.group(self.url().prettyUrl())
+            # restore some options from the view menu
+            for name, action in self.viewActions():
+                if group.hasKey(name):
+                    value = group.readEntry(name, QVariant(False)).toBool()
+                    if value != action.isChecked():
+                        action.trigger()
+            # cursor position
+            line, okline = group.readEntry("line", QVariant(0)).toInt()
+            column, okcolumn = group.readEntry("column", QVariant(0)).toInt()
+            if okline and okcolumn and line < self.doc.lines():
+                self.view.setCursorPosition(KTextEditor.Cursor(line, column))
+            # bookmarks
+            marks = str(group.readEntry("bookmarks", ""))
+            if re.match(r"\d+:\d+(,\d+:\d+)*$", marks):
+                markiface = self.doc.markInterface()
+                for m in marks.split(','):
+                    line, mark = map(int, m.split(':'))
+                    if line < self.doc.lines():
+                        markiface.addMark(line, mark)
+            
+    def saveState(self):
+        if self.view and not self.url().isEmpty():
+            group = self.app.metainfos.group(self.url().prettyUrl())
+            # save some options in the view menu
+            for name, action in self.viewActions():
+                group.writeEntry(name, QVariant(action.isChecked()))
+            # cursor position
+            cursor = self.view.cursorPosition()
+            group.writeEntry("line", QVariant(cursor.line()))
+            group.writeEntry("column", QVariant(cursor.column()))
+            # bookmarks
+            # markInterface().marks() crashes so we use mark() instead...
+            markiface = self.doc.markInterface()
+            marks = []
+            for line in range(self.doc.lines()):
+                m = markiface.mark(line)
+                if m:
+                    marks.append("%d:%d" % (line, m))
+            group.writeEntry("bookmarks", ','.join(marks))
+            group.writeEntry("date", QVariant(QDate.currentDate()))
+            group.sync()
+            
     def variables(self):
         """
         Returns a dictionary with variables put in specially formatted LilyPond
