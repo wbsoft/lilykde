@@ -122,10 +122,12 @@ class Document(kateshell.app.Document):
             action = self.view.actionCollection().action(name)
             if action:
                 sip.delete(action)
-        self.app.stateManager().loadState(self)
+        if config().readEntry("save metainfo", QVariant(False)).toBool():
+            self.app.stateManager().loadState(self)
         
     def aboutToClose(self):
-        self.app.stateManager().saveState(self)
+        if config().readEntry("save metainfo", QVariant(False)).toBool():
+            self.app.stateManager().saveState(self)
         
     def viewActions(self):
         """
@@ -158,6 +160,55 @@ class Document(kateshell.app.Document):
         """
         return updatedFiles(self.localPath())
             
+    def readConfig(self, group):
+        """
+        This is called by the state manager. You can read stuff from
+        the KConfigGroup group, to adjust settings for the loaded document
+        and its view.
+        """
+        # restore some options from the view menu
+        for name, action in self.viewActions():
+            if group.hasKey(name):
+                value = group.readEntry(name, QVariant(False)).toBool()
+                if value != action.isChecked():
+                    action.trigger()
+        # cursor position
+        line, okline = group.readEntry("line", QVariant(0)).toInt()
+        column, okcolumn = group.readEntry("column", QVariant(0)).toInt()
+        if okline and okcolumn and line < self.doc.lines():
+            self.view.setCursorPosition(KTextEditor.Cursor(line, column))
+        # bookmarks
+        marks = str(group.readEntry("bookmarks", ""))
+        if re.match(r"\d+:\d+(,\d+:\d+)*$", marks):
+            markiface = self.doc.markInterface()
+            for m in marks.split(','):
+                line, mark = map(int, m.split(':'))
+                if line < self.doc.lines():
+                    markiface.addMark(line, mark)
+
+    def writeConfig(self, group):
+        """
+        This is called by the state manager. You can write stuff to
+        the KConfigGroup group, to save settings for the about to be
+        closed document and its view.
+        """
+        # save some options in the view menu
+        for name, action in self.viewActions():
+            group.writeEntry(name, QVariant(action.isChecked()))
+        # cursor position
+        cursor = self.view.cursorPosition()
+        group.writeEntry("line", QVariant(cursor.line()))
+        group.writeEntry("column", QVariant(cursor.column()))
+        # bookmarks
+        # markInterface().marks() crashes so we use mark() instead...
+        markiface = self.doc.markInterface()
+        marks = []
+        for line in range(self.doc.lines()):
+            m = markiface.mark(line)
+            if m:
+                marks.append("%d:%d" % (line, m))
+        group.writeEntry("bookmarks", ','.join(marks))
+
 
 class MainWindow(kateshell.mainwindow.MainWindow):
     """ Our customized Frescobaldi MainWindow """
@@ -639,46 +690,13 @@ class StateManager(object):
         if (not doc.url().isEmpty() and 
             self.metainfos.hasGroup(doc.url().prettyUrl())):
             group = self.metainfos.group(doc.url().prettyUrl())
-            # restore some options from the view menu
-            for name, action in doc.viewActions():
-                if group.hasKey(name):
-                    value = group.readEntry(name, QVariant(False)).toBool()
-                    if value != action.isChecked():
-                        action.trigger()
-            # cursor position
-            line, okline = group.readEntry("line", QVariant(0)).toInt()
-            column, okcolumn = group.readEntry("column", QVariant(0)).toInt()
-            if okline and okcolumn and line < doc.doc.lines():
-                doc.view.setCursorPosition(KTextEditor.Cursor(line, column))
-            # bookmarks
-            marks = str(group.readEntry("bookmarks", ""))
-            if re.match(r"\d+:\d+(,\d+:\d+)*$", marks):
-                markiface = doc.doc.markInterface()
-                for m in marks.split(','):
-                    line, mark = map(int, m.split(':'))
-                    if line < doc.doc.lines():
-                        markiface.addMark(line, mark)
+            doc.readConfig(group)
             
     def saveState(self, doc):
         if doc.view and not doc.url().isEmpty():
             group = self.metainfos.group(doc.url().prettyUrl())
-            # save some options in the view menu
-            for name, action in doc.viewActions():
-                group.writeEntry(name, QVariant(action.isChecked()))
-            # cursor position
-            cursor = doc.view.cursorPosition()
-            group.writeEntry("line", QVariant(cursor.line()))
-            group.writeEntry("column", QVariant(cursor.column()))
-            # bookmarks
-            # markInterface().marks() crashes so we use mark() instead...
-            markiface = doc.doc.markInterface()
-            marks = []
-            for line in range(doc.doc.lines()):
-                m = markiface.mark(line)
-                if m:
-                    marks.append("%d:%d" % (line, m))
-            group.writeEntry("bookmarks", ','.join(marks))
             group.writeEntry("date", QVariant(QDate.currentDate()))
+            doc.writeConfig(group)
             group.sync()
             
     def cleanup(self):
