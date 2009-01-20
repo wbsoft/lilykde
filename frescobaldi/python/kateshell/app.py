@@ -260,11 +260,14 @@ class Document(DBusItem):
             action = self.view.actionCollection().action(name)
             if action:
                 sip.delete(action)
+        
+        # set default context menu
+        self.view.setContextMenu(self.view.defaultContextMenu())
         self.viewCreated()
     
     def viewCreated(self):
         """
-        Implement this in subclasses to do things after the KTextEditor.View
+        Override this in subclasses to do things after the KTextEditor.View
         for this document has materialized.
         """
         pass 
