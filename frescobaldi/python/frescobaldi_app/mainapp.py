@@ -688,6 +688,7 @@ class StateManager(object):
             last = self.metainfos.group(g).readEntry("date", defdate).toDate()
             if last.daysTo(QDate.currentDate()) > 31:
                 self.metainfos.deleteGroup(g)
+        self.metainfos.sync()
 
 
 
