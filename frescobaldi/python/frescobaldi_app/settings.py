@@ -121,6 +121,8 @@ class GeneralPreferences(KVBox):
                 "save on run", False),
             (i18n("Let LilyPond delete intermediate output files"),
                 "delete intermediate files", True),
+            (i18n("Remember cursor position, bookmarks, etc."),
+                "save metainfo", False),
         ):
             b = QCheckBox(title, self)
             QObject.connect(b, SIGNAL("clicked()"), dialog.changed)
