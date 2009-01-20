@@ -17,10 +17,10 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import glob, os, re, sip
+import glob, os, re, sip, time
 from dbus.service import method
 
-from PyQt4.QtCore import QDate, QObject, QString, QTimer, QVariant, Qt, SIGNAL
+from PyQt4.QtCore import QObject, QString, QTimer, QVariant, Qt, SIGNAL
 from PyQt4.QtGui import QLabel, QStackedWidget, QWidget
 from PyKDE4.kdecore import KConfig, KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
@@ -129,18 +129,6 @@ class Document(kateshell.app.Document):
         if config().readEntry("save metainfo", QVariant(False)).toBool():
             self.app.stateManager().saveState(self)
         
-    def viewActions(self):
-        """
-        Iterate over the View actions for which the state could be saved.
-        """
-        if self.view:
-            for name in (
-                "view_word_wrap_marker", "view_border", "view_line_numbers",
-                "view_scrollbar_marks"):
-                action = self.view.actionCollection().action(name)
-                if action:
-                    yield name, action
-
     def variables(self):
         """
         Returns a dictionary with variables put in specially formatted LilyPond
@@ -159,55 +147,6 @@ class Document(kateshell.app.Document):
         Returns a function that can list updated files based on extension.
         """
         return updatedFiles(self.localPath())
-            
-    def readConfig(self, group):
-        """
-        This is called by the state manager. You can read stuff from
-        the KConfigGroup group, to adjust settings for the loaded document
-        and its view.
-        """
-        # restore some options from the view menu
-        for name, action in self.viewActions():
-            if group.hasKey(name):
-                value = group.readEntry(name, QVariant(False)).toBool()
-                if value != action.isChecked():
-                    action.trigger()
-        # cursor position
-        line, okline = group.readEntry("line", QVariant(0)).toInt()
-        column, okcolumn = group.readEntry("column", QVariant(0)).toInt()
-        if okline and okcolumn and line < self.doc.lines():
-            self.view.setCursorPosition(KTextEditor.Cursor(line, column))
-        # bookmarks
-        marks = str(group.readEntry("bookmarks", ""))
-        if re.match(r"\d+:\d+(,\d+:\d+)*$", marks):
-            markiface = self.doc.markInterface()
-            for m in marks.split(','):
-                line, mark = map(int, m.split(':'))
-                if line < self.doc.lines():
-                    markiface.addMark(line, mark)
-
-    def writeConfig(self, group):
-        """
-        This is called by the state manager. You can write stuff to
-        the KConfigGroup group, to save settings for the about to be
-        closed document and its view.
-        """
-        # save some options in the view menu
-        for name, action in self.viewActions():
-            group.writeEntry(name, QVariant(action.isChecked()))
-        # cursor position
-        cursor = self.view.cursorPosition()
-        group.writeEntry("line", QVariant(cursor.line()))
-        group.writeEntry("column", QVariant(cursor.column()))
-        # bookmarks
-        # markInterface().marks() crashes so we use mark() instead...
-        markiface = self.doc.markInterface()
-        marks = []
-        for line in range(self.doc.lines()):
-            m = markiface.mark(line)
-            if m:
-                marks.append("%d:%d" % (line, m))
-        group.writeEntry("bookmarks", ','.join(marks))
 
 
 class MainWindow(kateshell.mainwindow.MainWindow):
@@ -687,24 +626,29 @@ class StateManager(object):
         self.metainfos = KConfig("metainfos", KConfig.NoGlobals, "appdata")
         
     def loadState(self, doc):
-        if (not doc.url().isEmpty() and 
-            self.metainfos.hasGroup(doc.url().prettyUrl())):
+        if (not doc.url().isEmpty() and
+                self.metainfos.hasGroup(doc.url().prettyUrl())):
             group = self.metainfos.group(doc.url().prettyUrl())
-            doc.readConfig(group)
+            last = group.readEntry("time", QVariant(0.0)).toDouble()[0]
+            # when it is a local file, only load the state when the
+            # file was not modified later
+            if not doc.localPath() or (
+                    os.path.exists(doc.localPath()) and
+                    os.path.getmtime(doc.localPath()) <= last):
+                doc.readConfig(group)
             
     def saveState(self, doc):
         if doc.view and not doc.url().isEmpty():
             group = self.metainfos.group(doc.url().prettyUrl())
-            group.writeEntry("date", QVariant(QDate.currentDate()))
+            group.writeEntry("time", QVariant(time.time()))
             doc.writeConfig(group)
             group.sync()
             
     def cleanup(self):
         """ Purge entries that are not used for more than a month. """
-        defdate = QVariant(QDate(1970, 1, 1))
         for g in self.metainfos.groupList():
-            last = self.metainfos.group(g).readEntry("date", defdate).toDate()
-            if last.daysTo(QDate.currentDate()) > 31:
+            last = self.metainfos.group(g).readEntry("time", QVariant(0.0)).toDouble()[0]
+            if (time.time() - last) / 86400 > 31:
                 self.metainfos.deleteGroup(g)
         self.metainfos.sync()
 

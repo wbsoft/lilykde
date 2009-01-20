@@ -17,10 +17,10 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, sip, dbus, dbus.service, dbus.mainloop.qt
+import os, re, sip, dbus, dbus.service, dbus.mainloop.qt
 from dbus.service import method, signal
 
-from PyQt4.QtCore import QObject, SIGNAL
+from PyQt4.QtCore import QObject, QVariant, SIGNAL
 from PyKDE4.kdecore import i18n, KGlobal, KUrl
 from PyKDE4.kdeui import KApplication, KGuiItem, KMessageBox, KStandardGuiItem
 from PyKDE4.kio import KEncodingFileDialog
@@ -459,4 +459,63 @@ class Document(DBusItem):
         """
         pass
     
-    
+    def viewActions(self):
+        """
+        Iterate over the View actions for which the state could be saved.
+        """
+        if self.view:
+            for name in (
+                "view_word_wrap_marker", "view_border", "view_line_numbers",
+                "view_scrollbar_marks"):
+                action = self.view.actionCollection().action(name)
+                if action:
+                    yield name, action
+
+    def readConfig(self, group):
+        """
+        This can be called by a state manager. You can read stuff from
+        the KConfigGroup group, to adjust settings for the loaded document
+        and its view.
+        """
+        # restore some options from the view menu
+        for name, action in self.viewActions():
+            if group.hasKey(name):
+                value = group.readEntry(name, QVariant(False)).toBool()
+                if value != action.isChecked():
+                    action.trigger()
+        # cursor position
+        line, okline = group.readEntry("line", QVariant(0)).toInt()
+        column, okcolumn = group.readEntry("column", QVariant(0)).toInt()
+        if okline and okcolumn and line < self.doc.lines():
+            self.view.setCursorPosition(KTextEditor.Cursor(line, column))
+        # bookmarks
+        marks = str(group.readEntry("bookmarks", ""))
+        if re.match(r"\d+:\d+(,\d+:\d+)*$", marks):
+            markiface = self.doc.markInterface()
+            for m in marks.split(','):
+                line, mark = map(int, m.split(':'))
+                if line < self.doc.lines():
+                    markiface.addMark(line, mark)
+
+    def writeConfig(self, group):
+        """
+        This can be called by a state manager. You can write stuff to
+        the KConfigGroup group, to save settings for the document and its view.
+        """
+        # save some options in the view menu
+        for name, action in self.viewActions():
+            group.writeEntry(name, QVariant(action.isChecked()))
+        # cursor position
+        cursor = self.view.cursorPosition()
+        group.writeEntry("line", QVariant(cursor.line()))
+        group.writeEntry("column", QVariant(cursor.column()))
+        # bookmarks
+        # markInterface().marks() crashes so we use mark() instead...
+        markiface = self.doc.markInterface()
+        marks = []
+        for line in range(self.doc.lines()):
+            m = markiface.mark(line)
+            if m:
+                marks.append("%d:%d" % (line, m))
+        group.writeEntry("bookmarks", ','.join(marks))
+
