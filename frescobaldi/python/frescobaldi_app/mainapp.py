@@ -548,6 +548,10 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         for action in "view_scroll_up", "view_scroll_down":
             self.part.actionCollection().action(action).setShortcutContext(
                 Qt.WidgetShortcut)
+        # default to single page layout
+        single = self.part.actionCollection().action("view_render_mode_single")
+        if single and not single.isChecked():
+            single.trigger()
         
     def saveSettings(self):
         conf = self.config()
