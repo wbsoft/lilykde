@@ -63,7 +63,6 @@ class MainApp(kateshell.app.MainApp):
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
         os.environ["FRESCOBALDI_PID"] = str(os.getpid())
-        self.metainfos = KConfig("metainfos", KConfig.NoGlobals, "appdata")
         
     def openUrl(self, url, encoding=None):
         # The URL can be python string, dbus string or QString or KUrl
@@ -102,8 +101,12 @@ class MainApp(kateshell.app.MainApp):
 
     def defaultDirectory(self):
         return config().readPathEntry("default directory", "")
+    
+    @lazy
+    def stateManager(self):
+        return StateManager(self)
         
-
+        
 class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """
     def documentIcon(self):
@@ -119,10 +122,10 @@ class Document(kateshell.app.Document):
             action = self.view.actionCollection().action(name)
             if action:
                 sip.delete(action)
-        self.loadState()
+        self.app.stateManager().loadState(self)
         
     def aboutToClose(self):
-        self.saveState()
+        self.app.stateManager().saveState(self)
         
     def viewActions(self):
         """
@@ -136,52 +139,6 @@ class Document(kateshell.app.Document):
                 if action:
                     yield name, action
 
-    def loadState(self):
-        if (not self.url().isEmpty() and 
-            self.app.metainfos.hasGroup(self.url().prettyUrl())):
-            group = self.app.metainfos.group(self.url().prettyUrl())
-            # restore some options from the view menu
-            for name, action in self.viewActions():
-                if group.hasKey(name):
-                    value = group.readEntry(name, QVariant(False)).toBool()
-                    if value != action.isChecked():
-                        action.trigger()
-            # cursor position
-            line, okline = group.readEntry("line", QVariant(0)).toInt()
-            column, okcolumn = group.readEntry("column", QVariant(0)).toInt()
-            if okline and okcolumn and line < self.doc.lines():
-                self.view.setCursorPosition(KTextEditor.Cursor(line, column))
-            # bookmarks
-            marks = str(group.readEntry("bookmarks", ""))
-            if re.match(r"\d+:\d+(,\d+:\d+)*$", marks):
-                markiface = self.doc.markInterface()
-                for m in marks.split(','):
-                    line, mark = map(int, m.split(':'))
-                    if line < self.doc.lines():
-                        markiface.addMark(line, mark)
-            
-    def saveState(self):
-        if self.view and not self.url().isEmpty():
-            group = self.app.metainfos.group(self.url().prettyUrl())
-            # save some options in the view menu
-            for name, action in self.viewActions():
-                group.writeEntry(name, QVariant(action.isChecked()))
-            # cursor position
-            cursor = self.view.cursorPosition()
-            group.writeEntry("line", QVariant(cursor.line()))
-            group.writeEntry("column", QVariant(cursor.column()))
-            # bookmarks
-            # markInterface().marks() crashes so we use mark() instead...
-            markiface = self.doc.markInterface()
-            marks = []
-            for line in range(self.doc.lines()):
-                m = markiface.mark(line)
-                if m:
-                    marks.append("%d:%d" % (line, m))
-            group.writeEntry("bookmarks", ','.join(marks))
-            group.writeEntry("date", QVariant(QDate.currentDate()))
-            group.sync()
-            
     def variables(self):
         """
         Returns a dictionary with variables put in specially formatted LilyPond
@@ -438,6 +395,10 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         menu.addSeparator()
         self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
         
+    def saveSettings(self):
+        self.app.stateManager().cleanup()
+        super(MainWindow, self).saveSettings()
+
 
 class ApplyRhythmDialog(KDialog):
     def __init__(self, mainwin):
@@ -663,6 +624,70 @@ class RumorTool(kateshell.mainwindow.Tool):
     def factory(self):
         import frescobaldi_app.rumor
         return frescobaldi_app.rumor.RumorPanel(self)
+
+
+class StateManager(object):
+    """
+    Manages state and meta-info for documents, like bookmarks
+    and cursor position, etc.
+    """
+    def __init__(self, app):
+        self.app = app
+        self.metainfos = KConfig("metainfos", KConfig.NoGlobals, "appdata")
+        
+    def loadState(self, doc):
+        if (not doc.url().isEmpty() and 
+            self.metainfos.hasGroup(doc.url().prettyUrl())):
+            group = self.metainfos.group(doc.url().prettyUrl())
+            # restore some options from the view menu
+            for name, action in doc.viewActions():
+                if group.hasKey(name):
+                    value = group.readEntry(name, QVariant(False)).toBool()
+                    if value != action.isChecked():
+                        action.trigger()
+            # cursor position
+            line, okline = group.readEntry("line", QVariant(0)).toInt()
+            column, okcolumn = group.readEntry("column", QVariant(0)).toInt()
+            if okline and okcolumn and line < doc.doc.lines():
+                doc.view.setCursorPosition(KTextEditor.Cursor(line, column))
+            # bookmarks
+            marks = str(group.readEntry("bookmarks", ""))
+            if re.match(r"\d+:\d+(,\d+:\d+)*$", marks):
+                markiface = doc.doc.markInterface()
+                for m in marks.split(','):
+                    line, mark = map(int, m.split(':'))
+                    if line < doc.doc.lines():
+                        markiface.addMark(line, mark)
+            
+    def saveState(self, doc):
+        if doc.view and not doc.url().isEmpty():
+            group = self.metainfos.group(doc.url().prettyUrl())
+            # save some options in the view menu
+            for name, action in doc.viewActions():
+                group.writeEntry(name, QVariant(action.isChecked()))
+            # cursor position
+            cursor = doc.view.cursorPosition()
+            group.writeEntry("line", QVariant(cursor.line()))
+            group.writeEntry("column", QVariant(cursor.column()))
+            # bookmarks
+            # markInterface().marks() crashes so we use mark() instead...
+            markiface = doc.doc.markInterface()
+            marks = []
+            for line in range(doc.doc.lines()):
+                m = markiface.mark(line)
+                if m:
+                    marks.append("%d:%d" % (line, m))
+            group.writeEntry("bookmarks", ','.join(marks))
+            group.writeEntry("date", QVariant(QDate.currentDate()))
+            group.sync()
+            
+    def cleanup(self):
+        """ Purge entries that are not used for more than a month. """
+        defdate = QVariant(QDate(1970, 1, 1))
+        for g in self.metainfos.groupList():
+            last = self.metainfos.group(g).readEntry("date", defdate).toDate()
+            if last.daysTo(QDate.currentDate()) > 31:
+                self.metainfos.deleteGroup(g)
 
 
 
