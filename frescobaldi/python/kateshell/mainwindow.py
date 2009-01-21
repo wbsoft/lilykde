@@ -618,11 +618,8 @@ class Tool(object):
         self.setIcon(icon)
         self.setDock(dock)
         Tool.__instance_counter += 1
+        self.loadSettings()
     
-    def config(self):
-        """ Return a suitable configgroup for our settings. """
-        return config("tool_%s" % self.name)
-        
     def delete(self):
         """ Completely remove our tool """
         if self._docked:
@@ -755,12 +752,22 @@ class Tool(object):
         """
         pass
     
+    def config(self):
+        """ Return a suitable configgroup for our settings. """
+        return config("tool_%s" % self.name)
+
+    def loadSettings(self):
+        self.readConfig(self.config())
+
     def saveSettings(self):
-        """
-        Use this to save settings for your tool.
-        """
-        pass
+        self.writeConfig(self.config())
+        
+    def readConfig(self, conf):
+        pass # Implement
     
+    def writeConfig(self, conf):
+        pass # Implement
+        
 
 class KPartTool(Tool):
     def __init__(self, mainwin, name, title="", icon="",
@@ -780,9 +787,8 @@ class KPartTool(Tool):
                 QObject.connect(part, SIGNAL("destroyed()"), self.slotDestroyed)
                 QTimer.singleShot(0, self.partLoaded)
                 return part.widget()
-        return QLabel("<center>%s</center>" %
-            i18n("Could not load %1", "<br/><b><tt>%s</tt></b><br/>" %
-                self._partlibrary))
+        libmsg = "<br/><b><tt>%s</tt></b><br/>" % self._partlibrary
+        return QLabel("<center>%s</center>" % i18n("Could not load %1", libmsg))
 
     def partLoaded(self):
         """ Called when part is loaded. Use this to apply settings, etc."""
