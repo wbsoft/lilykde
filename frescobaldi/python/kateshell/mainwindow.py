@@ -757,16 +757,26 @@ class Tool(object):
         return config("tool_%s" % self.name)
 
     def loadSettings(self):
-        self.readConfig(self.config())
+        """ Do not override this method, use readConfig instead. """
+        conf = self.config()
+        self.readConfig(conf)
 
     def saveSettings(self):
-        self.writeConfig(self.config())
+        """ Do not override this method, use writeConfig instead. """
+        conf = self.config()
+        self.writeConfig(conf)
         
     def readConfig(self, conf):
-        pass # Implement
+        """
+        You can implement this in your subclass to read additional config data.
+        """
+        pass
     
     def writeConfig(self, conf):
-        pass # Implement
+        """
+        You can implement this in your subclass to write additional config data.
+        """
+        pass
         
 
 class KPartTool(Tool):
