@@ -1,14 +1,17 @@
-Changes in 0.7.3
+Changes in 0.7.3 -- (not yet released)
 
-* Score Wizard: add Try button that shows score example
-* Save Dialog now also has LilyPond filetype filter and default extension
+* Score Wizard: new "Try" button that shows score example
 * New option to set default directory for documents
 * New option to save state (bookmarks, cursor position, etc.) for documents
-* Release tarballs now have prebuilt icons and translations
+* New rhythm menu actions to copy and paste rhythms.
 * Default keyboard shortcuts have been added for most used actions
+* Save Dialog now also has LilyPond filetype filter and default extension
 * Bugfixes:
   * Fix editor part not saving and loading settings
   * Score Wizard: fix partial measure, tabstaff, basso continuo and drumstaff
+* Installation:
+  * Install script does not use pykdeconfig anymore, just tests PyKDE4, etc.
+  * Release tarballs now have prebuilt icons and translations
 
 Changes in 0.7.2 -- January 7th, 2009
 
