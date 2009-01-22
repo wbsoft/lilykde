@@ -115,3 +115,12 @@ def applyRhythm(text, rhythm):
             return m.group('chord') + nextdur()
     return ly.rx.chord_rest.sub(repl, text)
 
+def extractRhythm(text):
+    """ Iterate over a rhythm from text, returning only the durations """
+    duration = ''
+    for m in ly.rx.chord_rest.finditer(text):
+        if m.group('chord'):
+            if m.group('duration'):
+                duration = m.group('duration')
+            yield duration
+

@@ -24,7 +24,8 @@ from PyQt4.QtCore import QObject, QString, QTimer, QVariant, Qt, SIGNAL
 from PyQt4.QtGui import QLabel, QStackedWidget, QWidget
 from PyKDE4.kdecore import KConfig, KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
-    KDialog, KIcon, KLineEdit, KMessageBox, KStandardAction, KVBox)
+    KApplication, KDialog, KIcon, KLineEdit, KMessageBox, KStandardAction,
+    KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -297,6 +298,20 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             tooltip=i18n("Apply an entered rhythm to the selected music."))
         def durations_apply_rhythm(text):
             self.applyRhythmDialog().edit(text)
+        
+        @self.onSelAction(i18n("Copy rhythm"),
+            tooltip=i18n("Copy the rhythm of the selected music."))
+        def durations_copy_rhythm(text):
+            import ly.duration
+            text = ' '.join(ly.duration.extractRhythm(text))
+            KApplication.clipboard().setText(text)
+            
+        @self.onSelAction(i18n("Paste rhythm"),
+            tooltip=i18n("Paste a rhythm to the selected music."))
+        def durations_paste_rhythm(text):
+            import ly.duration
+            rhythm = unicode(KApplication.clipboard().text())
+            return ly.duration.applyRhythm(text, rhythm)
         
         # Setup lyrics hyphen and de-hyphen action
         @self.onSelAction(i18n("Hyphenate Lyrics Text"), keepSelection=False, key="Ctrl+L")
