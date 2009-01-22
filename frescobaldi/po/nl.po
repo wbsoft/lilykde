@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-22 12:39+0100\n"
+"POT-Creation-Date: 2009-01-22 13:20+0100\n"
 "PO-Revision-Date: 2009-01-22 01:49+0100\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@lists.kde.org>\n"
@@ -797,7 +797,7 @@ msgstr "geen log"
 msgid "Rumor"
 msgstr "Rumor"
 
-#: ../python/frescobaldi_app/rumor.py:71
+#: ../python/frescobaldi_app/rumor.py:72
 msgid ""
 "The meter to use. Leave 'Auto' to let Frescobaldi determine the meter from "
 "the LilyPond document."
@@ -805,31 +805,31 @@ msgstr ""
 "De te gebruiken maatsoort. Indien 'Auto', bepaalt Frescobaldi de maatsoort "
 "uit het huidige document."
 
-#: ../python/frescobaldi_app/rumor.py:78
+#: ../python/frescobaldi_app/rumor.py:79
 msgid "Quantize:"
 msgstr "Quantiseren:"
 
-#: ../python/frescobaldi_app/rumor.py:84
+#: ../python/frescobaldi_app/rumor.py:85
 msgid "The shortest note duration to use."
 msgstr "De kortste toegestane toonduur."
 
-#: ../python/frescobaldi_app/rumor.py:89
+#: ../python/frescobaldi_app/rumor.py:90
 msgid "Step"
 msgstr "Stap"
 
-#: ../python/frescobaldi_app/rumor.py:91
+#: ../python/frescobaldi_app/rumor.py:92
 msgid "Record LilyPond input note by note, without durations."
 msgstr "Neem noot voor noot op, zonder toonduur te registreren."
 
-#: ../python/frescobaldi_app/rumor.py:95
+#: ../python/frescobaldi_app/rumor.py:96
 msgid "Mono"
 msgstr "Mono"
 
-#: ../python/frescobaldi_app/rumor.py:97
+#: ../python/frescobaldi_app/rumor.py:98
 msgid "Record monophonic input, without chords."
 msgstr "Monofoon opnemen, zonder akkoorden."
 
-#: ../python/frescobaldi_app/rumor.py:106
+#: ../python/frescobaldi_app/rumor.py:107
 msgid ""
 "The number of accidentals. A negative number designates flats. Leave 'Auto' "
 "to let Frescobaldi determine the key signature from the LilyPond document."
@@ -837,87 +837,87 @@ msgstr ""
 "Het aantal voortekens. Een negatieve waarde duidt mollen aan. Indien 'Auto', "
 "bepaalt Frescobaldi de toonsoort uit het huidige document."
 
-#: ../python/frescobaldi_app/rumor.py:112
+#: ../python/frescobaldi_app/rumor.py:113
 msgid "Tempo:"
 msgstr "Tempo:"
 
-#: ../python/frescobaldi_app/rumor.py:115
+#: ../python/frescobaldi_app/rumor.py:116
 msgid "Meter:"
 msgstr "Maatsoort:"
 
-#: ../python/frescobaldi_app/rumor.py:118
+#: ../python/frescobaldi_app/rumor.py:119
 msgid "Key:"
 msgstr "Toonsoort:"
 
-#: ../python/frescobaldi_app/rumor.py:130
+#: ../python/frescobaldi_app/rumor.py:131
 msgid "Configure..."
 msgstr "Instellen..."
 
-#: ../python/frescobaldi_app/rumor.py:131
+#: ../python/frescobaldi_app/rumor.py:132
 msgid "Adjust more settings, like MIDI input and output."
 msgstr "Meer instellingen, zoals MIDI in- en uitvoer."
 
-#: ../python/frescobaldi_app/rumor.py:137
+#: ../python/frescobaldi_app/rumor.py:138
 msgid "Save"
 msgstr "Opslaan"
 
-#: ../python/frescobaldi_app/rumor.py:138
+#: ../python/frescobaldi_app/rumor.py:139
 msgid "Set these settings as default."
 msgstr "Deze instelling opslaan en standaard gebruiken."
 
-#: ../python/frescobaldi_app/rumor.py:148
+#: ../python/frescobaldi_app/rumor.py:149
 msgid "Found rumor version %1."
 msgstr "Rumor versie %1 gevonden."
 
-#: ../python/frescobaldi_app/rumor.py:151
+#: ../python/frescobaldi_app/rumor.py:152
 msgid "Could not find Rumor: %1"
 msgstr "Kon Rumor niet vinden: %1"
 
-#: ../python/frescobaldi_app/rumor.py:162
+#: ../python/frescobaldi_app/rumor.py:163
 msgid "Settings have been saved."
 msgstr "De instellingen zijn opgeslagen."
 
-#: ../python/frescobaldi_app/rumor.py:323
+#: ../python/frescobaldi_app/rumor.py:324
 msgid "Record"
 msgstr "Opnemen"
 
-#: ../python/frescobaldi_app/rumor.py:325
+#: ../python/frescobaldi_app/rumor.py:326
 msgid "Start or stop Rumor MIDI-recording."
 msgstr "Rumor MIDI-opname starten of stoppen."
 
-#: ../python/frescobaldi_app/rumor.py:340
+#: ../python/frescobaldi_app/rumor.py:341
 msgid "Rumor is recording, press ESC to stop."
 msgstr "Rumor neemt op, druk op ESC om te stoppen."
 
-#: ../python/frescobaldi_app/rumor.py:354
+#: ../python/frescobaldi_app/rumor.py:360
 msgid "Rumor stopped."
 msgstr "Rumor is gestopt."
 
-#: ../python/frescobaldi_app/rumor.py:388
+#: ../python/frescobaldi_app/rumor.py:394
 msgid "TiMidity"
 msgstr "TiMidity"
 
-#: ../python/frescobaldi_app/rumor.py:389
+#: ../python/frescobaldi_app/rumor.py:395
 msgid "Start or stop the TiMidity ALSA MIDI client."
 msgstr "De TiMidity ALSA MIDI-client starten of stoppen."
 
-#: ../python/frescobaldi_app/rumor.py:407
+#: ../python/frescobaldi_app/rumor.py:413
 msgid "Rumor Settings"
 msgstr "Rumor instellingen"
 
-#: ../python/frescobaldi_app/rumor.py:413
+#: ../python/frescobaldi_app/rumor.py:419
 msgid "OSS device %1"
 msgstr "OSS apparaat %1"
 
-#: ../python/frescobaldi_app/rumor.py:415
+#: ../python/frescobaldi_app/rumor.py:421
 msgid "Keyboard"
 msgstr "Toetsenbord"
 
-#: ../python/frescobaldi_app/rumor.py:421
+#: ../python/frescobaldi_app/rumor.py:427
 msgid "MIDI input:"
 msgstr "MIDI invoer:"
 
-#: ../python/frescobaldi_app/rumor.py:425
+#: ../python/frescobaldi_app/rumor.py:431
 msgid ""
 "MIDI input to use. Choose 'Keyboard' if you want to play on the keyboard of "
 "your computer."
@@ -925,29 +925,29 @@ msgstr ""
 "Het te gebruiken MIDI-invoerapparaat. Kies 'Toetsenbord' om op het "
 "toetsenbord van uw computer te spelen."
 
-#: ../python/frescobaldi_app/rumor.py:431
+#: ../python/frescobaldi_app/rumor.py:437
 msgid "MIDI output:"
 msgstr "MIDI uitvoer:"
 
-#: ../python/frescobaldi_app/rumor.py:435
+#: ../python/frescobaldi_app/rumor.py:441
 msgid "MIDI output to use."
 msgstr "Het te gebruiken MIDI-uitvoerapparaat."
 
-#: ../python/frescobaldi_app/rumor.py:440
+#: ../python/frescobaldi_app/rumor.py:446
 #: ../python/frescobaldi_app/scorewiz/__init__.py:432
 #: ../python/frescobaldi_app/scorewiz/__init__.py:532
 msgid "Language:"
 msgstr "Taal:"
 
-#: ../python/frescobaldi_app/rumor.py:445
+#: ../python/frescobaldi_app/rumor.py:451
 msgid "The LilyPond language you want Rumor to output the pitches in."
 msgstr "De LilyPond-taal die u wilt gebruiken voor de toonhoogtes."
 
-#: ../python/frescobaldi_app/rumor.py:453
+#: ../python/frescobaldi_app/rumor.py:459
 msgid "Explicit durations"
 msgstr "Expliciete toonduur"
 
-#: ../python/frescobaldi_app/rumor.py:455
+#: ../python/frescobaldi_app/rumor.py:461
 msgid ""
 "Add a duration after every note, even if it is the same as the preceding "
 "note."
@@ -955,59 +955,59 @@ msgstr ""
 "De toonduur na elke noot weergeven, ook als deze hetzelfde is als de vorige "
 "noot."
 
-#: ../python/frescobaldi_app/rumor.py:460
+#: ../python/frescobaldi_app/rumor.py:466
 msgid "Absolute pitch"
 msgstr "Absolute toonhoogte"
 
-#: ../python/frescobaldi_app/rumor.py:462
+#: ../python/frescobaldi_app/rumor.py:468
 msgid "Use absolute pitches instead of relative."
 msgstr "Gebruik absolute octaafhoogte in plaats van relatieve."
 
-#: ../python/frescobaldi_app/rumor.py:468
+#: ../python/frescobaldi_app/rumor.py:474
 msgid "No barlines"
 msgstr "Geen maatstrepen"
 
-#: ../python/frescobaldi_app/rumor.py:470
+#: ../python/frescobaldi_app/rumor.py:476
 msgid "Filter the barlines out of Rumor's output."
 msgstr "Verwijder de maatstrepen uit Rumor's uitvoer."
 
-#: ../python/frescobaldi_app/rumor.py:474
+#: ../python/frescobaldi_app/rumor.py:480
 msgid "No dots"
 msgstr "Geen punten"
 
-#: ../python/frescobaldi_app/rumor.py:476
+#: ../python/frescobaldi_app/rumor.py:482
 msgid "Do not use dotted notes, but ties instead."
 msgstr "Plaats geen punt achter de noot, maar een overbindingsboogje."
 
-#: ../python/frescobaldi_app/rumor.py:480
+#: ../python/frescobaldi_app/rumor.py:486
 msgid "Legato"
 msgstr "Legato"
 
-#: ../python/frescobaldi_app/rumor.py:481
+#: ../python/frescobaldi_app/rumor.py:487
 msgid "Do not use rests, but give all notes the maximum length."
 msgstr "Gebruik geen rusten maar geef alle noten de maximale lengte."
 
-#: ../python/frescobaldi_app/rumor.py:486
+#: ../python/frescobaldi_app/rumor.py:492
 msgid "Strip rests"
 msgstr "Rusten verwijderen"
 
-#: ../python/frescobaldi_app/rumor.py:488
+#: ../python/frescobaldi_app/rumor.py:494
 msgid "Strip leading and trialing rests from output."
 msgstr "Verwijder rusten aan het begin en het einde."
 
-#: ../python/frescobaldi_app/rumor.py:492
+#: ../python/frescobaldi_app/rumor.py:498
 msgid "Guile scripts to load:"
 msgstr "Guile scripts om te laden:"
 
-#: ../python/frescobaldi_app/rumor.py:497
+#: ../python/frescobaldi_app/rumor.py:503
 msgid "Name"
 msgstr "Naam"
 
-#: ../python/frescobaldi_app/rumor.py:497
+#: ../python/frescobaldi_app/rumor.py:503
 msgid "Description"
 msgstr "Omschrijving"
 
-#: ../python/frescobaldi_app/rumor.py:499
+#: ../python/frescobaldi_app/rumor.py:505
 msgid ""
 "Here you can select which Guile scripts you want Rumor to load. Check "
 "\"What's this\" for more information."
@@ -1015,7 +1015,7 @@ msgstr ""
 "Hier kunt u selecteren welke Guile scripts u met Rumor wilt gebruiken. "
 "Raadpleeg \"Wat is dit\" voor meer informatie."
 
-#: ../python/frescobaldi_app/rumor.py:503
+#: ../python/frescobaldi_app/rumor.py:509
 msgid ""
 "Here you can select which Guile scripts you want Rumor to load. You can add "
 "your own scripts by putting them in %1. If the first line of your script "
@@ -1026,7 +1026,7 @@ msgstr ""
 "regel van uw script met een puntkomma (;) begint wordt deze als omschrijving "
 "weergegeven."
 
-#: ../python/frescobaldi_app/rumor.py:619
+#: ../python/frescobaldi_app/rumor.py:625
 msgid "Auto"
 msgstr "Auto"
 
