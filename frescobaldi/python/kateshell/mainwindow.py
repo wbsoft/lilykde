@@ -299,8 +299,9 @@ class MainWindow(KParts.MainWindow):
     def editKeys(self):
         """ Opens a window to edit the keyboard shortcuts """
         dlg = KShortcutsDialog(KShortcutsEditor.AllActions,
-            KShortcutsEditor.LetterShortcutsAllowed, self)
-        dlg.addCollection(self.actionCollection())
+            KShortcutsEditor.LetterShortcutsDisallowed, self)
+        dlg.addCollection(self.actionCollection(),
+            KGlobal.mainComponent().aboutData().programName())
         if self.view():
             dlg.addCollection(self.view().actionCollection())
         dlg.configure()
