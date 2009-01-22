@@ -466,7 +466,7 @@ class Document(DBusItem):
         if self.view:
             for name in (
                 "view_word_wrap_marker", "view_border", "view_line_numbers",
-                "view_scrollbar_marks"):
+                "view_scrollbar_marks", "view_folding_markers"):
                 action = self.view.actionCollection().action(name)
                 if action:
                     yield name, action
