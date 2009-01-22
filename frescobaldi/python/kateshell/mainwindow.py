@@ -26,7 +26,8 @@ from PyQt4.QtGui import (
     QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, KPluginLoader, KUrl, i18n
 from PyKDE4.kdeui import (
-    KAction, KDialog, KHBox, KIcon, KMenu, KMessageBox, KMultiTabBar, KShortcut,
+    KAction, KActionMenu, KDialog, KEditToolBar, KHBox, KIcon, KMenu,
+    KMessageBox, KMultiTabBar, KShortcut, KShortcutsDialog, KShortcutsEditor,
     KStandardAction, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
@@ -133,33 +134,18 @@ class MainWindow(KParts.MainWindow):
 
         self._selectionActions = []
         self.setupActions() # Let subclasses add more actions
-        
+        self.setStandardToolBarMenuEnabled(True)
         self.createShellGUI(True) # ui.rc is loaded automagically
         
         if not self.initialGeometrySet():
             self.resize(700, 480)
         
+        self.setupDocMenu()
         self.setAutoSaveSettings()
-
-        # Documents menu
-        self.docMenu = self.factory().container("documents", self)
-        self.docGroup = QActionGroup(self.docMenu)
-        self.docGroup.setExclusive(True)
-        QObject.connect(self.docMenu, SIGNAL("aboutToShow()"),
-            self.populateDocMenu)
-        QObject.connect(self.docGroup, SIGNAL("triggered(QAction*)"),
-            lambda a: a.doc.setActive())
-        
-        # Tool Views menu
-        self.toolViewsMenu = self.factory().container("tools_toolviews", self)
-        QObject.connect(self.toolViewsMenu, SIGNAL("aboutToShow()"),
-            self.populateToolViewsMenu)
-        
         self.loadSettings()
         self.show()
         
     def setupActions(self):
-        # actions
         self.act('file_new', KStandardAction.New, self.app.new)
         self.act('file_open', KStandardAction.Open, self.openDocument)
         self.act('file_close', KStandardAction.Close,
@@ -171,7 +157,7 @@ class MainWindow(KParts.MainWindow):
         self.act('file_quit', KStandardAction.Quit, self.app.quit)
         self.act('doc_back', KStandardAction.Back, self.app.back)
         self.act('doc_forward', KStandardAction.Forward, self.app.forward)
-        self.showPath = self.act('settings_show_full_path', i18n("Show Path"),
+        self.showPath = self.act('options_show_full_path', i18n("Show Path"),
             lambda: self.updateCaption(self.currentDocument()))
         self.showPath.setCheckable(True)
         # recent files.
@@ -179,7 +165,31 @@ class MainWindow(KParts.MainWindow):
             self, SLOT("slotOpenRecent(KUrl)"), self)
         self.actionCollection().addAction(
             self.openRecent.objectName(), self.openRecent)
-        
+        self.act('options_configure_toolbars', KStandardAction.ConfigureToolbars,
+            self.editToolbars)
+        self.act('options_configure_keys', KStandardAction.KeyBindings,
+            self.editKeys)
+        # tool views submenu
+        a = KActionMenu(i18n("&Tool Views"), self)
+        self.actionCollection().addAction('options_toolviews', a)
+        menu = a.menu()
+        def populate():
+            menu.clear()
+            for tool in self.tools.itervalues():
+                title = menu.addTitle(tool.icon(), tool.title())
+                count = len(menu.children())
+                if not tool.isDocked():
+                    a = menu.addAction(KIcon("tab-detach"), i18n("Dock"))
+                    QObject.connect(a, SIGNAL("triggered()"), tool.dock)
+                elif not tool.isActive():
+                    a = menu.addAction(i18n("Show"))
+                    QObject.connect(a, SIGNAL("triggered()"), tool.show)
+                tool.addMenuActions(menu)
+                # remove title if the tool did not add any menu items
+                if count == len(menu.children()):
+                    sip.delete(title)
+        QObject.connect(menu, SIGNAL("aboutToShow()"), populate)
+            
     def act(self, name, texttype, func,
             icon=None, tooltip=None, whatsthis=None, key=None):
         """ Create an action and add it to own actionCollection """
@@ -286,37 +296,48 @@ class MainWindow(KParts.MainWindow):
         self.sb_selmode.setText(" %s " % text)
         self.sb_selmode.setToolTip(tip)
 
-    def populateDocMenu(self):
-        for a in self.docGroup.actions():
-            sip.delete(a)
-        for d in self.app.documents:
-            a = KAction(d.documentName(), self.docGroup)
-            a.setCheckable(True)
-            a.doc = d
-            icon = d.documentIcon()
-            if icon:
-                a.setIcon(KIcon(icon))
-            if d is self._currentDoc:
-                a.setChecked(True)
-            self.docGroup.addAction(a)
-            self.docMenu.addAction(a)
+    def editKeys(self):
+        """ Opens a window to edit the keyboard shortcuts """
+        dlg = KShortcutsDialog(KShortcutsEditor.AllActions,
+            KShortcutsEditor.LetterShortcutsAllowed, self)
+        dlg.addCollection(self.actionCollection())
+        if self.view():
+            dlg.addCollection(self.view().actionCollection())
+        dlg.configure()
+    
+    def editToolbars(self):
+        """ Opens a window to edit the toolbar(s) """
+        conf = config("MainWindow")
+        self.saveMainWindowSettings(conf)
+        dlg = KEditToolBar(self.guiFactory(), self)
+        def newToolbarConfig():
+            self.applyMainWindowSettings(conf)
+            self.setupDocMenu()
+        QObject.connect(dlg, SIGNAL("newToolbarConfig()"), newToolbarConfig)
+        dlg.exec_()
 
-    def populateToolViewsMenu(self):
-        m = self.toolViewsMenu
-        m.clear()
-        for tool in self.tools.itervalues():
-            title = m.addTitle(tool.icon(), tool.title())
-            count = len(m.children())
-            if not tool.isDocked():
-                a = m.addAction(KIcon("tab-detach"), i18n("Dock"))
-                QObject.connect(a, SIGNAL("triggered()"), tool.dock)
-            elif not tool.isActive():
-                a = m.addAction(i18n("Show"))
-                QObject.connect(a, SIGNAL("triggered()"), tool.show)
-            tool.addMenuActions(m)
-            # remove title if the tool did not add any menu items
-            if count == len(m.children()):
-                sip.delete(title)
+    def setupDocMenu(self):
+        """ Sets up the documents menu so that it shows all open documents. """
+        docMenu = self.factory().container("documents", self)
+        docGroup = QActionGroup(docMenu)
+        docGroup.setExclusive(True)
+        QObject.connect(docGroup, SIGNAL("triggered(QAction*)"),
+            lambda a: a.doc.setActive())
+        def populate():
+            for a in docGroup.actions():
+                sip.delete(a)
+            for d in self.app.documents:
+                a = KAction(d.documentName(), docGroup)
+                a.setCheckable(True)
+                a.doc = d
+                icon = d.documentIcon()
+                if icon:
+                    a.setIcon(KIcon(icon))
+                if d is self._currentDoc:
+                    a.setChecked(True)
+                docGroup.addAction(a)
+                docMenu.addAction(a)
+        QObject.connect(docMenu, SIGNAL("aboutToShow()"), populate)
 
     def openDocument(self):
         """ Open an existing document. """

@@ -39,16 +39,16 @@
     <Merge/>
   </Menu>
 
+  <Menu name="view"><text>&amp;View</text>
+    <DefineGroup name="view_operations" />
+  </Menu>
+
   <Menu name="documents"><text>&amp;Document</text>
     <Action name="doc_back"/>
     <Action name="doc_forward"/>
     <Separator />
     <Action name="session_list"/>
     <Separator />
-  </Menu>
-
-  <Menu name="view"><text>&amp;View</text>
-    <DefineGroup name="view_operations" />
   </Menu>
 
   <Menu name="lilypond"><text>&amp;LilyPond</text>
@@ -74,9 +74,9 @@
       <Action name="durations_implicit"/>
       <Action name="durations_explicit"/>
       <Separator />
-      <Action name="durations_apply_rhythm"/>
       <Action name="durations_copy_rhythm"/>
       <Action name="durations_paste_rhythm"/>
+      <Action name="durations_apply_rhythm"/>
     </Menu>
     <Menu name="lilypond_lyrics"><text>&amp;Lyrics</text>
       <Action name="lyrics_hyphen"/>
@@ -93,24 +93,18 @@
     <DefineGroup name="tools_operations" />
   </Menu>
 
-  <Menu name="settings"><text>&amp;Settings</text>
+  <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
     <Merge name="StandardToolBarMenuHandler" />
-    <DefineGroup name="show_merge" />
-    <DefineGroup name="configure_merge" />
+    <Action name="options_show_full_path" />
     <Separator />
-    <Action name="settings_show_statusbar" />
-    <Action name="settings_show_full_path" />
+    <Action name="options_toolviews" />
     <Separator />
-    <Menu name="tools_toolviews"><text>&amp;Tool Views</text>
-    </Menu>
-    <Separator />
-    <Action name="options_configure_keybinding"/>
-    <Action name="set_configure_toolbars"/>
-    <Action name="settings_configure" />
+    <Action name="options_configure_keys" />
+    <Action name="options_configure_toolbars" />
+    <Action name="options_configure" />
   </Menu>
 
   <Menu name="help"><text>&amp;Help</text>
-    <Action name="help_about_editor" append="about_merge"/>
   </Menu>
 </MenuBar>
 

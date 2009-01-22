@@ -5,7 +5,6 @@
 i18n("&Document")
 i18n("&Lyrics")
 i18n("&Rhythm")
-i18n("&Tool Views")
 i18n("&Generated Files")
 
 # frescobaldi.desktop :

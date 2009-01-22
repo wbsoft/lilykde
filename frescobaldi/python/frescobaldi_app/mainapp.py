@@ -344,7 +344,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             
         # Settings
         @self.onAction(KStandardAction.Preferences)
-        def settings_configure():
+        def options_configure():
             import frescobaldi_app.settings
             frescobaldi_app.settings.SettingsDialog(self).show()
             
