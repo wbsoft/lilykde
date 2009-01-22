@@ -20,7 +20,7 @@
 import os, re, sip, dbus, dbus.service, dbus.mainloop.qt
 from dbus.service import method, signal
 
-from PyQt4.QtCore import QObject, QVariant, SIGNAL
+from PyQt4.QtCore import QObject, Qt, QVariant, SIGNAL
 from PyKDE4.kdecore import i18n, KGlobal, KUrl
 from PyKDE4.kdeui import KApplication, KGuiItem, KMessageBox, KStandardGuiItem
 from PyKDE4.kio import KEncodingFileDialog
@@ -166,6 +166,12 @@ class MainApp(DBusItem):
     def quit(self):
         return self.mainwin.close()
 
+    @method(iface, in_signature='', out_signature='')
+    def show(self):
+        """ Raises our mainwindow if minimized """
+        self.mainwin.setWindowState(
+            self.mainwin.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+    
     def addDocument(self, doc):
         self.documents.append(doc)
         self.history.append(doc)
@@ -187,8 +193,8 @@ class MainApp(DBusItem):
         self.history.remove(doc)
         self.history.append(doc)
         listeners.call(self.activeChanged, doc)
-        
-        
+
+
 class Document(DBusItem):
     """
     A loaded (LilyPond) text document.
@@ -465,6 +471,7 @@ class Document(DBusItem):
         """
         if self.view:
             for name in (
+                "view_dynamic_word_wrap",
                 "view_word_wrap_marker", "view_border", "view_line_numbers",
                 "view_scrollbar_marks", "view_folding_markers"):
                 action = self.view.actionCollection().action(name)

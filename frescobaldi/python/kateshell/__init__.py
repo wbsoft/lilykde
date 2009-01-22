@@ -95,7 +95,12 @@ class Proxy(object):
         return getattr(self.obj, attr)
     
     def run(self):
-        """ cancel the startup notification """
+        """
+        Tell the remote app to show if necessary and cancel our own
+        startup notification
+        """
+        if self.iface:
+            self.iface.show()
         import PyKDE4.kdeui
         PyKDE4.kdeui.KStartupInfo.appStarted()
 
