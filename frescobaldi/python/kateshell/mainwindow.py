@@ -101,7 +101,7 @@ class MainWindow(KParts.MainWindow):
         s.addWidget(self.docks[Right])
         
         s.setStretchFactor(0, 0)
-        s.setStretchFactor(1, 1)
+        s.setStretchFactor(1, 2)
         s.setStretchFactor(2, 1)
         
         tab_top = TabBar(Top, v)
