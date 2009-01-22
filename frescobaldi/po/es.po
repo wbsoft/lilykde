@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-22 01:47+0100\n"
+"POT-Creation-Date: 2009-01-22 05:27+0100\n"
 "PO-Revision-Date: 2009-01-10 01:54+0100\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
 "Language-Team: Spanish\n"
@@ -17,11 +17,11 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: ../frescobaldi.py:32 dummy.py:12
+#: ../frescobaldi.py:32 dummy.py:11
 msgid "Frescobaldi"
 msgstr ""
 
-#: ../frescobaldi.py:34 dummy.py:13
+#: ../frescobaldi.py:34 dummy.py:12
 msgid "LilyPond Music Editor"
 msgstr "Editor de música para LilyPond"
 
@@ -76,10 +76,6 @@ msgid "&Rhythm"
 msgstr "&Duraciones"
 
 #: dummy.py:8
-msgid "&Tool Views"
-msgstr "Vistas de herramien&tas"
-
-#: dummy.py:9
 msgid "&Generated Files"
 msgstr "Archivos &generados"
 
@@ -343,79 +339,83 @@ msgstr "Punta izquierda"
 msgid "Right toe"
 msgstr "Punta derecha"
 
-#: ../python/kateshell/mainwindow.py:96
+#: ../python/kateshell/mainwindow.py:97
 msgid "Left Sidebar"
 msgstr "Barra lateral izquierda"
 
-#: ../python/kateshell/mainwindow.py:100
+#: ../python/kateshell/mainwindow.py:101
 msgid "Right Sidebar"
 msgstr "Barra lateral derecha"
 
-#: ../python/kateshell/mainwindow.py:112
+#: ../python/kateshell/mainwindow.py:113
 msgid "Top Sidebar"
 msgstr "Barra superior"
 
-#: ../python/kateshell/mainwindow.py:116
+#: ../python/kateshell/mainwindow.py:117
 msgid "Bottom Sidebar"
 msgstr "Barra inferior"
 
-#: ../python/kateshell/mainwindow.py:174
+#: ../python/kateshell/mainwindow.py:160
 msgid "Show Path"
 msgstr "Mostrar ruta"
 
-#: ../python/kateshell/mainwindow.py:266
-msgid "modified"
-msgstr "modificado"
+#: ../python/kateshell/mainwindow.py:173
+msgid "&Tool Views"
+msgstr "Vistas de herramien&tas"
 
-#: ../python/kateshell/mainwindow.py:275
-msgid "Line: %1 Col: %2"
-msgstr "Línea: %1 Columna: %2"
-
-#: ../python/kateshell/mainwindow.py:283
-msgid "BLOCK"
-msgstr "BLOQUE"
-
-#: ../python/kateshell/mainwindow.py:283
-msgid "Block selection mode"
-msgstr "Modo de selección de bloques"
-
-#: ../python/kateshell/mainwindow.py:285
-msgid "LINE"
-msgstr "LÍNEA"
-
-#: ../python/kateshell/mainwindow.py:285
-msgid "Line selection mode"
-msgstr "Modo de selección de líneas"
-
-#: ../python/kateshell/mainwindow.py:311
+#: ../python/kateshell/mainwindow.py:182
 msgid "Dock"
 msgstr "Empotrar"
 
-#: ../python/kateshell/mainwindow.py:314
+#: ../python/kateshell/mainwindow.py:185
 msgid "Show"
 msgstr "Mostrar"
 
-#: ../python/kateshell/mainwindow.py:326
+#: ../python/kateshell/mainwindow.py:276
+msgid "modified"
+msgstr "modificado"
+
+#: ../python/kateshell/mainwindow.py:285
+msgid "Line: %1 Col: %2"
+msgstr "Línea: %1 Columna: %2"
+
+#: ../python/kateshell/mainwindow.py:293
+msgid "BLOCK"
+msgstr "BLOQUE"
+
+#: ../python/kateshell/mainwindow.py:293
+msgid "Block selection mode"
+msgstr "Modo de selección de bloques"
+
+#: ../python/kateshell/mainwindow.py:295
+msgid "LINE"
+msgstr "LÍNEA"
+
+#: ../python/kateshell/mainwindow.py:295
+msgid "Line selection mode"
+msgstr "Modo de selección de líneas"
+
+#: ../python/kateshell/mainwindow.py:347
 msgid "All Files"
 msgstr "Todos los archivos"
 
-#: ../python/kateshell/mainwindow.py:327
+#: ../python/kateshell/mainwindow.py:348
 msgid "Open File"
 msgstr "Abrir archivo"
 
-#: ../python/kateshell/mainwindow.py:407
+#: ../python/kateshell/mainwindow.py:428
 msgid "Please select some text first."
 msgstr "Seleccione primero algo de texto."
 
-#: ../python/kateshell/mainwindow.py:739
+#: ../python/kateshell/mainwindow.py:760
 msgid "Move To"
 msgstr "Mover a"
 
-#: ../python/kateshell/mainwindow.py:746
+#: ../python/kateshell/mainwindow.py:767
 msgid "Undock"
 msgstr "Desempotrar"
 
-#: ../python/kateshell/mainwindow.py:803
+#: ../python/kateshell/mainwindow.py:824
 msgid "Could not load %1"
 msgstr "No se ha podido cargar %1"
 

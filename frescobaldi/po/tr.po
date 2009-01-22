@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-22 01:47+0100\n"
+"POT-Creation-Date: 2009-01-22 05:27+0100\n"
 "PO-Revision-Date: 2008-10-26 15:22+0200\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../frescobaldi.py:32 dummy.py:12
+#: ../frescobaldi.py:32 dummy.py:11
 msgid "Frescobaldi"
 msgstr ""
 
-#: ../frescobaldi.py:34 dummy.py:13
+#: ../frescobaldi.py:34 dummy.py:12
 #, fuzzy
 msgid "LilyPond Music Editor"
 msgstr "Çevrilecek LilyPond dosyaları"
@@ -79,10 +79,6 @@ msgid "&Rhythm"
 msgstr "&Ritm"
 
 #: dummy.py:8
-msgid "&Tool Views"
-msgstr ""
-
-#: dummy.py:9
 msgid "&Generated Files"
 msgstr ""
 
@@ -346,84 +342,88 @@ msgstr "Left toe"
 msgid "Right toe"
 msgstr "Right toe"
 
-#: ../python/kateshell/mainwindow.py:96
+#: ../python/kateshell/mainwindow.py:97
 #, fuzzy
 msgid "Left Sidebar"
 msgstr "Left toe"
 
-#: ../python/kateshell/mainwindow.py:100
+#: ../python/kateshell/mainwindow.py:101
 #, fuzzy
 msgid "Right Sidebar"
 msgstr "Right toe"
 
-#: ../python/kateshell/mainwindow.py:112
+#: ../python/kateshell/mainwindow.py:113
 msgid "Top Sidebar"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:116
+#: ../python/kateshell/mainwindow.py:117
 msgid "Bottom Sidebar"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:174
+#: ../python/kateshell/mainwindow.py:160
 msgid "Show Path"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:266
-msgid "modified"
+#: ../python/kateshell/mainwindow.py:173
+msgid "&Tool Views"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:275
-msgid "Line: %1 Col: %2"
-msgstr ""
-
-#: ../python/kateshell/mainwindow.py:283
-msgid "BLOCK"
-msgstr ""
-
-#: ../python/kateshell/mainwindow.py:283
-msgid "Block selection mode"
-msgstr ""
-
-#: ../python/kateshell/mainwindow.py:285
-msgid "LINE"
-msgstr ""
-
-#: ../python/kateshell/mainwindow.py:285
-#, fuzzy
-msgid "Line selection mode"
-msgstr "Dil Seçimi"
-
-#: ../python/kateshell/mainwindow.py:311
+#: ../python/kateshell/mainwindow.py:182
 msgid "Dock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:314
+#: ../python/kateshell/mainwindow.py:185
 #, fuzzy
 msgid "Show"
 msgstr "Kısa"
 
-#: ../python/kateshell/mainwindow.py:326
+#: ../python/kateshell/mainwindow.py:276
+msgid "modified"
+msgstr ""
+
+#: ../python/kateshell/mainwindow.py:285
+msgid "Line: %1 Col: %2"
+msgstr ""
+
+#: ../python/kateshell/mainwindow.py:293
+msgid "BLOCK"
+msgstr ""
+
+#: ../python/kateshell/mainwindow.py:293
+msgid "Block selection mode"
+msgstr ""
+
+#: ../python/kateshell/mainwindow.py:295
+msgid "LINE"
+msgstr ""
+
+#: ../python/kateshell/mainwindow.py:295
+#, fuzzy
+msgid "Line selection mode"
+msgstr "Dil Seçimi"
+
+#: ../python/kateshell/mainwindow.py:347
 msgid "All Files"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:327
+#: ../python/kateshell/mainwindow.py:348
 #, fuzzy
 msgid "Open File"
 msgstr "PDF aç"
 
-#: ../python/kateshell/mainwindow.py:407
+#: ../python/kateshell/mainwindow.py:428
 msgid "Please select some text first."
 msgstr "Lütfen önce bir metin seçiniz."
 
-#: ../python/kateshell/mainwindow.py:739
+#: ../python/kateshell/mainwindow.py:760
 msgid "Move To"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:746
+#: ../python/kateshell/mainwindow.py:767
 msgid "Undock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:803
+#: ../python/kateshell/mainwindow.py:824
 #, fuzzy
 msgid "Could not load %1"
 msgstr "LilyPond başlatılamadı: %s"

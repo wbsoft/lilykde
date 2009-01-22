@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-22 01:47+0100\n"
+"POT-Creation-Date: 2009-01-22 05:27+0100\n"
 "PO-Revision-Date: 2009-01-22 01:49+0100\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@lists.kde.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "X-Generator: Lokalize 0.2\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: ../frescobaldi.py:32 dummy.py:12
+#: ../frescobaldi.py:32 dummy.py:11
 msgid "Frescobaldi"
 msgstr "Frescobaldi"
 
-#: ../frescobaldi.py:34 dummy.py:13
+#: ../frescobaldi.py:34 dummy.py:12
 msgid "LilyPond Music Editor"
 msgstr "Muziek-editor voor LilyPond"
 
@@ -77,10 +77,6 @@ msgid "&Rhythm"
 msgstr "&Ritme"
 
 #: dummy.py:8
-msgid "&Tool Views"
-msgstr "&Gereedschapsweergaven"
-
-#: dummy.py:9
 msgid "&Generated Files"
 msgstr "&Aangemaakte bestanden"
 
@@ -344,79 +340,83 @@ msgstr "Linker teen"
 msgid "Right toe"
 msgstr "Rechter teen"
 
-#: ../python/kateshell/mainwindow.py:96
+#: ../python/kateshell/mainwindow.py:97
 msgid "Left Sidebar"
 msgstr "Linker zijbalk"
 
-#: ../python/kateshell/mainwindow.py:100
+#: ../python/kateshell/mainwindow.py:101
 msgid "Right Sidebar"
 msgstr "Rechter zijbalk"
 
-#: ../python/kateshell/mainwindow.py:112
+#: ../python/kateshell/mainwindow.py:113
 msgid "Top Sidebar"
 msgstr "Bovenste zijbalk"
 
-#: ../python/kateshell/mainwindow.py:116
+#: ../python/kateshell/mainwindow.py:117
 msgid "Bottom Sidebar"
 msgstr "Onderste zijbalk"
 
-#: ../python/kateshell/mainwindow.py:174
+#: ../python/kateshell/mainwindow.py:160
 msgid "Show Path"
 msgstr "Pad tonen"
 
-#: ../python/kateshell/mainwindow.py:266
-msgid "modified"
-msgstr "gewijzigd"
+#: ../python/kateshell/mainwindow.py:173
+msgid "&Tool Views"
+msgstr "&Gereedschapsweergaven"
 
-#: ../python/kateshell/mainwindow.py:275
-msgid "Line: %1 Col: %2"
-msgstr "Regel: %1 Kol: %2"
-
-#: ../python/kateshell/mainwindow.py:283
-msgid "BLOCK"
-msgstr "BLOK"
-
-#: ../python/kateshell/mainwindow.py:283
-msgid "Block selection mode"
-msgstr "Blokselectiemodus"
-
-#: ../python/kateshell/mainwindow.py:285
-msgid "LINE"
-msgstr "REGEL"
-
-#: ../python/kateshell/mainwindow.py:285
-msgid "Line selection mode"
-msgstr "Regelselectiemodus"
-
-#: ../python/kateshell/mainwindow.py:311
+#: ../python/kateshell/mainwindow.py:182
 msgid "Dock"
 msgstr "Vastmaken"
 
-#: ../python/kateshell/mainwindow.py:314
+#: ../python/kateshell/mainwindow.py:185
 msgid "Show"
 msgstr "Weergeven"
 
-#: ../python/kateshell/mainwindow.py:326
+#: ../python/kateshell/mainwindow.py:276
+msgid "modified"
+msgstr "gewijzigd"
+
+#: ../python/kateshell/mainwindow.py:285
+msgid "Line: %1 Col: %2"
+msgstr "Regel: %1 Kol: %2"
+
+#: ../python/kateshell/mainwindow.py:293
+msgid "BLOCK"
+msgstr "BLOK"
+
+#: ../python/kateshell/mainwindow.py:293
+msgid "Block selection mode"
+msgstr "Blokselectiemodus"
+
+#: ../python/kateshell/mainwindow.py:295
+msgid "LINE"
+msgstr "REGEL"
+
+#: ../python/kateshell/mainwindow.py:295
+msgid "Line selection mode"
+msgstr "Regelselectiemodus"
+
+#: ../python/kateshell/mainwindow.py:347
 msgid "All Files"
 msgstr "Alle bestanden"
 
-#: ../python/kateshell/mainwindow.py:327
+#: ../python/kateshell/mainwindow.py:348
 msgid "Open File"
 msgstr "Bestand openen"
 
-#: ../python/kateshell/mainwindow.py:407
+#: ../python/kateshell/mainwindow.py:428
 msgid "Please select some text first."
 msgstr "Selecteer eerst de tekst waarop u de functie wilt toepassen."
 
-#: ../python/kateshell/mainwindow.py:739
+#: ../python/kateshell/mainwindow.py:760
 msgid "Move To"
 msgstr "Verplaatsen naar"
 
-#: ../python/kateshell/mainwindow.py:746
+#: ../python/kateshell/mainwindow.py:767
 msgid "Undock"
 msgstr "Losmaken"
 
-#: ../python/kateshell/mainwindow.py:803
+#: ../python/kateshell/mainwindow.py:824
 msgid "Could not load %1"
 msgstr "Kan %1 niet laden"
 
@@ -2471,4 +2471,3 @@ msgstr "Speciaal"
 
 #~ msgid "Your language"
 #~ msgstr "Uw eigen taal"
-
