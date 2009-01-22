@@ -24,7 +24,8 @@ Frescobaldi module to run Rumor
 import os, re, sys
 from subprocess import Popen, PIPE
 
-from PyQt4.QtCore import QEvent, QObject, QRegExp, QSize, QVariant, Qt, SIGNAL
+from PyQt4.QtCore import (
+    QEvent, QObject, QRegExp, QSize, QTimer, QVariant, Qt, SIGNAL)
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QHBoxLayout, QLabel, QPushButton,
     QRegExpValidator, QToolButton, QTreeWidget, QTreeWidgetItem, QWidget)
@@ -245,7 +246,7 @@ class RumorPanel(QWidget):
                 re.DOTALL).match(text)
             if m:
                 pitch, mode = m.group(1,2)
-                acc = ly.key.key2num[lang][pitch] + modes[mode]
+                acc = ly.key.key2num[lang][pitch] + ly.key.modes[mode]
             else:
                 acc = 0
         else:
@@ -345,8 +346,13 @@ class RumorButton(ProcessButtonBase, QToolButton):
             
     def stop(self):
         # Rumor wants to be killed with SIGINT
-        os.kill(self.process().pid(), 2)
-        
+        stop = lambda: os.kill(self.process().pid(), 2)
+        if self.panel.keyboardEmu:
+            self.writeInput(" ")
+            QTimer.singleShot(100, stop)
+        else:
+            stop()
+            
     def readOutput(self, text):
         self.panel.insertRumorOutput(unicode(text))
 
