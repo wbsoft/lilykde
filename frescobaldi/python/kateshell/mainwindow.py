@@ -140,7 +140,7 @@ class MainWindow(KParts.MainWindow):
         if not self.initialGeometrySet():
             self.resize(700, 480)
         
-        self.setupDocMenu()
+        self.setupGeneratedMenus()
         self.setAutoSaveSettings()
         self.loadSettings()
         self.show()
@@ -189,7 +189,31 @@ class MainWindow(KParts.MainWindow):
                 if count == len(menu.children()):
                     sip.delete(title)
         QObject.connect(menu, SIGNAL("aboutToShow()"), populate)
-            
+
+    def setupGeneratedMenus(self):
+        """ This should setup menus that are generated on show. """
+        # Set up the documents menu so that it shows all open documents.
+        docMenu = self.factory().container("documents", self)
+        docGroup = QActionGroup(docMenu)
+        docGroup.setExclusive(True)
+        QObject.connect(docGroup, SIGNAL("triggered(QAction*)"),
+            lambda a: a.doc.setActive())
+        def populateDocMenu():
+            for a in docGroup.actions():
+                sip.delete(a)
+            for d in self.app.documents:
+                a = KAction(d.documentName(), docGroup)
+                a.setCheckable(True)
+                a.doc = d
+                icon = d.documentIcon()
+                if icon:
+                    a.setIcon(KIcon(icon))
+                if d is self._currentDoc:
+                    a.setChecked(True)
+                docGroup.addAction(a)
+                docMenu.addAction(a)
+        QObject.connect(docMenu, SIGNAL("aboutToShow()"), populateDocMenu)
+        
     def act(self, name, texttype, func,
             icon=None, tooltip=None, whatsthis=None, key=None):
         """ Create an action and add it to own actionCollection """
@@ -313,32 +337,9 @@ class MainWindow(KParts.MainWindow):
         dlg = KEditToolBar(self.guiFactory(), self)
         def newToolbarConfig():
             self.applyMainWindowSettings(conf)
-            self.setupDocMenu()
+            self.setupGeneratedMenus()
         QObject.connect(dlg, SIGNAL("newToolbarConfig()"), newToolbarConfig)
         dlg.exec_()
-
-    def setupDocMenu(self):
-        """ Sets up the documents menu so that it shows all open documents. """
-        docMenu = self.factory().container("documents", self)
-        docGroup = QActionGroup(docMenu)
-        docGroup.setExclusive(True)
-        QObject.connect(docGroup, SIGNAL("triggered(QAction*)"),
-            lambda a: a.doc.setActive())
-        def populate():
-            for a in docGroup.actions():
-                sip.delete(a)
-            for d in self.app.documents:
-                a = KAction(d.documentName(), docGroup)
-                a.setCheckable(True)
-                a.doc = d
-                icon = d.documentIcon()
-                if icon:
-                    a.setIcon(KIcon(icon))
-                if d is self._currentDoc:
-                    a.setChecked(True)
-                docGroup.addAction(a)
-                docMenu.addAction(a)
-        QObject.connect(docMenu, SIGNAL("aboutToShow()"), populate)
 
     def openDocument(self):
         """ Open an existing document. """

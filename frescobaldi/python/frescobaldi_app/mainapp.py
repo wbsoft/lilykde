@@ -164,12 +164,6 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         self.jobs = {}
         listeners[app.activeChanged].append(self.updateJobActions)
         
-        # Generated files actions:
-        self.generatedFilesMenu = self.factory().container(
-            "lilypond_actions", self)
-        QObject.connect(self.generatedFilesMenu, SIGNAL("aboutToShow()"),
-            self.populateGeneratedFilesMenu)
-            
     @lazy
     def actionManager(self):
         """
@@ -347,7 +341,22 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         def options_configure():
             import frescobaldi_app.settings
             frescobaldi_app.settings.SettingsDialog(self).show()
-            
+
+    def setupGeneratedMenus(self):
+        super(MainWindow, self).setupGeneratedMenus()
+        # Generated file menu:
+        menu = self.factory().container("lilypond_actions", self)
+        def populateGenFilesMenu(menu=menu):
+            for action in menu.actions():
+                if action.objectName() != "actions_email":
+                    sip.delete(action)
+            doc = self.currentDocument()
+            if not doc:
+                return
+            menu.addSeparator()
+            self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
+        QObject.connect(menu, SIGNAL("aboutToShow()"), populateGenFilesMenu)
+        
     def createLilyPondJob(self, doc, preview=True):
         if doc not in self.jobs:
             from frescobaldi_app.runlily import LyDoc2PDF
@@ -389,17 +398,6 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         act("lilypond_runner").setIcon(KIcon(icon))
         act("lilypond_runner").setToolTip(tip)
 
-    def populateGeneratedFilesMenu(self):
-        menu = self.generatedFilesMenu
-        for action in menu.actions():
-            if action.objectName() != "actions_email":
-                sip.delete(action)
-        doc = self.currentDocument()
-        if not doc:
-            return
-        menu.addSeparator()
-        self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
-        
     def saveSettings(self):
         self.app.stateManager().cleanup()
         super(MainWindow, self).saveSettings()
