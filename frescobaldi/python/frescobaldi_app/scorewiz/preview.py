@@ -70,6 +70,10 @@ class PreviewDialog(KDialog):
                 a = part.actionCollection().action("show_leftpanel")
                 if a and a.isChecked():
                     a.toggle()
+                # default to single page layout
+                a = part.actionCollection().action("view_render_mode_single")
+                if a and not a.isChecked():
+                    a.trigger()
         self.setMinimumSize(QSize(400, 300))
         self.restoreDialogSize(config("scorewiz").group("preview"))
         self.directory = None
