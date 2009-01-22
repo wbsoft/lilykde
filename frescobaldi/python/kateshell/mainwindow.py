@@ -28,7 +28,7 @@ from PyKDE4.kdecore import KGlobal, KPluginLoader, KUrl, i18n
 from PyKDE4.kdeui import (
     KAction, KActionMenu, KDialog, KEditToolBar, KHBox, KIcon, KMenu,
     KMessageBox, KMultiTabBar, KShortcut, KShortcutsDialog, KShortcutsEditor,
-    KStandardAction, KVBox)
+    KStandardAction, KToggleFullScreenAction, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 from PyKDE4.kio import KEncodingFileDialog
@@ -160,6 +160,10 @@ class MainWindow(KParts.MainWindow):
         self.showPath = self.act('options_show_full_path', i18n("Show Path"),
             lambda: self.updateCaption(self.currentDocument()))
         self.showPath.setCheckable(True)
+        # full screen
+        a = self.actionCollection().addAction(KStandardAction.FullScreen, 'fullscreen')
+        QObject.connect(a, SIGNAL("toggled(bool)"), lambda t:
+            KToggleFullScreenAction.setFullScreen(self, t))
         # recent files.
         self.openRecent = KStandardAction.openRecent(
             self, SLOT("slotOpenRecent(KUrl)"), self)
