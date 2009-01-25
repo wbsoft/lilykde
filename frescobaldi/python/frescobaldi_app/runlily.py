@@ -24,8 +24,8 @@ import os, re, time
 from PyQt4.QtCore import (
     QObject, QProcess, QSize, QTimer, QUrl, QVariant, Qt, SIGNAL)
 from PyQt4.QtGui import (
-    QBrush, QColor, QFont, QFrame, QTextBrowser, QTextCharFormat, QToolBar,
-    QVBoxLayout)
+    QBrush, QColor, QFont, QFrame, QTextBrowser, QTextCharFormat, QTextCursor,
+    QToolBar, QVBoxLayout)
 from PyKDE4.kdecore import KGlobal, KProcess, i18n
 
 from kateshell.mainwindow import listeners
@@ -155,6 +155,7 @@ class LogWidget(QFrame):
         self.textBrowser.setFocusPolicy(Qt.NoFocus)
         self.textBrowser.setOpenLinks(False)
         self.textBrowser.setOpenExternalLinks(False)
+        self.textCursor = QTextCursor(self.textBrowser.document())
         self.formats = textFormats()
         layout.addWidget(self.textBrowser)
         self.actionBar = QToolBar(self)
@@ -188,12 +189,12 @@ class LogWidget(QFrame):
             sb.setValue(sb.maximum())
         
     def write(self, text, format='log'):
-        self.textBrowser.setCurrentCharFormat(self.formats[format])
-        self.checkScroll(lambda: self.textBrowser.insertPlainText(text))
+        self.checkScroll(lambda:
+            self.textCursor.insertText(text, self.formats[format]))
 
     def writeMsg(self, text, format='msg'):
         # start on a new line if necessary
-        if self.textBrowser.textCursor().columnNumber() > 0:
+        if self.textCursor.columnNumber() > 0:
             self.write('\n', format)
         self.write(text, format)
 
