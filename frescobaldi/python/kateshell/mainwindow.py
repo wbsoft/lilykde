@@ -809,9 +809,9 @@ class Tool(object):
         
 
 class KPartTool(Tool):
-    def __init__(self, mainwin, name, title="", icon="",
-            dock=Right):
+    def __init__(self, mainwin, name, title="", icon="", dock=Right):
         self.part = None
+        self.failed = False
         Tool.__init__(self, mainwin,
             name, title, icon, dock, factory=self.partFactory)
             
@@ -826,6 +826,7 @@ class KPartTool(Tool):
                 QObject.connect(part, SIGNAL("destroyed()"), self.slotDestroyed)
                 QTimer.singleShot(0, self.partLoaded)
                 return part.widget()
+        self.failed = True
         libmsg = "<br/><b><tt>%s</tt></b><br/>" % self._partlibrary
         return QLabel("<center>%s</center>" % i18n("Could not load %1", libmsg))
 
@@ -839,6 +840,7 @@ class KPartTool(Tool):
         
     def slotDestroyed(self):
         self.part = None
+        self.failed = False
         self.widget = None
         if not sip.isdeleted(self.mainwin):
             if self._docked:

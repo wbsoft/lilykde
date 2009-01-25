@@ -537,7 +537,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
 
     def openUrl(self, url):
         """ Expects KUrl."""
-        if self.part:
+        if not self.failed:
             self.show()
             if url != self._currentUrl:
                 self._currentUrl = url
