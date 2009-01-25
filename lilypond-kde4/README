@@ -1,6 +1,14 @@
 lilypond-kde4
 =============
 
+Note: This package is not needed anymore in KDE 4.2.  The oxygen icon and the
+indenter script have moved to KDE 4.2, and Okular now does not pass textedit://
+urls to KRun, so our protocol service is not necessary: The user must configure
+the command to run in Okular (or a wizard can write the appropriate setting in
+Okular's config).
+
+
+
 http://lilykde.googlecode.com/
 
 This is a small package with LilyPond-related files that can be shared
