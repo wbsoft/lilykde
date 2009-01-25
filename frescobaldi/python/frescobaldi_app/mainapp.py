@@ -537,10 +537,11 @@ class PDFTool(kateshell.mainwindow.KPartTool):
 
     def openUrl(self, url):
         """ Expects KUrl."""
-        self.show()
-        if url != self._currentUrl:
-            self._currentUrl = url
-            self._timer.start()
+        if self.part:
+            self.show()
+            if url != self._currentUrl:
+                self._currentUrl = url
+                self._timer.start()
 
     def _okularMiniBar(self):
         """ get the okular miniBar """
