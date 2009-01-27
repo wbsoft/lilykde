@@ -64,6 +64,10 @@ class MainApp(kateshell.app.MainApp):
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
         os.environ["FRESCOBALDI_PID"] = str(os.getpid())
+        # check if stuff needs to be run after an update of Frescobaldi
+        if self.version() != config("").readEntry("version", "0.0"):
+            from frescobaldi_app.install import install
+            install(self)
         
     def openUrl(self, url, encoding=None):
         # The URL can be python string, dbus string or QString or KUrl

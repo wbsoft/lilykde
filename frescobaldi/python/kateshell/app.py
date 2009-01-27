@@ -194,6 +194,20 @@ class MainApp(DBusItem):
         self.history.append(doc)
         listeners.call(self.activeChanged, doc)
 
+    @method(iface, in_signature='', out_signature='s')
+    def programName(self):
+        """
+        Returns the name of the application
+        """
+        return unicode(KGlobal.mainComponent().aboutData().programName())
+        
+    @method(iface, in_signature='', out_signature='s')
+    def version(self):
+        """
+        Returns the version of our app.
+        """
+        return unicode(KGlobal.mainComponent().aboutData().version())
+
 
 class Document(DBusItem):
     """
