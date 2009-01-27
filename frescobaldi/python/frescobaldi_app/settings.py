@@ -30,8 +30,8 @@ from PyKDE4.kio import KFile, KUrlRequester
 
 from frescobaldi_app.widgets import ExecLineEdit, ExecArgsLineEdit
 
-# these modules provide their own default settings
-import frescobaldi_app.rumor, frescobaldi_app.hyphen
+# these modules provide their own default settings or update functions
+import frescobaldi_app.hyphen, frescobaldi_app.mainapp, frescobaldi_app.rumor
 
 class SettingsDialog(KPageDialog):
     def __init__(self, mainwin):
@@ -111,6 +111,7 @@ class EditorComponent(object):
 class GeneralPreferences(KVBox):
     def __init__(self, dialog):
         KVBox.__init__(self, dialog)
+        self.mainwin = dialog.mainwin
         item = dialog.addPage(self, i18n("General Preferences"))
         item.setHeader(i18n("General Frescobaldi Preferences"))
         item.setIcon(KIcon("configure"))
@@ -123,6 +124,8 @@ class GeneralPreferences(KVBox):
                 "delete intermediate files", True),
             (i18n("Remember cursor position, bookmarks, etc."),
                 "save metainfo", False),
+            (i18n("Disable the built-in PDF preview"),
+                "disable pdf preview", False),
         ):
             b = QCheckBox(title, self)
             QObject.connect(b, SIGNAL("clicked()"), dialog.changed)
@@ -142,6 +145,14 @@ class GeneralPreferences(KVBox):
         conf = config("preferences")
         for widget, name, default in self.checks:
             conf.writeEntry(name, QVariant(widget.isChecked()))
+        # disable or enable the builtin PDF preview
+        disable = conf.readEntry("disable pdf preview", QVariant(False)).toBool()
+        running = "pdf" in self.mainwin.tools
+        if disable and running:
+            self.mainwin.tools["pdf"].delete()
+        elif not disable and not running:
+            tool = frescobaldi_app.mainapp.PDFTool(self.mainwin)
+            tool.sync(self.mainwin.currentDocument())
 
 
 class Commands(QWidget):

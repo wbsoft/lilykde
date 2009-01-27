@@ -651,11 +651,10 @@ class Tool(object):
     
     def delete(self):
         """ Completely remove our tool """
-        if self._docked:
-            self._dock.removeTool(self)
-            self._dock = None
-        else:
-            self._dialog.done(0)
+        if not self._docked:
+            self.dock()
+        self._dock.removeTool(self)
+        self._dock = None
         if self.widget:
             sip.delete(self.widget)
             self.widget = None
@@ -835,8 +834,9 @@ class KPartTool(Tool):
         pass
     
     def delete(self):
+        if self.part:
+            QObject.disconnect(self.part, SIGNAL("destroyed()"), self.slotDestroyed)
         super(KPartTool, self).delete()
-        sip.delete(self.part)
         
     def slotDestroyed(self):
         self.part = None

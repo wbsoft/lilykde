@@ -161,9 +161,10 @@ class MainWindow(kateshell.mainwindow.MainWindow):
 
         KonsoleTool(self)
         LogTool(self)
-        PDFTool(self)
         QuickInsertTool(self)
         RumorTool(self)
+        if not config().readEntry("disable pdf preview", QVariant(False)).toBool():
+            PDFTool(self)
         
         self.jobs = {}
         listeners[app.activeChanged].append(self.updateJobActions)
@@ -509,7 +510,11 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             if self._currentUrl:
                 super(PDFTool, self).openUrl(self._currentUrl)
         QObject.connect(self._timer, SIGNAL("timeout()"), timeoutFunc)
-    
+
+    def delete(self):
+        listeners[self.mainwin.app.activeChanged].remove(self.sync)
+        super(PDFTool, self).delete()
+        
     def sync(self, doc):
         if self._config["sync"] and not doc.url().isEmpty():
             pdfs = doc.updatedFiles()("pdf")
