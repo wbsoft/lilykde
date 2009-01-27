@@ -54,7 +54,7 @@ class MainApp(DBusItem):
     """
     iface = DBUS_IFACE_PREFIX + "MainApp"
     defaultEncoding = 'UTF-8'
-    defaultHighlightingMode = None
+    defaultMode = None
     fileTypes = []
     
     def __init__(self, servicePrefix):
@@ -240,8 +240,8 @@ class Document(DBusItem):
 
         if not self._url.isEmpty():
             self.doc.openUrl(self._url)
-        elif self.app.defaultHighlightingMode:
-            self.doc.setHighlightingMode(self.app.defaultHighlightingMode)
+        elif self.app.defaultMode:
+            self.doc.setMode(self.app.defaultMode)
 
         if self._cursor is not None:
             self.view.setCursorPosition(KTextEditor.Cursor(*self._cursor))

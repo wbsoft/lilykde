@@ -55,7 +55,7 @@ class MainApp(kateshell.app.MainApp):
     """ A Frescobaldi application instance """
     
     defaultEncoding = 'UTF-8'
-    defaultHighlightingMode = "LilyPond"
+    defaultMode = "LilyPond"
     
     def __init__(self, servicePrefix):
         kateshell.app.MainApp.__init__(self, servicePrefix)
