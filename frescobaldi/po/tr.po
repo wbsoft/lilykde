@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-27 13:27+0100\n"
+"POT-Creation-Date: 2009-01-27 14:35+0100\n"
 "PO-Revision-Date: 2008-10-26 15:22+0200\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
@@ -415,15 +415,15 @@ msgstr "PDF aç"
 msgid "Please select some text first."
 msgstr "Lütfen önce bir metin seçiniz."
 
-#: ../python/kateshell/mainwindow.py:766
+#: ../python/kateshell/mainwindow.py:765
 msgid "Move To"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:773
+#: ../python/kateshell/mainwindow.py:772
 msgid "Undock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:831
+#: ../python/kateshell/mainwindow.py:830
 #, fuzzy
 msgid "Could not load %1"
 msgstr "LilyPond başlatılamadı: %s"
@@ -455,7 +455,7 @@ msgid "Play MIDI"
 msgstr "MIDI çal"
 
 #: ../python/frescobaldi_app/actions.py:101
-#: ../python/frescobaldi_app/mainapp.py:339
+#: ../python/frescobaldi_app/mainapp.py:340
 msgid "Email..."
 msgstr ""
 
@@ -581,37 +581,37 @@ msgstr ""
 msgid "LilyPond files"
 msgstr "LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:193
+#: ../python/frescobaldi_app/mainapp.py:194
 #: ../python/frescobaldi_app/scorewiz/__init__.py:347
 msgid "LilyPond"
 msgstr "LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:203
+#: ../python/frescobaldi_app/mainapp.py:204
 msgid "Setup New Score..."
 msgstr "Yeni Bir Esere Başla..."
 
-#: ../python/frescobaldi_app/mainapp.py:208
+#: ../python/frescobaldi_app/mainapp.py:209
 msgid "Run LilyPond (preview)"
 msgstr "LilyPond'u çalıştır (önizleme)"
 
-#: ../python/frescobaldi_app/mainapp.py:212
+#: ../python/frescobaldi_app/mainapp.py:213
 msgid "Run LilyPond (publish)"
 msgstr "LilyPond'u çalıştır (yayınla)"
 
-#: ../python/frescobaldi_app/mainapp.py:219
+#: ../python/frescobaldi_app/mainapp.py:220
 #, fuzzy
 msgid "There is already a LilyPond job running for this document."
 msgstr "Bu belge için kullanacağınız Lilypond sürüm numarası:"
 
-#: ../python/frescobaldi_app/mainapp.py:221
+#: ../python/frescobaldi_app/mainapp.py:222
 msgid "Already Running"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:224
+#: ../python/frescobaldi_app/mainapp.py:225
 msgid "Your document currently has no filename, please save first."
 msgstr "Belgenize bir dosya adı vermediniz, lütfen önce kaydediniz."
 
-#: ../python/frescobaldi_app/mainapp.py:228
+#: ../python/frescobaldi_app/mainapp.py:229
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -619,75 +619,75 @@ msgstr ""
 "Üzgünüm, uzak dosya desteği henüz verilmiyor.\n"
 "Lütfen belgenizi yerel bir dosyaya kaydediniz."
 
-#: ../python/frescobaldi_app/mainapp.py:235
+#: ../python/frescobaldi_app/mainapp.py:236
 msgid "Your document has been modified, please save first."
 msgstr "Belgeniz değiştirildi, lütfen önce kaydediniz."
 
-#: ../python/frescobaldi_app/mainapp.py:239
+#: ../python/frescobaldi_app/mainapp.py:240
 msgid "Interrupt LilyPond Job"
 msgstr "Lilypond Görevini Durdur"
 
-#: ../python/frescobaldi_app/mainapp.py:246
+#: ../python/frescobaldi_app/mainapp.py:247
 msgid "Double durations"
 msgstr "Katlı süreler"
 
-#: ../python/frescobaldi_app/mainapp.py:247
+#: ../python/frescobaldi_app/mainapp.py:248
 msgid "Double all the durations in the selection."
 msgstr "Seçilen tüm süreleri katlı hale getir."
 
-#: ../python/frescobaldi_app/mainapp.py:252
+#: ../python/frescobaldi_app/mainapp.py:253
 msgid "Halve durations"
 msgstr "Süreleri yarı değerine indir"
 
-#: ../python/frescobaldi_app/mainapp.py:253
+#: ../python/frescobaldi_app/mainapp.py:254
 msgid "Halve all the durations in the selection."
 msgstr "Seçilen tüm süreleri yarıya indir."
 
-#: ../python/frescobaldi_app/mainapp.py:258
+#: ../python/frescobaldi_app/mainapp.py:259
 msgid "Dot durations"
 msgstr "Noktalı süreler"
 
-#: ../python/frescobaldi_app/mainapp.py:259
+#: ../python/frescobaldi_app/mainapp.py:260
 msgid "Add a dot to all the durations in the selection."
 msgstr "Seçilen tüm sürelere nokta ekle."
 
-#: ../python/frescobaldi_app/mainapp.py:264
+#: ../python/frescobaldi_app/mainapp.py:265
 msgid "Undot durations"
 msgstr "Sürelerdeki noktaları kaldır"
 
-#: ../python/frescobaldi_app/mainapp.py:265
+#: ../python/frescobaldi_app/mainapp.py:266
 msgid "Remove one dot from all the durations in the selection."
 msgstr "Seçilen tüm notalardan bir nokta kaldır."
 
-#: ../python/frescobaldi_app/mainapp.py:270
+#: ../python/frescobaldi_app/mainapp.py:271
 msgid "Remove scaling"
 msgstr "Ölçeklemeyi kaldır"
 
-#: ../python/frescobaldi_app/mainapp.py:271
+#: ../python/frescobaldi_app/mainapp.py:272
 msgid "Remove all scaling (*n/m) from the durations in the selection."
 msgstr "Seçilen tüm sürelerdeki ölçeklemeyi (*n/m) kaldır."
 
-#: ../python/frescobaldi_app/mainapp.py:276
+#: ../python/frescobaldi_app/mainapp.py:277
 msgid "Remove durations"
 msgstr "Süreleri kaldır"
 
-#: ../python/frescobaldi_app/mainapp.py:277
+#: ../python/frescobaldi_app/mainapp.py:278
 msgid "Remove all durations from the selection."
 msgstr "Seçilen tüm süreleri kaldır."
 
-#: ../python/frescobaldi_app/mainapp.py:282
+#: ../python/frescobaldi_app/mainapp.py:283
 msgid "Make implicit"
 msgstr "Görünmez yap"
 
-#: ../python/frescobaldi_app/mainapp.py:283
+#: ../python/frescobaldi_app/mainapp.py:284
 msgid "Make durations implicit (remove repeated durations)."
 msgstr "Süreleri görünmez yap (tekrarlanan süreleri kaldır)."
 
-#: ../python/frescobaldi_app/mainapp.py:288
+#: ../python/frescobaldi_app/mainapp.py:289
 msgid "Make explicit"
 msgstr "Görünmez yap"
 
-#: ../python/frescobaldi_app/mainapp.py:289
+#: ../python/frescobaldi_app/mainapp.py:290
 msgid ""
 "Make durations explicit (add duration to every note, even if it is the same "
 "as the preceding note)."
@@ -695,115 +695,115 @@ msgstr ""
 "Süreleri görünmez yap (bir önceki notanın süresi aynı olsa bile, her notaya "
 "süre ekle)"
 
-#: ../python/frescobaldi_app/mainapp.py:295
+#: ../python/frescobaldi_app/mainapp.py:296
 msgid "Apply rhythm..."
 msgstr "Ritm uygula..."
 
-#: ../python/frescobaldi_app/mainapp.py:296
+#: ../python/frescobaldi_app/mainapp.py:297
 msgid "Apply an entered rhythm to the selected music."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:300
+#: ../python/frescobaldi_app/mainapp.py:301
 #, fuzzy
 msgid "Copy rhythm"
 msgstr "Ritm uygula"
 
-#: ../python/frescobaldi_app/mainapp.py:301
+#: ../python/frescobaldi_app/mainapp.py:302
 msgid "Copy the rhythm of the selected music."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:307
+#: ../python/frescobaldi_app/mainapp.py:308
 msgid "Paste rhythm"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:308
+#: ../python/frescobaldi_app/mainapp.py:309
 msgid "Paste a rhythm to the selected music."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:315
+#: ../python/frescobaldi_app/mainapp.py:316
 msgid "Hyphenate Lyrics Text"
 msgstr "Şarkı Sözleri Metnini Tirele"
 
-#: ../python/frescobaldi_app/mainapp.py:320
+#: ../python/frescobaldi_app/mainapp.py:321
 msgid "Remove hyphenation"
 msgstr "Tirelemeyi kaldır"
 
-#: ../python/frescobaldi_app/mainapp.py:325
+#: ../python/frescobaldi_app/mainapp.py:326
 msgid "Insert LilyPond version"
 msgstr "LilyPond Sürümünü ekle"
 
-#: ../python/frescobaldi_app/mainapp.py:330
+#: ../python/frescobaldi_app/mainapp.py:331
 msgid "Update with convert-ly"
 msgstr "convert-ly ile Güncelle"
 
-#: ../python/frescobaldi_app/mainapp.py:335
+#: ../python/frescobaldi_app/mainapp.py:336
 #, fuzzy
 msgid "Open Current Folder"
 msgstr "Dizin aç"
 
-#: ../python/frescobaldi_app/mainapp.py:398
+#: ../python/frescobaldi_app/mainapp.py:399
 msgid "Abort the running LilyPond process"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:401
+#: ../python/frescobaldi_app/mainapp.py:402
 #, fuzzy
 msgid "Run LilyPond in preview mode"
 msgstr "LilyPond'u çalıştır (önizleme)"
 
-#: ../python/frescobaldi_app/mainapp.py:413
+#: ../python/frescobaldi_app/mainapp.py:414
 msgid "Apply Rhythm"
 msgstr "Ritm uygula"
 
-#: ../python/frescobaldi_app/mainapp.py:419
+#: ../python/frescobaldi_app/mainapp.py:420
 msgid "Enter a rhythm:"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:422
+#: ../python/frescobaldi_app/mainapp.py:423
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr ""
 "Süre değerlerine göre boşluk bırakarak bir ritm girin (örn. 8. 16 8 4 8)"
 
-#: ../python/frescobaldi_app/mainapp.py:446
+#: ../python/frescobaldi_app/mainapp.py:447
 #, fuzzy
 msgid "Terminal"
 msgstr "Trill"
 
-#: ../python/frescobaldi_app/mainapp.py:479
+#: ../python/frescobaldi_app/mainapp.py:480
 msgid "S&ynchronize Terminal with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:499
+#: ../python/frescobaldi_app/mainapp.py:500
 #: ../python/frescobaldi_app/scorewiz/preview.py:45
 #, fuzzy
 msgid "PDF Preview"
 msgstr "PDF'yi e-posta ile gönder (önizleme)"
 
-#: ../python/frescobaldi_app/mainapp.py:527
+#: ../python/frescobaldi_app/mainapp.py:532
 #, fuzzy
 msgid "Show PDF Navigation Panel"
 msgstr "PDF izleme panosunu bağla"
 
-#: ../python/frescobaldi_app/mainapp.py:528
+#: ../python/frescobaldi_app/mainapp.py:533
 msgid "Show PDF minipager"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:530
+#: ../python/frescobaldi_app/mainapp.py:535
 msgid "S&ynchronize Preview with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:583
+#: ../python/frescobaldi_app/mainapp.py:588
 msgid "Quick Insert"
 msgstr "Hızılı Ekle"
 
-#: ../python/frescobaldi_app/mainapp.py:595
+#: ../python/frescobaldi_app/mainapp.py:600
 msgid "LilyPond Log"
 msgstr "LilyPond Günlüğü"
 
-#: ../python/frescobaldi_app/mainapp.py:599
+#: ../python/frescobaldi_app/mainapp.py:604
 msgid "no log"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:628
+#: ../python/frescobaldi_app/mainapp.py:633
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -1094,50 +1094,55 @@ msgstr ""
 msgid "Editor Component Options"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:114
+#: ../python/frescobaldi_app/settings.py:115
 #, fuzzy
 msgid "General Preferences"
 msgstr "Genel tercihler"
 
-#: ../python/frescobaldi_app/settings.py:115
+#: ../python/frescobaldi_app/settings.py:116
 #, fuzzy
 msgid "General Frescobaldi Preferences"
 msgstr "Genel tercihler"
 
-#: ../python/frescobaldi_app/settings.py:120
+#: ../python/frescobaldi_app/settings.py:121
 msgid "Save document when LilyPond is run"
 msgstr "Lilypond çalışırken belgeleri kaydet"
 
-#: ../python/frescobaldi_app/settings.py:122
+#: ../python/frescobaldi_app/settings.py:123
 msgid "Let LilyPond delete intermediate output files"
 msgstr "LilyPond'un ara çıktı dosyalarını silmesine izin ver"
 
-#: ../python/frescobaldi_app/settings.py:124
+#: ../python/frescobaldi_app/settings.py:125
 msgid "Remember cursor position, bookmarks, etc."
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:153
+#: ../python/frescobaldi_app/settings.py:127
+#, fuzzy
+msgid "Disable the built-in PDF preview"
+msgstr "PDF'yi e-posta ile gönder (önizleme)"
+
+#: ../python/frescobaldi_app/settings.py:164
 #, fuzzy
 msgid "Paths"
 msgstr "Partiler"
 
-#: ../python/frescobaldi_app/settings.py:154
+#: ../python/frescobaldi_app/settings.py:165
 msgid "Paths to programs or data used by Frescobaldi"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:163
+#: ../python/frescobaldi_app/settings.py:174
 msgid "Name or full path of the LilyPond program."
 msgstr "Lilypond programının tam yolunun adı."
 
-#: ../python/frescobaldi_app/settings.py:165
+#: ../python/frescobaldi_app/settings.py:176
 msgid "Name or full path of the convert-ly program."
 msgstr "Convert-ly programının tam yolunun adı."
 
-#: ../python/frescobaldi_app/settings.py:166
+#: ../python/frescobaldi_app/settings.py:177
 msgid "Printcommand:"
 msgstr "Yazdırma komutu:"
 
-#: ../python/frescobaldi_app/settings.py:167
+#: ../python/frescobaldi_app/settings.py:178
 msgid ""
 "Command to print a PDF file, for example lpr or kprinter. You may add some "
 "arguments, e.g. lpr -P myprinter."
@@ -1145,11 +1150,11 @@ msgstr ""
 "Bir PDF dosyasını yazdırma komutu, örneğin lpr veya kprinter. Bu komutlara "
 "lpr -P yazıcım gibi değerler eklemek de mümkündür."
 
-#: ../python/frescobaldi_app/settings.py:171
+#: ../python/frescobaldi_app/settings.py:182
 msgid "Name or full path of the Rumor program."
 msgstr "Rumor programının tam yolunun adı."
 
-#: ../python/frescobaldi_app/settings.py:173
+#: ../python/frescobaldi_app/settings.py:184
 msgid ""
 "Name or full path of the aconnect program (part of ALSA, for MIDI input and "
 "playback using Rumor)."
@@ -1157,22 +1162,22 @@ msgstr ""
 "Programa bağlanmanın adı veya tam yolu (ALSA'nın bir parçası, MIDI girişi ve "
 "Rumor'u kullanarak çalmak için)"
 
-#: ../python/frescobaldi_app/settings.py:177
+#: ../python/frescobaldi_app/settings.py:188
 msgid ""
 "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "ALSA MIDI istemcisi olarak Timidity (veya bir diğer başka programı) "
 "başlatmanın tam komutu."
 
-#: ../python/frescobaldi_app/settings.py:192
+#: ../python/frescobaldi_app/settings.py:203
 msgid "Default directory:"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:197
+#: ../python/frescobaldi_app/settings.py:208
 msgid "The default folder for your LilyPond documents (optional)."
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:210
+#: ../python/frescobaldi_app/settings.py:221
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
@@ -2452,9 +2457,6 @@ msgstr "Özel"
 
 #~ msgid "Use no, short or long instrument names before the next systems."
 #~ msgstr "Sonraki satırda kısa veya uzun hiç çalgı isimleri kullanma."
-
-#~ msgid "Email PDF (preview)"
-#~ msgstr "PDF'yi e-posta ile gönder (önizleme)"
 
 #~ msgid "Rhythm"
 #~ msgstr "Ritm"
