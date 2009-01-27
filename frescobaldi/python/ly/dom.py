@@ -1,6 +1,6 @@
 # This file is part of LilyDOM, http://lilykde.googlecode.com/
 #
-# Copyright (c) 2008  Wilbert Berendsen
+# Copyright (c) 2008, 2009  Wilbert Berendsen
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
