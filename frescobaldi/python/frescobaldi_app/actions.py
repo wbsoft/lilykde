@@ -210,7 +210,7 @@ class EmailDialog(KDialog):
             def __init__(self, icon, fileName):
                 directory, name = os.path.split(fileName)
                 if directory != basedir:
-                    name += " (%s)" % directory
+                    name += " (%s)" % os.path.normpath(directory)
                 QListWidgetItem.__init__(self, KIcon(icon), name, fileList)
                 self.fileName = fileName
                 self.ext = os.path.splitext(fileName)[1]
