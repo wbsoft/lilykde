@@ -1,4 +1,4 @@
-# translation of it.po to Italiano
+# translation of it.po to
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-01-27 14:35+0100\n"
-"PO-Revision-Date: 2008-11-12 00:50+0100\n"
-"Last-Translator: Gianluca D'Orazio <gianluca.dorazio@gmail.com>\n"
-"Language-Team: Italiano\n"
+"POT-Creation-Date: 2009-01-29 01:04+0100\n"
+"PO-Revision-Date: 2009-01-27 00:17+0100\n"
+"Last-Translator: \n"
+"Language-Team:  <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,16 +20,15 @@ msgstr ""
 
 #: ../frescobaldi.py:32 dummy.py:11
 msgid "Frescobaldi"
-msgstr ""
+msgstr "Frescobaldi"
 
 #: ../frescobaldi.py:34 dummy.py:12
-#, fuzzy
 msgid "LilyPond Music Editor"
-msgstr "File LilyPond da convertire"
+msgstr "Editor musicale per LilyPond"
 
 #: ../frescobaldi.py:36
 msgid "Copyright (c) 2008, Wilbert Berendsen"
-msgstr ""
+msgstr "Copyright (c) 2008, Wilbert Berendsen"
 
 #: ../frescobaldi.py:45
 msgctxt "NAME OF TRANSLATORS"
@@ -39,35 +38,35 @@ msgstr "Gianluca D'Orazio"
 #: ../frescobaldi.py:46
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "i18n@frescobaldi.org"
-msgstr ""
+msgstr "gianluca.dorazio@gmail.com"
 
 #: ../frescobaldi.py:51
 msgid "Session to start"
-msgstr ""
+msgstr "Sessione da avviare"
 
 #: ../frescobaldi.py:52
 msgid "Start a new instance"
-msgstr ""
+msgstr "Avvia una nuova istanza"
 
 #: ../frescobaldi.py:53
 msgid "Encoding to use"
-msgstr ""
+msgstr "Codifica da usare"
 
 #: ../frescobaldi.py:54
 msgid "Line number to go to, starting at 1"
-msgstr ""
+msgstr "Numero di riga a cui andare, partendo da 1"
 
 #: ../frescobaldi.py:55
 msgid "Column to go to, starting at 0"
-msgstr ""
+msgstr "Colonna a cui andare, partendo da zero"
 
 #: ../frescobaldi.py:56
 msgid "LilyPond files to open, may also be textedit URLs"
-msgstr ""
+msgstr "Documenti LilyPond da aprire, possono essere anche URL textedit"
 
 #: dummy.py:5
 msgid "&Document"
-msgstr ""
+msgstr "&Documento"
 
 #: dummy.py:6
 msgid "&Lyrics"
@@ -79,7 +78,7 @@ msgstr "&Ritmo"
 
 #: dummy.py:8
 msgid "&Generated Files"
-msgstr ""
+msgstr "&File generati"
 
 #: ../python/ly/__init__.py:62
 msgid "Dedication"
@@ -342,73 +341,68 @@ msgid "Right toe"
 msgstr "Punta destra"
 
 #: ../python/kateshell/mainwindow.py:97
-#, fuzzy
 msgid "Left Sidebar"
-msgstr "Punta sinistra"
+msgstr "Barra sinistra"
 
 #: ../python/kateshell/mainwindow.py:101
-#, fuzzy
 msgid "Right Sidebar"
-msgstr "Punta destra"
+msgstr "Barra destra"
 
 #: ../python/kateshell/mainwindow.py:113
 msgid "Top Sidebar"
-msgstr ""
+msgstr "Barra superiore"
 
 #: ../python/kateshell/mainwindow.py:117
 msgid "Bottom Sidebar"
-msgstr ""
+msgstr "Barra inferiore"
 
 #: ../python/kateshell/mainwindow.py:160
 msgid "Show Path"
-msgstr ""
+msgstr "Mostra percorso"
 
 #: ../python/kateshell/mainwindow.py:177
 msgid "&Tool Views"
-msgstr ""
+msgstr "&Finestre degli strumenti"
 
 #: ../python/kateshell/mainwindow.py:186
 msgid "Dock"
-msgstr ""
+msgstr "Aggancia"
 
 #: ../python/kateshell/mainwindow.py:189
-#, fuzzy
 msgid "Show"
-msgstr "Abbreviato"
+msgstr "Mostra"
 
 #: ../python/kateshell/mainwindow.py:304
 msgid "modified"
-msgstr ""
+msgstr "modificato"
 
 #: ../python/kateshell/mainwindow.py:313
 msgid "Line: %1 Col: %2"
-msgstr ""
+msgstr "Riga: %1 Col: %2"
 
 #: ../python/kateshell/mainwindow.py:321
 msgid "BLOCK"
-msgstr ""
+msgstr "BLOCCO"
 
 #: ../python/kateshell/mainwindow.py:321
 msgid "Block selection mode"
-msgstr ""
+msgstr "Modalità di selezione a blocchi"
 
 #: ../python/kateshell/mainwindow.py:323
 msgid "LINE"
-msgstr ""
+msgstr "RIGA"
 
 #: ../python/kateshell/mainwindow.py:323
-#, fuzzy
 msgid "Line selection mode"
-msgstr "Scelta della lingua"
+msgstr "Modalità di selezione a righe"
 
 #: ../python/kateshell/mainwindow.py:353
 msgid "All Files"
-msgstr ""
+msgstr "Tutti i file"
 
 #: ../python/kateshell/mainwindow.py:354
-#, fuzzy
 msgid "Open File"
-msgstr "Apri PDF"
+msgstr "Apri file"
 
 #: ../python/kateshell/mainwindow.py:434
 msgid "Please select some text first."
@@ -416,30 +410,27 @@ msgstr "Selezionare il testo prima."
 
 #: ../python/kateshell/mainwindow.py:765
 msgid "Move To"
-msgstr ""
+msgstr "Sposta"
 
 #: ../python/kateshell/mainwindow.py:772
 msgid "Undock"
-msgstr ""
+msgstr "Sgancia"
 
 #: ../python/kateshell/mainwindow.py:830
-#, fuzzy
 msgid "Could not load %1"
-msgstr "Impossibile avviare LilyPond: %s"
+msgstr "Impossibile caricare %1"
 
 #: ../python/frescobaldi_app/actions.py:55
 msgid "Open %1 in external viewer"
-msgstr ""
+msgstr "Apri %1 in un visualizzatore esterno"
 
 #: ../python/frescobaldi_app/actions.py:58
-#, fuzzy
 msgid "Print %1"
-msgstr "Stampa"
+msgstr "Stampa %1"
 
 #: ../python/frescobaldi_app/actions.py:66
-#, fuzzy
 msgid "Play %1"
-msgstr "Esegui MIDI"
+msgstr "Suona %1"
 
 #: ../python/frescobaldi_app/actions.py:95
 msgid "Open PDF"
@@ -456,12 +447,11 @@ msgstr "Esegui MIDI"
 #: ../python/frescobaldi_app/actions.py:101
 #: ../python/frescobaldi_app/mainapp.py:340
 msgid "Email..."
-msgstr ""
+msgstr "Spedire..."
 
 #: ../python/frescobaldi_app/actions.py:124
-#, fuzzy
 msgid "Printing failed: %1"
-msgstr "Stampa non riuscita: %s"
+msgstr "Stampa non riuscita: %1"
 
 #: ../python/frescobaldi_app/actions.py:127
 msgid "The document has been sent to the printer."
@@ -473,36 +463,41 @@ msgid ""
 "\n"
 "The print command %2 does probably not exist. Please check your settings."
 msgstr ""
+"Stampa non riuscita: %1\n"
+"\n"
+"Il comando di stampa %2 probabilmente non è installato. Controllare le "
+"impostazioni."
 
 #: ../python/frescobaldi_app/actions.py:135
 msgid "The print command contains errors. Please check your settings."
-msgstr ""
+msgstr "Ci sono errori nel comando di stampa. Controllare le impostazioni."
 
 #: ../python/frescobaldi_app/actions.py:162
 msgid "There are no files to send via email."
-msgstr ""
+msgstr "Non ci sono documenti da spedire."
 
 #: ../python/frescobaldi_app/actions.py:163
 msgid "No files to send"
-msgstr ""
+msgstr "Nessun documento da spedire"
 
 #: ../python/frescobaldi_app/actions.py:170
 msgid "Email documents"
-msgstr ""
+msgstr "Spedisci documenti"
 
 #: ../python/frescobaldi_app/actions.py:174
-#, fuzzy
 msgid "Please select the files you want to send:"
-msgstr "Scegliere la lingua:"
+msgstr "Scegliere i documenti da spedire:"
 
 #: ../python/frescobaldi_app/actions.py:179
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document).  Also LilyPond files included by the source document are shown."
 msgstr ""
+"Questi sono i file aggiornati (cioè più recenti del documento Lilypond "
+"sorgente). Inoltre sono visualizzati anche i file inclusi tramite il "
+"documento sorgente."
 
 #: ../python/frescobaldi_app/actions.py:189
-#, fuzzy
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -515,14 +510,14 @@ msgid_plural ""
 "smaller."
 msgstr[0] ""
 "Questo PDF è stato creato inserendo link per il point-and-click (modalità "
-"anteprima): questo aumenta di molto la dimensione del file. È meglio spedire "
-"via email documenti senza link per il point-and-click (modalità "
-"pubblicazione) perché sono molto piú piccoli. Continuare comunque?"
+"anteprima) questo aumenta di molto la dimensione del file. È meglio spedire "
+"documenti senza link per il point-and-click (modalità pubblicazione) perché "
+"sono molto piú piccoli. Continuare comunque?"
 msgstr[1] ""
-"Questo PDF è stato creato inserendo link per il point-and-click (modalità "
-"anteprima): questo aumenta di molto la dimensione del file. È meglio spedire "
-"via email documenti senza link per il point-and-click (modalità "
-"pubblicazione) perché sono molto piú piccoli. Continuare comunque?"
+"Questi PDF sono stati creati inserendo link per il point-and-click (modalità "
+"anteprima): questo aumenta di molto la dimensione dei file. È meglio spedire "
+"documenti senza link per il point-and-click (modalità pubblicazione) perché "
+"sono molto piú piccoli. Continuare comunque?"
 
 #: ../python/frescobaldi_app/hyphen.py:122
 msgid "Language selection"
@@ -581,9 +576,8 @@ msgstr ""
 "della selezione."
 
 #: ../python/frescobaldi_app/mainapp.py:63
-#, fuzzy
 msgid "LilyPond files"
-msgstr "LilyPond"
+msgstr "Documenti LilyPond"
 
 #: ../python/frescobaldi_app/mainapp.py:194
 #: ../python/frescobaldi_app/scorewiz/__init__.py:347
@@ -603,13 +597,12 @@ msgid "Run LilyPond (publish)"
 msgstr "Esegui LilyPond (pubblicazione)"
 
 #: ../python/frescobaldi_app/mainapp.py:220
-#, fuzzy
 msgid "There is already a LilyPond job running for this document."
-msgstr "La versione di LilyPond che sarà usata per questo documento."
+msgstr "È già in esecuzione un processo LilyPond per questo documento."
 
 #: ../python/frescobaldi_app/mainapp.py:222
 msgid "Already Running"
-msgstr ""
+msgstr "Già in esecuzione"
 
 #: ../python/frescobaldi_app/mainapp.py:225
 msgid "Your document currently has no filename, please save first."
@@ -704,24 +697,27 @@ msgstr "Applica un ritmo..."
 
 #: ../python/frescobaldi_app/mainapp.py:297
 msgid "Apply an entered rhythm to the selected music."
-msgstr ""
+msgstr "Applica il ritmo inserito alla musica selezionata."
 
 #: ../python/frescobaldi_app/mainapp.py:301
 #, fuzzy
 msgid "Copy rhythm"
-msgstr "Applica un ritmo"
+msgstr "Copyright"
 
 #: ../python/frescobaldi_app/mainapp.py:302
+#, fuzzy
 msgid "Copy the rhythm of the selected music."
-msgstr ""
+msgstr "Applica il ritmo inserito alla musica selezionata."
 
 #: ../python/frescobaldi_app/mainapp.py:308
+#, fuzzy
 msgid "Paste rhythm"
-msgstr ""
+msgstr "Inserire un ritmo:"
 
 #: ../python/frescobaldi_app/mainapp.py:309
+#, fuzzy
 msgid "Paste a rhythm to the selected music."
-msgstr ""
+msgstr "Applica il ritmo inserito alla musica selezionata."
 
 #: ../python/frescobaldi_app/mainapp.py:316
 msgid "Hyphenate Lyrics Text"
@@ -740,16 +736,14 @@ msgid "Update with convert-ly"
 msgstr "Aggiorna con convert-ly"
 
 #: ../python/frescobaldi_app/mainapp.py:336
-#, fuzzy
 msgid "Open Current Folder"
-msgstr "Apri cartella"
+msgstr "Apri cartella attuale"
 
 #: ../python/frescobaldi_app/mainapp.py:399
 msgid "Abort the running LilyPond process"
-msgstr ""
+msgstr "Ferma il processo LilyPond in esecuzione"
 
 #: ../python/frescobaldi_app/mainapp.py:402
-#, fuzzy
 msgid "Run LilyPond in preview mode"
 msgstr "Esegui LilyPond (anteprima)"
 
@@ -759,7 +753,7 @@ msgstr "Applica un ritmo"
 
 #: ../python/frescobaldi_app/mainapp.py:420
 msgid "Enter a rhythm:"
-msgstr ""
+msgstr "Inserire un ritmo:"
 
 #: ../python/frescobaldi_app/mainapp.py:423
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
@@ -768,32 +762,29 @@ msgstr ""
 "spazio (ad es. 8. 16 8 4 8)"
 
 #: ../python/frescobaldi_app/mainapp.py:447
-#, fuzzy
 msgid "Terminal"
-msgstr "Trillo"
+msgstr "Terminale"
 
 #: ../python/frescobaldi_app/mainapp.py:480
 msgid "S&ynchronize Terminal with Current Document"
-msgstr ""
+msgstr "S&incronizza il terminale con il documento attuale"
 
 #: ../python/frescobaldi_app/mainapp.py:500
 #: ../python/frescobaldi_app/scorewiz/preview.py:45
-#, fuzzy
 msgid "PDF Preview"
-msgstr "Spedisci PDF (anteprima)"
+msgstr "Anteprima PDF"
 
 #: ../python/frescobaldi_app/mainapp.py:532
-#, fuzzy
 msgid "Show PDF Navigation Panel"
-msgstr "Mostra/nascondi pannello di navigazione del PDF"
+msgstr "Mostra il pannello di navigazione del PDF"
 
 #: ../python/frescobaldi_app/mainapp.py:533
 msgid "Show PDF minipager"
-msgstr ""
+msgstr "Mostra le miniature del PDF"
 
 #: ../python/frescobaldi_app/mainapp.py:535
 msgid "S&ynchronize Preview with Current Document"
-msgstr ""
+msgstr "S&incronizza l'anteprima con il documento attuale"
 
 #: ../python/frescobaldi_app/mainapp.py:588
 msgid "Quick Insert"
@@ -805,20 +796,19 @@ msgstr "LilyPond Log"
 
 #: ../python/frescobaldi_app/mainapp.py:604
 msgid "no log"
-msgstr ""
+msgstr "nessun log presente"
 
 #: ../python/frescobaldi_app/mainapp.py:633
 msgid "Rumor"
 msgstr "Rumor"
 
 #: ../python/frescobaldi_app/rumor.py:72
-#, fuzzy
 msgid ""
 "The meter to use. Leave 'Auto' to let Frescobaldi determine the meter from "
 "the LilyPond document."
 msgstr ""
-"Il metro da usare. Lasciare \"Auto\" per far dedurre il metro a Frescobaldi "
-"dal documento LilyPond."
+"Il metro da usare. Lasciare \"Auto\" per far dedurre a Frescobaldi il "
+"metrodal documento LilyPond."
 
 #: ../python/frescobaldi_app/rumor.py:79
 msgid "Quantize:"
@@ -826,7 +816,7 @@ msgstr "Approsimazione:"
 
 #: ../python/frescobaldi_app/rumor.py:85
 msgid "The shortest note duration to use."
-msgstr "La durata piú breve da usare per le note."
+msgstr "La durata più breve da usare per le note."
 
 #: ../python/frescobaldi_app/rumor.py:90
 msgid "Step"
@@ -894,12 +884,11 @@ msgstr "Le impostazioni sono state salvate."
 
 #: ../python/frescobaldi_app/rumor.py:324
 msgid "Record"
-msgstr ""
+msgstr "Registra"
 
 #: ../python/frescobaldi_app/rumor.py:326
-#, fuzzy
 msgid "Start or stop Rumor MIDI-recording."
-msgstr "Avvia o ferma Rumor"
+msgstr "Avvia o ferma la registrazione MIDI di Rumor."
 
 #: ../python/frescobaldi_app/rumor.py:341
 msgid "Rumor is recording, press ESC to stop."
@@ -907,7 +896,7 @@ msgstr "Rumor sta registrando, premere ESC per fermarlo."
 
 #: ../python/frescobaldi_app/rumor.py:360
 msgid "Rumor stopped."
-msgstr ""
+msgstr "Rumor fermato."
 
 #: ../python/frescobaldi_app/rumor.py:394
 msgid "TiMidity"
@@ -1064,7 +1053,7 @@ msgstr "LilyPond [%1] è uscito con il codice %2."
 
 #: ../python/frescobaldi_app/runlily.py:80
 msgid "LilyPond [%1] exited with exit status %2."
-msgstr "LilyPond [%1] è uscito con il codice %2."
+msgstr "LilyPond [%1] è uscito con lo stato %2."
 
 #: ../python/frescobaldi_app/runlily.py:83
 msgid "LilyPond [%1] finished."
@@ -1072,20 +1061,19 @@ msgstr "LilyPond [%1] terminato."
 
 #: ../python/frescobaldi_app/runlily.py:92
 msgid "Could not start LilyPond. Please check path and permissions."
-msgstr ""
+msgstr "Impossibile avviare LilyPond. Controllare il percorso e i permessi."
 
 #: ../python/frescobaldi_app/runlily.py:95
-#, fuzzy
 msgid "Could not read from the LilyPond process."
-msgstr "Impossibile avviare LilyPond."
+msgstr "Impossibile avere informazioni dal processo LilyPond."
 
 #: ../python/frescobaldi_app/runlily.py:98
 msgid "An unknown error occured."
-msgstr ""
+msgstr "Si è verificato un errore sconosciuto."
 
 #: ../python/frescobaldi_app/runlily.py:125
 msgid "Click to edit this file"
-msgstr ""
+msgstr "Fare clic per modificare questo file"
 
 #: ../python/frescobaldi_app/settings.py:44
 msgid "Configure"
@@ -1093,20 +1081,19 @@ msgstr "Configura"
 
 #: ../python/frescobaldi_app/settings.py:86
 msgid "Editor Component"
-msgstr ""
+msgstr "Componente editor"
 
 #: ../python/frescobaldi_app/settings.py:87
 msgid "Editor Component Options"
-msgstr ""
+msgstr "Opzioni del componente editor"
 
 #: ../python/frescobaldi_app/settings.py:115
 msgid "General Preferences"
-msgstr "Preferenze generali"
+msgstr "Opzioni generali"
 
 #: ../python/frescobaldi_app/settings.py:116
-#, fuzzy
 msgid "General Frescobaldi Preferences"
-msgstr "Preferenze generali"
+msgstr "Opzioni generali di Frescobaldi"
 
 #: ../python/frescobaldi_app/settings.py:121
 msgid "Save document when LilyPond is run"
@@ -1114,27 +1101,23 @@ msgstr "Salva il documento quando si esegue LilyPond"
 
 #: ../python/frescobaldi_app/settings.py:123
 msgid "Let LilyPond delete intermediate output files"
-msgstr ""
-"Lasciare che LilyPond cancelli i file di output\n"
-"intermedi"
+msgstr "Lasciare che LilyPond cancelli i file di outputintermedi"
 
 #: ../python/frescobaldi_app/settings.py:125
 msgid "Remember cursor position, bookmarks, etc."
 msgstr ""
 
 #: ../python/frescobaldi_app/settings.py:127
-#, fuzzy
 msgid "Disable the built-in PDF preview"
-msgstr "Spedisci PDF (anteprima)"
+msgstr ""
 
 #: ../python/frescobaldi_app/settings.py:164
-#, fuzzy
 msgid "Paths"
-msgstr "Parti"
+msgstr "Percorsi"
 
 #: ../python/frescobaldi_app/settings.py:165
 msgid "Paths to programs or data used by Frescobaldi"
-msgstr ""
+msgstr "Percorsi ai programmi o ai dati usati da Frescobaldi"
 
 #: ../python/frescobaldi_app/settings.py:174
 msgid "Name or full path of the LilyPond program."
@@ -1202,7 +1185,7 @@ msgstr ""
 
 #: ../python/frescobaldi_app/version.py:41
 msgid "Version already set"
-msgstr ""
+msgstr "La versione è già stata aggiunta"
 
 #: ../python/frescobaldi_app/version.py:48
 #: ../python/frescobaldi_app/version.py:67
@@ -1211,7 +1194,7 @@ msgid ""
 "installation."
 msgstr ""
 "Impossibile determinare la versione di LilyPond: controllare che "
-"l'installazione sia corretta."
+"l'installazione di Lilypond sia corretta."
 
 #: ../python/frescobaldi_app/version.py:63
 msgid ""
@@ -1269,7 +1252,7 @@ msgstr "Titoli e Intestazioni"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:149
 msgid "Click to enter a value."
-msgstr ""
+msgstr "Fare clic per inserire un valore."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:151
 msgid "bottom of first page"
@@ -1364,7 +1347,7 @@ msgstr "Usa virgolette tipografiche"
 #: ../python/frescobaldi_app/scorewiz/__init__.py:472
 msgid "Replace normal quotes in titles with nice typographical quotes."
 msgstr ""
-"Sostituisce le virgolette normali con quelle tipografiche, di piú bel "
+"Sostituisce le virgolette normali con quelle tipografiche, di più bel "
 "aspetto."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:474
@@ -1437,14 +1420,14 @@ msgid "Other systems:"
 msgstr "Gli altri sistemi:"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:528
-#, fuzzy
 msgid "Use short, long or no instrument names before the next systems."
-msgstr "Il tipo di nome degli strumenti da usare davanti agli altri sistemi."
+msgstr ""
+"Usa il nome per esteso, abbreviato o non usa i nomi degli strumenti davanti "
+"agli altri sistemi."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:536
-#, fuzzy
 msgid "Which language to use for the instrument names."
-msgstr "La lingua da usare per le altezze delle note nel sorgente LilyPond."
+msgstr "La lingua da usare per i nomi degli strumenti."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:708
 msgid "Remove default LilyPond tagline"
@@ -2047,7 +2030,7 @@ msgstr "Pedale:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1067
 msgid "Set to 0 to disable the pedal altogether."
-msgstr "Impostare a 0 per togliere il pedale."
+msgstr "Impostare a 0 per togliere il rigo del pedale."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1077
 msgid "Celesta"
@@ -2193,307 +2176,5 @@ msgstr "Percussioni"
 msgid "Special"
 msgstr "Altri"
 
-#, fuzzy
-#~ msgid "Save File"
-#~ msgstr "Apri PDF"
-
-#, fuzzy
 #~ msgid "Untitled"
-#~ msgstr "Sottotitolo"
-
-#, fuzzy
-#~ msgid "LilyPond crashed."
-#~ msgstr "LilyPond"
-
-#~ msgid ""
-#~ "A LilyPond Kate/Pate plugin.\n"
-#~ "\n"
-#~ "This is LilyKDE, a plugin to make it easy to run the LilyPond music "
-#~ "typesetter from within Kate.\n"
-#~ "\n"
-#~ "Version: $version\n"
-#~ "Homepage: $homepage\n"
-#~ msgstr ""
-#~ "Un plugin Kate/Pate per LilyPond.\n"
-#~ "\n"
-#~ "Questo è LilyKDE, un plugin per facilitare l'esecuzione del programma di "
-#~ "tipografia musicale \"LilyPond\" dall'interno di Kate.\n"
-#~ "\n"
-#~ "Versione: $version\n"
-#~ "Sito web: $homepage\n"
-
-#~ msgid "Actions"
-#~ msgstr "Azioni"
-
-#~ msgid "All documents successfully converted."
-#~ msgstr "Tutti i documenti sono stati convertiti con successo."
-
-#~ msgid "Always embed LilyPond source files in published PDF"
-#~ msgstr "Integra sempre i file sorgente di LilyPond nel PDF"
-
-#~ msgid "Apply"
-#~ msgstr "Applica"
-
-#~ msgid "Attach the PDF to an email message."
-#~ msgstr "Allega il PDF ad un messaggio email."
-
-#~ msgid ""
-#~ "Check the actions you want to display (if applicable) after LilyPond has "
-#~ "successfully compiled your document."
-#~ msgstr ""
-#~ "Spunta le azioni che verranno mostrate (se disponibili) quando LilyPond "
-#~ "avrà terminato con successo la compilazione del documento."
-
-#~ msgid ""
-#~ "Choose standard Italian instrument names, like '%s' instead of 'Organ.'"
-#~ msgstr ""
-#~ "Usa per gli strumenti i nomi convenzionali in italiano, come \"%s\" al "
-#~ "posto di \"Organ.\""
-
-#~ msgid "Clear LilyPond Log"
-#~ msgstr "Pulisci il log di LilyPond"
-
-#~ msgid "Clear log before LilyPond is started"
-#~ msgstr "Pulisci il log prima di avviare LilyPond"
-
-#~ msgid "Commands"
-#~ msgstr "Comandi"
-
-#~ msgid "Configure %s"
-#~ msgstr "Configura %s"
-
-#~ msgid "Could not start Pdftk: %s"
-#~ msgstr "Impossibile avviare Pdftk: %s"
-
-#~ msgid ""
-#~ "Could not start TiMidity. Please try the command %s in a terminal to find "
-#~ "out what went wrong."
-#~ msgstr ""
-#~ "Impossibile avviare Timidity. Provare ad eseguire il comando %s in un "
-#~ "terminale per scoprire che cosa non ha funzionato."
-
-#~ msgid "Different tools to edit durations."
-#~ msgstr "Vari strumenti per modificare le durate."
-
-#~ msgid "Dock/Undock PDF preview"
-#~ msgstr "Aggancia/Sgancia vista PDF"
-
-#~ msgid "Dock/Undock Quick Insert Panel"
-#~ msgstr "Aggancia/Sgancia Pannello Inserimento Veloce"
-
-#~ msgid "Durations"
-#~ msgstr "Durate"
-
-#~ msgid "Email PDF"
-#~ msgstr "Spedisci PDF"
-
-#~ msgid "Embed source"
-#~ msgstr "Integra il sorgente"
-
-#~ msgid "Embed the LilyPond source files in the published PDF (using pdftk)."
-#~ msgstr "Integra il file sorgente di LilyPond nel PDF (usando pdftk)."
-
-#~ msgid "Embedded file %s in PDF."
-#~ msgid_plural "Embedded files %s in PDF."
-#~ msgstr[0] "Il file %s è stato integrato nel PDF."
-#~ msgstr[1] "l file %s sono stati integrati nel PDF."
-
-#~ msgid "Embedding files in PDF failed."
-#~ msgstr "Integrazione dei file nel PDF non riuscita."
-
-#~ msgid "Finished"
-#~ msgstr "Fatto"
-
-#~ msgid "Force reload of PDF preview when LilyPond has run"
-#~ msgstr ""
-#~ "Forza l'aggiornamento dell'anteprima del PDF\n"
-#~ "al termine dell'esecuzione di LilyPond"
-
-#~ msgid "Hyphenation"
-#~ msgstr "Sillabazione"
-
-#~ msgid "Italian names"
-#~ msgstr "Nomi in italiano"
-
-#~ msgid "Keep undocked windows on top of Kate"
-#~ msgstr "Tieni le finestre sganciate sopra Kate"
-
-#~ msgid "LilyKDE servicemenu helper"
-#~ msgstr "Aiuto del servicemenu di LilyKDE"
-
-#~ msgid "LilyPond [$filename] exited abnormally."
-#~ msgstr "LilyPond [$filename] si è interrotto in modo anomalo."
-
-#~ msgid "LilyPond [$filename] starting..."
-#~ msgstr "LilyPond [$filename] in esecuzione..."
-
-#~ msgid "LilyPond [$filename] was terminated by signal $signal."
-#~ msgstr "LilyPond [$filename] si è chiuso con il segnale $signal."
-
-#~ msgid "LilyPond did not write a PDF. You probably forgot <b>\\layout</b>?"
-#~ msgstr ""
-#~ "LilyPond non ha generato il PDF. Forse manca il blocco <b>\\layout</b>?"
-
-#~ msgid "Move selected part down."
-#~ msgstr "Sposta in basso la parte selezionata."
-
-#~ msgid "Move selected part up."
-#~ msgstr "Sposta in alto la parte selezionata."
-
-#~ msgid "Name or full path of the pdftk program (see %s)."
-#~ msgstr "Nome o percorso completo di pdftk (vedere %s)."
-
-#~ msgid "One document failed."
-#~ msgid_plural "$count documents failed."
-#~ msgstr[0] "Un documento non è andato a buon fine."
-#~ msgstr[1] "$count documenti non sono andati a buon fine."
-
-#~ msgid "Open the folder containing the LilyPond and PDF documents."
-#~ msgstr "Apre la cartella contenente i PDF e i file LilyPond."
-
-#~ msgid "Open the generated PDF file with the default PDF viewer."
-#~ msgstr "Apre il PDF con il visualizzatore predefinito."
-
-#~ msgid "PDF"
-#~ msgstr "PDF"
-
-#~ msgid ""
-#~ "Play the generated MIDI files using the default MIDI player (Timidity++ "
-#~ "is recommended)."
-#~ msgstr ""
-#~ "Suona i file MIDI usando il MIDI player di default (È consigliato Timidity"
-#~ "++)."
-
-#~ msgid "Preferences"
-#~ msgstr "Preferenze"
-
-#~ msgid ""
-#~ "Press to apply the entered rhythm to the selected music. This will delete "
-#~ "previously entered durations."
-#~ msgstr ""
-#~ "Fare click per applicare lo schema ritmico inserito alla musica "
-#~ "selezionata. Questo cancellarà le durate già presenti."
-
-#~ msgid ""
-#~ "Print the PDF using the print command set in the Commands settings page."
-#~ msgstr ""
-#~ "Stampa il PDF usando il comando di stampa impostato nella pagina di "
-#~ "configurazione Comandi."
-
-#~ msgid "Quick Insert Panel"
-#~ msgstr "Pannello Inserimento Veloce"
-
-#~ msgid "REC"
-#~ msgstr "REC"
-
-#~ msgid "Record MIDI with Rumor"
-#~ msgstr "Registra MIDI con Rumor"
-
-#~ msgid "Remove selected part from your score."
-#~ msgstr "Togli la parte selezionata dallo spartito."
-
-#~ msgid "Return code: %i"
-#~ msgstr "Ritornato il codice: %i"
-
-#~ msgid "TiMidity stopped."
-#~ msgstr "TiMidity fermato."
-
-#~ msgid "TiMidity successfully started."
-#~ msgstr "TiMidity avviato con successo."
-
-#~ msgid "unknown"
-#~ msgstr "sconosciuto"
-
-#~ msgid "LilyPond [$filename] starting ($mode)..."
-#~ msgstr "LilyPond [$filename] in esecuzione ($mode)..."
-
-#~ msgid "Could not start LilyPond."
-#~ msgstr "Impossibile avviare LilyPond."
-
-#~ msgid "LilyPond [$filename] exited with return code $retcode."
-#~ msgstr "LilyPond [$filename] è uscito con il codice $retcode."
-
-#~ msgid "LilyPond [$filename] finished."
-#~ msgstr "LilyPond [$filename] terminato."
-
-#~ msgid "Insert LilyPond version (%s)"
-#~ msgstr "Inserisci la versione di LilyPond (%s) "
-
-#~ msgid "Toggle PDF navigation panel"
-#~ msgstr "Mostra/nascondi pannello di navigazione del PDF"
-
-#~ msgid "Could not start LilyPond: %s"
-#~ msgstr "Impossibile avviare LilyPond: %s"
-
-#~ msgid ""
-#~ "The document has been processed with convert-ly, but remained unchanged. "
-#~ "This is the message given by convert-ly: %s"
-#~ msgstr ""
-#~ "Il documento è stato elaborato con convert-ly ma non è stato modificato."
-#~ "Questo è il messaggio di uscita di convert-ly: %s"
-
-#~ msgid "Could not start convert-ly: %s"
-#~ msgstr "Impossibile avviare convert-ly: %s"
-
-#~ msgid "Start or stop Rumor"
-#~ msgstr "Avvia o ferma Rumor"
-
-#~ msgid ""
-#~ "The meter to use. Leave 'Auto' to let LilyKDE determine the meter from "
-#~ "the LilyPond document."
-#~ msgstr ""
-#~ "Il metro da usare. Lasciare \"Auto\" per far dedurre il metro a LilyKDE "
-#~ "dal documento LilyPond."
-
-#~ msgid ""
-#~ "The number of accidentals. A negative number designates flats. Leave "
-#~ "'Auto' to let LilyKDE determine the key signature from the LilyPond "
-#~ "document."
-#~ msgstr ""
-#~ "Il numero di accidenti. I numeri negativi indicano i bemolli. Lasciare "
-#~ "\"Auto\" perché LilyKDE deduca la tonalità dal documento LilyPond."
-
-#~ msgid "Found rumor version $version."
-#~ msgstr "Trovata la versione $version di Rumor."
-
-#~ msgid "Could not find Rumor: %s"
-#~ msgstr "Impossibile trovare Rumor: %s"
-
-#~ msgid "OSS device %d"
-#~ msgstr "Dispositivo OSS %d"
-
-#~ msgid ""
-#~ "Here you can select which Guile scripts you want Rumor to load. You can "
-#~ "add your own scripts by putting them in %s. If the first line of your "
-#~ "script starts with a semicolon (;) that line will be shown as description."
-#~ msgstr ""
-#~ "Qui si possono scegliere gli script Guile da far caricare a Rumor. È "
-#~ "possibile aggiungere i propri script copiandoli in %s. Se la prima linea "
-#~ "dello script inizia con un punto e virgola (;) questa linea sarà mostrata "
-#~ "come descrizione."
-
-#~ msgid "Use no, short or long instrument names before the next systems."
-#~ msgstr ""
-#~ "Il tipo di nome degli strumenti da usare davanti agli altri sistemi."
-
-#~ msgid "Rhythm"
-#~ msgstr "Ritmo"
-
-#~ msgid "LilyPond files to convert"
-#~ msgstr "File LilyPond da convertire"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Set this to your name"
-#~ msgstr "Gianluca D'Orazio"
-
-#, fuzzy
-#~ msgid "&amp;Lyrics"
-#~ msgstr "Parole"
-
-#, fuzzy
-#~ msgid "English"
-#~ msgstr "Corno inglese"
-
-#, fuzzy
-#~ msgid "Your language"
-#~ msgstr "Lingua:"
+#~ msgstr "Senza titolo"
