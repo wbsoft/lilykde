@@ -33,6 +33,7 @@ def install(app):
     version = conf.readEntry("version", "")
     if not version:
         installKateModeRC()
+        installOkularPartRC()
     
     # ... other stuff can be added here ...
     
@@ -50,4 +51,13 @@ def installKateModeRC():
         "space-indent on; "
         )
     rc.sync()
+
+def installOkularPartRC():
+    """ Set our custom editor command in okularpartrc """
+    okularpartrc = KConfig("okularpartrc", KConfig.NoGlobals)
+    group = okularpartrc.group("General")
+    group.writeEntry("ExternalEditor", "Custom")
+    group.writeEntry("ExternalEditorCommand", "frescobaldi --line %l --column %c")
+    group.sync()
+    
 
