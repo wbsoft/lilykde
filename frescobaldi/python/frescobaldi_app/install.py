@@ -49,6 +49,8 @@ def installKateModeRC():
         "indent-mode lilypond; "
         "indent-width 2; "
         "space-indent on; "
+        "replace-tabs on; "
+        "replace-tabs-save on; "
         )
     rc.sync()
 
