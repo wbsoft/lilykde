@@ -34,7 +34,7 @@ def make_re(*classes):
 
 # Classes that represent pieces of lilypond text:
 # base classes:
-class parsed(unicode):
+class Parsed(unicode):
     """
     Represents a parsed piece of LilyPond text, the subclass determines
     the type.
@@ -46,7 +46,7 @@ class parsed(unicode):
         obj.pos = matchObj.pos
         return obj
 
-class schemeitem(parsed):
+class SchemeItem(Parsed):
     """
     A piece of Scheme input. If level in state is zero, terminates the
     (Scheme) state after this string.
@@ -56,7 +56,7 @@ class schemeitem(parsed):
             state.pop()
 
 # real types of lilypond input
-class unparsed(unicode):
+class Unparsed(unicode):
     """
     Represents an unparsed piece of LilyPond text.
     Needs to be given a value and a position (where the string was found)
@@ -66,62 +66,62 @@ class unparsed(unicode):
         obj.pos = pos
         return obj
 
-class command(parsed):
+class Command(Parsed):
     rx = r"\\[A-Za-z]+(-[A-Za-z]+)*"
 
-class string(parsed):
+class String(Parsed):
     rx = r'"(\\[\\"]|[^"])*"'
 
-class comment(parsed):
+class Comment(Parsed):
     rx = r'%{.*?%}|%[^\n]*'
 
-class word(parsed):
+class Word(Parsed):
     rx = r"[^\W\d]+"
 
-class space(parsed):
+class Space(Parsed):
     rx = r"\s+"
 
-class opendelimiter(parsed):
+class OpenDelimiter(Parsed):
     rx = r"<<|\{"
     
-class closedelimiter(parsed):
+class CloseDelimiter(Parsed):
     rx = r">>|\}"
 
-class openchord(parsed):
+class OpenChord(Parsed):
     rx = "<"
     
-class closechord(parsed):
+class CloseChord(Parsed):
     rx = ">"
 
-class articulation(parsed):
+class Articulation(Parsed):
     rx = "[-_^][_.>|+^-]"
     
-class dynamic(parsed):
+class Dynamic(Parsed):
     rx = r"\[<>!]"
 
-class voiceseparator(parsed):
+class VoiceSeparator(Parsed):
     rx = r"\\"
 
-class digit(parsed):
+class Digit(Parsed):
     rx = r"\d+"
     
-class endschemelily(parsed):
+class EndSchemeLily(Parsed):
     rx = "#}"
     def __init__(self, matchObj, state):
         if len(state) > 1:
             state.pop()
             
-class scheme(parsed):
+class Scheme(Parsed):
     rx = "#"
     def __init__(self, matchObj, state):
         state.append(SchemeState())
 
-class schemeopenparenthesis(parsed):
+class SchemeOpenParenthesis(Parsed):
     rx = r"\("
     def __init__(self, matchObj, state):
         state[-1].level += 1
 
-class schemecloseparenthesis(parsed):
+class SchemeCloseParenthesis(Parsed):
     rx = r"\)"
     def __init__(self, matchObj, state):
         if state[-1].level > 1:
@@ -129,52 +129,54 @@ class schemecloseparenthesis(parsed):
         else:
             state.pop()
 
-class schemestring(string, schemeitem):
+class SchemeString(String, SchemeItem):
     pass
 
-class schemespace(space, schemeitem):
+class SchemeSpace(Space):
     pass
 
-class schemechar(schemeitem):
+class SchemeChar(SchemeItem):
     rx = r'#\\([a-z]+|.)'
 
-class schemelily(parsed):
+class SchemeLily(Parsed):
     rx = "#{"
     def __init__(self, matchObj, state):
         state.append(LilyState())
         
-class schemeword(schemeitem):
+class SchemeWord(SchemeItem):
     rx = r'[^()"{}\s]+'
 
 #States:
-class LilyState:
-    rx = make_re(
-        command,
-        string,
-        comment,
-        articulation,
-        dynamic,
-        voiceseparator,
-        opendelimiter, closedelimiter,
-        openchord, closechord,
-        endschemelily,
-        scheme,
-        digit,
-        word,
-        space,
-        )
-
-class SchemeState:
-    rx = make_re(
-        schemestring,
-        schemechar,
-        schemelily,
-        schemeword,
-        schemeopenparenthesis, schemecloseparenthesis,
-        schemespace,
-        )
+class State(object):
     def __init__(self):
         self.level = 0
+
+class LilyState(State):
+    rx = make_re(
+        Command,
+        String,
+        Comment,
+        Articulation,
+        Dynamic,
+        VoiceSeparator,
+        OpenDelimiter, CloseDelimiter,
+        OpenChord, CloseChord,
+        EndSchemeLily,
+        Scheme,
+        Digit,
+        Word,
+        Space,
+        )
+
+class SchemeState(State):
+    rx = make_re(
+        SchemeString,
+        SchemeChar,
+        SchemeLily,
+        SchemeWord,
+        SchemeOpenParenthesis, SchemeCloseParenthesis,
+        SchemeSpace,
+        )
 
 
 def tokenize(text, pos = 0, state = None):
@@ -194,11 +196,11 @@ def tokenize(text, pos = 0, state = None):
         m = state[-1].rx.search(text, pos)
         if not m:
             if pos < len(text):
-                yield unparsed(text[pos:], pos)
+                yield Unparsed(text[pos:], pos)
             return
         else:
             if pos < m.start():
-                yield unparsed(text[pos:m.start()], pos)
+                yield Unparsed(text[pos:m.start()], pos)
             yield eval(m.lastgroup)(m, state)
             pos = m.end()
 
