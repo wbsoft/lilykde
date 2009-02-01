@@ -21,7 +21,7 @@
 
 import sys
 from PyKDE4.kdecore import (ki18n, ki18nc,
-    KAboutData, KCmdLineArgs, KCmdLineOptions, KLocalizedString)
+    KAboutData, KCmdLineArgs, KCmdLineOptions, KGlobal, KLocalizedString)
 
 # Find our own Python modules and packages
 sys.path.insert(0, "@MODULE_DIR@")
@@ -58,7 +58,7 @@ KCmdLineArgs.addCmdLineOptions(options)
 
 args = KCmdLineArgs.parsedArgs()
 
-app = not args.isSet("new") and runningApp() or newApp()
+app = not args.isSet("new") and runningApp() or newApp("@CMAKE_INSTALL_PREFIX@")
 nav = args.isSet("line") or args.isSet("column")
 line = int(args.getOption("line") or 1)
 col = int(args.getOption("column") or 0)

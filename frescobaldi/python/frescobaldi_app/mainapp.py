@@ -57,8 +57,8 @@ class MainApp(kateshell.app.MainApp):
     defaultEncoding = 'UTF-8'
     defaultMode = "LilyPond"
     
-    def __init__(self, servicePrefix):
-        kateshell.app.MainApp.__init__(self, servicePrefix)
+    def __init__(self, servicePrefix, installPrefix=None):
+        kateshell.app.MainApp.__init__(self, servicePrefix, installPrefix)
         # just set now because we are translated
         self.fileTypes = ["*.ly *.ily *.lyi|%s" % i18n("LilyPond files")]
         # Put ourselves in environment so ktexteditservice can find us

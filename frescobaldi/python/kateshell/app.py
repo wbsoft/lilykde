@@ -57,7 +57,7 @@ class MainApp(DBusItem):
     defaultMode = None
     fileTypes = []
     
-    def __init__(self, servicePrefix):
+    def __init__(self, servicePrefix, installPrefix=None):
         # listeners to our events
         listeners.add(self.activeChanged)
         # We manage our own documents.
@@ -66,6 +66,8 @@ class MainApp(DBusItem):
 
         # KApplication needs to be instantiated before any D-Bus stuff
         self.kapp = KApplication()
+        if installPrefix:
+            KGlobal.dirs().addPrefix(installPrefix)
         serviceName = "%s%d" % (servicePrefix, os.getpid())
         DBusItem.__init__(self, serviceName, '/MainApp')
 
@@ -78,6 +80,7 @@ class MainApp(DBusItem):
         self.editor.readConfig()
 
         # restore session etc.
+        
     def defaultDirectory(self):
         return ''
 
