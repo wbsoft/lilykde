@@ -104,7 +104,7 @@ class MainWindow(KParts.MainWindow):
         s.setStretchFactor(0, 0)
         s.setStretchFactor(1, 1)
         s.setStretchFactor(2, 1)
-        
+        s.setChildrenCollapsible(False)
         s.setSizes((100, 400, 400))
         
         tab_top = TabBar(Top, v)
@@ -120,6 +120,7 @@ class MainWindow(KParts.MainWindow):
         s1.setStretchFactor(0, 0)
         s1.setStretchFactor(1, 1)
         s1.setStretchFactor(2, 0)
+        s1.setChildrenCollapsible(False)
         
         # Set some reasonable default sizes for top and bottom dock, to
         # prevent the embedded terminal taking up a too large default space.
