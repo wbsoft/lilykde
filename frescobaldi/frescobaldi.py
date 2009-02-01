@@ -21,7 +21,7 @@
 
 import sys
 from PyKDE4.kdecore import (ki18n, ki18nc,
-    KAboutData, KCmdLineArgs, KCmdLineOptions, KGlobal, KLocalizedString)
+    KAboutData, KCmdLineArgs, KCmdLineOptions, KLocalizedString)
 
 # Find our own Python modules and packages
 sys.path.insert(0, "@MODULE_DIR@")

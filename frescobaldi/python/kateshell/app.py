@@ -66,8 +66,12 @@ class MainApp(DBusItem):
 
         # KApplication needs to be instantiated before any D-Bus stuff
         self.kapp = KApplication()
+        
+        # Make ourselves relocatable
         if installPrefix:
             KGlobal.dirs().addPrefix(installPrefix)
+        
+        # DBus init
         serviceName = "%s%d" % (servicePrefix, os.getpid())
         DBusItem.__init__(self, serviceName, '/MainApp')
 
