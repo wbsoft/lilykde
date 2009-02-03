@@ -63,46 +63,38 @@ class DocumentManipulator(object):
             pretext = ''
 
         # iterate over the document and replace pitches in the text section.
-        state = [ly.tokenize.LilyState()]
-        output = None
-        level = []
+        state = ly.tokenize.State()
         lastCommand = None
         writer = ly.pitch.pitchWriter[lang]
         reader = ly.pitch.pitchReader["nederlands"]
-        for text in pretext, changetext:
-            for token in ly.tokenize.tokenize(text, state=state):
-                if isinstance(token, ly.tokenize.Command):
-                    lastCommand = token
-                elif isinstance(token, ly.tokenize.OpenDelimiter):
-                    level.append(lastCommand in noMusicCommands)
-                elif level and isinstance(token, ly.tokenize.CloseDelimiter):
-                    level.pop()
-                elif (
-                    output is not None and isinstance(token, ly.tokenize.Word)
-                    and ((level and level[-1]) or lastCommand in pitchCommands)
-                    ):
-                    result = reader(token)
-                    if result:
-                        # result is a two-tuple (note, alter)
-                        # Write out the translated pitch.
-                        token = writer(*result)
-                elif (isinstance(token, ly.tokenize.String)
-                    and lastCommand == "\\include"):
-                    langName = token[1:-4]
-                    if langName in ly.pitch.pitchInfo.keys():
-                        reader = ly.pitch.pitchReader[langName]
-                        token = '"%s.ly"' % langName
-                elif not isinstance(token, (ly.tokenize.String, ly.tokenize.Space)):
-                    lastCommand = None
-                if output is not None:
-                    output.append(token)
-            output = [] # start writing the changed output
+        # Walk through not-selected text, to track the state and the 
+        # current pitch language.
+        for token in ly.tokenize.tokenize(pretext, state=state):
+            if isinstance(token, ly.tokenize.Command):
+                lastCommand = token
+            elif (isinstance(token, ly.tokenize.String)
+                and lastCommand == "\\include"):
+                langName = token[1:-4]
+                if langName in ly.pitch.pitchInfo.keys():
+                    reader = ly.pitch.pitchReader[langName]
 
-
-noMusicCommands = (
-    '\\lyricsto', '\\lyricmode', '\\addlyrics', '\\oldaddlyrics',
-)
-
-pitchCommands = (
-    '\\relative', '\\key', '\\transpose', '\\transposition',
-)
+        # Now walk through the part that needs to be translated.
+        output = []
+        for token in ly.tokenize.tokenize(changetext, state=state):
+            if isinstance(token, ly.tokenize.Command):
+                lastCommand = token
+            elif (isinstance(token, ly.tokenize.String)
+                and lastCommand == "\\include"):
+                langName = token[1:-4]
+                if langName in ly.pitch.pitchInfo.keys():
+                    reader = ly.pitch.pitchReader[langName]
+                    token = '"%s.ly"' % lang
+            elif isinstance(token, ly.tokenize.Word):
+                result = reader(token)
+                if result:
+                    # result is a two-tuple (note, alter)
+                    # Write out the translated pitch.
+                    token = writer(*result)
+            output.append(token)
+        print "".join(output) #DEBUG
+        #TODO: write to document

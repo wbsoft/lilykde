@@ -141,6 +141,9 @@ class SchemeChar(Item):
 class SchemeWord(Item):
     rx = r'[^()"{}\s]+'
 
+class SchemeComment(Parsed):
+    rx = r";[^\n]*|#!.*?!#"
+    
 class SchemeLily(Parsed):
     rx = "#\{"
     def __init__(self, matchObj, state):
@@ -231,6 +234,7 @@ class SchemeParser(Parser):
     rx = make_re((
         String,
         SchemeChar,
+        SchemeComment,
         SchemeOpenParenthesis, SchemeCloseParenthesis,
         SchemeLily,
         SchemeWord,
