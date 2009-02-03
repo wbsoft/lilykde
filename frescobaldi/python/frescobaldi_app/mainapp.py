@@ -21,11 +21,11 @@ import glob, os, re, sip, time
 from dbus.service import method
 
 from PyQt4.QtCore import QObject, QString, QTimer, QVariant, Qt, SIGNAL
-from PyQt4.QtGui import QLabel, QStackedWidget, QWidget
+from PyQt4.QtGui import QActionGroup, QLabel, QStackedWidget, QWidget
 from PyKDE4.kdecore import KConfig, KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
-    KApplication, KDialog, KIcon, KLineEdit, KMessageBox, KStandardAction,
-    KVBox)
+    KActionMenu, KApplication, KDialog, KIcon, KLineEdit, KMessageBox,
+    KStandardAction, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -153,6 +153,15 @@ class Document(kateshell.app.Document):
         """
         return updatedFiles(self.localPath())
 
+    @lazy
+    def manipulator(self):
+        """
+        Returns a singleton object for this document that can
+        perform more advanced manipulations.
+        """
+        import frescobaldi_app.document
+        return frescobaldi_app.document.DocumentManipulator(self)
+        
 
 class MainWindow(kateshell.mainwindow.MainWindow):
     """ Our customized Frescobaldi MainWindow """
@@ -186,7 +195,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
     @lazy
     def applyRhythmDialog(self):
         return ApplyRhythmDialog(self)
-        
+
     def setupActions(self):
         super(MainWindow, self).setupActions()
         
@@ -243,6 +252,15 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             if d:
                 self.abortLilyPondJob(d)
             
+        # actions and functionality for editing pitches
+        a = KActionMenu(KIcon("applications-education-language"),
+                i18n("Change Pitch Language"), self)
+        a.setToolTip(i18n("Change the LilyPond language used for pitch names "
+                          "in this document or in the selection."))
+        self.actionCollection().addAction('pitch_change_language', a)
+        QObject.connect(a.menu(), SIGNAL("aboutToShow()"), lambda menu=a.menu():
+            self.currentDocument().manipulator().populateLanguageMenu(menu))
+        
         # actions and functionality for editing rhythms
         @self.onSelAction(i18n("Double durations"),
             tooltip=i18n("Double all the durations in the selection."))

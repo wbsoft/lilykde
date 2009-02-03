@@ -3,6 +3,7 @@
 
 # frescobaldiui.rc :
 i18n("&Document")
+i18n("&Pitch")
 i18n("&Lyrics")
 i18n("&Rhythm")
 i18n("&Generated Files")

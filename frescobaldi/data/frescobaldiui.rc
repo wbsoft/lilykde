@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="frescobaldi" version="5">
+<kpartgui name="frescobaldi" version="6">
 
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -61,6 +61,9 @@
       <Action name="actions_email"/>
     </Menu>
     <Separator />
+    <Menu name="lilypond_edit_pitch"><text>&amp;Pitch</text>
+      <Action name="pitch_change_language"/>
+    </Menu>
     <Menu name="lilypond_edit_rhythm"><text>&amp;Rhythm</text>
       <Action name="durations_double"/>
       <Action name="durations_halve"/>

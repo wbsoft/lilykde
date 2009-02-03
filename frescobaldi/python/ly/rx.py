@@ -105,3 +105,10 @@ include_file = re.compile(r'\\include\s*"([^"]+)"')
 
 # does not take percent signs inside quoted strings into account
 all_comments = re.compile(r'%\{.*?%\}|%.*?\n', re.DOTALL)
+
+# document language
+language = re.compile(
+    r'\\include\s*"('
+        "nederlands|english|deutsch|norsk|svenska|suomi|"
+        "italiano|catalan|espanol|portuges|vlaams"
+    r')\.ly"')
