@@ -207,9 +207,9 @@ class RumorPanel(QWidget):
                 lang = m.group(1)[:2]
                 if lang == "po": lang = "es"
                 elif lang == "su": lang = "de"
-                elif lang == "en" and not re.match(
+                elif lang == "en" and not re.search(
                         r'\b[a-g](flat|sharp)\b', text):
-                    lang == "en-short"
+                    lang = "en-short"
                 elif lang == "vl":
                     # "vlaams" is not supported by Rumor
                     # TODO: rewrite the pitches output by Rumor :-)

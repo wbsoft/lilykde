@@ -107,7 +107,7 @@ class DocumentManipulator(object):
                     (i18n("The pitch language of the selected text has been "
                           "updated, but you need to manually add the following "
                           "command to your document:"), lang),
-                    i18n("Change Pitch Language"))
+                    i18n("Pitch Name Language"))
         else:
             self.doc.doc.startEditing()
             self.doc.doc.setText("".join(output))

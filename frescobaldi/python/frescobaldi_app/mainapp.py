@@ -254,7 +254,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             
         # actions and functionality for editing pitches
         a = KActionMenu(KIcon("applications-education-language"),
-                i18n("Change Pitch Language"), self)
+                i18n("Pitch Name Language"), self)
         a.setToolTip(i18n("Change the LilyPond language used for pitch names "
                           "in this document or in the selection."))
         self.actionCollection().addAction('pitch_change_language', a)
