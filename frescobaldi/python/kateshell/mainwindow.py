@@ -417,49 +417,26 @@ class MainWindow(KParts.MainWindow):
         """
         Returns the text of the current line.
         """
-        v = self.view()
-        d = v.document()
-        return unicode(d.line(v.cursorPosition().line()))
+        return self.currentDocument().line()
 
     def selectionText(self, warn=True):
         """
         Convenience method for accessing the current document.
-        
         Returns selected text or None if no selection.
         In that case the user is warned to select some text.
         """
-        v = self.view()
-        if v.selection():
-            return unicode(v.selectionText())
-        if warn:
+        text = self.currentDocument().selectionText()
+        if warn and not text:
             KMessageBox.sorry(self, i18n("Please select some text first."))
-        return None
+        return text
 
     def replaceSelectionWith(self, text, keepSelection=True):
         """
-        Convenience method for accessing the current document.
-        
+        Convenience method for accessing this method on the current document.
         Replaces the selection (if any) with text. If keepSelection
         is true, select the newly inserted text again.
         """
-        v, d = self.view(), self.view().document()
-        if v.selection():
-            line = v.selectionRange().start().line()
-            col = v.selectionRange().start().column()
-        else:
-            line = v.cursorPosition().line()
-            col = v.cursorPosition().column()
-        lines = text.split('\n')
-        endline, endcol = line + len(lines) - 1, len(lines[-1])
-        if len(lines) < 2:
-            endcol += col
-        d.startEditing()
-        if v.selection():
-            v.removeSelectionText()
-        v.insertText(text)
-        d.endEditing()
-        if keepSelection:
-            v.setSelection(KTextEditor.Range(line, col, endline, endcol))
+        self.currentDocument().replaceSelectionWith(text, keepSelection)
 
 
 class TabBar(KMultiTabBar):

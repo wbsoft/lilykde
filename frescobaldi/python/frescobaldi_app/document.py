@@ -21,7 +21,11 @@
 Advanced manipulations on LilyPond documents.
 """
 
+import re
+
 from PyQt4 import QtCore, QtGui
+from PyKDE4.kdecore import i18n
+from PyKDE4.kdeui import KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
 import ly.pitch, ly.parse, ly.tokenize
@@ -35,14 +39,11 @@ class DocumentManipulator(object):
 
     def populateLanguageMenu(self, menu):
         menu.clear()
-        group = QtGui.QActionGroup(menu)
-        group.setExclusive(True)
         # determine doc language
         currentLang = ly.parse.documentLanguage(self.doc.text()) or "nederlands"
         for lang in sorted(ly.pitch.pitchInfo.keys()):
             a = menu.addAction(lang.title())
             a.setCheckable(True)
-            group.addAction(a)
             if lang == currentLang:
                 a.setChecked(True)
             QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"),
@@ -80,6 +81,7 @@ class DocumentManipulator(object):
 
         # Now walk through the part that needs to be translated.
         output = []
+        includeCommandChanged = False
         for token in ly.tokenize.tokenize(changetext, state=state):
             if isinstance(token, ly.tokenize.Command):
                 lastCommand = token
@@ -89,6 +91,7 @@ class DocumentManipulator(object):
                 if langName in ly.pitch.pitchInfo.keys():
                     reader = ly.pitch.pitchReader[langName]
                     token = '"%s.ly"' % lang
+                    includeCommandChanged = True
             elif isinstance(token, ly.tokenize.Word):
                 result = reader(token)
                 if result:
@@ -96,5 +99,19 @@ class DocumentManipulator(object):
                     # Write out the translated pitch.
                     token = writer(*result)
             output.append(token)
-        print "".join(output) #DEBUG
-        #TODO: write to document
+        if self.doc.view.selection():
+            self.doc.replaceSelectionWith("".join(output))
+            if not includeCommandChanged:
+                KMessageBox.information(self.doc.app.mainwin,
+                    '<p>%s</p><p><tt>\\include "%s.ly"</tt></p>' %
+                    (i18n("The pitch language of the selected text has been "
+                          "updated, but you need to add manually the following "
+                          "command:"), lang),
+                    i18n("Change Pitch Language"))
+        else:
+            self.doc.doc.startEditing()
+            self.doc.doc.setText("".join(output))
+            if not includeCommandChanged:
+                lineNum = re.search(r'\\version\s*"', self.doc.line(0)) and 1 or 0
+                self.doc.doc.insertLine(lineNum, '\\include "%s.ly"' % lang)
+            self.doc.doc.endEditing()

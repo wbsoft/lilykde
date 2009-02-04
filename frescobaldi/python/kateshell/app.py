@@ -547,3 +547,42 @@ class Document(DBusItem):
                 marks.append("%d:%d" % (line, m))
         group.writeEntry("bookmarks", ','.join(marks))
 
+    def line(self, lineNumber = None):
+        """
+        Returns the text of the given or current line.
+        """
+        if self.doc:
+            if lineNumber is None:
+                lineNumber = self.view.cursorPosition().line()
+            return unicode(self.doc.line(lineNumber))
+    
+    def selectionText(self):
+        """
+        Returns the selected text or None.
+        """
+        if self.view and self.view.selection():
+            return unicode(self.view.selectionText())
+            
+    def replaceSelectionWith(self, text, keepSelection=True):
+        """
+        Convenience method. Replaces the selection (if any) with text.
+        If keepSelection is true, select the newly inserted text again.
+        """
+        v, d = self.view, self.doc
+        if v.selection():
+            line = v.selectionRange().start().line()
+            col = v.selectionRange().start().column()
+        else:
+            line = v.cursorPosition().line()
+            col = v.cursorPosition().column()
+        lines = text.split('\n')
+        endline, endcol = line + len(lines) - 1, len(lines[-1])
+        if len(lines) < 2:
+            endcol += col
+        d.startEditing()
+        if v.selection():
+            v.removeSelectionText()
+        v.insertText(text)
+        d.endEditing()
+        if keepSelection:
+            v.setSelection(KTextEditor.Range(line, col, endline, endcol))

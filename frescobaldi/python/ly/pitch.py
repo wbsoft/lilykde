@@ -96,7 +96,7 @@ pitchInfo = {
         ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
         ('bb', '', 'b', '', '', '', 's', '', 'ss')
     ),
-    'portuges': (
+    'portugues': (
         ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
         ('bb', 'btqt', 'b', 'bqt', '', 'sqt', 's', 'stqt', 'ss')
     ),
