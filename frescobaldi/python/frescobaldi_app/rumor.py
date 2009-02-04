@@ -201,7 +201,7 @@ class RumorPanel(QWidget):
             # determine lily language from document
             m = re.compile(r'.*\\include\s*"('
                 "nederlands|english|deutsch|norsk|svenska|suomi|"
-                "italiano|catalan|espanol|portuges|vlaams"
+                "italiano|catalan|espanol|portugues|vlaams"
                 r')\.ly"', re.DOTALL).match(text)
             if m:
                 lang = m.group(1)[:2]

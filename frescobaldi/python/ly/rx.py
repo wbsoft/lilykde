@@ -110,5 +110,5 @@ all_comments = re.compile(r'%\{.*?%\}|%.*?\n', re.DOTALL)
 language = re.compile(
     r'\\include\s*"('
         "nederlands|english|deutsch|norsk|svenska|suomi|"
-        "italiano|catalan|espanol|portuges|vlaams"
+        "italiano|catalan|espanol|portugues|vlaams"
     r')\.ly"')
