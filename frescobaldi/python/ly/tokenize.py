@@ -83,8 +83,8 @@ class Command(Item):
 class String(Item):
     rx = r'"(\\[\\"]|[^"])*"'
 
-class Word(Item):
-    rx = r'[^\W\d]+'
+class PitchWord(Item):
+    rx = r'[a-z]+'
     
 class Scheme(Parsed):
     rx = "#"
@@ -148,7 +148,13 @@ class SchemeLily(Parsed):
     rx = "#\{"
     def __init__(self, matchObj, state):
         state.enter(ToplevelParser)
-        
+
+
+class OpenBracket(Increaser):
+    rx = r"\{"
+
+class CloseBracket(Decreaser):
+    rx = r"\}"
 
 class MarkupCommand(Command):
     def __init__(self, matchObj, state):
@@ -158,16 +164,28 @@ class MarkupCommand(Command):
             argcount = 1
         state.enter(MarkupParser, argcount)
 
-class MarkupOpenDelimiter(Increaser):
-    rx = r"\{"
-
-class MarkupCloseDelimiter(Decreaser):
-    rx = r"\}"
-
 class MarkupWord(Item):
     rx = r'[^{}"\\\s]+'
+
+class LyricMode(Command):
+    rx = r'\\(lyricmode|((old)?add)?lyrics|lyricsto)\b'
+    def __init__(self, matchObj, state):
+        if matchObj.group() == "\\lyricsto":
+            argcount = 2
+        else:
+            argcount = 1
+        state.enter(LyricParser)
+        
+class LyricWord(Item):
+    rx = r'[^\W\d]+'
     
-    
+class Section(Command):
+    """Introduce a section with no music, like \\layout, etc."""
+    rx = r'\\(with|layout|midi|paper|header)\b'
+    def __init__(self, matchObj, state):
+        state.enter(SectionParser)
+        
+
 class State(object):
     """
     Manages state for the parsers.
@@ -215,18 +233,25 @@ class Parser(object):
     level = 0
 
 
+# tuple with base stuff to parse in LilyPond input
+_lilybase = (
+    Comment,
+    String,
+    EndSchemeLily,
+    Scheme,
+    Section,
+    LyricMode,
+    Markup,
+    Command,
+    Space,
+    )
+
+
 class ToplevelParser(Parser):
     rx = make_re((
-        Comment,
-        String,
-        Markup,
-        Command,
-        EndSchemeLily,
-        Scheme,
         OpenDelimiter, CloseDelimiter,
-        Word,
-        Space,
-    ))
+        PitchWord,
+    ) + _lilybase)
 
 
 class SchemeParser(Parser):
@@ -245,16 +270,27 @@ class SchemeParser(Parser):
 class MarkupParser(Parser):
     argcount = 1
     rx = make_re((
-        Comment,
-        String,
         MarkupCommand,
-        Scheme,
-        MarkupOpenDelimiter, MarkupCloseDelimiter,
+        OpenBracket, CloseBracket,
         MarkupWord,
-        Space,
-    ))
+    ) + _lilybase)
     
-    
+
+class LyricParser(Parser):
+    argcount = 1
+    rx = make_re((
+        OpenBracket, CloseBracket,
+        LyricWord,
+    ) + _lilybase)
+
+
+class SectionParser(Parser):
+    argcount = 1
+    rx = make_re((
+        OpenBracket, CloseBracket,
+    ) + _lilybase)
+
+
 def tokenize(text, pos = 0, state = None):
     """
     Iterate over the LilyPond tokens in the string.

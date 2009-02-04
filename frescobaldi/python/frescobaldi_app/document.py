@@ -92,7 +92,7 @@ class DocumentManipulator(object):
                     reader = ly.pitch.pitchReader[langName]
                     token = '"%s.ly"' % lang
                     includeCommandChanged = True
-            elif isinstance(token, ly.tokenize.Word):
+            elif isinstance(token, ly.tokenize.PitchWord):
                 result = reader(token)
                 if result:
                     # result is a two-tuple (note, alter)
@@ -105,8 +105,8 @@ class DocumentManipulator(object):
                 KMessageBox.information(self.doc.app.mainwin,
                     '<p>%s</p><p><tt>\\include "%s.ly"</tt></p>' %
                     (i18n("The pitch language of the selected text has been "
-                          "updated, but you need to add manually the following "
-                          "command:"), lang),
+                          "updated, but you need to manually add the following "
+                          "command to your document:"), lang),
                     i18n("Change Pitch Language"))
         else:
             self.doc.doc.startEditing()
