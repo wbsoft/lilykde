@@ -63,7 +63,7 @@ class pitchreader(object):
                 else:
                     alter = 0
                 return note, alter
-            # were we using (rarely used) long english syntax?
+            # HACK: were we using (rarely used) long english syntax?
             text = text.replace('flat', 'f').replace('sharp', 's')
         return False
             
