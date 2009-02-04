@@ -169,4 +169,4 @@ keyNames = {
 keyNames['svenska'] = keyNames['norsk']
 keyNames['suomi'] = keyNames['deutsch']
 keyNames['catalan'] = keyNames['italiano']
-keyNames['portuges'] = keyNames['espanol']
+keyNames['portugues'] = keyNames['espanol']
