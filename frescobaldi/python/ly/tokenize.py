@@ -102,10 +102,10 @@ class Markup(Item):
     def __init__(self, matchObj, state):
         state.enter(MarkupParser)
 
-class OpenDelimiter(Parsed):
+class OpenDelimiter(Increaser):
     rx = r"<<|\{"
     
-class CloseDelimiter(Parsed):
+class CloseDelimiter(Decreaser):
     rx = r">>|\}"
 
 class OpenChord(Parsed):
@@ -156,6 +156,11 @@ class OpenBracket(Increaser):
 class CloseBracket(Decreaser):
     rx = r"\}"
 
+class MarkupScore(Command):
+    rx = r"\\score\b"
+    def __init__(self, matchObj, state):
+        state.enter(ToplevelParser, 1)
+        
 class MarkupCommand(Command):
     def __init__(self, matchObj, state):
         if matchObj.group() == "\\combine":
@@ -270,6 +275,7 @@ class SchemeParser(Parser):
 class MarkupParser(Parser):
     argcount = 1
     rx = make_re((
+        MarkupScore,
         MarkupCommand,
         OpenBracket, CloseBracket,
         MarkupWord,
