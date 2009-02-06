@@ -27,11 +27,19 @@ class pitchwriter(object):
         self.accs = accs
         self.replacements = replacements
 
-    def __call__(self, note, alter = 0):
+    def __call__(self, note, alter = 0, warn = False):
+        """
+        Returns a string representing the pitch in our language.
+        If warn == True and the requested pitch has an alteration not present
+        in the current language, False is returned.
+        """
         pitch = self.names[note]
         if alter:
             acc = self.accs[int(alter * 4 + 4)]
-            # FIXME: warn if no alter defined
+            # warn if a quarter tone is requested but not present in the
+            # current language.
+            if warn and acc == '':
+                return False
             pitch += acc
         for s, r in self.replacements:
             if pitch.startswith(s):

@@ -95,9 +95,16 @@ class DocumentManipulator(object):
             elif isinstance(token, ly.tokenize.PitchWord):
                 result = reader(token)
                 if result:
-                    # result is a two-tuple (note, alter)
+                    note, alter = result
                     # Write out the translated pitch.
-                    token = writer(*result)
+                    token = writer(note, alter, warn=True)
+                    if not token:
+                        KMessageBox.sorry(self.doc.app.mainwin, i18n(
+                            "Can't perform the requested translation. "
+                            "The music contains quarter-tone alterations, but "
+                            "those are not available in the pitch language %1.",
+                            lang))
+                        return
             output.append(token)
         if self.doc.view.selection():
             self.doc.replaceSelectionWith("".join(output))
