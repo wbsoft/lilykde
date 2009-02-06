@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-02-04 14:51+0100\n"
+"POT-Creation-Date: 2009-02-06 19:45+0100\n"
 "PO-Revision-Date: 2008-07-06 11:34+0400\n"
 "Last-Translator: Сергей Полтавский\n"
 "Language-Team:  <ru@li.org>\n"
@@ -532,13 +532,19 @@ msgstr[2] ""
 "по электронной почте документы без \"point-and-click\", потому что они "
 "значительно меньше. Всё равно продолжить?"
 
-#: ../python/frescobaldi_app/document.py:107
+#: ../python/frescobaldi_app/document.py:103
+msgid ""
+"Can't perform the requested translation. The music contains quarter-tone "
+"alterations, but those are not available in the pitch language %1."
+msgstr ""
+
+#: ../python/frescobaldi_app/document.py:114
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:110
+#: ../python/frescobaldi_app/document.py:117
 #: ../python/frescobaldi_app/mainapp.py:257
 msgid "Pitch Name Language"
 msgstr ""

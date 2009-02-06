@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-02-04 14:51+0100\n"
+"POT-Creation-Date: 2009-02-06 19:45+0100\n"
 "PO-Revision-Date: 2009-01-29 21:35+0200\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
@@ -519,13 +519,19 @@ msgstr[0] ""
 "kipinde yeniden derlemeyi deneyiniz, böylece PDF dosya boyutu daha "
 "küçülecektir."
 
-#: ../python/frescobaldi_app/document.py:107
+#: ../python/frescobaldi_app/document.py:103
+msgid ""
+"Can't perform the requested translation. The music contains quarter-tone "
+"alterations, but those are not available in the pitch language %1."
+msgstr ""
+
+#: ../python/frescobaldi_app/document.py:114
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:110
+#: ../python/frescobaldi_app/document.py:117
 #: ../python/frescobaldi_app/mainapp.py:257
 msgid "Pitch Name Language"
 msgstr ""
