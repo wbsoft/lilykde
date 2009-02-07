@@ -315,7 +315,7 @@ class MainWindow(KParts.MainWindow):
         self.sb_insmode.setText(doc.view.viewMode())
 
     def updateSelection(self, doc):
-        enable = doc.view.selection()
+        enable = doc.view.selection() and not doc.view.selectionRange().isEmpty()
         for a in self._selectionActions:
             a.setEnabled(enable)
         if doc.view.blockSelection():

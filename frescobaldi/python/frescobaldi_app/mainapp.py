@@ -251,6 +251,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             d = self.currentDocument()
             if d:
                 self.abortLilyPondJob(d)
+        # Edit menu actions:
+        @self.onSelAction(i18n("Cut and Assign"),
+            tooltip=i18n("Cut selection and assign it to a LilyPond variable."))
+        def edit_cut_assign(text):
+            self.currentDocument().manipulator().assignSelectionToVariable()
             
         # actions and functionality for editing pitches
         a = KActionMenu(KIcon("applications-education-language"),

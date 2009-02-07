@@ -828,7 +828,7 @@ class Choir(VocalPart):
         l = QLabel('<p>%s</p><p><i>(%s)</i></p>' % (
             i18n("Please select the voices for the choir. "
             "Use the letters S, A, T, or B. A hyphen denotes a new staff."),
-            i18n("Tip: For a double choir you can use two choir parts.")))
+            i18n("Hint: For a double choir you can use two choir parts.")))
         l.setWordWrap(True)
         layout.addWidget(l)
         h = KHBox()

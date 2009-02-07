@@ -24,11 +24,13 @@ Advanced manipulations on LilyPond documents.
 import re
 
 from PyQt4 import QtCore, QtGui
+
 from PyKDE4.kdecore import i18n
 from PyKDE4.kdeui import KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
 import ly.pitch, ly.parse, ly.tokenize
+from frescobaldi_app.widgets import promptText
 
 class DocumentManipulator(object):
     """
@@ -119,6 +121,81 @@ class DocumentManipulator(object):
             self.doc.doc.startEditing()
             self.doc.doc.setText("".join(output))
             if not includeCommandChanged:
-                lineNum = re.search(r'\\version\s*"', self.doc.line(0)) and 1 or 0
-                self.doc.doc.insertLine(lineNum, '\\include "%s.ly"' % lang)
+                self.addLineToTop('\\include "%s.ly"' % lang)
             self.doc.doc.endEditing()
+
+    def addLineToTop(self, text):
+        """
+        Adds text to the beginning of the document, but below a \version
+        command.
+        """
+        self.doc.doc.insertLine(insert, text)
+
+    def topInsertPoint(self):
+        """
+        Finds the topmost place to add text, but below a \version command.
+        """
+        for line in range(20):
+            if re.search(r'\\version\s*".*?"', self.doc.line(line)):
+                return line + 1
+        else:
+            return 0
+        
+    def findInsertPoint(self, lineNum):
+        """
+        Finds the last possible toplevel insertion point before line number
+        lineNum. Returns the line number to insert text at.
+        """
+        insert = 0
+        lastComment = False
+        state = ly.tokenize.State()
+        for token in ly.tokenize.tokenizeLineColumn(self.doc.text(), state=state):
+            if (isinstance(token, ly.tokenize.Space)
+                and state.depth() == (1, 0)
+                # dont insert below a comment that has no blank line below it
+                and ((token.count('\n') == 1 and not lastComment)
+                      or token.count('\n') > 1)):
+                if token.line >= lineNum:
+                    break
+                insert = token.line + 1 # next line is the line to insert at
+            lastComment = isinstance(token, ly.tokenize.Comment)
+        return insert or self.topInsertPoint()
+        
+    def assignSelectionToVariable(self):
+        """
+        Cuts out selected text and stores it under a variable name, adding a
+        reference to that variable in the original place.
+        There MUST be a selection.
+        """
+        # ask the variable name
+        name = promptText(self.doc.app.mainwin, i18n(
+            "Please enter the name for the variable to assign the selected "
+            "text to:"), i18n("Cut and Assign"), rx="[a-zA-Z]*")
+        if not name:
+            return
+        currentLine = self.doc.view.selectionRange().start().line()
+        insertLine = self.findInsertPoint(currentLine)
+        
+        text = self.doc.selectionText().strip()
+        if '\n' in text:
+            lines = text.splitlines()
+            # re-indent the text
+            indent = min(len(re.match(r'\s*', line).group())
+                for line in lines[1:])
+            text = '\n  '.join(lines[:1] + [line[indent:] for line in lines[1:]])
+            result = "%s = {\n  %s\n}\n" % (name, text)
+        else:
+            result = "%s = { %s }\n" % (name, text)
+            
+        if self.doc.line(insertLine).strip():
+            result += '\n'
+        if insertLine > 0 and self.doc.line(insertLine - 1).strip():
+            result = '\n' + result
+        
+        # do it:
+        cursor = KTextEditor.Cursor(insertLine, 0)
+        self.doc.doc.startEditing()
+        self.doc.replaceSelectionWith("\\%s" % name, keepSelection=False)
+        self.doc.doc.insertText(cursor, result)
+        self.doc.doc.endEditing()
+        

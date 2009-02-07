@@ -24,10 +24,12 @@ Some special widgets
 import os
 from time import time
 
-from PyQt4.QtCore import QObject, QProcess, QString, Qt, SIGNAL
-from PyQt4.QtGui import QLineEdit, QPushButton, QSlider, QSpinBox, QToolButton
+from PyQt4.QtCore import QObject, QProcess, QRegExp, QString, Qt, SIGNAL
+from PyQt4.QtGui import (
+    QLabel, QLineEdit, QPushButton, QSlider, QSpinBox, QToolButton,
+    QRegExpValidator)
 from PyKDE4.kdecore import i18n, KProcess
-
+from PyKDE4.kdeui import KDialog, KLineEdit, KVBox
 
 class TapButton(QPushButton):
     """
@@ -206,6 +208,27 @@ class ExecArgsLineEdit(ExecLineEdit):
     def _get(self, filename):
         return unicode(filename).split()[0]
 
+# some handy "static" functions
+def promptText(parent, message, title = None, text="", rx=None):
+    """
+    Prompts for a text. Returns None on cancel, otherwise the input string.
+    """
+    d = KDialog(parent)
+    d.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel))
+    if title:
+        d.setCaption(title)
+    v = KVBox()
+    v.setSpacing(4)
+    d.setMainWidget(v)
+    QLabel(message, v)
+    edit = KLineEdit(v)
+    if rx:
+        edit.setValidator(QRegExpValidator(QRegExp(rx), edit))
+    edit.setText(text)
+    d.show()
+    edit.setFocus()
+    if d.exec_():
+        return unicode(edit.text())
 
 
 # utility functions used by above classes:

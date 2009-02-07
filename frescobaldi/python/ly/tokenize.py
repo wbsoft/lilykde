@@ -232,6 +232,13 @@ class State(object):
             self.state[-1].level -= 1
             self.endArgument()
             
+    def depth(self):
+        """
+        Return a two-tuple representing the depth of the current state.
+        This is useful to quickly check when a part of LilyPond input ends.
+        """
+        return len(self.state), self.state[-1].level
+        
 
 class Parser(object):
     argcount = 0
@@ -322,3 +329,32 @@ def tokenize(text, pos = 0, state = None):
             yield eval(m.lastgroup)(m, state)
             pos = m.end()
 
+
+class Cursor(object):
+    def __init__(self):
+        self.line = 0
+        self.column = 0
+    
+    def walk(self, text):
+        lines = text.count('\n')
+        if lines:
+            self.line += lines
+            self.column = len(text) - text.rfind('\n') - 1
+        else:
+            self.column += len(text)
+        
+
+def tokenizeLineColumn(text, pos = 0, state = None):
+    """
+    Iterate over the tokens returned by tokenize(), adding line and column
+    information to every token.
+    """
+    cursor = Cursor()
+    if pos:
+        cursor.walk(text[:pos])
+    for token in tokenize(text, pos, state):
+        token.line = cursor.line
+        token.column = cursor.column
+        yield token
+        cursor.walk(token)
+        
