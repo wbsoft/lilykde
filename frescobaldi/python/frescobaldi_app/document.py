@@ -187,10 +187,16 @@ class DocumentManipulator(object):
         if insertLine > 0 and self.doc.line(insertLine - 1).strip():
             result = '\n' + result
         
+        # add space if necessary
+        variable = "\\%s" % name
+        end = self.doc.view.selectionRange().end()
+        if self.doc.line(end.line())[end.column():end.column()+1].strip():
+            variable += " "
+
         # do it:
         cursor = KTextEditor.Cursor(insertLine, 0)
         self.doc.doc.startEditing()
-        self.doc.replaceSelectionWith("\\%s" % name, keepSelection=False)
+        self.doc.replaceSelectionWith(variable, keepSelection=False)
         self.doc.doc.insertText(cursor, result)
         self.doc.doc.endEditing()
         
