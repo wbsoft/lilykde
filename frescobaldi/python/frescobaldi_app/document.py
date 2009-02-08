@@ -194,3 +194,36 @@ class DocumentManipulator(object):
         self.doc.doc.insertText(cursor, result)
         self.doc.doc.endEditing()
         
+    def repeatLastExpression(self):
+        """
+        Repeat the last entered music expression (without duration)
+        """
+        # find the last non-empty line
+        curPos = self.doc.view.cursorPosition()
+        lineNum = curPos.line()
+        while lineNum > 0 and not self.doc.line(lineNum).strip():
+            lineNum -= 1
+            
+        text = unicode(self.doc.doc.text(
+            KTextEditor.Range(KTextEditor.Cursor(lineNum, 0), curPos)))
+        matchObj = None
+        for m in ly.rx.chord_rest.finditer(text):
+            if m.group('chord'):
+                matchObj = m
+        if not matchObj:
+            return # nothing to repeat
+        
+        # leave out the duration
+        result = matchObj.group('chord')
+        
+        # add articulations, etc
+        stuff = text[matchObj.start() + len(matchObj.group()):].strip()
+        if stuff:
+            result += stuff.splitlines()[0]
+        
+        # write it in the document, add a space if necessary
+        col = curPos.column()
+        if col > 1 and self.doc.line()[col-1].strip():
+            result = " " + result
+        self.doc.view.insertText(result + " ")
+        

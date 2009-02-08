@@ -257,6 +257,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             tooltip=i18n("Cut selection and assign it to a LilyPond variable."))
         def edit_cut_assign(text):
             self.currentDocument().manipulator().assignSelectionToVariable()
+        
+        @self.onAction(i18n("Repeat last note or chord"), key="Ctrl+;",
+            tooltip=i18n("Repeat the last music expression (note or chord)."))
+        def edit_repeat_last():
+            self.currentDocument().manipulator().repeatLastExpression()
             
         # actions and functionality for editing pitches
         a = KActionMenu(KIcon("applications-education-language"),
