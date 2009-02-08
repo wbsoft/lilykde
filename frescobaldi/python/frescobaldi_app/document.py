@@ -147,18 +147,14 @@ class DocumentManipulator(object):
         lineNum. Returns the line number to insert text at.
         """
         insert = 0
-        lastComment = False
         state = ly.tokenize.State()
         for token in ly.tokenize.tokenizeLineColumn(self.doc.text(), state=state):
             if (isinstance(token, ly.tokenize.Space)
                 and state.depth() == (1, 0)
-                # dont insert below a comment that has no blank line below it
-                and ((token.count('\n') == 1 and not lastComment)
-                      or token.count('\n') > 1)):
+                and token.count('\n') > 1):
                 if token.line >= lineNum:
                     break
                 insert = token.line + 1 # next line is the line to insert at
-            lastComment = isinstance(token, ly.tokenize.Comment)
         return insert or self.topInsertPoint()
         
     def assignSelectionToVariable(self):
