@@ -174,10 +174,9 @@ class DocumentManipulator(object):
         
         text = self.doc.selectionText().strip()
         if '\n' in text:
-            lines = text.splitlines()
             # re-indent the text
-            indent = min(len(re.match(r'\s*', line).group())
-                for line in lines[1:])
+            lines = text.splitlines()
+            indent = min(len(re.match(r'\s*', line).group()) for line in lines[1:])
             text = '\n  '.join(lines[:1] + [line[indent:] for line in lines[1:]])
             result = "%s = {\n  %s\n}\n" % (name, text)
         else:

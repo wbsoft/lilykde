@@ -233,7 +233,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                 return KMessageBox.sorry(self, i18n(
                     "Your document currently has no filename, "
                     "please save first."))
-            elif not d.url().protocol() == "file":
+            elif d.url().protocol() != "file":
                 return KMessageBox.sorry(self, i18n(
                     "Sorry, support for remote files is not yet implemented.\n"
                     "Please save your document to a local file."))
@@ -251,8 +251,9 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             d = self.currentDocument()
             if d:
                 self.abortLilyPondJob(d)
+        
         # Edit menu actions:
-        @self.onSelAction(i18n("Cut and Assign"),
+        @self.onSelAction(i18n("Cut and Assign"), "edit-cut", key="Ctrl+Shift+C",
             tooltip=i18n("Cut selection and assign it to a LilyPond variable."))
         def edit_cut_assign(text):
             self.currentDocument().manipulator().assignSelectionToVariable()
