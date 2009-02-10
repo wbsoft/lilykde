@@ -268,8 +268,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         def edit_repeat_last():
             self.currentDocument().manipulator().repeatLastExpression()
             
-        @self.onAction(i18n("Expand"), "arrow-down", key="Ctrl+.",
-            tooltip=i18n("Expand last word or open the expansions dialog"))
+        @self.onAction(i18n("Expand"), key="Ctrl+.",
+            tooltip=i18n("Expand last word or open the expansions dialog."))
         def edit_expand():
             self.expandManager().expand()
             
