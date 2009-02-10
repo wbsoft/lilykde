@@ -31,9 +31,14 @@
     <DefineGroup name="edit_undo_merge"/>
     <Separator/>
     <DefineGroup name="edit_paste_merge"/>
-    <Action name="edit_cut_assign"/>
-    <Action name="edit_repeat_last"/>
-    <Action name="edit_expand"/>
+    <Menu name="edit_lilypond"><text>&amp;LilyPond</text>
+      <Action name="edit_cut_assign"/>
+      <Action name="edit_repeat_last"/>
+      <Action name="edit_expand"/>
+      <Separator/>
+      <Action name="edit_prev_blank_line"/>
+      <Action name="edit_next_blank_line"/>
+    </Menu>
     <Separator/>
     <DefineGroup name="edit_select_merge"/>
     <Separator/>

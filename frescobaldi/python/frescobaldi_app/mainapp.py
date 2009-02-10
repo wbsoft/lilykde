@@ -273,6 +273,30 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         def edit_expand():
             self.expandManager().expand()
             
+        @self.onAction(i18n("Next blank line"), "go-down-search", key="Alt+Down",
+            tooltip=i18n("Go to the next blank line."))
+        def edit_next_blank_line():
+            d = self.currentDocument()
+            lineNum = d.view.cursorPosition().line()
+            while lineNum < d.doc.lines() - 1:
+                lineNum += 1
+                line = d.line(lineNum)
+                if not line or line.isspace():
+                    d.view.setCursorPosition(KTextEditor.Cursor(lineNum, len(line)))
+                    return
+        
+        @self.onAction(i18n("Previous blank line"), "go-up-search", key="Alt+Up",
+            tooltip=i18n("Go to the previous blank line."))
+        def edit_prev_blank_line():
+            d = self.currentDocument()
+            lineNum = d.view.cursorPosition().line()
+            while lineNum > 0:
+                lineNum -= 1
+                line = d.line(lineNum)
+                if not line or line.isspace():
+                    d.view.setCursorPosition(KTextEditor.Cursor(lineNum, len(line)))
+                    return
+        
         # actions and functionality for editing pitches
         a = KActionMenu(KIcon("applications-education-language"),
                 i18n("Pitch Name Language"), self)
