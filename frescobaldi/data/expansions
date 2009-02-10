@@ -33,3 +33,16 @@ Text=\\relative c(|) {\n  \n}\n
 [18]
 Name=Set Global Staffsize
 Text=#(set-global-staff-size 18)
+
+[rep]
+Name=Repeat
+Text=\\repeat volta 2(|) {\n  \n}\n
+
+[alt]
+Name=Repeat Alternative
+Text=\\alternative {\n  { (|) }\n  {  }\n}\n
+
+[he]
+Name=Header
+Text=\\header {\n  (|)\n}\n
+
