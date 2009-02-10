@@ -126,7 +126,7 @@ class ExpansionDialog(KDialog):
     def __init__(self, manager):
         self.manager = manager
         KDialog.__init__(self, manager.mainwin)
-        self.setCaption("Expansion Manager")
+        self.setCaption(i18n("Expansion Manager"))
         self.setButtons(KDialog.ButtonCode(
             KDialog.Ok | KDialog.Close | KDialog.User1 | KDialog.User2 ))
         self.setButtonGuiItem(KDialog.User1, KStandardGuiItem.remove())
