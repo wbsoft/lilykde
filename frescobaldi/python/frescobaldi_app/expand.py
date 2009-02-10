@@ -106,6 +106,11 @@ class ExpandManager(object):
         # where to insert the text:
         cursor = doc.view.cursorPosition()
         newcursor = False
+        
+        # re-indent the text:
+        indent = re.match(r'\s*', doc.line()[:cursor.column()]).group()
+        text = text.replace('\n' , '\n' + indent)
+        
         # "(|)" is the place to position the cursor after inserting
         if "(|)" in text:
             col = cursor.column()
@@ -118,9 +123,6 @@ class ExpandManager(object):
                 col += len(t1)
             text = t1 + t2
             newcursor = KTextEditor.Cursor(line, col)
-        # re-indent the text:
-        indent = re.match(r'\s*', doc.line()[:cursor.column()]).group()
-        text = text.replace('\n' , '\n' + indent)
         doc.doc.insertText(cursor, text)
         if newcursor:
             doc.view.setCursorPosition(newcursor)
