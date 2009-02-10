@@ -1,0 +1,35 @@
+[pa]
+Name=Paper Section
+Text=\\paper {\n  (|)\n}\n
+
+[a4]
+Name=Set A4 Papersize
+Text=#(set-paper-size "a4")
+
+[a4l]
+Name=Set A4 Papersize Landscape
+Text=#(set-paper-size "a4" 'landscape)
+
+[a5]
+Name=Set A5 Papersize
+Text=#(set-paper-size "a5")
+
+[oo]
+Name=Once Override
+Text=\\once \\override\s
+
+[su]
+Name=Stem Up
+Text=\\stemUp\s
+
+[sd]
+Name=Stem Down
+Text=\\stemDown\s
+
+[rel]
+Name=Relative Music
+Text=\\relative c(|) {\n  \n}\n
+
+[18]
+Name=Set Global Staffsize
+Text=#(set-global-staff-size 18)

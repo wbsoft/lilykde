@@ -195,6 +195,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
     @lazy
     def applyRhythmDialog(self):
         return ApplyRhythmDialog(self)
+    
+    @lazy
+    def expandManager(self):
+        import frescobaldi_app.expand
+        return frescobaldi_app.expand.ExpandManager(self)
 
     def setupActions(self):
         super(MainWindow, self).setupActions()
@@ -262,6 +267,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             tooltip=i18n("Repeat the last music expression (note or chord)."))
         def edit_repeat_last():
             self.currentDocument().manipulator().repeatLastExpression()
+            
+        @self.onAction(i18n("Expand"), "arrow-down", key="Ctrl+.",
+            tooltip=i18n("Expand last word or open the expansions dialog"))
+        def edit_expand():
+            self.expandManager().expand()
             
         # actions and functionality for editing pitches
         a = KActionMenu(KIcon("applications-education-language"),

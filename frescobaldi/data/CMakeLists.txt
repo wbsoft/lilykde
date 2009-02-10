@@ -2,7 +2,7 @@
 install(FILES frescobaldi.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
 # UI configuration
-install(FILES frescobaldiui.rc DESTINATION ${APP_DIR})
+install(FILES frescobaldiui.rc expansions DESTINATION ${APP_DIR})
 
 # Appicon
 install(
