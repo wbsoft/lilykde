@@ -36,7 +36,11 @@ def config():
     return KGlobal.config().group("expand manager")
 
 def onSignal(obj, signalName, shot=False):
-    """ decorator to attach a function to a Qt signal """
+    """
+    Decorator to attach a function to a Qt signal.
+    If shot == True, the function is called after the event queue
+    has been processed, using QTimer.singleShot.
+    """
     def decorator(func):
         if shot:
             QObject.connect(obj, SIGNAL(signalName), lambda *args:
@@ -148,6 +152,7 @@ class ExpansionDialog(KDialog):
         tree.setColumnCount(2)
         tree.setHeaderLabels((i18n("Shortcut"), i18n("Description")))
         tree.setRootIsDecorated(False)
+        tree.setAllColumnsShowFocus(True)
         search.setTreeWidget(tree)
         splitter.addWidget(tree)
         
@@ -175,13 +180,6 @@ class ExpansionDialog(KDialog):
             item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
             return item
         
-        def setCurrent(item):
-            item.setSelected(True)
-            updateSelection()
-            tree.setCurrentItem(item)
-            tree.scrollToItem(item)
-            
-
         # load the expansions
         for groupName in sorted(self.manager.expansions.groupList()):
             group = expansions.group(groupName)
@@ -192,16 +190,21 @@ class ExpansionDialog(KDialog):
         tree.sortByColumn(1, Qt.AscendingOrder)
         tree.setSortingEnabled(True)
         
+        def setCurrent(item):
+            item.setSelected(True)
+            updateSelection()
+            tree.setCurrentItem(item)
+            tree.scrollToItem(item)
+
         @onSignal(self, "user1Clicked()")
         def removeButton():
-            items = tree.selectedItems()
-            if items and not items[0].isHidden():
-                item = items[0]
+            item = self.currentItem()
+            if item:
                 index = tree.indexOfTopLevelItem(item)
                 if index + 1 == tree.topLevelItemCount():
                     index = 0
-                expansions.deleteGroup(items[0].groupName)
-                sip.delete(items[0])
+                expansions.deleteGroup(item.groupName)
+                sip.delete(item)
                 if index:
                     setCurrent(tree.topLevelItem(index))
                 
@@ -216,9 +219,11 @@ class ExpansionDialog(KDialog):
             if num:
                 description += " %d" % num
             expansions.group(name).writeEntry("Name", description)
+            search.clear() # otherwise strange things happen...
             item = makeItem(name, description)
             setCurrent(item)
             tree.editItem(item, 0)
+            edit.dirty = True # so that our (empty) text gets saved
             
         @onSignal(edit, "textChanged()")
         def textChanged():
@@ -279,6 +284,12 @@ class ExpansionDialog(KDialog):
         return (self.treeWidget.topLevelItem(i)
                 for i in range(self.treeWidget.topLevelItemCount()))
     
+    def currentItem(self):
+        """ Returns the currently selected item, if any. """
+        items = self.treeWidget.selectedItems()
+        if items and not items[0].isHidden():
+            return items[0]
+            
     def saveEditIfNecessary(self):
         if self.edit.dirty and self.edit.item:
             self.manager.expansions.group(self.edit.item.text(0)).writeEntry(
@@ -301,3 +312,4 @@ class ExpansionDialog(KDialog):
         self.saveDialogSize(config())
         KDialog.done(self, result)
 
+            
