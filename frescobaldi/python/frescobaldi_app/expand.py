@@ -175,7 +175,7 @@ class ExpansionDialog(KDialog):
             "<html><head><style type='text/css'>"
             "td.short { font-family: monospace; font-weight: bold; }"
             "</style></head><body>"
-            "<p>%s</p><table border=0 width=300><tbody>"
+            "<p>%s</p><table border=0 width=300 cellspacing=2><tbody>"
             "<tr><td class=short>(|)</td><td>%s</td></tr>"
             "</tbody></table></body></html>"
             % (i18n(
