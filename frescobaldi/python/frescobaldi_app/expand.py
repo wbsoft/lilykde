@@ -163,6 +163,27 @@ class ExpansionDialog(KDialog):
         edit.dirty = False
         splitter.addWidget(edit)
         
+        # whats this etc.
+        tree.setWhatsThis(i18n(
+            "This is the list of defined expansions.\n\n"
+            "Click on a row to see or change the associated text. "
+            "Doubleclick a shortcut or its description to change it. "
+            "You can also press F2 to edit the current shortcut.\n\n"
+            "Use the buttons below to add or remove expansions."))
+            
+        edit.setWhatsThis(
+            "<html><head><style type='text/css'>"
+            "td.short { font-family: monospace; font-weight: bold; }"
+            "</style></head><body>"
+            "<p>%s</p><table border=0 width=300><tbody>"
+            "<tr><td class=short>(|)</td><td>%s</td></tr>"
+            "</tbody></table></body></html>"
+            % (i18n(
+                "This is the text associated with the selected shortcut. "
+                "Some characters have special meaning:"),
+            i18n("Place the cursor on this spot.")),
+            )
+        
         self.searchLine = search
         self.treeWidget = tree
         self.edit = edit
