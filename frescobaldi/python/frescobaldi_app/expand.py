@@ -171,7 +171,12 @@ class ExpansionDialog(KDialog):
             "Click on a row to see or change the associated text. "
             "Doubleclick a shortcut or its description to change it. "
             "You can also press F2 to edit the current shortcut.\n\n"
-            "Use the buttons below to add or remove expansions."))
+            "Use the buttons below to add or remove expansions.\n\n"
+            "There are two ways to use the expansion: either type the "
+            "shortcut in the text and then call the Expand function, or "
+            "just call the Expand function (default shortcut: Ctrl+.), "
+            "choose the expansion from the list and press Enter or click Ok."
+            ))
             
         edit.setWhatsThis(
             "<html><head><style type='text/css'>"

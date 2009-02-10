@@ -2,17 +2,25 @@
 Name=Paper Section
 Text=\\paper {\n  (|)\n}\n
 
+[i0]
+Name=Paper: indent = 0
+Text=indent = #0
+
 [a4]
-Name=Set A4 Papersize
+Name=Paper Size A4
 Text=#(set-paper-size "a4")
 
 [a4l]
-Name=Set A4 Papersize Landscape
+Name=Paper Size A4 Landscape
 Text=#(set-paper-size "a4" 'landscape)
 
 [a5]
-Name=Set A5 Papersize
+Name=Paper Size A5
 Text=#(set-paper-size "a5")
+
+[let]
+Name=Paper Size Letter
+Text=#(set-paper-size "letter")
 
 [oo]
 Name=Once Override
@@ -28,7 +36,7 @@ Text=\\stemDown\s
 
 [rel]
 Name=Relative Music
-Text=\\relative c(|) {\n  \n}\n
+Text=\\relative c'(|) {\n  \n}\n
 
 [18]
 Name=Set Global Staffsize
@@ -45,4 +53,12 @@ Text=\\alternative {\n  { (|) }\n  {  }\n}\n
 [he]
 Name=Header
 Text=\\header {\n  (|)\n}\n
+
+[lyr]
+Name=Lyric Stanza
+Text=\\lyricmode {\n  \\set stanza = "(|)."\n  \n}\n
+
+[song]
+Name=Melody with Lyrics
+Text=\\relative c'(|) {\n  \n}\n\\addlyrics {\n  \n}\n
 

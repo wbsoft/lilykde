@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-02-10 15:48+0100\n"
+"POT-Creation-Date: 2009-02-10 18:09+0100\n"
 "PO-Revision-Date: 2008-04-11 16:36+0200\n"
 "Last-Translator: Valentin Villenave <v.villenave@gmail.com>\n"
 "Language-Team: France <kde-i18n-fr@kde.org>\n"
@@ -551,25 +551,25 @@ msgstr ""
 msgid "Cut and Assign"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:133
+#: ../python/frescobaldi_app/expand.py:135
 msgid "Expansion Manager"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:144
+#: ../python/frescobaldi_app/expand.py:146
 msgid "Search..."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:153
+#: ../python/frescobaldi_app/expand.py:155
 #, fuzzy
 msgid "Shortcut"
 msgstr "Court"
 
-#: ../python/frescobaldi_app/expand.py:153
+#: ../python/frescobaldi_app/expand.py:155
 #: ../python/frescobaldi_app/rumor.py:503
 msgid "Description"
 msgstr "Description"
 
-#: ../python/frescobaldi_app/expand.py:168
+#: ../python/frescobaldi_app/expand.py:170
 msgid ""
 "This is the list of defined expansions.\n"
 "\n"
@@ -577,35 +577,40 @@ msgid ""
 "or its description to change it. You can also press F2 to edit the current "
 "shortcut.\n"
 "\n"
-"Use the buttons below to add or remove expansions."
+"Use the buttons below to add or remove expansions.\n"
+"\n"
+"There are two ways to use the expansion: either type the shortcut in the "
+"text and then call the Expand function, or just call the Expand function "
+"(default shortcut: Ctrl+.), choose the expansion from the list and press "
+"Enter or click Ok."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:182
+#: ../python/frescobaldi_app/expand.py:189
 msgid ""
 "This is the text associated with the selected shortcut. Some characters have "
 "special meaning:"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:184
+#: ../python/frescobaldi_app/expand.py:191
 msgid "Place the cursor on this spot."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:239
+#: ../python/frescobaldi_app/expand.py:246
 msgid "New Item"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:278
+#: ../python/frescobaldi_app/expand.py:285
 msgid "Please don't leave the description empty."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:285
+#: ../python/frescobaldi_app/expand.py:292
 msgid ""
 "Another expansion already uses this name.\n"
 "\n"
 "Please use a different name."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:291
+#: ../python/frescobaldi_app/expand.py:298
 msgid ""
 "Please only use letters, numbers and the underscore character in the "
 "expansion name."
