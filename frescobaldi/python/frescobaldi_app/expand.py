@@ -168,6 +168,7 @@ class ExpansionDialog(KDialog):
         self.setDefaultButton(KDialog.Ok)
         
         layout = QVBoxLayout(self.mainWidget())
+        layout.setContentsMargins(0, 0, 0, 0)
         
         search = KTreeWidgetSearchLine()
         search.setClickMessage(i18n("Search..."))
@@ -384,7 +385,7 @@ class ExpandHighlighter(LilyPondHighlighter):
     def highlightBlock(self, text):
         matches = []
         def repl(m):
-            matches.append((m.start(), m.end() - m.start()))
+            matches.append((m.start(), len(m.group())))
             return ' ' * len(m.group())
         text = re.compile(r"\(\|\)|@").sub(repl, unicode(text))
         super(ExpandHighlighter, self).highlightBlock(text)
