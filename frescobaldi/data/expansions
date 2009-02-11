@@ -206,3 +206,14 @@ Text=\\once \\override Staff.TimeSignature #'style = #'()\n\\once \\override Sta
 Name=Tempo text mark
 Name[nl]=Tempo tekstaanduiding
 Text=tempoMark = {\n  \\once \\override Score.RehearsalMark #'self-alignment-X = #LEFT\n  \\once \\override Score.RehearsalMark #'break-align-symbols = #'(time-signature key-signature)\n  \\once \\override Staff.TimeSignature #'break-align-anchor-alignment = #LEFT\n  \\mark \\markup \\bold {\n    Allegro(|)\n    \\small \\general-align #Y #DOWN \\note #"4" #1 = 100\n  }\n}\n
+
+[2]
+Name=Two voices
+Name[nl]=Twee stemmen
+Text=<< { (|) } \\\\ {  } >>
+
+[l]
+Name=New Lyrics
+Name[nl]=Nieuwe liedtekst (Lyrics)
+Text=\\new Lyrics \\lyricsto = "(|)" { }\n
+
