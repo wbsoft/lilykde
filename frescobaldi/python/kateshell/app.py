@@ -556,6 +556,21 @@ class Document(DBusItem):
                 lineNumber = self.view.cursorPosition().line()
             return unicode(self.doc.line(lineNumber))
     
+    def textToCursor(self, line=None, column=None):
+        """
+        Returns the text from the start of the document to the given
+        cursor position.
+        If line and column are None, the current cursor position is used.
+        If column is None, line is expected to be a KTextEditor.Cursor object.
+        """
+        if self.view:
+            if line is None:
+                line = self.view.cursorPosition()
+            if column is None:
+                column = line.column()
+                line = line.line()
+            return unicode(self.doc.text(KTextEditor.Range(0, 0, line, column)))
+
     def selectionText(self):
         """
         Returns the selected text or None.

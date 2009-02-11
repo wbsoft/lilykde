@@ -29,7 +29,7 @@ from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly.rx, ly.pitch
+import ly.pitch
 
 from frescobaldi_app.widgets import promptText
 from frescobaldi_app.mainapp import lazy
@@ -110,15 +110,9 @@ class ExpandManager(object):
         newcursor = False
         
         # translate pitches (marked by @)
-        # remove comments in text from start to cursor, to find the current
-        # language
-        doctext = ly.rx.all_comments.sub('', unicode(doc.doc.text(
-            KTextEditor.Range(0, 0, cursor.line(), cursor.column()))))
-        m = re.compile(r'.*\\include\s*"('
-                "english|deutsch|norsk|svenska|suomi|" # nederlands not needed
-                "italiano|catalan|espanol|portugues|vlaams"
-                r')\.ly"', re.DOTALL).match(doctext)
-        writer = ly.pitch.pitchWriter[m and m.group(1) or "nederlands"]
+        # find the current language
+        lang = doc.manipulator().pitchNameLanguage(cursor)
+        writer = ly.pitch.pitchWriter[lang or "nederlands"]
         reader = ly.pitch.pitchReader["nederlands"]
         
         def repl(matchObj):
