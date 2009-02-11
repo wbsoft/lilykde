@@ -36,7 +36,7 @@ Text=\\stemDown\s
 
 [rel]
 Name=Relative Music
-Text=\\relative c'(|) {\n  \n}\n
+Text=\\relative @c'(|) {\n  \n}\n
 
 [18]
 Name=Set Global Staffsize
@@ -51,8 +51,12 @@ Name=Repeat Alternative
 Text=\\alternative {\n  { (|) }\n  {  }\n}\n
 
 [he]
-Name=Header
+Name=Header Section
 Text=\\header {\n  (|)\n}\n
+
+[nt]
+Name=Header: No Tagline
+Text=tagline = ##f
 
 [lyr]
 Name=Lyric Stanza
@@ -60,5 +64,85 @@ Text=\\lyricmode {\n  \\set stanza = "(|)."\n  \n}\n
 
 [song]
 Name=Melody with Lyrics
-Text=\\relative c'(|) {\n  \n}\n\\addlyrics {\n  \n}\n
+Text=\\relative @c'(|) {\n  \n}\n\\addlyrics {\n  \n}\n
+
+[la]
+Name=Layout Section
+Text=\\layout {\n  (|)\n}\n
+
+[nb]
+Name=Layout: No Barnumbers
+Text=\\context {\n  \\Score\n  \\remove "Bar_number_engraver"\n}\n
+
+[c]
+Name=New ChoirStaff
+Text=\\new ChoirStaff (|)<<\n  \n>>\n
+
+[p]
+Name=New PianoStaff
+Text=\\new PianoStaff (|)<<\n  \\new Staff = "rh" {  }\n  \\new Staff = "lh" { \\clef bass }\n>>\n
+
+[s]
+Name=New Staff
+Text=\\new Staff (|){ }\n
+
+[w]
+Name=With (after \\new Staff, etc.)
+Text=\\with {\n  (|)\n}\s
+
+[C]
+Name=Key C major
+Text=\\key @c \\major\n
+
+[D]
+Name=Key D major
+Text=\\key @d \\major\n
+
+[E]
+Name=Key E major
+Text=\\key @e \\major\n
+
+[F]
+Name=Key F major
+Text=\\key @f \\major\n
+
+[G]
+Name=Key G major
+Text=\\key @g \\major\n
+
+[A]
+Name=Key A major
+Text=\\key @a \\major\n
+
+[Cm]
+Name=Key C minor
+Text=\\key @c \\minor\n
+
+[Dm]
+Name=Key D minor
+Text=\\key @d \\minor\n
+
+[Em]
+Name=Key E minor
+Text=\\key @e \\minor\n
+
+[Fm]
+Name=Key F minor
+Text=\\key @f \\minor\n
+
+[Gm]
+Name=Key G minor
+Text=\\key @g \\minor\n
+
+[Am]
+Name=Key A minor
+Text=\\key @a \\minor\n
+
+[22]
+Name=Modern 2/2 Time Signature
+Text=\\override Staff.TimeSignature #'style = #'()\n\\time 2/2\n
+
+[44]
+Name=Modern 4/4 Time Signature
+Text=\\override Staff.TimeSignature #'style = #'()\n\\time 4/4\n
 

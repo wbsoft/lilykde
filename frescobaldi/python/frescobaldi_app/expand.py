@@ -29,6 +29,8 @@ from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 from PyKDE4.ktexteditor import KTextEditor
 
+import ly.rx, ly.pitch
+
 from frescobaldi_app.widgets import promptText
 from frescobaldi_app.mainapp import lazy
 
@@ -107,6 +109,28 @@ class ExpandManager(object):
         cursor = doc.view.cursorPosition()
         newcursor = False
         
+        # translate pitches (marked by @)
+        # remove comments in text from start to cursor, to find the current
+        # language
+        doctext = ly.rx.all_comments.sub('', unicode(doc.doc.text(
+            KTextEditor.Range(0, 0, cursor.line(), cursor.column()))))
+        m = re.compile(r'.*\\include\s*"('
+                "english|deutsch|norsk|svenska|suomi|" # nederlands not needed
+                "italiano|catalan|espanol|portugues|vlaams"
+                r')\.ly"', re.DOTALL).match(doctext)
+        writer = ly.pitch.pitchWriter[m and m.group(1) or "nederlands"]
+        reader = ly.pitch.pitchReader["nederlands"]
+        
+        def repl(matchObj):
+            pitch = matchObj.group(1)
+            result = reader(pitch)
+            if result:
+                note, alter = result
+                return writer(note, alter)
+            return matchObj.group()
+            
+        text = re.sub(r"@([a-z]+)(?!\.)", repl, text)
+            
         # re-indent the text:
         indent = re.match(r'\s*', doc.line()[:cursor.column()]).group()
         text = text.replace('\n' , '\n' + indent)
@@ -183,13 +207,15 @@ class ExpansionDialog(KDialog):
             "td.short { font-family: monospace; font-weight: bold; }"
             "</style></head><body>"
             "<p>%s</p><table border=0 width=300 cellspacing=2><tbody>"
-            "<tr><td class=short>(|)</td><td>%s</td></tr>"
+            "<tr><td class=short align=center>(|)</td><td>%s</td></tr>"
+            "<tr><td class=short align=center>@</td><td>%s</td></tr>"
             "</tbody></table></body></html>"
             % (i18n(
                 "This is the text associated with the selected shortcut. "
                 "Some characters have special meaning:"),
-            i18n("Place the cursor on this spot.")),
-            )
+            i18n("Place the cursor on this spot."),
+            i18n("Translate the following pitch."),
+            ))
         
         self.searchLine = search
         self.treeWidget = tree

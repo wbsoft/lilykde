@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.0\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-02-10 18:33+0100\n"
+"POT-Creation-Date: 2009-02-11 08:10+0100\n"
 "PO-Revision-Date: 2008-11-19 22:36+0100\n"
 "Last-Translator: Henrik Evers <henrik.evers@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -556,25 +556,25 @@ msgstr ""
 msgid "Cut and Assign"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:135
+#: ../python/frescobaldi_app/expand.py:159
 msgid "Expansion Manager"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:146
+#: ../python/frescobaldi_app/expand.py:170
 msgid "Search..."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:155
+#: ../python/frescobaldi_app/expand.py:179
 #, fuzzy
 msgid "Shortcut"
 msgstr "Kurz"
 
-#: ../python/frescobaldi_app/expand.py:155
+#: ../python/frescobaldi_app/expand.py:179
 #: ../python/frescobaldi_app/rumor.py:503
 msgid "Description"
 msgstr "Beschreibung"
 
-#: ../python/frescobaldi_app/expand.py:170
+#: ../python/frescobaldi_app/expand.py:194
 msgid ""
 "This is the list of defined expansions.\n"
 "\n"
@@ -590,32 +590,36 @@ msgid ""
 "Enter or click Ok."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:189
+#: ../python/frescobaldi_app/expand.py:214
 msgid ""
 "This is the text associated with the selected shortcut. Some characters have "
 "special meaning:"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:191
+#: ../python/frescobaldi_app/expand.py:216
 msgid "Place the cursor on this spot."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:246
+#: ../python/frescobaldi_app/expand.py:217
+msgid "Translate the following pitch."
+msgstr ""
+
+#: ../python/frescobaldi_app/expand.py:272
 msgid "New Item"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:285
+#: ../python/frescobaldi_app/expand.py:311
 msgid "Please don't leave the description empty."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:292
+#: ../python/frescobaldi_app/expand.py:318
 msgid ""
 "Another expansion already uses this name.\n"
 "\n"
 "Please use a different name."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:298
+#: ../python/frescobaldi_app/expand.py:324
 msgid ""
 "Please only use letters, numbers and the underscore character in the "
 "expansion name."

@@ -129,7 +129,7 @@ class DocumentManipulator(object):
         Adds text to the beginning of the document, but below a \version
         command.
         """
-        self.doc.doc.insertLine(insert, text)
+        self.doc.doc.insertLine(self.topInsertPoint(), text)
 
     def topInsertPoint(self):
         """
