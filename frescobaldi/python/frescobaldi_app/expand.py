@@ -20,13 +20,15 @@
 """
 Expand Manager, manages expansions.
 """
-import re, sip
+import re
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import QObject, QString, QTimer, Qt, SIGNAL
+from PyQt4.QtGui import (
+    QFont, QSplitter, QTextEdit, QTreeWidget, QTreeWidgetItem, QVBoxLayout)
 
-from PyKDE4.kdecore import *
-from PyKDE4.kdeui import *
+from PyKDE4.kdecore import KConfig, KGlobal, i18n
+from PyKDE4.kdeui import (
+    KDialog, KMessageBox, KStandardGuiItem, KTreeWidgetSearchLine)
 from PyKDE4.ktexteditor import KTextEditor
 
 import ly.parse, ly.pitch

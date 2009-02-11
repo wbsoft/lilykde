@@ -64,7 +64,7 @@ class LilyPondHighlighter(QSyntaxHighlighter):
                 setFormat('command')
             elif isinstance(token, ly.tokenize.String):
                 setFormat('string')
-            elif token in ('{', '}', '<<', '>>', '#{', '#}', '#', '<', '>'):
+            elif token in ('{', '}', '<<', '>>', '#{', '#}', '<', '>'):
                 setFormat('delimiter')
             elif isinstance(token, ly.tokenize.Comment):
                 setFormat('comment')
