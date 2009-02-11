@@ -33,6 +33,7 @@ import ly.parse, ly.pitch
 
 from frescobaldi_app.widgets import promptText
 from frescobaldi_app.mainapp import lazy
+from frescobaldi_app.highlight import LilyPondHighlighter
 
 def config():
     return KGlobal.config().group("expand manager")
@@ -183,11 +184,12 @@ class ExpansionDialog(KDialog):
         splitter.addWidget(tree)
         
         edit = QTextEdit()
-        edit.setFontFamily("monospace")
         edit.setAcceptRichText(False)
+        edit.setStyleSheet("QTextEdit { font-family: monospace; }")
         edit.item = None
         edit.dirty = False
         splitter.addWidget(edit)
+        ExpandHighlighter(edit.document())
         
         # whats this etc.
         tree.setWhatsThis(i18n(
@@ -255,11 +257,10 @@ class ExpansionDialog(KDialog):
             item = self.currentItem()
             if item:
                 index = tree.indexOfTopLevelItem(item)
-                if index + 1 == tree.topLevelItemCount():
-                    index = 0
+                setIndex = index + 1 < tree.topLevelItemCount()
                 expansions.deleteGroup(item.groupName)
-                sip.delete(item)
-                if index:
+                tree.takeTopLevelItem(index)
+                if setIndex:
                     setCurrent(tree.topLevelItem(index))
                 
         @onSignal(self, "user2Clicked()")
@@ -299,7 +300,7 @@ class ExpansionDialog(KDialog):
             items = tree.selectedItems()
             if items:
                 self.saveEditIfNecessary()
-                edit.setText(expansions.group(
+                edit.setPlainText(expansions.group(
                     items[0].text(0)).readEntry("Text", ""))
                 edit.item = items[0]
                 edit.dirty = False
@@ -372,4 +373,18 @@ class ExpansionDialog(KDialog):
         self.saveDialogSize(config())
         KDialog.done(self, result)
 
-            
+
+class ExpandHighlighter(LilyPondHighlighter):
+    """
+    LilyPond Highlighter that also highlights some non-LilyPond input that
+    the expander uses.
+    """
+    def highlightBlock(self, text):
+        matches = []
+        def repl(m):
+            matches.append((m.start(), m.end() - m.start()))
+            return ' ' * len(m.group())
+        text = re.compile(r"\(\|\)|@").sub(repl, unicode(text))
+        super(ExpandHighlighter, self).highlightBlock(text)
+        for start, count in matches:
+            self.setFormat(start, count, self.formats['special'])

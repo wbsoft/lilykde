@@ -182,3 +182,27 @@ Name=Modern 4/4 Time Signature
 Name[nl]=Moderne 4/4 maat
 Text=\\override Staff.TimeSignature #'style = #'()\n\\time 4/4\n
 
+[tac_maj]
+Name=Tactus Major (2/half note)
+Name[nl]=Tactus Major (2/halve noot)
+Text=\\once \\override Staff.TimeSignature #'style = #'()\n\\once \\override Staff.TimeSignature #'stencil = #ly:text-interface::print\n\\once \\override Staff.TimeSignature #'text = \\markup {\n  \\override #'(baseline-skip . 0.5)\n  \\column { \\number 2 \\tiny \\note #"2" #-.6 }\n}\n
+
+[tac_min]
+Name=Tactus Minor (1/half note)
+Name[nl]=Tactus Minor (1/halve noot)
+Text=\\once \\override Staff.TimeSignature #'style = #'()\n\\once \\override Staff.TimeSignature #'stencil = #ly:text-interface::print\n\\once \\override Staff.TimeSignature #'text = \\markup {\n  \\override #'(baseline-skip . 0.5)\n  \\column { \\number 1 \\tiny \\note #"2" #-.6 }\n}\n
+
+[tac_prop]
+Name=Tactus Proportionatus (1/half dot)
+Name[nl]=Tactus Proportionatus (1/halve punt)
+Text=\\once \\override Staff.TimeSignature #'style = #'()\n\\once \\override Staff.TimeSignature #'stencil = #ly:text-interface::print\n\\once \\override Staff.TimeSignature #'text = \\markup {\n  \\override #'(baseline-skip . 0.5)\n  \\column { \\number 1 \\tiny \\note #"2." #-.6 }\n}\n
+
+[tac_prop3]
+Name=Tactus Proportionatus (3/quarter note)
+Name[nl]=Tactus Proportionatus (3/kwartnoot)
+Text=\\once \\override Staff.TimeSignature #'style = #'()\n\\once \\override Staff.TimeSignature #'stencil = #ly:text-interface::print\n\\once \\override Staff.TimeSignature #'text = \\markup {\n  \\override #'(baseline-skip . 0.5)\n  \\column { \\number 3 \\tiny \\note #"4" #-.6 }\n}\n
+
+[tm]
+Name=Tempo text mark
+Name[nl]=Tempo tekstaanduiding
+Text=tempoMark = {\n  \\once \\override Score.RehearsalMark #'self-alignment-X = #LEFT\n  \\once \\override Score.RehearsalMark #'break-align-symbols = #'(time-signature key-signature)\n  \\once \\override Staff.TimeSignature #'break-align-anchor-alignment = #LEFT\n  \\mark \\markup \\bold {\n    Allegro(|)\n    \\small \\general-align #Y #DOWN \\note #"4" #1 = 100\n  }\n}\n

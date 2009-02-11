@@ -97,7 +97,7 @@ class Comment(Parsed):
 class Space(Parsed):
     rx = r"\s+"
 
-class Markup(Item):
+class Markup(Command):
     rx = r"\\markup\b"
     def __init__(self, matchObj, state):
         state.enter(MarkupParser)
