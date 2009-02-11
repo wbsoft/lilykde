@@ -233,20 +233,3 @@ class DocumentManipulator(object):
             result = " " + result
         self.doc.view.insertText(result + " ")
     
-    def pitchNameLanguage(self, line=None, column=None):
-        """
-        Returns the pitch name language in effect at given cursor position,
-        or None if none defined.
-        
-        If line and col are None, the current cursor position is used.
-        If column is None, line is expected to be a KTextEditor.Cursor object.
-        """
-        # get document fragment, remove comments
-        text = ly.rx.all_comments.sub('', self.doc.textToCursor(line, column))
-        m = re.compile(r'.*\\include\s*"('
-                "nederlands|english|deutsch|norsk|svenska|suomi|"
-                "italiano|catalan|espanol|portugues|vlaams"
-                r')\.ly"', re.DOTALL).match(text)
-        if m:
-            return m.group(1)
-            

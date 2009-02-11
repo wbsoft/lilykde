@@ -50,6 +50,6 @@ def documentLanguage(text):
     Return the LilyPond pitch language name for the document, if set.
     """
     text = ly.rx.all_comments.sub('', text)
-    m = ly.rx.language.search(text)
+    m = ly.rx.language.match(text)
     if m:
         return m.group(1)

@@ -29,7 +29,7 @@ from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly.pitch
+import ly.parse, ly.pitch
 
 from frescobaldi_app.widgets import promptText
 from frescobaldi_app.mainapp import lazy
@@ -95,7 +95,13 @@ class ExpandManager(object):
         """
         return [name for name in self.expansions.groupList()
                      if self.expansions.group(name).hasKey("Name")]
-                     
+
+    def description(self, name):
+        """
+        Return the description for the expansion name.
+        """
+        return unicode(self.expansions.group(name).readEntry("Name", ""))
+    
     def doExpand(self, expansion):
         """
         Perform the given expansion, must exist.
@@ -111,7 +117,7 @@ class ExpandManager(object):
         
         # translate pitches (marked by @)
         # find the current language
-        lang = doc.manipulator().pitchNameLanguage(cursor)
+        lang = ly.parse.documentLanguage(doc.textToCursor(cursor))
         writer = ly.pitch.pitchWriter[lang or "nederlands"]
         reader = ly.pitch.pitchReader["nederlands"]
         
@@ -269,6 +275,11 @@ class ExpansionDialog(KDialog):
             expansions.group(name).writeEntry("Name", description)
             search.clear() # otherwise strange things happen...
             item = makeItem(name, description)
+            if edit.item is None:
+                # the user might have typed/pasted text in the edit already,
+                # intending to add a new expansion.
+                edit.item = item
+                self.saveEditIfNecessary()
             setCurrent(item)
             tree.editItem(item, 0)
             edit.dirty = True # so that our (empty) text gets saved
@@ -299,7 +310,7 @@ class ExpansionDialog(KDialog):
                 group = expansions.group(item.text(0))
                 if item.text(1):
                     group.writeEntry("Name", item.text(1))
-                    setCurrent(item)
+                    tree.scrollToItem(item)
                 else:
                     KMessageBox.error(self.manager.mainwin, i18n(
                         "Please don't leave the description empty."))
@@ -322,10 +333,11 @@ class ExpansionDialog(KDialog):
                 else:
                     group = expansions.group(item.text(0))
                     group.writeEntry("Name", item.text(1))
-                    group.writeEntry("Text", edit.toPlainText())
+                    group.writeEntry("Text",
+                        expansions.group(item.groupName).readEntry("Text", ""))
                     expansions.deleteGroup(item.groupName)
                     item.groupName = item.text(0)
-                    setCurrent(item)
+                    tree.scrollToItem(item)
                 
     def items(self):
         """ Return an iterator over all the items in our dialog. """

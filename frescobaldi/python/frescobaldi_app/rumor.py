@@ -33,7 +33,7 @@ from PyKDE4.kdecore import KGlobal, KProcess, KShell, i18n
 from PyKDE4.kdeui import KDialog, KIcon
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly.key
+import ly.key, ly.parse
 from frescobaldi_app.widgets import ProcessButtonBase, TempoControl
 
 class RumorPanel(QWidget):
@@ -184,38 +184,28 @@ class RumorPanel(QWidget):
         """
         conf = config("rumor")
         args = []
+        doc = self.mainwin.currentDocument()
+        cursor = doc.view.cursorPosition()
         # indent of current line
-        self.indent = re.match(r'\s*',
-            self.mainwin.currentLineText()[:self.mainwin.currentColumn()]
-            ).group()
+        self.indent = re.match(r'\s*', doc.line()[:cursor.column()]).group()
         # text from start to cursor
-        v = self.mainwin.view()
-        d, cursor = v.document(), v.cursorPosition()
-        text = unicode(
-            d.text(KTextEditor.Range(0, 0, cursor.line(), cursor.column())))
+        text = doc.textToCursor(cursor)
         
         # Language
         lang = unicode(conf.readEntry("language", "auto"))
         if lang not in (
                 'ne', 'en', 'en-short', 'de', 'no', 'sv', 'it', 'ca', 'es'):
             # determine lily language from document
-            m = re.compile(r'.*\\include\s*"('
-                "nederlands|english|deutsch|norsk|svenska|suomi|"
-                "italiano|catalan|espanol|portugues|vlaams"
-                r')\.ly"', re.DOTALL).match(text)
-            if m:
-                lang = m.group(1)[:2]
-                if lang == "po": lang = "es"
-                elif lang == "su": lang = "de"
-                elif lang == "en" and not re.search(
-                        r'\b[a-g](flat|sharp)\b', text):
-                    lang = "en-short"
-                elif lang == "vl":
-                    # "vlaams" is not supported by Rumor
-                    # TODO: rewrite the pitches output by Rumor :-)
-                    lang == "it"
-            else:
-                lang = "ne" # the default
+            lang = (ly.parse.documentLanguage(text) or "ne")[:2]
+            if lang == "po": lang = "es"
+            elif lang == "su": lang = "de"
+            elif lang == "en" and not re.search(
+                    r'\b[a-g](flat|sharp)\b', text):
+                lang = "en-short"
+            elif lang == "vl":
+                # "vlaams" is not supported by Rumor
+                # TODO: rewrite the pitches output by Rumor :-)
+                lang == "it"
         args.append("--lang=%s" % lang)
 
         # Step recording?
