@@ -1,25 +1,31 @@
 [pa]
 Name=Paper Section
+Name[nl]=Papier sectie (\\paper)
 Text=\\paper {\n  (|)\n}\n
 
 [i0]
 Name=Paper: indent = 0
+Name[nl]=Papier: indent = 0
 Text=indent = #0
 
 [a4]
 Name=Paper Size A4
+Name[nl]=Papierformaat A4
 Text=#(set-paper-size "a4")
 
 [a4l]
 Name=Paper Size A4 Landscape
+Name[nl]=Papierformaat A4 oblong
 Text=#(set-paper-size "a4" 'landscape)
 
 [a5]
 Name=Paper Size A5
+Name[nl]=Papierformaat A5
 Text=#(set-paper-size "a5")
 
 [let]
 Name=Paper Size Letter
+Name[nl]=Papierformaat Letter
 Text=#(set-paper-size "letter")
 
 [oo]
@@ -28,121 +34,151 @@ Text=\\once \\override\s
 
 [su]
 Name=Stem Up
+Name[nl]=Stokken omhoog
 Text=\\stemUp\s
 
 [sd]
 Name=Stem Down
+Name[nl]=Stokken omlaag
 Text=\\stemDown\s
 
 [rel]
 Name=Relative Music
+Name[nl]=Relatieve muziek
 Text=\\relative @c'(|) {\n  \n}\n
 
 [18]
-Name=Set Global Staffsize
+Name=Set Global Staffsize 18
+Name[nl]=Globale balk-grootte 18
 Text=#(set-global-staff-size 18)
 
 [rep]
 Name=Repeat
+Name[nl]=Herhaling (\\repeat)
 Text=\\repeat volta 2(|) {\n  \n}\n
 
 [alt]
 Name=Repeat Alternative
+Name[nl]=Herhaling alternatief
 Text=\\alternative {\n  { (|) }\n  {  }\n}\n
 
 [he]
 Name=Header Section
+Name[nl]=Kopregels sectie (\\header)
 Text=\\header {\n  (|)\n}\n
 
 [nt]
 Name=Header: No Tagline
+Name[nl]=Kopregels: geen tagline
 Text=tagline = ##f
 
 [lyr]
 Name=Lyric Stanza
+Name[nl]=Couplet liedtekst
 Text=\\lyricmode {\n  \\set stanza = "(|)."\n  \n}\n
 
 [song]
 Name=Melody with Lyrics
+Name[nl]=Melodie met liedtekst
 Text=\\relative @c'(|) {\n  \n}\n\\addlyrics {\n  \n}\n
 
 [la]
 Name=Layout Section
+Name[nl]=Layout sectie
 Text=\\layout {\n  (|)\n}\n
 
 [nb]
 Name=Layout: No Barnumbers
+Name[nl]=Layout: geen maatnummers
 Text=\\context {\n  \\Score\n  \\remove "Bar_number_engraver"\n}\n
 
 [c]
 Name=New ChoirStaff
+Name[nl]=Nieuwe koorbalk (ChoirStaff)
 Text=\\new ChoirStaff (|)<<\n  \n>>\n
 
 [p]
 Name=New PianoStaff
+Name[nl]=Nieuwe pianobalk (PianoStaff)
 Text=\\new PianoStaff (|)<<\n  \\new Staff = "rh" {  }\n  \\new Staff = "lh" { \\clef bass }\n>>\n
 
 [s]
 Name=New Staff
+Name[nl]=Nieuwe balk (Staff)
 Text=\\new Staff (|){ }\n
 
 [w]
 Name=With (after \\new Staff, etc.)
+Name[nl]=With (na \\new Staff, etc.)
 Text=\\with {\n  (|)\n}\s
 
 [C]
 Name=Key C major
+Name[nl]=C-groot
 Text=\\key @c \\major\n
 
 [D]
 Name=Key D major
+Name[nl]=D-groot
 Text=\\key @d \\major\n
 
 [E]
 Name=Key E major
+Name[nl]=E-groot
 Text=\\key @e \\major\n
 
 [F]
 Name=Key F major
+Name[nl]=F-groot
 Text=\\key @f \\major\n
 
 [G]
 Name=Key G major
+Name[nl]=G-groot
 Text=\\key @g \\major\n
 
 [A]
 Name=Key A major
+Name[nl]=A-groot
 Text=\\key @a \\major\n
 
 [Cm]
 Name=Key C minor
+Name[nl]=C-klein
 Text=\\key @c \\minor\n
 
 [Dm]
 Name=Key D minor
+Name[nl]=D-klein
 Text=\\key @d \\minor\n
 
 [Em]
 Name=Key E minor
+Name[nl]=E-klein
 Text=\\key @e \\minor\n
 
 [Fm]
 Name=Key F minor
+Name[nl]=F-klein
 Text=\\key @f \\minor\n
 
 [Gm]
 Name=Key G minor
+Name[nl]=G-klein
 Text=\\key @g \\minor\n
 
 [Am]
 Name=Key A minor
+Name[nl]=A-klein
 Text=\\key @a \\minor\n
 
 [22]
 Name=Modern 2/2 Time Signature
+Name[nl]=Moderne 2/2 maat
 Text=\\override Staff.TimeSignature #'style = #'()\n\\time 2/2\n
 
 [44]
 Name=Modern 4/4 Time Signature
+Name[nl]=Moderne 4/4 maat
 Text=\\override Staff.TimeSignature #'style = #'()\n\\time 4/4\n
 
