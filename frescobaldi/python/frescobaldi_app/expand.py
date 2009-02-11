@@ -129,7 +129,7 @@ class ExpandManager(object):
                 return writer(note, alter)
             return matchObj.group()
             
-        text = re.sub(r"\b@([a-z]+)(?!\.)", repl, text)
+        text = re.sub(r"@([a-z]+)(?!\.)", repl, text)
             
         # re-indent the text:
         indent = re.match(r'\s*', doc.line()[:cursor.column()]).group()
