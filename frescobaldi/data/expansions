@@ -28,6 +28,10 @@ Name=Paper Size Letter
 Name[nl]=Papierformaat Letter
 Text=#(set-paper-size "letter")
 
+[o]
+Name=Override
+Text=\\override\s
+
 [oo]
 Name=Once Override
 Text=\\once \\override\s
@@ -131,6 +135,19 @@ Text=\\new Staff (|){ }\n
 Name=With (after \\new Staff, etc.)
 Name[nl]=With (na \\new Staff, etc.)
 Text=\\with {\n  (|)\n}\s
+
+[in]
+Name=With: instrumentName
+Text=instrumentName = #"(|)"
+
+[sin]
+Name=With: shortInstrumentName
+Text=shortInstrumentName = #"(|)"
+
+[ss]
+Name=With: Smaller Staffsize
+Name[nl]=With: notenbalk verkleinen
+Text=fontSize = #-1\n\\override StaffSymbol #'staff-space = #(magstep -1)
 
 [C]
 Name=Key C major
