@@ -82,6 +82,11 @@ Name=Melody with Lyrics
 Name[nl]=Melodie met liedtekst
 Text=\\relative @c'(|) {\n  \n}\n\\addlyrics {\n  \n}\n
 
+[sc]
+Name=Score section
+Name[nl]=Score sectie
+Text=\\score {\n  (|)\n}\n
+
 [la]
 Name=Layout Section
 Name[nl]=Layout sectie
@@ -90,7 +95,22 @@ Text=\\layout {\n  (|)\n}\n
 [nb]
 Name=Layout: No Barnumbers
 Name[nl]=Layout: geen maatnummers
-Text=\\context {\n  \\Score\n  \\remove "Bar_number_engraver"\n}\n
+Text=\\context {\n  \\Score\n  \\remove "Bar_number_engraver"\n}
+
+[mi]
+Name=Midi section
+Name[nl]=Midi sectie
+Text=\\midi {\n  (|)\n}\n
+
+[nd]
+Name=Midi: No Dynamics
+Name[nl]=Midi: geen dynamiek
+Text=\\context {\n  \\Voice\n  \\remove "Dynamic_performer"\n}
+
+[mt]
+Name=Midi: Set Tempo
+Name[nl]=Midi: tempo instellen
+Text=\\context {\n  \\Score\n  tempoWholesPerMinute = #(ly:make-moment (|)100 4)\n}
 
 [c]
 Name=New ChoirStaff
