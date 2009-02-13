@@ -196,12 +196,12 @@ class TablaturePart(SingleVoicePart):
         else:       # both TabStaff and normal staff
             p = StaffGroup()
             s = Sim(p)
+            m = Seqr(Staff(parent=s))
             s.append(tab)
-            s = Seqr(Staff(parent=s))
-            builder.setMidiInstrument(s.parent(), self.midiInstrument)
+            builder.setMidiInstrument(m.parent(), self.midiInstrument)
             if self.clef:
-                Clef(self.clef, s)
-            Identifier(ref, s)
+                Clef(self.clef, m)
+            Identifier(ref, m)
         builder.setInstrumentNames(p, self.instrumentNames, self.num)
         self.nodes.append(p)
 
