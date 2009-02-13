@@ -229,7 +229,7 @@ class DocumentManipulator(object):
         
         # write it in the document, add a space if necessary
         col = curPos.column()
-        if col > 1 and self.doc.line()[col-1].strip():
+        if col > 0 and self.doc.line()[col-1].strip():
             result = " " + result
         self.doc.view.insertText(result + " ")
     
