@@ -138,6 +138,12 @@ class ExpandManager(object):
         indent = re.match(r'\s*', doc.line()[:cursor.column()]).group()
         text = text.replace('\n' , '\n' + indent)
         
+        # if the expansion starts with a backslash and the character just 
+        # before the cursor is also a backslash, don't repeat it.
+        if (text.startswith("\\") and cursor.column() > 0
+            and doc.line()[cursor.column()-1] == "\\"):
+            text = text[1:]
+        
         # "(|)" is the place to position the cursor after inserting
         if "(|)" in text:
             col = cursor.column()
