@@ -20,7 +20,7 @@
 """ Functions to run convert-ly and insert the LilyPond version """
 
 from subprocess import Popen, PIPE
-import ly.version
+import ly.tokenize, ly.version
 
 from PyKDE4.kdecore import i18n, KGlobal
 from PyKDE4.kdeui import KMessageBox
@@ -31,18 +31,18 @@ def insertVersion(mainwin):
     Insert the current LilyPond version into the current document
     if it does not already have a version command.
     """
-    doc = mainwin.view().document()
-    search = doc.searchInterface()
-    res = search.searchText(doc.documentRange(), '\\version')
-    if res[0].isValid():
-        mainwin.view().setCursorPosition(res[0].start())
-        KMessageBox.sorry(mainwin,
-            i18n("Your document has already a LilyPond version statement."),
-            i18n("Version already set"))
+    doc = mainwin.currentDocument()
+    for token in ly.tokenize.tokenizeLineColumn(doc.text()):
+        if token == "\\version":
+            doc.view.setCursorPosition(KTextEditor.Cursor(token.line, token.column))
+            KMessageBox.sorry(mainwin,
+                i18n("Your document has already a LilyPond version statement."),
+                i18n("Version already set"))
+            return
     else:
         version = ly.version.LilyPondVersion().versionString
         if version:
-            mainwin.view().document().insertLine(0, '\\version "%s"' % version)
+            doc.doc.insertLine(0, '\\version "%s"' % version)
         else:
             KMessageBox.sorry(mainwin,
                 i18n("Can't determine the version of LilyPond. "
@@ -53,8 +53,8 @@ def convertLy(mainwin):
     """
     Run the current document through convert-ly.
     """
-    doc = mainwin.view().document()
-    text = unicode(doc.text())
+    doc = mainwin.currentDocument()
+    text = doc.text()
     docVersion = ly.version.getVersion(text) #or ly.guess.version(text)
     lilyVersion = ly.version.LilyPondVersion().versionTuple
     
@@ -79,7 +79,7 @@ def convertLy(mainwin):
                             stdin=PIPE, stdout=PIPE, stderr=PIPE
                             ).communicate(text.encode('utf8'))
             if out:
-                doc.setText(u"%s\n\n%%{\n%s\n%%}\n" %
+                doc.doc.setText(u"%s\n\n%%{\n%s\n%%}\n" %
                     (out.decode('utf8'), err.decode('utf8')))
                 KMessageBox.information(mainwin, i18n(
                  "The document has been processed with convert-ly. You'll find "
