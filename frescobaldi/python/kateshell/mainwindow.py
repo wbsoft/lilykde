@@ -257,11 +257,15 @@ class MainWindow(KParts.MainWindow):
         """
         def decorator(func):
             def selfunc():
-                text = self.selectionText(warn)
-                if text:
-                    result = func(text)
-                    if result is not None:
-                        self.replaceSelectionWith(result, keepSelection)
+                doc = self.currentDocument()
+                if doc:
+                    text = doc.selectionText()
+                    if text:
+                        result = func(text)
+                        if result is not None:
+                            doc.replaceSelectionWith(result, keepSelection)
+                    elif warn:
+                        KMessageBox.sorry(self, i18n("Please select some text first."))
             self.selAct(func.func_name, texttype, selfunc, icon, tooltip, whatsthis, key)
             return func
         return decorator
@@ -294,8 +298,7 @@ class MainWindow(KParts.MainWindow):
             return self._currentDoc.view
     
     def currentDocument(self):
-        if self._currentDoc:
-            return self._currentDoc
+        return self._currentDoc
             
     def updateCaption(self, doc):
         name = self.showPath.isChecked() and doc.prettyUrl() or doc.documentName()
@@ -400,43 +403,6 @@ class MainWindow(KParts.MainWindow):
         self.app.editor.writeConfig()
         # write them back
         config().sync()
-
-    def currentLine(self):
-        """
-        Convenience method to get the current line number of the cursor.
-        """
-        return self.view().cursorPosition().line()
-        
-    def currentColumn(self):
-        """
-        Convenience method to get the current column number of the cursor.
-        """
-        return self.view().cursorPosition().column()
-
-    def currentLineText(self):
-        """
-        Returns the text of the current line.
-        """
-        return self.currentDocument().line()
-
-    def selectionText(self, warn=True):
-        """
-        Convenience method for accessing the current document.
-        Returns selected text or None if no selection.
-        In that case the user is warned to select some text.
-        """
-        text = self.currentDocument().selectionText()
-        if warn and not text:
-            KMessageBox.sorry(self, i18n("Please select some text first."))
-        return text
-
-    def replaceSelectionWith(self, text, keepSelection=True):
-        """
-        Convenience method for accessing this method on the current document.
-        Replaces the selection (if any) with text. If keepSelection
-        is true, select the newly inserted text again.
-        """
-        self.currentDocument().replaceSelectionWith(text, keepSelection)
 
 
 class TabBar(KMultiTabBar):

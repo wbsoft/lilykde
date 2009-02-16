@@ -491,7 +491,7 @@ class ApplyRhythmDialog(KDialog):
     def doApply(self):
         import ly.duration
         self.lineedit.completionObject().addItem(self.lineedit.text())
-        self.parent().replaceSelectionWith(ly.duration.applyRhythm(
+        self.parent().currentDocument().replaceSelectionWith(ly.duration.applyRhythm(
             self.text, unicode(self.lineedit.text())))
 
     def edit(self, text):
