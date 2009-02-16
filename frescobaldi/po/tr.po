@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-02-12 07:35+0100\n"
+"POT-Creation-Date: 2009-02-16 08:42+0100\n"
 "PO-Revision-Date: 2009-01-29 21:35+0200\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
@@ -377,51 +377,51 @@ msgstr "Kısalt"
 msgid "Show"
 msgstr "Göster"
 
-#: ../python/kateshell/mainwindow.py:305
-msgid "modified"
-msgstr "değiştirilmiş"
-
-#: ../python/kateshell/mainwindow.py:314
-msgid "Line: %1 Col: %2"
-msgstr "Satır: %1 Sütun: %2"
-
-#: ../python/kateshell/mainwindow.py:322
-msgid "BLOCK"
-msgstr "GENİŞLİK"
-
-#: ../python/kateshell/mainwindow.py:322
-msgid "Block selection mode"
-msgstr "Genişlik seçim kipi"
-
-#: ../python/kateshell/mainwindow.py:324
-msgid "LINE"
-msgstr "SATIR"
-
-#: ../python/kateshell/mainwindow.py:324
-msgid "Line selection mode"
-msgstr "Satır seçim kipi"
-
-#: ../python/kateshell/mainwindow.py:354
-msgid "All Files"
-msgstr "Tüm dosyalar"
-
-#: ../python/kateshell/mainwindow.py:355
-msgid "Open File"
-msgstr "Dosya Aç"
-
-#: ../python/kateshell/mainwindow.py:430
+#: ../python/kateshell/mainwindow.py:268
 msgid "Please select some text first."
 msgstr "Lütfen önce bir metin seçiniz."
 
-#: ../python/kateshell/mainwindow.py:743
+#: ../python/kateshell/mainwindow.py:308
+msgid "modified"
+msgstr "değiştirilmiş"
+
+#: ../python/kateshell/mainwindow.py:317
+msgid "Line: %1 Col: %2"
+msgstr "Satır: %1 Sütun: %2"
+
+#: ../python/kateshell/mainwindow.py:325
+msgid "BLOCK"
+msgstr "GENİŞLİK"
+
+#: ../python/kateshell/mainwindow.py:325
+msgid "Block selection mode"
+msgstr "Genişlik seçim kipi"
+
+#: ../python/kateshell/mainwindow.py:327
+msgid "LINE"
+msgstr "SATIR"
+
+#: ../python/kateshell/mainwindow.py:327
+msgid "Line selection mode"
+msgstr "Satır seçim kipi"
+
+#: ../python/kateshell/mainwindow.py:357
+msgid "All Files"
+msgstr "Tüm dosyalar"
+
+#: ../python/kateshell/mainwindow.py:358
+msgid "Open File"
+msgstr "Dosya Aç"
+
+#: ../python/kateshell/mainwindow.py:709
 msgid "Move To"
 msgstr "Buraya Taşı"
 
-#: ../python/kateshell/mainwindow.py:750
+#: ../python/kateshell/mainwindow.py:716
 msgid "Undock"
 msgstr "Uzat"
 
-#: ../python/kateshell/mainwindow.py:808
+#: ../python/kateshell/mainwindow.py:774
 msgid "Could not load %1"
 msgstr "Yüklenemedi %s"
 
@@ -545,25 +545,25 @@ msgstr ""
 msgid "Cut and Assign"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:162
+#: ../python/frescobaldi_app/expand.py:168
 msgid "Expansion Manager"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:174
+#: ../python/frescobaldi_app/expand.py:180
 msgid "Search..."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:183
+#: ../python/frescobaldi_app/expand.py:189
 #, fuzzy
 msgid "Shortcut"
 msgstr "Kısa"
 
-#: ../python/frescobaldi_app/expand.py:183
+#: ../python/frescobaldi_app/expand.py:189
 #: ../python/frescobaldi_app/rumor.py:493
 msgid "Description"
 msgstr "Tanım"
 
-#: ../python/frescobaldi_app/expand.py:199
+#: ../python/frescobaldi_app/expand.py:205
 msgid ""
 "This is the list of defined expansions.\n"
 "\n"
@@ -579,36 +579,36 @@ msgid ""
 "Enter or click Ok."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:219
+#: ../python/frescobaldi_app/expand.py:225
 msgid ""
 "This is the text associated with the selected shortcut. Some characters have "
 "special meaning:"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:221
+#: ../python/frescobaldi_app/expand.py:227
 msgid "Place the cursor on this spot."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:222
+#: ../python/frescobaldi_app/expand.py:228
 msgid "Translate the following pitch."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:276
+#: ../python/frescobaldi_app/expand.py:282
 msgid "New Item"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:320
+#: ../python/frescobaldi_app/expand.py:326
 msgid "Please don't leave the description empty."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:327
+#: ../python/frescobaldi_app/expand.py:333
 msgid ""
 "Another expansion already uses this name.\n"
 "\n"
 "Please use a different name."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:333
+#: ../python/frescobaldi_app/expand.py:339
 msgid ""
 "Please only use letters, numbers and the underscore character in the "
 "expansion name."
@@ -1309,11 +1309,11 @@ msgstr ""
 "sözlüklerini arama yolları. Eğer başlangıç eğri çizgisini çıkarırsanız, "
 "KDEDIRS ortam değişkenlerinin önekleri kendiliğinden eklenir."
 
-#: ../python/frescobaldi_app/version.py:40
+#: ../python/frescobaldi_app/version.py:39
 msgid "Your document has already a LilyPond version statement."
 msgstr "Belgenizde zaten Lilypond sürüm bildirimi var."
 
-#: ../python/frescobaldi_app/version.py:41
+#: ../python/frescobaldi_app/version.py:40
 msgid "Version already set"
 msgstr "Sürüm numarası ayarlanmış durumda"
 
