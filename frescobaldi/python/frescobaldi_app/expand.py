@@ -77,9 +77,8 @@ class ExpandManager(object):
             # delete entered expansion name
             begin = KTextEditor.Cursor(cursor)
             begin.setColumn(begin.column() - len(lastWord))
-            doc.doc.removeText(KTextEditor.Range(begin, cursor))
             # write the expansion
-            self.doExpand(lastWord)
+            self.doExpand(lastWord, remove=KTextEditor.Range(begin, cursor))
             return
         # open dialog and let the user choose
         self.expansionDialog().show()
@@ -105,9 +104,10 @@ class ExpandManager(object):
         """
         return unicode(self.expansions.group(name).readEntry("Name", ""))
     
-    def doExpand(self, expansion):
+    def doExpand(self, expansion, remove=None):
         """
         Perform the given expansion, must exist.
+        if remove is given, use doc.replaceText to replace that Range.
         """
         doc = self.mainwin.currentDocument()
         
@@ -115,7 +115,7 @@ class ExpandManager(object):
         text = unicode(group.readEntry("Text", ""))
         
         # where to insert the text:
-        cursor = doc.view.cursorPosition()
+        cursor = remove and remove.start() or doc.view.cursorPosition()
         newcursor = False
         
         # translate pitches (marked by @)
@@ -156,7 +156,10 @@ class ExpandManager(object):
                 col += len(t1)
             text = t1 + t2
             newcursor = KTextEditor.Cursor(line, col)
-        doc.doc.insertText(cursor, text)
+        if remove:
+            doc.doc.replaceText(remove, text)
+        else:
+            doc.doc.insertText(cursor, text)
         if newcursor:
             doc.view.setCursorPosition(newcursor)
     
