@@ -21,6 +21,8 @@
 LilyPond auto completion
 """
 
+import re
+
 from PyQt4.QtCore import QModelIndex, QVariant, Qt
 
 from PyKDE4.ktexteditor import KTextEditor
@@ -32,8 +34,7 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
         KTextEditor.CodeCompletionModel.__init__(self, parent)
         #self.setHasGroups(False)
         
-        #FIXME, temp
-        self.matches = ['aaaaaaaaaaaaaaa','abbbbbbbbbbbbbbbb','acccccccccccccccc']
+        self.matches = []
         
     def data(self, index, role):
         if index.column() != KTextEditor.CodeCompletionModel.Name:
@@ -63,7 +64,21 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
             return len(self.matches)
             
     def completionInvoked(self, view, word, invocationType):
-        pass
+        doc = view.document()
+        print "completionInvoked", view, doc.text(word), invocationType #DEBUG
+        line, col = word.start().line(), word.start().column()
+        textLine = unicode(doc.line(line))
+        textCur = textLine[:col]
+        print "text:",textCur#DEBUG
+        # determine what the user tries to type
+        if textCur.endswith("\\"):
+            self.matches = ['once', 'override', 'relative', 'repeat']
+        elif re.search(r"\\(override|revert)\s*$", textCur):
+            self.matches = ['Staff', 'Voice', 'PianoStaff', 'Lyrics']
+        elif re.search(r'\\(consists|remove)\s*"?$', textCur):
+            self.matches = ['Ambitus_engraver', 'Stem_engraver', 'Bar_line_engraver']
+        else:
+            self.matches = []
     
     def index(self, row, column, parent):
         if (row < 0 or row >= len(self.matches) or
