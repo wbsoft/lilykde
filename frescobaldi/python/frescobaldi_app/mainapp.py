@@ -110,8 +110,13 @@ class MainApp(kateshell.app.MainApp):
     @lazy
     def stateManager(self):
         return StateManager(self)
-        
-        
+    
+    @lazy
+    def completionModel(self):
+        import frescobaldi_app.completion
+        return frescobaldi_app.completion.CompletionModel(self.mainwin)
+
+
 class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """
     def documentIcon(self):
@@ -127,8 +132,14 @@ class Document(kateshell.app.Document):
             action = self.view.actionCollection().action(name)
             if action:
                 sip.delete(action)
+        # read state information (view settings etc.)
         if config().readEntry("save metainfo", QVariant(False)).toBool():
             self.app.stateManager().loadState(self)
+        # activate completion
+        iface = self.view.codeCompletionInterface()
+        if iface:
+            iface.registerCompletionModel(self.app.completionModel())
+            iface.setAutomaticInvocationEnabled()
         
     def aboutToClose(self):
         if config().readEntry("save metainfo", QVariant(False)).toBool():
