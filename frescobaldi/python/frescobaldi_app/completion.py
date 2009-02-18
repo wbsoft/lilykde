@@ -55,14 +55,26 @@ def findMatches(view, word, invocationType):
         return ly.words.midi_instruments
     if re.search(r'\\musicglyph\s*#"$', textCur):
         return musicglyph_names()
+    if re.search(r'\\key\s+[a-z]+\s*\\$', textCur):
+        return ly.words.modes
+    if re.search(r'\\(un)?set\b\s*$', textCur):
+        return ly.words.contexts + ly.words.contextproperties
+    if ly.words.set_context_re.search(textCur):
+        return ly.words.contextproperties
     if ly.words.context_re.search(textCur):
         return ly.words.grobs
     if textCur[-2:] == "#'":
         m = ly.words.grob_re.search(textCur[:-2])
         if m:
             return ly.words.schemeprops(m.group(1))
-    if re.search(r"\\(override|revert)\s*$", textCur):
+    if re.search(r"\\(override|revert)\s+$", textCur):
         return ly.words.contexts + ly.words.grobs
+    if re.search(r'\\repeat\s+"?$', textCur):
+        return ly.words.repeat_types
+    if re.search(r'\\clef\s*"$', textCur):
+        return ly.words.clefs
+    if re.search(r"\\clef\s+$", textCur):
+        return ly.words.clefs_plain
     
     # parse to get current context
     fragment = unicode(doc.text(KTextEditor.Range(
@@ -75,5 +87,16 @@ def findMatches(view, word, invocationType):
         if isinstance(state.parser(), ly.tokenize.MarkupParser):
             return ly.words.markupcommands
         else:
-            return ly.words.musiccommands
+            return ly.words.keywords + ly.words.musiccommands
 
+    if state.parser().token == "\\header":
+        return ly.words.headervars
+    if state.parser().token == "\\paper":    
+        return ly.words.papervars
+    if state.parser().token == "\\layout":
+        return ly.words.layoutvars
+    if state.parser().token in ("\\context", "\\with"):
+        return ly.words.contextproperties
+    
+        
+        

@@ -189,8 +189,14 @@ class Section(Command):
     rx = r'\\(with|layout|midi|paper|header)\b'
     def __init__(self, matchObj, state):
         state.enter(SectionParser, self)
-        
 
+class Context(Command):
+    """ Introduce a \context section within layout, midi. """
+    rx = r'\\context\b'
+    def __init__(self, matchObj, state):
+        state.enter(ContextParser, self)
+        
+        
 class State(object):
     """
     Manages state for the parsers.
@@ -303,8 +309,16 @@ class SectionParser(Parser):
     argcount = 1
     rx = make_re((
         OpenBracket, CloseBracket,
+        Context,
     ) + _lilybase)
 
+
+class ContextParser(Parser):
+    argcount = 1
+    rx = make_re((
+        OpenBracket, CloseBracket,
+    ) + _lilybase)
+    
 
 def tokenize(text, pos = 0, state = None):
     """
