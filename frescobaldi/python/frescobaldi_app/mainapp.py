@@ -753,13 +753,6 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
         KTextEditor.CodeCompletionModel.__init__(self, parent)
         self.matches = []
         
-    def index(self, row, column, parent):
-        if (row < 0 or row >= len(self.matches) or
-            column < 0 or column >= KTextEditor.CodeCompletionModel.ColumnCount or
-            parent.isValid()):
-            return QModelIndex()
-        return self.createIndex(row, column, 0)
-    
     def data(self, index, role):
         if index.column() != KTextEditor.CodeCompletionModel.Name:
             return QVariant()
