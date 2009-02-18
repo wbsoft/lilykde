@@ -752,6 +752,13 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
     def __init__(self, parent):
         KTextEditor.CodeCompletionModel.__init__(self, parent)
         self.matches = []
+
+    def index(self, row, column, parent):
+        if (row < 0 or row >= len(self.matches) or
+            column < 0 or column >= KTextEditor.CodeCompletionModel.ColumnCount or
+            parent.isValid()):
+            return QModelIndex()
+        return self.createIndex(row, column, 0)
         
     def data(self, index, role):
         if index.column() != KTextEditor.CodeCompletionModel.Name:
@@ -785,7 +792,10 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
         self.matches = frescobaldi_app.completion.findMatches(
             view, word, invocationType) or []
 
-
+    def match(self, start, role, value, hits=1, flags=None):
+        return super(CompletionModel, self).match(start, role, value, hits, (
+            Qt.MatchFixedString | Qt.MatchStartsWith |
+            Qt.MatchCaseSensitive | Qt.MatchWrap))
 
 # Easily get our global config
 def config(group="preferences"):
