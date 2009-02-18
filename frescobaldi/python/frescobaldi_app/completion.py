@@ -23,92 +23,46 @@ LilyPond auto completion
 
 import re
 
-from PyQt4.QtCore import QModelIndex, QVariant, Qt
-
 from PyKDE4.ktexteditor import KTextEditor
 
+import ly.words, ly.tokenize
 
 
-class CompletionModel(KTextEditor.CodeCompletionModel):
-    def __init__(self, parent):
-        KTextEditor.CodeCompletionModel.__init__(self, parent)
-        #self.setHasGroups(False)
-        
-        self.matches = []
-        
-    def data(self, index, role):
-        if index.column() != KTextEditor.CodeCompletionModel.Name:
-            return QVariant()
-        if role == Qt.DisplayRole:
-            return QVariant(self.matches[index.row()])
-        elif role == KTextEditor.CodeCompletionModel.CompletionRole:
-            return QVariant(
-                KTextEditor.CodeCompletionModel.FirstProperty |
-                KTextEditor.CodeCompletionModel.Public |
-                KTextEditor.CodeCompletionModel.LastProperty )
-        elif role == KTextEditor.CodeCompletionModel.ScopeIndex:
-            return QVariant(0)
-        elif role == KTextEditor.CodeCompletionModel.MatchQuality:
-            return QVariant(10)
-        elif role == KTextEditor.CodeCompletionModel.HighlightingMethod:
-            return QVariant(QVariant.Invalid)
-        elif role == KTextEditor.CodeCompletionModel.InheritanceDepth:
-            return QVariant(0)
-        else:
-            return QVariant()
-            
-    def rowCount(self, parent):
-        if parent.isValid():
-            return 0 # Do not make the model look hierarchical
-        else:
-            return len(self.matches)
-            
-    def completionInvoked(self, view, word, invocationType):
-        self.matches = self.allMatches(view, word, invocationType) or []
-        
-    def allMatches(self, view, word, invocationType):
-        """
-        Return the list of matches that are useful in the current context.
-        """
-        doc = view.document()
-        print "compl invoked", doc.text(word), invocationType #DEBUG
-        line, col = word.start().line(), word.start().column()
-        textLine = unicode(doc.line(line))
-        textCur = textLine[:col]
-        print "text:",textCur#DEBUG
-        
-        # determine what the user tries to type
-        import ly.words
-        # very specific situations:
-        if re.search(r'\\(consists|remove)\s*"?$', textCur):
-            return ly.words.engravers
-        if re.search(r'\bmidiInstrument\s*=\s*"$', textCur):
-            return ly.words.midi_instruments
-        if ly.words.context_re.search(textCur):
-            return ly.words.grobs
-        if textCur[-2:] == "#'":
-            m = ly.words.grob_re.search(textCur[:-2])
-            if m:
-                return ly.words.schemeprops(m.group(1))
-        if re.search(r"\\(override|revert)\s*$", textCur):
-            return ly.words.contexts + ly.words.grobs
-        # parse to get current context
-        fragment = unicode(doc.text(KTextEditor.Range(
-            KTextEditor.Cursor(0, 0), word.start())))
-        import ly.tokenize
-        state = ly.tokenize.State()
-        for token in ly.tokenize.tokenize(fragment, state=state):
-            pass
-        if textCur.endswith("\\"):
-            if isinstance(state.parser(), ly.tokenize.MarkupParser):
-                return ly.words.markupcommands
-            else:
-                return ly.words.musiccommands
+def findMatches(view, word, invocationType):
+    """
+    Return the list of matches that are useful in the current context.
+    """
+    doc = view.document()
+    print "compl invoked", doc.text(word), invocationType #DEBUG
+    line, col = word.start().line(), word.start().column()
+    textLine = unicode(doc.line(line))
+    textCur = textLine[:col]
+    print "text:",textCur#DEBUG
     
-    def index(self, row, column, parent):
-        if (row < 0 or row >= len(self.matches) or
-            column < 0 or column >= KTextEditor.CodeCompletionModel.ColumnCount or
-            parent.isValid()):
-            return QModelIndex()
-        return self.createIndex(row, column, 0)
+    # determine what the user tries to type
+    # very specific situations:
+    if re.search(r'\\(consists|remove)\s*"?$', textCur):
+        return ly.words.engravers
+    if re.search(r'\bmidiInstrument\s*=\s*"$', textCur):
+        return ly.words.midi_instruments
+    if ly.words.context_re.search(textCur):
+        return ly.words.grobs
+    if textCur[-2:] == "#'":
+        m = ly.words.grob_re.search(textCur[:-2])
+        if m:
+            return ly.words.schemeprops(m.group(1))
+    if re.search(r"\\(override|revert)\s*$", textCur):
+        return ly.words.contexts + ly.words.grobs
+    # parse to get current context
+    fragment = unicode(doc.text(KTextEditor.Range(
+        KTextEditor.Cursor(0, 0), word.start())))
+
+    state = ly.tokenize.State()
+    for token in ly.tokenize.tokenize(fragment, state=state):
+        pass
+    if textCur.endswith("\\"):
+        if isinstance(state.parser(), ly.tokenize.MarkupParser):
+            return ly.words.markupcommands
+        else:
+            return ly.words.musiccommands
 

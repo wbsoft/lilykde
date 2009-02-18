@@ -113,8 +113,7 @@ class MainApp(kateshell.app.MainApp):
     
     @lazy
     def completionModel(self):
-        import frescobaldi_app.completion
-        return frescobaldi_app.completion.CompletionModel(self.mainwin)
+        return CompletionModel(self.mainwin)
 
 
 class Document(kateshell.app.Document):
@@ -748,6 +747,51 @@ class StateManager(object):
             if (time.time() - last) / 86400 > 31:
                 self.metainfos.deleteGroup(g)
         self.metainfos.sync()
+
+
+class CompletionModel(KTextEditor.CodeCompletionModel):
+    def __init__(self, parent):
+        KTextEditor.CodeCompletionModel.__init__(self, parent)
+        self.matches = []
+        
+    def index(self, row, column, parent):
+        if (row < 0 or row >= len(self.matches) or
+            column < 0 or column >= KTextEditor.CodeCompletionModel.ColumnCount or
+            parent.isValid()):
+            return QModelIndex()
+        return self.createIndex(row, column, 0)
+    
+    def data(self, index, role):
+        if index.column() != KTextEditor.CodeCompletionModel.Name:
+            return QVariant()
+        if role == Qt.DisplayRole:
+            return QVariant(self.matches[index.row()])
+        elif role == KTextEditor.CodeCompletionModel.CompletionRole:
+            return QVariant(
+                KTextEditor.CodeCompletionModel.FirstProperty |
+                KTextEditor.CodeCompletionModel.Public |
+                KTextEditor.CodeCompletionModel.LastProperty )
+        elif role == KTextEditor.CodeCompletionModel.ScopeIndex:
+            return QVariant(0)
+        elif role == KTextEditor.CodeCompletionModel.MatchQuality:
+            return QVariant(10)
+        elif role == KTextEditor.CodeCompletionModel.HighlightingMethod:
+            return QVariant(QVariant.Invalid)
+        elif role == KTextEditor.CodeCompletionModel.InheritanceDepth:
+            return QVariant(0)
+        else:
+            return QVariant()
+            
+    def rowCount(self, parent):
+        if parent.isValid():
+            return 0 # Do not make the model look hierarchical
+        else:
+            return len(self.matches)
+            
+    def completionInvoked(self, view, word, invocationType):
+        import frescobaldi_app.completion
+        self.matches = frescobaldi_app.completion.findMatches(
+            view, word, invocationType) or []
 
 
 
