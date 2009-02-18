@@ -138,7 +138,6 @@ class Document(kateshell.app.Document):
         iface = self.view.codeCompletionInterface()
         if iface:
             iface.registerCompletionModel(self.app.completionModel())
-            iface.setAutomaticInvocationEnabled()
         
     def aboutToClose(self):
         if config().readEntry("save metainfo", QVariant(False)).toBool():
