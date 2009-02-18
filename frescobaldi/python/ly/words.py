@@ -297,7 +297,7 @@ musiccommands = (
     'lyricsto',
     'lyrics',
     'lyricmode',
-    'lyricMelismaAlignment',
+    #'lyricMelismaAlignment',
     'ltoe',
     'longfermata',
     'longa',
