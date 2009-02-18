@@ -780,7 +780,10 @@ class Builder(object):
         match = re.search('(\\d+).*?(\\d+)', unicode(s.time.currentText()))
         if match:
             if s.time.currentText() in ('2/2', '4/4'):
-                ly.dom.Line(r"\override Staff.TimeSignature #'style = #'()", g)
+                if self.lilypondVersion >= (2, 11, 44):
+                    ly.dom.Line(r"\numericTimeSignature", g)
+                else:
+                    ly.dom.Line(r"\override Staff.TimeSignature #'style = #'()", g)
             num, beat = map(int, match.group(1, 2))
             ly.dom.TimeSignature(num, beat, g).after = 1
         # partial
