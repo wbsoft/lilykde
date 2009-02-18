@@ -84,17 +84,26 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
             return ly.words.engravers
         if re.search(r'\bmidiInstrument\s*=\s*"$', textCur):
             return ly.words.midi_instruments
-        if re.search(r'\b('+'|'.join(ly.words.contexts)+r')\s*\.\s*$', textCur):
+        if ly.words.context_re.search(textCur):
             return ly.words.grobs
         if textCur[-2:] == "#'":
-            m = re.search('('+'|'.join(ly.words.grobs)+r')\s*$', textCur[:-2])
+            m = ly.words.grob_re.search(textCur[:-2])
             if m:
                 return ly.words.schemeprops(m.group(1))
-        # parse to get current context
-        if textCur.endswith("\\"):
-            return ly.words.musiccommands
         if re.search(r"\\(override|revert)\s*$", textCur):
             return ly.words.contexts + ly.words.grobs
+        # parse to get current context
+        fragment = unicode(doc.text(KTextEditor.Range(
+            KTextEditor.Cursor(0, 0), word.start())))
+        import ly.tokenize
+        state = ly.tokenize.State()
+        for token in ly.tokenize.tokenize(fragment, state=state):
+            pass
+        if textCur.endswith("\\"):
+            if isinstance(state.parser(), ly.tokenize.MarkupParser):
+                return ly.words.markupcommands
+            else:
+                return ly.words.musiccommands
     
     def index(self, row, column, parent):
         if (row < 0 or row >= len(self.matches) or

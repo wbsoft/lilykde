@@ -18,14 +18,23 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 """
-LilyPond reserved words for auto completion
+LilyPond reserved words for auto completion, and some regexps
 """
+
+import re
 
 musiccommands = (
     'once',
     'override',
     'relative',
     'repeat',
+    )
+
+markupcommands = (
+    'bold',
+    'column',
+    'italic',
+    'line',
     )
 
 contexts = (
@@ -728,4 +737,8 @@ all_user_grob_properties = (
     'zigzag-length',
     'zigzag-width',
     )
+
+
+context_re = re.compile(r'\b(' + '|'.join(contexts) + r')\s*\.\s*$')
+grob_re = re.compile(r'\b(' + '|'.join(grobs) + r')\s*$')
 
