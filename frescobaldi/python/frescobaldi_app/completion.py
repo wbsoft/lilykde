@@ -28,16 +28,24 @@ from PyKDE4.ktexteditor import KTextEditor
 
 import ly, ly.font, ly.tokenize, ly.version, ly.words
 
+def lilypondCommand():
+    return unicode(
+        KGlobal.config().group("commands").readEntry("lilypond", "lilypond"))
+        
 @ly.lazy
 def musicglyph_names():
-    cmd = KGlobal.config().group("commands").readEntry("lilypond", "lilypond")
-    datadir = ly.version.datadir(unicode(cmd))
+    datadir = ly.version.datadir(lilypondCommand())
     if datadir:
         font = ly.font.emmentaler20(datadir)
         if font:
             return tuple(font.glyphs())
     return ()
 
+@ly.lazy
+def lilypondVersion():
+    ver = ly.version.LilyPondVersion(lilypondCommand()).versionString
+    return ver and ('version "%s"' % ver,) or ()
+    
 def findMatches(view, word, invocationType):
     """
     Return the list of matches that are useful in the current context.
@@ -87,9 +95,9 @@ def findMatches(view, word, invocationType):
         if isinstance(state.parser(), ly.tokenize.MarkupParser):
             return ly.words.markupcommands
         elif state.parser().token == "\\context":
-            return ly.words.contexts + ly.words.keywords + ly.words.musiccommands
+            return ly.words.contexts + ly.words.keywords + ly.words.musiccommands + lilypondVersion()
         else:
-            return ly.words.keywords + ly.words.musiccommands
+            return ly.words.keywords + ly.words.musiccommands + lilypondVersion()
 
     if state.parser().token == "\\header":
         return ly.words.headervars
