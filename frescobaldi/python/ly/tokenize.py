@@ -89,7 +89,7 @@ class PitchWord(Item):
 class Scheme(Parsed):
     rx = "#"
     def __init__(self, matchObj, state):
-        state.enter(SchemeParser)
+        state.enter(SchemeParser, self)
 
 class Comment(Parsed):
     rx = r'%{.*?%}|%[^\n]*'
@@ -100,7 +100,7 @@ class Space(Parsed):
 class Markup(Command):
     rx = r"\\markup\b"
     def __init__(self, matchObj, state):
-        state.enter(MarkupParser)
+        state.enter(MarkupParser, self)
 
 class OpenDelimiter(Increaser):
     rx = r"<<|\{"
@@ -147,7 +147,7 @@ class SchemeComment(Parsed):
 class SchemeLily(Parsed):
     rx = "#\{"
     def __init__(self, matchObj, state):
-        state.enter(ToplevelParser)
+        state.enter(ToplevelParser, self)
 
 
 class OpenBracket(Increaser):
@@ -159,7 +159,7 @@ class CloseBracket(Decreaser):
 class MarkupScore(Command):
     rx = r"\\score\b"
     def __init__(self, matchObj, state):
-        state.enter(ToplevelParser, 1)
+        state.enter(ToplevelParser, self, 1)
         
 class MarkupCommand(Command):
     def __init__(self, matchObj, state):
@@ -167,7 +167,7 @@ class MarkupCommand(Command):
             argcount = 2
         else:
             argcount = 1
-        state.enter(MarkupParser, argcount)
+        state.enter(MarkupParser, self, argcount)
 
 class MarkupWord(Item):
     rx = r'[^{}"\\\s]+'
@@ -179,7 +179,7 @@ class LyricMode(Command):
             argcount = 2
         else:
             argcount = 1
-        state.enter(LyricParser)
+        state.enter(LyricParser, self)
         
 class LyricWord(Item):
     rx = r'[^\W\d]+'
@@ -188,7 +188,7 @@ class Section(Command):
     """Introduce a section with no music, like \\layout, etc."""
     rx = r'\\(with|layout|midi|paper|header)\b'
     def __init__(self, matchObj, state):
-        state.enter(SectionParser)
+        state.enter(SectionParser, self)
         
 
 class State(object):
@@ -206,8 +206,9 @@ class State(object):
     def parse(self, text, pos):
         return self.state[-1].rx.search(text, pos)
         
-    def enter(self, parserClass, argcount = None):
+    def enter(self, parserClass, token, argcount = None):
         self.state.append(parserClass())
+        self.state[-1].token = token
         if argcount is not None:
             self.state[-1].argcount = argcount
 
@@ -243,6 +244,7 @@ class State(object):
 class Parser(object):
     argcount = 0
     level = 0
+    token = None
 
 
 # tuple with base stuff to parse in LilyPond input
