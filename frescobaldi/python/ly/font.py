@@ -19,7 +19,7 @@
 
 """ Routines dealing with LilyPond fonts """
 
-import os, xml.dom.minidom
+import os, ly, xml.dom.minidom
 
 class SvgFont(object):
     """
@@ -42,4 +42,11 @@ class SvgFont(object):
     def glyphs(self):
         return self.name2unicode.keys()
 
+@ly.lazy
+def emmentaler20(datadir):
+    """
+    Return the emmentaler-20 font, loaded and cached
+    """
+    font = os.path.join(datadir, "fonts", "svg", "emmentaler-20.svg")
+    return os.path.exists(font) and SvgFont(font) or None
 

@@ -21,30 +21,40 @@
 LilyPond auto completion
 """
 
-import re
+import os, re
 
+from PyKDE4.kdecore import KGlobal
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly.words, ly.tokenize
+import ly, ly.font, ly.tokenize, ly.version, ly.words
 
+@ly.lazy
+def musicglyph_names():
+    cmd = KGlobal.config().group("commands").readEntry("lilypond", "lilypond")
+    datadir = ly.version.datadir(unicode(cmd))
+    if datadir:
+        font = ly.font.emmentaler20(datadir)
+        if font:
+            return tuple(font.glyphs())
+    return ()
 
 def findMatches(view, word, invocationType):
     """
     Return the list of matches that are useful in the current context.
     """
     doc = view.document()
-    print "compl invoked", doc.text(word), invocationType #DEBUG
     line, col = word.start().line(), word.start().column()
     textLine = unicode(doc.line(line))
     textCur = textLine[:col]
-    print "text:",textCur#DEBUG
     
     # determine what the user tries to type
     # very specific situations:
     if re.search(r'\\(consists|remove)\s*"?$', textCur):
         return ly.words.engravers
-    if re.search(r'\bmidiInstrument\s*=\s*"$', textCur):
+    if re.search(r'\bmidiInstrument\s*=\s*#?"$', textCur):
         return ly.words.midi_instruments
+    if re.search(r'\\musicglyph\s*#"$', textCur):
+        return musicglyph_names()
     if ly.words.context_re.search(textCur):
         return ly.words.grobs
     if textCur[-2:] == "#'":
@@ -53,13 +63,14 @@ def findMatches(view, word, invocationType):
             return ly.words.schemeprops(m.group(1))
     if re.search(r"\\(override|revert)\s*$", textCur):
         return ly.words.contexts + ly.words.grobs
+    
     # parse to get current context
     fragment = unicode(doc.text(KTextEditor.Range(
         KTextEditor.Cursor(0, 0), word.start())))
-
     state = ly.tokenize.State()
     for token in ly.tokenize.tokenize(fragment, state=state):
         pass
+    
     if textCur.endswith("\\"):
         if isinstance(state.parser(), ly.tokenize.MarkupParser):
             return ly.words.markupcommands
