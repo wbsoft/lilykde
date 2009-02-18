@@ -86,6 +86,8 @@ def findMatches(view, word, invocationType):
     if textCur.endswith("\\"):
         if isinstance(state.parser(), ly.tokenize.MarkupParser):
             return ly.words.markupcommands
+        elif state.parser().token == "\\context":
+            return ly.words.contexts + ly.words.keywords + ly.words.musiccommands
         else:
             return ly.words.keywords + ly.words.musiccommands
 
