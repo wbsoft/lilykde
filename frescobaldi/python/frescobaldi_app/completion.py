@@ -64,21 +64,37 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
             return len(self.matches)
             
     def completionInvoked(self, view, word, invocationType):
+        self.matches = self.allMatches(view, word, invocationType) or []
+        
+    def allMatches(self, view, word, invocationType):
+        """
+        Return the list of matches that are useful in the current context.
+        """
         doc = view.document()
-        print "completionInvoked", view, doc.text(word), invocationType #DEBUG
+        print "compl invoked", doc.text(word), invocationType #DEBUG
         line, col = word.start().line(), word.start().column()
         textLine = unicode(doc.line(line))
         textCur = textLine[:col]
         print "text:",textCur#DEBUG
+        
         # determine what the user tries to type
+        import ly.words
+        # very specific situations:
+        if re.search(r'\\(consists|remove)\s*"?$', textCur):
+            return ly.words.engravers
+        if re.search(r'\bmidiInstrument\s*=\s*"$', textCur):
+            return ly.words.midi_instruments
+        if re.search(r'\b('+'|'.join(ly.words.contexts)+r')\s*\.\s*$', textCur):
+            return ly.words.grobs
+        if textCur[-2:] == "#'":
+            m = re.search('('+'|'.join(ly.words.grobs)+r')\s*$', textCur[:-2])
+            if m:
+                return ly.words.schemeprops(m.group(1))
+        # parse to get current context
         if textCur.endswith("\\"):
-            self.matches = ['once', 'override', 'relative', 'repeat']
-        elif re.search(r"\\(override|revert)\s*$", textCur):
-            self.matches = ['Staff', 'Voice', 'PianoStaff', 'Lyrics']
-        elif re.search(r'\\(consists|remove)\s*"?$', textCur):
-            self.matches = ['Ambitus_engraver', 'Stem_engraver', 'Bar_line_engraver']
-        else:
-            self.matches = []
+            return ly.words.musiccommands
+        if re.search(r"\\(override|revert)\s*$", textCur):
+            return ly.words.contexts + ly.words.grobs
     
     def index(self, row, column, parent):
         if (row < 0 or row >= len(self.matches) or
