@@ -792,10 +792,7 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
         self.matches = frescobaldi_app.completion.findMatches(
             view, word, invocationType) or []
 
-    def match(self, start, role, value, hits=1, flags=None):
-        return super(CompletionModel, self).match(start, role, value, hits, (
-            Qt.MatchFixedString | Qt.MatchStartsWith |
-            Qt.MatchCaseSensitive | Qt.MatchWrap))
+
 
 # Easily get our global config
 def config(group="preferences"):
