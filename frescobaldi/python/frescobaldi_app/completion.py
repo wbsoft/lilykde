@@ -71,10 +71,12 @@ def findMatches(view, word, invocationType):
         return ly.words.contextproperties
     if ly.words.context_re.search(textCur):
         return ly.words.grobs
-    if textCur[-2:] == "#'":
+    if textCur.endswith("#'"):
         m = ly.words.grob_re.search(textCur[:-2])
         if m:
             return ly.words.schemeprops(m.group(1))
+        if re.search(r"\\tweak\b\s*$", textCur[:-2]):
+            return ly.words.schemeprops()
     if re.search(r"\\(override|revert)\s+$", textCur):
         return ly.words.contexts + ly.words.grobs
     if re.search(r'\\repeat\s+"?$', textCur):
@@ -88,8 +90,12 @@ def findMatches(view, word, invocationType):
     fragment = unicode(doc.text(KTextEditor.Range(
         KTextEditor.Cursor(0, 0), word.start())))
     state = ly.tokenize.State()
+    token = None # in case the next loop does not run at all
     for token in ly.tokenize.tokenize(fragment, state=state):
         pass
+    # don't bother if we are inside a string or comment
+    if isinstance(token, (ly.tokenize.Incomplete, ly.tokenize.Comment)):
+        return
     
     if textCur.endswith("\\"):
         if isinstance(state.parser(), ly.tokenize.MarkupParser):
@@ -99,6 +105,14 @@ def findMatches(view, word, invocationType):
         else:
             return ly.words.keywords + ly.words.musiccommands + lilypondVersion()
 
+    if isinstance(state.parser(), ly.tokenize.SchemeParser):
+        if textCur.endswith("#("):
+            if state.parser(-2).token == "\\paper":
+                return ('set-paper-size',)
+        elif textCur.endswith("#:"):
+            return ly.words.markupcommands
+        return ly.words.schemefuncs
+        
     if state.parser().token == "\\header":
         return ly.words.headervars
     if state.parser().token == "\\paper":    

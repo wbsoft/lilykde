@@ -1372,6 +1372,32 @@ all_user_grob_properties = (
     )
 
 
+schemefuncs = (
+    'set-global-staff-size',
+    'set-octavation',
+    'define-music-function',
+    'define-markup-command',
+    'markup',
+    'parser',
+    'location',
+    'number?',
+    'string?',
+    'pair?',
+    'ly:duration?',
+    'ly:grob?',
+    'ly:make-moment',
+    'ly:make-pitch',
+    'ly:music?',
+    'ly:moment?',
+    'ly:format',
+    'markup?',
+    'interpret-markup',
+    'make-line-markup',
+    'make-center-markup',
+    'make-column-markup',
+    )
+    
+
 headervars = (
     'dedication',
     'title',

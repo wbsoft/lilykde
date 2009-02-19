@@ -53,6 +53,12 @@ class Item(Parsed):
     def __init__(self, matchObj, state):
         state.endArgument()
 
+class Incomplete(Item):
+    """
+    Represents an unfinished item, e.g. string or block comment.
+    """
+    pass
+
 class Increaser(Parsed):
     def __init__(self, matchObj, state):
         state.inc()
@@ -83,6 +89,9 @@ class Command(Item):
 class String(Item):
     rx = r'"(\\[\\"]|[^"])*"'
 
+class IncompleteString(Incomplete):
+    rx = r'"(\\[\\"]|[^"])*$'
+    
 class PitchWord(Item):
     rx = r'[a-z]+'
     
@@ -206,8 +215,8 @@ class State(object):
             parserClass = ToplevelParser
         self.state = [parserClass()]
 
-    def parser(self):
-        return self.state[-1]
+    def parser(self, depth = -1):
+        return self.state[depth]
         
     def parse(self, text, pos):
         return self.state[-1].rx.search(text, pos)
@@ -257,6 +266,7 @@ class Parser(object):
 _lilybase = (
     Comment,
     String,
+    IncompleteString,
     EndSchemeLily,
     Scheme,
     Section,
@@ -278,6 +288,7 @@ class SchemeParser(Parser):
     argcount = 1
     rx = make_re((
         String,
+        IncompleteString,
         SchemeChar,
         SchemeComment,
         SchemeOpenParenthesis, SchemeCloseParenthesis,
