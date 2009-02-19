@@ -21,7 +21,7 @@
 LilyPond auto completion
 """
 
-import os, re
+import re
 
 from PyKDE4.kdecore import KGlobal
 from PyKDE4.ktexteditor import KTextEditor
@@ -52,38 +52,37 @@ def findMatches(view, word, invocationType):
     """
     doc = view.document()
     line, col = word.start().line(), word.start().column()
-    textLine = unicode(doc.line(line))
-    textCur = textLine[:col]
+    text = unicode(doc.line(line))[:col]
     
     # determine what the user tries to type
     # very specific situations:
-    if re.search(r'\\(consists|remove)\s*"?$', textCur):
+    if re.search(r'\\(consists|remove)\s*"?$', text):
         return ly.words.engravers
-    if re.search(r'\bmidiInstrument\s*=\s*#?"$', textCur):
+    if re.search(r'\bmidiInstrument\s*=\s*#?"$', text):
         return ly.words.midi_instruments
-    if re.search(r'\\musicglyph\s*#"$', textCur):
+    if re.search(r'\\musicglyph\s*#"$', text):
         return musicglyph_names()
-    if re.search(r'\\key\s+[a-z]+\s*\\$', textCur):
+    if re.search(r'\\key\s+[a-z]+\s*\\$', text):
         return ly.words.modes
-    if re.search(r'\\(un)?set\b\s*$', textCur):
+    if re.search(r'\\(un)?set\b\s*$', text):
         return ly.words.contexts + ly.words.contextproperties
-    if ly.words.set_context_re.search(textCur):
+    if ly.words.set_context_re.search(text):
         return ly.words.contextproperties
-    if ly.words.context_re.search(textCur):
+    if ly.words.context_re.search(text):
         return ly.words.grobs
-    if textCur.endswith("#'"):
-        m = ly.words.grob_re.search(textCur[:-2])
+    if text.endswith("#'"):
+        m = ly.words.grob_re.search(text[:-2])
         if m:
             return ly.words.schemeprops(m.group(1))
-        if re.search(r"\\tweak\b\s*$", textCur[:-2]):
+        if re.search(r"\\tweak\b\s*$", text[:-2]):
             return ly.words.schemeprops()
-    if re.search(r"\\(override|revert)\s+$", textCur):
+    if re.search(r"\\(override|revert)\s+$", text):
         return ly.words.contexts + ly.words.grobs
-    if re.search(r'\\repeat\s+"?$', textCur):
+    if re.search(r'\\repeat\s+"?$', text):
         return ly.words.repeat_types
-    if re.search(r'\\clef\s*"$', textCur):
+    if re.search(r'\\clef\s*"$', text):
         return ly.words.clefs
-    if re.search(r"\\clef\s+$", textCur):
+    if re.search(r"\\clef\s+$", text):
         return ly.words.clefs_plain
     
     # parse to get current context
@@ -97,7 +96,7 @@ def findMatches(view, word, invocationType):
     if isinstance(token, (ly.tokenize.Incomplete, ly.tokenize.Comment)):
         return
     
-    if textCur.endswith("\\"):
+    if text.endswith("\\"):
         if isinstance(state.parser(), ly.tokenize.MarkupParser):
             return ly.words.markupcommands
         elif state.parser().token == "\\context":
@@ -110,10 +109,10 @@ def findMatches(view, word, invocationType):
         if token is state.parser().token:
             return ('UP', 'DOWN', 'CENTER', 'LEFT', 'RIGHT')
         else:
-            if textCur.endswith("#("):
+            if text.endswith("#("):
                 if state.parser(-2).token == "\\paper":
                     return ('set-paper-size',)
-            elif textCur.endswith("#:"):
+            elif text.endswith("#:"):
                 return ly.words.markupcommands
             return ly.words.schemefuncs
         

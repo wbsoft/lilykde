@@ -1,15 +1,11 @@
 Changes in 0.7.6 -- 
 
-* New context sensitive autocomplete feature, supporting:
-  * general lilypond commands
-  * contexts and their properties
-  * layout objects and their properties
-  * engravers
-  * markup commands inside markup
-  * musicglyph names
-  * midi instruments
-  * often used scheme function names
-  * often used variable names in \header, \paper, \layout, etc.
+* New context sensitive autocompletion feature, supporting:
+  * general lilypond commands and markup commands (inside markup)
+  * contexts and layout objects and their properties
+  * engravers, musicglyph names and midi instrument names
+  * most used variable names in \header, \paper, \layout, etc.
+  * some often used scheme function names
 
 Changes in 0.7.5 -- February 12th, 2009
 
