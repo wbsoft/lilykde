@@ -106,12 +106,16 @@ def findMatches(view, word, invocationType):
             return ly.words.keywords + ly.words.musiccommands + lilypondVersion()
 
     if isinstance(state.parser(), ly.tokenize.SchemeParser):
-        if textCur.endswith("#("):
-            if state.parser(-2).token == "\\paper":
-                return ('set-paper-size',)
-        elif textCur.endswith("#:"):
-            return ly.words.markupcommands
-        return ly.words.schemefuncs
+        # is the last token the scheme-introducing '#' ?
+        if token is state.parser().token:
+            return ('UP', 'DOWN', 'CENTER', 'LEFT', 'RIGHT')
+        else:
+            if textCur.endswith("#("):
+                if state.parser(-2).token == "\\paper":
+                    return ('set-paper-size',)
+            elif textCur.endswith("#:"):
+                return ly.words.markupcommands
+            return ly.words.schemefuncs
         
     if state.parser().token == "\\header":
         return ly.words.headervars
