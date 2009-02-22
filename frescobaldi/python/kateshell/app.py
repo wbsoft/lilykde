@@ -584,20 +584,20 @@ class Document(DBusItem):
         If keepSelection is true, select the newly inserted text again.
         """
         v, d = self.view, self.doc
+        cur = v.selection() and v.selectionRange().start() or v.cursorPosition()
+        line, col = cur.line(), cur.column()
         if v.selection():
-            line = v.selectionRange().start().line()
-            col = v.selectionRange().start().column()
+            d.replaceText(v.selectionRange(), text)
         else:
-            line = v.cursorPosition().line()
-            col = v.cursorPosition().column()
-        lines = text.split('\n')
-        endline, endcol = line + len(lines) - 1, len(lines[-1])
-        if len(lines) < 2:
-            endcol += col
-        d.startEditing()
-        if v.selection():
-            v.removeSelectionText()
-        v.insertText(text)
-        d.endEditing()
+            v.insertText(text)
         if keepSelection:
+            lines = text.count('\n')
+            endline = line + lines
+            if lines:
+                endcol = len(text) - text.rfind('\n') - 1
+            else:
+                endcol = col + len(text)
             v.setSelection(KTextEditor.Range(line, col, endline, endcol))
+        else:
+            v.removeSelection()
+

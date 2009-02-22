@@ -47,7 +47,7 @@ class Lqi(QWidget):
             toolbox.setItemIcon(i, KIcon(icon))
         if tooltip:
             toolbox.setItemToolTip(i, tooltip)
-        self.view = toolbox.mainwin.view
+        self.mainwin = toolbox.mainwin
 
 
 class Articulations(Lqi):
@@ -118,20 +118,17 @@ class Articulations(Lqi):
         else:
             art = ('^', '', '_')[self.direction.currentIndex()] + '\\' + sign
 
-        v, d = self.view(), self.view().document()
-        if v.selection():
+        doc = self.mainwin.currentDocument()
+        text = doc.selectionText()
+        if text:
             def repl(m):
                 if m.group('chord'):
                     return m.group('full') + art
                 else:
                     return m.group()
-            text = unicode(v.selectionText())
-            d.startEditing()
-            v.removeSelectionText()
-            v.insertText(ly.rx.chord.sub(repl, text))
-            d.endEditing()
+            doc.replaceSelectionWith(ly.rx.chord.sub(repl, text), keepSelection=False)
         else:
-            v.insertText(art)
-        v.setFocus()
+            doc.view.insertText(art)
+        doc.view.setFocus()
         
 
