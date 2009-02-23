@@ -103,6 +103,8 @@ def makeExplicit(text):
 def applyRhythm(text, rhythm):
     """ Adds the entered rhythm to the selected music."""
     durs = [m.group() for m in ly.rx.finddurs.finditer(rhythm)]
+    if not durs:
+        return text
     def durgen():
         old = ''
         while True:
@@ -113,6 +115,7 @@ def applyRhythm(text, rhythm):
     def repl(m):
         if m.group('chord'):
             return m.group('chord') + nextdur()
+        return m.group()
     return ly.rx.chord_rest.sub(repl, text)
 
 def extractRhythm(text):

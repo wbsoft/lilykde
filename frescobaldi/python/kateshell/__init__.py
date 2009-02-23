@@ -44,9 +44,9 @@ def runningApp(servicePrefix, pid=None):
         return Proxy(bus.get_object(name, '/MainApp'))
     return False
     
-def newApp(servicePrefix, installPrefix=None):
+def newApp(servicePrefix):
     from kateshell.app import MainApp
-    return MainApp(servicePrefix, installPrefix)
+    return MainApp(servicePrefix)
 
 
 class Proxy(object):

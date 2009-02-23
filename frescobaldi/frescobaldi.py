@@ -21,7 +21,7 @@
 
 import sys
 from PyKDE4.kdecore import (ki18n, ki18nc,
-    KAboutData, KCmdLineArgs, KCmdLineOptions, KLocalizedString)
+    KAboutData, KCmdLineArgs, KCmdLineOptions, KComponentData, KLocalizedString)
 
 # Find our own Python modules and packages
 sys.path.insert(0, "@MODULE_DIR@")
@@ -46,6 +46,7 @@ aboutData.setTranslator(
     ki18nc("EMAIL OF TRANSLATORS", "i18n@frescobaldi.org"))
  
 KCmdLineArgs.init(sys.argv, aboutData)
+KComponentData(aboutData).dirs().addPrefix("@CMAKE_INSTALL_PREFIX@")
 
 options = KCmdLineOptions()
 options.add("start <session>", ki18n("Session to start"))
@@ -58,7 +59,7 @@ KCmdLineArgs.addCmdLineOptions(options)
 
 args = KCmdLineArgs.parsedArgs()
 
-app = not args.isSet("new") and runningApp() or newApp("@CMAKE_INSTALL_PREFIX@")
+app = not args.isSet("new") and runningApp() or newApp()
 nav = args.isSet("line") or args.isSet("column")
 line = int(args.getOption("line") or 1)
 col = int(args.getOption("column") or 0)

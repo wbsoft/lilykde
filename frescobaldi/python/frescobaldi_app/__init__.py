@@ -29,6 +29,6 @@ def runningApp():
     pid = os.environ.get("FRESCOBALDI_PID", "")
     return kateshell.runningApp(DBUS_PREFIX, pid)
 
-def newApp(installPrefix=None):
+def newApp():
     from frescobaldi_app import mainapp
-    return mainapp.MainApp(DBUS_PREFIX, installPrefix)
+    return mainapp.MainApp(DBUS_PREFIX)

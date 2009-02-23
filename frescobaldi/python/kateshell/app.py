@@ -57,7 +57,7 @@ class MainApp(DBusItem):
     defaultMode = None
     fileTypes = []
     
-    def __init__(self, servicePrefix, installPrefix=None):
+    def __init__(self, servicePrefix):
         # listeners to our events
         listeners.add(self.activeChanged)
         # We manage our own documents.
@@ -66,10 +66,6 @@ class MainApp(DBusItem):
 
         # KApplication needs to be instantiated before any D-Bus stuff
         self.kapp = KApplication()
-        
-        # Make ourselves relocatable
-        if installPrefix:
-            KGlobal.dirs().addPrefix(installPrefix)
         
         # DBus init
         serviceName = "%s%d" % (servicePrefix, os.getpid())

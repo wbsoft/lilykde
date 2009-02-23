@@ -536,7 +536,7 @@ class Settings(QWidget):
         h.setToolTip(i18n("Which language to use for the instrument names."))
 
         langs = KGlobal.dirs().findAllResources("locale", "*/LC_MESSAGES/frescobaldi.mo")
-        self.instrLanguages = list(sorted(unicode(lang).split('/')[-3] for lang in langs))
+        self.instrLanguages = list(sorted(set(unicode(lang).split('/')[-3] for lang in langs)))
         self.instrLang.addItems([KGlobal.locale().languageCodeToName(lang)
                 for lang in self.instrLanguages])
         
