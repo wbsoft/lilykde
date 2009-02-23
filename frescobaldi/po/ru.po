@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-02-21 08:15+0100\n"
+"POT-Creation-Date: 2009-02-23 23:32+0100\n"
 "PO-Revision-Date: 2009-02-22 12:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -17,7 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "#-#-#-#-#  ru.po (ru)  #-#-#-#-#\n"
-"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Lokalize 0.3\n"
 
 #: ../frescobaldi.py:32 dummy.py:12
@@ -42,27 +43,27 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "i18n@frescobaldi.org"
 msgstr "serge.uliss@gmail.com"
 
-#: ../frescobaldi.py:51
+#: ../frescobaldi.py:52
 msgid "Session to start"
 msgstr "Используемая сессия"
 
-#: ../frescobaldi.py:52
+#: ../frescobaldi.py:53
 msgid "Start a new instance"
 msgstr "Начать новую сессию"
 
-#: ../frescobaldi.py:53
+#: ../frescobaldi.py:54
 msgid "Encoding to use"
 msgstr "Используемая кодировка"
 
-#: ../frescobaldi.py:54
+#: ../frescobaldi.py:55
 msgid "Line number to go to, starting at 1"
 msgstr "Номер строки для перехода, начиная с 1"
 
-#: ../frescobaldi.py:55
+#: ../frescobaldi.py:56
 msgid "Column to go to, starting at 0"
 msgstr "Столбец для перехода, начиная с 0"
 
-#: ../frescobaldi.py:56
+#: ../frescobaldi.py:57
 msgid "LilyPond files to open, may also be textedit URLs"
 msgstr "Файлы lilypond или URL"
 
@@ -471,8 +472,7 @@ msgid ""
 msgstr ""
 "Ошибка печати: %1\n"
 "\n"
-"Команда печати %2 не может быть выполнена. "
-"Проверьте настройки."
+"Команда печати %2 не может быть выполнена. Проверьте настройки."
 
 #: ../python/frescobaldi_app/actions.py:135
 msgid "The print command contains errors. Please check your settings."
@@ -499,8 +499,8 @@ msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document).  Also LilyPond files included by the source document are shown."
 msgstr ""
-"Эти файлы обновлены (т.е. созданы позже, чем исходные файлы LilyPond). "
-"Также показаны файлы включенные в исходный документ."
+"Эти файлы обновлены (т.е. созданы позже, чем исходные файлы LilyPond). Также "
+"показаны файлы включенные в исходный документ."
 
 #: ../python/frescobaldi_app/actions.py:189
 msgid ""
@@ -515,10 +515,14 @@ msgid_plural ""
 "smaller."
 msgstr[0] ""
 "Это PDF документ был создан с использованием \"point-and-click\" технологии "
-"(режим просмотра), которая сильно увеличивает размер файла. Возможно, лучше будет пересоздать файл в режиме публикации, так как полученный PDF файл будет значительно меньшего размера."
+"(режим просмотра), которая сильно увеличивает размер файла. Возможно, лучше "
+"будет пересоздать файл в режиме публикации, так как полученный PDF файл "
+"будет значительно меньшего размера."
 msgstr[1] ""
-"Эти PDF документы были созданы с использованием \"point-and-click\" технологии "
-"(режим просмотра), которая сильно увеличивает размер файлов. Возможно, лучше будет пересоздать файлы в режиме публикации, так как полученные PDF файлы будет значительно меньшего размера."
+"Эти PDF документы были созданы с использованием \"point-and-click\" "
+"технологии (режим просмотра), которая сильно увеличивает размер файлов. "
+"Возможно, лучше будет пересоздать файлы в режиме публикации, так как "
+"полученные PDF файлы будет значительно меньшего размера."
 msgstr[2] ""
 "Это PDF документ был создан с использованием \"point-and-click\" технологии "
 "(режим просмотра), которая сильно увеличивает размер файла. Лучше отсылать "
@@ -529,13 +533,17 @@ msgstr[2] ""
 msgid ""
 "Can't perform the requested translation. The music contains quarter-tone "
 "alterations, but those are not available in the pitch language %1."
-msgstr "Невозможно выполнить требуемое преобразование. Музыка содержит четвертьтоновые альтерации, которые недоступны в языковой записи %1."
+msgstr ""
+"Невозможно выполнить требуемое преобразование. Музыка содержит "
+"четвертьтоновые альтерации, которые недоступны в языковой записи %1."
 
 #: ../python/frescobaldi_app/document.py:116
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
-msgstr "Язык ввода нот выделенного текста был обновлен, но Вы должны вручную добавить следующую команду в документ:"
+msgstr ""
+"Язык ввода нот выделенного текста был обновлен, но Вы должны вручную "
+"добавить следующую команду в документ:"
 
 #: ../python/frescobaldi_app/document.py:119
 #: ../python/frescobaldi_app/mainapp.py:311
@@ -544,7 +552,8 @@ msgstr "Язык нотной записи"
 
 #: ../python/frescobaldi_app/document.py:168
 msgid "Please enter the name for the variable to assign the selected text to:"
-msgstr "Введите имя для переменной, которая будет присвоена выделенному тексту:"
+msgstr ""
+"Введите имя для переменной, которая будет присвоена выделенному тексту:"
 
 #: ../python/frescobaldi_app/document.py:169
 #: ../python/frescobaldi_app/mainapp.py:270
@@ -617,7 +626,9 @@ msgstr ""
 msgid ""
 "Please only use letters, numbers and the underscore character in the "
 "expansion name."
-msgstr "Используйте только латинские буквы, цифры и символ подчеркивания в названии расширения."
+msgstr ""
+"Используйте только латинские буквы, цифры и символ подчеркивания в названии "
+"расширения."
 
 #: ../python/frescobaldi_app/hyphen.py:122
 msgid "Language selection"
@@ -1193,7 +1204,8 @@ msgstr "LilyPond [%1] завершен."
 
 #: ../python/frescobaldi_app/runlily.py:92
 msgid "Could not start LilyPond. Please check path and permissions."
-msgstr "Невозможно запустить LilyPond/ Проверьте путь к программе и разрешения."
+msgstr ""
+"Невозможно запустить LilyPond/ Проверьте путь к программе и разрешения."
 
 #: ../python/frescobaldi_app/runlily.py:95
 msgid "Could not read from the LilyPond process."
@@ -1284,8 +1296,10 @@ msgstr ""
 "воспроизведения MIDI, используя Rumor)"
 
 #: ../python/frescobaldi_app/settings.py:188
-msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
-msgstr "Полная команда запуска TiMidity или другой программы MIDI-клиента ALSA."
+msgid ""
+"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgstr ""
+"Полная команда запуска TiMidity или другой программы MIDI-клиента ALSA."
 
 #: ../python/frescobaldi_app/settings.py:203
 msgid "Default directory:"
@@ -1485,7 +1499,8 @@ msgid "Remove bar numbers"
 msgstr "Удалить номера тактов"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:480
-msgid "Suppress the display of measure numbers at the beginning of every system."
+msgid ""
+"Suppress the display of measure numbers at the beginning of every system."
 msgstr "Удаляет номера тактов в начале каждой системы."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:483
@@ -1532,7 +1547,8 @@ msgstr "Короткий"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:519
 msgid "Use long or short instrument names before the first system."
-msgstr "Использовать длинные или короткие имена инструментов перед первой системой."
+msgstr ""
+"Использовать длинные или короткие имена инструментов перед первой системой."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:523
 msgid "Other systems:"
@@ -1540,7 +1556,9 @@ msgstr "Остальные системы:"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:528
 msgid "Use short, long or no instrument names before the next systems."
-msgstr "(Не)Показывать сокращенные или длинные названия инструментов перед следующими системами."
+msgstr ""
+"(Не)Показывать сокращенные или длинные названия инструментов перед "
+"следующими системами."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:536
 msgid "Which language to use for the instrument names."
@@ -1596,7 +1614,8 @@ msgstr "Амбитус"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:260
 msgid "Show the pitch range of the voice at the beginning of the staff."
-msgstr "Показывает диапазон голоса от низшего до высшего тона в начале нотоносца"
+msgstr ""
+"Показывает диапазон голоса от низшего до высшего тона в начале нотоносца"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:321
 msgid "Adjust how many separate voices you want on each staff."
@@ -2050,7 +2069,8 @@ msgstr "Добавить стан для аккомпанемента."
 msgid ""
 "Adds an accompaniment staff and also puts an accompaniment voice in the "
 "upper staff."
-msgstr "Добавить станы для аккомпанемента и поместить аккомпанируемый голос верхним."
+msgstr ""
+"Добавить станы для аккомпанемента и поместить аккомпанируемый голос верхним."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:825
 msgid "Choir"
@@ -2089,7 +2109,8 @@ msgid "Every voice same lyrics"
 msgstr "Одинаковый текст во всех голосах"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:858
-msgid "Every voice gets its own lyrics, using the same text as the other voices."
+msgid ""
+"Every voice gets its own lyrics, using the same text as the other voices."
 msgstr ""
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:861
@@ -2287,5 +2308,3 @@ msgstr "Ударные"
 #: ../python/frescobaldi_app/scorewiz/parts.py:1254
 msgid "Special"
 msgstr "Другие"
-
-
