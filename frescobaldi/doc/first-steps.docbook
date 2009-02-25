@@ -2,8 +2,72 @@
 <title>First Steps</title>
 
 <para>
-After you installed Frescobaldi, run it from your KDE4 menu (under Audio or Utilities).
+After you installed &frescobaldi;, run it from your KDE4 menu (under Audio or Utilities).
 You'll see an empty screen like this:
+</para>
+
+<mediaobject>
+<imageobject><imagedata format="PNG" fileref="first-steps1.png"/></imageobject>
+<textobject>
+<phrase>Empty &frescobaldi; window</phrase>  
+</textobject>
+</mediaobject>
+
+<para>
+Now write some &lilypond; code, like this:
+</para>
+
+<programlisting>
+\relative c'' {
+  \time 7/4
+  c2 bes4 a2 g a bes4 a( g) f2
+}
+\addlyrics {
+  Join us now and share the soft -- ware!
+}
+</programlisting>
+
+<para>
+Save the file by pressing <keycap>Ctrl+S</keycap> and enter a name (if you leave out the
+extension, &frescobaldi; will add the <filename>.ly</filename> extension for you).
+</para>
+
+<para>
+Then click the &lilypond; toolbar button or press <keycap>Ctrl+M</keycap>. If all is good, &lilypond;
+starts now and processes your file. At the bottom of the screen you can follow
+&lilypond;'s progress. If &lilypond; does not encounter any mistakes on your part,
+it will produce a PDF file that will be displayed at the right of the
+&frescobaldi; window: 
+</para>
+
+<mediaobject>
+<imageobject><imagedata format="PNG" fileref="first-steps2.png"/></imageobject>
+<textobject>
+<phrase>&frescobaldi; window with Free Software Song</phrase>  
+</textobject>
+</mediaobject>
+
+<para>
+You can zoom the PDF preview by dragging the middle mouse button. The PDF
+preview is an embedded Okular, KDE's default PDF viewer.
+</para>
+
+<para>
+Everytime you change the &lilypond; document, you must press the button (or
+<keycap>Ctrl+M</keycap>) to update the PDF preview.
+</para>
+
+<para>
+If &lilypond; produced PDF and/or MIDI files, you will see buttons below the
+&lilypond; output log to quickly open those files in their default applications,
+to print the PDF directly, or to email the generated output to someone else.
+</para>
+
+<para>
+If &lilypond; does not start at all, check if you have installed &lilypond;
+correctly and that the lilypond command is in your system's PATH environment
+variable. If needed, provide the exact path to your &lilypond; executable under
+<guilabel>Settings</guilabel> » <guilabel>Configure &frescobaldi;...</guilabel> » <guilabel>Paths</guilabel>.
 </para>
 
 
