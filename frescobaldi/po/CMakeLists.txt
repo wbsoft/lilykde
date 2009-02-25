@@ -9,8 +9,9 @@ foreach(_po ${_po_files})
   set(_mo ${CMAKE_CURRENT_BINARY_DIR}/${_lang}.mo)
   add_custom_command(
     OUTPUT ${_mo}
-    COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -o ${_mo} ${_po}
+    COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -v -o ${_mo} ${_po}
     DEPENDS ${_po}
+    COMMENT "Creating MO file for language ${_lang}:"
   )
   install(
     FILES ${_mo}
