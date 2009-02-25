@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.4)
 project(frescobaldi)
 set(VERSION "0.7.7")
 
+option(HANDBOOK "Install Frescobaldi User Guide" ON)
+
 # Find our own modules
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
@@ -30,6 +32,9 @@ add_subdirectory(python)
 add_subdirectory(data)
 add_subdirectory(pics)
 add_subdirectory(po)
+if(HANDBOOK)
+  add_subdirectory(doc)
+endif(HANDBOOK)
 
 install(DIRECTORY 
         rumor

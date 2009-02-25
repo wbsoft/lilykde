@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+ "dtd/kdex.dtd" [
+  <!-- apps -->
+  <!ENTITY frescobaldi "Frescobaldi">
+  <!ENTITY lilypond "LilyPond">
+  <!ENTITY kappname "&frescobaldi;">
+  
+  <!-- people -->
+  <!ENTITY Wilbert.Berendsen '<personname><firstname>Wilbert</firstname><surname>Berendsen</surname></personname>'>
+  <!ENTITY Wilbert.Berendsen.mail '<email>info@frescobaldi.org</email>'>
+  
+  <!-- parts -->
+  <!ENTITY frescobaldi-first-steps SYSTEM "first-steps.docbook">
+  
+]>
+
+<book lang="&language;">
+
+<bookinfo>
+  <title>The &frescobaldi; User Guide</title>
+
+  <authorgroup>
+    <author>&Wilbert.Berendsen; &Wilbert.Berendsen.mail;</author>
+  </authorgroup>
+
+  <copyright>
+    <year>2008</year> <year>2009</year>
+    <holder>&Wilbert.Berendsen;</holder>
+  </copyright>
+
+  <!--<legalnotice>&FDLNotice;</legalnotice>-->
+  <date>2009-02-25</date>
+  <releaseinfo>0.x</releaseinfo>
+
+  <abstract>
+  <para>&frescobaldi; is a &lilypond; sheet music editor.</para>
+  </abstract>
+  
+  <keywordset>
+    <keyword>&lilypond;</keyword>
+    <keyword>Music</keyword>
+  </keywordset>
+</bookinfo>
+
+&frescobaldi-first-steps;
+
+</book>
