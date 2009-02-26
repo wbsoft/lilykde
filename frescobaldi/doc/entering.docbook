@@ -28,9 +28,9 @@ MIDI output or not, which key and time signature you want to use, etc.
 </para>
 
 <para>
-Clicking Try presents a demo score with some random notes filled in. Clicking Ok
-writes the &lilypond; code to your text document, waiting for music etc. to be
-added.
+Clicking <guibutton>Try</guibutton> presents a demo score with some random notes filled in.
+Clicking <guibutton>Ok</guibutton> writes the &lilypond; code to your text document,
+waiting for music etc. to be added.
 </para>
 </sect1>
 
@@ -157,7 +157,10 @@ symbols to all notes or chords in a selected music fragment.
 <title>Other shortcuts</title>
 
 <para>
-Repeat last note or chord (<keycap>Ctrl+;</keycap>) repeats the last entered note or chord with
+<menuchoice>
+  <shortcut><keycombo><keycap>Ctrl+;</keycap></keycombo></shortcut>
+  <guimenuitem>Repeat last note or chord</guimenuitem>
+</menuchoice> repeats the last entered note or chord with
 all its suffixes (ties, articulations, etc.)
 </para>
 </sect1>
