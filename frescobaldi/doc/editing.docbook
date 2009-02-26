@@ -1,0 +1,95 @@
+<chapter id="editing">
+<title>Editing Features</title>
+
+<para>
+While editing, &frescobaldi; provides many ways to change and manipulate already entered music. 
+</para>
+
+<sect1 id="rhythm">
+<title>Rhythm</title>
+
+<para>
+In the <menuchoice><guimenu>&lilypond;</guimenu><guisubmenu>Rhythm</guisubmenu></menuchoice>
+menu there are many options to manipulate the durations
+of a selected music fragment. You can double or halve the durations, add or
+remove dots, remove scaling (the <userinput>*n/m suffix</userinput>) or remove all durations. Make
+implicit removes durations that are equal to the previous note, and Make
+explicit adds the duration to every note or chord, even if it has the same
+duration as the previous one. 
+</para>
+
+<para>
+You can also copy a rhythm from a selected piece of music. The rhythm is then
+copied to the clipboard. To "paste" the rhythm to other music you must then
+select the target music. <guimenuitem>Paste Rhythm</guimenuitem> will then apply the copied rhythm to the
+newly selected music. This is nice when you enter e.g. hymns that have multiple
+voices that share the same rhythm. You can also use <guimenuitem>Apply Rhythm...</guimenuitem> to manually
+enter some durations and apply them to a selected fragment of music. 
+</para>
+</sect1>
+
+<sect1 id="pitch">
+<title>Pitch</title>
+
+<para>
+The only currently available command that manipulates pitches
+(<menuchoice><guimenu>&lilypond;</guimenu><guisubmenu>Pitch</guisubmenu>
+<guimenuitem>Pitch Name Language</guimenuitem></menuchoice>)
+is very powerful: it translates pitch names in your
+document to a different &lilypond; language. This is useful when you want to edit
+a work started by someone else, but are not accustomed to entering notes in e.g.
+dutch or italian names. 
+</para>
+
+<para>
+The pitch translation function is very powerful: it almost 100% correctly
+parses &lilypond; input and finds all pitches, without altering e.g. markup,
+lyrics, strings or comments that also might contain words (like "do") that are
+also pitch names. It even warns you when quarter tones are used and the target
+languages does not have definitions for them. But just to be sure: run &lilypond;
+after translating the pitches and carefully examine the document. If anything
+went wrong, press <keycap>Ctrl+Z</keycap> and try again.
+</para>
+</sect1>
+
+<sect1 id="lyrics">
+<title>Lyrics</title>
+
+<para>
+&frescobaldi; can automatically place hyphens <userinput>' -- '</userinput> inside texts to make those
+texts usable as lyrics. It can use hyphenation dictionaries of <productname>OpenOffice.org</productname>,
+<productname>Scribus</productname>, <productname>KOffice</productname>, etc.
+</para>
+
+<para>
+To use this feature you must first select the text you want to hyphenate. Then
+choose
+<menuchoice>
+  <guimenu>&lilypond;</guimenu>
+  <guisubmenu>Lyrics</guisubmenu>
+  <guimenuitem>Hyphenation</guimenuitem>
+</menuchoice> from the <guimenu>&lilypond;</guimenu> menu or press <keycap>Ctrl+L</keycap>.
+In the dialog that appears, select the language. Click <guibutton>OK</guibutton>
+or press <keycap>Enter</keycap> to have the hyphenation take place. 
+</para>
+
+<para>
+A small limitation is that word processor hyphenation dictionaries often don't
+want to break a word right after the first letter (e.g. <userinput>o -- pen</userinput>), because that
+does not look nice in word processor texts. So it might be possible that you
+have add some hyphens after the first letter of such lyrics. 
+</para>
+
+<para>
+There is also a command to remove hyphenation. This can be useful if you have a
+stanza of lyrics that you just want to display as a markup below the music.
+Under <menuchoice>
+  <guimenu>Settings</guimenu>
+  <guisubmenu>Configure &frescobaldi;...</guisubmenu>
+  <guimenuitem>Paths</guimenuitem>
+</menuchoice> you can enter a list of
+directories to search for hyphenation pattern files.
+</para>
+</sect1>
+
+</chapter>
