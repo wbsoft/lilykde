@@ -26,7 +26,7 @@ from PyQt4.QtCore import QObject, QString, QTimer, Qt, SIGNAL
 from PyQt4.QtGui import (
     QFont, QSplitter, QTextEdit, QTreeWidget, QTreeWidgetItem, QVBoxLayout)
 
-from PyKDE4.kdecore import KConfig, KGlobal, i18n
+from PyKDE4.kdecore import KConfig, KGlobal, KToolInvocation, i18n
 from PyKDE4.kdeui import (
     KDialog, KMessageBox, KStandardGuiItem, KTreeWidgetSearchLine)
 from PyKDE4.ktexteditor import KTextEditor
@@ -170,6 +170,7 @@ class ExpansionDialog(KDialog):
         KDialog.__init__(self, manager.mainwin)
         self.setCaption(i18n("Expansion Manager"))
         self.setButtons(KDialog.ButtonCode(
+            KDialog.Help |
             KDialog.Ok | KDialog.Close | KDialog.User1 | KDialog.User2 ))
         self.setButtonGuiItem(KDialog.User1, KStandardGuiItem.remove())
         self.setButtonGuiItem(KDialog.User2, KStandardGuiItem.add())
@@ -351,6 +352,10 @@ class ExpansionDialog(KDialog):
                     expansions.deleteGroup(item.groupName)
                     item.groupName = item.text(0)
                     tree.scrollToItem(item)
+            
+        @onSignal(self, "helpClicked()")
+        def showHelp():
+            KToolInvocation.invokeHelp("expand")
                 
     def items(self):
         """ Return an iterator over all the items in our dialog. """

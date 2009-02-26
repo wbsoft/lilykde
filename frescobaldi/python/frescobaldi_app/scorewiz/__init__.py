@@ -31,7 +31,7 @@ from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QLabel,
     QListWidget, QListWidgetItem, QSplitter, QStackedWidget, QTextBrowser,
     QToolButton, QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
-from PyKDE4.kdecore import KGlobal, i18n, ki18n
+from PyKDE4.kdecore import KGlobal, KToolInvocation, i18n, ki18n
 from PyKDE4.kdeui import (
     KCompletion, KHBox, KIcon, KLineEdit, KPageDialog, KPushButton,
     KStandardGuiItem, KVBox)
@@ -59,7 +59,7 @@ class ScoreWizard(KPageDialog):
         self.mainwin = mainwin
         self.setFaceType(KPageDialog.Tabbed)
         self.setButtons(KPageDialog.ButtonCode(
-            KPageDialog.Try |
+            KPageDialog.Try | KPageDialog.Help |
             KPageDialog.Ok | KPageDialog.Cancel | KPageDialog.Default))
         self.setButtonIcon(KPageDialog.Try, KIcon("run-lilypond"))
         self.enableButton(KPageDialog.Try, False)
@@ -78,6 +78,9 @@ class ScoreWizard(KPageDialog):
         @onSignal(self, "tryClicked()")
         def previewscore():
             self.previewDialog().showPreview()
+        @onSignal(self, "helpClicked()")
+        def showHelp():
+            KToolInvocation.invokeHelp("scorewiz")
         
     @lazy
     def previewDialog(self):
