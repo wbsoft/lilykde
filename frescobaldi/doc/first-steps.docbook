@@ -67,7 +67,11 @@ to print the PDF directly, or to email the generated output to someone else.
 If &lilypond; does not start at all, check if you have installed &lilypond;
 correctly and that the lilypond command is in your system's PATH environment
 variable. If needed, provide the exact path to your &lilypond; executable under
-<guilabel>Settings</guilabel> » <guilabel>Configure &frescobaldi;...</guilabel> » <guilabel>Paths</guilabel>.
+<menuchoice>
+  <guimenu>Settings</guimenu>
+  <guisubmenu>Configure &frescobaldi;...</guisubmenu>
+  <guimenuitem>Paths</guimenuitem>
+</menuchoice>.
 </para>
 
 

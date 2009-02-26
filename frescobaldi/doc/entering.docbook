@@ -1,0 +1,164 @@
+<chapter id="entering">
+<title>Entering Scores</title>
+
+<para>
+&frescobaldi; provides a host of features to help you to enter &lilypond; music scores as fast as possible.
+</para>
+
+<sect1>
+<title>Score Setup Wizard</title>
+
+<para>
+The Score Setup Wizard, at <menuchoice>
+  <shortcut><keycombo><keycap>Ctrl+Shift+N</keycap></keycombo></shortcut>
+  <guimenu>&lilypond;</guimenu>
+  <guimenuitem>Setup New Score...</guimenuitem>
+</menuchoice>, makes
+for a quick start of many types of music score. In the first tab you can enter
+titling information, in the second tab you can compose your score of many
+available part types. Doubleclick a part type to add it to your score (or click
+<guibutton>Add</guibutton>). Select the part in the score list to change some settings for the selected
+part, if desired. Many parts, especially Choir, have powerful options to set up
+the score the way you want it.
+</para>
+<!-- TODO: images -->
+<para>
+In the third tab you can set some general adjustments, e.g. whether to create
+MIDI output or not, which key and time signature you want to use, etc.
+</para>
+
+<para>
+Clicking Try presents a demo score with some random notes filled in. Clicking Ok
+writes the &lilypond; code to your text document, waiting for music etc. to be
+added.
+</para>
+</sect1>
+
+<sect1 id="autocomplete">
+<title>Context Sensitive Autocompletion</title>
+
+<para>
+&frescobaldi; has a context-sensitive automatic
+completion feature. In most cases it will be enabled by default. It will pop up
+relevant completions as you type. The autocompletion popup can be enabled or
+disabled under 
+<menuchoice>
+  <guimenu>Settings</guimenu>
+  <guisubmenu>Configure &frescobaldi;</guisubmenu>
+  <guisubmenu>Editor component</guisubmenu>
+  <guisubmenu>Editing</guisubmenu>
+  <guimenuitem>Auto Completion</guimenuitem>
+</menuchoice>.
+Even if disabled, you can always show the popup with <keycap>Ctrl+Space</keycap>.
+</para>
+</sect1>
+
+<sect1 id="expand">
+<title>Quick Text Expansions</title>
+
+<para>
+Type e.g. <userinput>rel</userinput> and then press <keycap>Ctrl+.</keycap> (period).
+&frescobaldi; will expand it to:
+</para>
+
+<programlisting>
+\relative c' {
+
+}
+</programlisting>
+
+<para>
+and place the cursor right after the pitch so you could change it. If you then
+move the cursor a line down, you can start typing music notes or other
+shortcuts. E.g. typing <userinput>F</userinput> and then <keycap>Ctrl+.</keycap> yields <computeroutput>\key f \major</computeroutput>. There are many
+many more default shortcuts. Press <keycap>Ctrl+.</keycap> (without having entered an existing
+shortcut) to have a dialog open with all defined shortcuts. In this dialog you
+can also add, alter or remove shortcuts. See the "What's This" info (<keycap>Shift+F1</keycap>)
+for more information.
+</para>
+</sect1>
+
+<sect1 id="rumor">
+<title>MIDI input via Rumor (Linux only)</title>
+
+<para>
+&frescobaldi; can use <productname>Rumor</productname>, enabling you to enter music just by playing it on a
+MIDI keyboard (or even your computer keyboard). This has some limitations: you
+can only play monophonic music (notes or chords). Rumor also does not support
+tuplets.
+</para>
+
+<para>
+Setup: Start the Rumor plugin by clicking on its tab in the bottom of the
+&frescobaldi; window. The Rumor panel appears at the bottom. In the panel is a
+settings dialog where you can configure which MIDI input and output you want to
+use.
+</para>
+
+<para>
+If you have a MIDI keyboard controller but no audible output device you can run
+an ALSA MIDI-client like TiMidity++. &frescobaldi; can do this for you when you
+press the TiMidity-button (you can configure it to run any command in the main
+config dialog under <menuchoice>
+  <guimenu>Settings</guimenu>
+  <guisubmenu>Configure &frescobaldi;...</guisubmenu>
+  <guimenuitem>Paths</guimenuitem>
+</menuchoice>). &frescobaldi;
+remembers the settings, so the next time it will automatically start the MIDI
+client.
+</para>
+
+<para>
+If you have no MIDI-controller you can also set the MIDI input to 'Computer
+Keyboard' in the settings screen of the Rumor plugin. This way you can play on
+your computer keyboard like a piano.
+</para>
+
+<para>
+Entering music: Clicking the <guibutton>Record</guibutton> button starts Rumor. If all is well you hear
+a metronome and you can start playing; you'll see the notes appear. Clicking
+<guibutton>Record</guibutton> again or pressing <keycap>Escape</keycap> stops Rumor. If you already entered the key and
+time signature in your document, &frescobaldi; will automatically use it, to
+interpret alterations correctly. &frescobaldi; will also output pitches
+automatically in the language you use in the document.
+</para>
+
+<para>
+You can configure the shortest note value to use using the <guilabel>Quantise</guilabel> option.
+If you enable the <guilabel>Step</guilabel> checkbox, Rumor will directly output every note played,
+without a duration.
+If you enable the <guilabel>Mono</guilabel>checkbox, Rumor will not output chords, but only single
+notes.
+</para>
+
+<para>
+Under the <guibutton>Settings</guibutton> button you can configure some more settings. A powerful
+feature of Rumor is that it can load special scripts that change the Rumor
+output. This is useful when you write e.g. music with complicated rhythms. You
+can configure which scripts to load, and even put your own Rumor Guile scripts
+in <filename class="directory">~/.kde/share/apps/frescobaldi/rumor/</filename>.
+More information about writing Rumor scripts is on the
+<ulink url="http://www.volny.cz/smilauer/rumor/">Rumor homepage</ulink>.
+</para>
+</sect1>
+
+<sect1 id="quickinsert">
+<title>Quick Insert Panel</title>
+
+<para>
+The Quick Insert Panel is available in the left dock. It currently has one panel
+to add articulations and other symbols to your music. It can also add those
+symbols to all notes or chords in a selected music fragment.
+</para>
+
+</sect1>
+
+<sect1 id="other">
+<title>Other shortcuts</title>
+
+<para>
+Repeat last note or chord (<keycap>Ctrl+;</keycap>) repeats the last entered note or chord with
+all its suffixes (ties, articulations, etc.)
+</para>
+</sect1>
+</chapter>

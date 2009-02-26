@@ -1,4 +1,4 @@
-# mostly taken from KDE4Macros
+# mostly taken from KDE4Macros.cmake
 
 find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH)
 find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4)

@@ -1,0 +1,189 @@
+<chapter id="running">
+<title>Running &lilypond;</title>
+
+<sect1 id="pdf_output">
+<title>Creating PDF output</title>
+
+<para>
+There are currently two different ways you can run &lilypond; on your document.
+</para>
+
+<para>
+The default one (by pressing the toolbar button or <keycap>Ctrl+M</keycap>) is to output a PDF
+preview document. This document contains clickable notes and other objects. If
+you click on a note or other object, &frescobaldi; will put your textcursor in the
+correct place (and even open the document for you if needed).
+</para>
+
+<para>
+In the <guilabel>&lilypond;</guilabel> menu, you can also find the option <guilabel>Run &lilypond; (publish)</guilabel>.
+This option also runs &lilypond;, but with clickable notes disabled. The resulting PDF
+is much smaller and better suitable for distribution via e-mail or the Web. With
+large musical scores, disabling the clickable notes can make the PDF many times
+smaller.
+</para>
+
+<para>
+While &lilypond; is running, you can follow its progress in the log view. If
+&lilypond; encounters errors, you can click on the messages to place the text
+cursor in the offending line and column. If there are many errors you want to
+correct without waiting for &lilypond; to be finished, you can click the &lilypond;
+button again to abort the running &lilypond; process.
+</para>
+
+<para>
+When you want to run &lilypond; on your text document, it needs to be saved to
+disk first, so &lilypond; can read it. (Currently, you can not run &lilypond; on
+non-local &lilypond; documents.) If your document has not been saved yet,
+&frescobaldi; asks you to save it to a local file. If your document has been
+modified, &frescobaldi; asks you to save it first.
+</para>
+
+<para>
+If you want &frescobaldi; to always save your last modifications before running
+&lilypond;, you can go to
+<menuchoice>
+  <guimenu>Settings</guimenu>
+  <guimenuitem>Configure &frescobaldi;...</guimenuitem>
+</menuchoice>
+and check the option <guilabel>Save document when &lilypond; is run</guilabel>.
+</para>
+
+<para>
+After a succesful &lilypond; run, you will see some buttons appear at the bottom
+of the Log view.
+</para>
+
+<para>
+If &lilypond; created a PDF, a button will be shown to open the PDF in the default
+PDF viewer, and a button to (directly!) print the PDF by sending it to the <command>lpr</command>
+command. (You can configure a different print command in
+<menuchoice>
+  <guimenu>Settings</guimenu>
+  <guisubmenu>Configure &frescobaldi;...</guisubmenu>
+  <guisubmenu>Paths</guisubmenu>
+  <guimenuitem>Print command</guimenuitem>
+</menuchoice>.)
+</para>
+
+</sect1>
+
+<sect1 id="midi_output">
+<title>Creating MIDI output</title>
+
+<para>
+If &lilypond; created a MIDI file, a button will be shown to play the MIDI in the
+default MIDI player. If you want &lilypond; to create a MIDI file, add a <userinput>\midi { }</userinput>
+line in your <userinput>\score { }</userinput> section, like this:
+</para>
+
+<programlisting>
+<![CDATA[\score {
+  \relative c'' {
+    \time 7/4
+    c2 bes4 a2 g a bes4 a( g) f2
+  }
+  \addlyrics {
+    Join us now and share the soft -- ware!
+  }
+  \layout { }
+  \midi { }
+}]]>
+</programlisting>
+
+<para>
+Be sure to also add a <userinput>\layout { }</userinput> line if you add a <userinput>\midi { }</userinput> line, otherwise
+&lilypond; will not generate a PDF.
+</para>
+
+<para>
+Also an email button is shown, allowing you to easily send the source and output
+documents to someone else using your default mail client.
+</para>
+
+</sect1>
+
+<sect1 id="include">
+<title>&lilypond; files that include other files</title>
+
+<para>
+When working on large music scores, it might be possible that you divide the
+musical score in different files, and include them from a "master" file. Such a
+master file, named e.g. <filename>NewSong.ly</filename>, might look like:
+</para>
+
+<programlisting>
+<![CDATA[\version "2.12.0"
+
+\header {
+  title = "New Song"
+}
+
+\include "LayoutSettings.ly"
+
+\include "SopranoPart.ly"
+\include "PianoPart.ly"
+
+\score {
+  <<
+    \new Staff = "soprano" \sopranoMusic
+    \new Lyrics \lyricsto "soprano" \sopranoText
+    \new PianoStaff <<
+      \new Staff = "right" \rightHandMusic
+      \new Staff = "left" \leftHandMusic
+    >>
+  >>
+}]]>
+</programlisting>
+
+<para>
+The files <filename>SopranoPart.ly</filename> and <filename>PianoPart.ly</filename> just contain the music definitions and
+<filename>LayoutSettings.ly</filename> has some settings for font and page layout etc. Neither one of
+them has a \score { } section in it. So pressing <keycap>Ctrl+M</keycap> and running &lilypond;
+while you are working on such an included document might not make much sense, as
+it would probably not generate a PDF output file (the document only contains
+music expressions that are assigned to variables).
+</para>
+
+<para>
+In such cases, you can tell &frescobaldi; that another file is the "master" file
+for the current document. When you run &lilypond;, &frescobaldi; will run &lilypond;
+on the master document rather than the current document. So in <filename>SopranoPart.ly</filename>
+and <filename>PianoPart.ly</filename> you add a special line that is just a &lilypond; comment. But
+&frescobaldi; will read the line and understand that you want &lilypond; to be run
+on the master file. Here is an example how <filename>SopranoPart.ly</filename> would look like:
+</para>
+
+<programlisting>
+\version "2.12.0"
+
+% Soprano part
+
+sopranoMusic = \relative c' {
+  c d e f g f e d
+}
+
+sopranoText = \lyricmode {
+  Boer er ligt een kip in't wa -- ter
+}
+
+%%master: NewSong.ly
+</programlisting>
+
+<para>
+The last line <userinput>%%master: &lt;filename&gt;</userinput> directs &frescobaldi; to compile <filename>NewSong.ly</filename>
+instead of the current document when &lilypond; is started.
+</para>
+
+<para>
+There are two related special comments: <userinput>%%master-preview:</userinput> and <userinput>%%master-publish:</userinput>.
+Those will only compile the named file in either preview or publish mode. That
+can be useful if you include several movements or e.g. hymns in a master file,
+where every source file has it's own score section. If you e.g. use
+<userinput>%%master-publish</userinput>, running in preview mode will just show the current document,
+but running in publish mode will compile the master document so you get a view
+on the whole score or book. 
+</para>
+</sect1>
+
+</chapter>

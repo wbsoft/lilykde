@@ -12,6 +12,8 @@
   
   <!-- parts -->
   <!ENTITY frescobaldi-first-steps SYSTEM "first-steps.docbook">
+  <!ENTITY frescobaldi-running SYSTEM "running.docbook">
+  <!ENTITY frescobaldi-entering SYSTEM "entering.docbook">
   
 ]>
 
@@ -43,6 +45,19 @@
   </keywordset>
 </bookinfo>
 
+<preface>
+<title>Introduction</title>
+<para>
+Frescobaldi is an application designed to make editing LilyPond music scores
+faster and easier. You still will need to learn the LilyPond input language. If
+you read the "First Steps" section you'll also pickup some LilyPond basics. Then
+you can continue to learn LilyPond using the Tutorial from 
+<ulink url="http://lilypond.org/doc/v2.12/Documentation/">LilyPond's excellent online documentation</ulink>.
+</para>
+</preface>
+
 &frescobaldi-first-steps;
+&frescobaldi-running;
+&frescobaldi-entering;
 
 </book>
