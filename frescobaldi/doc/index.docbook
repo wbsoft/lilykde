@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
  "dtd/kdex.dtd" [
   <!-- apps -->
@@ -15,6 +15,28 @@
   <!ENTITY frescobaldi-running SYSTEM "running.docbook">
   <!ENTITY frescobaldi-entering SYSTEM "entering.docbook">
   <!ENTITY frescobaldi-editing SYSTEM "editing.docbook">
+  
+  <!-- often used menus -->
+  <!ENTITY menu.settings.paths
+    '<menuchoice>
+      <guimenu>Settings</guimenu>
+      <guisubmenu>Configure &frescobaldi;...</guisubmenu>
+      <guimenuitem>Paths</guimenuitem>
+    </menuchoice>'>
+  <!ENTITY menu.settings.printcommand
+    '<menuchoice>
+      <guimenu>Settings</guimenu>
+      <guisubmenu>Configure &frescobaldi;...</guisubmenu>
+      <guisubmenu>Paths</guisubmenu>
+      <guimenuitem>Print command</guimenuitem>
+    </menuchoice>'>
+  <!ENTITY menu.lilypond.hyphenation
+    '<menuchoice>
+      <shortcut><keycombo><keycap>Ctrl+L</keycap></keycombo></shortcut>
+      <guimenu>&lilypond;</guimenu>
+      <guisubmenu>Lyrics</guisubmenu>
+      <guimenuitem>Hyphenation</guimenuitem>
+    </menuchoice>'>
 ]>
 
 <book lang="&language;">
@@ -33,7 +55,7 @@
 
   <!--<legalnotice>&FDLNotice;</legalnotice>-->
   <date>2009-02-25</date>
-  <releaseinfo>0.x</releaseinfo>
+  <releaseinfo>1.0</releaseinfo>
 
   <abstract>
   <para>&frescobaldi; is a &lilypond; sheet music editor.</para>

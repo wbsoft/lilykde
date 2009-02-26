@@ -88,8 +88,10 @@ can only play monophonic music (notes or chords). Rumor also does not support
 tuplets.
 </para>
 
+<sect2>
+<title>Setup</title>
 <para>
-Setup: Start the Rumor plugin by clicking on its tab in the bottom of the
+Start the Rumor plugin by clicking on its tab in the bottom of the
 &frescobaldi; window. The Rumor panel appears at the bottom. In the panel is a
 settings dialog where you can configure which MIDI input and output you want to
 use.
@@ -99,12 +101,8 @@ use.
 If you have a MIDI keyboard controller but no audible output device you can run
 an ALSA MIDI-client like TiMidity++. &frescobaldi; can do this for you when you
 press the TiMidity-button (you can configure it to run any command in the main
-config dialog under <menuchoice>
-  <guimenu>Settings</guimenu>
-  <guisubmenu>Configure &frescobaldi;...</guisubmenu>
-  <guimenuitem>Paths</guimenuitem>
-</menuchoice>). &frescobaldi;
-remembers the settings, so the next time it will automatically start the MIDI
+config dialog under &menu.settings.paths;).
+&frescobaldi; remembers the settings, so the next time it will automatically start the MIDI
 client.
 </para>
 
@@ -113,9 +111,12 @@ If you have no MIDI-controller you can also set the MIDI input to 'Computer
 Keyboard' in the settings screen of the Rumor plugin. This way you can play on
 your computer keyboard like a piano.
 </para>
+</sect2>
 
+<sect2>
+<title>Entering music</title>
 <para>
-Entering music: Clicking the <guibutton>Record</guibutton> button starts Rumor. If all is well you hear
+Clicking the <guibutton>Record</guibutton> button starts Rumor. If all is well you hear
 a metronome and you can start playing; you'll see the notes appear. Clicking
 <guibutton>Record</guibutton> again or pressing <keycap>Escape</keycap> stops Rumor. If you already entered the key and
 time signature in your document, &frescobaldi; will automatically use it, to
@@ -140,6 +141,7 @@ in <filename class="directory">~/.kde/share/apps/frescobaldi/rumor/</filename>.
 More information about writing Rumor scripts is on the
 <ulink url="http://www.volny.cz/smilauer/rumor/">Rumor homepage</ulink>.
 </para>
+</sect2>
 </sect1>
 
 <sect1 id="quickinsert">

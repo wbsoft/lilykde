@@ -57,13 +57,7 @@ of the Log view.
 <para>
 If &lilypond; created a PDF, a button will be shown to open the PDF in the default
 PDF viewer, and a button to (directly!) print the PDF by sending it to the <command>lpr</command>
-command. (You can configure a different print command in
-<menuchoice>
-  <guimenu>Settings</guimenu>
-  <guisubmenu>Configure &frescobaldi;...</guisubmenu>
-  <guisubmenu>Paths</guisubmenu>
-  <guimenuitem>Print command</guimenuitem>
-</menuchoice>.)
+command. (You can configure a different print command in &menu.settings.printcommand;.)
 </para>
 
 </sect1>
@@ -139,7 +133,7 @@ master file, named e.g. <filename>NewSong.ly</filename>, might look like:
 <para>
 The files <filename>SopranoPart.ly</filename> and <filename>PianoPart.ly</filename> just contain the music definitions and
 <filename>LayoutSettings.ly</filename> has some settings for font and page layout etc. Neither one of
-them has a \score { } section in it. So pressing <keycap>Ctrl+M</keycap> and running &lilypond;
+them has a <userinput>\score { }</userinput> section in it. So pressing <keycap>Ctrl+M</keycap> and running &lilypond;
 while you are working on such an included document might not make much sense, as
 it would probably not generate a PDF output file (the document only contains
 music expressions that are assigned to variables).
@@ -155,7 +149,7 @@ on the master file. Here is an example how <filename>SopranoPart.ly</filename> w
 </para>
 
 <programlisting>
-\version "2.12.0"
+<![CDATA[\version "2.12.0"
 
 % Soprano part
 
@@ -168,7 +162,7 @@ sopranoText = \lyricmode {
 }
 
 %%master: NewSong.ly
-</programlisting>
+]]></programlisting>
 
 <para>
 The last line <userinput>%%master: &lt;filename&gt;</userinput> directs &frescobaldi; to compile <filename>NewSong.ly</filename>

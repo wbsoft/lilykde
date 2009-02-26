@@ -18,14 +18,14 @@ Now write some &lilypond; code, like this:
 </para>
 
 <programlisting>
-\relative c'' {
+<![CDATA[\relative c'' {
   \time 7/4
   c2 bes4 a2 g a bes4 a( g) f2
 }
 \addlyrics {
   Join us now and share the soft -- ware!
 }
-</programlisting>
+]]></programlisting>
 
 <para>
 Save the file by pressing <keycap>Ctrl+S</keycap> and enter a name (if you leave out the
@@ -67,11 +67,7 @@ to print the PDF directly, or to email the generated output to someone else.
 If &lilypond; does not start at all, check if you have installed &lilypond;
 correctly and that the lilypond command is in your system's PATH environment
 variable. If needed, provide the exact path to your &lilypond; executable under
-<menuchoice>
-  <guimenu>Settings</guimenu>
-  <guisubmenu>Configure &frescobaldi;...</guisubmenu>
-  <guimenuitem>Paths</guimenuitem>
-</menuchoice>.
+&menu.settings.paths;.
 </para>
 
 

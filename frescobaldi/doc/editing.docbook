@@ -63,12 +63,7 @@ texts usable as lyrics. It can use hyphenation dictionaries of <productname>Open
 
 <para>
 To use this feature you must first select the text you want to hyphenate. Then
-choose
-<menuchoice>
-  <guimenu>&lilypond;</guimenu>
-  <guisubmenu>Lyrics</guisubmenu>
-  <guimenuitem>Hyphenation</guimenuitem>
-</menuchoice> from the <guimenu>&lilypond;</guimenu> menu or press <keycap>Ctrl+L</keycap>.
+choose &menu.lilypond.hyphenation;.
 In the dialog that appears, select the language. Click <guibutton>OK</guibutton>
 or press <keycap>Enter</keycap> to have the hyphenation take place. 
 </para>
@@ -83,11 +78,7 @@ have add some hyphens after the first letter of such lyrics.
 <para>
 There is also a command to remove hyphenation. This can be useful if you have a
 stanza of lyrics that you just want to display as a markup below the music.
-Under <menuchoice>
-  <guimenu>Settings</guimenu>
-  <guisubmenu>Configure &frescobaldi;...</guisubmenu>
-  <guimenuitem>Paths</guimenuitem>
-</menuchoice> you can enter a list of
+Under &menu.settings.paths; you can enter a list of
 directories to search for hyphenation pattern files.
 </para>
 </sect1>
