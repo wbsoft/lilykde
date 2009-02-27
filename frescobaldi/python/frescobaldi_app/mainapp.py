@@ -513,7 +513,6 @@ class ApplyRhythmDialog(KDialog):
 class KonsoleTool(kateshell.mainwindow.KPartTool):
     """ A tool embedding a Konsole """
     _partlibrary = "libkonsolepart"
-    helpAppName = "konsole"
     def __init__(self, mainwin):
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "konsole", i18n("Terminal"), "terminal",
