@@ -592,8 +592,6 @@ contexts = (
     'GrandStaff',
     'GregorianTranscriptionStaff',
     'GregorianTranscriptionVoice',
-    'InnerChoirStaff',
-    'InnerStaffGroup',
     'Lyrics',
     'MensuralStaff',
     'MensuralVoice',
