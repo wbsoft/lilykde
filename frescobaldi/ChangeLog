@@ -1,8 +1,12 @@
 Changes in 0.7.7
 
 * New User Guide in the help menu (F1 key)
+* Context sensitive Help buttons in most dialogs
 * New Czech translation by Pavel Fric, many thanks!
 * Updated translations: ru
+* Score Wizard: if there is more than one part, make separate assignments for
+  the parts. This simplifies the generated \score { } section and makes it
+  easier to create additional score sections for printing separate parts.
 * Bugfixes:
   * Apply/paste rhythm: don't lose parts of text and don't hang if no rhythm
   * Find translations when installed to non-standard directory
