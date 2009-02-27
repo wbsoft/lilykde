@@ -26,7 +26,7 @@ import ly.rx
 from hyphenator import Hyphenator
 
 from PyQt4.QtGui import QLabel, QListWidget
-from PyKDE4.kdecore import KConfig, KGlobal, KStandardDirs, i18n
+from PyKDE4.kdecore import KConfig, KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KVBox
 
 try:
@@ -55,12 +55,8 @@ def findDicts():
     def paths():
         """ build a list of paths based on config """
         # in which prefixes to look for relative paths
-        if 'KDEDIRS' in os.environ:
-            prefixes = os.environ['KDEDIRS'].split(':')
-        else:
-            prefixes = ['/usr', '/usr/local']
-            if 'KDEDIR' in os.environ:
-                prefixes.append(os.environ['KDEDIR'])
+        prefixes = unicode(KGlobal.dirs().kfsstnd_prefixes()).split(os.pathsep)
+        prefixes = set(prefixes + ['/usr/', '/usr/local/'])
         # if the path is not absolute, add it to all prefixes.
         for path in conf.readEntry("paths", defaultPaths):
             path = unicode(path)
@@ -69,7 +65,7 @@ def findDicts():
             else:
                 for pref in prefixes:
                     yield os.path.join(pref, path)
-                for d in KStandardDirs().findDirs("data", path):
+                for d in KGlobal.dirs().findDirs("data", path):
                     yield unicode(d)
 
     # now find the hyph_xx_XX.dic files
@@ -118,14 +114,17 @@ def hyphenate(text, mainwindow):
     index = lang in langs and langs.index(lang) or 0
     
     d = KDialog(mainwindow)
-    d.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel))
-    d.setCaption(i18n("Language selection"))
+    d.setButtons(KDialog.ButtonCode(
+        KDialog.Ok | KDialog.Cancel | KDialog.Help))
+    d.setCaption(i18n("Hyphenate Lyrics Text"))
+    d.setHelp("lyrics")
     v = KVBox(d)
     d.setMainWidget(v)
     QLabel(i18n("Please select a language:"), v)
     listbox = QListWidget(v)
     listbox.addItems(langs)
     listbox.setCurrentRow(index)
+    listbox.setFocus()
     if d.exec_():
         lang = langs[listbox.currentRow()]
         conf.writeEntry("lastused", lang)
