@@ -24,11 +24,11 @@ from PyQt4.QtCore import (
 from PyQt4.QtGui import (
     QAction, QActionGroup, QDialog, QLabel, QPixmap, QSplitter, QStackedWidget,
     QVBoxLayout, QWidget)
-from PyKDE4.kdecore import KGlobal, KPluginLoader, KUrl, i18n
+from PyKDE4.kdecore import KGlobal, KPluginLoader, KToolInvocation, KUrl, i18n
 from PyKDE4.kdeui import (
     KAction, KActionMenu, KDialog, KEditToolBar, KHBox, KIcon, KMenu,
     KMessageBox, KMultiTabBar, KShortcut, KShortcutsDialog, KShortcutsEditor,
-    KStandardAction, KToggleFullScreenAction, KVBox)
+    KStandardAction, KStandardGuiItem, KToggleFullScreenAction, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 from PyKDE4.kio import KEncodingFileDialog
@@ -569,6 +569,8 @@ class Tool(object):
     allowedPlaces = Top, Right, Bottom, Left
     defaultHeight = 300
     defaultWidth = 500
+    
+    helpAnchor, helpAppName = "", ""
 
     __instance_counter = 0
     
@@ -716,6 +718,10 @@ class Tool(object):
         a = m.addAction(KIcon("tab-detach"), i18n("Undock"))
         QObject.connect(a, SIGNAL("triggered()"), self.undock)
         self.addMenuActions(m)
+        if self.helpAnchor or self.helpAppName:
+            m.addSeparator()
+            a = m.addAction(KIcon("help-contextual"), KStandardGuiItem.help().text())
+            QObject.connect(a, SIGNAL("triggered()"), self.help)
         return m
 
     def addMenuActions(self, menu):
@@ -749,7 +755,10 @@ class Tool(object):
         You can implement this in your subclass to write additional config data.
         """
         pass
-        
+    
+    def help(self):
+        KToolInvocation.invokeHelp(self.helpAnchor, self.helpAppName)
+
 
 class KPartTool(Tool):
     def __init__(self, mainwin, name, title="", icon="", dock=Right):
