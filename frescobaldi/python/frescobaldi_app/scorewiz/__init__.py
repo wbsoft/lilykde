@@ -827,12 +827,25 @@ class Builder(object):
                 ly.dom.BlankLine(doc)
 
         # create a \score and add all nodes:
-        score = ly.dom.Score(doc)
+        score = ly.dom.Score()
         sim = ly.dom.Simr(score)
-        for part in partList:
-            for n in part.nodes:
-                sim.append(n)
+        
+        # if there is more than one part, make separate assignments for each
+        # part, so printing separate parts is easier
+        if len(partList) > 1:
+            for part in partList:
+                ref = ly.dom.Reference(part.identifier() + "Part")
+                p = ly.dom.Simr(ly.dom.Assignment(ref, doc))
+                ly.dom.BlankLine(doc)
+                ly.dom.Identifier(ref, sim).after = 1
+                for n in part.nodes:
+                    p.append(n)
+        else:
+            for part in partList:
+                for n in part.nodes:
+                    sim.append(n)
 
+        doc.append(score)
         lay = ly.dom.Layout(score)
         if s.barnum.isChecked():
             ly.dom.Line('\\remove "Bar_number_engraver"',
