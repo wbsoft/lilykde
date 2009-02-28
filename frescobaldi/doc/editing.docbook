@@ -83,4 +83,111 @@ directories to search for hyphenation pattern files.
 </para>
 </sect1>
 
+<sect1 id="keybindings">
+<title>Keyboard Shortcuts</title>
+
+<para>
+&frescobaldi; uses the KatePart text editing component of KDE. So, in addition to the
+shortcuts outlined below, you can also use the many keyboard shortcuts available in e.g.
+<ulink url="help:/kate/working-with-kate.html#keystroke-commands">Kate</ulink> and
+<ulink url="help:/kwrite/keybindings.html">KWrite</ulink>.
+</para>
+
+<informaltable>
+<tgroup cols="2">
+<tbody>
+
+<row>
+<entry><para><keycombo><keycap>Alt+Up</keycap></keycombo></para></entry>
+<entry><para> Move the cursor to the end of the previous blank line </para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Alt+Down</keycap></keycombo></para></entry>
+<entry><para> Move the cursor to the end of the next blank line </para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+D</keycap></keycombo></para></entry>
+<entry><para> Comment out the current line or selected text </para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+Shift+D</keycap></keycombo></para></entry>
+<entry><para> Uncomment the current line or selected text </para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+;</keycap></keycombo></para></entry>
+<entry><para> Repeat the last entered note or chord with all added articulations, etc </para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+.</keycap></keycombo></para></entry>
+<entry><para>
+Replace the entered mnemonic with the corresponding snippet from the
+<link linkend="expand">Expand Manager</link>,
+or, if no existing mnemonic was typed, show the Expand Manager dialog
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+Shift+C</keycap></keycombo></para></entry>
+<entry><para>
+Cut selected text fragment and assign it to a LilyPond variable. The assignment
+is put in the document just before the current section, and a reference to the variable
+is placed where the text has been cut out.
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+Shift+V</keycap></keycombo></para></entry>
+<entry><para>
+Insert a <userinput>\version</userinput> command with the version of the currently
+installed &lilypond;
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+Shift+N</keycap></keycombo></para></entry>
+<entry><para> Show the <link linkend="scorewiz">Score Wizard</link> </para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+M</keycap></keycombo></para></entry>
+<entry><para> Run &lilypond; on the current document in preview mode </para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+L</keycap></keycombo></para></entry>
+<entry><para>
+<link linkend="lyrics">Hyphenate</link> the currently selected lyric text
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+E</keycap></keycombo></para></entry>
+<entry><para>
+Email the generated output documents (PDF, MIDI, etc.) after a &lilypond; run
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+Shift+F</keycap></keycombo></para></entry>
+<entry><para> Toggle Full-screen mode </para></entry>
+</row>
+
+</tbody></tgroup></informaltable>
+
+<para>
+You can change the keyboard shortcuts and also add shortcuts for actions that don't
+have one by default, by choosing
+<menuchoice>
+  <guimenu>Settings</guimenu>
+  <guimenuitem>Configure Shortcuts...</guimenuitem>
+</menuchoice>
+or by right-clicking the respective menu entries.
+</para>
+
+</sect1>
 </chapter>
