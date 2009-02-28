@@ -1,3 +1,6 @@
+How to install Frescobaldi:
+===========================
+
 The recommended way to install Frescobaldi (from the frescobaldi directory) is:
 
 cmake . -DCMAKE_INSTALL_PREFIX=$(kde4-config --exec-prefix)
@@ -16,8 +19,12 @@ If you install Frescobaldi from a released tarball, the LilyPond musical symbol
 icons in pics/ and the translations in po/ are already prebuilt.
 
 If you build Frescobaldi out-of-source (or if you install Frescobaldi from SVN),
-those icons and translations are regenerated. In that case you also need
+those icons and translations need to be generated. In that case you also need
 LilyPond, ImageMagick and GNU Gettext.
+
+
+Dependencies:
+=============
 
 Frescobaldi depends on:
 - lilypond-kde4 (http://lilykde.googlecode.com/) (not needed in KDE 4.2+)
@@ -30,7 +37,19 @@ Frescobaldi depends on:
 You also might need to install some of the the corresponding -dev packages from
 the above to install Frescobaldi from this source package.
 
-Some other useful programs are:
+If you get errors about missing Python modules, but you're sure that they are
+installed, CMake might be finding the wrong Python version. If you e.g. install
+PyKDE4 inside Python 2.5 but CMake is finding Python 2.6 then you get errors
+about missing modules. You can fix this by explicitly defining the Python
+interpreter to use, e.g.:
+
+cmake . -DPYTHON_EXECUTABLE=/usr/bin/python2.5
+
+
+Other useful programs:
+======================
+
+Some other useful programs to use together with Frescobaldi are:
 - LilyPond (of course!) http://lilypond.org/
 - Rumor                 http://www.volny.cz/smilauer/rumor/
 - a MIDI player like timidity++, etc.
