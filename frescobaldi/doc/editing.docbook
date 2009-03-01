@@ -132,6 +132,11 @@ or, if no existing mnemonic was typed, show the Expand Manager dialog
 </row>
 
 <row>
+<entry><para><keycombo><keycap>Ctrl+Space</keycap></keycombo></para></entry>
+<entry><para> Show the available <link linkend="autocomplete">completions</link> </para></entry>
+</row>
+
+<row>
 <entry><para><keycombo><keycap>Ctrl+Shift+C</keycap></keycombo></para></entry>
 <entry><para>
 Cut selected text fragment and assign it to a LilyPond variable. The assignment
