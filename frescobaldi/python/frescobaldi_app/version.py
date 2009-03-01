@@ -26,6 +26,15 @@ from PyKDE4.kdecore import i18n, KGlobal
 from PyKDE4.kdeui import KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
+def defaultVersion():
+    """
+    Returns the LilyPond version number according to the user's
+    preference: the version of the currently installed LilyPond, the
+    version of the last rule in convert-ly, or a custom version.
+    """
+    #TODO: implement
+    return ly.version.LilyPondVersion(command("lilypond")).versionString
+
 def insertVersion(mainwin):
     """
     Insert the current LilyPond version into the current document
@@ -40,14 +49,13 @@ def insertVersion(mainwin):
                 i18n("Version already set"))
             return
     else:
-        version = ly.version.LilyPondVersion().versionString
+        version = defaultVersion()
         if version:
             doc.doc.insertLine(0, '\\version "%s"' % version)
         else:
             KMessageBox.sorry(mainwin,
                 i18n("Can't determine the version of LilyPond. "
                      "Please check your LilyPond installation."))
-
 
 def convertLy(mainwin):
     """
@@ -56,7 +64,7 @@ def convertLy(mainwin):
     doc = mainwin.currentDocument()
     text = doc.text()
     docVersion = ly.version.getVersion(text) #or ly.guess.version(text)
-    lilyVersion = ly.version.LilyPondVersion().versionTuple
+    lilyVersion = ly.version.LilyPondVersion(command("lilypond")).versionTuple
     
     if not docVersion:
         KMessageBox.sorry(mainwin, i18n(
@@ -73,11 +81,11 @@ def convertLy(mainwin):
         # Ok, let's run convert-ly.
         # We add the from-version. Only in that case convert-ly wants to
         # read from stdin.
-        convert_ly = unicode(config("commands").readEntry("convert-ly", "convert-ly"))
         try:
-            out, err = Popen((convert_ly, "-f", "%d.%d.%d" % docVersion, "-"),
-                            stdin=PIPE, stdout=PIPE, stderr=PIPE
-                            ).communicate(text.encode('utf8'))
+            out, err = Popen(
+                (command("convert-ly"), "-f", "%d.%d.%d" % docVersion, "-"),
+                stdin=PIPE, stdout=PIPE, stderr=PIPE
+                ).communicate(text.encode('utf8'))
             if out:
                 doc.doc.setText(u"%s\n\n%%{\n%s\n%%}\n" %
                     (out.decode('utf8'), err.decode('utf8')))
@@ -96,5 +104,8 @@ def convertLy(mainwin):
             KMessageBox.error(mainwin, i18n("Could not start convert-ly: %1", msg))
 
     
-def config(group="rumor"):
+def config(group):
     return KGlobal.config().group(group)
+
+def command(cmd):
+    return unicode(config("commands").readEntry(cmd, cmd))

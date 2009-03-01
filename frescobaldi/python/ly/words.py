@@ -1376,6 +1376,7 @@ papervars = (
     'ragged-last-bottom',
     'ragged-right',
     'right-margin',
+    'system-separator-markup',
     'top-margin',
     # different markups
     'bookTitleMarkup',
@@ -1384,7 +1385,6 @@ papervars = (
     'oddFooterMarkup',
     'oddHeaderMarkup',
     'scoreTitleMarkup',
-    'systemSeparatorMarkup',
     'tocItemMarkup',
     'tocTitleMarkup',
     )
@@ -1575,12 +1575,13 @@ clefs_plain = (
     'varbaritone',
     'baritone',
     'percussion',
-    'tab'
+    'tab',
     )
     
 
 clefs = clefs_plain + (
     'treble_8',
+    'bass_8',
     )
 
 

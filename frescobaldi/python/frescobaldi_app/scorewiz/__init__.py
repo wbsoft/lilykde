@@ -22,7 +22,7 @@ Score Wizard
 """
 
 import os, re, sip, string, sys
-import ly, ly.dom, ly.version
+import ly, ly.dom
 from rational import Rational
 
 from PyQt4.QtCore import (
@@ -38,6 +38,7 @@ from PyKDE4.kdeui import (
 
 from frescobaldi_app.widgets import TapButton
 from frescobaldi_app.mainapp import lazy
+from frescobaldi_app.version import defaultVersion
 
 def config(group=None):
     c = KGlobal.config().group("scorewiz")
@@ -459,7 +460,7 @@ class Settings(QWidget):
         self.lyversion = QComboBox(h)
         self.lyversion.setEditable(True)
         l.setBuddy(self.lyversion)
-        version = ly.version.LilyPondVersion('lilypond').versionString
+        version = defaultVersion()
         if version:
             self.lyversion.addItem(version)
         self.lyversion.addItems(('2.10.0', '2.11.0'))
