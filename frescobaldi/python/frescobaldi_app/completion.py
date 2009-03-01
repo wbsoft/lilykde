@@ -27,14 +27,11 @@ from PyKDE4.kdecore import KGlobal
 from PyKDE4.ktexteditor import KTextEditor
 
 import ly, ly.font, ly.tokenize, ly.version, ly.words
+import frescobaldi_app.version
 
-def lilypondCommand():
-    return unicode(
-        KGlobal.config().group("commands").readEntry("lilypond", "lilypond"))
-        
 @ly.lazy
 def musicglyph_names():
-    datadir = ly.version.datadir(lilypondCommand())
+    datadir = ly.version.datadir(command("lilypond"))
     if datadir:
         font = ly.font.emmentaler20(datadir)
         if font:
@@ -43,7 +40,7 @@ def musicglyph_names():
 
 @ly.lazy
 def lilypondVersion():
-    ver = ly.version.LilyPondVersion(lilypondCommand()).versionString
+    ver = frescobaldi_app.version.defaultVersion()
     return ver and ('version "%s"' % ver,) or ()
     
 def findMatches(view, word, invocationType):
@@ -126,4 +123,9 @@ def findMatches(view, word, invocationType):
         return ly.words.contextproperties
     
         
+def config(group):
+    return KGlobal.config().group(group)
+
+def command(cmd):
+    return unicode(config("commands").readEntry(cmd, cmd))
         
