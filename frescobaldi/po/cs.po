@@ -4,13 +4,14 @@
 #
 #  <pavelfric@seznam.cz>, 2009.
 # Pavel Fric <pavel@seznam.cz>, 2009.
+# Pavel Fric <pavelfric@seznam.cz>, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.5\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-03-01 20:41+0100\n"
-"PO-Revision-Date: 2009-02-21 20:10+0100\n"
-"Last-Translator: Pavel Fric <pavel@seznam.cz>\n"
+"POT-Creation-Date: 2009-03-01 23:23+0100\n"
+"PO-Revision-Date: 2009-03-01 11:22+0100\n"
+"Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@lists.kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,9 +28,8 @@ msgid "LilyPond Music Editor"
 msgstr "LilyPond hudební editor"
 
 #: ../frescobaldi.py:36
-#, fuzzy
 msgid "Copyright (c) 2008-2009, Wilbert Berendsen"
-msgstr "Copyright (c) 2008, Wilbert Berendsen"
+msgstr "Copyright (c) 2008-2009, Wilbert Berendsen"
 
 #: ../frescobaldi.py:45
 msgctxt "NAME OF TRANSLATORS"
@@ -121,7 +121,7 @@ msgstr "Básník"
 
 #: ../python/ly/__init__.py:83
 msgid "Meter"
-msgstr "Měřič"
+msgstr "Metrum"
 
 #: ../python/ly/__init__.py:84
 msgid "Piece"
@@ -181,7 +181,7 @@ msgstr "Artikulace"
 
 #: ../python/ly/articulation.py:34
 msgid "Accent"
-msgstr "Důraz"
+msgstr "Akcent (důraz)"
 
 #: ../python/ly/articulation.py:35
 msgid "Marcato"
@@ -401,7 +401,7 @@ msgstr "Režim výběru bloku"
 
 #: ../python/kateshell/mainwindow.py:327
 msgid "LINE"
-msgstr "Řádek"
+msgstr "ŘÁDEK"
 
 #: ../python/kateshell/mainwindow.py:327
 msgid "Line selection mode"
@@ -934,7 +934,7 @@ msgstr "Terminál"
 
 #: ../python/frescobaldi_app/mainapp.py:551
 msgid "S&ynchronize Terminal with Current Document"
-msgstr "Ča&sově sladit terminál s aktuálním dokumentem"
+msgstr "Se&řídit terminál s aktuálním dokumentem"
 
 #: ../python/frescobaldi_app/mainapp.py:571
 #: ../python/frescobaldi_app/scorewiz/preview.py:45
@@ -951,7 +951,7 @@ msgstr "Ukázat miniaturní PDF číslovač stran"
 
 #: ../python/frescobaldi_app/mainapp.py:606
 msgid "S&ynchronize Preview with Current Document"
-msgstr "Ča&sově sladit náhled s aktuálním dokumentem"
+msgstr "Se&řídit náhled s aktuálním dokumentem"
 
 #: ../python/frescobaldi_app/mainapp.py:660
 msgid "Quick Insert"
@@ -1492,7 +1492,7 @@ msgstr "Žádný"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:396
 msgid "Metronome mark:"
-msgstr "Model metronomu:"
+msgstr "Hodnota na metronomu:"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:424
 msgid "Tempo indication:"
@@ -1561,15 +1561,15 @@ msgstr "Vytvořit soubor MIDI vedle souboru PDF."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:489
 msgid "Show metronome mark"
-msgstr "Ukázat značku metronomu"
+msgstr "Ukázat hodnotu na metronomu"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:491
 msgid ""
 "If checked, show the metronome mark at the beginning of the score. The MIDI "
 "output also uses the metronome setting."
 msgstr ""
-"V případě, že je zaškrtnuto, značka metronomu se ukáže na začátku notového "
-"zápisu. MIDI výstup používá nastavení metronomu také."
+"V případě, že je zaškrtnuto, hodnota na metronomu se ukáže na začátku "
+"notového zápisu. MIDI výstup používá nastavení metronomu také."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:499
 msgid "Paper size:"
