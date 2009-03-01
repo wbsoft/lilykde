@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-02-27 14:32+0100\n"
+"POT-Creation-Date: 2009-03-01 15:56+0100\n"
 "PO-Revision-Date: 2009-02-05 00:15+0100\n"
 "Last-Translator: Gianluca D'Orazio <gianluca.dorazio@gmail.com>\n"
 "Language-Team: italiano <it@li.org>\n"
@@ -681,7 +681,7 @@ msgid "LilyPond files"
 msgstr "Documenti LilyPond"
 
 #: ../python/frescobaldi_app/mainapp.py:217
-#: ../python/frescobaldi_app/scorewiz/__init__.py:348
+#: ../python/frescobaldi_app/scorewiz/__init__.py:349
 msgid "LilyPond"
 msgstr "LilyPond"
 
@@ -1075,8 +1075,8 @@ msgid "MIDI output to use."
 msgstr "L'uscita MIDI da usare."
 
 #: ../python/frescobaldi_app/rumor.py:436
-#: ../python/frescobaldi_app/scorewiz/__init__.py:433
-#: ../python/frescobaldi_app/scorewiz/__init__.py:533
+#: ../python/frescobaldi_app/scorewiz/__init__.py:434
+#: ../python/frescobaldi_app/scorewiz/__init__.py:534
 msgid "Language:"
 msgstr "Lingua:"
 
@@ -1207,63 +1207,80 @@ msgstr "Si è verificato un errore sconosciuto."
 msgid "Click to edit this file"
 msgstr "Fare clic per modificare questo file"
 
-#: ../python/frescobaldi_app/settings.py:44
+#: ../python/frescobaldi_app/settings.py:47
 msgid "Configure"
 msgstr "Configura"
 
-#: ../python/frescobaldi_app/settings.py:86
+#: ../python/frescobaldi_app/settings.py:89
 msgid "Editor Component"
 msgstr "Componente editor"
 
-#: ../python/frescobaldi_app/settings.py:87
+#: ../python/frescobaldi_app/settings.py:90
 msgid "Editor Component Options"
 msgstr "Opzioni del componente editor"
 
-#: ../python/frescobaldi_app/settings.py:115
+#: ../python/frescobaldi_app/settings.py:118
 msgid "General Preferences"
 msgstr "Opzioni generali"
 
-#: ../python/frescobaldi_app/settings.py:116
+#: ../python/frescobaldi_app/settings.py:119
 msgid "General Frescobaldi Preferences"
 msgstr "Opzioni generali di Frescobaldi"
 
-#: ../python/frescobaldi_app/settings.py:121
+#: ../python/frescobaldi_app/settings.py:124
 msgid "Save document when LilyPond is run"
 msgstr "Salva il documento quando si esegue LilyPond"
 
-#: ../python/frescobaldi_app/settings.py:123
+#: ../python/frescobaldi_app/settings.py:126
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Lasciare che LilyPond cancelli i file di output intermedi"
 
-#: ../python/frescobaldi_app/settings.py:125
+#: ../python/frescobaldi_app/settings.py:128
 msgid "Remember cursor position, bookmarks, etc."
 msgstr "Ricorda la posizione del cursore, i segnalibri, ecc."
 
-#: ../python/frescobaldi_app/settings.py:127
+#: ../python/frescobaldi_app/settings.py:130
 msgid "Disable the built-in PDF preview"
 msgstr "Disabilita l'anteprima integrata del PDF"
 
-#: ../python/frescobaldi_app/settings.py:164
+#: ../python/frescobaldi_app/settings.py:147
+#, fuzzy
+msgid "LilyPond version number to use for new documents"
+msgstr "La versione di LilyPond che sarà usata per questo documento."
+
+#: ../python/frescobaldi_app/settings.py:149
+msgid "Use version of installed LilyPond"
+msgstr ""
+
+#: ../python/frescobaldi_app/settings.py:150
+msgid "Use version of last convert-ly rule"
+msgstr ""
+
+#: ../python/frescobaldi_app/settings.py:151
+msgid "Use custom version:"
+msgstr ""
+
+#: ../python/frescobaldi_app/settings.py:221
 msgid "Paths"
 msgstr "Percorsi"
 
-#: ../python/frescobaldi_app/settings.py:165
+#: ../python/frescobaldi_app/settings.py:222
 msgid "Paths to programs or data used by Frescobaldi"
 msgstr "Percorsi ai programmi o ai dati usati da Frescobaldi"
 
-#: ../python/frescobaldi_app/settings.py:174
+#: ../python/frescobaldi_app/settings.py:231
 msgid "Name or full path of the LilyPond program."
 msgstr "Nome o percorso completo dell'eseguibile di LilyPond."
 
-#: ../python/frescobaldi_app/settings.py:176
+#: ../python/frescobaldi_app/settings.py:233
 msgid "Name or full path of the convert-ly program."
 msgstr "Nome o percorso completo di convert-ly."
 
-#: ../python/frescobaldi_app/settings.py:177
+#: ../python/frescobaldi_app/settings.py:234
 msgid "Printcommand:"
 msgstr "Comando di stampa:"
 
-#: ../python/frescobaldi_app/settings.py:178
+#: ../python/frescobaldi_app/settings.py:235
 msgid ""
 "Command to print a PDF file, for example lpr or kprinter. You may add some "
 "arguments, e.g. lpr -P myprinter."
@@ -1271,11 +1288,11 @@ msgstr ""
 "Comando per stampare un PDF, per esempio lpr o kprinter. Si possono far "
 "seguire opzioni, ad es.: lpr -P myprinter."
 
-#: ../python/frescobaldi_app/settings.py:182
+#: ../python/frescobaldi_app/settings.py:239
 msgid "Name or full path of the Rumor program."
 msgstr "Nome o percorso completo dell'eseguibile di Rumor."
 
-#: ../python/frescobaldi_app/settings.py:184
+#: ../python/frescobaldi_app/settings.py:241
 msgid ""
 "Name or full path of the aconnect program (part of ALSA, for MIDI input and "
 "playback using Rumor)."
@@ -1283,22 +1300,22 @@ msgstr ""
 "Nome o percorso completo di aconnect (componente ALSA per l'inserimento e "
 "l'esecuzione MIDI tramite Rumor)."
 
-#: ../python/frescobaldi_app/settings.py:188
+#: ../python/frescobaldi_app/settings.py:245
 msgid ""
 "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Comando completo per avviare TiMidity (o un altro programma) come client "
 "MIDI per ALSA."
 
-#: ../python/frescobaldi_app/settings.py:203
+#: ../python/frescobaldi_app/settings.py:260
 msgid "Default directory:"
 msgstr "Cartella predefinita:"
 
-#: ../python/frescobaldi_app/settings.py:208
+#: ../python/frescobaldi_app/settings.py:265
 msgid "The default folder for your LilyPond documents (optional)."
 msgstr "La cartella predefinita dei documenti LilyPond (facoltativo)."
 
-#: ../python/frescobaldi_app/settings.py:221
+#: ../python/frescobaldi_app/settings.py:278
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
@@ -1309,18 +1326,18 @@ msgstr ""
 "aggiunti automaticamente i prefissi contenuti nella variabile d'ambiente "
 "KDEDIRS."
 
-#: ../python/frescobaldi_app/version.py:39
+#: ../python/frescobaldi_app/version.py:54
 msgid "Your document has already a LilyPond version statement."
 msgstr ""
 "Il documento contiene già la dichiarazione del numero di versione di "
 "LilyPond."
 
-#: ../python/frescobaldi_app/version.py:40
+#: ../python/frescobaldi_app/version.py:55
 msgid "Version already set"
 msgstr "La versione è già stata aggiunta"
 
-#: ../python/frescobaldi_app/version.py:48
-#: ../python/frescobaldi_app/version.py:67
+#: ../python/frescobaldi_app/version.py:63
+#: ../python/frescobaldi_app/version.py:81
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
@@ -1328,7 +1345,7 @@ msgstr ""
 "Impossibile determinare la versione di LilyPond: controllare che "
 "l'installazione di Lilypond sia corretta."
 
-#: ../python/frescobaldi_app/version.py:63
+#: ../python/frescobaldi_app/version.py:77
 msgid ""
 "Can't determine the LilyPond version of the current document. Please add a "
 "\\version statement with the correct version."
@@ -1336,11 +1353,11 @@ msgstr ""
 "Impossibile determinare il numero di versione di LilyPond per il documento "
 "in uso. Aggiungere la dichiarazione con il numero di versione corretto."
 
-#: ../python/frescobaldi_app/version.py:71
+#: ../python/frescobaldi_app/version.py:85
 msgid "This LilyPond document is already up-to-date."
 msgstr "Questo documento LilyPond è già aggiornato all'ultima versione."
 
-#: ../python/frescobaldi_app/version.py:85
+#: ../python/frescobaldi_app/version.py:99
 msgid ""
 "The document has been processed with convert-ly. You'll find the messages of "
 "convert-ly in a comment block at the end. You still may have to edit some "
@@ -1350,7 +1367,7 @@ msgstr ""
 "trovano in un blocco di commento alla fine del file; potrebbe essere "
 "necessario modificare a mano alcune parti."
 
-#: ../python/frescobaldi_app/version.py:91
+#: ../python/frescobaldi_app/version.py:105
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
 "This is the message given by convert-ly: %1"
@@ -1358,7 +1375,7 @@ msgstr ""
 "Il documento è stato elaborato con convert-ly ma non è stato modificato."
 "Questo è il messaggio di uscita di convert-ly: %1"
 
-#: ../python/frescobaldi_app/version.py:96
+#: ../python/frescobaldi_app/version.py:110
 msgid "Could not start convert-ly: %1"
 msgstr "Impossibile avviare convert-ly: %1"
 
@@ -1374,145 +1391,145 @@ msgstr "Fare clic a tempo su questo pulsante per impostare la velocità."
 msgid "The tempo in beats per minute."
 msgstr "Il tempo in battiti al minuto."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:66
+#: ../python/frescobaldi_app/scorewiz/__init__.py:67
 msgid "Score Setup Wizard"
 msgstr "Configurazione assistita di un nuovo spartito"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:132
+#: ../python/frescobaldi_app/scorewiz/__init__.py:133
 msgid "Titles and Headers"
 msgstr "Titoli e Intestazioni"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:150
+#: ../python/frescobaldi_app/scorewiz/__init__.py:151
 msgid "Click to enter a value."
 msgstr "Fare clic per inserire un valore."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:152
+#: ../python/frescobaldi_app/scorewiz/__init__.py:153
 msgid "bottom of first page"
 msgstr "in fondo alla prima pagina"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:153
+#: ../python/frescobaldi_app/scorewiz/__init__.py:154
 msgid "bottom of last page"
 msgstr "in fondo all'ultima pagina"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:196
+#: ../python/frescobaldi_app/scorewiz/__init__.py:197
 msgid "Parts"
 msgstr "Parti"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:201
+#: ../python/frescobaldi_app/scorewiz/__init__.py:202
 msgid "Available parts:"
 msgstr "Parti disponibili:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:204
+#: ../python/frescobaldi_app/scorewiz/__init__.py:205
 msgid "Add selected part to your score."
 msgstr "Aggiungi la parte selezionata allo spartito."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:209
+#: ../python/frescobaldi_app/scorewiz/__init__.py:210
 msgid "Score:"
 msgstr "Spartito:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:341
-#: ../python/frescobaldi_app/scorewiz/__init__.py:346
+#: ../python/frescobaldi_app/scorewiz/__init__.py:342
+#: ../python/frescobaldi_app/scorewiz/__init__.py:347
 msgid "Score settings"
 msgstr "Impostazioni spartito"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:353
+#: ../python/frescobaldi_app/scorewiz/__init__.py:354
 msgid "General preferences"
 msgstr "Preferenze generali"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:355
+#: ../python/frescobaldi_app/scorewiz/__init__.py:356
 msgid "Instrument names"
 msgstr "Nomi degli strumenti"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:362
+#: ../python/frescobaldi_app/scorewiz/__init__.py:363
 msgid "Key signature:"
 msgstr "Tonalità:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:370
+#: ../python/frescobaldi_app/scorewiz/__init__.py:371
 msgid "Time signature:"
 msgstr "Indicazione di tempo:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:384
+#: ../python/frescobaldi_app/scorewiz/__init__.py:385
 msgid "Pickup measure:"
 msgstr "Battuta in levare:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:386
-#: ../python/frescobaldi_app/scorewiz/__init__.py:527
+#: ../python/frescobaldi_app/scorewiz/__init__.py:387
+#: ../python/frescobaldi_app/scorewiz/__init__.py:528
 msgid "None"
 msgstr "Niente"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:395
+#: ../python/frescobaldi_app/scorewiz/__init__.py:396
 msgid "Metronome mark:"
 msgstr "Indicazione per il metronomo:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:423
+#: ../python/frescobaldi_app/scorewiz/__init__.py:424
 msgid "Tempo indication:"
 msgstr "Indicazione di movimento:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:427
+#: ../python/frescobaldi_app/scorewiz/__init__.py:428
 msgid "A tempo indication, e.g. \"Allegro.\""
 msgstr "Un'indicazione di movimento, ad es. \"Allegro.\""
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:437
-#: ../python/frescobaldi_app/scorewiz/__init__.py:502
-#: ../python/frescobaldi_app/scorewiz/__init__.py:536
+#: ../python/frescobaldi_app/scorewiz/__init__.py:438
+#: ../python/frescobaldi_app/scorewiz/__init__.py:503
+#: ../python/frescobaldi_app/scorewiz/__init__.py:537
 #: ../python/frescobaldi_app/scorewiz/parts.py:169
 #: ../python/frescobaldi_app/scorewiz/parts.py:378
 msgid "Default"
 msgstr "Predefinita"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:441
+#: ../python/frescobaldi_app/scorewiz/__init__.py:442
 msgid "The LilyPond language you want to use for the pitch names."
 msgstr "La lingua da usare per le altezze delle note nel sorgente LilyPond."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:458
+#: ../python/frescobaldi_app/scorewiz/__init__.py:459
 msgid "Version:"
 msgstr "Versione:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:467
+#: ../python/frescobaldi_app/scorewiz/__init__.py:468
 msgid "The LilyPond version you will be using for this document."
 msgstr "La versione di LilyPond che sarà usata per questo documento."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:471
+#: ../python/frescobaldi_app/scorewiz/__init__.py:472
 msgid "Use typographical quotes"
 msgstr "Usa virgolette tipografiche"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:473
+#: ../python/frescobaldi_app/scorewiz/__init__.py:474
 msgid "Replace normal quotes in titles with nice typographical quotes."
 msgstr ""
 "Sostituisce le virgolette normali con quelle tipografiche, di più bel "
 "aspetto."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:475
+#: ../python/frescobaldi_app/scorewiz/__init__.py:476
 msgid "Remove default tagline"
 msgstr "Togli la tagline predefinita"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:477
+#: ../python/frescobaldi_app/scorewiz/__init__.py:478
 msgid "Suppress the default tagline output by LilyPond."
 msgstr "Elimina la tagline predefinita di LilyPond."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:479
+#: ../python/frescobaldi_app/scorewiz/__init__.py:480
 msgid "Remove bar numbers"
 msgstr "Togli i numeri di battuta"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:481
+#: ../python/frescobaldi_app/scorewiz/__init__.py:482
 msgid ""
 "Suppress the display of measure numbers at the beginning of every system."
 msgstr ""
 "Elimina la visualizzazione dei numeri di battuta all'inizio di ogni sistema."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:484
+#: ../python/frescobaldi_app/scorewiz/__init__.py:485
 msgid "Create MIDI output"
 msgstr "Genera MIDI"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:486
+#: ../python/frescobaldi_app/scorewiz/__init__.py:487
 msgid "Create a MIDI file in addition to the PDF file."
 msgstr "Genera anche un file MIDI oltre al PDF."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:488
+#: ../python/frescobaldi_app/scorewiz/__init__.py:489
 msgid "Show metronome mark"
 msgstr "Mostra l'indicazione per il metronomo"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:490
+#: ../python/frescobaldi_app/scorewiz/__init__.py:491
 msgid ""
 "If checked, show the metronome mark at the beginning of the score. The MIDI "
 "output also uses the metronome setting."
@@ -1520,52 +1537,52 @@ msgstr ""
 "Se selezionato, mostra l'indicazione per il metronomo all'inizio dello "
 "spartito. Anche l'output MIDI userà la stessa indicazione."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:498
+#: ../python/frescobaldi_app/scorewiz/__init__.py:499
 msgid "Paper size:"
 msgstr "Dimensione del foglio:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:501
+#: ../python/frescobaldi_app/scorewiz/__init__.py:502
 msgid "Landscape"
 msgstr "Orizzontale"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:515
+#: ../python/frescobaldi_app/scorewiz/__init__.py:516
 msgid "First system:"
 msgstr "Primo sistema:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:518
-#: ../python/frescobaldi_app/scorewiz/__init__.py:527
+#: ../python/frescobaldi_app/scorewiz/__init__.py:519
+#: ../python/frescobaldi_app/scorewiz/__init__.py:528
 msgid "Long"
 msgstr "Per esteso"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:518
-#: ../python/frescobaldi_app/scorewiz/__init__.py:527
+#: ../python/frescobaldi_app/scorewiz/__init__.py:519
+#: ../python/frescobaldi_app/scorewiz/__init__.py:528
 msgid "Short"
 msgstr "Abbreviato"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:520
+#: ../python/frescobaldi_app/scorewiz/__init__.py:521
 msgid "Use long or short instrument names before the first system."
 msgstr ""
 "Usa il nome dello strumento abbreviato o per esteso davanti al primo sistema."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:524
+#: ../python/frescobaldi_app/scorewiz/__init__.py:525
 msgid "Other systems:"
 msgstr "Gli altri sistemi:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:529
+#: ../python/frescobaldi_app/scorewiz/__init__.py:530
 msgid "Use short, long or no instrument names before the next systems."
 msgstr ""
 "Usa il nome per esteso, abbreviato o non usa i nomi degli strumenti davanti "
 "agli altri sistemi."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:537
+#: ../python/frescobaldi_app/scorewiz/__init__.py:538
 msgid "Which language to use for the instrument names."
 msgstr "La lingua da usare per i nomi degli strumenti."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:709
+#: ../python/frescobaldi_app/scorewiz/__init__.py:710
 msgid "Remove default LilyPond tagline"
 msgstr "Elimina la tagline predefinita di LilyPond"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:956
+#: ../python/frescobaldi_app/scorewiz/__init__.py:957
 msgid "No settings available."
 msgstr "Nessuna configurazione disponibile."
 
