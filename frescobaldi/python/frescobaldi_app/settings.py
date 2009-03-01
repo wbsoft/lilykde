@@ -21,12 +21,15 @@
 Config dialog
 """
 
-from PyQt4.QtCore import QObject, QSize, QString, QVariant, SIGNAL
+from PyQt4.QtCore import QObject, QSize, QString, QTimer, QVariant, SIGNAL
 from PyQt4.QtGui import (
-    QCheckBox, QGridLayout, QLabel, QTextEdit, QTreeView, QWidget)
+    QCheckBox, QGridLayout, QGroupBox, QLabel, QLineEdit, QRadioButton,
+    QTextEdit, QTreeView, QWidget)
 from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KIcon, KPageDialog, KVBox
 from PyKDE4.kio import KFile, KUrlRequester
+
+import ly.version
 
 from frescobaldi_app.widgets import ExecLineEdit, ExecArgsLineEdit
 
@@ -130,16 +133,64 @@ class GeneralPreferences(KVBox):
             b = QCheckBox(title, self)
             QObject.connect(b, SIGNAL("clicked()"), dialog.changed)
             self.checks.append((b, name, default))
+            
+        self.layout().addSpacing(20)
+        
+        self.versionOptions = {}
+        self.customVersion = QLineEdit()
+        
+        def changed(dummy):
+            dialog.changed()
+            self.customVersion.setEnabled(self.versionOptions["custom"].isChecked())
+            
+        grid = QGridLayout(QGroupBox(i18n(
+            "LilyPond version number to use for new documents"), self))
+        for title, name in (
+            (i18n("Use version of installed LilyPond"), "lilypond"),
+            (i18n("Use version of last convert-ly rule"), "convert-ly"),
+            (i18n("Use custom version:"), "custom"),
+        ):
+            self.versionOptions[name] = QRadioButton(title)
+            QObject.connect(self.versionOptions[name], SIGNAL("toggled(bool)"), changed)
+        
+        QObject.connect(self.customVersion, SIGNAL("textChanged(QString)"),
+            lambda dummy: dialog.changed())
+        
+        grid.addWidget(self.versionOptions["lilypond"], 0, 0, 1, 2)
+        grid.addWidget(self.versionOptions["convert-ly"], 1, 0, 1, 2)
+        grid.addWidget(self.versionOptions["custom"], 2, 0, 1, 1)
+        grid.addWidget(self.customVersion, 2, 1, 1, 1)
+        
+        def displayVersions():
+            ver = ly.version.LilyPondVersion(command("lilypond")).versionString
+            if ver:
+                w = self.versionOptions["lilypond"]
+                w.setText(w.text() + (' (%s)' % ver))
+            ver = ly.version.ConvertLyLastRuleVersion(command("convert-ly")).versionString
+            if ver:
+                w = self.versionOptions["convert-ly"]
+                w.setText(w.text() + (' (%s)' % ver))
+        
+        QTimer.singleShot(0, displayVersions)
         self.layout().addStretch(1)
 
     def defaults(self):
         for widget, name, default in self.checks:
             widget.setChecked(default)
+        # lily version:
+        self.customVersion.clear()
+        self.versionOptions["lilypond"].setChecked(True)
             
     def loadSettings(self):
         conf = config("preferences")
         for widget, name, default in self.checks:
             widget.setChecked(conf.readEntry(name, QVariant(default)).toBool())
+        # lily version:
+        self.customVersion.setText(conf.readEntry("custom version", ""))
+        name = unicode(conf.readEntry("default version", ""))
+        if name not in self.versionOptions:
+            name = "lilypond"
+        self.versionOptions[name].setChecked(True)
 
     def saveSettings(self):
         conf = config("preferences")
@@ -153,6 +204,12 @@ class GeneralPreferences(KVBox):
         elif not disable and not running:
             tool = frescobaldi_app.mainapp.PDFTool(self.mainwin)
             tool.sync(self.mainwin.currentDocument())
+        # lily version:
+        conf.writeEntry("custom version", self.customVersion.text())
+        for name, widget in self.versionOptions.items():
+            if widget.isChecked():
+                conf.writeEntry("default version", name)
+                break
 
 
 class Commands(QWidget):
@@ -266,3 +323,5 @@ class Commands(QWidget):
 def config(group):
     return KGlobal.config().group(group)
 
+def command(cmd):
+    return unicode(config("commands").readEntry(cmd, cmd))
