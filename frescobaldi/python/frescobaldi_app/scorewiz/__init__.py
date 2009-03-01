@@ -431,7 +431,7 @@ class Settings(QWidget):
         v = QVBoxLayout(lily)
         h = KHBox()
         v.addWidget(h)
-        l = QLabel(i18n("Language:"), h)
+        l = QLabel(i18n("Pitch name language:"), h)
         self.languageNames = list(sorted(ly.keyNames))
         self.lylang = QComboBox(h)
         l.setBuddy(self.lylang)

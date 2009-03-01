@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-03-01 15:56+0100\n"
+"POT-Creation-Date: 2009-03-01 20:41+0100\n"
 "PO-Revision-Date: 2009-02-05 00:15+0100\n"
 "Last-Translator: Gianluca D'Orazio <gianluca.dorazio@gmail.com>\n"
 "Language-Team: italiano <it@li.org>\n"
@@ -1075,7 +1075,6 @@ msgid "MIDI output to use."
 msgstr "L'uscita MIDI da usare."
 
 #: ../python/frescobaldi_app/rumor.py:436
-#: ../python/frescobaldi_app/scorewiz/__init__.py:434
 #: ../python/frescobaldi_app/scorewiz/__init__.py:534
 msgid "Language:"
 msgstr "Lingua:"
@@ -1249,38 +1248,42 @@ msgid "LilyPond version number to use for new documents"
 msgstr "La versione di LilyPond che sarà usata per questo documento."
 
 #: ../python/frescobaldi_app/settings.py:149
-msgid "Use version of installed LilyPond"
+msgid "Use version number of installed LilyPond"
 msgstr ""
 
 #: ../python/frescobaldi_app/settings.py:150
-msgid "Use version of last convert-ly rule"
+msgid "Use version number of last convert-ly rule"
 msgstr ""
 
 #: ../python/frescobaldi_app/settings.py:151
-msgid "Use custom version:"
+msgid "Use custom version number:"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:221
+#: ../python/frescobaldi_app/settings.py:157
+msgid "Enter a valid LilyPond version number, e.g. 2.12.0"
+msgstr ""
+
+#: ../python/frescobaldi_app/settings.py:212
 msgid "Paths"
 msgstr "Percorsi"
 
-#: ../python/frescobaldi_app/settings.py:222
+#: ../python/frescobaldi_app/settings.py:213
 msgid "Paths to programs or data used by Frescobaldi"
 msgstr "Percorsi ai programmi o ai dati usati da Frescobaldi"
 
-#: ../python/frescobaldi_app/settings.py:231
+#: ../python/frescobaldi_app/settings.py:222
 msgid "Name or full path of the LilyPond program."
 msgstr "Nome o percorso completo dell'eseguibile di LilyPond."
 
-#: ../python/frescobaldi_app/settings.py:233
+#: ../python/frescobaldi_app/settings.py:224
 msgid "Name or full path of the convert-ly program."
 msgstr "Nome o percorso completo di convert-ly."
 
-#: ../python/frescobaldi_app/settings.py:234
+#: ../python/frescobaldi_app/settings.py:225
 msgid "Printcommand:"
 msgstr "Comando di stampa:"
 
-#: ../python/frescobaldi_app/settings.py:235
+#: ../python/frescobaldi_app/settings.py:226
 msgid ""
 "Command to print a PDF file, for example lpr or kprinter. You may add some "
 "arguments, e.g. lpr -P myprinter."
@@ -1288,11 +1291,11 @@ msgstr ""
 "Comando per stampare un PDF, per esempio lpr o kprinter. Si possono far "
 "seguire opzioni, ad es.: lpr -P myprinter."
 
-#: ../python/frescobaldi_app/settings.py:239
+#: ../python/frescobaldi_app/settings.py:230
 msgid "Name or full path of the Rumor program."
 msgstr "Nome o percorso completo dell'eseguibile di Rumor."
 
-#: ../python/frescobaldi_app/settings.py:241
+#: ../python/frescobaldi_app/settings.py:232
 msgid ""
 "Name or full path of the aconnect program (part of ALSA, for MIDI input and "
 "playback using Rumor)."
@@ -1300,22 +1303,22 @@ msgstr ""
 "Nome o percorso completo di aconnect (componente ALSA per l'inserimento e "
 "l'esecuzione MIDI tramite Rumor)."
 
-#: ../python/frescobaldi_app/settings.py:245
+#: ../python/frescobaldi_app/settings.py:236
 msgid ""
 "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Comando completo per avviare TiMidity (o un altro programma) come client "
 "MIDI per ALSA."
 
-#: ../python/frescobaldi_app/settings.py:260
+#: ../python/frescobaldi_app/settings.py:251
 msgid "Default directory:"
 msgstr "Cartella predefinita:"
 
-#: ../python/frescobaldi_app/settings.py:265
+#: ../python/frescobaldi_app/settings.py:256
 msgid "The default folder for your LilyPond documents (optional)."
 msgstr "La cartella predefinita dei documenti LilyPond (facoltativo)."
 
-#: ../python/frescobaldi_app/settings.py:278
+#: ../python/frescobaldi_app/settings.py:269
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
@@ -1468,6 +1471,11 @@ msgstr "Indicazione di movimento:"
 #: ../python/frescobaldi_app/scorewiz/__init__.py:428
 msgid "A tempo indication, e.g. \"Allegro.\""
 msgstr "Un'indicazione di movimento, ad es. \"Allegro.\""
+
+#: ../python/frescobaldi_app/scorewiz/__init__.py:434
+#, fuzzy
+msgid "Pitch name language:"
+msgstr "Lingua:"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:438
 #: ../python/frescobaldi_app/scorewiz/__init__.py:503
