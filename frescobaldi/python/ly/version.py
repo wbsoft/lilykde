@@ -37,6 +37,22 @@ class LilyPondVersion(object):
             self.versionString = ""
 
 
+class ConvertLyLastRuleVersion(object):
+    def __init__(self, command = 'convert-ly'):
+        self.versionTuple = ()
+        self.versionString = ""
+        try:
+            output = Popen((command, '--show-rules'), stdout=PIPE).communicate()[0]
+            for line in reversed(output.splitlines()):
+                match = re.match(r"((\d+)\.(\d+)\.(\d+)):", line)
+                if match:
+                    self.versionString = match.group(1)
+                    self.versionTuple = tuple(int(s) for s in match.group(2, 3, 4))
+                    return
+        except OSError:
+            pass
+
+
 def datadir(command = 'lilypond'):
     """ Returns the data directory of the given lilypond binary """
     

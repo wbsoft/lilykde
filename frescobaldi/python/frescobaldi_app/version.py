@@ -28,12 +28,18 @@ from PyKDE4.ktexteditor import KTextEditor
 
 def defaultVersion():
     """
-    Returns the LilyPond version number according to the user's
+    Returns the LilyPond version number string according to the user's
     preference: the version of the currently installed LilyPond, the
     version of the last rule in convert-ly, or a custom version.
     """
-    #TODO: implement
-    return ly.version.LilyPondVersion(command("lilypond")).versionString
+    prefs = config("preferences")
+    pver = prefs.readEntry("default version", "lilypond")
+    version = ''
+    if pver == "custom":
+        version = unicode(prefs.readEntry("custom version", ""))
+    elif pver == "convert-ly":
+        version = ly.version.ConvertLyLastRuleVersion(command("convert-ly")).versionString
+    return version or ly.version.LilyPondVersion(command("lilypond")).versionString
 
 def insertVersion(mainwin):
     """
