@@ -79,16 +79,75 @@ Here you can set some general preferences to influence the behaviour of &frescob
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>LilyPond version number to use for new documents</guilabel></term>
+<term><guilabel>&lilypond; version number to use for new documents</guilabel></term>
 <listitem>
   <para>
   Here you can set which version number you want &frescobaldi; to insert by default with
   the <guilabel>Insert &lilypond; Version</guilabel> command or the Score Wizard.
+  Choose one of three options:
   </para>
+  <variablelist>
+    <varlistentry>
+    <term><guilabel>Use version number of installed &lilypond;</guilabel></term>
+    <listitem>
+      <para>
+      &frescobaldi; will use the version number of the installed &lilypond; by default.
+      </para>
+      
+      <para>
+      (&frescobaldi; determines the version by running
+      <command>lilypond</command> <option>-v</option> and looking at the first line
+      of the output.)
+      </para>
+    </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+    <term><guilabel>Use version number of last convert-ly rule</guilabel></term>
+    <listitem>
+      <para>
+      &frescobaldi; will use the version number of last rule of the installed
+      <command>convert-ly</command> program by default. This is useful if you just want
+      your document to conform to the latest &lilypond; syntax without requiring the most
+      recent available version.
+      </para>
+      
+      <para>
+      This makes document exchange easier.
+      E.g. when you use <userinput>\version "2.12.2"</userinput>, another user's &lilypond;
+      version 2.12.0 might complain about your document's version being to new, even though there
+      are no syntax changes and the older &lilypond; would just compile the document fine.
+      </para>
+      
+      <para>
+      (&frescobaldi; determines the last convert-ly rule version by running
+      <command>convert-ly</command> <option>--show-rules</option> and looking at the last line
+      that starts with a version number.)
+      </para>
+    </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+    <term><guilabel>Use custom version number</guilabel></term>
+    <listitem>
+      <para>
+      Enables you to explicitly specify the version number you want to use by default
+      for new documents.
+      </para>
+    </listitem>
+    </varlistentry>
+  </variablelist>
 </listitem>
 </varlistentry>
 
 </variablelist>
+
+<note><para>
+Note that the Score Wizard is able to adjust its output depending on the version
+you specify in the Score Wizard. It is therefore possible to write documents for
+older &lilypond; versions, although in general using the most recent stable &lilypond;
+release is recommended.
+</para></note>
 
 </sect2>
 
@@ -96,7 +155,15 @@ Here you can set some general preferences to influence the behaviour of &frescob
 <title>Paths</title>
 
 <para>
+Here you can specify the paths to use for different commands. Normally you would just
+leave the defaults, but if you have multiple versions of &lilypond; installed,
+you can specify which one to run by entering the exact path.
 </para>
+
+<note><para>
+If you change the path to the <command>lilypond</command> command, be sure to also point the
+<command>convert-ly</command> command to the same directory.
+</para></note>
 
 </sect2>
 
@@ -116,10 +183,53 @@ Documentation for the editor component can be found in the manuals for
 
 
 <sect1 id="point-and-click">
-<title>Configuring Point and Click</title>
+<title>Configuring Point &amp; Click</title>
 
 <para>
+Point &amp; Click is a &lilypond; feature that embeds clickable URLs in the PDF output.
+Those URLs contain the source file path and line and column numbers. Clicking on those
+clickable objects lets the cursor in &frescobaldi; jump to the corresponding position
+in the source document.
 </para>
+
+<para>
+If all is well, Point &amp; Click should <trademark>"Just Work"</trademark>.
+But this section is here to help you setting it up in the case it doesn't work
+by default. Point &amp; Click in &frescobaldi; is handled differently in KDE 4.1 and KDE 4.2.
+</para>
+
+<para>
+In KDE 4.1, you need to install the <literal>lilypond-kde4</literal> package.
+This contains a program that handles the <literal>textedit:</literal> service.
+If point and click still does not work, check if &frescobaldi; is tied to the
+<literal>text/x-lilypond</literal> MIME type in the KDE System Settings
+(File Associations).
+</para>
+
+<para>
+In KDE 4.2, the Point &amp; Click URLs are handled by Okular itself.
+When you install &frescobaldi;, on its first run it autoconfigures the Okular part
+to run &frescobaldi; when a Point &amp; Click URL is clicked.
+But if for some reason this didn't happen, you can configure Okular manually
+to run &frescobaldi;.
+Right-click the PDF preview tab and choose <guimenuitem>Configure Okular...</guimenuitem>
+(or use
+<menuchoice>
+  <guimenu>Settings</guimenu>
+  <guisubmenu>Tool Views</guisubmenu>
+  <guimenuitem>Configure Okular...</guimenuitem>
+</menuchoice>) to open the Okular settings dialog.
+There, under <guilabel>Editors</guilabel>, you can configure a custom editor command.
+Enter the following command and click <guibutton>Ok</guibutton>:
+</para>
+
+<programlisting>frescobaldi --line %l --column %c</programlisting>
+
+<note><para>
+Point &amp; Click URLs enlarge the PDF output documents significantly.
+It is therefore better to build PDF documents in publish mode when you
+want to distribute them (via e-mail or the World-wide Web) to others.
+</para></note>
 
 </sect1>
 
@@ -127,6 +237,24 @@ Documentation for the editor component can be found in the manuals for
 <title>Highlighting and indenting</title>
 
 <para>
+Frescobaldi uses the &lilypond; syntax highlighting and indenting algorithm from KDE's 
+editing component KatePart. By default, indenting is switched on, using spaces,
+and the indent-width is 2 spaces.
+(Using spaces for indenting works better with Point &amp; Click in some cases.)
+For most &lilypond; scores this indent-width will look good, and in some places
+this is currently hard-coded in Frescobaldi (e.g. the default snippets in the
+<link linkend="expand">expand dialog</link>).
+</para>
+
+<para>
+You can configure other indent settings using kate variables in your document,
+or globally by setting kate variables in the &lilypond; Kate mode.
+Setting variables in the document is described
+<ulink url="help:/kate/config-variables.html">here in the Kate manual</ulink>.
+Setting variables globally for the &lilypond; Kate mode is described
+in the Kate manual under
+&quot;<ulink url="help:/kate/config-dialog-editor.html#pref-open-save-modes-filetypes"
+>Modes &amp; Filetypes</ulink>.&quot;
 </para>
 
 </sect1>

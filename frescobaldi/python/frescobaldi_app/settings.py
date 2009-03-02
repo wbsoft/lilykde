@@ -43,8 +43,9 @@ class SettingsDialog(KPageDialog):
         self.setFaceType(KPageDialog.Tree)
         self.setButtons(KPageDialog.ButtonCode(
             KPageDialog.Reset | KPageDialog.Default | KPageDialog.Apply |
-            KPageDialog.Ok | KPageDialog.Cancel))
+            KPageDialog.Ok | KPageDialog.Cancel | KPageDialog.Help))
         self.setCaption(i18n("Configure"))
+        self.setHelp("settings-dialog")
         self.setDefaultButton(KPageDialog.Ok)
         QObject.connect(self, SIGNAL("applyClicked()"), self.saveSettings)
         QObject.connect(self, SIGNAL("defaultClicked()"), self.defaultClicked)
