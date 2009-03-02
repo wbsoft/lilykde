@@ -469,19 +469,15 @@ class Dock(QStackedWidget):
 
     def addTool(self, tool):
         """ Add a tool to our tabbar, save dock and tabid in the tool """
-        if tool.widget:
-            QStackedWidget.addWidget(self, tool.widget)
         self.tabbar.addTool(tool)
         self.tools.append(tool)
         if tool.isActive():
             self.showTool(tool)
 
     def removeTool(self, tool):
+        """ Remove a tool from our dock. """
         if tool not in self.tools:
             return
-        # Removing is not necessary ...
-        #if tool.widget:
-            #QStackedWidget.removeWidget(self, tool.widget)
         self.tabbar.removeTool(tool)
         self.tools.remove(tool)
         if tool is self._currentTool:
@@ -495,10 +491,9 @@ class Dock(QStackedWidget):
         """
         if tool not in self.tools or tool is self._currentTool:
             return
-        if not tool.widget:
-            tool.materialize()
-            QStackedWidget.addWidget(self, tool.widget)
-        QStackedWidget.setCurrentWidget(self, tool.widget)
+        if self.indexOf(tool.widget) == -1:
+            self.addWidget(tool.widget)
+        self.setCurrentWidget(tool.widget)
         self.tabbar.showTool(tool)
         cur = self._currentTool
         self._currentTool = tool
@@ -611,6 +606,7 @@ class Tool(object):
 
     def show(self):
         """ Bring our tool into view. """
+        self.materialize()
         if self._docked:
             self._active = True
             self._dock.showTool(self)

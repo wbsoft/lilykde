@@ -602,9 +602,18 @@ class PDFTool(kateshell.mainwindow.KPartTool):
                 lambda: self.toggleAction(name))
         act("leftpanel", i18n("Show PDF Navigation Panel"))
         act("minipager", i18n("Show PDF minipager"))
+        a = m.addAction(i18n("Configure Okular..."))
+        QObject.connect(a, SIGNAL("triggered()"), self.openOkularSettings)
         m.addSeparator()
         act("sync", i18n("S&ynchronize Preview with Current Document"))
 
+    def openOkularSettings(self):
+        self.materialize()
+        if self.part:
+            a = self.part.actionCollection().action("options_configure")
+            if a:
+                a.trigger()
+                
     def toggleAction(self, name):
         c = self._config[name] = not self._config[name]
         if not self.part:
