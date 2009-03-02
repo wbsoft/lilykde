@@ -1,0 +1,134 @@
+<chapter id="configuring">
+<title>Configuring &frescobaldi;</title>
+
+<para>This chapter documents how to configure &frescobaldi; for your needs.</para>
+
+<sect1 id="settings-menu">
+<title>The Settings Menu</title>
+
+<para>
+The <guimenu>Settings</guimenu> menu has options to show the full path of the
+file currently being edited in the window title bar or just the filename, to show or
+hide the toolbar and to switch the &frescobaldi; window to full screen mode.
+</para>
+
+<para>
+The <guisubmenu>Tool Views</guisubmenu> sub menu lets you alter some settings of the
+tools in the sidebar docks of the &frescobaldi; window. (Note that you can right-click
+on the tabs in the sidebar docks for more tool options.)
+</para>
+
+<para>
+Finally, &frescobaldi; has the usual menu entries
+<guimenuitem>Configure Shortcuts...</guimenuitem>,
+<guimenuitem>Configure Toolbars...</guimenuitem> and
+<link linkend="settings-dialog"><guimenuitem>Configure &frescobaldi;...</guimenuitem></link>.
+</para>
+
+</sect1>
+
+<sect1 id="settings-dialog">
+<title>The Settings Dialog</title>
+
+<sect2 id="settings-general-preferences">
+<title>General Preferences</title>
+
+<para>
+Here you can set some general preferences to influence the behaviour of &frescobaldi; and &lilypond;:
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Save Document when &lilypond; is run</guilabel></term>
+<listitem>
+  <para>
+  If checked, &frescobaldi; will save the document (if modified) before running &lilypond;.
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Let &lilypond; delete intermediate files</guilabel></term>
+<listitem>
+  <para>
+  If checked, &frescobaldi; will run &lilypond; with the <option>delete-intermediate-files</option> option,
+  so that e.g. PostScript files are deleted after the PDF file has been generated.
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Remember cursor position, bookmarks, etc.</guilabel></term>
+<listitem>
+  <para>
+  If checked, &frescobaldi; will save the cursor position, bookmarks and some view settings
+  for a document when it is closed. This meta-information is retained for one month.
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Disable the built-in PDF preview</guilabel></term>
+<listitem>
+  <para>
+  If checked, the built-in PDF preview will be disabled. This is useful if you prefer an
+  external PDF viewer (e.g. <productname>Okular</productname>).
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>LilyPond version number to use for new documents</guilabel></term>
+<listitem>
+  <para>
+  Here you can set which version number you want &frescobaldi; to insert by default with
+  the <guilabel>Insert &lilypond; Version</guilabel> command or the Score Wizard.
+  </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="settings-paths">
+<title>Paths</title>
+
+<para>
+</para>
+
+</sect2>
+
+<sect2 id="settings-editor-component">
+<title>Editor Component</title>
+
+<para>
+Here configuration options can be set for the KatePart editor component that is used by &frescobaldi;.
+Documentation for the editor component can be found in the manuals for
+<ulink url="help:/kwrite/pref-dialog.html">KWrite</ulink> and
+<ulink url="help:/kate/config-dialog-editor.html">Kate</ulink>.
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="point-and-click">
+<title>Configuring Point and Click</title>
+
+<para>
+</para>
+
+</sect1>
+
+<sect1 id="syntax">
+<title>Highlighting and indenting</title>
+
+<para>
+</para>
+
+</sect1>
+
+</chapter>
