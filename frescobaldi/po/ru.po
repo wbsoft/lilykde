@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-03-01 20:41+0100\n"
+"POT-Creation-Date: 2009-03-02 22:07+0100\n"
 "PO-Revision-Date: 2009-02-22 12:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -415,15 +415,15 @@ msgstr "Все файлы"
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: ../python/kateshell/mainwindow.py:711
+#: ../python/kateshell/mainwindow.py:707
 msgid "Move To"
 msgstr "Переместить"
 
-#: ../python/kateshell/mainwindow.py:718
+#: ../python/kateshell/mainwindow.py:714
 msgid "Undock"
 msgstr "Скрыть док"
 
-#: ../python/kateshell/mainwindow.py:783
+#: ../python/kateshell/mainwindow.py:779
 msgid "Could not load %1"
 msgstr "Невозможно запустить LilyPond: %1"
 
@@ -929,23 +929,28 @@ msgstr "Показать панель навигации по PDF докумен
 msgid "Show PDF minipager"
 msgstr "Показать PDF мини-пейджер"
 
-#: ../python/frescobaldi_app/mainapp.py:606
+#: ../python/frescobaldi_app/mainapp.py:605
+#, fuzzy
+msgid "Configure Okular..."
+msgstr "Настройка..."
+
+#: ../python/frescobaldi_app/mainapp.py:608
 msgid "S&ynchronize Preview with Current Document"
 msgstr "Синхронизировать просмотр с текущим документом"
 
-#: ../python/frescobaldi_app/mainapp.py:660
+#: ../python/frescobaldi_app/mainapp.py:669
 msgid "Quick Insert"
 msgstr "Быстрая вставка"
 
-#: ../python/frescobaldi_app/mainapp.py:672
+#: ../python/frescobaldi_app/mainapp.py:681
 msgid "LilyPond Log"
 msgstr "LilyPond журнал"
 
-#: ../python/frescobaldi_app/mainapp.py:676
+#: ../python/frescobaldi_app/mainapp.py:685
 msgid "no log"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:706
+#: ../python/frescobaldi_app/mainapp.py:715
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -1219,80 +1224,80 @@ msgstr "Кликните, для редактирования этого фай�
 msgid "Configure"
 msgstr "Настройка"
 
-#: ../python/frescobaldi_app/settings.py:89
+#: ../python/frescobaldi_app/settings.py:90
 msgid "Editor Component"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:90
+#: ../python/frescobaldi_app/settings.py:91
 msgid "Editor Component Options"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:118
+#: ../python/frescobaldi_app/settings.py:119
 msgid "General Preferences"
 msgstr "Общие настройки"
 
-#: ../python/frescobaldi_app/settings.py:119
+#: ../python/frescobaldi_app/settings.py:120
 msgid "General Frescobaldi Preferences"
 msgstr "Общие настройки Frescobaldi"
 
-#: ../python/frescobaldi_app/settings.py:124
+#: ../python/frescobaldi_app/settings.py:125
 msgid "Save document when LilyPond is run"
 msgstr "Сохранять документ перед запуском LilyPond"
 
-#: ../python/frescobaldi_app/settings.py:126
+#: ../python/frescobaldi_app/settings.py:127
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Удалить служебные файлы LilyPond."
 
-#: ../python/frescobaldi_app/settings.py:128
+#: ../python/frescobaldi_app/settings.py:129
 msgid "Remember cursor position, bookmarks, etc."
 msgstr "Запоминать позицию курсора, закладки и т.п."
 
-#: ../python/frescobaldi_app/settings.py:130
+#: ../python/frescobaldi_app/settings.py:131
 msgid "Disable the built-in PDF preview"
 msgstr "Запретить встроенный просмотр PDF"
 
-#: ../python/frescobaldi_app/settings.py:147
+#: ../python/frescobaldi_app/settings.py:148
 #, fuzzy
 msgid "LilyPond version number to use for new documents"
 msgstr "Версия LilyPond используемая для текущего документа."
 
-#: ../python/frescobaldi_app/settings.py:149
+#: ../python/frescobaldi_app/settings.py:150
 msgid "Use version number of installed LilyPond"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:150
+#: ../python/frescobaldi_app/settings.py:151
 msgid "Use version number of last convert-ly rule"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:151
+#: ../python/frescobaldi_app/settings.py:152
 msgid "Use custom version number:"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:157
+#: ../python/frescobaldi_app/settings.py:158
 msgid "Enter a valid LilyPond version number, e.g. 2.12.0"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:212
+#: ../python/frescobaldi_app/settings.py:213
 msgid "Paths"
 msgstr "Пути"
 
-#: ../python/frescobaldi_app/settings.py:213
+#: ../python/frescobaldi_app/settings.py:214
 msgid "Paths to programs or data used by Frescobaldi"
 msgstr "Пути к программам или данным, используемым Frescobaldi"
 
-#: ../python/frescobaldi_app/settings.py:222
+#: ../python/frescobaldi_app/settings.py:223
 msgid "Name or full path of the LilyPond program."
 msgstr "Имя или полный путь к программе LilyPond"
 
-#: ../python/frescobaldi_app/settings.py:224
+#: ../python/frescobaldi_app/settings.py:225
 msgid "Name or full path of the convert-ly program."
 msgstr "Имя или полный путь к программе convert-ly"
 
-#: ../python/frescobaldi_app/settings.py:225
+#: ../python/frescobaldi_app/settings.py:226
 msgid "Printcommand:"
 msgstr "Команда печати:"
 
-#: ../python/frescobaldi_app/settings.py:226
+#: ../python/frescobaldi_app/settings.py:227
 msgid ""
 "Command to print a PDF file, for example lpr or kprinter. You may add some "
 "arguments, e.g. lpr -P myprinter."
@@ -1300,11 +1305,11 @@ msgstr ""
 "Команда печати PDF файла, например, lpr или kprinter. Вы можете добавить "
 "дополнительные аргументы, напр. lpr -P myprinter"
 
-#: ../python/frescobaldi_app/settings.py:230
+#: ../python/frescobaldi_app/settings.py:231
 msgid "Name or full path of the Rumor program."
 msgstr "Имя или полный путь к программе Rumor."
 
-#: ../python/frescobaldi_app/settings.py:232
+#: ../python/frescobaldi_app/settings.py:233
 msgid ""
 "Name or full path of the aconnect program (part of ALSA, for MIDI input and "
 "playback using Rumor)."
@@ -1312,21 +1317,21 @@ msgstr ""
 "Имя или полный путь к программе aconnect (часть пакета ALSA, для ввода и "
 "воспроизведения MIDI, используя Rumor)"
 
-#: ../python/frescobaldi_app/settings.py:236
+#: ../python/frescobaldi_app/settings.py:237
 msgid ""
 "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Полная команда запуска TiMidity или другой программы MIDI-клиента ALSA."
 
-#: ../python/frescobaldi_app/settings.py:251
+#: ../python/frescobaldi_app/settings.py:252
 msgid "Default directory:"
 msgstr "Директория по умолчанию"
 
-#: ../python/frescobaldi_app/settings.py:256
+#: ../python/frescobaldi_app/settings.py:257
 msgid "The default folder for your LilyPond documents (optional)."
 msgstr "Директория по умолчанию, для Ваших LilyPond документов (опционально)."
 
-#: ../python/frescobaldi_app/settings.py:269
+#: ../python/frescobaldi_app/settings.py:270
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
