@@ -1,0 +1,79 @@
+Development of Frescobaldi
+==========================
+
+If you want to contribute to Frescobaldi, you can find here some information
+about how the Frescobaldi code is organized.
+
+frescobaldi.py
+
+  the entry point. This small script is installed as BIN/frescobaldi and imports
+  the rest of the python modules as soon as they are needed.
+
+data/
+
+  data files such as ui and desktop files
+
+icons/
+
+  this directory is verbatim installed into SHARE/apps/frescobaldi/icons
+
+pics/
+
+  PNG icons that are generated from lilypond source files
+
+po/
+
+  translations. Read README-translations for info about how to add a new
+  translations to Frescobaldi.
+
+doc/
+
+  the docbook sources for the Frescobaldi User Guide
+
+rumor/
+
+  some support files for the Rumor plugin. (Rumor is an external program that
+  translates MIDI input to LilyPond output, and it can be used by Frescobaldi.)
+
+python/
+
+  python modules and packages that are installed to SHARE/apps/frescobaldi/lib.
+
+makedist.sh
+
+  a small shell script that exports the source tree from a SVN working copy
+  and creates a release tarball with LilyPond-generated icons and MO files
+  prebuilt. The version is read from the toplevel CMakeLists.txt file.
+
+
+Python directory structure
+==========================
+
+The python/ directory contains all python modules that comprise Frescobaldi.
+There are three main packages:
+
+ly/
+  
+  a collection of modules that interact with LilyPond and the .LY file format.
+  No KDE-related modules.
+
+kateshell/
+
+  an editor shell around KatePart. No LilyPond-related code.
+
+frescobaldi_app/
+
+  all Frescobaldi-specific modules. The mainapp.py file contains the application
+  core functionality, and subclasses most of the generic classes in kateshell/.
+
+
+Python Coding guidelines
+========================
+
+Use ASCII or UTF-8 encoding for the Python source files and 4 spaces for indent.
+
+Be lazy: try to load as few Python modules as possible from startup to display
+of the mainwindow.
+
+Remain compatible with Python 2.4, 2.5 and 2.6
+

@@ -1,16 +1,16 @@
 <chapter id="about">
-<title>About Frescobaldi</title>
+<title>About &frescobaldi;</title>
 
 <sect1 id="credits">
 <title>Credits</title>
 
 <para>
-The following people have contributed to Frescobaldi:
+The following people have contributed to &frescobaldi;:
 </para>
 
 <variablelist>
 <varlistentry>
-<term>Main author and core developer:</term>
+<term>Main author, core developer and Dutch translation:</term>
 <listitem>
   <para>
   Wilbert Berendsen (<ulink url="http://www.wilbertberendsen.nl/">www.wilbertberendsen.nl</ulink>)
@@ -94,6 +94,33 @@ The following people have contributed to Frescobaldi:
 <title>License</title>
 &underFDL;
 &underGPL;
+</sect1>
+
+<sect1 id="contributing">
+<title>Contributing</title>
+<para>
+&frescobaldi; is a <ulink url="http://www.gnu.org/philosophy/free-sw.html">Free Software</ulink>
+project to create a user friendly &lilypond; music score editor.
+&frescobaldi; is written in <ulink url="http://www.python.org/">Python</ulink> and 
+uses the <ulink url="http://www.kde.org/">KDE4</ulink> libraries as a foundation.
+The goal is to make &frescobaldi; available on all platforms supported by KDE.
+</para>
+
+<para>
+&frescobaldi; is developed in a public GoogleCode SVN repository at
+<ulink url="http://lilykde.googlecode.com/">lilykde.googlecode.com</ulink>.
+There you can browse or checkout the source code and report bugs and wishes.
+</para>
+
+<para>
+You can contribute by simply using &frescobaldi; and reporting bugs and suggestions.
+Translations are also very welcome. How to create new translations is described
+in the <filename>README-translations</filename> in the <literal>po</literal> directory
+in the source distribution of &frescobaldi;.
+If you want to add functionality you can find information about the source code
+structure in the file <filename>README-development</filename> in the source distribution.
+</para>
+
 </sect1>
 
 </chapter>
