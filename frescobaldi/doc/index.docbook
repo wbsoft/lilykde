@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
  "dtd/kdex.dtd" [
-  <!-- apps -->
   <!ENTITY frescobaldi "Frescobaldi">
-  <!ENTITY lilypond "LilyPond">
   <!ENTITY kappname "&frescobaldi;">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE" > <!-- change language only here -->
+
+  <!-- apps -->
+  <!ENTITY lilypond "LilyPond">
   
   <!-- people -->
   <!ENTITY Wilbert.Berendsen '<personname><firstname>Wilbert</firstname><surname>Berendsen</surname></personname>'>
@@ -16,6 +19,7 @@
   <!ENTITY frescobaldi-entering SYSTEM "entering.docbook">
   <!ENTITY frescobaldi-editing SYSTEM "editing.docbook">
   <!ENTITY frescobaldi-configuring SYSTEM "configuring.docbook">
+  <!ENTITY frescobaldi-about SYSTEM "about.docbook">
   
   <!-- often used menus -->
   <!ENTITY menu.settings.paths
@@ -54,7 +58,7 @@
     <holder>&Wilbert.Berendsen;</holder>
   </copyright>
 
-  <!--<legalnotice>&FDLNotice;</legalnotice>-->
+<!--   <legalnotice>&FDLNotice;</legalnotice> -->
   <date>2009-02-25</date>
   <releaseinfo>1.0</releaseinfo>
 
@@ -84,5 +88,6 @@ you can continue to learn LilyPond using the Tutorial from
 &frescobaldi-entering;
 &frescobaldi-editing;
 &frescobaldi-configuring;
+&frescobaldi-about;
 
 </book>
