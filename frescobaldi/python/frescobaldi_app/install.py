@@ -22,6 +22,7 @@ Functions that can be run if the user updates Frescobaldi
 to a newer version.
 """
 
+from PyQt4.QtCore import QVariant
 from PyKDE4.kdecore import KConfig, KGlobal
 
 def install(app):
@@ -60,6 +61,8 @@ def installOkularPartRC():
     group = okularpartrc.group("General")
     group.writeEntry("ExternalEditor", "Custom")
     group.writeEntry("ExternalEditorCommand", "frescobaldi --line %l --column %c")
+    if not group.readEntry("WatchFile", QVariant(True)).toBool():
+        group.writeEntry("WatchFile", QVariant(True))
     group.sync()
     
 
