@@ -24,7 +24,8 @@ copied to the clipboard. To "paste" the rhythm to other music you must then
 select the target music. <guimenuitem>Paste Rhythm</guimenuitem> will then apply the copied rhythm to the
 newly selected music. This is nice when you enter e.g. hymns that have multiple
 voices that share the same rhythm. You can also use <guimenuitem>Apply Rhythm...</guimenuitem> to manually
-enter some durations and apply them to a selected fragment of music. 
+enter some durations and apply them to a selected fragment of music.
+If there are more notes than durations, the durations will be repeated.
 </para>
 </sect1>
 
@@ -42,9 +43,9 @@ dutch or italian names.
 </para>
 
 <para>
-The pitch translation function is very powerful: it almost 100% correctly
+The pitch translation function is quite accurate: it almost 100% correctly
 parses &lilypond; input and finds all pitches, without altering e.g. markup,
-lyrics, strings or comments that also might contain words (like "do") that are
+lyrics, strings or comments that might contain words (like "do") that are
 also pitch names. It even warns you when quarter tones are used and the target
 languages does not have definitions for them. But just to be sure: run &lilypond;
 after translating the pitches and carefully examine the document. If anything
@@ -56,7 +57,7 @@ went wrong, press <keycap>Ctrl+Z</keycap> and try again.
 <title>Lyrics</title>
 
 <para>
-&frescobaldi; can automatically place hyphens <userinput>' -- '</userinput> inside texts to make those
+&frescobaldi; can automatically place hyphens <userinput>'&nbsp;--&nbsp;'</userinput> inside texts to make those
 texts usable as lyrics. It can use hyphenation dictionaries of <productname>OpenOffice.org</productname>,
 <productname>Scribus</productname>, <productname>KOffice</productname>, etc.
 </para>
@@ -70,7 +71,7 @@ or press <keycap>Enter</keycap> to have the hyphenation take place.
 
 <para>
 A small limitation is that word processor hyphenation dictionaries often don't
-want to break a word right after the first letter (e.g. <userinput>o -- pen</userinput>), because that
+want to break a word right after the first letter (e.g. <userinput>a&nbsp;--&nbsp;men</userinput>), because that
 does not look nice in word processor texts. So it might be possible that you
 have add some hyphens after the first letter of such lyrics. 
 </para>
@@ -80,6 +81,32 @@ There is also a command to remove hyphenation. This can be useful if you have a
 stanza of lyrics that you just want to display as a markup below the music.
 Under &menu.settings.paths; you can enter a list of
 directories to search for hyphenation pattern files.
+</para>
+</sect1>
+
+<sect1 id="cut-assign">
+<title>Cut and Assign</title>
+
+<para>
+If you find that you want to use the same &lilypond; commands or music fragment
+more than once in multiple places in your document, but have already entered
+them in some structure, there is a quick command to cut the fragment out and
+put it as a toplevel variable assignment in your &lilypond; document.
+</para>
+
+<para>
+First select the exact text you want to store in a variable. Then choose
+<menuchoice>
+  <shortcut><keycombo><keycap>Ctrl+Shift+C</keycap></keycombo></shortcut>
+  <guimenu>Edit</guimenu>
+  <guisubmenu>LilyPond</guisubmenu>
+  <guimenuitem>Cut and Assign</guimenuitem>
+</menuchoice> and enter a &lilypond; variable name.
+This identifier name may only contain letters. Then click
+<guibutton>Ok</guibutton>. The selected fragment will be cut from its original
+place and assigned to the specified variable. The assignment is placed just
+before the current section in your document. The fragment will be replaced
+with a reference to the variable.
 </para>
 </sect1>
 
@@ -138,18 +165,15 @@ or, if no existing mnemonic was typed, show the Expand Manager dialog
 
 <row>
 <entry><para><keycombo><keycap>Ctrl+Shift+C</keycap></keycombo></para></entry>
-<entry><para>
-Cut selected text fragment and assign it to a LilyPond variable. The assignment
-is put in the document just before the current section, and a reference to the variable
-is placed where the text has been cut out.
-</para></entry>
+<entry><para><link linkend="cut-assign">Cut and assign</link></para></entry>
 </row>
 
 <row>
 <entry><para><keycombo><keycap>Ctrl+Shift+V</keycap></keycombo></para></entry>
 <entry><para>
-Insert a <userinput>\version</userinput> command with the version of the currently
-installed &lilypond;
+Insert a <userinput>\version</userinput> command with the default &lilypond; version number.
+Which version number is used can be configured in the
+<link linkend="settings-general-preferences">Settings dialog</link>.
 </para></entry>
 </row>
 

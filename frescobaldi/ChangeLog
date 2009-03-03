@@ -1,12 +1,13 @@
-Changes in 0.7.7
+Changes in 0.7.7 -- March 3rd, 2009
 
-* New User Guide in the help menu (F1 key)
+* New comprehensive User Guide in the help menu (F1 key)
 * Context sensitive Help buttons in most dialogs
 * New Czech translation by Pavel Fric, many thanks!
-* Updated translations: ru
+* Updated translations: ru, nl
 * Settings: it is now possible to choose which LilyPond version number to
   use by default for new documents: the version of the installed LilyPond,
   the version of the last conversion rule of convert-ly, or a custom version.
+* PDF preview: context menu has a new action to configure Okular
 * Score Wizard: if there is more than one part, make separate assignments for
   the parts. This simplifies the generated \score { } section and makes it
   easier to create additional score sections for printing separate parts.

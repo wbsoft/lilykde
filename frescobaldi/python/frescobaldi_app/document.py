@@ -166,7 +166,7 @@ class DocumentManipulator(object):
         # ask the variable name
         name = promptText(self.doc.app.mainwin, i18n(
             "Please enter the name for the variable to assign the selected "
-            "text to:"), i18n("Cut and Assign"), rx="[a-zA-Z]*")
+            "text to:"), i18n("Cut and Assign"), rx="[a-zA-Z]*", help="cut-assign")
         if not name:
             return
         currentLine = self.doc.view.selectionRange().start().line()

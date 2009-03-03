@@ -484,7 +484,9 @@ class ApplyRhythmDialog(KDialog):
     def __init__(self, mainwin):
         KDialog.__init__(self, mainwin)
         self.setCaption(i18n("Apply Rhythm"))
-        self.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Apply | KDialog.Cancel))
+        self.setButtons(KDialog.ButtonCode(
+            KDialog.Ok | KDialog.Apply | KDialog.Cancel | KDialog.Help))
+        self.setHelp("rhythm")
         self.setModal(True)
         v = KVBox(self)
         v.setSpacing(4)

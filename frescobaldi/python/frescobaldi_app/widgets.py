@@ -209,12 +209,18 @@ class ExecArgsLineEdit(ExecLineEdit):
         return unicode(filename).split()[0]
 
 # some handy "static" functions
-def promptText(parent, message, title = None, text="", rx=None):
+def promptText(parent, message, title = None, text="", rx=None, help=None):
     """
     Prompts for a text. Returns None on cancel, otherwise the input string.
+    rx = if given, regexp string that the input must validate against
+    help = if given, the docbook id in the help menu handbook.
     """
     d = KDialog(parent)
-    d.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel))
+    buttons = KDialog.Ok | KDialog.Cancel
+    if help:
+        buttons |= KDialog.Help
+        d.setHelp(help)
+    d.setButtons(KDialog.ButtonCode(buttons))
     if title:
         d.setCaption(title)
     v = KVBox()
