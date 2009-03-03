@@ -30,6 +30,8 @@ cd "$pkg" || die "could not cd into package"
 cp build/po/*.mo po/
 # put pics (LilyPond-generated icons) in source tree
 cp build/pics/*.png pics/
+# put compiled handbook in source tree
+cp build/doc/index.cache.* doc/
 
 # Remove build directory
 rm -fr build
