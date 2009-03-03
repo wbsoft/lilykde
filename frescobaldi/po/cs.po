@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.5\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-03-02 22:07+0100\n"
+"POT-Creation-Date: 2009-03-03 14:23+0100\n"
 "PO-Revision-Date: 2009-03-01 11:22+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@lists.kde.org>\n"
@@ -563,24 +563,24 @@ msgstr "Zadejte, prosím, název proměnné, aby byl vybraný text přidělen do
 msgid "Cut and Assign"
 msgstr "Vyjmout a přidělit"
 
-#: ../python/frescobaldi_app/expand.py:171
+#: ../python/frescobaldi_app/expand.py:170
 msgid "Expansion Manager"
 msgstr "Správce rozšíření "
 
-#: ../python/frescobaldi_app/expand.py:185
+#: ../python/frescobaldi_app/expand.py:184
 msgid "Search..."
 msgstr "Hledat..."
 
-#: ../python/frescobaldi_app/expand.py:194
+#: ../python/frescobaldi_app/expand.py:193
 msgid "Shortcut"
 msgstr "Zkratka"
 
-#: ../python/frescobaldi_app/expand.py:194
+#: ../python/frescobaldi_app/expand.py:193
 #: ../python/frescobaldi_app/rumor.py:493
 msgid "Description"
 msgstr "Popis"
 
-#: ../python/frescobaldi_app/expand.py:210
+#: ../python/frescobaldi_app/expand.py:209
 msgid ""
 "This is the list of defined expansions.\n"
 "\n"
@@ -608,30 +608,30 @@ msgstr ""
 "(vychozí klávesová zkratka: Ctrl+.), vyberete rozšíření ze seznamu a "
 "stisknete Enter nebo klepnete na tlačítko OK."
 
-#: ../python/frescobaldi_app/expand.py:230
+#: ../python/frescobaldi_app/expand.py:229
 msgid ""
 "This is the text associated with the selected shortcut. Some characters have "
 "special meaning:"
 msgstr ""
 "Toto je text spojený s vybranou zkratkou. Některé znaky mají zvláštní význam:"
 
-#: ../python/frescobaldi_app/expand.py:232
+#: ../python/frescobaldi_app/expand.py:231
 msgid "Place the cursor on this spot."
 msgstr "Umístěte kurzor na toto místo."
 
-#: ../python/frescobaldi_app/expand.py:233
+#: ../python/frescobaldi_app/expand.py:232
 msgid "Translate the following pitch."
 msgstr "Přesuňte následující výšku tónu."
 
-#: ../python/frescobaldi_app/expand.py:287
+#: ../python/frescobaldi_app/expand.py:286
 msgid "New Item"
 msgstr "Nová položka"
 
-#: ../python/frescobaldi_app/expand.py:331
+#: ../python/frescobaldi_app/expand.py:330
 msgid "Please don't leave the description empty."
 msgstr "Neopusťte, prosím, popis prázdný."
 
-#: ../python/frescobaldi_app/expand.py:338
+#: ../python/frescobaldi_app/expand.py:337
 msgid ""
 "Another expansion already uses this name.\n"
 "\n"
@@ -641,7 +641,7 @@ msgstr ""
 "\n"
 "Použijte, prosím, jiný název."
 
-#: ../python/frescobaldi_app/expand.py:344
+#: ../python/frescobaldi_app/expand.py:343
 msgid ""
 "Please only use letters, numbers and the underscore character in the "
 "expansion name."
@@ -918,59 +918,59 @@ msgstr "Spustit LilyPond v režimu náhledu"
 msgid "Apply Rhythm"
 msgstr "Použít rytmus"
 
-#: ../python/frescobaldi_app/mainapp.py:492
+#: ../python/frescobaldi_app/mainapp.py:494
 msgid "Enter a rhythm:"
 msgstr "Zadat rytmus:"
 
-#: ../python/frescobaldi_app/mainapp.py:495
+#: ../python/frescobaldi_app/mainapp.py:497
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr ""
 "Zadat rytmus za použití mezerou oddělených hodnot dob trvání (např. 8. 16 8 "
 "4 8)"
 
-#: ../python/frescobaldi_app/mainapp.py:518
+#: ../python/frescobaldi_app/mainapp.py:520
 msgid "Terminal"
 msgstr "Terminál"
 
-#: ../python/frescobaldi_app/mainapp.py:551
+#: ../python/frescobaldi_app/mainapp.py:553
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "Se&řídit terminál s aktuálním dokumentem"
 
-#: ../python/frescobaldi_app/mainapp.py:571
+#: ../python/frescobaldi_app/mainapp.py:573
 #: ../python/frescobaldi_app/scorewiz/preview.py:45
 msgid "PDF Preview"
 msgstr "Náhled PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:603
+#: ../python/frescobaldi_app/mainapp.py:605
 msgid "Show PDF Navigation Panel"
 msgstr "Ukázat navigační panel PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:604
+#: ../python/frescobaldi_app/mainapp.py:606
 msgid "Show PDF minipager"
 msgstr "Ukázat miniaturní PDF číslovač stran"
 
-#: ../python/frescobaldi_app/mainapp.py:605
+#: ../python/frescobaldi_app/mainapp.py:607
 #, fuzzy
 msgid "Configure Okular..."
 msgstr "Nastavit..."
 
-#: ../python/frescobaldi_app/mainapp.py:608
+#: ../python/frescobaldi_app/mainapp.py:610
 msgid "S&ynchronize Preview with Current Document"
 msgstr "Se&řídit náhled s aktuálním dokumentem"
 
-#: ../python/frescobaldi_app/mainapp.py:669
+#: ../python/frescobaldi_app/mainapp.py:671
 msgid "Quick Insert"
 msgstr "Rychle vložit"
 
-#: ../python/frescobaldi_app/mainapp.py:681
+#: ../python/frescobaldi_app/mainapp.py:683
 msgid "LilyPond Log"
 msgstr "Záznam o průběhu činnosti od LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:685
+#: ../python/frescobaldi_app/mainapp.py:687
 msgid "no log"
 msgstr "Žádný záznam o průběhu činnosti"
 
-#: ../python/frescobaldi_app/mainapp.py:715
+#: ../python/frescobaldi_app/mainapp.py:717
 msgid "Rumor"
 msgstr "Rumor"
 

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-03-02 22:07+0100\n"
+"POT-Creation-Date: 2009-03-03 14:23+0100\n"
 "PO-Revision-Date: 2009-02-22 12:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -560,24 +560,24 @@ msgstr ""
 msgid "Cut and Assign"
 msgstr "Вырезать и Присвоить"
 
-#: ../python/frescobaldi_app/expand.py:171
+#: ../python/frescobaldi_app/expand.py:170
 msgid "Expansion Manager"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:185
+#: ../python/frescobaldi_app/expand.py:184
 msgid "Search..."
 msgstr "Поиск..."
 
-#: ../python/frescobaldi_app/expand.py:194
+#: ../python/frescobaldi_app/expand.py:193
 msgid "Shortcut"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:194
+#: ../python/frescobaldi_app/expand.py:193
 #: ../python/frescobaldi_app/rumor.py:493
 msgid "Description"
 msgstr "Описание"
 
-#: ../python/frescobaldi_app/expand.py:210
+#: ../python/frescobaldi_app/expand.py:209
 msgid ""
 "This is the list of defined expansions.\n"
 "\n"
@@ -593,36 +593,36 @@ msgid ""
 "Enter or click Ok."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:230
+#: ../python/frescobaldi_app/expand.py:229
 msgid ""
 "This is the text associated with the selected shortcut. Some characters have "
 "special meaning:"
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:232
+#: ../python/frescobaldi_app/expand.py:231
 msgid "Place the cursor on this spot."
 msgstr "Поместите курсор на это место."
 
-#: ../python/frescobaldi_app/expand.py:233
+#: ../python/frescobaldi_app/expand.py:232
 msgid "Translate the following pitch."
 msgstr "Преобразовать следующие ноты."
 
-#: ../python/frescobaldi_app/expand.py:287
+#: ../python/frescobaldi_app/expand.py:286
 msgid "New Item"
 msgstr "Новый пункт"
 
-#: ../python/frescobaldi_app/expand.py:331
+#: ../python/frescobaldi_app/expand.py:330
 msgid "Please don't leave the description empty."
 msgstr "Пожалуйста, не оставляйте поле description пустым."
 
-#: ../python/frescobaldi_app/expand.py:338
+#: ../python/frescobaldi_app/expand.py:337
 msgid ""
 "Another expansion already uses this name.\n"
 "\n"
 "Please use a different name."
 msgstr ""
 
-#: ../python/frescobaldi_app/expand.py:344
+#: ../python/frescobaldi_app/expand.py:343
 msgid ""
 "Please only use letters, numbers and the underscore character in the "
 "expansion name."
@@ -898,59 +898,59 @@ msgstr "Запустить LilyPond в режиме просмотра"
 msgid "Apply Rhythm"
 msgstr "Применить ритм"
 
-#: ../python/frescobaldi_app/mainapp.py:492
+#: ../python/frescobaldi_app/mainapp.py:494
 msgid "Enter a rhythm:"
 msgstr "Введите ритм:"
 
-#: ../python/frescobaldi_app/mainapp.py:495
+#: ../python/frescobaldi_app/mainapp.py:497
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr ""
 "Введите ритм, используя пробел в качестве разделителя длительностей, "
 "например, 8 16 8 4 8"
 
-#: ../python/frescobaldi_app/mainapp.py:518
+#: ../python/frescobaldi_app/mainapp.py:520
 msgid "Terminal"
 msgstr "Консоль"
 
-#: ../python/frescobaldi_app/mainapp.py:551
+#: ../python/frescobaldi_app/mainapp.py:553
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "Синхронизировать консоль с текущим документом"
 
-#: ../python/frescobaldi_app/mainapp.py:571
+#: ../python/frescobaldi_app/mainapp.py:573
 #: ../python/frescobaldi_app/scorewiz/preview.py:45
 msgid "PDF Preview"
 msgstr "Предпросмотр PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:603
+#: ../python/frescobaldi_app/mainapp.py:605
 msgid "Show PDF Navigation Panel"
 msgstr "Показать панель навигации по PDF документу"
 
-#: ../python/frescobaldi_app/mainapp.py:604
+#: ../python/frescobaldi_app/mainapp.py:606
 msgid "Show PDF minipager"
 msgstr "Показать PDF мини-пейджер"
 
-#: ../python/frescobaldi_app/mainapp.py:605
+#: ../python/frescobaldi_app/mainapp.py:607
 #, fuzzy
 msgid "Configure Okular..."
 msgstr "Настройка..."
 
-#: ../python/frescobaldi_app/mainapp.py:608
+#: ../python/frescobaldi_app/mainapp.py:610
 msgid "S&ynchronize Preview with Current Document"
 msgstr "Синхронизировать просмотр с текущим документом"
 
-#: ../python/frescobaldi_app/mainapp.py:669
+#: ../python/frescobaldi_app/mainapp.py:671
 msgid "Quick Insert"
 msgstr "Быстрая вставка"
 
-#: ../python/frescobaldi_app/mainapp.py:681
+#: ../python/frescobaldi_app/mainapp.py:683
 msgid "LilyPond Log"
 msgstr "LilyPond журнал"
 
-#: ../python/frescobaldi_app/mainapp.py:685
+#: ../python/frescobaldi_app/mainapp.py:687
 msgid "no log"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:715
+#: ../python/frescobaldi_app/mainapp.py:717
 msgid "Rumor"
 msgstr "Rumor"
 
