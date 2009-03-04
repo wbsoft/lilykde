@@ -501,7 +501,6 @@ markupcommands = (
     'center-column',
     'circle',
     'column',
-    'column-lines',
     'combine',
     'concat',
     'dir-column',
@@ -519,7 +518,6 @@ markupcommands = (
     'hspace',
     'huge',
     'italic',
-    'justified-lines',
     'justify',
     'large',
     'larger',
@@ -538,7 +536,6 @@ markupcommands = (
     'number',
     'on-the-fly',
     'override',
-    'override-lines',
     'pad-around',
     'pad-markup',
     'pad-to-box',
@@ -573,6 +570,13 @@ markupcommands = (
     'with-dimensions',
     'with-url',
     'wordwrap',
+    )
+
+
+markuplistcommands = (
+    'column-lines',
+    'justified-lines',
+    'override-lines',
     'wordwrap-internal',
     'wordwrap-lines',
     'wordwrap-string-internal',

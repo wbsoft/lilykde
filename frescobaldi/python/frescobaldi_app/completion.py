@@ -95,7 +95,10 @@ def findMatches(view, word, invocationType):
     
     if text.endswith("\\"):
         if isinstance(state.parser(), ly.tokenize.MarkupParser):
-            return ly.words.markupcommands
+            if state.parser().token == "\\markuplines":
+                return ly.words.markupcommands + ly.words.markuplistcommands
+            else:
+                return ly.words.markupcommands
         elif state.parser().token == "\\context":
             return ly.words.contexts + ly.words.keywords + ly.words.musiccommands + lilypondVersion()
         else:

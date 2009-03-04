@@ -111,6 +111,11 @@ class Markup(Command):
     def __init__(self, matchObj, state):
         state.enter(MarkupParser, self)
 
+class MarkupLines(Command):
+    rx = r"\\markuplines\b"
+    def __init__(self, matchObj, state):
+        state.enter(MarkupParser, self)
+
 class OpenDelimiter(Increaser):
     rx = r"<<|\{"
     
@@ -272,6 +277,7 @@ _lilybase = (
     Section,
     LyricMode,
     Markup,
+    MarkupLines,
     Command,
     Space,
     )
