@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-03-03 14:23+0100\n"
-"PO-Revision-Date: 2009-01-29 21:35+0200\n"
+"POT-Creation-Date: 2009-03-03 14:26+0100\n"
+"PO-Revision-Date: 2009-03-04 11:36+0200\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
-"Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
+"Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "#-#-#-#-#  tr.po (tr)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: KBabel 1.11.4\n"
+"X-Generator: Lokalize 0.3\n"
 
 #: ../frescobaldi.py:32 dummy.py:12
 msgid "Frescobaldi"
@@ -72,7 +72,7 @@ msgstr "&Belge"
 
 #: dummy.py:6
 msgid "&Pitch"
-msgstr ""
+msgstr "Ses noktası"
 
 #: dummy.py:7
 msgid "&Lyrics"
@@ -525,39 +525,42 @@ msgid ""
 "Can't perform the requested translation. The music contains quarter-tone "
 "alterations, but those are not available in the pitch language %1."
 msgstr ""
+"İstenen çeviriyi uygulayamaz. Müzik, çeyrek ses değişimleri içermektedir, "
+"fakat bunlar %1 ses dili için mümkün değildir."
 
 #: ../python/frescobaldi_app/document.py:116
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
 msgstr ""
+"Seçilmiş olan metindeki ses noktası dili güncellendi, fakat belgeniz "
+"aşağıdaki komutu elle eklemelisiniz:"
 
 #: ../python/frescobaldi_app/document.py:119
 #: ../python/frescobaldi_app/mainapp.py:311
 msgid "Pitch Name Language"
-msgstr ""
+msgstr "Ses Adı Dili"
 
 #: ../python/frescobaldi_app/document.py:168
 msgid "Please enter the name for the variable to assign the selected text to:"
-msgstr ""
+msgstr "Lütfen, metne atamak üzere değişkene bir ad veriniz:"
 
 #: ../python/frescobaldi_app/document.py:169
 #: ../python/frescobaldi_app/mainapp.py:270
 msgid "Cut and Assign"
-msgstr ""
+msgstr "Kes ve Ata:"
 
 #: ../python/frescobaldi_app/expand.py:170
 msgid "Expansion Manager"
-msgstr ""
+msgstr "Genişleme Düzenleyicisi"
 
 #: ../python/frescobaldi_app/expand.py:184
 msgid "Search..."
-msgstr ""
+msgstr "Ara..."
 
 #: ../python/frescobaldi_app/expand.py:193
-#, fuzzy
 msgid "Shortcut"
-msgstr "Kısa"
+msgstr "Kısayol"
 
 #: ../python/frescobaldi_app/expand.py:193
 #: ../python/frescobaldi_app/rumor.py:493
@@ -579,28 +582,41 @@ msgid ""
 "(default shortcut: Ctrl+.), choose the expansion from the list and press "
 "Enter or click Ok."
 msgstr ""
+"Tanımlı genişlemelerin listesi.\n"
+"\n"
+"İlgili metni görmek veya değiştirmek için sıradaki öğeye tıklayınız. "
+"Kısayolun tanımını değiştirmek için ona çift tıklayınız. O kısayolu "
+"düzenlemek için ayrıca F2 tuşuna da basabilirsiniz.\n"
+"\n"
+"Genişlemeleri eklemek veya çıkarmak için aşağıdaki düğmeleri kullanınız.\n"
+"\n"
+"Genişlemeyi kullanmanın iki yolu vardır: ya metindeki kısayolu yazını ve "
+"ardından Genişlet işlevini çağırın, ya da sadece Genişlet işlevini çağırın "
+"(öntanımlı kısayol: Ctrl+.), listeden genişleme özelliğini seçip Enter veya "
+"OK tuşuna basın"
 
 #: ../python/frescobaldi_app/expand.py:229
 msgid ""
 "This is the text associated with the selected shortcut. Some characters have "
 "special meaning:"
 msgstr ""
+"Bu, seçili kısayola atanmış metindir. Bazı karakterlerin özel anlamı vardır:"
 
 #: ../python/frescobaldi_app/expand.py:231
 msgid "Place the cursor on this spot."
-msgstr ""
+msgstr "İmleçi bu unsura yerleştirin."
 
 #: ../python/frescobaldi_app/expand.py:232
 msgid "Translate the following pitch."
-msgstr ""
+msgstr "Gelen sesi çevirin."
 
 #: ../python/frescobaldi_app/expand.py:286
 msgid "New Item"
-msgstr ""
+msgstr "Yeni Öğe"
 
 #: ../python/frescobaldi_app/expand.py:330
 msgid "Please don't leave the description empty."
-msgstr ""
+msgstr "Lütfen tanımı boş bırakmayın."
 
 #: ../python/frescobaldi_app/expand.py:337
 msgid ""
@@ -608,12 +624,15 @@ msgid ""
 "\n"
 "Please use a different name."
 msgstr ""
+"Başka genişleme aynı adı kullanıyor.\n"
+"\n"
+"Lütgen başka bir ad kullanın."
 
 #: ../python/frescobaldi_app/expand.py:343
 msgid ""
 "Please only use letters, numbers and the underscore character in the "
 "expansion name."
-msgstr ""
+msgstr "Genişleme adında lütfen sadece harf, rakkkam ve küçük harf kullanın."
 
 #: ../python/frescobaldi_app/hyphen.py:119
 #: ../python/frescobaldi_app/mainapp.py:388
@@ -723,46 +742,47 @@ msgstr "Lilypond Görevini Durdur"
 
 #: ../python/frescobaldi_app/mainapp.py:271
 msgid "Cut selection and assign it to a LilyPond variable."
-msgstr ""
+msgstr "Seçimi kesin ve onu LilyPond değişkeni olarak atayın."
 
 #: ../python/frescobaldi_app/mainapp.py:275
 msgid "Repeat last note or chord"
-msgstr ""
+msgstr "Son notayı veya akoru tekrarlayın."
 
 #: ../python/frescobaldi_app/mainapp.py:276
 msgid "Repeat the last music expression (note or chord)."
-msgstr ""
+msgstr "Son müzik ifadesini tekrarlayın (nota veya akor)."
 
 #: ../python/frescobaldi_app/mainapp.py:280
 msgid "Expand"
-msgstr ""
+msgstr "Genişlet"
 
 #: ../python/frescobaldi_app/mainapp.py:281
 msgid "Expand last word or open the expansions dialog."
-msgstr ""
+msgstr "Son kelimeyi genişlet veya genişletmeler penceresini aç."
 
 #: ../python/frescobaldi_app/mainapp.py:285
-#, fuzzy
 msgid "Next blank line"
-msgstr "Ölçü çizgisi yok"
+msgstr "Sonraki boş satır"
 
 #: ../python/frescobaldi_app/mainapp.py:286
 msgid "Go to the next blank line."
-msgstr ""
+msgstr "Bir sonraki boş satıra geç."
 
 #: ../python/frescobaldi_app/mainapp.py:297
 msgid "Previous blank line"
-msgstr ""
+msgstr "Önceki boş satır"
 
 #: ../python/frescobaldi_app/mainapp.py:298
 msgid "Go to the previous blank line."
-msgstr ""
+msgstr "Önceki boş satıra git."
 
 #: ../python/frescobaldi_app/mainapp.py:312
 msgid ""
 "Change the LilyPond language used for pitch names in this document or in the "
 "selection."
 msgstr ""
+"Bu belgedeki veya seçimde ses adları için kullanılan LilyPond dilini "
+"değiştir."
 
 #: ../python/frescobaldi_app/mainapp.py:319
 msgid "Double durations"
@@ -841,24 +861,20 @@ msgid "Apply an entered rhythm to the selected music."
 msgstr "Seçilen müziğe bir ritm girişi uygulayınız."
 
 #: ../python/frescobaldi_app/mainapp.py:373
-#, fuzzy
 msgid "Copy rhythm"
-msgstr "Telif Hakkı"
+msgstr "Ritmi kopyala"
 
 #: ../python/frescobaldi_app/mainapp.py:374
-#, fuzzy
 msgid "Copy the rhythm of the selected music."
-msgstr "Seçilen müziğe bir ritm girişi uygulayınız."
+msgstr "Seçilen müziğe ritmi kopyalayınız."
 
 #: ../python/frescobaldi_app/mainapp.py:380
-#, fuzzy
 msgid "Paste rhythm"
-msgstr "Bir ritm giriniz:"
+msgstr "Bir ritm yapıştırınız"
 
 #: ../python/frescobaldi_app/mainapp.py:381
-#, fuzzy
 msgid "Paste a rhythm to the selected music."
-msgstr "Seçilen müziğe bir ritm girişi uygulayınız."
+msgstr "Seçilen müziğe bir ritm girişi yapıştırınız."
 
 #: ../python/frescobaldi_app/mainapp.py:393
 msgid "Remove hyphenation"
@@ -919,9 +935,8 @@ msgid "Show PDF minipager"
 msgstr "PDF göstericiyi görüntüle"
 
 #: ../python/frescobaldi_app/mainapp.py:607
-#, fuzzy
 msgid "Configure Okular..."
-msgstr "Yapılandır..."
+msgstr "Okular uygulamasını yapılandır..."
 
 #: ../python/frescobaldi_app/mainapp.py:610
 msgid "S&ynchronize Preview with Current Document"
@@ -1240,32 +1255,31 @@ msgstr "LilyPond'un ara çıktı dosyalarını silmesine izin ver"
 
 #: ../python/frescobaldi_app/settings.py:129
 msgid "Remember cursor position, bookmarks, etc."
-msgstr ""
+msgstr "İmleç konumunu, yer imlerini, ve bunun gibi öğeleri hatırla."
 
 #: ../python/frescobaldi_app/settings.py:131
 msgid "Disable the built-in PDF preview"
-msgstr ""
+msgstr "Yerleşik PDF önizlemeyi devre dışı bırak."
 
 #: ../python/frescobaldi_app/settings.py:148
-#, fuzzy
 msgid "LilyPond version number to use for new documents"
-msgstr "Bu belge için kullanacağınız Lilypond sürüm numarası:"
+msgstr "Bu belge için kullanacak olduğunuz Lilypond sürüm numarası:"
 
 #: ../python/frescobaldi_app/settings.py:150
 msgid "Use version number of installed LilyPond"
-msgstr ""
+msgstr "Yüklü LilyPond'un sürüm numarasını kullan"
 
 #: ../python/frescobaldi_app/settings.py:151
 msgid "Use version number of last convert-ly rule"
-msgstr ""
+msgstr "Son convert-ly kuralının sürüm numarasını kullan"
 
 #: ../python/frescobaldi_app/settings.py:152
 msgid "Use custom version number:"
-msgstr ""
+msgstr "Güncel sürüm numarasını kullan:"
 
 #: ../python/frescobaldi_app/settings.py:158
 msgid "Enter a valid LilyPond version number, e.g. 2.12.0"
-msgstr ""
+msgstr "Geçerli bir LilyPond sürüm numarası girin, 2.12.0 gibi"
 
 #: ../python/frescobaldi_app/settings.py:213
 msgid "Paths"
@@ -1316,11 +1330,11 @@ msgstr ""
 
 #: ../python/frescobaldi_app/settings.py:252
 msgid "Default directory:"
-msgstr ""
+msgstr "Öntanımlı dizin:"
 
 #: ../python/frescobaldi_app/settings.py:257
 msgid "The default folder for your LilyPond documents (optional)."
-msgstr ""
+msgstr "LilyPond belgelerinizin öntanımlı dizini (opsiyonel)."
 
 #: ../python/frescobaldi_app/settings.py:270
 msgid ""
@@ -1472,9 +1486,8 @@ msgid "A tempo indication, e.g. \"Allegro.\""
 msgstr "Bir hız belirteci, örneğin \"Allegro.\""
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:434
-#, fuzzy
 msgid "Pitch name language:"
-msgstr "Dil:"
+msgstr "Ses adı dili:"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:438
 #: ../python/frescobaldi_app/scorewiz/__init__.py:503
