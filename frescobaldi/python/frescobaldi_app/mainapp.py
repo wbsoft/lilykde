@@ -170,7 +170,7 @@ class Document(kateshell.app.Document):
         """
         import frescobaldi_app.document
         return frescobaldi_app.document.DocumentManipulator(self)
-        
+
 
 class MainWindow(kateshell.mainwindow.MainWindow):
     """ Our customized Frescobaldi MainWindow """
@@ -447,8 +447,10 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                 listeners[doc.close].remove(self.abortLilyPondJob)
                 result = self.jobs[doc].updatedFiles()
                 pdfs = result("pdf")
-                if pdfs and "pdf" in self.tools:
-                    self.tools["pdf"].openUrl(KUrl(pdfs[0]))
+                if pdfs:
+                    if "pdf" in self.tools:
+                        self.tools["pdf"].openUrl(KUrl(pdfs[0]))
+                    doc.resetCursorTranslations()
                 self.actionManager().addActionsToLog(result, log)
                 del self.jobs[doc]
                 self.updateJobActions()

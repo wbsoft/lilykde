@@ -238,7 +238,7 @@ class Document(DBusItem):
         self._edited = False    # has this document been modified and saved?
         self._cursor = None     # line, col. None = not set.
         self._encoding = encoding or self.app.defaultEncoding # encoding [UTF-8]
-
+        self._cursorTranslator = None   # for translating cursor positions
         self.app.addDocument(self)
         listeners.add(self.updateCaption, self.updateStatus, self.updateSelection,
             self.close)
@@ -260,6 +260,10 @@ class Document(DBusItem):
         elif self.app.defaultMode:
             self.doc.setMode(self.app.defaultMode)
 
+        # init the cursor translations (so that point and click keeps working
+        # while the document changes)
+        self.resetCursorTranslations()
+        
         if self._cursor is not None:
             self.setCursorPosition(*self._cursor)
 
@@ -421,17 +425,8 @@ class Document(DBusItem):
         """
         if self.view:
             line -= 1 # katepart numbers lines from zero
-            charcol, realcol = 0, 0
-            if column > 0:
-                for char in self.line(line):
-                    charcol += 1
-                    if char == '\t':
-                        realcol = realcol + 8 & -8
-                    else:
-                        realcol += 1
-                    if realcol >= column:
-                        break
-            self.view.setCursorPosition(KTextEditor.Cursor(line, charcol))
+            self.view.setCursorPosition(
+                self._cursorTranslator.cursor(line, column))
         else:
             self._cursor = (line, column)
 
@@ -453,6 +448,7 @@ class Document(DBusItem):
             listeners.call(self.close, self) # before we are really deleted
             self.aboutToClose()
             self.app.mainwin.removeDoc(self)
+            self._cursorTranslator = None
             sip.delete(self.view)
             sip.delete(self.doc)
         else:
@@ -609,4 +605,57 @@ class Document(DBusItem):
             v.setSelection(KTextEditor.Range(line, col, endline, endcol))
         else:
             v.removeSelection()
+
+    def resetCursorTranslations(self):
+        """
+        Clears the cursor translations that keep Point and Click
+        working while the document changes.
+        Call this when the PDF output document has been updated by
+        a succesful LilyPond run.
+        """
+        if self.doc:
+            self._cursorTranslator = CursorTranslator(self.doc)
+
+
+class CursorTranslator(object):
+    """
+    This object makes a kind of snapshot of a document and makes it
+    possible to translate cursor positions in that snapshot to the correct
+    place in the current document.
+    """
+    def __init__(self, doc):
+        """ doc should be a KTextEditor.Document instance """
+        self.doc = doc
+        self.savedText = map(unicode, doc.textLines(doc.documentRange()))
+        self.iface = doc.smartInterface()
+        if self.iface:
+            self.revision = self.iface.currentRevision()
+            
+    def __del__(self):
+        """ Remove our grip on the document. """
+        print "Bye!"
+        if self.iface:
+            self.iface.releaseRevision(self.revision)
+        
+    def cursor(self, line, column):
+        """
+        translates the cursor position to the current document.
+        """
+        # First, resolve tabs
+        charcol, realcol = 0, 0
+        if column > 0:
+            print "Saved text for line:", line, self.savedText[line]
+            for char in self.savedText[line]:
+                charcol += 1
+                if char == '\t':
+                    realcol = realcol + 8 & -8
+                else:
+                    realcol += 1
+                if realcol >= column:
+                    break
+        cursor = KTextEditor.Cursor(line, charcol)
+        if self.iface:
+            self.iface.useRevision(self.revision)
+            cursor = self.iface.translateFromRevision(cursor)
+        return cursor
 
