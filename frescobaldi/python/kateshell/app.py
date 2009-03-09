@@ -261,7 +261,7 @@ class Document(DBusItem):
             self.doc.setMode(self.app.defaultMode)
 
         if self._cursor is not None:
-            self.view.setCursorPosition(KTextEditor.Cursor(*self._cursor))
+            self.setCursorPosition(*self._cursor)
 
         QObject.connect(self.doc,
             SIGNAL("documentUrlChanged(KTextEditor::Document*)"),
@@ -415,10 +415,23 @@ class Document(DBusItem):
 
     @method(iface, in_signature='ii', out_signature='')
     def setCursorPosition(self, line, column):
-        """Sets the cursor in this document. Lines start at 1, columns at 0."""
-        line -= 1
+        """
+        Sets the cursor in this document. Lines start at 1, columns at 0.
+        A TAB character counts as (max, depending on column) 8 characters.
+        """
         if self.view:
-            self.view.setCursorPosition(KTextEditor.Cursor(line, column))
+            line -= 1 # katepart numbers lines from zero
+            charcol, realcol = 0, 0
+            if column > 0:
+                for char in self.line(line):
+                    charcol += 1
+                    if char == '\t':
+                        realcol = realcol + 8 & -8
+                    else:
+                        realcol += 1
+                    if realcol >= column:
+                        break
+            self.view.setCursorPosition(KTextEditor.Cursor(line, charcol))
         else:
             self._cursor = (line, column)
 
