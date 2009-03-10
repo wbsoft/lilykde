@@ -86,7 +86,7 @@ class MainApp(kateshell.app.MainApp):
                 url = KUrl()
         d = kateshell.app.MainApp.openUrl(self, url, encoding)
         if nav:
-            d.setCursorPosition(line, col, True)
+            d.setCursorPosition(line, col, False)
         return d
 
     @method("org.lilypond.TextEdit", in_signature='s', out_signature='b')

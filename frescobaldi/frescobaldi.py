@@ -54,7 +54,7 @@ options.add("n").add("new", ki18n("Start a new instance"))
 options.add("e").add("encoding <enc>", ki18n("Encoding to use"), "UTF-8")
 options.add("l").add("line <num>", ki18n("Line number to go to, starting at 1"))
 options.add("c").add("column <num>", ki18n("Column to go to, starting at 0"))
-options.add("smart", ki18n("Try to use smart line and column numbers."))
+options.add("smart", ki18n("Try to use smart line and column numbers"))
 options.add("+files", ki18n("LilyPond files to open, may also be textedit URLs"))
 KCmdLineArgs.addCmdLineOptions(options)
 
