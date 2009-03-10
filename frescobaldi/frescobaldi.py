@@ -54,6 +54,7 @@ options.add("n").add("new", ki18n("Start a new instance"))
 options.add("e").add("encoding <enc>", ki18n("Encoding to use"), "UTF-8")
 options.add("l").add("line <num>", ki18n("Line number to go to, starting at 1"))
 options.add("c").add("column <num>", ki18n("Column to go to, starting at 0"))
+options.add("smart", ki18n("Try to use smart line and column numbers."))
 options.add("+files", ki18n("LilyPond files to open, may also be textedit URLs"))
 KCmdLineArgs.addCmdLineOptions(options)
 
@@ -66,7 +67,7 @@ col = int(args.getOption("column") or 0)
 for c in range(args.count()):
     doc = app.openUrl(args.url(c), args.getOption("encoding"))
     if doc and nav:
-        doc.setCursorPosition(line, col)
+        doc.setCursorPosition(line, col, args.isSet("smart"))
         nav = False # only first doc
     
 app.run()

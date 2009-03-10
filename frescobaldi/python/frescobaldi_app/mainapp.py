@@ -75,18 +75,18 @@ class MainApp(kateshell.app.MainApp):
             url = KUrl(url)
         nav = False
         if url.protocol() == "textedit":
-            parts = unicode(url.path()).rsplit(":", 3)
-            if len(parts) > 2:
+            m = re.match(r"^(.*):(\d+):(\d+):(\d+)$", unicode(url.path()))
+            if m:
                 # We have a valid textedit:/ uri.
-                url = KUrl.fromPath(parts[0].encode('latin1').decode("utf-8"))
-                line, char = map(int, parts[1:3])
+                url = KUrl.fromPath(m.group(1).encode('latin1').decode("utf-8"))
+                line, char, col = map(int, m.group(2, 3, 4))
                 nav = True
             else:
                 # We can't open malformed textedit urls
                 url = KUrl()
         d = kateshell.app.MainApp.openUrl(self, url, encoding)
         if nav:
-            d.setCursorPosition(line, char)
+            d.setCursorPosition(line, col, True)
         return d
 
     @method("org.lilypond.TextEdit", in_signature='s', out_signature='b')

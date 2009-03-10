@@ -22,6 +22,8 @@ Functions that can be run if the user updates Frescobaldi
 to a newer version.
 """
 
+import re
+
 from PyQt4.QtCore import QVariant
 from PyKDE4.kdecore import KConfig, KGlobal
 
@@ -31,9 +33,13 @@ def install(app):
     running Frescobaldi version.
     """
     conf = KGlobal.config().group("")
-    version = conf.readEntry("version", "")
+    version = tuple(map(int,
+        re.findall(r'\d+', unicode(conf.readEntry("version", "")))))
+    
     if not version:
         installKateModeRC()
+        
+    if version < (0, 7, 8):
         installOkularPartRC()
     
     # ... other stuff can be added here ...
@@ -60,7 +66,7 @@ def installOkularPartRC():
     okularpartrc = KConfig("okularpartrc", KConfig.NoGlobals)
     group = okularpartrc.group("General")
     group.writeEntry("ExternalEditor", "Custom")
-    group.writeEntry("ExternalEditorCommand", "frescobaldi --line %l --column %c")
+    group.writeEntry("ExternalEditorCommand", "frescobaldi --smart --line %l --column %c")
     if not group.readEntry("WatchFile", QVariant(True)).toBool():
         group.writeEntry("WatchFile", QVariant(True))
     group.sync()

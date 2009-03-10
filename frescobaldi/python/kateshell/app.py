@@ -417,26 +417,49 @@ class Document(DBusItem):
         self.materialize()
         self.app.activeChanged(self)
 
-    @method(iface, in_signature='ii', out_signature='')
-    def setCursorPosition(self, line, column):
+    @method(iface, in_signature='iib', out_signature='')
+    def setCursorPosition(self, line, column, translate=True):
         """
         Sets the cursor in this document. Lines start at 1, columns at 0.
         A TAB character counts as (max, depending on column) 8 characters.
+        
+        If translate is True, the cursor position is translated from the state
+        saved by the current CursorTranslator to the current state of the
+        document. This way, external references to positions in the document
+        remain working, even if the document is edited, until the
+        CursorTranslator is updated (which typically happens if a new build is
+        started).
         """
         if self.view:
             line -= 1 # katepart numbers lines from zero
-            self.view.setCursorPosition(
-                self._cursorTranslator.cursor(line, column))
+            if translate:
+                cursor = self._cursorTranslator.cursor(line, column)
+            else:
+                column = resolvetabs_text(column, self.line(line))
+                cursor = KTextEditor.Cursor(line, column)
+            self.view.setCursorPosition(cursor)
         else:
             self._cursor = (line, column)
 
     @method(iface, in_signature='', out_signature='s')
     def text(self):
+        """
+        Returns the document text.
+        """
         if self.doc:
             return unicode(self.doc.text())
         else:
             return ''
-            
+    
+    def textLines(self):
+        """
+        Returns the full document text as a list of lines.
+        """
+        if self.doc:
+            return map(unicode, self.doc.textLines(self.doc.documentRange()))
+        else:
+            return []
+    
     @method(iface, in_signature='b', out_signature='b')
     def close(self, prompt=True):
         """Closes this document, returning true if closing succeeded."""
@@ -611,10 +634,10 @@ class Document(DBusItem):
         Clears the cursor translations that keep Point and Click
         working while the document changes.
         Call this when the PDF output document has been updated by
-        a succesful LilyPond run.
+        a succesful LilyPond run (for example).
         """
         if self.doc:
-            self._cursorTranslator = CursorTranslator(self.doc)
+            self._cursorTranslator = CursorTranslator(self)
 
 
 class CursorTranslator(object):
@@ -624,38 +647,67 @@ class CursorTranslator(object):
     place in the current document.
     """
     def __init__(self, doc):
-        """ doc should be a KTextEditor.Document instance """
-        self.doc = doc
-        self.savedText = map(unicode, doc.textLines(doc.documentRange()))
-        self.iface = doc.smartInterface()
+        """ doc should be a kateshell.app.Document instance """
+        self.savedTabs = map(tabindices, doc.textLines())
+        self.iface = doc.doc.smartInterface()
         if self.iface:
             self.revision = self.iface.currentRevision()
             
     def __del__(self):
         """ Remove our grip on the document. """
-        print "Bye!"
         if self.iface:
             self.iface.releaseRevision(self.revision)
         
     def cursor(self, line, column):
         """
-        translates the cursor position to the current document.
+        Translates a cursor position to the current document.
+        Also resolves tabs (i.e. the column parameter is the virtual position).
+        Returns a KTextEditor.Cursor instance.
         """
-        # First, resolve tabs
-        charcol, realcol = 0, 0
-        if column > 0:
-            print "Saved text for line:", line, self.savedText[line]
-            for char in self.savedText[line]:
-                charcol += 1
-                if char == '\t':
-                    realcol = realcol + 8 & -8
-                else:
-                    realcol += 1
-                if realcol >= column:
-                    break
-        cursor = KTextEditor.Cursor(line, charcol)
+        if line < len(self.savedTabs) and self.savedTabs[line]:
+            column = resolvetabs_indices(column, self.savedTabs[line])
+        cursor = KTextEditor.Cursor(line, column)
         if self.iface:
             self.iface.useRevision(self.revision)
-            cursor = self.iface.translateFromRevision(cursor)
+            cursor = self.iface.translateFromRevision(cursor,
+                KTextEditor.SmartCursor.MoveOnInsert)
         return cursor
 
+
+def tabindices(text):
+    """
+    Returns a list of positions in text at which a tab character is found.
+    If no tab character is found, returns None.
+    """
+    result = []
+    tab = text.find('\t')
+    while tab != -1:
+        result.append(tab)
+        tab = text.find('\t', tab + 1)
+    return result or None
+
+def resolvetabs_text(column, text):
+    """
+    Parses text for tab stops and resolves column (a virtual position)
+    to point to the correct character position in the text.
+    """
+    return resolvetabs_indices(column, tabindices(text))
+
+def resolvetabs_indices(column, indices):
+    """
+    Uses the tabstops in indices (a list with the indices of tabstops in a text)
+    to translate a virtual cursor position to the correct character index.
+    """
+    if not indices or column < indices[0]:
+        return column
+    charcol, realcol = 0, 0
+    # TODO: this loop can probably be optimized
+    while True:
+        if charcol in indices:
+            realcol = realcol + 8 & -8
+        else:
+            realcol += 1
+        if realcol > column:
+            return charcol
+        charcol += 1
+        

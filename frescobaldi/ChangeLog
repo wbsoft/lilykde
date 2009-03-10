@@ -2,8 +2,10 @@ Changes in 0.7.8
 
 * New Polish translation by Piotr Komorowski, many thanks!
 * Updated translations: tr
+* Smarter Point & Click: URLs point to correct position even if the document is
+  changed without re-running LilyPond.
 * Bugfix:
-  * Make Point & Click work in KDE 4.2 when there are tabs in the document.
+  * Make Point & Click work again in KDE 4.2 if there are tabs in the document.
 
 Changes in 0.7.7 -- March 3rd, 2009
 

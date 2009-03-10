@@ -223,7 +223,13 @@ There, under <guilabel>Editor</guilabel>, you can configure a custom editor comm
 Enter the following command and click <guibutton>Ok</guibutton>:
 </para>
 
-<programlisting>frescobaldi --line %l --column %c</programlisting>
+<programlisting>frescobaldi --smart --line %l --column %c</programlisting>
+
+<para>
+(The <option>smart</option> option tells Frescobaldi to translate cursor positions according
+to changes in the document. This way, Point &amp; Click URLs remain working, even if you
+change the document without updating the PDF preview.)
+</para>
 
 <note><para>
 Point &amp; Click URLs enlarge the PDF output documents significantly.
