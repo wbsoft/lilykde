@@ -31,14 +31,15 @@ from PyKDE4.kdecore import KGlobal, KPluginLoader, KUrl, i18n
 from PyKDE4.kdeui import KDialog
 from PyKDE4.kio import KRun
 
-from kateshell.mainwindow import listeners
+from signals import Signal
+
 from frescobaldi_app.scorewiz import config, onSignal
 from frescobaldi_app.runlily import LogWidget, Ly2PDF
 
 
 class PreviewDialog(KDialog):
     def __init__(self, scorewiz):
-        listeners.add(self.close)
+        self.closed = Signal()
         self.scorewiz = scorewiz
         KDialog.__init__(self, scorewiz)
         self.setModal(True)
@@ -80,7 +81,7 @@ class PreviewDialog(KDialog):
         @onSignal(self, "finished()")
         def close():
             self.saveDialogSize(config("scorewiz").group("preview"))
-            listeners.call(self.close)
+            self.closed()
             if self.directory:
                 shutil.rmtree(self.directory)
         
@@ -136,12 +137,11 @@ class PreviewDialog(KDialog):
         # ... and run LilyPond.
         job = Ly2PDF(lyfile, self.log)
         def finished():
-            listeners[self.close].remove(job.abort)
             pdfs = job.updatedFiles()("pdf")
             if pdfs:
                 self.openPDF(pdfs[0])
-        listeners[self.close].append(job.abort)
-        listeners[job.finished].append(finished)
+        self.closed.connect(job.abort)
+        job.done.connect(finished)
     
     def openPDF(self, fileName):
         if self.part:

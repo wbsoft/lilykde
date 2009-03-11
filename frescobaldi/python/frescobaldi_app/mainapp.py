@@ -30,7 +30,6 @@ from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
 import kateshell.app, kateshell.mainwindow
-from kateshell.mainwindow import listeners
 
 # Constants ...
 # find specially formatted variables in a LilyPond source document
@@ -185,7 +184,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             PDFTool(self)
         
         self.jobs = {}
-        listeners[app.activeChanged].append(self.updateJobActions)
+        app.activeChanged.connect(self.updateJobActions)
         
     @lazy
     def actionManager(self):
@@ -444,7 +443,6 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             self.jobs[doc] = LyDoc2PDF(doc, log, preview)
             self.updateJobActions()
             def finished():
-                listeners[doc.close].remove(self.abortLilyPondJob)
                 result = self.jobs[doc].updatedFiles()
                 pdfs = result("pdf")
                 if pdfs:
@@ -454,8 +452,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                 self.actionManager().addActionsToLog(result, log)
                 del self.jobs[doc]
                 self.updateJobActions()
-            listeners[doc.close].append(self.abortLilyPondJob)
-            listeners[self.jobs[doc].finished].append(finished)
+            doc.closed.connect(self.jobs[doc].abort)
+            self.jobs[doc].done.connect(finished)
             
     def abortLilyPondJob(self, doc):
         if doc in self.jobs:
@@ -521,7 +519,7 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "konsole", i18n("Terminal"), "terminal",
             dock=kateshell.mainwindow.Bottom)
-        listeners[mainwin.app.activeChanged].append(self.sync)
+        mainwin.app.activeChanged.connect(self.sync)
             
     def partFactory(self):
         w = super(KonsoleTool, self).partFactory()
@@ -574,7 +572,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "pdf", i18n("PDF Preview"), "application-pdf",
             dock=kateshell.mainwindow.Right)
-        listeners[mainwin.app.activeChanged].append(self.sync)
+        mainwin.app.activeChanged.connect(self.sync)
         self._currentUrl = None
         # We open urls with a timer otherwise Okular is called 
         # too quickly when the user switches documents too fast.
@@ -586,10 +584,6 @@ class PDFTool(kateshell.mainwindow.KPartTool):
                 super(PDFTool, self).openUrl(self._currentUrl)
         QObject.connect(self._timer, SIGNAL("timeout()"), timeoutFunc)
 
-    def delete(self):
-        listeners[self.mainwin.app.activeChanged].remove(self.sync)
-        super(PDFTool, self).delete()
-        
     def sync(self, doc):
         if self._config["sync"] and not doc.url().isEmpty():
             pdfs = doc.updatedFiles()("pdf")
@@ -687,7 +681,7 @@ class LogTool(kateshell.mainwindow.Tool):
             widget=QStackedWidget())
         self.logs = {}
         self.widget.addWidget(QLabel("<center>(%s)</center>" % i18n("no log")))
-        listeners[mainwin.app.activeChanged].append(self.showLog)
+        mainwin.app.activeChanged.connect(self.showLog)
         
     def showLog(self, doc):
         if doc in self.logs:
@@ -698,7 +692,7 @@ class LogTool(kateshell.mainwindow.Tool):
             from frescobaldi_app.runlily import Log
             self.logs[doc] = Log(self, doc)
             self.widget.addWidget(self.logs[doc])
-            listeners[doc.close].append(self.removeLog)
+            doc.closed.connect(lambda: self.removeLog(doc))
         self.showLog(doc)
         return self.logs[doc]
 

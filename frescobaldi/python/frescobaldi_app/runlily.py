@@ -28,7 +28,8 @@ from PyQt4.QtGui import (
     QToolBar, QVBoxLayout)
 from PyKDE4.kdecore import KGlobal, KProcess, i18n
 
-from kateshell.mainwindow import listeners
+from signals import Signal
+
 import frescobaldi_app.mainapp
 
 def config(group):
@@ -41,7 +42,7 @@ _ly_message_re = re.compile(r"^((.*?):(\d+)(?::(\d+))?)(?=:)", re.M)
 class Ly2PDF(object):
     preview = False
     def __init__(self, lyfile, log):
-        listeners.add(self.finished)
+        self.done = Signal()
         # save this so the log knows if we built a PDF with point and click:
         log.preview = self.preview
         self.log = log
@@ -101,8 +102,7 @@ class Ly2PDF(object):
             QTimer.singleShot(0, self.bye)
         
     def bye(self):
-        listeners.call(self.finished)
-        listeners.remove(self.finished)
+        self.done()
 
     def abort(self):
         """ Abort the LilyPond job """

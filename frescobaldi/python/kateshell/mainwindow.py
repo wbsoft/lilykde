@@ -37,23 +37,6 @@ from PyKDE4.kio import KEncodingFileDialog
 def config(group="kateshell"):
     return KGlobal.config().group(group)
 
-class _signalstore(dict):
-    def __new__(cls):
-        return dict.__new__(cls)
-    def call(self, meth, *args):
-        for f in self[meth]:
-            f(*args)
-    def add(self, *methods):
-        for meth in methods:
-            self[meth] = []
-    def remove(self, *methods):
-        for meth in methods:
-            del self[meth]
-
-# global hash with listeners, this is our way of connecting
-# objects to each other
-listeners = _signalstore()
-
 
 Top = KMultiTabBar.Top
 Right = KMultiTabBar.Right
@@ -128,10 +111,7 @@ class MainWindow(KParts.MainWindow):
         
         self.viewPlace.setMinimumSize(200, 100)
 
-        listeners[app.activeChanged].append(self.showDoc)
-        listeners[app.activeChanged].append(self.updateCaption)
-        listeners[app.activeChanged].append(self.updateStatusBar)
-        listeners[app.activeChanged].append(self.updateSelection)
+        app.activeChanged.connect(self.showDoc)
 
         self._selectionActions = []
         self.setupActions() # Let subclasses add more actions
@@ -272,16 +252,19 @@ class MainWindow(KParts.MainWindow):
         
     def showDoc(self, doc):
         if self._currentDoc:
-            listeners[self._currentDoc.updateCaption].remove(self.updateCaption)
-            listeners[self._currentDoc.updateStatus].remove(self.updateStatusBar)
-            listeners[self._currentDoc.updateSelection].remove(self.updateSelection)
+            self._currentDoc.captionChanged.disconnect(self.updateCaption)
+            self._currentDoc.statusChanged.disconnect(self.updateStatusBar)
+            self._currentDoc.selectionChanged.disconnect(self.updateSelection)
             self.guiFactory().removeClient(self._currentDoc.view)
         self._currentDoc = doc
         self.guiFactory().addClient(doc.view)
         self.viewPlace.setCurrentWidget(doc.view)
-        listeners[doc.updateCaption].append(self.updateCaption)
-        listeners[doc.updateStatus].append(self.updateStatusBar)
-        listeners[doc.updateSelection].append(self.updateSelection)
+        doc.captionChanged.connect(self.updateCaption)
+        doc.statusChanged.connect(self.updateStatusBar)
+        doc.selectionChanged.connect(self.updateSelection)
+        self.updateCaption()
+        self.updateStatusBar()
+        self.updateSelection()
         doc.view.setFocus()
 
     def addDoc(self, doc):
@@ -300,7 +283,8 @@ class MainWindow(KParts.MainWindow):
     def currentDocument(self):
         return self._currentDoc
             
-    def updateCaption(self, doc):
+    def updateCaption(self):
+        doc = self.currentDocument()
         name = self.showPath.isChecked() and doc.prettyUrl() or doc.documentName()
         if len(name) > 72:
             name = '...' + name[-69:]
@@ -311,13 +295,15 @@ class MainWindow(KParts.MainWindow):
             self.setCaption(name)
             self.sb_modified.setPixmap(QPixmap())
     
-    def updateStatusBar(self, doc):
+    def updateStatusBar(self):
+        doc = self.currentDocument()
         pos = doc.view.cursorPositionVirtual()
         line, col = pos.line()+1, pos.column()
         self.sb_linecol.setText(i18n("Line: %1 Col: %2", line, col))
         self.sb_insmode.setText(doc.view.viewMode())
 
-    def updateSelection(self, doc):
+    def updateSelection(self):
+        doc = self.currentDocument()
         enable = doc.view.selection() and not doc.view.selectionRange().isEmpty()
         for a in self._selectionActions:
             a.setEnabled(enable)

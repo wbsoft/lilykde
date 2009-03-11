@@ -20,6 +20,8 @@
 import os, re, sip, dbus, dbus.service, dbus.mainloop.qt
 from dbus.service import method, signal
 
+from signals import Signal
+
 from PyQt4.QtCore import QObject, Qt, QVariant, SIGNAL
 from PyKDE4.kdecore import i18n, KGlobal, KUrl
 from PyKDE4.kdeui import KApplication, KGuiItem, KMessageBox, KStandardGuiItem
@@ -27,7 +29,7 @@ from PyKDE4.kio import KEncodingFileDialog
 from PyKDE4.ktexteditor import KTextEditor
 
 from kateshell import DBUS_IFACE_PREFIX
-from kateshell.mainwindow import MainWindow, listeners
+from kateshell.mainwindow import MainWindow
 
 
 # Make the Qt mainloop the default one
@@ -51,6 +53,11 @@ class MainApp(DBusItem):
     """
     Our main application instance. Also exposes some methods to DBus.
     Instantiated only once.
+    
+    Emits three signals to Python others can connect to:
+    activeChanged(Document)
+    documentCreated(Document)
+    documentClosed(Document)
     """
     iface = DBUS_IFACE_PREFIX + "MainApp"
     defaultEncoding = 'UTF-8'
@@ -58,8 +65,10 @@ class MainApp(DBusItem):
     fileTypes = []
     
     def __init__(self, servicePrefix):
-        # listeners to our events
-        listeners.add(self.activeChanged)
+        # others can connect to our events
+        self.activeChanged = Signal()
+        self.documentCreated = Signal()
+        self.documentClosed = Signal()
         # We manage our own documents.
         self.documents = []
         self.history = []       # latest shown documents
@@ -178,6 +187,7 @@ class MainApp(DBusItem):
     def addDocument(self, doc):
         self.documents.append(doc)
         self.history.append(doc)
+        self.documentCreated(doc)
 
     def removeDocument(self, doc):
         if doc in self.documents:
@@ -185,6 +195,7 @@ class MainApp(DBusItem):
             wasActive = doc is self.activeDocument()
             self.documents.remove(doc)
             self.history.remove(doc)
+            self.documentClosed(doc)
             if len(self.documents) == 0:
                 self.createDocument()
             # If we were the active document, switch to the previous active doc.
@@ -192,10 +203,10 @@ class MainApp(DBusItem):
                 self.history[-1].setActive()
 
     @signal(iface, signature='o')
-    def activeChanged(self, doc):
+    def activeDocumentChanged(self, doc):
         self.history.remove(doc)
         self.history.append(doc)
-        listeners.call(self.activeChanged, doc)
+        self.activeChanged(doc) # emit our signal
 
     @method(iface, in_signature='', out_signature='s')
     def programName(self):
@@ -217,6 +228,12 @@ class Document(DBusItem):
     A loaded (LilyPond) text document.
     We support lazy document instantiation: only when a view is requested,
     we create the KTextEditor document and view.
+    
+    We emit these signals:
+    captionChanged()
+    statusChanged()
+    selectionChanged()
+    closed()
     """
     __instance_counter = 0
     iface = DBUS_IFACE_PREFIX + "Document"
@@ -240,8 +257,12 @@ class Document(DBusItem):
         self._encoding = encoding or self.app.defaultEncoding # encoding [UTF-8]
         self._cursorTranslator = None   # for translating cursor positions
         self.app.addDocument(self)
-        listeners.add(self.updateCaption, self.updateStatus, self.updateSelection,
-            self.close)
+        
+        self.captionChanged = Signal()
+        self.statusChanged = Signal()
+        self.selectionChanged = Signal()
+        self.closed = Signal()
+        
         # track filename in recently opened files
         self.app.mainwin.addToRecentFiles(url)
 
@@ -270,16 +291,21 @@ class Document(DBusItem):
         QObject.connect(self.doc,
             SIGNAL("documentUrlChanged(KTextEditor::Document*)"),
             lambda: self.app.mainwin.addToRecentFiles(self.url()))
+            
+        def captionChanged():
+            if not self.isModified():
+                self._edited = True
+            self.captionChanged()
         for s in ("documentUrlChanged(KTextEditor::Document*)",
                   "modifiedChanged(KTextEditor::Document*)"):
-            QObject.connect(self.doc, SIGNAL(s), self.updateCaption)
+            QObject.connect(self.doc, SIGNAL(s), captionChanged)
         for s in (
             "cursorPositionChanged(KTextEditor::View*, const KTextEditor::Cursor&)",
             "viewModeChanged(KTextEditor::View*)",
             "informationMessage(KTextEditor::View*)"):
-            QObject.connect(self.view, SIGNAL(s), self.updateStatus)
+            QObject.connect(self.view, SIGNAL(s), lambda: self.statusChanged())
         for s in ("selectionChanged(KTextEditor::View*)",):
-            QObject.connect(self.view, SIGNAL(s), self.updateSelection)
+            QObject.connect(self.view, SIGNAL(s), lambda: self.selectionChanged())
         
         # delete some actions from the view before plugging in GUI
         # trick found in kateviewmanager.cpp
@@ -337,20 +363,6 @@ class Document(DBusItem):
         if self.doc:
             self.doc.openUrl(url)
     
-    def updateCaption(self):
-        """ Called when name or modifiedstate changes """
-        if not self.isModified():
-            self._edited = True
-        listeners.call(self.updateCaption, self)
-
-    def updateStatus(self):
-        """ Called on signals from the View """
-        listeners.call(self.updateStatus, self)
-
-    def updateSelection(self):
-        """ Called when the selection changes """
-        listeners.call(self.updateSelection, self)
-
     @method(iface, in_signature='s', out_signature='')
     def setEncoding(self, encoding):
         if self.doc:
@@ -415,7 +427,7 @@ class Document(DBusItem):
     def setActive(self):
         """ Make the document the active (shown) document """
         self.materialize()
-        self.app.activeChanged(self)
+        self.app.activeDocumentChanged(self)
 
     @method(iface, in_signature='iib', out_signature='')
     def setCursorPosition(self, line, column, translate=True):
@@ -468,17 +480,15 @@ class Document(DBusItem):
                 return False
             if not self.doc.closeUrl(False):
                 return False # closing did not succeed, but that'd be abnormal
-            listeners.call(self.close, self) # before we are really deleted
+            self.closed() # before we are really deleted
             self.aboutToClose()
             self.app.mainwin.removeDoc(self)
             self._cursorTranslator = None
             sip.delete(self.view)
             sip.delete(self.doc)
         else:
-            listeners.call(self.close, self) # probably never needed...
+            self.closed() # probably never needed...
             self.aboutToClose()
-        listeners.remove(self.updateCaption, self.updateStatus, self.updateSelection,
-            self.close)
         self.remove_from_connection() # remove our exported D-Bus object
         self.app.removeDocument(self)
         return True
