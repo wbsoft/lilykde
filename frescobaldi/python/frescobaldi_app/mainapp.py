@@ -521,8 +521,8 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
             dock=kateshell.mainwindow.Bottom)
         mainwin.app.activeChanged.connect(self.sync)
             
-    def partFactory(self):
-        w = super(KonsoleTool, self).partFactory()
+    def factory(self):
+        w = super(KonsoleTool, self).factory()
         if self.part:
             d = self.mainwin.currentDocument()
             if d and not d.url().isEmpty():
@@ -579,17 +579,18 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         self._timer = QTimer()
         self._timer.setSingleShot(True)
         self._timer.setInterval(200)
-        def timeoutFunc():
-            if self._currentUrl:
-                super(PDFTool, self).openUrl(self._currentUrl)
-        QObject.connect(self._timer, SIGNAL("timeout()"), timeoutFunc)
+        QObject.connect(self._timer, SIGNAL("timeout()"), self.timeoutFunc)
+    
+    def timeoutFunc(self):
+        if self._currentUrl:
+            super(PDFTool, self).openUrl(self._currentUrl)
 
     def sync(self, doc):
         if self._config["sync"] and not doc.url().isEmpty():
             pdfs = doc.updatedFiles()("pdf")
             if pdfs:
                 self.openUrl(KUrl(pdfs[0]))
-    
+
     def addMenuActions(self, m):
         m.addSeparator()
         def act(name, title):
@@ -665,8 +666,7 @@ class QuickInsertTool(kateshell.mainwindow.Tool):
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "quickinsert", i18n("Quick Insert"), "document-properties",
-            dock=kateshell.mainwindow.Left,
-            factory=self.factory)
+            dock=kateshell.mainwindow.Left)
             
     def factory(self):
         import frescobaldi_app.lqi
@@ -711,8 +711,7 @@ class RumorTool(kateshell.mainwindow.Tool):
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "rumor", i18n("Rumor"), "media-record",
-            dock=kateshell.mainwindow.Bottom,
-            factory=self.factory)
+            dock=kateshell.mainwindow.Bottom)
             
     def factory(self):
         import frescobaldi_app.rumor

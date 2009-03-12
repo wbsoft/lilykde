@@ -111,8 +111,6 @@ class MainWindow(KParts.MainWindow):
         
         self.viewPlace.setMinimumSize(200, 100)
 
-        app.activeChanged.connect(self.showDoc)
-
         self._selectionActions = []
         self.setupActions() # Let subclasses add more actions
         self.setStandardToolBarMenuEnabled(True)
@@ -250,7 +248,7 @@ class MainWindow(KParts.MainWindow):
             return func
         return decorator
         
-    def showDoc(self, doc):
+    def showDocument(self, doc):
         if self._currentDoc:
             self._currentDoc.captionChanged.disconnect(self.updateCaption)
             self._currentDoc.statusChanged.disconnect(self.updateStatusBar)
@@ -403,35 +401,35 @@ class TabBar(KMultiTabBar):
                 self.setMaximumHeight(maxSize)
             else:
                 self.setMaximumWidth(maxSize)
-        self._tabs = {}
+        self._tools = []
         
     def addTool(self, tool):
+        self._tools.append(tool)
         self.appendTab(tool.icon().pixmap(16), tool._id, tool.title())
-        self._tabs[tool] = tool._id
         tab = self.tab(tool._id)
         tab.setFocusPolicy(Qt.NoFocus)
         QObject.connect(tab, SIGNAL("clicked()"), tool.toggle)
         tab.installEventFilter(self)
 
     def removeTool(self, tool):
-        self.removeTab(self._tabs[tool])
-        del self._tabs[tool]
+        self._tools.remove(tool)
+        self.removeTab(tool._id)
         
     def showTool(self, tool):
-        self.tab(self._tabs[tool]).setState(True)
+        self.tab(tool._id).setState(True)
         
     def hideTool(self, tool):
-        self.tab(self._tabs[tool]).setState(False)
+        self.tab(tool._id).setState(False)
         
     def updateState(self, tool):
-        tab = self.tab(self._tabs[tool])
+        tab = self.tab(tool._id)
         tab.setIcon(tool.icon())
         tab.setText(tool.title())
 
     def eventFilter(self, obj, ev):
         if ev.type() == QEvent.ContextMenu:
-            for tool, _id in self._tabs.iteritems():
-                if obj is self.tab(_id):
+            for tool in self._tools:
+                if obj is self.tab(tool._id):
                     tool.contextMenu().popup(ev.globalPos())
                     return True
         return False
@@ -449,23 +447,21 @@ class Dock(QStackedWidget):
         self.tabbar = tabbar
         self.title = title
         self.icon = icon and KIcon(icon) or KIcon()
-        self.tools = []          # a list of the tools we host
+        self._tools = []          # a list of the tools we host
         self._currentTool = None # the currently active tool, if any
         self.hide() # by default
 
     def addTool(self, tool):
         """ Add a tool to our tabbar, save dock and tabid in the tool """
         self.tabbar.addTool(tool)
-        self.tools.append(tool)
+        self._tools.append(tool)
         if tool.isActive():
             self.showTool(tool)
 
     def removeTool(self, tool):
         """ Remove a tool from our dock. """
-        if tool not in self.tools:
-            return
         self.tabbar.removeTool(tool)
-        self.tools.remove(tool)
+        self._tools.remove(tool)
         if tool is self._currentTool:
             self._currentTool = None
             self.hide()
@@ -475,7 +471,7 @@ class Dock(QStackedWidget):
         Only to be called by tool.show().
         Call tool.show() to make it active.
         """
-        if tool not in self.tools or tool is self._currentTool:
+        if tool not in self._tools or tool is self._currentTool:
             return
         if self.indexOf(tool.widget) == -1:
             self.addWidget(tool.widget)
@@ -557,7 +553,7 @@ class Tool(object):
     
     def __init__(self, mainwin, name,
             title="", icon="", dock=Right,
-            widget=None, factory=QWidget):
+            widget=None):
         self._id = Tool.__instance_counter
         self._active = False
         self._docked = True
@@ -569,27 +565,38 @@ class Tool(object):
         self.name = name
         mainwin.tools[name] = self
         self.widget = widget
-        self.factory = factory
         self.setTitle(title)
         self.setIcon(icon)
         self.setDock(dock)
         Tool.__instance_counter += 1
         self.loadSettings()
     
+    def materialize(self):
+        if self.widget is None:
+            self.widget = self.factory()
+    
+    def factory(self):
+        """
+        Should return this Tool's widget when it must become visible.
+        I you didn't supply a widget on init, you must override this method.
+        """
+        return QWidget()
+        
     def delete(self):
         """ Completely remove our tool """
         if not self._docked:
             self.dock()
         self._dock.removeTool(self)
-        self._dock = None
         if self.widget:
             sip.delete(self.widget)
-            self.widget = None
         if self._dialog:
             sip.delete(self._dialog)
-            self._dialog = None
+        del self._dock, self.widget, self._dialog
         del self.mainwin.tools[self.name]
 
+    def __del__(self):
+        print "Exit tool", self.name
+        
     def show(self):
         """ Bring our tool into view. """
         self.materialize()
@@ -619,12 +626,8 @@ class Tool(object):
     def isDocked(self):
         return self._docked
         
-    def materialize(self):
-        if self.widget is None:
-            self.widget = self.factory()
-    
     def setDock(self, place):
-        dock = self.mainwin.docks.get(place, self.dock)
+        dock = self.mainwin.docks.get(place, self._dock)
         if dock is self._dock:
             return
         if self._docked:
@@ -746,10 +749,9 @@ class KPartTool(Tool):
     def __init__(self, mainwin, name, title="", icon="", dock=Right):
         self.part = None
         self.failed = False
-        Tool.__init__(self, mainwin,
-            name, title, icon, dock, factory=self.partFactory)
-            
-    def partFactory(self):
+        Tool.__init__(self, mainwin, name, title, icon, dock)
+    
+    def factory(self):
         if self.part:
             return
         factory = KPluginLoader(self._partlibrary).factory()

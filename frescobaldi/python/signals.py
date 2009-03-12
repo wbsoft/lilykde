@@ -44,7 +44,7 @@ class Signal:
 class WeakMethod:
     def __init__(self, f, signal):
         self.f = f.im_func
-        self.r = weakref.ref(f.im_self, lambda dummy: signal.disconnect(f))
+        self.r = weakref.ref(f.im_self)# lambda dummy: signal.disconnect(f))
     
     def __call__(self, *args, **kwargs):
         obj = self.r()
