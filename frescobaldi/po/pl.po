@@ -1,17 +1,15 @@
-# Polskie tłumaczenie programu Frescobaldi.
 # Copyright (c) 2008-2009, Wilbert Berendsen
 # This file is distributed under the same license as the Frescobaldi package.
 # Piotr Komorowski <piotr-komorowski@wp.pl>, 2009.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.1\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-03-10 14:40+0100\n"
-"PO-Revision-Date: 2008-O3-05 11:35+0100\n"
+"POT-Creation-Date: 2009-03-13 14:41+0100\n"
+"PO-Revision-Date: 2009-03-12 21:56+0100\n"
 "Last-Translator: Piotr Komorowski <piotr-komorowski@wp.pl>\n"
-"Language-Team: Polish \t<LL@li.org>\n"
+"Language-Team: Polish \\t <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -36,7 +34,7 @@ msgstr "Piotr Komorowski"
 #: ../frescobaldi.py:46
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "i18n@frescobaldi.org"
-msgstr ""
+msgstr "i18n@frescobaldi.org"
 
 #: ../frescobaldi.py:52
 msgid "Session to start"
@@ -72,7 +70,7 @@ msgstr "$Dokument"
 
 #: dummy.py:6
 msgid "&Pitch"
-msgstr ""
+msgstr "&Dźwięki"
 
 #: dummy.py:7
 msgid "&Lyrics"
@@ -84,7 +82,7 @@ msgstr "&Rytm"
 
 #: dummy.py:9
 msgid "&Generated Files"
-msgstr ""
+msgstr "&Wygenerowane Pliki"
 
 #: ../python/ly/__init__.py:75
 msgid "Dedication"
@@ -120,7 +118,7 @@ msgstr "Autor tekstu"
 
 #: ../python/ly/__init__.py:83
 msgid "Meter"
-msgstr "Tempo"
+msgstr "Licznik"
 
 #: ../python/ly/__init__.py:84
 msgid "Piece"
@@ -216,15 +214,15 @@ msgstr "Tryl"
 
 #: ../python/ly/articulation.py:44
 msgid "Prall"
-msgstr ""
+msgstr "Mordent"
 
 #: ../python/ly/articulation.py:45
 msgid "Mordent"
-msgstr "Mordent"
+msgstr "Mordent przekreślony"
 
 #: ../python/ly/articulation.py:46
 msgid "Turn"
-msgstr ""
+msgstr "Obiegnik"
 
 #: ../python/ly/articulation.py:47
 msgid "Prall prall"
@@ -264,11 +262,11 @@ msgstr ""
 
 #: ../python/ly/articulation.py:56
 msgid "Reverse turn"
-msgstr ""
+msgstr "Obiegnik odwrócony"
 
 #: ../python/ly/articulation.py:58
 msgid "Signs"
-msgstr ""
+msgstr "Symbole"
 
 #: ../python/ly/articulation.py:59
 msgid "Fermata"
@@ -332,139 +330,136 @@ msgstr "Kciuk"
 
 #: ../python/ly/articulation.py:75
 msgid "Left heel"
-msgstr ""
+msgstr "Lewa pięta"
 
 #: ../python/ly/articulation.py:76
 msgid "Right heel"
-msgstr ""
+msgstr "Prawa pięta"
 
 #: ../python/ly/articulation.py:77
 msgid "Left toe"
-msgstr ""
+msgstr "Lewy palec"
 
 #: ../python/ly/articulation.py:78
 msgid "Right toe"
-msgstr ""
+msgstr "Prawy palec"
 
-#: ../python/kateshell/mainwindow.py:97
+#: ../python/kateshell/mainwindow.py:80
 msgid "Left Sidebar"
-msgstr ""
+msgstr "Lewy panel"
 
-#: ../python/kateshell/mainwindow.py:101
+#: ../python/kateshell/mainwindow.py:84
 msgid "Right Sidebar"
-msgstr ""
+msgstr "Prawy panel"
 
-#: ../python/kateshell/mainwindow.py:113
+#: ../python/kateshell/mainwindow.py:96
 msgid "Top Sidebar"
-msgstr ""
+msgstr "Górny panle"
 
-#: ../python/kateshell/mainwindow.py:117
+#: ../python/kateshell/mainwindow.py:100
 msgid "Bottom Sidebar"
-msgstr ""
+msgstr "Dolny panel"
 
-#: ../python/kateshell/mainwindow.py:161
+#: ../python/kateshell/mainwindow.py:140
 msgid "Show Path"
-msgstr ""
+msgstr "Pokaż ścieżkę"
 
-#: ../python/kateshell/mainwindow.py:178
+#: ../python/kateshell/mainwindow.py:157
 msgid "&Tool Views"
-msgstr ""
+msgstr "&Widok narzędzi"
 
-#: ../python/kateshell/mainwindow.py:187
+#: ../python/kateshell/mainwindow.py:166
 msgid "Dock"
-msgstr ""
+msgstr "Załaduj"
 
-#: ../python/kateshell/mainwindow.py:190
-#, fuzzy
+#: ../python/kateshell/mainwindow.py:169
 msgid "Show"
-msgstr "Skrót"
+msgstr "Pokaż"
 
-#: ../python/kateshell/mainwindow.py:268
+#: ../python/kateshell/mainwindow.py:247
 msgid "Please select some text first."
 msgstr "Proszę najpierw wybrać tekst"
 
-#: ../python/kateshell/mainwindow.py:308
+#: ../python/kateshell/mainwindow.py:291
 msgid "modified"
 msgstr "zmieniony"
 
-#: ../python/kateshell/mainwindow.py:317
+#: ../python/kateshell/mainwindow.py:301
 msgid "Line: %1 Col: %2"
 msgstr "Linia: %1 Kol: %2"
 
-#: ../python/kateshell/mainwindow.py:325
+#: ../python/kateshell/mainwindow.py:310
 msgid "BLOCK"
-msgstr ""
+msgstr "Blok"
 
-#: ../python/kateshell/mainwindow.py:325
+#: ../python/kateshell/mainwindow.py:310
 msgid "Block selection mode"
-msgstr ""
+msgstr "Tryb wyboru blokowego"
 
-#: ../python/kateshell/mainwindow.py:327
+#: ../python/kateshell/mainwindow.py:312
 msgid "LINE"
 msgstr "Linia"
 
-#: ../python/kateshell/mainwindow.py:327
+#: ../python/kateshell/mainwindow.py:312
 msgid "Line selection mode"
-msgstr ""
+msgstr "Tryb wyboru liniowego"
 
-#: ../python/kateshell/mainwindow.py:357
+#: ../python/kateshell/mainwindow.py:342
 msgid "All Files"
 msgstr "Wszystkie pliki"
 
-#: ../python/kateshell/mainwindow.py:358
+#: ../python/kateshell/mainwindow.py:343
 msgid "Open File"
 msgstr "Otwórz plik"
 
-#: ../python/kateshell/mainwindow.py:707
+#: ../python/kateshell/mainwindow.py:694
 msgid "Move To"
 msgstr "Skocz do"
 
-#: ../python/kateshell/mainwindow.py:714
+#: ../python/kateshell/mainwindow.py:701
 msgid "Undock"
-msgstr ""
+msgstr "Wyładuj"
 
-#: ../python/kateshell/mainwindow.py:779
+#: ../python/kateshell/mainwindow.py:765
 msgid "Could not load %1"
 msgstr "Nie można wczytać %1"
 
 #: ../python/frescobaldi_app/actions.py:55
 msgid "Open %1 in external viewer"
-msgstr ""
+msgstr "Otwórz %1 w przeglądarce zewnętrznej"
 
 #: ../python/frescobaldi_app/actions.py:58
 msgid "Print %1"
-msgstr ""
+msgstr "Drukuj %1"
 
 #: ../python/frescobaldi_app/actions.py:66
 msgid "Play %1"
-msgstr ""
+msgstr "Graj %1"
 
 #: ../python/frescobaldi_app/actions.py:95
-#, fuzzy
 msgid "Open PDF"
-msgstr "Otwórz plik"
+msgstr "Otwórz PDF"
 
 #: ../python/frescobaldi_app/actions.py:96
-#, fuzzy
 msgid "Print"
-msgstr "Frygijska"
+msgstr "Drukuj"
 
 #: ../python/frescobaldi_app/actions.py:98
 msgid "Play MIDI"
-msgstr ""
+msgstr "Graj MIDI"
 
 #: ../python/frescobaldi_app/actions.py:101
-#: ../python/frescobaldi_app/mainapp.py:412
+#: ../python/frescobaldi_app/mainapp.py:411
 msgid "Email..."
-msgstr ""
+msgstr "Email..."
 
 #: ../python/frescobaldi_app/actions.py:124
 msgid "Printing failed: %1"
-msgstr ""
+msgstr "Drukowanie nie powiodło się: %1"
 
 #: ../python/frescobaldi_app/actions.py:127
 msgid "The document has been sent to the printer."
-msgstr ""
+msgstr "Dokument został wysłany do drukarki"
 
 #: ../python/frescobaldi_app/actions.py:130
 msgid ""
@@ -472,35 +467,40 @@ msgid ""
 "\n"
 "The print command %2 does probably not exist. Please check your settings."
 msgstr ""
+"Drukowanie nie powiodło się: %1\n"
+"\n"
+"Zadanie wydruku %2 prawdopodobnie nie istnieje. Proszę sprawdzić ustawienia."
 
 #: ../python/frescobaldi_app/actions.py:135
 msgid "The print command contains errors. Please check your settings."
-msgstr ""
+msgstr "Zadanie wydruku zawiera błędy. Proszę sprawdzić ustawienia."
 
 #: ../python/frescobaldi_app/actions.py:162
 msgid "There are no files to send via email."
-msgstr ""
+msgstr "Brak plików do wysłania przez e-mail."
 
 #: ../python/frescobaldi_app/actions.py:163
 msgid "No files to send"
-msgstr ""
+msgstr "Brak plików do wysłania"
 
 #: ../python/frescobaldi_app/actions.py:170
 msgid "Email documents"
-msgstr ""
+msgstr "Wyślij dokumenty e-mailem"
 
 #: ../python/frescobaldi_app/actions.py:174
-#, fuzzy
 msgid "Please select the files you want to send:"
-msgstr "Proszę wybrać język"
+msgstr "Proszę wybrać pliki do wysłania:"
 
 #: ../python/frescobaldi_app/actions.py:179
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document).  Also LilyPond files included by the source document are shown."
 msgstr ""
+"To są zaktualizowane pliki (tj. nowsze niż dokument źródłowy LilyPonda). "
+"Pokazane są również pliki zawarte w dokumencie źródłowym."
 
 #: ../python/frescobaldi_app/actions.py:189
+#, fuzzy
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -512,44 +512,52 @@ msgid_plural ""
 "to rebuild the files in publish mode, because then the PDF files are much "
 "smaller."
 msgstr[0] ""
+"Uwaga:ten plik PDF został stworzony w trybie podglądu i zawiera punkty URLs, "
+"co znacznie zwiększa jego objętość.Proszę rozważyć zamianę na tryb wydruku, "
+"co spowoduję znaczne zmniejszenie objętości pliku."
 msgstr[1] ""
+"Uwaga:ten plik PDF został stworzony w trybie podglądu i zawiera punkty URLs, "
+"co znacznie zwiększa jego objętość.Proszę rozważyć zamianę na tryb wydruku, "
+"co spowoduję znaczne zmniejszenie objętości pliku."
 
 #: ../python/frescobaldi_app/document.py:105
 msgid ""
 "Can't perform the requested translation. The music contains quarter-tone "
 "alterations, but those are not available in the pitch language %1."
 msgstr ""
+"Przetłumaczenie nie powiodło się. Muzyka zawiera ćwierćtonowe znaki "
+"chromatyczne, które nie są dostępne w tym języku %1."
 
 #: ../python/frescobaldi_app/document.py:116
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
-msgstr ""
+msgstr "Język "
 
 #: ../python/frescobaldi_app/document.py:119
-#: ../python/frescobaldi_app/mainapp.py:311
+#: ../python/frescobaldi_app/mainapp.py:310
 msgid "Pitch Name Language"
-msgstr ""
+msgstr "Język nazw dźwięków"
 
 #: ../python/frescobaldi_app/document.py:168
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
+"Proszę wybrać nazwę dla zmniennej przyporządkowanej do wybranego tekstu:"
 
 #: ../python/frescobaldi_app/document.py:169
-#: ../python/frescobaldi_app/mainapp.py:270
+#: ../python/frescobaldi_app/mainapp.py:269
 msgid "Cut and Assign"
-msgstr ""
+msgstr "Wytnij i przyporządkuj"
 
 #: ../python/frescobaldi_app/expand.py:170
 msgid "Expansion Manager"
-msgstr ""
+msgstr "Menadżer rozszerzeń"
 
 #: ../python/frescobaldi_app/expand.py:184
 msgid "Search..."
-msgstr ""
+msgstr "Szukaj..."
 
 #: ../python/frescobaldi_app/expand.py:193
-#, fuzzy
 msgid "Shortcut"
 msgstr "Skrót"
 
@@ -573,28 +581,42 @@ msgid ""
 "(default shortcut: Ctrl+.), choose the expansion from the list and press "
 "Enter or click Ok."
 msgstr ""
+"To jest lista zdefiniowanych rozszerzeń.\n"
+"\n"
+"Kliknij na wybrany rząd, aby zobaczyć lub zmienić skojarzony z nim tekst. "
+"Kliknij dwukrotnie na skrót lub jego opis, aby go zmnienić. Możesz również "
+"wcisnąć F2, żeby edytować obecny skrót.\n"
+"\n"
+"Użyj przycisków poniżej, aby dodać lub usunąć rozszerzenia.\n"
+"\n"
+"Rozszerzeń można używać na dwa sposoby: wystukując nazwę skrótu na "
+"klawiaturze, a następnie przywołując funkcję Rozszerzenia, bądź przywołując "
+"funkcję (skrót: Ctrl+.) i wybierając rozszerzenie z listy (zatwierdzając "
+"Enter lub OK)."
 
 #: ../python/frescobaldi_app/expand.py:229
 msgid ""
 "This is the text associated with the selected shortcut. Some characters have "
 "special meaning:"
 msgstr ""
+"To jest tekst skojarzony z wybranym skrótem. Niektóry znaki posiadają "
+"specjalne znaczenie:"
 
 #: ../python/frescobaldi_app/expand.py:231
 msgid "Place the cursor on this spot."
-msgstr ""
+msgstr "Umieść kursor w tym miejscu."
 
 #: ../python/frescobaldi_app/expand.py:232
 msgid "Translate the following pitch."
-msgstr ""
+msgstr "Przetłumacz daną nazwę dźwięku."
 
 #: ../python/frescobaldi_app/expand.py:286
 msgid "New Item"
-msgstr ""
+msgstr "Nowy objekt."
 
 #: ../python/frescobaldi_app/expand.py:330
 msgid "Please don't leave the description empty."
-msgstr ""
+msgstr "Proszę nie zostawiać pustego pola opisu."
 
 #: ../python/frescobaldi_app/expand.py:337
 msgid ""
@@ -602,15 +624,20 @@ msgid ""
 "\n"
 "Please use a different name."
 msgstr ""
+"Inne rozszerzenie korzysta już z tej nazwy.\n"
+"\n"
+"Proszę użyć innej nazwy."
 
 #: ../python/frescobaldi_app/expand.py:343
 msgid ""
 "Please only use letters, numbers and the underscore character in the "
 "expansion name."
 msgstr ""
+"Proszę używać wyłącznie liter, liczb i znaków podkreślenia w nazwie "
+"rozszerzeń."
 
 #: ../python/frescobaldi_app/hyphen.py:119
-#: ../python/frescobaldi_app/mainapp.py:388
+#: ../python/frescobaldi_app/mainapp.py:387
 msgid "Hyphenate Lyrics Text"
 msgstr "Rozdziel tekst myślnikami"
 
@@ -628,7 +655,7 @@ msgstr "Różne rodzaje artykulacji i inne znaki."
 
 #: ../python/frescobaldi_app/lqi.py:68
 msgid "Allow shorthands"
-msgstr ""
+msgstr "Pozwól na stenografowanie"
 
 #: ../python/frescobaldi_app/lqi.py:71
 msgid "Use short notation for some articulations like staccato."
@@ -666,270 +693,269 @@ msgstr ""
 "Jeśli najpierw zaznaczysz fragment muzyki, artykulacja zostanie dodana do "
 "wszystkich nut w danym obszarze."
 
-#: ../python/frescobaldi_app/mainapp.py:63
+#: ../python/frescobaldi_app/mainapp.py:62
 msgid "LilyPond files"
 msgstr "Pliki LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:217
+#: ../python/frescobaldi_app/mainapp.py:216
 #: ../python/frescobaldi_app/scorewiz/__init__.py:349
 msgid "LilyPond"
 msgstr "LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:227
+#: ../python/frescobaldi_app/mainapp.py:226
 msgid "Setup New Score..."
 msgstr "Stwórz Nową Partyturę..."
 
-#: ../python/frescobaldi_app/mainapp.py:232
+#: ../python/frescobaldi_app/mainapp.py:231
 msgid "Run LilyPond (preview)"
 msgstr "Uruchom LilyPonda (podgląd)"
 
-#: ../python/frescobaldi_app/mainapp.py:236
+#: ../python/frescobaldi_app/mainapp.py:235
 msgid "Run LilyPond (publish)"
 msgstr "Uruchom LiliPonda (do druku)"
 
-#: ../python/frescobaldi_app/mainapp.py:243
+#: ../python/frescobaldi_app/mainapp.py:242
 msgid "There is already a LilyPond job running for this document."
 msgstr "LilyPond już pracuje nad tym dokumentem."
 
-#: ../python/frescobaldi_app/mainapp.py:245
+#: ../python/frescobaldi_app/mainapp.py:244
 msgid "Already Running"
 msgstr "Już pracuje"
 
-#: ../python/frescobaldi_app/mainapp.py:248
+#: ../python/frescobaldi_app/mainapp.py:247
 msgid "Your document currently has no filename, please save first."
 msgstr "Twój dokument nie ma jeszcze nazwy, najpierw go zapisz."
 
-#: ../python/frescobaldi_app/mainapp.py:252
+#: ../python/frescobaldi_app/mainapp.py:251
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
 msgstr ""
+"Niestety, na razie brak obsługi plików sieciowych.\n"
+"Proszę zapisać dokument jako plik lokalny."
 
-#: ../python/frescobaldi_app/mainapp.py:259
+#: ../python/frescobaldi_app/mainapp.py:258
 msgid "Your document has been modified, please save first."
 msgstr "Twój dokument został zmieniony, proszę najpierw go zapisać."
 
-#: ../python/frescobaldi_app/mainapp.py:263
+#: ../python/frescobaldi_app/mainapp.py:262
 msgid "Interrupt LilyPond Job"
 msgstr "Przerwij działanie LilyPonda"
 
-#: ../python/frescobaldi_app/mainapp.py:271
+#: ../python/frescobaldi_app/mainapp.py:270
 msgid "Cut selection and assign it to a LilyPond variable."
-msgstr ""
+msgstr "Wytnij fragment i przyporządkuj go do zmiennej LilyPonda."
+
+#: ../python/frescobaldi_app/mainapp.py:274
+msgid "Repeat last note or chord"
+msgstr "Powtórz ostatnią nutę lub akord."
 
 #: ../python/frescobaldi_app/mainapp.py:275
-msgid "Repeat last note or chord"
-msgstr ""
-
-#: ../python/frescobaldi_app/mainapp.py:276
 msgid "Repeat the last music expression (note or chord)."
-msgstr ""
+msgstr "Powtórz ostatnie wyrażenie (nutę lub akord)."
+
+#: ../python/frescobaldi_app/mainapp.py:279
+msgid "Expand"
+msgstr "Rozszerz"
 
 #: ../python/frescobaldi_app/mainapp.py:280
-msgid "Expand"
-msgstr ""
-
-#: ../python/frescobaldi_app/mainapp.py:281
 msgid "Expand last word or open the expansions dialog."
-msgstr ""
+msgstr "Rozszerz ostatni wyraz lub otwórz okno dialogowe rozszerzeń."
+
+#: ../python/frescobaldi_app/mainapp.py:284
+msgid "Next blank line"
+msgstr "Następna pusta linia"
 
 #: ../python/frescobaldi_app/mainapp.py:285
-#, fuzzy
-msgid "Next blank line"
-msgstr "Bez kresek taktowych"
-
-#: ../python/frescobaldi_app/mainapp.py:286
 msgid "Go to the next blank line."
-msgstr ""
+msgstr "Przejdź do następnej pustej lini."
+
+#: ../python/frescobaldi_app/mainapp.py:296
+msgid "Previous blank line"
+msgstr "Poprzednia pusta linia."
 
 #: ../python/frescobaldi_app/mainapp.py:297
-msgid "Previous blank line"
-msgstr ""
-
-#: ../python/frescobaldi_app/mainapp.py:298
 msgid "Go to the previous blank line."
-msgstr ""
+msgstr "Przejdź do poprzedniej pustej lini."
 
-#: ../python/frescobaldi_app/mainapp.py:312
+#: ../python/frescobaldi_app/mainapp.py:311
 msgid ""
 "Change the LilyPond language used for pitch names in this document or in the "
 "selection."
 msgstr ""
+"Zmień języku używany przez LilyPonda dla nazw dźwięków dla tego dokumentu, "
+"lub w danym zaznaczeniu."
 
-#: ../python/frescobaldi_app/mainapp.py:319
+#: ../python/frescobaldi_app/mainapp.py:318
 msgid "Double durations"
 msgstr "Zdubluj wartości"
 
-#: ../python/frescobaldi_app/mainapp.py:320
+#: ../python/frescobaldi_app/mainapp.py:319
 msgid "Double all the durations in the selection."
 msgstr "Zdubluj wartości w danym fragmencie. "
 
-#: ../python/frescobaldi_app/mainapp.py:325
+#: ../python/frescobaldi_app/mainapp.py:324
 msgid "Halve durations"
 msgstr "Zmniejsz wartości o połowę"
 
-#: ../python/frescobaldi_app/mainapp.py:326
+#: ../python/frescobaldi_app/mainapp.py:325
 msgid "Halve all the durations in the selection."
 msgstr "Zmniejsz wartości o połowę w danym fragmencie."
 
-#: ../python/frescobaldi_app/mainapp.py:331
+#: ../python/frescobaldi_app/mainapp.py:330
 msgid "Dot durations"
 msgstr "Dodaj kropkę"
 
-#: ../python/frescobaldi_app/mainapp.py:332
+#: ../python/frescobaldi_app/mainapp.py:331
 msgid "Add a dot to all the durations in the selection."
 msgstr "Dodaj kropkę do wszystkich wartości w danym fragmencie."
 
-#: ../python/frescobaldi_app/mainapp.py:337
+#: ../python/frescobaldi_app/mainapp.py:336
 msgid "Undot durations"
 msgstr "Odejmij kropkę"
 
-#: ../python/frescobaldi_app/mainapp.py:338
+#: ../python/frescobaldi_app/mainapp.py:337
 msgid "Remove one dot from all the durations in the selection."
 msgstr "Usuń po jednej kropce z wszystkich nut w danym fragmencie."
 
-#: ../python/frescobaldi_app/mainapp.py:343
+#: ../python/frescobaldi_app/mainapp.py:342
 msgid "Remove scaling"
 msgstr "Usuń skalowanie"
 
-#: ../python/frescobaldi_app/mainapp.py:344
+#: ../python/frescobaldi_app/mainapp.py:343
 msgid "Remove all scaling (*n/m) from the durations in the selection."
-msgstr ""
+msgstr "Usuń skalowanie (*n/m) z wartości rytmicznych w tym fragmencie."
 
-#: ../python/frescobaldi_app/mainapp.py:349
+#: ../python/frescobaldi_app/mainapp.py:348
 msgid "Remove durations"
 msgstr "Wyczyść wartości"
 
-#: ../python/frescobaldi_app/mainapp.py:350
+#: ../python/frescobaldi_app/mainapp.py:349
 msgid "Remove all durations from the selection."
 msgstr "Wyczyść wszystkie wartości w danym fragmencie."
 
-#: ../python/frescobaldi_app/mainapp.py:355
+#: ../python/frescobaldi_app/mainapp.py:354
 msgid "Make implicit"
-msgstr ""
+msgstr "Ukryj wartości rytmiczne"
 
-#: ../python/frescobaldi_app/mainapp.py:356
+#: ../python/frescobaldi_app/mainapp.py:355
 msgid "Make durations implicit (remove repeated durations)."
-msgstr ""
+msgstr "Ukryj symbole wartości rytmicznych (ukryj powtarzające się wartości)."
+
+#: ../python/frescobaldi_app/mainapp.py:360
+msgid "Make explicit"
+msgstr "Pokaż wartości rytmiczne"
 
 #: ../python/frescobaldi_app/mainapp.py:361
-msgid "Make explicit"
-msgstr ""
-
-#: ../python/frescobaldi_app/mainapp.py:362
 msgid ""
 "Make durations explicit (add duration to every note, even if it is the same "
 "as the preceding note)."
 msgstr ""
+"Pokaż wszystkie wartości rytmiczne (pokazuje wartość rytmiczną przy każdej "
+"nuty, nawet jeśli jest taka sama jak poprzednia)."
 
-#: ../python/frescobaldi_app/mainapp.py:368
+#: ../python/frescobaldi_app/mainapp.py:367
 msgid "Apply rhythm..."
 msgstr "Dodaj rytm..."
 
-#: ../python/frescobaldi_app/mainapp.py:369
+#: ../python/frescobaldi_app/mainapp.py:368
 msgid "Apply an entered rhythm to the selected music."
 msgstr "Dodaj podany rytm do zaznaczonego fragmentu muzyki."
 
-#: ../python/frescobaldi_app/mainapp.py:373
-#, fuzzy
+#: ../python/frescobaldi_app/mainapp.py:372
 msgid "Copy rhythm"
-msgstr "Copyright"
+msgstr "Kopiuj rytm"
 
-#: ../python/frescobaldi_app/mainapp.py:374
-#, fuzzy
+#: ../python/frescobaldi_app/mainapp.py:373
 msgid "Copy the rhythm of the selected music."
-msgstr "Dodaj podany rytm do zaznaczonego fragmentu muzyki."
+msgstr "Kopiuj rytm z zaznaczonego fragmentu muzyki."
+
+#: ../python/frescobaldi_app/mainapp.py:379
+msgid "Paste rhythm"
+msgstr "Wklej rytm"
 
 #: ../python/frescobaldi_app/mainapp.py:380
-#, fuzzy
-msgid "Paste rhythm"
-msgstr "Wprowadź rytm:"
-
-#: ../python/frescobaldi_app/mainapp.py:381
-#, fuzzy
 msgid "Paste a rhythm to the selected music."
-msgstr "Dodaj podany rytm do zaznaczonego fragmentu muzyki."
+msgstr "Wklej rytm do wybranego fragmentu muzyki."
 
-#: ../python/frescobaldi_app/mainapp.py:393
+#: ../python/frescobaldi_app/mainapp.py:392
 msgid "Remove hyphenation"
 msgstr "Usuń rozdzielenie tekstu myślnikami"
 
-#: ../python/frescobaldi_app/mainapp.py:398
+#: ../python/frescobaldi_app/mainapp.py:397
 msgid "Insert LilyPond version"
 msgstr "Wstaw wersję LilyPonda"
 
-#: ../python/frescobaldi_app/mainapp.py:403
+#: ../python/frescobaldi_app/mainapp.py:402
 msgid "Update with convert-ly"
 msgstr "Uaktualnij z convert-ly"
 
-#: ../python/frescobaldi_app/mainapp.py:408
+#: ../python/frescobaldi_app/mainapp.py:407
 msgid "Open Current Folder"
-msgstr ""
+msgstr "Otwórz obecny folder"
 
-#: ../python/frescobaldi_app/mainapp.py:473
+#: ../python/frescobaldi_app/mainapp.py:471
 msgid "Abort the running LilyPond process"
 msgstr "Przerwij działanie LilyPonda"
 
-#: ../python/frescobaldi_app/mainapp.py:476
+#: ../python/frescobaldi_app/mainapp.py:474
 msgid "Run LilyPond in preview mode"
 msgstr "Uruchom LilyPonda w trybie podglądu"
 
-#: ../python/frescobaldi_app/mainapp.py:488
+#: ../python/frescobaldi_app/mainapp.py:486
 msgid "Apply Rhythm"
 msgstr "Dodaj rytm"
 
-#: ../python/frescobaldi_app/mainapp.py:496
+#: ../python/frescobaldi_app/mainapp.py:494
 msgid "Enter a rhythm:"
 msgstr "Wprowadź rytm:"
 
-#: ../python/frescobaldi_app/mainapp.py:499
+#: ../python/frescobaldi_app/mainapp.py:497
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr "Wprowadź rytm używając wartości oddzielonych spacją (np. 8. 16 8 4 8)"
 
-#: ../python/frescobaldi_app/mainapp.py:522
+#: ../python/frescobaldi_app/mainapp.py:520
 msgid "Terminal"
 msgstr "Terminal"
 
-#: ../python/frescobaldi_app/mainapp.py:555
+#: ../python/frescobaldi_app/mainapp.py:553
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "S&ynchronizuj Terminal z obecnym dokumentem"
 
-#: ../python/frescobaldi_app/mainapp.py:575
-#: ../python/frescobaldi_app/scorewiz/preview.py:45
+#: ../python/frescobaldi_app/mainapp.py:573
+#: ../python/frescobaldi_app/scorewiz/preview.py:46
 msgid "PDF Preview"
 msgstr "Podgląd PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:607
+#: ../python/frescobaldi_app/mainapp.py:602
 msgid "Show PDF Navigation Panel"
 msgstr "Pokaż panel nawigacyjny PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:608
+#: ../python/frescobaldi_app/mainapp.py:603
 msgid "Show PDF minipager"
 msgstr "Pokaż minipodgląd PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:609
-#, fuzzy
+#: ../python/frescobaldi_app/mainapp.py:604
 msgid "Configure Okular..."
-msgstr "Ustawienia..."
+msgstr "Ustawienia Okular..."
 
-#: ../python/frescobaldi_app/mainapp.py:612
-#, fuzzy
+#: ../python/frescobaldi_app/mainapp.py:607
 msgid "S&ynchronize Preview with Current Document"
-msgstr "S&ynchronizuj Terminal z obecnym dokumentem"
+msgstr "S&ynchronizuj podgląd z obecnym dokumentem"
 
-#: ../python/frescobaldi_app/mainapp.py:673
+#: ../python/frescobaldi_app/mainapp.py:668
 msgid "Quick Insert"
 msgstr "Pod ręką"
 
-#: ../python/frescobaldi_app/mainapp.py:685
+#: ../python/frescobaldi_app/mainapp.py:679
 msgid "LilyPond Log"
 msgstr "LilyPond Log"
 
-#: ../python/frescobaldi_app/mainapp.py:689
+#: ../python/frescobaldi_app/mainapp.py:683
 msgid "no log"
 msgstr "no log"
 
-#: ../python/frescobaldi_app/mainapp.py:719
+#: ../python/frescobaldi_app/mainapp.py:713
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -971,8 +997,9 @@ msgid ""
 "to let Frescobaldi determine the key signature from the LilyPond document."
 msgstr ""
 "Ilość znaków chromatycznych. Liczba negatywna oznacza bemole. Pozostaw "
-"'Auto',aby pozwolić Frescobaldiemu ustalić tonację na podstawie dokumentu "
-"LilyPonda."
+"'Auto',aby pozwolić Frescobaldiemu\n"
+" \n"
+"ustalić tonację na podstawie dokumentu LilyPonda."
 
 #: ../python/frescobaldi_app/rumor.py:113
 msgid "Tempo:"
@@ -980,7 +1007,7 @@ msgstr "Tempo:"
 
 #: ../python/frescobaldi_app/rumor.py:116
 msgid "Meter:"
-msgstr ""
+msgstr "Licznik:"
 
 #: ../python/frescobaldi_app/rumor.py:119
 msgid "Key:"
@@ -1048,7 +1075,7 @@ msgstr "Urządzenie OSS %1"
 
 #: ../python/frescobaldi_app/rumor.py:411
 msgid "Keyboard"
-msgstr ""
+msgstr "Klawiatura"
 
 #: ../python/frescobaldi_app/rumor.py:417
 msgid "MIDI input:"
@@ -1067,7 +1094,7 @@ msgstr "Wyjście MIDI:"
 
 #: ../python/frescobaldi_app/rumor.py:431
 msgid "MIDI output to use."
-msgstr ""
+msgstr "Wyjście MIDI do wykorzystania"
 
 #: ../python/frescobaldi_app/rumor.py:436
 #: ../python/frescobaldi_app/scorewiz/__init__.py:534
@@ -1080,21 +1107,22 @@ msgstr "Ustawienie języka LilyPond, w którym Rumor zapisze nagrywane nuty."
 
 #: ../python/frescobaldi_app/rumor.py:449
 msgid "Explicit durations"
-msgstr ""
+msgstr "Uwidocznione wartości rytmiczne"
 
 #: ../python/frescobaldi_app/rumor.py:451
 msgid ""
 "Add a duration after every note, even if it is the same as the preceding "
 "note."
 msgstr ""
+"Dodaj wartość do każdej nuty, nawet jeśli jest taka sama jak poprzednia."
 
 #: ../python/frescobaldi_app/rumor.py:456
 msgid "Absolute pitch"
-msgstr ""
+msgstr "Absolutne wysokości"
 
 #: ../python/frescobaldi_app/rumor.py:458
 msgid "Use absolute pitches instead of relative."
-msgstr ""
+msgstr "Używaj absolutnych nazw wysokości, zamiast relatywnych."
 
 #: ../python/frescobaldi_app/rumor.py:464
 msgid "No barlines"
@@ -1126,11 +1154,11 @@ msgstr "Usuń pauzy"
 
 #: ../python/frescobaldi_app/rumor.py:484
 msgid "Strip leading and trialing rests from output."
-msgstr ""
+msgstr "Usuń pauzy na początku i końcu pliku wyjściowego."
 
 #: ../python/frescobaldi_app/rumor.py:488
 msgid "Guile scripts to load:"
-msgstr ""
+msgstr "Skrypt Guile do załadowania:"
 
 #: ../python/frescobaldi_app/rumor.py:493
 msgid "Name"
@@ -1141,6 +1169,8 @@ msgid ""
 "Here you can select which Guile scripts you want Rumor to load. Check "
 "\"What's this\" for more information."
 msgstr ""
+"Tu możesz wybrać skrypt Guile, jakiego ma używać Rumor. Sprawdź \"Co to jest"
+"\" , by uzyskać więcej informacji."
 
 #: ../python/frescobaldi_app/rumor.py:499
 msgid ""
@@ -1148,161 +1178,164 @@ msgid ""
 "your own scripts by putting them in %1. If the first line of your script "
 "starts with a semicolon (;) that line will be shown as description."
 msgstr ""
+"Tu możesz wybrać, który skrypt Guile ma być użytu przez Rumor. Możesz dodać "
+"własne skrypty, umieszczając je w %1. Jeśli pierwsza linijka twojego skryptu "
+"rozpoczyna się średnikiem, będzie ona pokazywana jako opis."
 
 #: ../python/frescobaldi_app/rumor.py:615
 msgid "Auto"
 msgstr "Auto"
 
-#: ../python/frescobaldi_app/runlily.py:70
+#: ../python/frescobaldi_app/runlily.py:71
 msgid "preview mode"
 msgstr "tryb podglądu"
 
-#: ../python/frescobaldi_app/runlily.py:70
+#: ../python/frescobaldi_app/runlily.py:71
 msgid "publish mode"
 msgstr "tryb wydruku"
 
-#: ../python/frescobaldi_app/runlily.py:71
-#, fuzzy
+#: ../python/frescobaldi_app/runlily.py:72
 msgid "LilyPond [%1] starting (%2)..."
-msgstr "LilyPond [%1] zaczyna (%2)...\n"
+msgstr "LilyPond [%1] zaczyna (%2)..."
 
-#: ../python/frescobaldi_app/runlily.py:77
+#: ../python/frescobaldi_app/runlily.py:78
 msgid "LilyPond [%1] exited with return code %2."
 msgstr "LilyPond [%1] zakończył z kodem %2."
 
-#: ../python/frescobaldi_app/runlily.py:80
+#: ../python/frescobaldi_app/runlily.py:81
 msgid "LilyPond [%1] exited with exit status %2."
-msgstr ""
+msgstr "LilyPond [%1] zakończył ze statusem %2."
 
-#: ../python/frescobaldi_app/runlily.py:83
+#: ../python/frescobaldi_app/runlily.py:84
 msgid "LilyPond [%1] finished."
 msgstr "LilyPond [%1] zakończył."
 
-#: ../python/frescobaldi_app/runlily.py:92
+#: ../python/frescobaldi_app/runlily.py:93
 msgid "Could not start LilyPond. Please check path and permissions."
 msgstr "Nie można uruchomić LilyPonda. Sprawdź scieżkę oraz pozwolenia."
 
-#: ../python/frescobaldi_app/runlily.py:95
+#: ../python/frescobaldi_app/runlily.py:96
 msgid "Could not read from the LilyPond process."
-msgstr ""
+msgstr "Nie można odczytać z tego przebiegu LilyPonda."
 
-#: ../python/frescobaldi_app/runlily.py:98
+#: ../python/frescobaldi_app/runlily.py:99
 msgid "An unknown error occured."
-msgstr ""
+msgstr "Pojawił się nieznany błąd."
 
 #: ../python/frescobaldi_app/runlily.py:125
 msgid "Click to edit this file"
 msgstr "Kliknij by rozpocząć edycję pliku"
 
 #: ../python/frescobaldi_app/settings.py:47
-#, fuzzy
 msgid "Configure"
-msgstr "Ustawienia..."
+msgstr "Ustaw"
 
 #: ../python/frescobaldi_app/settings.py:90
 msgid "Editor Component"
-msgstr ""
+msgstr "Edytor komponentów"
 
 #: ../python/frescobaldi_app/settings.py:91
 msgid "Editor Component Options"
-msgstr ""
+msgstr "Opcje edytora komponentów"
 
 #: ../python/frescobaldi_app/settings.py:119
-#, fuzzy
 msgid "General Preferences"
 msgstr "Ustawienia ogólne"
 
 #: ../python/frescobaldi_app/settings.py:120
-#, fuzzy
 msgid "General Frescobaldi Preferences"
-msgstr "Ustawienia ogólne"
+msgstr "Ustawienia ogólne Frescobaldiego"
 
 #: ../python/frescobaldi_app/settings.py:125
 msgid "Save document when LilyPond is run"
-msgstr ""
+msgstr "Zapisz dokument podczas działania LilyPonda"
 
 #: ../python/frescobaldi_app/settings.py:127
 msgid "Let LilyPond delete intermediate output files"
-msgstr ""
+msgstr "Pozwól, by LilyPond usuwał wynikowe pliki pośrednie"
 
 #: ../python/frescobaldi_app/settings.py:129
 msgid "Remember cursor position, bookmarks, etc."
-msgstr ""
+msgstr "Zapamietaj pozycje kursora, zakładki, itd."
 
 #: ../python/frescobaldi_app/settings.py:131
 msgid "Disable the built-in PDF preview"
-msgstr ""
+msgstr "Wyłącz wbudowany podgląd PDF"
 
 #: ../python/frescobaldi_app/settings.py:148
-#, fuzzy
 msgid "LilyPond version number to use for new documents"
 msgstr "Wersja LilyPond jakiej użyjesz dla tego dokumentu."
 
 #: ../python/frescobaldi_app/settings.py:150
 msgid "Use version number of installed LilyPond"
-msgstr ""
+msgstr "Użyj numeru wersji LilyPonda, która jest zainstalowana"
 
 #: ../python/frescobaldi_app/settings.py:151
 msgid "Use version number of last convert-ly rule"
-msgstr ""
+msgstr "Użyj numeru wersji z ostaniej dostępnej reguły convert-ly"
 
 #: ../python/frescobaldi_app/settings.py:152
 msgid "Use custom version number:"
-msgstr ""
+msgstr "Użyj wersji użytkownika:"
 
 #: ../python/frescobaldi_app/settings.py:158
 msgid "Enter a valid LilyPond version number, e.g. 2.12.0"
-msgstr ""
+msgstr "Wprowadź poprawną wersję LilyPonda, np. 2.12.0"
 
 #: ../python/frescobaldi_app/settings.py:213
-#, fuzzy
 msgid "Paths"
-msgstr "Głosy"
+msgstr "Ścieżki"
 
 #: ../python/frescobaldi_app/settings.py:214
 msgid "Paths to programs or data used by Frescobaldi"
-msgstr ""
+msgstr "Ścieżka do programów lub danych używanych przez Frescobaldiego"
 
 #: ../python/frescobaldi_app/settings.py:223
 msgid "Name or full path of the LilyPond program."
-msgstr ""
+msgstr "Nazwa lub pełna ścieżka do programu LilyPond."
 
 #: ../python/frescobaldi_app/settings.py:225
 msgid "Name or full path of the convert-ly program."
-msgstr ""
+msgstr "Nazwa lub pełna ścieżka do programu convert-ly"
 
 #: ../python/frescobaldi_app/settings.py:226
 msgid "Printcommand:"
-msgstr ""
+msgstr "Polecenie wydruku:"
 
 #: ../python/frescobaldi_app/settings.py:227
 msgid ""
 "Command to print a PDF file, for example lpr or kprinter. You may add some "
 "arguments, e.g. lpr -P myprinter."
 msgstr ""
+"Polecenie wydruku pliku PDF, np. lpr lub kprinter. Możesz dodać różne "
+"wartości, np. lpr -P myprinter."
 
 #: ../python/frescobaldi_app/settings.py:231
 msgid "Name or full path of the Rumor program."
-msgstr ""
+msgstr "Nazwa lub pełna ścieżka programu Rumor."
 
 #: ../python/frescobaldi_app/settings.py:233
 msgid ""
 "Name or full path of the aconnect program (part of ALSA, for MIDI input and "
 "playback using Rumor)."
 msgstr ""
+"Nazwa lub pełna ścieżka do programu aconnect (część ALSA, dla wejść i wyjść "
+"MIDI przy użyciu Rumora)."
 
 #: ../python/frescobaldi_app/settings.py:237
 msgid ""
 "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
+"Pełne polecenie rozpoczynające Timidity (lub inny program), jako klienta "
+"MIDI dla ALSA."
 
 #: ../python/frescobaldi_app/settings.py:252
 msgid "Default directory:"
-msgstr ""
+msgstr "Domyślna lokalizacja:"
 
 #: ../python/frescobaldi_app/settings.py:257
 msgid "The default folder for your LilyPond documents (optional)."
-msgstr ""
+msgstr "Domyślny folder dla Twoich dokumentów LilyPonda (do wyboru)."
 
 #: ../python/frescobaldi_app/settings.py:270
 msgid ""
@@ -1310,6 +1343,9 @@ msgid ""
 "KOffice, etc, one per line. If you leave out the starting slash, the "
 "prefixes from the KDEDIRS environment variable are prepended."
 msgstr ""
+"Ścieżki do reguł rozdzielania wyrazów ze słowników OpenOffice.org, Scribus, "
+"KOffice, itd., (po jednej na linię). Jeśli pozostawisz początkowy lewy "
+"ukośnik, użyte zostaną prefiksy dla zmiennych środowiskowych z KDEDIRS. "
 
 #: ../python/frescobaldi_app/version.py:54
 msgid "Your document has already a LilyPond version statement."
@@ -1452,9 +1488,8 @@ msgid "A tempo indication, e.g. \"Allegro.\""
 msgstr "Oznaczenie tempa, np. \"Allegro.\""
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:434
-#, fuzzy
 msgid "Pitch name language:"
-msgstr "Proszę wybrać język"
+msgstr "Język dla nazw dźwięków:"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:438
 #: ../python/frescobaldi_app/scorewiz/__init__.py:503
@@ -1478,11 +1513,11 @@ msgstr "Wersja LilyPond jakiej użyjesz dla tego dokumentu."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:472
 msgid "Use typographical quotes"
-msgstr ""
+msgstr "Użyj cudzysłowu drukarskiego"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:474
 msgid "Replace normal quotes in titles with nice typographical quotes."
-msgstr ""
+msgstr "Zamień normalny cudzysłów na cudzysłów drukarski."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:476
 msgid "Remove default tagline"
@@ -1490,7 +1525,7 @@ msgstr "Usuń domyślną stopkę"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:478
 msgid "Suppress the default tagline output by LilyPond."
-msgstr ""
+msgstr "Ukryj domyślną stopkę dodawaną przez LilyPond."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:480
 msgid "Remove bar numbers"
@@ -1499,7 +1534,7 @@ msgstr "Usuń numery taktów"
 #: ../python/frescobaldi_app/scorewiz/__init__.py:482
 msgid ""
 "Suppress the display of measure numbers at the beginning of every system."
-msgstr ""
+msgstr "Ukryj numery taktów na początku każdego systemu."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:485
 msgid "Create MIDI output"
@@ -1570,7 +1605,7 @@ msgstr "Brak dostępnych ustawień."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:83
 msgid "Music follows here."
-msgstr "Nuty wpisz tutaj"
+msgstr "Poniżej wpisz nuty."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:149
 msgid "Staff type:"
@@ -1594,11 +1629,11 @@ msgstr "Strój:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:239
 msgid "Lyrics follow here."
-msgstr "Tekst wpisz tutaj"
+msgstr "Poniżej wpisz tekst."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:250
 msgid "Stanzas:"
-msgstr "Strofy:"
+msgstr "Zwrotki:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:254
 msgid "The number of stanzas."
@@ -1634,7 +1669,7 @@ msgstr "Nazwy akordów"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:366
 msgid "Chords follow here."
-msgstr "Akordy wpisz tutaj."
+msgstr "Poniżej wpisz akordy."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:374
 msgid "Chord style:"
@@ -1663,59 +1698,59 @@ msgstr "Bas cyfrowany"
 #: ../python/frescobaldi_app/scorewiz/parts.py:392
 #: ../python/frescobaldi_app/scorewiz/parts.py:449
 msgid "Figures follow here."
-msgstr "Cyfrowanie basu wpisz tutaj"
+msgstr "Poniżej wpisz cyfowanie basu."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:400
 msgid "Use extender lines"
-msgstr ""
+msgstr "Użyj wypełniających linii"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:405
 msgid "Violin"
-msgstr ""
+msgstr "Skrzypce"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:406
 msgid "Violin|Vl."
-msgstr ""
+msgstr "Skrzypce|Skrz."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:411
 msgid "Viola"
-msgstr ""
+msgstr "Altówka"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:412
 msgid "Viola|Vla."
-msgstr ""
+msgstr "Altówka|Alt."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:419
 msgid "Cello"
-msgstr ""
+msgstr "Wiolonczela"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:420
 msgid "Cello|Cl."
-msgstr ""
+msgstr "Wiolonczela|Wiol."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:427
 msgid "Contrabass"
-msgstr ""
+msgstr "Kontrabas"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:428
 msgid "Contrabass|Cb."
-msgstr ""
+msgstr "Kontrabas|Kb."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:435
 msgid "Basso continuo"
-msgstr ""
+msgstr "Basso continuo"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:436
 msgid "Basso Continuo|B.c."
-msgstr ""
+msgstr "Basso Continuo|B.c."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:456
 msgid "Mandolin"
-msgstr ""
+msgstr "Mandolina"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:457
 msgid "Mandolin|Mdl."
-msgstr ""
+msgstr "Mandolina|Mdl."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:460
 msgid "Mandolin tuning"
@@ -1723,11 +1758,11 @@ msgstr "Strój mandoliny"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:465
 msgid "Banjo"
-msgstr ""
+msgstr "Banjo"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:466
 msgid "Banjo|Bj."
-msgstr ""
+msgstr "Banjo|Bj."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:470
 msgid "Open G-tuning (aDGBD)"
@@ -1755,11 +1790,11 @@ msgstr "Cztery struny (zamiast pięciu)"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:495
 msgid "Classical guitar"
-msgstr ""
+msgstr "Gitara "
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:496
 msgid "Guitar|Gt."
-msgstr ""
+msgstr "Gitara|Git."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:500
 msgid "Guitar tuning"
@@ -1771,20 +1806,20 @@ msgstr "Strój G"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:506
 msgid "Jazz guitar"
-msgstr ""
+msgstr "Gitara jazzowa"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:507
 msgid "Jazz guitar|J.Gt."
-msgstr ""
+msgstr "Gitara jazzowa|Git.jazz."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:512
 #: ../python/frescobaldi_app/scorewiz/parts.py:749
 msgid "Bass"
-msgstr ""
+msgstr "Gitara basowa"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:513
 msgid "Bass|Bs."
-msgstr ""
+msgstr "Gitara basowa|Git.b."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:519
 msgid "Bass tuning"
@@ -1792,267 +1827,267 @@ msgstr "Strój basu"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:524
 msgid "Electric bass"
-msgstr ""
+msgstr "Bas elektryczny"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:525
 msgid "Electric bass|E.Bs."
-msgstr ""
+msgstr "Bas elektryczny|E.b."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:530
 msgid "Harp"
-msgstr ""
+msgstr "Harfa"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:531
 msgid "Harp|Hp."
-msgstr ""
+msgstr "Harfa|Hf."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:550
 msgid "Flute"
-msgstr ""
+msgstr "Flet"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:551
 msgid "Flute|Fl."
-msgstr ""
+msgstr "Flet|Fl."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:556
 msgid "Piccolo"
-msgstr ""
+msgstr "Pikulina"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:557
 msgid "Piccolo|Pic."
-msgstr ""
+msgstr "Pikulina|Pik."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:563
 msgid "Bass flute"
-msgstr ""
+msgstr "Flet basowy"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:564
 msgid "Bass flute|Bfl."
-msgstr ""
+msgstr "Flet basowy|Fl.b."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:570
 msgid "Oboe"
-msgstr ""
+msgstr "Obój"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:571
 msgid "Oboe|Ob."
-msgstr ""
+msgstr "Obój|Ob."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:576
 msgid "Oboe d'Amore"
-msgstr ""
+msgstr "Obój miłosny"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:577
 msgid "Oboe d'amore|Ob.d'am."
-msgstr ""
+msgstr "Obój miłosny|Ob.mił."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:583
 msgid "English Horn"
-msgstr ""
+msgstr "Rożek angielski"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:584
 msgid "English horn|Eng.h."
-msgstr ""
+msgstr "Rożek angielski|R.ang."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:590
 msgid "Bassoon"
-msgstr ""
+msgstr "Fagot"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:591
 msgid "Bassoon|Bn."
-msgstr ""
+msgstr "Fagot|Fg."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:598
 msgid "Contrabassoon"
-msgstr ""
+msgstr "Kontrafagot"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:599
 msgid "Contrabassoon|C.Bn."
-msgstr ""
+msgstr "Kontrafagot|Kfg."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:607
 msgid "Clarinet"
-msgstr ""
+msgstr "Klarnet"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:608
 msgid "Clarinet|Cl."
-msgstr ""
+msgstr "Klarnet|Kl."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:614
 msgid "Sopranino Sax"
-msgstr ""
+msgstr "Saksofon sopranino"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:615
 msgid "Sopranino Sax|SiSx."
-msgstr ""
+msgstr "Saksofon sopranino|Sx.Sno"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:621
 msgid "Soprano Sax"
-msgstr ""
+msgstr "Saksofon sopranowy"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:622
 msgid "Soprano Sax|SoSx."
-msgstr ""
+msgstr "Saksofon sopranowy|S.Sx"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:628
 msgid "Alto Sax"
-msgstr ""
+msgstr "Saksofon altowy"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:629
 msgid "Alto Sax|ASx."
-msgstr ""
+msgstr "Saksofon altowy|Sx.a."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:635
 msgid "Tenor Sax"
-msgstr ""
+msgstr "Saksofon tenorowy"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:636
 msgid "Tenor Sax|TSx."
-msgstr ""
+msgstr "Saksofon tenorowy|Sx.t."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:642
 msgid "Baritone Sax"
-msgstr ""
+msgstr "Saksofon barytonowy"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:643
 msgid "Baritone Sax|BSx."
-msgstr ""
+msgstr "Saksofon barytonowy|Sx.b"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:649
 msgid "Bass Sax"
-msgstr ""
+msgstr "Saksofon basowy"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:650
 msgid "Bass Sax|BsSx."
-msgstr ""
+msgstr "Saksofon basowy|Sx.bs"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:656
 msgid "Soprano recorder"
-msgstr ""
+msgstr "Flet prosty sopranowy"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:657
 msgid "Soprano recorder|S.rec."
-msgstr ""
+msgstr "Flet prosty sopranowy|Fl.s."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:663
 msgid "Alto recorder"
-msgstr ""
+msgstr "Flet prosty altowy"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:664
 msgid "Alto recorder|A.rec."
-msgstr ""
+msgstr "Flet prosty altowy|Fl.a."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:669
 msgid "Tenor recorder"
-msgstr ""
+msgstr "Flet prosty tenorowy"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:670
 msgid "Tenor recorder|T.rec."
-msgstr ""
+msgstr "Flet prosty tenorowy|Fl.t."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:675
 msgid "Bass recorder"
-msgstr ""
+msgstr "Flet prosty basowy"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:676
 msgid "Bass recorder|B.rec."
-msgstr ""
+msgstr "Flet prosty basowy|Fl.b."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:683
 msgid "Horn in F"
-msgstr ""
+msgstr "Róg F"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:684
 msgid "Horn in F|Hn.F."
-msgstr ""
+msgstr "Róg F|R. F"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:690
 msgid "Trumpet in C"
-msgstr ""
+msgstr "Trąbka C"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:691
 msgid "Trumpet in C|Tr.C"
-msgstr ""
+msgstr "Trąbka C|Tr.C"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:696
 msgid "Trumpet in Bb"
-msgstr ""
+msgstr "Trąbka Bb"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:697
 msgid "Trumpet in Bb|Tr.Bb"
-msgstr ""
+msgstr "Trąbka Bb|Tr.Bb"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:702
 msgid "Trombone"
-msgstr ""
+msgstr "Puzon"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:703
 msgid "Trombone|Trb."
-msgstr ""
+msgstr "Puzon|Puz."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:710
 msgid "Tuba"
-msgstr ""
+msgstr "Tuba"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:711
 msgid "Tuba|Tb."
-msgstr ""
+msgstr "Tuba|Tb."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:717
 msgid "Bass Tuba"
-msgstr ""
+msgstr "Tuba basowa"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:718
 msgid "Bass Tuba|B.Tb."
-msgstr ""
+msgstr "Tuba basowa|Tb.b."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:726
 msgid "Soprano"
-msgstr ""
+msgstr "Sopran"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:727
 msgid "Soprano|S."
-msgstr ""
+msgstr "Sopran|S."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:731
 msgid "Mezzo soprano"
-msgstr ""
+msgstr "Mezzo-sopran"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:732
 msgid "Mezzo-soprano|Ms."
-msgstr ""
+msgstr "Mezzo-sopran|Ms."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:736
 msgid "Alto"
-msgstr ""
+msgstr "Alt"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:737
 msgid "Alto|A."
-msgstr ""
+msgstr "Alt|A."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:742
 msgid "Tenor"
-msgstr ""
+msgstr "Tenor"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:743
 msgid "Tenor|T."
-msgstr ""
+msgstr "Tenor|T."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:750
 msgid "Bass|B."
-msgstr ""
+msgstr "Bas|B."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:756
 msgid "Lead sheet"
-msgstr ""
+msgstr "Prymka"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:811
 msgid ""
 "The Lead Sheet provides a staff with chord names above and lyrics below it. "
 "A second staff is optional."
 msgstr ""
-"Lead Sheet zawiera system z akordami powyżej oraz tekstem poniżej.Drugi "
-"system jest opcjonalny."
+"Prymka zawiera system z akordami powyżej oraz tekstem poniżej.Drugi system "
+"jest opcjonalny."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:815
 msgid "Add accompaniment staff"
@@ -2068,7 +2103,7 @@ msgstr ""
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:825
 msgid "Choir"
-msgstr ""
+msgstr "Chór"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:829
 msgid ""
@@ -2079,7 +2114,7 @@ msgstr ""
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:831
 msgid "Hint: For a double choir you can use two choir parts."
-msgstr ""
+msgstr "Porada: Dla chóru podwójnego użyj dwóch systemów chóralnych."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:836
 msgid "Voicing:"
@@ -2106,6 +2141,7 @@ msgstr "Ten sam tekst dla każdego głosu"
 msgid ""
 "Every voice gets its own lyrics, using the same text as the other voices."
 msgstr ""
+"Każdy głos ma własne słowa, używając tego samego tekstu jak pozostałe głosy."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:861
 msgid "Every voice different lyrics"
@@ -2117,191 +2153,191 @@ msgstr "Każdy głos dostaje inny fragment tekstu."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:888
 msgid "Choir|Ch."
-msgstr ""
+msgstr "Chór|Ch."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1034
 msgid "Piano"
-msgstr ""
+msgstr "Fortepian"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1035
 msgid "Piano|Pno."
-msgstr ""
+msgstr "Fortepian|Pf."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1040
 msgid "Harpsichord"
-msgstr ""
+msgstr "Klawesyn"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1041
 msgid "Harpsichord|Hs."
-msgstr ""
+msgstr "Klawesyn|Klws."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1046
 msgid "Clavichord"
-msgstr ""
+msgstr "Klawikord"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1047
 msgid "Clavichord|Clv."
-msgstr ""
+msgstr "Klawikord|Klwk."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1052
 msgid "Organ"
-msgstr ""
+msgstr "Organy"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1053
 msgid "Organ|Org."
-msgstr ""
+msgstr "Organy|Org."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1060
 msgid "Pedal:"
-msgstr ""
+msgstr "Pedał:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1067
 msgid "Set to 0 to disable the pedal altogether."
-msgstr ""
+msgstr "Ustaw na zero, aby zupełnie wyłączyć pedał. "
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1077
 msgid "Celesta"
-msgstr ""
+msgstr "Czelesta"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1078
 msgid "Celesta|Cel."
-msgstr ""
+msgstr "Czelesta|Czel."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1083
 msgid "Timpani"
-msgstr ""
+msgstr "Kotły"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1084
 msgid "Timpani|Tmp."
-msgstr ""
+msgstr "Kotły|Ktł."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1091
 msgid "Xylophone"
-msgstr ""
+msgstr "Ksylofon"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1092
 msgid "Xylophone|Xyl."
-msgstr ""
+msgstr "Ksylofon|Ksf."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1097
 msgid "Marimba"
-msgstr ""
+msgstr "Marimba"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1098
 msgid "Marimba|Mar."
-msgstr ""
+msgstr "Marimba|Mar."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1103
 msgid "Vibraphone"
-msgstr ""
+msgstr "Wibrafon"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1104
 msgid "Vibraphone|Vib."
-msgstr ""
+msgstr "Wibrafon|Wibr."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1109
 msgid "Tubular bells"
-msgstr ""
+msgstr "Dzwony rurowe"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1110
 msgid "Tubular bells|Tub."
-msgstr ""
+msgstr "Dzwony rurowe|Dzw.r."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1115
 msgid "Glockenspiel"
-msgstr ""
+msgstr "Dzwonki orkiestrowe"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1116
 msgid "Glockenspiel|Gls."
-msgstr ""
+msgstr "Dzwonki orkiestrowe|Dzw.o."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1121
 msgid "Drums"
-msgstr ""
+msgstr "Perkusja"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1122
 msgid "Drums|Dr."
-msgstr ""
+msgstr "Perkusja|Perk."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1127
 msgid "Drums follow here."
-msgstr ""
+msgstr "Poniżej wpisz nuty dla perkusji."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1151
 msgid "keep some distance."
-msgstr ""
+msgstr "zachowaj odstęp."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1157
 msgid "Voices:"
-msgstr ""
+msgstr "Głosy:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1162
 msgid "How many drum voices to put in this staff."
-msgstr ""
+msgstr "Ilość głosów perkusyjnych dla tego systemu."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1165
 msgid "Style:"
-msgstr ""
+msgstr "Styl:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1169
 msgid "Drums (5 lines, default)"
-msgstr ""
+msgstr "Perkusja (domyślnie 5 linii)"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1170
 msgid "Timbales-style (2 lines)"
-msgstr ""
+msgstr "Zapis timbalesów (2 linie)"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1171
 msgid "Congas-style (2 lines)"
-msgstr ""
+msgstr "Zapis congi (2 linie)"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1172
 msgid "Bongos-style (2 lines)"
-msgstr ""
+msgstr "Zapis bongosów (2 linie)"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1173
 msgid "Percussion-style (1 line)"
-msgstr ""
+msgstr "Zapis perkusyjny (1 linia)"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1174
 msgid "Remove stems"
-msgstr "Usuń ogonki"
+msgstr "Usuń laseczki nut"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1175
 msgid "Remove the stems from the drum notes."
-msgstr "Usuń ogonki z nut perkusyjnych"
+msgstr "Usuń laseczki z nut perkusyjnych"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1184
 msgid "Strings"
-msgstr ""
+msgstr "Smyczki"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1191
 msgid "Plucked strings"
-msgstr ""
+msgstr "Strunowe szarpane"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1200
 msgid "Woodwinds"
-msgstr ""
+msgstr "Dęte drewniane"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1221
 msgid "Brass"
-msgstr ""
+msgstr "Dęte blaszane"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1229
 msgid "Vocal"
-msgstr ""
+msgstr "Głos"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1238
 msgid "Keyboard instruments"
-msgstr ""
+msgstr "Instrumenty klawiszowe"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1245
 msgid "Percussion"
-msgstr ""
+msgstr "Perkusja"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1254
 msgid "Special"
-msgstr ""
+msgstr "Specjalne"
 
 #~ msgid "Untitled"
 #~ msgstr "Bez tytułu"
