@@ -30,12 +30,16 @@ class Signal:
     To use, simply create a Signal instance. The instance may be a member
     of a class, a global, or a local; it makes no difference what scope
     it resides within. Connect slots to the signal using the "connect()"
-    method. The slot may be a member of a class or a simple function. If
-    the slot is a member of a class, Signal will automatically detect
+    method. The slot may be a member of a class or a simple function.
+    
+    If the slot is a member of a class, Signal will automatically detect
     when the method's class instance has been deleted and remove it
     from its list of connected slots. If the member is a function, you
     can optionally specify an owner object. If that owner disappears,
     the function if also deleted from the list of connected slots.
+    
+    Invoke the signal (which will call all connected slots) by simply
+    calling it.
     """
     def __init__(self):
         self.functions = set()
