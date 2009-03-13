@@ -24,9 +24,11 @@ class Signal:
 
     def __call__(self, *args, **kwargs):
         for slot in self.slots.values():
+            print slot
             slot(*args, **kwargs)
                 
     def connect(self, slot):
+        print "adding", repr(slot)
         self.disconnect(slot)
         if inspect.ismethod(slot):
             self.slots[id(slot)] = WeakMethod(slot, self)
@@ -43,11 +45,17 @@ class Signal:
 
 class WeakMethod:
     def __init__(self, f, signal):
+        i, r = id(f), repr(f)
+        def callback(dummy):
+            del signal.slots[i]
+            print "deleting", r
         self.f = f.im_func
-        self.r = weakref.ref(f.im_self)# lambda dummy: signal.disconnect(f))
+        self.r = weakref.ref(f.im_self, callback)
     
     def __call__(self, *args, **kwargs):
         obj = self.r()
+        print "ask:", obj
         if obj is not None:
+            print "calling:", self.f.func_name, obj
             self.f(obj, *args, **kwargs)
 

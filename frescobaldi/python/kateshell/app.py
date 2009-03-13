@@ -83,7 +83,7 @@ class MainApp(DBusItem):
         # We support only one MainWindow.
         self.mainwin = self.createMainWindow()
         self.kapp.setTopWidget(self.mainwin)
-        self.activeChanged.connect(self.mainwin.showDocument)
+        #self.activeChanged.connect(self.mainwin.showDocument)
 
         # Get our beloved editor :-)
         self.editor = KTextEditor.EditorChooser.editor()

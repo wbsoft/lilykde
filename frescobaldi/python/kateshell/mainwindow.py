@@ -123,6 +123,7 @@ class MainWindow(KParts.MainWindow):
         self.setAutoSaveSettings()
         self.loadSettings()
         self.show()
+        app.activeChanged.connect(self.showDocument)
         
     def setupActions(self):
         self.act('file_new', KStandardAction.New, self.app.new)
