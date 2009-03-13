@@ -132,9 +132,6 @@ class Ly2PDF(object):
         """
         return frescobaldi_app.mainapp.updatedFiles(self.lyfile, self.startTime)
 
-    def __del__(self):
-        print "Job collected."
-
 
 class LyDoc2PDF(Ly2PDF):
     def __init__(self, doc, log, preview):

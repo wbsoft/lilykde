@@ -595,9 +595,6 @@ class Tool(object):
         del self._dock, self.widget, self._dialog
         del self.mainwin.tools[self.name]
 
-    def __del__(self):
-        print "Exit tool", self.name
-        
     def show(self):
         """ Bring our tool into view. """
         self.materialize()
