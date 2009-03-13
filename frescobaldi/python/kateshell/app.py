@@ -83,7 +83,6 @@ class MainApp(DBusItem):
         # We support only one MainWindow.
         self.mainwin = self.createMainWindow()
         self.kapp.setTopWidget(self.mainwin)
-        #self.activeChanged.connect(self.mainwin.showDocument)
 
         # Get our beloved editor :-)
         self.editor = KTextEditor.EditorChooser.editor()
@@ -275,7 +274,7 @@ class Document(DBusItem):
         self.doc.setEncoding(self._encoding)
         self.view = self.doc.createView(self.app.mainwin)
 
-        self.app.mainwin.addDoc(self)
+        self.app.mainwin.addDocument(self)
 
         if not self._url.isEmpty():
             self.doc.openUrl(self._url)
@@ -483,7 +482,7 @@ class Document(DBusItem):
                 return False # closing did not succeed, but that'd be abnormal
             self.closed() # before we are really deleted
             self.aboutToClose()
-            self.app.mainwin.removeDoc(self)
+            self.app.mainwin.removeDocument(self)
             self._cursorTranslator = None
             sip.delete(self.view)
             sip.delete(self.doc)

@@ -266,10 +266,10 @@ class MainWindow(KParts.MainWindow):
         self.updateSelection()
         doc.view.setFocus()
 
-    def addDoc(self, doc):
+    def addDocument(self, doc):
         self.viewPlace.addWidget(doc.view)
         
-    def removeDoc(self, doc):
+    def removeDocument(self, doc):
         self.viewPlace.removeWidget(doc.view)
         if doc is self._currentDoc:
             self.guiFactory().removeClient(doc.view)

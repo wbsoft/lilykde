@@ -1,61 +1,79 @@
+# This file is part of the Frescobaldi project, http://www.frescobaldi.org/
+#
+# Copyright (c) 2008, 2009  Wilbert Berendsen
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# See http://www.gnu.org/licenses/ for more information.
+
 """
-A signals implementation.
-Inspired by http://code.activestate.com/recipes/439356/ but very drastically
-changed. (WB)
+A simple signal/slot implementation.
 """
 
 import inspect, weakref
 
 class Signal:
     """
-    class Signal
-
-    A simple implementation of the Signal/Slot pattern. To use, simply 
-    create a Signal instance. The instance may be a member of a class, 
-    a global, or a local; it makes no difference what scope it resides 
-    within. Connect slots to the signal using the "connect()" method. 
-    The slot may be a member of a class or a simple function. If the 
-    slot is a member of a class, Signal will automatically detect when
-    the method's class instance has been deleted and remove it from 
-    its list of connected slots.
+    A simple implementation of the Signal/Slot pattern.
+    
+    To use, simply create a Signal instance. The instance may be a member
+    of a class, a global, or a local; it makes no difference what scope
+    it resides within. Connect slots to the signal using the "connect()"
+    method. The slot may be a member of a class or a simple function. If
+    the slot is a member of a class, Signal will automatically detect
+    when the method's class instance has been deleted and remove it
+    from its list of connected slots. If the member is a function, you
+    can optionally specify an owner object. If that owner disappears,
+    the function if also deleted from the list of connected slots.
     """
     def __init__(self):
-        self.slots = {}
+        self.functions = set()
+        self.objects = weakref.WeakKeyDictionary()
+        self.ownedfunctions = weakref.WeakKeyDictionary()
 
     def __call__(self, *args, **kwargs):
-        for slot in self.slots.values():
-            print slot
-            slot(*args, **kwargs)
-                
-    def connect(self, slot):
-        print "adding", repr(slot)
-        self.disconnect(slot)
-        if inspect.ismethod(slot):
-            self.slots[id(slot)] = WeakMethod(slot, self)
+        for func in self.functions:
+            func(*args, **kwargs)
+        for obj, methods in self.objects.items():
+            for func in methods:
+                func(obj, *args, **kwargs)
+        for functions in self.ownedfunctions.values():
+            for func in functions:
+                func(*args, **kwargs)
+    
+    def connect(self, func, owner = None):
+        if inspect.ismethod(func):
+            self.objects.setdefault(func.im_self, set()).add(func.im_func)
+        elif owner is None:
+            self.functions.add(func)
         else:
-            self.slots[id(slot)] = slot
+            self.ownedfunctions.setdefault(owner, set()).add(func)
 
-    def disconnect(self, slot):
-        if id(slot) in self.slots:
-            del self.slots[id(slot)]
+    def disconnect(self, func, owner = None):
+        if inspect.ismethod(func):
+            s = self.objects.get(func.im_self)
+            if s is not None: 
+                s.discard(func.im_func)
+        elif owner is None:
+            self.functions.discard(func)
+        else:
+            s = self.ownedfunctions.get(owner)
+            if s is not None:
+                s.discard(func)
 
     def disconnectAll(self):
-        self.slots = {}
-
-
-class WeakMethod:
-    def __init__(self, f, signal):
-        i, r = id(f), repr(f)
-        def callback(dummy):
-            del signal.slots[i]
-            print "deleting", r
-        self.f = f.im_func
-        self.r = weakref.ref(f.im_self, callback)
-    
-    def __call__(self, *args, **kwargs):
-        obj = self.r()
-        print "ask:", obj
-        if obj is not None:
-            print "calling:", self.f.func_name, obj
-            self.f(obj, *args, **kwargs)
+        self.functions.clear()
+        self.objects.clear()
+        self.ownedfunctions.clear()
 
