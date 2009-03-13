@@ -546,7 +546,7 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
         if (self.part and self._sync
             and doc and doc.doc and not doc.url().isEmpty()):
             # FIXME This does not work currently.
-            self.openUrl(doc.url().directory())
+            self.openUrl(doc.url())
 
     def addMenuActions(self, m):
         m.addSeparator()
