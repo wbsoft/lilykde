@@ -136,13 +136,14 @@ class PreviewDialog(KDialog):
         
         # ... and run LilyPond.
         self.job = Ly2PDF(lyfile, self.log)
-        def finished():
-            pdfs = self.job.updatedFiles()("pdf")
-            if pdfs:
-                self.openPDF(pdfs[0])
-            del self.job
         self.closed.connect(self.job.abort)
-        self.job.done.connect(finished)
+        self.job.done.connect(self.finished)
+    
+    def finished(self):
+        pdfs = self.job.updatedFiles()("pdf")
+        if pdfs:
+            self.openPDF(pdfs[0])
+        del self.job
     
     def openPDF(self, fileName):
         if self.part:

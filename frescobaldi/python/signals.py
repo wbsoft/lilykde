@@ -38,8 +38,7 @@ class Signal:
     can optionally specify an owner object. If that owner disappears,
     the function if also deleted from the list of connected slots.
     
-    Invoke the signal (which will call all connected slots) by simply
-    calling it.
+    Emit the signal (to call all connected slots) by simply invoking it.
     """
     def __init__(self):
         self.functions = set()
