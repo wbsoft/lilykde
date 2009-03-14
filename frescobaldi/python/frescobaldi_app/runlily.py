@@ -144,6 +144,29 @@ class LyDoc2PDF(Ly2PDF):
         super(LyDoc2PDF, self).__init__(lyfile, log)
         
 
+class JobManager(object):
+    def __init__(self, mainwin):
+        self.mainwin = mainwin
+        self.jobs = {}
+        self.jobStarted = Signal()
+        self.jobFinished = Signal()
+        
+    def job(self, doc):
+        return self.jobs.get(doc)
+        
+    def createJob(self, doc, log, preview):
+        if doc in self.jobs:
+            return
+        self.jobs[doc] = job = LyDoc2PDF(doc, log, preview)
+        doc.closed.connect(job.abort)
+        self.jobStarted(doc)
+        def finished():
+            del self.jobs[doc]
+            self.jobFinished(doc)
+        job.done.connect(finished)
+        return job
+
+
 class LogWidget(QFrame):
     def __init__(self, parent=None):
         QFrame.__init__(self, parent)

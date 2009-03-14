@@ -118,7 +118,7 @@ class MainApp(kateshell.app.MainApp):
 class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """
     def documentIcon(self):
-        if self in self.app.mainwin.jobs:
+        if self.app.mainwin.jobManager().job(self):
             return "run-lilypond"
         return super(Document, self).documentIcon()
     
@@ -183,7 +183,6 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         if not config().readEntry("disable pdf preview", QVariant(False)).toBool():
             PDFTool(self)
         
-        self.jobs = {}
         app.activeChanged.connect(self.updateJobActions)
         
     @lazy
@@ -208,7 +207,15 @@ class MainWindow(kateshell.mainwindow.MainWindow):
     def expandManager(self):
         import frescobaldi_app.expand
         return frescobaldi_app.expand.ExpandManager(self)
-
+    
+    @lazy
+    def jobManager(self):
+        import frescobaldi_app.runlily
+        man = frescobaldi_app.runlily.JobManager(self)
+        man.jobStarted.connect(self.updateJobActions)
+        man.jobFinished.connect(self.updateJobActions)
+        return man
+        
     def setupActions(self):
         super(MainWindow, self).setupActions()
         
@@ -217,8 +224,9 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         def lilypond_runner():
             d = self.currentDocument()
             if d:
-                if d in self.jobs:
-                    self.abortLilyPondJob(d)
+                job = self.jobManager().job(d)
+                if job:
+                    job.abort()
                 else:
                     lilypond_run_preview()
 
@@ -237,7 +245,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             d = self.currentDocument()
             if not d:
                 return
-            elif d in self.jobs:
+            elif self.jobManager().job(d):
                 return KMessageBox.sorry(self,
                     i18n("There is already a LilyPond job running "
                             "for this document."),
@@ -263,7 +271,9 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         def lilypond_abort():
             d = self.currentDocument()
             if d:
-                self.abortLilyPondJob(d)
+                job = self.jobManager().job(d)
+                if job:
+                    job.abort()
         
         # Edit menu actions:
         @self.onSelAction(i18n("Cut and Assign"), "edit-cut", key="Ctrl+Shift+C",
@@ -434,32 +444,23 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         QObject.connect(menu, SIGNAL("aboutToShow()"), populateGenFilesMenu)
         
     def createLilyPondJob(self, doc, preview=True):
-        if doc not in self.jobs:
-            from frescobaldi_app.runlily import LyDoc2PDF
+        if not self.jobManager().job(doc):
             # get a LogWidget
             log = self.tools["log"].createLog(doc)
-            self.jobs[doc] = LyDoc2PDF(doc, log, preview)
-            self.updateJobActions()
+            job = self.jobManager().createJob(doc, log, preview)
             def finished():
-                result = self.jobs[doc].updatedFiles()
+                result = job.updatedFiles()
                 pdfs = result("pdf")
                 if pdfs:
                     if "pdf" in self.tools:
                         self.tools["pdf"].openUrl(KUrl(pdfs[0]))
                     doc.resetCursorTranslations()
                 self.actionManager().addActionsToLog(result, log)
-                del self.jobs[doc]
-                self.updateJobActions()
-            doc.closed.connect(self.jobs[doc].abort)
-            self.jobs[doc].done.connect(finished)
+            job.done.connect(finished)
             
-    def abortLilyPondJob(self, doc):
-        if doc in self.jobs:
-            self.jobs[doc].abort()
-
     def updateJobActions(self, doc=None):
         doc = doc or self.currentDocument()
-        running = doc and doc in self.jobs
+        running = bool(doc and self.jobManager().job(doc))
         act = self.actionCollection().action
         act("lilypond_run_preview").setEnabled(not running)
         act("lilypond_run_publish").setEnabled(not running)
