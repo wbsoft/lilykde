@@ -438,8 +438,6 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             from frescobaldi_app.runlily import LyDoc2PDF
             # get a LogWidget
             log = self.tools["log"].createLog(doc)
-            if config().readEntry("always show log", QVariant(True)).toBool():
-                log.show()
             self.jobs[doc] = LyDoc2PDF(doc, log, preview)
             self.updateJobActions()
             def finished():
@@ -675,6 +673,7 @@ class QuickInsertTool(kateshell.mainwindow.Tool):
 
 class LogTool(kateshell.mainwindow.Tool):
     def __init__(self, mainwin):
+        self._config = {}
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "log", i18n("LilyPond Log"), "run-lilypond",
             dock=kateshell.mainwindow.Bottom,
@@ -694,6 +693,8 @@ class LogTool(kateshell.mainwindow.Tool):
             self.widget.addWidget(self.logs[doc])
             doc.closed.connect(lambda: self.removeLog(doc))
         self.showLog(doc)
+        if not self._config["errors only"]:
+            self.show()
         return self.logs[doc]
 
     def removeLog(self, doc):
@@ -704,7 +705,30 @@ class LogTool(kateshell.mainwindow.Tool):
                 if not self._docked:
                     self.dock()
                 self.hide()
-
+    
+    def addMenuActions(self, m):
+        m.addSeparator()
+        def act(name, title):
+            a = m.addAction(title)
+            a.setCheckable(True)
+            a.setChecked(self._config[name])
+            QObject.connect(a, SIGNAL("triggered()"),
+                lambda: self.toggleAction(name))
+        act("errors only", i18n("Only show on errors"))
+        
+    def toggleAction(self, name):
+        self._config[name] = not self._config[name]
+        
+    def readConfig(self, conf):
+        for name, default in (
+            ("errors only", False),
+            ):
+            self._config[name] = conf.readEntry(name, QVariant(default)).toBool()
+            
+    def writeConfig(self, conf):
+        for name in ("errors only",):
+            conf.writeEntry(name, QVariant(self._config[name]))
+        
 
 class RumorTool(kateshell.mainwindow.Tool):
     helpAnchor = "rumor"
