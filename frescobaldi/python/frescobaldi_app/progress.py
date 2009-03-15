@@ -26,7 +26,7 @@ import weakref, time
 
 from PyQt4.QtCore import QObject, QTimer, SIGNAL
 
-_ticks = 50     # ticks per second
+_ticks = 25     # ticks per second
 class ProgressBarManager(object):
     
     def __init__(self, jobmanager, progressbar):
@@ -35,30 +35,33 @@ class ProgressBarManager(object):
         self.times = weakref.WeakKeyDictionary() # don't keep real references
         self.runtimes = weakref.WeakKeyDictionary()
         self.timer = QTimer()
+        self.hideTimer = QTimer()
         
         self.timer.setInterval(1000 / _ticks)
         QObject.connect(self.timer, SIGNAL("timeout()"), self.timeout)
+        self.hideTimer.setInterval(3000)
+        self.hideTimer.setSingleShot(True)
+        QObject.connect(self.hideTimer, SIGNAL("timeout()"), self.bar.hide)
         self.man.jobStarted.connect(self.start)
         self.man.jobFinished.connect(self.stop)
         
     def start(self, doc):
         """ Call this when a job on doc started. """
-        print "starting compile", doc, self.man.count()
         lastruntime = self.runtimes.get(doc, 0.0)
+        if lastruntime == 0.0:
+            lastruntime = 3.0 + doc.lines() / 20 # very arbitrary estimate...
         self.times[doc] = time.time()
         
         if self.man.count() == 1:
+            self.hideTimer.stop()
             self.bar.show()
-            if lastruntime == 0.0:
-                self.bar.setRange(0, 0)
-            else:
-                self.bar.setRange(0, int(_ticks * lastruntime))
-                self.bar.setValue(0)
-                self.timer.start()
+            self.bar.setValue(0)
+            self.bar.setMaximum(0)
+            self.timer.start()
+        self.bar.setMaximum(self.bar.maximum() + int(_ticks * lastruntime))
                 
     def stop(self, doc, success):
         """ Call this when a job on doc stopped. """
-        print "stopping compile", doc, self.man.count()
         starttime = self.times.get(doc, 0.0)
         if starttime and success:
             runtime = time.time() - starttime
@@ -66,10 +69,9 @@ class ProgressBarManager(object):
         
         if self.man.count() == 0:
             self.timer.stop()
-            self.bar.setRange(0, 100)
             if success:
-                self.bar.setValue(100)
-                QTimer.singleShot(3000, self.bar.hide)
+                self.bar.setValue(self.bar.maximum())
+                self.hideTimer.start()
             else:
                 self.bar.hide()
                 

@@ -463,6 +463,13 @@ class Document(DBusItem):
         else:
             return ''
     
+    @method(iface, in_signature='', out_signature='i')
+    def lines(self):
+        """
+        Returns the number of lines.
+        """
+        return self.doc and self.doc.lines() or 0
+        
     def textLines(self):
         """
         Returns the full document text as a list of lines.

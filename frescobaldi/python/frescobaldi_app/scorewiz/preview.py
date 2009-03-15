@@ -139,7 +139,7 @@ class PreviewDialog(KDialog):
         self.closed.connect(self.job.abort)
         self.job.done.connect(self.finished)
     
-    def finished(self, success):
+    def finished(self):
         pdfs = self.job.updatedFiles()("pdf")
         if pdfs:
             self.openPDF(pdfs[0])

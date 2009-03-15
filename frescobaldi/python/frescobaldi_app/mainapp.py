@@ -219,7 +219,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         import frescobaldi_app.runlily
         man = frescobaldi_app.runlily.JobManager(self)
         man.jobStarted.connect(self.updateJobActions)
-        man.jobFinished.connect(lambda doc, success: self.updateJobActions(doc))
+        man.jobFinished.connect(self.updateJobActions)
         self.progressBarManager(man) # show progress of jobs using progress bar
         return man
     
@@ -461,7 +461,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             # get a LogWidget
             log = self.tools["log"].createLog(doc)
             job = self.jobManager().createJob(doc, log, preview)
-            def finished(success):
+            def finished():
                 result = job.updatedFiles()
                 pdfs = result("pdf")
                 if pdfs:
