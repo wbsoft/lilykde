@@ -126,6 +126,7 @@ class Ly2PDF(object):
             SIGNAL("error(QProcess::ProcessError)"), self.error)
         QObject.disconnect(self.p, SIGNAL("readyRead()"), self.readOutput)
         self.p.kill()
+        self.p.waitForFinished(2000)
         self.done(False, self)
         
     def readOutput(self):
