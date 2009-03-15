@@ -189,7 +189,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         if not config().readEntry("disable pdf preview", QVariant(False)).toBool():
             PDFTool(self)
         
-        app.activeChanged.connect(self.updateJobActions)
+        self.currentDocumentChanged.connect(self.updateJobActions)
         
     @lazy
     def actionManager(self):
@@ -278,7 +278,20 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                     return KMessageBox.sorry(self, i18n(
                         "Your document has been modified, "
                         "please save first."))
-            self.createLilyPondJob(d, preview)
+            # Run LilyPond; get a LogWidget and create a job
+            def finished(success, job):
+                result = job.updatedFiles()
+                pdfs = result("pdf")
+                if pdfs:
+                    if "pdf" in self.tools:
+                        self.tools["pdf"].openUrl(KUrl(pdfs[0]))
+                    d.resetCursorTranslations()
+                log = self.tools["log"].log(d)
+                if log:
+                    self.actionManager().addActionsToLog(result, log)
+            log = self.tools["log"].createLog(d)
+            job = self.jobManager().createJob(d, log, preview)
+            job.done.connect(finished)
         
         @self.onAction(i18n("Interrupt LilyPond Job"), "process-stop")
         def lilypond_abort():
@@ -455,25 +468,10 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             menu.addSeparator()
             self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
         QObject.connect(menu, SIGNAL("aboutToShow()"), populateGenFilesMenu)
-        
-    def createLilyPondJob(self, doc, preview=True):
-        if not self.jobManager().job(doc):
-            # get a LogWidget
-            log = self.tools["log"].createLog(doc)
-            job = self.jobManager().createJob(doc, log, preview)
-            def finished():
-                result = job.updatedFiles()
-                pdfs = result("pdf")
-                if pdfs:
-                    if "pdf" in self.tools:
-                        self.tools["pdf"].openUrl(KUrl(pdfs[0]))
-                    doc.resetCursorTranslations()
-                self.actionManager().addActionsToLog(result, log)
-            job.done.connect(finished)
             
-    def updateJobActions(self, doc=None):
-        doc = doc or self.currentDocument()
-        running = bool(doc and self.jobManager().job(doc))
+    def updateJobActions(self):
+        doc = self.currentDocument()
+        running = bool(doc and not doc.isEmpty() and self.jobManager().job(doc))
         act = self.actionCollection().action
         act("lilypond_run_preview").setEnabled(not running)
         act("lilypond_run_publish").setEnabled(not running)
@@ -531,7 +529,7 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "konsole", i18n("Terminal"), "terminal",
             dock=kateshell.mainwindow.Bottom)
-        mainwin.app.activeChanged.connect(self.sync)
+        mainwin.currentDocumentChanged.connect(self.sync)
             
     def factory(self):
         w = super(KonsoleTool, self).factory()
@@ -584,7 +582,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "pdf", i18n("PDF Preview"), "application-pdf",
             dock=kateshell.mainwindow.Right)
-        mainwin.app.activeChanged.connect(self.sync)
+        mainwin.currentDocumentChanged.connect(self.sync)
         self._currentUrl = None
         # We open urls with a timer otherwise Okular is called 
         # too quickly when the user switches documents too fast.
@@ -694,18 +692,23 @@ class LogTool(kateshell.mainwindow.Tool):
             widget=QStackedWidget())
         self.logs = {}
         self.widget.addWidget(QLabel("<center>(%s)</center>" % i18n("no log")))
-        mainwin.app.activeChanged.connect(self.showLog)
-        
+        mainwin.currentDocumentChanged.connect(self.showLog)
+        mainwin.app.documentClosed.connect(self.removeLog)
+        QObject.connect(self.widget, SIGNAL("destroyed()"),
+            lambda: self.logs.clear())
+            
     def showLog(self, doc):
         if doc in self.logs:
             self.widget.setCurrentWidget(self.logs[doc])
             
+    def log(self, doc):
+        return self.logs.get(doc)
+        
     def createLog(self, doc):
         if doc not in self.logs:
             from frescobaldi_app.runlily import Log
             self.logs[doc] = Log(self, doc)
             self.widget.addWidget(self.logs[doc])
-            doc.closed.connect(lambda: self.removeLog(doc))
         self.showLog(doc)
         if not self._config["errors only"]:
             self.show()

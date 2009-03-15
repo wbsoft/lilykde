@@ -46,13 +46,15 @@ class Signal:
         self.ownedfunctions = weakref.WeakKeyDictionary()
 
     def __call__(self, *args, **kwargs):
-        for func in self.functions:
+        """ call all connected slots """
+        # make copies because the sets might change...
+        for func in set(self.functions):
             func(*args[:func.func_code.co_argcount], **kwargs)
         for obj, methods in self.objects.items():
-            for func in methods:
+            for func in set(methods):
                 func(obj, *args[:func.func_code.co_argcount-1], **kwargs)
         for functions in self.ownedfunctions.values():
-            for func in functions:
+            for func in set(functions):
                 func(*args[:func.func_code.co_argcount], **kwargs)
     
     def connect(self, func, owner = None):

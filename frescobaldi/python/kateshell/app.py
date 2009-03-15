@@ -57,6 +57,7 @@ class MainApp(DBusItem):
     Emits three signals to Python others can connect to:
     activeChanged(Document)
     documentCreated(Document)
+    documentMaterialized(Document)
     documentClosed(Document)
     """
     iface = DBUS_IFACE_PREFIX + "MainApp"
@@ -68,6 +69,7 @@ class MainApp(DBusItem):
         # others can connect to our events
         self.activeChanged = Signal()
         self.documentCreated = Signal()
+        self.documentMaterialized = Signal()
         self.documentClosed = Signal()
         # We manage our own documents.
         self.documents = []
@@ -187,7 +189,6 @@ class MainApp(DBusItem):
     def addDocument(self, doc):
         self.documents.append(doc)
         self.history.append(doc)
-        self.documentCreated(doc)
 
     def removeDocument(self, doc):
         if doc in self.documents:
@@ -257,6 +258,7 @@ class Document(DBusItem):
         self._encoding = encoding or self.app.defaultEncoding # encoding [UTF-8]
         self._cursorTranslator = None   # for translating cursor positions
         self.app.addDocument(self)
+        self.app.documentCreated(self)
         
         self.captionChanged = Signal()
         self.statusChanged = Signal()
@@ -273,8 +275,6 @@ class Document(DBusItem):
         self.doc = self.app.editor.createDocument(self.app.mainwin)
         self.doc.setEncoding(self._encoding)
         self.view = self.doc.createView(self.app.mainwin)
-
-        self.app.mainwin.addDocument(self)
 
         if not self._url.isEmpty():
             self.doc.openUrl(self._url)
@@ -316,6 +316,7 @@ class Document(DBusItem):
         
         # set default context menu
         self.view.setContextMenu(self.view.defaultContextMenu())
+        self.app.documentMaterialized(self)
         self.viewCreated()
     
     def viewCreated(self):
@@ -487,17 +488,14 @@ class Document(DBusItem):
                 return False
             if not self.doc.closeUrl(False):
                 return False # closing did not succeed, but that'd be abnormal
-            self.closed() # before we are really deleted
-            self.aboutToClose()
-            self.app.mainwin.removeDocument(self)
-            self._cursorTranslator = None
-            sip.delete(self.view)
-            sip.delete(self.doc)
-        else:
-            self.closed() # probably never needed...
-            self.aboutToClose()
-        self.remove_from_connection() # remove our exported D-Bus object
+        self.closed() # before we are really deleted
+        self.aboutToClose()
+        self.app.documentClosed(self)
+        self._cursorTranslator = None
+        self.view and sip.delete(self.view)
+        self.doc and sip.delete(self.doc)
         self.app.removeDocument(self)
+        self.remove_from_connection() # remove our exported D-Bus object
         return True
 
     def queryClose(self):

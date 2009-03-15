@@ -44,9 +44,9 @@ class Ly2PDF(object):
     An object of this class performs one LilyPond run on a LilyPond file
     given in filename, with output to the LogWidget log.
     
-    It emits the signal "done" when the jobs has finished. The updatedFiles
-    method then can return a function that returns the updated files of a
-    given type.
+    It emits the signal done(success, self) when the jobs has finished.
+    The updatedFiles method then can return a function that returns the
+    updated files of a given type.
     """
     preview = False
     def __init__(self, lyfile, log):
@@ -110,12 +110,28 @@ class Ly2PDF(object):
             self.bye(False)
         
     def bye(self, success):
-        QTimer.singleShot(0, lambda: self.done(success))
+        QTimer.singleShot(0, lambda: self.done(success, self))
 
     def abort(self):
         """ Abort the LilyPond job """
         self.p.terminate()
 
+    def kill(self):
+        """
+        Immediately kill the job, and disconnect it's output signals, etc.
+        Emits the done(False) signal.
+        """
+        QObject.disconnect(self.p,
+            SIGNAL("finished(int, QProcess::ExitStatus)"), self.finished)
+        QObject.disconnect(self.p,
+            SIGNAL("error(QProcess::ProcessError)"), self.error)
+        QObject.disconnect(self.p, SIGNAL("readyRead()"), self.readOutput)
+        self.p.kill()
+        print "kill called"#DEBUG
+        time.sleep(5)
+        print "slept!"
+        self.done(False, self)
+        
     def readOutput(self):
         text = str(self.p.readAllStandardOutput()).decode('utf-8')
         parts = _ly_message_re.split(text)
@@ -140,6 +156,9 @@ class Ly2PDF(object):
         """
         return frescobaldi_app.mainapp.updatedFiles(self.lyfile, self.startTime)
 
+    def __del__(self):
+        print "job deleted"
+        
 
 class LyDoc2PDF(Ly2PDF):
     """
@@ -153,6 +172,7 @@ class LyDoc2PDF(Ly2PDF):
         if ly:
             lyfile = os.path.join(os.path.dirname(lyfile), ly)
         super(LyDoc2PDF, self).__init__(lyfile, log)
+        doc.closed.connect(self.kill)
         
 
 class JobManager(object):
@@ -161,6 +181,9 @@ class JobManager(object):
     
     Create new jobs with the createJob method.
     (Stop jobs by calling abort() on the job).
+    Emits:
+    jobStarted(Document)
+    jobFinished(Document, success, job)
     """
     def __init__(self, mainwin):
         self.mainwin = mainwin
@@ -180,14 +203,13 @@ class JobManager(object):
     def createJob(self, doc, log, preview):
         if doc in self.jobs:
             return
-        self.jobs[doc] = job = LyDoc2PDF(doc, log, preview)
-        doc.closed.connect(job.abort)
+        self.jobs[doc] = LyDoc2PDF(doc, log, preview)
         self.jobStarted(doc)
-        def finished(success):
+        def finished(success, job):
             del self.jobs[doc]
-            self.jobFinished(doc, success)
-        job.done.connect(finished)
-        return job
+            self.jobFinished(doc, success, job)
+        self.jobs[doc].done.connect(finished)
+        return self.jobs[doc]
 
 
 class LogWidget(QFrame):

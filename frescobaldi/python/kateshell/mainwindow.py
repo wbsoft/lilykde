@@ -33,6 +33,8 @@ from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 from PyKDE4.kio import KEncodingFileDialog
 
+from signals import Signal
+
 # Easily get our global config
 def config(group="kateshell"):
     return KGlobal.config().group(group)
@@ -45,12 +47,19 @@ Left = KMultiTabBar.Left
 
 
 class MainWindow(KParts.MainWindow):
+    """
+    An editor main window.
+    
+    Emits the following (Python) signals:
+    currentDocumentChanged(Document)
+    """
     def __init__(self, app):
         KParts.MainWindow.__init__(self)
         self.app = app
         self._currentDoc = None
         self.docks = {}
         self.tools = {}
+        self.currentDocumentChanged = Signal()
 
         # status bar
         sb = self.statusBar()
@@ -123,7 +132,9 @@ class MainWindow(KParts.MainWindow):
         self.setAutoSaveSettings()
         self.loadSettings()
         self.show()
-        app.activeChanged.connect(self.showDocument)
+        app.documentMaterialized.connect(self.addDocument)
+        app.activeChanged.connect(self.setCurrentDocument)
+        app.documentClosed.connect(self.removeDocument)
         
     def setupActions(self):
         self.act('file_new', KStandardAction.New, self.app.new)
@@ -249,7 +260,7 @@ class MainWindow(KParts.MainWindow):
             return func
         return decorator
         
-    def showDocument(self, doc):
+    def setCurrentDocument(self, doc):
         if self._currentDoc:
             self._currentDoc.captionChanged.disconnect(self.updateCaption)
             self._currentDoc.statusChanged.disconnect(self.updateStatusBar)
@@ -264,6 +275,7 @@ class MainWindow(KParts.MainWindow):
         self.updateCaption()
         self.updateStatusBar()
         self.updateSelection()
+        self.currentDocumentChanged(doc) # emit our signal
         doc.view.setFocus()
 
     def addDocument(self, doc):
