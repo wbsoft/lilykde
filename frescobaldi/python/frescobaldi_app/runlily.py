@@ -40,6 +40,14 @@ _ly_message_re = re.compile(r"^((.*?):(\d+)(?::(\d+))?)(?=:)", re.M)
 
 
 class Ly2PDF(object):
+    """
+    An object of this class performs one LilyPond run on a LilyPond file
+    given in filename, with output to the LogWidget log.
+    
+    It emits the signal "done" when the jobs has finished. The updatedFiles
+    method then can return a function that returns the updated files of a
+    given type.
+    """
     preview = False
     def __init__(self, lyfile, log):
         self.done = Signal()
@@ -84,7 +92,7 @@ class Ly2PDF(object):
             self.log.writeMsg(i18n("LilyPond [%1] finished.", self.lyfile_arg),
                 "msgok")
         # so we see the log message before Okular loads...
-        QTimer.singleShot(0, self.bye)
+        self.bye(not (exitCode or exitStatus))
     
     def error(self, errCode):
         """ Called when QProcess encounters an error """
@@ -99,10 +107,10 @@ class Ly2PDF(object):
             self.log.writeMsg(i18n("An unknown error occured."), "msgerr")
         if self.p.state() == QProcess.NotRunning:
             # otherwise we delete ourselves during our event handler, crashing...
-            QTimer.singleShot(0, self.bye)
+            self.bye(False)
         
-    def bye(self):
-        self.done()
+    def bye(self, success):
+        QTimer.singleShot(0, lambda: self.done(success))
 
     def abort(self):
         """ Abort the LilyPond job """
@@ -134,6 +142,9 @@ class Ly2PDF(object):
 
 
 class LyDoc2PDF(Ly2PDF):
+    """
+    Runs LilyPond on the given Document.
+    """
     def __init__(self, doc, log, preview):
         self.preview = preview
         lyfile = doc.localPath()
@@ -145,6 +156,12 @@ class LyDoc2PDF(Ly2PDF):
         
 
 class JobManager(object):
+    """
+    Manages LilyPond jobs.
+    
+    Create new jobs with the createJob method.
+    (Stop jobs by calling abort() on the job).
+    """
     def __init__(self, mainwin):
         self.mainwin = mainwin
         self.jobs = {}
@@ -153,6 +170,12 @@ class JobManager(object):
         
     def job(self, doc):
         return self.jobs.get(doc)
+    
+    def count(self):
+        return len(self.jobs)
+        
+    def docs(self):
+        return self.jobs.keys()
         
     def createJob(self, doc, log, preview):
         if doc in self.jobs:
@@ -160,9 +183,9 @@ class JobManager(object):
         self.jobs[doc] = job = LyDoc2PDF(doc, log, preview)
         doc.closed.connect(job.abort)
         self.jobStarted(doc)
-        def finished():
+        def finished(success):
             del self.jobs[doc]
-            self.jobFinished(doc)
+            self.jobFinished(doc, success)
         job.done.connect(finished)
         return job
 

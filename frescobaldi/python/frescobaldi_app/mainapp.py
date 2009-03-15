@@ -21,7 +21,8 @@ import glob, os, re, sip, time
 from dbus.service import method
 
 from PyQt4.QtCore import QObject, QString, QTimer, QVariant, Qt, SIGNAL
-from PyQt4.QtGui import QActionGroup, QLabel, QStackedWidget, QWidget
+from PyQt4.QtGui import (
+    QActionGroup, QLabel, QProgressBar, QStackedWidget, QWidget)
 from PyKDE4.kdecore import KConfig, KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
     KActionMenu, KApplication, KDialog, KIcon, KLineEdit, KMessageBox,
@@ -175,6 +176,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
     """ Our customized Frescobaldi MainWindow """
     def __init__(self, app):
         kateshell.mainwindow.MainWindow.__init__(self, app)
+        
+        self.progressBar = QProgressBar()
+        self.progressBar.setMaximumHeight(16)
+        self.statusBar().addPermanentWidget(self.progressBar)
+        self.progressBar.hide()
 
         KonsoleTool(self)
         LogTool(self)
@@ -213,8 +219,15 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         import frescobaldi_app.runlily
         man = frescobaldi_app.runlily.JobManager(self)
         man.jobStarted.connect(self.updateJobActions)
-        man.jobFinished.connect(self.updateJobActions)
+        man.jobFinished.connect(lambda doc, success: self.updateJobActions(doc))
+        self.progressBarManager(man) # show progress of jobs using progress bar
         return man
+    
+    @lazy
+    def progressBarManager(self, jobmanager):
+        import frescobaldi_app.progress
+        return frescobaldi_app.progress.ProgressBarManager(jobmanager,
+            self.progressBar)
         
     def setupActions(self):
         super(MainWindow, self).setupActions()
@@ -448,7 +461,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             # get a LogWidget
             log = self.tools["log"].createLog(doc)
             job = self.jobManager().createJob(doc, log, preview)
-            def finished():
+            def finished(success):
                 result = job.updatedFiles()
                 pdfs = result("pdf")
                 if pdfs:
