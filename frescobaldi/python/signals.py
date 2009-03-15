@@ -41,7 +41,7 @@ class Signal:
     Emit the signal (to call all connected slots) by simply invoking it.
     """
     def __init__(self):
-        self.functions = []
+        self.functions = set()
         self.objects = weakref.WeakKeyDictionary()
         self.ownedfunctions = weakref.WeakKeyDictionary()
 
@@ -56,26 +56,24 @@ class Signal:
                 func(*args[:func.func_code.co_argcount], **kwargs)
     
     def connect(self, func, owner = None):
-        self.disconnect(func, owner)
         if inspect.ismethod(func):
-            self.objects.setdefault(func.im_self, []).append(func.im_func)
+            self.objects.setdefault(func.im_self, set()).add(func.im_func)
         elif owner is None:
-            self.functions.append(func)
+            self.functions.add(func)
         else:
-            self.ownedfunctions.setdefault(owner, []).append(func)
+            self.ownedfunctions.setdefault(owner, set()).add(func)
 
     def disconnect(self, func, owner = None):
         if inspect.ismethod(func):
-            l = self.objects.get(func.im_self)
-            if l is not None and func.im_func in l:
-                l.remove(func.im_func)
+            s = self.objects.get(func.im_self)
+            if s is not None:
+                s.discard(func.im_func)
         elif owner is None:
-            if func in self.functions:
-                self.functions.remove(func)
+            self.functions.discard(func)
         else:
-            l = self.ownedfunctions.get(owner)
-            if l is not None and func in l:
-                l.remove(func)
+            s = self.ownedfunctions.get(owner)
+            if s is not None:
+                s.discard(func)
 
     def disconnectAll(self):
         self.functions.clear()
