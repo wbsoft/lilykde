@@ -39,6 +39,7 @@ class Signal:
     the function if also deleted from the list of connected slots.
     
     Emit the signal (to call all connected slots) by simply invoking it.
+    The order in which the slots are called is undetermined.
     """
     def __init__(self):
         self.functions = set()

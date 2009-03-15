@@ -91,7 +91,6 @@ class Ly2PDF(object):
         else:
             self.log.writeMsg(i18n("LilyPond [%1] finished.", self.lyfile_arg),
                 "msgok")
-        # so we see the log message before Okular loads...
         self.bye(not (exitCode or exitStatus))
     
     def error(self, errCode):
@@ -106,10 +105,10 @@ class Ly2PDF(object):
         elif self.p.state() == QProcess.NotRunning:
             self.log.writeMsg(i18n("An unknown error occured."), "msgerr")
         if self.p.state() == QProcess.NotRunning:
-            # otherwise we delete ourselves during our event handler, crashing...
             self.bye(False)
         
     def bye(self, success):
+        # otherwise we delete ourselves during our event handler, causing crash
         QTimer.singleShot(0, lambda: self.done(success, self))
 
     def abort(self):
@@ -127,9 +126,6 @@ class Ly2PDF(object):
             SIGNAL("error(QProcess::ProcessError)"), self.error)
         QObject.disconnect(self.p, SIGNAL("readyRead()"), self.readOutput)
         self.p.kill()
-        print "kill called"#DEBUG
-        time.sleep(5)
-        print "slept!"
         self.done(False, self)
         
     def readOutput(self):
@@ -155,9 +151,6 @@ class Ly2PDF(object):
         Returns a function that can list updated files based on extension.
         """
         return frescobaldi_app.mainapp.updatedFiles(self.lyfile, self.startTime)
-
-    def __del__(self):
-        print "job deleted"
         
 
 class LyDoc2PDF(Ly2PDF):
