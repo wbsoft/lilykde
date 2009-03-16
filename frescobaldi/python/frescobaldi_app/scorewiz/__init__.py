@@ -734,7 +734,8 @@ class Builder(object):
         s = self.wizard.settings
 
         # a global = {  } construct setting key and time sig, etc.
-        g = ly.dom.Seq(ly.dom.Assignment('global'))
+        globalAssignment = ly.dom.Assignment('global')
+        g = ly.dom.Seq(globalAssignment)
 
         # First find out if we need to define a tempoMark section.
         tempoText = unicode(s.tempoInd.text())
@@ -770,7 +771,7 @@ class Builder(object):
             ly.dom.Tempo(dur, val, g).after = 1
 
         # Add the global section's assignment to the document:
-        doc.append(g.parent())
+        doc.append(globalAssignment)
         ly.dom.BlankLine(doc)
 
         # key signature
@@ -846,6 +847,11 @@ class Builder(object):
                 for n in part.nodes:
                     sim.append(n)
 
+        # clean up the parts:
+        for part in partList:
+            part.cleanup()
+        
+        # put the score in the document
         doc.append(score)
         lay = ly.dom.Layout(score)
         if s.barnum.isChecked():
@@ -917,6 +923,13 @@ class PartBase(object):
     def __init__(self):
         self.num = 0
 
+    def cleanup(self):
+        """
+        Delete previously built assignments and nodes
+        """
+        self.assignments = []
+        self.nodes = []
+        
     def run(self, builder):
         """
         This method is called by the score wizard to build our part.
@@ -924,8 +937,7 @@ class PartBase(object):
         method. You should not reimplement this method, but rather the
         build method.
         """
-        self.assignments = []
-        self.nodes = []
+        self.cleanup()
         self.build(builder)
         
     @classmethod

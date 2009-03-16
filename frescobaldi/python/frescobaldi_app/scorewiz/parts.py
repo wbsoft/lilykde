@@ -784,7 +784,7 @@ class LeadSheet(VocalPart, Chords):
                 # we don't use \addlyrics but create a new Lyrics context.
                 # So in that case we don't use addStanzas, but insert the
                 # Lyrics contexts manually inside our ChoirStaff.
-                v1.cid = ContextId('melody')
+                v1.cid = Reference('melody')
                 Line('\\consists "Ambitus_engraver"', v1.getWith())
                 count = self.stanzas.value() # number of stanzas
                 if count == 1:

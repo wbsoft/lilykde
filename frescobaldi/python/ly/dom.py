@@ -31,9 +31,10 @@ not enforce a legal LilyPond file.)
 
 All elements of a LilyPond document inherit Node.
 
+Note: elements keep a weak reference to their parent.
 """
 
-import re
+import re, weakref
 from rational import Rational
 
 import ly.pitch, ly.duration
@@ -50,7 +51,8 @@ class Node(object):
         """
         The parent, or None if the node has no parent.
         """
-        return self._parent
+        if self._parent is not None:
+            return self._parent()
 
     def children(self):
         """
@@ -62,15 +64,16 @@ class Node(object):
         """
         Takes away node from current parent and appends to other.
         """
-        if parent is not self._parent:
+        if parent is not self.parent():
             parent.append(self)
     
     def removeFromParent(self):
         """
         Removes self from parent.
         """
-        if self._parent:
-            self._parent.remove(self)
+        parent = self.parent()
+        if parent:
+            parent.remove(self)
 
     def append(self, node):
         """
@@ -80,7 +83,7 @@ class Node(object):
         assert isinstance(node, Node)
         node.removeFromParent()
         self._children.append(node)
-        node._parent = self
+        node._parent = weakref.ref(self)
         
     def index(self, node):
         """
@@ -97,7 +100,7 @@ class Node(object):
             where = self.index(where)
         node.removeFromParent()
         self._children.insert(where, node)
-        node._parent = self
+        node._parent = weakref.ref(self)
         
     def remove(self, node):
         """
@@ -118,7 +121,7 @@ class Node(object):
         else:
             old = self._children[where]
         node.removeFromParent()
-        node._parent = self
+        node._parent = weakref.ref(self)
         self._children[where] = node
         old._parent = None
 
@@ -171,30 +174,32 @@ class Node(object):
 
     def ancestors(self):
         """ climb the tree up over the parents """
-        node = self
-        while node._parent:
-            node = node._parent
+        node = self.parent()
+        while node:
             yield node
+            node = node.parent()
 
     def previousSibling(self):
         """
         Return the object just before this one in the parent's list of children.
         None if this is the first child, or if we have no parent.
         """
-        if self._parent:
-            i = self._parent.index(self)
+        parent = self.parent()
+        if parent:
+            i = parent.index(self)
             if i > 0:
-                return self._parent[i-1]
+                return parent[i-1]
 
     def nextSibling(self):
         """
         Return the object just after this one in the parent's list of children.
         None if this is the last child, or if we have no parent.
         """
-        if self._parent:
-            i = self._parent.index(self)
-            if i < len(self._parent) - 1:
-                return self._parent[i+1]
+        parent = self.parent()
+        if parent:
+            i = parent.index(self)
+            if i < len(parent) - 1:
+                return parent[i+1]
 
     def previousSiblings(self):
         """
@@ -225,8 +230,10 @@ class Node(object):
     def toplevel(self):
         """ returns the toplevel parent Node of this node """
         node = self
-        while node._parent:
-            node = node._parent
+        parent = self.parent()
+        while parent:
+            node = parent
+            parent = node.parent()
         return node
 
     def iterDepthFirst(self, depth = -1):
