@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-03-15 16:29+0100\n"
+"POT-Creation-Date: 2009-03-17 18:21+0100\n"
 "PO-Revision-Date: 2009-02-22 12:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -367,67 +367,67 @@ msgstr "Верхняя панель"
 msgid "Bottom Sidebar"
 msgstr "Нижняя панель"
 
-#: ../python/kateshell/mainwindow.py:151
+#: ../python/kateshell/mainwindow.py:152
 msgid "Show Path"
 msgstr "Показать путь"
 
-#: ../python/kateshell/mainwindow.py:168
+#: ../python/kateshell/mainwindow.py:169
 msgid "&Tool Views"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:177
+#: ../python/kateshell/mainwindow.py:178
 msgid "Dock"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:180
+#: ../python/kateshell/mainwindow.py:181
 msgid "Show"
 msgstr "Показать"
 
-#: ../python/kateshell/mainwindow.py:258
+#: ../python/kateshell/mainwindow.py:259
 msgid "Please select some text first."
 msgstr "Сначала необходимо выбрать текст."
 
-#: ../python/kateshell/mainwindow.py:303
+#: ../python/kateshell/mainwindow.py:306
 msgid "modified"
 msgstr "изменен"
 
-#: ../python/kateshell/mainwindow.py:313
+#: ../python/kateshell/mainwindow.py:316
 msgid "Line: %1 Col: %2"
 msgstr "Строка: %1 Поз.: %2"
 
-#: ../python/kateshell/mainwindow.py:322
+#: ../python/kateshell/mainwindow.py:325
 msgid "BLOCK"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:322
+#: ../python/kateshell/mainwindow.py:325
 msgid "Block selection mode"
 msgstr "Блочный режим выбора"
 
-#: ../python/kateshell/mainwindow.py:324
+#: ../python/kateshell/mainwindow.py:327
 msgid "LINE"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:324
+#: ../python/kateshell/mainwindow.py:327
 msgid "Line selection mode"
 msgstr "Построчный режим выбора"
 
-#: ../python/kateshell/mainwindow.py:354
+#: ../python/kateshell/mainwindow.py:357
 msgid "All Files"
 msgstr "Все файлы"
 
-#: ../python/kateshell/mainwindow.py:355
+#: ../python/kateshell/mainwindow.py:358
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: ../python/kateshell/mainwindow.py:706
+#: ../python/kateshell/mainwindow.py:708
 msgid "Move To"
 msgstr "Переместить"
 
-#: ../python/kateshell/mainwindow.py:713
+#: ../python/kateshell/mainwindow.py:715
 msgid "Undock"
 msgstr "Скрыть док"
 
-#: ../python/kateshell/mainwindow.py:777
+#: ../python/kateshell/mainwindow.py:779
 msgid "Could not load %1"
 msgstr "Невозможно запустить LilyPond: %1"
 
@@ -1187,44 +1187,44 @@ msgstr ""
 msgid "Auto"
 msgstr "Автоматически"
 
-#: ../python/frescobaldi_app/runlily.py:79
+#: ../python/frescobaldi_app/runlily.py:80
 msgid "preview mode"
 msgstr "режим просмотра"
 
-#: ../python/frescobaldi_app/runlily.py:79
+#: ../python/frescobaldi_app/runlily.py:80
 msgid "publish mode"
 msgstr "режим публикации"
 
-#: ../python/frescobaldi_app/runlily.py:80
+#: ../python/frescobaldi_app/runlily.py:81
 msgid "LilyPond [%1] starting (%2)..."
 msgstr "Запуск LilyPond [%1] (%2)..."
 
-#: ../python/frescobaldi_app/runlily.py:86
+#: ../python/frescobaldi_app/runlily.py:87
 msgid "LilyPond [%1] exited with return code %2."
 msgstr "Программа LilyPond [%1] завершилась с кодом %2."
 
-#: ../python/frescobaldi_app/runlily.py:89
+#: ../python/frescobaldi_app/runlily.py:90
 msgid "LilyPond [%1] exited with exit status %2."
 msgstr "Программа LilyPond [%1] завершилась с кодом %2."
 
-#: ../python/frescobaldi_app/runlily.py:92
+#: ../python/frescobaldi_app/runlily.py:93
 msgid "LilyPond [%1] finished."
 msgstr "LilyPond [%1] завершен."
 
-#: ../python/frescobaldi_app/runlily.py:100
+#: ../python/frescobaldi_app/runlily.py:101
 msgid "Could not start LilyPond. Please check path and permissions."
 msgstr ""
 "Невозможно запустить LilyPond/ Проверьте путь к программе и разрешения."
 
-#: ../python/frescobaldi_app/runlily.py:103
+#: ../python/frescobaldi_app/runlily.py:104
 msgid "Could not read from the LilyPond process."
 msgstr "Невозможно чтение из процесса LilyPond/"
 
-#: ../python/frescobaldi_app/runlily.py:106
+#: ../python/frescobaldi_app/runlily.py:107
 msgid "An unknown error occured."
 msgstr "Неизвестная ошибка произошла."
 
-#: ../python/frescobaldi_app/runlily.py:145
+#: ../python/frescobaldi_app/runlily.py:299
 msgid "Click to edit this file"
 msgstr "Кликните, для редактирования этого файла"
 
@@ -1602,7 +1602,7 @@ msgstr "Язык LilyPond для названий инструментов."
 msgid "Remove default LilyPond tagline"
 msgstr "Удалить строку LilyPond по умолчанию"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:957
+#: ../python/frescobaldi_app/scorewiz/__init__.py:969
 msgid "No settings available."
 msgstr "Настройки недоступны."
 

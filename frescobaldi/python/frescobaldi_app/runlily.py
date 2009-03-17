@@ -283,6 +283,7 @@ class Log(LogWidget):
     
     def clear(self):
         self.anchors.clear()
+        self.anchorgen = anchorgen().next
         super(Log, self).clear()
         
     def show(self):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-03-15 16:29+0100\n"
+"POT-Creation-Date: 2009-03-17 18:21+0100\n"
 "PO-Revision-Date: 2009-02-05 00:15+0100\n"
 "Last-Translator: Gianluca D'Orazio <gianluca.dorazio@gmail.com>\n"
 "Language-Team: italiano <it@li.org>\n"
@@ -365,67 +365,67 @@ msgstr "Barra superiore"
 msgid "Bottom Sidebar"
 msgstr "Barra inferiore"
 
-#: ../python/kateshell/mainwindow.py:151
+#: ../python/kateshell/mainwindow.py:152
 msgid "Show Path"
 msgstr "Mostra percorso"
 
-#: ../python/kateshell/mainwindow.py:168
+#: ../python/kateshell/mainwindow.py:169
 msgid "&Tool Views"
 msgstr "&Finestre degli strumenti"
 
-#: ../python/kateshell/mainwindow.py:177
+#: ../python/kateshell/mainwindow.py:178
 msgid "Dock"
 msgstr "Aggancia"
 
-#: ../python/kateshell/mainwindow.py:180
+#: ../python/kateshell/mainwindow.py:181
 msgid "Show"
 msgstr "Mostra"
 
-#: ../python/kateshell/mainwindow.py:258
+#: ../python/kateshell/mainwindow.py:259
 msgid "Please select some text first."
 msgstr "Selezionare il testo prima."
 
-#: ../python/kateshell/mainwindow.py:303
+#: ../python/kateshell/mainwindow.py:306
 msgid "modified"
 msgstr "modificato"
 
-#: ../python/kateshell/mainwindow.py:313
+#: ../python/kateshell/mainwindow.py:316
 msgid "Line: %1 Col: %2"
 msgstr "Riga: %1 Col: %2"
 
-#: ../python/kateshell/mainwindow.py:322
+#: ../python/kateshell/mainwindow.py:325
 msgid "BLOCK"
 msgstr "BLOCCO"
 
-#: ../python/kateshell/mainwindow.py:322
+#: ../python/kateshell/mainwindow.py:325
 msgid "Block selection mode"
 msgstr "Modalità di selezione a blocchi"
 
-#: ../python/kateshell/mainwindow.py:324
+#: ../python/kateshell/mainwindow.py:327
 msgid "LINE"
 msgstr "RIGA"
 
-#: ../python/kateshell/mainwindow.py:324
+#: ../python/kateshell/mainwindow.py:327
 msgid "Line selection mode"
 msgstr "Modalità di selezione a righe"
 
-#: ../python/kateshell/mainwindow.py:354
+#: ../python/kateshell/mainwindow.py:357
 msgid "All Files"
 msgstr "Tutti i file"
 
-#: ../python/kateshell/mainwindow.py:355
+#: ../python/kateshell/mainwindow.py:358
 msgid "Open File"
 msgstr "Apri file"
 
-#: ../python/kateshell/mainwindow.py:706
+#: ../python/kateshell/mainwindow.py:708
 msgid "Move To"
 msgstr "Sposta"
 
-#: ../python/kateshell/mainwindow.py:713
+#: ../python/kateshell/mainwindow.py:715
 msgid "Undock"
 msgstr "Sgancia"
 
-#: ../python/kateshell/mainwindow.py:777
+#: ../python/kateshell/mainwindow.py:779
 msgid "Could not load %1"
 msgstr "Impossibile caricare %1"
 
@@ -1179,43 +1179,43 @@ msgstr ""
 msgid "Auto"
 msgstr "Auto"
 
-#: ../python/frescobaldi_app/runlily.py:79
+#: ../python/frescobaldi_app/runlily.py:80
 msgid "preview mode"
 msgstr "modalità anteprima"
 
-#: ../python/frescobaldi_app/runlily.py:79
+#: ../python/frescobaldi_app/runlily.py:80
 msgid "publish mode"
 msgstr "modalità pubblicazione"
 
-#: ../python/frescobaldi_app/runlily.py:80
+#: ../python/frescobaldi_app/runlily.py:81
 msgid "LilyPond [%1] starting (%2)..."
 msgstr "LilyPond [%1] in esecuzione (%2)..."
 
-#: ../python/frescobaldi_app/runlily.py:86
+#: ../python/frescobaldi_app/runlily.py:87
 msgid "LilyPond [%1] exited with return code %2."
 msgstr "LilyPond [%1] è uscito con il codice %2."
 
-#: ../python/frescobaldi_app/runlily.py:89
+#: ../python/frescobaldi_app/runlily.py:90
 msgid "LilyPond [%1] exited with exit status %2."
 msgstr "LilyPond [%1] è uscito con lo stato %2."
 
-#: ../python/frescobaldi_app/runlily.py:92
+#: ../python/frescobaldi_app/runlily.py:93
 msgid "LilyPond [%1] finished."
 msgstr "LilyPond [%1] terminato."
 
-#: ../python/frescobaldi_app/runlily.py:100
+#: ../python/frescobaldi_app/runlily.py:101
 msgid "Could not start LilyPond. Please check path and permissions."
 msgstr "Impossibile avviare LilyPond. Controllare il percorso e i permessi."
 
-#: ../python/frescobaldi_app/runlily.py:103
+#: ../python/frescobaldi_app/runlily.py:104
 msgid "Could not read from the LilyPond process."
 msgstr "Impossibile avere informazioni dal processo LilyPond."
 
-#: ../python/frescobaldi_app/runlily.py:106
+#: ../python/frescobaldi_app/runlily.py:107
 msgid "An unknown error occured."
 msgstr "Si è verificato un errore sconosciuto."
 
-#: ../python/frescobaldi_app/runlily.py:145
+#: ../python/frescobaldi_app/runlily.py:299
 msgid "Click to edit this file"
 msgstr "Fare clic per modificare questo file"
 
@@ -1603,7 +1603,7 @@ msgstr "La lingua da usare per i nomi degli strumenti."
 msgid "Remove default LilyPond tagline"
 msgstr "Elimina la tagline predefinita di LilyPond"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:957
+#: ../python/frescobaldi_app/scorewiz/__init__.py:969
 msgid "No settings available."
 msgstr "Nessuna configurazione disponibile."
 
