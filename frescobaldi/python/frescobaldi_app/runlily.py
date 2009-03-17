@@ -19,7 +19,7 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
-import os, re, time
+import os, re, time, weakref
 
 from PyQt4.QtCore import (
     QObject, QProcess, QSize, QTimer, QUrl, QVariant, Qt, SIGNAL)
@@ -30,6 +30,7 @@ from PyKDE4.kdecore import KGlobal, KProcess, i18n
 
 from signals import Signal
 
+from kateshell.app import resolvetabs_text
 import frescobaldi_app.mainapp
 
 def config(group):
@@ -139,11 +140,10 @@ class Ly2PDF(object):
             self.log.show() # warnings or errors will be printed
         while len(parts[:5]) == 5:
             url, path, line, col, msg = parts[:5]
-            path = os.path.join(self.directory, path).encode('utf-8')
+            path = os.path.join(self.directory, path)
             line = int(line or "1") or 1
             col = int(col or "0")
-            href = "textedit://%s:%d:%d:%d" % (path, line, col, col)
-            self.log.writeUrl(url, href, i18n("Click to edit this file"))
+            self.log.writeFileRef(url, path, line, col)
             self.log.write(msg)
             del parts[:5]
     
@@ -263,7 +263,7 @@ class LogWidget(QFrame):
     def writeLine(self, text, format='msg'):
         self.writeMsg(text + '\n', format)
         
-    def writeUrl(self, text, href, tooltip=None, format='log'):
+    def writeFileRef(self, text, path, line, column, tooltip=None, format='log'):
         self.write(text, format)
 
 
@@ -275,25 +275,102 @@ class Log(LogWidget):
     def __init__(self, tool, doc):
         self.tool = tool
         self.doc = doc
+        self.anchors = {}
+        self.anchorgen = anchorgen().next
         LogWidget.__init__(self, tool.widget)
         QObject.connect(self.textBrowser, SIGNAL("anchorClicked(QUrl)"),
             self.anchorClicked)
     
+    def clear(self):
+        self.anchors.clear()
+        super(Log, self).clear()
+        
     def show(self):
         """ Really show our log, e.g. when there are errors """
         self.tool.showLog(self.doc)
         self.tool.show()
 
-    def anchorClicked(self, url):
-        self.doc.app.openUrl(url)
-
-    def writeUrl(self, text, href, tooltip=None, format='url'):
+    def writeFileRef(self, text, path, line, column, tooltip=None, format='url'):
+        anchor = self.anchorgen()
+        self.anchors[anchor] = FileRef(self, path, line, column)
         f = self.formats[format]
-        f.setAnchorHref(href)
-        if tooltip:
-            f.setToolTip(tooltip)
+        f.setAnchorHref(anchor)
+        f.setToolTip(tooltip or i18n("Click to edit this file"))
         self.write(text, format)
+    
+    def anchorClicked(self, url):
+        ref = self.anchors.get(str(url.path()))
+        if ref:
+            ref.activate()
+    
 
+class FileRef(object):
+    """
+    A reference to a file position (name, line, column).
+    Contacts documents if loaded and uses smart cursors to maintain the
+    position if the document is changed.
+    
+    Also listens to the application if a document is opened that might be
+    interesting for us.
+    """
+    def __init__(self, log, path, line, column):
+        self.log = weakref.ref(log)
+        
+        self.path = path
+        self.line = line
+        self.column = column
+        
+        self.smartCursor = None
+        self.doc = None
+        
+        # if named doc is loaded get a smart cursor
+        app = self.log().doc.app
+        doc = app.findDocument(path)
+        if doc:
+            self.bind(doc)
+        # listen to the application:
+        app.documentMaterialized.connect(self.documentOpened)
+        
+    def bind(self, doc):
+        """
+        Connects to the document (that must have our path) and tries
+        to get a SmartCursor from it.
+        If the document is closed, the binding is deleted.
+        TODO: delete the connection if the document is saved under a
+        different name...
+        TODO: update our cursor pos before document is closed...
+        """
+        if doc.doc:
+            iface = doc.doc.smartInterface()
+            if iface:
+                column = resolvetabs_text(self.column, doc.line(self.line - 1))
+                self.smartCursor = iface.newSmartCursor(self.line - 1, column)
+                self.doc = doc
+                doc.closed.connect(self.unbind)
+            
+    def unbind(self):
+        """
+        Deletes the binding to a document.
+        """
+        self.smartCursor = None
+        self.doc = None
+        
+    def activate(self):
+        """
+        Open our file and put the cursor in the right place.
+        """
+        if self.doc:
+            self.doc.setActive()
+            self.doc.view.setCursorPosition(self.smartCursor)
+        else:
+            app = self.log().doc.app
+            doc = app.openUrl(self.path)
+            doc.setCursorPosition(self.line, self.column, translate=False)
+
+    def documentOpened(self, doc):
+        if not self.doc and doc.localPath() == self.path:
+            self.bind(doc)
+            
 
 def textFormats():
     """ Return a dict with text formats """
@@ -317,3 +394,12 @@ def textFormats():
     
     return locals()
 
+
+def anchorgen(num = 0):
+    """
+    Generates an infinite row of anchor names, named
+    "anchor0", "anchor1", etc.
+    """
+    while True:
+        yield "anchor%d" % num
+        num += 1
