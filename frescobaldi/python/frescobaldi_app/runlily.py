@@ -323,13 +323,13 @@ class FileRef(object):
         self.smartCursor = None
         self.doc = None
         
+        # listen to the application:
+        self.app = self.log().doc.app
+        self.app.documentMaterialized.connect(self.documentOpened)
         # if named doc is loaded get a smart cursor
-        app = self.log().doc.app
-        doc = app.findDocument(path)
+        doc = self.app.findDocument(path)
         if doc:
             self.bind(doc)
-        # listen to the application:
-        app.documentMaterialized.connect(self.documentOpened)
         
     def bind(self, doc):
         """
@@ -346,13 +346,17 @@ class FileRef(object):
                 self.doc = doc
                 doc.closed.connect(self.unbind)
                 doc.urlChanged.connect(self.unbind)
-            
+                # no need to listen anymore
+                self.app.documentMaterialized.disconnect(self.documentOpened)
+    
     def unbind(self):
         """
         Deletes the binding to a document.
         """
         self.smartCursor = None
         self.doc = None
+        # listen again
+        self.app.documentMaterialized.connect(self.documentOpened)
         
     def activate(self):
         """
@@ -362,14 +366,14 @@ class FileRef(object):
             self.doc.setActive()
             self.doc.view.setCursorPosition(self.smartCursor)
         else:
-            app = self.log().doc.app
-            doc = app.openUrl(self.path)
-            doc.setCursorPosition(self.line, self.column, translate=False)
+            doc = self.app.openUrl(self.path)
+            if doc:
+                doc.setCursorPosition(self.line, self.column, translate=False)
 
     def documentOpened(self, doc):
         if not self.doc and doc.localPath() == self.path:
             self.bind(doc)
-            
+
 
 def textFormats():
     """ Return a dict with text formats """
