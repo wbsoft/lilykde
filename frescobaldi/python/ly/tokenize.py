@@ -249,6 +249,8 @@ class State(object):
         self.state[-1].level += 1
         
     def dec(self):
+        while self.state[-1].level == 0 and len(self.state) > 1:
+            self.state.pop()
         if self.state[-1].level > 0:
             self.state[-1].level -= 1
             self.endArgument()
