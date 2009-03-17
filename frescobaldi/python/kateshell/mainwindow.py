@@ -132,6 +132,7 @@ class MainWindow(KParts.MainWindow):
         self.setAutoSaveSettings()
         self.loadSettings()
         self.show()
+        app.documentCreated.connect(self.addToRecentFiles)
         app.documentMaterialized.connect(self.addDocument)
         app.activeChanged.connect(self.setCurrentDocument)
         app.documentClosed.connect(self.removeDocument)
@@ -262,6 +263,7 @@ class MainWindow(KParts.MainWindow):
         
     def setCurrentDocument(self, doc):
         if self._currentDoc:
+            self._currentDoc.urlChanged.disconnect(self.addToRecentFiles)
             self._currentDoc.captionChanged.disconnect(self.updateCaption)
             self._currentDoc.statusChanged.disconnect(self.updateStatusBar)
             self._currentDoc.selectionChanged.disconnect(self.updateSelection)
@@ -269,6 +271,7 @@ class MainWindow(KParts.MainWindow):
         self._currentDoc = doc
         self.guiFactory().addClient(doc.view)
         self.viewPlace.setCurrentWidget(doc.view)
+        doc.urlChanged.connect(self.addToRecentFiles)
         doc.captionChanged.connect(self.updateCaption)
         doc.statusChanged.connect(self.updateStatusBar)
         doc.selectionChanged.connect(self.updateSelection)
@@ -357,13 +360,12 @@ class MainWindow(KParts.MainWindow):
             if not url.isEmpty():
                 self.app.openUrl(url, res.encoding)
     
-    def addToRecentFiles(self, url):
-        """
-        Add url to recently opened files.
-        (Called by app.openUrl)
-        """
-        if not url.isEmpty():
-            if url not in self.openRecent.urls():
+    def addToRecentFiles(self, doc=None):
+        """ Add url of document to recently opened files. """
+        doc = doc or self.currentDocument()
+        if doc:
+            url = doc.url()
+            if not url.isEmpty() and url not in self.openRecent.urls():
                 self.openRecent.addUrl(url)
     
     @pyqtSignature("KUrl")

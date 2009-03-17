@@ -231,9 +231,11 @@ class Document(DBusItem):
     we create the KTextEditor document and view.
     
     We emit these signals:
+    urlChanged()
     captionChanged()
     statusChanged()
     selectionChanged()
+    saved(bool saveAs)
     closed()
     """
     __instance_counter = 0
@@ -260,14 +262,13 @@ class Document(DBusItem):
         self.app.addDocument(self)
         self.app.documentCreated(self)
         
+        self.urlChanged = Signal()
         self.captionChanged = Signal()
         self.statusChanged = Signal()
         self.selectionChanged = Signal()
+        self.saved = Signal()
         self.closed = Signal()
         
-        # track filename in recently opened files
-        self.app.mainwin.addToRecentFiles(url)
-
     def materialize(self):
         """ Really load the document, create doc and view etc. """
         if self.doc:
@@ -287,11 +288,13 @@ class Document(DBusItem):
         
         if self._cursor is not None:
             self.setCursorPosition(*self._cursor)
-
+        
+        QObject.connect(self.doc,
+            SIGNAL("documentSavedOrUploaded(KTextEditor::Document*, bool)"),
+            lambda doc, saveAs: self.saved(saveAs))
         QObject.connect(self.doc,
             SIGNAL("documentUrlChanged(KTextEditor::Document*)"),
-            lambda: self.app.mainwin.addToRecentFiles(self.url()))
-            
+            lambda: self.urlChanged())
         def captionChanged():
             if not self.isModified():
                 self._edited = True

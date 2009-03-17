@@ -336,8 +336,6 @@ class FileRef(object):
         Connects to the document (that must have our path) and tries
         to get a SmartCursor from it.
         If the document is closed, the binding is deleted.
-        TODO: delete the connection if the document is saved under a
-        different name...
         TODO: update our cursor pos before document is closed...
         """
         if doc.doc:
@@ -347,6 +345,7 @@ class FileRef(object):
                 self.smartCursor = iface.newSmartCursor(self.line - 1, column)
                 self.doc = doc
                 doc.closed.connect(self.unbind)
+                doc.urlChanged.connect(self.unbind)
             
     def unbind(self):
         """
