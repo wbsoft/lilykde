@@ -19,7 +19,7 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
-import os, re, time, weakref
+import os, re, time
 
 from PyQt4.QtCore import (
     QObject, QProcess, QSize, QTimer, QUrl, QVariant, Qt, SIGNAL)
@@ -293,7 +293,7 @@ class Log(LogWidget):
 
     def writeFileRef(self, text, path, line, column, tooltip=None, format='url'):
         anchor = self.anchorgen()
-        self.anchors[anchor] = FileRef(self, path, line, column)
+        self.anchors[anchor] = FileRef(self.doc.app, path, line, column)
         f = self.formats[format]
         f.setAnchorHref(anchor)
         f.setToolTip(tooltip or i18n("Click to edit this file"))
@@ -314,9 +314,7 @@ class FileRef(object):
     Also listens to the application if a document is opened that might be
     interesting for us.
     """
-    def __init__(self, log, path, line, column):
-        self.log = weakref.ref(log)
-        
+    def __init__(self, app, path, line, column):
         self.path = path
         self.line = line
         self.column = column
@@ -325,7 +323,7 @@ class FileRef(object):
         self.doc = None
         
         # listen to the application:
-        self.app = self.log().doc.app
+        self.app = app
         self.app.documentMaterialized.connect(self.documentOpened)
         # if named doc is loaded get a smart cursor
         doc = self.app.findDocument(path)
