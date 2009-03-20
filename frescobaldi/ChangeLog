@@ -1,4 +1,4 @@
-Changes in 0.7.8
+Changes in 0.7.8 -- March 20th, 2009
 
 * New Polish translation by Piotr Komorowski, many thanks!
 * Updated translations: tr
@@ -7,11 +7,11 @@ Changes in 0.7.8
   Smart Point & Click from the PDF preview only works in KDE 4.2.
 * New option to only show the log if LilyPond outputs warnings or errors
 * Progress bar in statusbar shows LilyPond progress
-* Bugfix:
+* Bugfixes:
   * Make Frescobaldi exit gracefully if a LilyPond job was still running
   * Make Point & Click work again in KDE 4.2 if there are tabs in the document.
   * Fixed Change Pitch Language, sometimes this function didn't work if there
-    are complicated markups in the document.
+    were complicated markups in the document.
   * Memory usage improvements (some unused objects were not garbage collected)
 
 Changes in 0.7.7 -- March 3rd, 2009
