@@ -19,7 +19,7 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
-import os, re, time
+import math, os, re, time
 
 from PyQt4.QtCore import (
     QObject, QProcess, QSize, QTimer, QUrl, QVariant, Qt, SIGNAL)
@@ -79,7 +79,7 @@ class Ly2PDF(object):
         self.log.clear()
         mode = unicode(self.preview and i18n("preview mode") or i18n("publish mode"))
         self.log.writeLine(i18n("LilyPond [%1] starting (%2)...", self.lyfile_arg, mode))
-        self.startTime = time.time()
+        self.startTime = math.floor(time.time())
         self.p.start()
         
     def finished(self, exitCode, exitStatus):
