@@ -168,6 +168,7 @@ class TablaturePart(SingleVoicePart):
         l.setBuddy(self.tuningSel)
         self.tuningSel.addItem(i18n("Default"))
         self.tuningSel.addItems([name.toString() for name, t in self.tunings])
+        self.tuningSel.setCurrentIndex(1)
 
     def slotTabEnable(self, enable):
         """
@@ -189,7 +190,7 @@ class TablaturePart(SingleVoicePart):
         self.setTunings(tab)
         s = Seqr(tab)
         ref = Reference(self.identifier())
-        self.assignMusic(s, self.octave, name=ref)
+        self.assignMusic(s, self.octave, self.transpose, name=ref)
         if t == 1:  # only a TabStaff
             builder.setMidiInstrument(tab, self.midiInstrument)
             p = tab
@@ -495,7 +496,7 @@ class ClassicalGuitar(TablaturePart):
     _name = ki18n("Classical guitar")
     instrumentNames = I18N_NOOP("Guitar|Gt.")
     midiInstrument = 'acoustic guitar (nylon)'
-    transpose = (-1, 0, 0)
+    clef = "treble_8"
     tunings = (
         (ki18n("Guitar tuning"), 'guitar-tuning'),
         (ki18n("Open G-tuning"), 'guitar-open-g-tuning'),
@@ -512,9 +513,8 @@ class Bass(TablaturePart):
     _name = ki18n("Bass")
     instrumentNames = I18N_NOOP("Bass|Bs.")  #FIXME
     midiInstrument = 'acoustic bass'
-    transpose = (-1, 0, 0)
-    clef = 'bass'
-    octave = -1
+    clef = 'bass_8'
+    octave = -2
     tunings = (
         (ki18n("Bass tuning"), 'bass-tuning'),
     )
