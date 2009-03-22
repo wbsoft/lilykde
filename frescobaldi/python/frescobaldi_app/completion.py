@@ -63,7 +63,7 @@ def findMatches(view, word, invocationType):
         return ly.words.modes
     if re.search(r'\\(un)?set\b\s*$', text):
         return ly.words.contexts + ly.words.contextproperties
-    if re.search(r'\\(new|context)\s+$', text):
+    if re.search(r'\\(new|change|context)\s+$', text):
         return ly.words.contexts
     if ly.words.set_context_re.search(text):
         return ly.words.contextproperties
