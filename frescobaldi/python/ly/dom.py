@@ -595,10 +595,16 @@ class Scheme(Text):
         return '#%s' % self.text
 
 
-class Version(Text):
+class Version(Line):
     """ a LilyPond version instruction """
     def ly(self, printer):
         return r'\version "%s"' % self.text
+
+
+class Include(Line):
+    """ a LilyPond \\include statement """
+    def ly(self, printer):
+        return r'\include "%s"' % self.text
 
 
 class Assignment(Container):

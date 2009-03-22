@@ -359,6 +359,7 @@ class Chords(Part):
     def build(self, builder):
         p = ChordNames()
         s = ChordMode()
+        name = Reference('chordNames')
         Identifier('global', s).after = 1
         i = self.chordStyle.currentIndex()
         if i > 0:
@@ -366,8 +367,13 @@ class Chords(Part):
                 ('german', 'semiGerman', 'italian', 'french')[i-1], s)
         LineComment(i18n("Chords follow here."), s)
         BlankLine(s)
-        self.assign(p, s, 'chordNames')
+        self.assign(p, s, name)
         self.nodes.append(p)
+        if self.guitarFrets.isChecked():
+            f = FretBoards()
+            Identifier(name, f)
+            self.nodes.append(f)
+            builder.include("predefined-guitar-fretboards.ly")
 
     def widgets(self, layout):
         h = KHBox()
@@ -381,7 +387,12 @@ class Chords(Part):
             i18n("Semi-German"),
             i18n("Italian"),
             i18n("French")))
-
+        self.guitarFrets = QCheckBox(i18n("Guitar Fretboards"))
+        self.guitarFrets.setToolTip(i18n(
+            "Show predefined guitar fretboards below the chord names "
+            "(LilyPond 2.12 and above)."))
+        layout.addWidget(self.guitarFrets)
+        
 
 class BassFigures(Part):
     _name = ki18n("Figured Bass")
@@ -812,12 +823,12 @@ class LeadSheet(VocalPart, Chords):
             "and lyrics below it. A second staff is optional."))
         l.setWordWrap(True)
         layout.addWidget(l)
+        Chords.widgets(self, layout)
         self.accomp = QCheckBox(i18n("Add accompaniment staff"))
         self.accomp.setToolTip(i18n(
             "Adds an accompaniment staff and also puts an accompaniment "
             "voice in the upper staff."))
         layout.addWidget(self.accomp)
-        Chords.widgets(self, layout)
         VocalPart.widgets(self, layout)
 
 

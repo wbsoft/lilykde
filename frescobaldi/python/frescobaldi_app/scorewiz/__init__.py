@@ -641,6 +641,8 @@ class Builder(object):
     functions, and should not interact with the Wizard directly!
 
     Parts may interact with:
+    
+    include             to request filenames to be included
 
     lilypondVersion     a tuple like (2, 11, 64) describing the LilyPond the
                         document is built for.
@@ -688,7 +690,10 @@ class Builder(object):
                     "/LC_MESSAGES/frescobaldi.mo")))).ugettext
             except IOError:
                 pass
-            
+        
+        # keep track of include files:
+        self.includeFiles = []
+        
         # version:
         version = unicode(s.lyversion.currentText())
         ly.dom.Version(version, doc)
@@ -698,8 +703,7 @@ class Builder(object):
         # pitch language:
         language = s.getLanguage()
         if language:
-            ly.dom.Text('\\include "%s.ly"' % language, doc)
-            ly.dom.BlankLine(doc)
+            self.include("%s.ly" % language)
 
         # header:
         h = ly.dom.Header()
@@ -725,7 +729,13 @@ class Builder(object):
         parts = self.wizard.parts.partList()
         if parts:
             self.buildScore(doc, parts)
-
+        
+        # add the files that want to be included at the beginning
+        if self.includeFiles:
+            doc.insert(2, ly.dom.BlankLine())
+            for fileName in reversed(self.includeFiles):
+                doc.insert(2, ly.dom.Include(fileName))
+                
         # Finally, return the document
         return doc
 
@@ -868,6 +878,15 @@ class Builder(object):
     ##
     # The following methods are to be used by the parts.
     ##
+    
+    def include(self, fileName):
+        """
+        Request an \\include statement be placed at the beginning
+        of the output document.
+        """
+        # We don't use a set, because we want to maintain the order.
+        if fileName not in self.includeFiles:
+            self.includeFiles.append(fileName)
 
     def getInstrumentNames(self, names, num=0):
         """
