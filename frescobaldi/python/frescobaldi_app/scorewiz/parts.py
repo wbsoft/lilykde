@@ -373,7 +373,7 @@ class Chords(Part):
             f = FretBoards()
             Identifier(name, f)
             self.nodes.append(f)
-            builder.include("predefined-guitar-fretboards.ly", True)
+            builder.include("predefined-guitar-fretboards.ly")
 
     def widgets(self, layout):
         h = KHBox()

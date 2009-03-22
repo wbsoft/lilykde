@@ -700,11 +700,6 @@ class Builder(object):
         ly.dom.BlankLine(doc)
         self.lilypondVersion = tuple(map(int, re.findall('\\d+', version)))
 
-        # pitch language:
-        language = s.getLanguage()
-        if language:
-            self.include("%s.ly" % language)
-
         # header:
         h = ly.dom.Header()
         for name, value in self.wizard.titles.headers():
@@ -730,6 +725,11 @@ class Builder(object):
         if parts:
             self.buildScore(doc, parts)
         
+        # pitch language:
+        language = s.getLanguage()
+        if language:
+            self.include("%s.ly" % language)
+
         # add the files that want to be included at the beginning
         if self.includeFiles:
             doc.insert(2, ly.dom.BlankLine())
@@ -882,20 +882,11 @@ class Builder(object):
     def include(self, fileName, prepend=False):
         """
         Request an \\include statement be placed at the beginning
-        of the output document. By default, the filename is append at the
-        end of the list of files to include.
-        
-        If prepend is True, the filename is added before the other already
-        defined ones. This is because e.g. predefined-guitar-fretboards.ly
-        expects notenames in Dutch, while the user might want to use another
-        pitch name language.
+        of the output document.
         """
         # We don't use a set, because we want to maintain the order.
         if fileName not in self.includeFiles:
-            if prepend:
-                self.includeFiles.insert(0, fileName)
-            else:
-                self.includeFiles.append(fileName)
+            self.includeFiles.append(fileName)
 
     def getInstrumentNames(self, names, num=0):
         """
