@@ -879,7 +879,7 @@ class Builder(object):
     # The following methods are to be used by the parts.
     ##
     
-    def include(self, fileName, prepend=False):
+    def include(self, fileName):
         """
         Request an \\include statement be placed at the beginning
         of the output document.
