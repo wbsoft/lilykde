@@ -387,9 +387,9 @@ class Chords(Part):
             i18n("Semi-German"),
             i18n("Italian"),
             i18n("French")))
-        self.guitarFrets = QCheckBox(i18n("Guitar Fretboards"))
+        self.guitarFrets = QCheckBox(i18n("Guitar fret diagrams"))
         self.guitarFrets.setToolTip(i18n(
-            "Show predefined guitar fretboards below the chord names "
+            "Show predefined guitar fret diagrams below the chord names "
             "(LilyPond 2.12 and above)."))
         layout.addWidget(self.guitarFrets)
         
@@ -771,7 +771,8 @@ class LeadSheet(VocalPart, Chords):
         Create chord names, song and lyrics.
         Optional a second staff with a piano accompaniment.
         """
-        Chords.build(self, builder)
+        if self.chords.isChecked():
+            Chords.build(self, builder)
         if self.accomp.isChecked():
             p = ChoirStaff()
             #TODO: instrument names ?
@@ -823,7 +824,13 @@ class LeadSheet(VocalPart, Chords):
             "and lyrics below it. A second staff is optional."))
         l.setWordWrap(True)
         layout.addWidget(l)
-        Chords.widgets(self, layout)
+        self.chords = QGroupBox(i18n("Chord names"))
+        self.chords.setCheckable(True)
+        self.chords.setChecked(True)
+        layout.addWidget(self.chords)
+        l = QVBoxLayout()
+        self.chords.setLayout(l)
+        Chords.widgets(self, l)
         self.accomp = QCheckBox(i18n("Add accompaniment staff"))
         self.accomp.setToolTip(i18n(
             "Adds an accompaniment staff and also puts an accompaniment "
