@@ -879,14 +879,23 @@ class Builder(object):
     # The following methods are to be used by the parts.
     ##
     
-    def include(self, fileName):
+    def include(self, fileName, prepend=False):
         """
         Request an \\include statement be placed at the beginning
-        of the output document.
+        of the output document. By default, the filename is append at the
+        end of the list of files to include.
+        
+        If prepend is True, the filename is added before the other already
+        defined ones. This is because e.g. predefined-guitar-fretboards.ly
+        expects notenames in Dutch, while the user might want to use another
+        pitch name language.
         """
         # We don't use a set, because we want to maintain the order.
         if fileName not in self.includeFiles:
-            self.includeFiles.append(fileName)
+            if prepend:
+                self.includeFiles.insert(0, fileName)
+            else:
+                self.includeFiles.append(fileName)
 
     def getInstrumentNames(self, names, num=0):
         """
