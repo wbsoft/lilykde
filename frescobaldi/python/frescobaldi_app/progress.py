@@ -26,7 +26,7 @@ import weakref, time
 
 from PyQt4.QtCore import QObject, QTimer, SIGNAL
 
-_ticks = 25     # ticks per second
+_ticks = 10     # ticks per second
 class ProgressBarManager(object):
     
     def __init__(self, jobmanager, progressbar):
