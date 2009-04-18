@@ -22,9 +22,12 @@
 import re
 
 step = (
-    r"\b([a-h]((iss){1,2}|(ess){1,2}|(is){1,2}|(es){1,2}|"
-    r"(sharp){1,2}|(flat){1,2}|ss?|ff?)?"
-    r"|(do|re|mi|fa|sol|la|si)(dd?|bb?|ss?|kk?)?)"
+    r"\b("
+    r"[a-h]((iss){1,2}|(ess){1,2}|(is){1,2}|(es){1,2}|"
+        r"(sharp){1,2}|(flat){1,2}|ss?|ff?)?"
+    r"|(do|re|mi|fa|sol|la|si)(dd?|bb?|ss?|kk?)?"
+    r"|as|asess?|es|esess?"
+    r")"
 )
 named_step = "(?P<step>" + step + ")"
 

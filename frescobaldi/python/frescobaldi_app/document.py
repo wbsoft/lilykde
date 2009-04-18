@@ -222,10 +222,17 @@ class DocumentManipulator(object):
         # leave out the duration
         result = matchObj.group('chord')
         
+        # remove octave mark from first pitch
+        result = re.sub(ly.rx.named_pitch,
+            lambda m: m.group('step') + m.group('cautionary'), result, 1)
+        
         # add articulations, etc
-        stuff = text[matchObj.start() + len(matchObj.group()):].strip()
-        if stuff:
-            result += stuff.splitlines()[0]
+        stuff = text[matchObj.start() + len(matchObj.group()):]
+        if stuff and not stuff.isspace():
+            stuff = stuff.splitlines()[0]
+            # remove bar check pypesymbols
+            stuff = re.sub(r"([^-_^]|^)\|", r"\1", stuff)
+            result += stuff.strip()
         
         # write it in the document, add a space if necessary
         col = curPos.column()
