@@ -35,6 +35,21 @@ from kateshell.mainwindow import MainWindow
 # Make the Qt mainloop the default one
 dbus.mainloop.qt.DBusQtMainLoop(set_as_default=True)
 
+
+def lazy(func):
+    """
+    A decorator that only performs the function call the first time,
+    caches the return value, and returns that next time.
+    The argments tuple should be hashable.
+    """
+    cache = {}
+    def loader(*args):
+        if args not in cache:
+            cache[args] = func(*args)
+        return cache[args]
+    return loader
+
+
 class DBusItem(dbus.service.Object):
     """
     An exported DBus item for our application.
@@ -657,6 +672,10 @@ class Document(DBusItem):
         if self.doc:
             self._cursorTranslator = CursorTranslator(self)
 
+    @lazy
+    def smartInterface(self):
+        return self.doc.smartInterface()
+
 
 class CursorTranslator(object):
     """
@@ -667,7 +686,7 @@ class CursorTranslator(object):
     def __init__(self, doc):
         """ doc should be a kateshell.app.Document instance """
         self.savedTabs = map(tabindices, doc.textLines())
-        self.iface = doc.doc.smartInterface()
+        self.iface = doc.smartInterface()
         if self.iface:
             self.revision = self.iface.currentRevision()
             

@@ -36,8 +36,8 @@ from PyKDE4.kdeui import (
     KCompletion, KHBox, KIcon, KLineEdit, KPageDialog, KPushButton,
     KStandardGuiItem, KVBox)
 
+from kateshell.app import lazy
 from frescobaldi_app.widgets import TapButton
-from frescobaldi_app.mainapp import lazy
 from frescobaldi_app.version import defaultVersion
 
 def config(group=None):

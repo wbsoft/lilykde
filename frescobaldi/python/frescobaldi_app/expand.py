@@ -33,7 +33,7 @@ from PyKDE4.ktexteditor import KTextEditor
 
 import ly.parse, ly.pitch
 
-from frescobaldi_app.mainapp import lazy
+from kateshell.app import lazy
 from frescobaldi_app.highlight import LilyPondHighlighter
 
 def config():

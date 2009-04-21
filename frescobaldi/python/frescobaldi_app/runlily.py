@@ -338,7 +338,7 @@ class FileRef(object):
         TODO: update our cursor pos before document is closed...
         """
         if doc.doc:
-            iface = doc.doc.smartInterface()
+            iface = doc.smartInterface()
             if iface:
                 column = resolvetabs_text(self.column, doc.line(self.line - 1))
                 self.smartCursor = iface.newSmartCursor(self.line - 1, column)

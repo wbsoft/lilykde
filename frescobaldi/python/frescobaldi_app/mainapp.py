@@ -31,24 +31,12 @@ from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
 import kateshell.app, kateshell.mainwindow
+from kateshell.app import lazy
+
 
 # Constants ...
 # find specially formatted variables in a LilyPond source document
 _variables_re = re.compile(r'^%%([a-z]+(?:-[a-z]+)*):[ \t]*(.+?)[ \t]*$', re.M)
-
-
-def lazy(func):
-    """
-    A decorator that only performs the function call the first time,
-    caches the return value, and returns that next time.
-    The argments tuple should be hashable.
-    """
-    cache = {}
-    def loader(*args):
-        if args not in cache:
-            cache[args] = func(*args)
-        return cache[args]
-    return loader
 
 
 class MainApp(kateshell.app.MainApp):
