@@ -31,7 +31,7 @@ from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
 import kateshell.app, kateshell.mainwindow
-from kateshell.app import lazy
+from kateshell.app import lazymethod
 
 
 # Constants ...
@@ -95,11 +95,11 @@ class MainApp(kateshell.app.MainApp):
     def defaultDirectory(self):
         return config().readPathEntry("default directory", "")
     
-    @lazy
+    @lazymethod
     def stateManager(self):
         return StateManager(self)
     
-    @lazy
+    @lazymethod
     def completionModel(self):
         return CompletionModel(self.mainwin)
 
@@ -150,7 +150,7 @@ class Document(kateshell.app.Document):
         """
         return updatedFiles(self.localPath())
 
-    @lazy
+    @lazymethod
     def manipulator(self):
         """
         Returns a singleton object for this document that can
@@ -179,7 +179,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         
         self.currentDocumentChanged.connect(self.updateJobActions)
         
-    @lazy
+    @lazymethod
     def actionManager(self):
         """
         Returns the ActionManager, managing actions that can be performed
@@ -188,21 +188,21 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         import frescobaldi_app.actions
         return frescobaldi_app.actions.ActionManager(self)
         
-    @lazy
+    @lazymethod
     def scoreWizard(self):
         import frescobaldi_app.scorewiz
         return frescobaldi_app.scorewiz.ScoreWizard(self)
     
-    @lazy
+    @lazymethod
     def applyRhythmDialog(self):
         return ApplyRhythmDialog(self)
     
-    @lazy
+    @lazymethod
     def expandManager(self):
         import frescobaldi_app.expand
         return frescobaldi_app.expand.ExpandManager(self)
     
-    @lazy
+    @lazymethod
     def jobManager(self):
         import frescobaldi_app.runlily
         man = frescobaldi_app.runlily.JobManager(self)
@@ -211,7 +211,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         self.progressBarManager(man) # show progress of jobs using progress bar
         return man
     
-    @lazy
+    @lazymethod
     def progressBarManager(self, jobmanager):
         import frescobaldi_app.progress
         return frescobaldi_app.progress.ProgressBarManager(jobmanager,

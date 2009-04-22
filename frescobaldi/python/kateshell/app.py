@@ -17,7 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, re, sip, dbus, dbus.service, dbus.mainloop.qt
+import os, re, sip, weakref, dbus, dbus.service, dbus.mainloop.qt
 from dbus.service import method, signal
 
 from signals import Signal
@@ -36,17 +36,17 @@ from kateshell.mainwindow import MainWindow
 dbus.mainloop.qt.DBusQtMainLoop(set_as_default=True)
 
 
-def lazy(func):
+def lazymethod(func):
     """
-    A decorator that only performs the function call the first time,
+    A decorator that only performs the method call the first time,
     caches the return value, and returns that next time.
     The argments tuple should be hashable.
     """
-    cache = {}
-    def loader(*args):
-        if args not in cache:
-            cache[args] = func(*args)
-        return cache[args]
+    cache = weakref.WeakKeyDictionary()
+    def loader(obj, *args):
+        if args not in cache.setdefault(obj, {}):
+            cache[obj][args] = func(obj, *args)
+        return cache[obj][args]
     return loader
 
 
@@ -672,10 +672,6 @@ class Document(DBusItem):
         if self.doc:
             self._cursorTranslator = CursorTranslator(self)
 
-    @lazy
-    def smartInterface(self):
-        return self.doc.smartInterface()
-
 
 class CursorTranslator(object):
     """
@@ -686,7 +682,7 @@ class CursorTranslator(object):
     def __init__(self, doc):
         """ doc should be a kateshell.app.Document instance """
         self.savedTabs = map(tabindices, doc.textLines())
-        self.iface = doc.smartInterface()
+        self.iface = doc.doc.smartInterface()
         if self.iface:
             self.revision = self.iface.currentRevision()
             

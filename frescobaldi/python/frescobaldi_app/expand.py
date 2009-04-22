@@ -33,7 +33,7 @@ from PyKDE4.ktexteditor import KTextEditor
 
 import ly.parse, ly.pitch
 
-from kateshell.app import lazy
+from kateshell.app import lazymethod
 from frescobaldi_app.highlight import LilyPondHighlighter
 
 def config():
@@ -82,7 +82,7 @@ class ExpandManager(object):
         # open dialog and let the user choose
         self.expansionDialog().show()
         
-    @lazy
+    @lazymethod
     def expansionDialog(self):
         return ExpansionDialog(self)
 
