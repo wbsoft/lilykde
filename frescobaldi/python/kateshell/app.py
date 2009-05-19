@@ -701,9 +701,11 @@ class CursorTranslator(object):
             column = resolvetabs_indices(column, self.savedTabs[line])
         cursor = KTextEditor.Cursor(line, column)
         if self.iface:
+            self.iface.smartMutex().lock()
             self.iface.useRevision(self.revision)
             cursor = self.iface.translateFromRevision(cursor,
                 KTextEditor.SmartCursor.MoveOnInsert)
+            self.iface.smartMutex().unlock()
         return cursor
 
 

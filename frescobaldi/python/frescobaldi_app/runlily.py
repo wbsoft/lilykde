@@ -341,8 +341,10 @@ class FileRef(object):
             iface = doc.doc.smartInterface()
             if iface:
                 column = resolvetabs_text(self.column, doc.line(self.line - 1))
+                iface.smartMutex().lock()
                 iface.clearRevision()
                 self.smartCursor = iface.newSmartCursor(self.line - 1, column)
+                iface.smartMutex().unlock()
                 self.doc = doc
                 doc.closed.connect(self.unbind)
                 doc.urlChanged.connect(self.unbind)
