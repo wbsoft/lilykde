@@ -37,7 +37,7 @@ from PyKDE4.kdeui import (
     KStandardGuiItem, KVBox)
 
 from kateshell.app import lazymethod
-from frescobaldi_app.widgets import TapButton
+from frescobaldi_app.widgets import TapButton, LilyIcon
 from frescobaldi_app.version import defaultVersion
 
 def config(group=None):
@@ -371,8 +371,8 @@ class Settings(QWidget):
         l = QLabel(i18n("Time signature:"), h)
         self.time = QComboBox(h)
         self.time.setEditable(True)
-        self.time.addItem(KIcon('time_c44'), '(4/4)')
-        self.time.addItem(KIcon('time_c22'), '(2/2)')
+        self.time.addItem(LilyIcon('time_c44'), '(4/4)')
+        self.time.addItem(LilyIcon('time_c22'), '(2/2)')
         self.time.addItems([
             '2/4', '3/4', '4/4', '5/4', '6/4', '7/4',
             '2/2', '3/2', '4/2',
@@ -386,7 +386,7 @@ class Settings(QWidget):
         self.pickup = QComboBox(h)
         self.pickup.addItem(i18n("None"))
         self.pickup.insertSeparator(1)
-        durs = [(KIcon('note_%s' % d.replace('.', 'd')), d) for d in durations]
+        durs = [(LilyIcon('note_%s' % d.replace('.', 'd')), d) for d in durations]
         for icon, text in durs:
             self.pickup.addItem(icon, text)
         l.setBuddy(self.pickup)
@@ -999,7 +999,14 @@ class PartBase(object):
 
 titles_html = r"""
 <html><head><style type='text/css'>
-a { text-decoration: none;}
+body {
+  background-color: #fefefe;
+  color: black;
+}
+a {
+  text-decoration: none;
+  color: black;
+}
 </style></head>
 <body><table width='100%%' style='font-family:serif;'>
 <tr><td colspan=3 align=center>$dedication</td></tr>

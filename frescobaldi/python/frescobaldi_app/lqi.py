@@ -21,14 +21,16 @@
 
 import re
 
-from PyQt4.QtCore import QObject, QSize, Qt, SIGNAL
+from PyQt4.QtCore import QObject, QSize, SIGNAL
 from PyQt4.QtGui import (
-    QApplication, QCheckBox, QColor, QComboBox, QGridLayout, QIcon, QLabel,
-    QPalette, QPixmap, QToolBox, QToolButton, QWidget)
+    QCheckBox, QComboBox, QGridLayout, QLabel, QToolBox, QToolButton, QWidget)
 from PyKDE4.kdecore import i18n
-from PyKDE4.kdeui import KHBox, KIcon, KIconLoader
+from PyKDE4.kdeui import KHBox
 
 import ly.articulation, ly.rx
+
+from frescobaldi_app.widgets import LilyIcon
+
 
 class ToolBox(QToolBox):
     def __init__(self, tool):
@@ -45,7 +47,7 @@ class Lqi(QWidget):
         QWidget.__init__(self, toolbox)
         i = toolbox.addItem(self, label)
         if icon:
-            toolbox.setItemIcon(i, coloredLilyIcon(icon))
+            toolbox.setItemIcon(i, LilyIcon(icon))
         if tooltip:
             toolbox.setItemToolTip(i, tooltip)
         self.mainwin = toolbox.mainwin
@@ -93,7 +95,7 @@ class Articulations(Lqi):
                 b = QToolButton(self)
                 b.setAutoRaise(True)
                 # load and convert the icon to the default text color
-                b.setIcon(coloredLilyIcon('articulation_%s' % sign, 22))
+                b.setIcon(LilyIcon('articulation_%s' % sign, 22))
                 b.setIconSize(QSize(22, 22))
                 b.setToolTip('%s (\\%s)' % (title, sign))
                 QObject.connect(b, SIGNAL("clicked()"),
@@ -133,17 +135,4 @@ class Articulations(Lqi):
             doc.view.insertText(art)
         doc.view.setFocus()
         
-
-def coloredLilyIcon(name, size = 22):
-    """
-    Returns the named LilyPond icon from the pics/ directory, with the black
-    foreground color changed to the current default foreground text color.
-    """
-    alpha = KIconLoader.global_().loadIcon(
-        name, KIconLoader.User, size).alphaChannel()
-    pixmap = QPixmap(alpha.size())
-    pixmap.fill(QApplication.palette().color(
-        QPalette.Active, QPalette.WindowText))
-    pixmap.setAlphaChannel(alpha)
-    return QIcon(pixmap)
 

@@ -26,10 +26,10 @@ from time import time
 
 from PyQt4.QtCore import QObject, QProcess, QRegExp, QString, Qt, SIGNAL
 from PyQt4.QtGui import (
-    QLabel, QLineEdit, QPushButton, QSlider, QSpinBox, QToolButton,
-    QRegExpValidator)
+    QIcon, QLabel, QLineEdit, QPalette, QPixmap, QPushButton, QSlider, QSpinBox,
+    QToolButton, QRegExpValidator)
 from PyKDE4.kdecore import i18n, KProcess
-from PyKDE4.kdeui import KDialog, KLineEdit, KVBox
+from PyKDE4.kdeui import KApplication, KDialog, KIconLoader, KLineEdit, KVBox
 
 class TapButton(QPushButton):
     """
@@ -264,3 +264,18 @@ def findexe(filename):
         if isexe(os.path.join(p, filename)):
             return os.path.join(p, filename)
     return False
+
+# convert black icons with LilyPond (symbols) to the default text color
+def LilyIcon(name, size = 22):
+    """
+    Returns the named LilyPond icon from the pics/ directory, with the black
+    foreground color changed to the current default foreground text color.
+    """
+    alpha = KIconLoader.global_().loadIcon(
+        name, KIconLoader.User, size).alphaChannel()
+    pixmap = QPixmap(alpha.size())
+    pixmap.fill(KApplication.palette().color(
+        QPalette.Active, QPalette.WindowText))
+    pixmap.setAlphaChannel(alpha)
+    return QIcon(pixmap)
+
