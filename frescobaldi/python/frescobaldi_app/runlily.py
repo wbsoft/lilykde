@@ -341,6 +341,7 @@ class FileRef(object):
             iface = doc.doc.smartInterface()
             if iface:
                 column = resolvetabs_text(self.column, doc.line(self.line - 1))
+                iface.clearRevision()
                 self.smartCursor = iface.newSmartCursor(self.line - 1, column)
                 self.doc = doc
                 doc.closed.connect(self.unbind)
