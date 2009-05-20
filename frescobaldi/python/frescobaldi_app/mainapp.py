@@ -309,34 +309,20 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             tooltip=i18n("Go to the next blank line."))
         def edit_next_blank_line():
             d = self.currentDocument()
-            lineNum = d.view.cursorPosition().line()
-            line = d.line(lineNum)
-            prev = not line or line.isspace()
-            while lineNum < d.doc.lines() - 1:
-                lineNum += 1
-                line = d.line(lineNum)
-                cur = not line or line.isspace()
-                if not prev and cur:
-                    d.view.setCursorPosition(KTextEditor.Cursor(lineNum, len(line)))
+            for num in range(d.view.cursorPosition().line(), d.doc.lines() - 1):
+                if not isblank(d.line(num)) and isblank(d.line(num + 1)):
+                    d.view.setCursorPosition(
+                        KTextEditor.Cursor(num + 1, len(d.line(num + 1))))
                     return
-                prev = cur
         
         @self.onAction(i18n("Previous blank line"), "go-up-search", key="Alt+Up",
             tooltip=i18n("Go to the previous blank line."))
         def edit_prev_blank_line():
             d = self.currentDocument()
-            lineNum = d.view.cursorPosition().line() - 1
-            prevline = d.line(lineNum)
-            prev = not prevline or prevline.isspace()
-            while lineNum > 0:
-                lineNum -= 1
-                line = d.line(lineNum)
-                cur = not line or line.isspace()
-                if prev and not cur:
-                    d.view.setCursorPosition(KTextEditor.Cursor(lineNum + 1,
-                        len(prevline)))
+            for num in range(d.view.cursorPosition().line() - 1, -1, -1):
+                if isblank(d.line(num)) and (num == 0 or not isblank(d.line(num - 1))):
+                    d.view.setCursorPosition(KTextEditor.Cursor(num, len(d.line(num))))
                     return
-                prev, prevline = cur, line
         
         # actions and functionality for editing pitches
         a = KActionMenu(KIcon("applications-education-language"),
@@ -867,4 +853,9 @@ def updatedFiles(lyfile, reftime=None):
             return []
     generatorfunc.lyfile = lyfile
     return generatorfunc
+    
+
+# is string an empty or blank line?
+def isblank(text):
+    return not text or text.isspace()
     
