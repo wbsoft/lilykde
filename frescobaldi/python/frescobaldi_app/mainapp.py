@@ -304,30 +304,39 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             tooltip=i18n("Expand last word or open the expansions dialog."))
         def edit_expand():
             self.expandManager().expand()
-            
+        
         @self.onAction(i18n("Next blank line"), "go-down-search", key="Alt+Down",
             tooltip=i18n("Go to the next blank line."))
         def edit_next_blank_line():
             d = self.currentDocument()
             lineNum = d.view.cursorPosition().line()
+            line = d.line(lineNum)
+            prev = not line or line.isspace()
             while lineNum < d.doc.lines() - 1:
                 lineNum += 1
                 line = d.line(lineNum)
-                if not line or line.isspace():
+                cur = not line or line.isspace()
+                if not prev and cur:
                     d.view.setCursorPosition(KTextEditor.Cursor(lineNum, len(line)))
                     return
+                prev = cur
         
         @self.onAction(i18n("Previous blank line"), "go-up-search", key="Alt+Up",
             tooltip=i18n("Go to the previous blank line."))
         def edit_prev_blank_line():
             d = self.currentDocument()
-            lineNum = d.view.cursorPosition().line()
+            lineNum = d.view.cursorPosition().line() - 1
+            prevline = d.line(lineNum)
+            prev = not prevline or prevline.isspace()
             while lineNum > 0:
                 lineNum -= 1
                 line = d.line(lineNum)
-                if not line or line.isspace():
-                    d.view.setCursorPosition(KTextEditor.Cursor(lineNum, len(line)))
+                cur = not line or line.isspace()
+                if prev and not cur:
+                    d.view.setCursorPosition(KTextEditor.Cursor(lineNum + 1,
+                        len(prevline)))
                     return
+                prev, prevline = cur, line
         
         # actions and functionality for editing pitches
         a = KActionMenu(KIcon("applications-education-language"),
