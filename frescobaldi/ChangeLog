@@ -1,5 +1,8 @@
-Changes in 0.7.9 -- 
+Changes in 0.7.9 -- May 23rd, 2009
 
+* Bugfixes:
+  - spurious crashes seem to have been gone (by using thread locks on
+    katepart's SmartInterface)
 * Editing:
   - Alt-Up and Alt-Down now jump to the first line of a blank block instead of
     just the next or previous blank line.
