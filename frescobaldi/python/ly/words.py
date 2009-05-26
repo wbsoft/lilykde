@@ -1570,6 +1570,24 @@ repeat_types = (
     )
 
 
+accidentalstyles = (
+    'default',
+    'voice',
+    'modern',
+    'modern-cautionary',
+    'modern-voice',
+    'modern-voice-cautionary',
+    'piano',
+    'piano-cautionary',
+    'neo-modern',
+    'neo-modern-cautionary',
+    'dodecaphonic',
+    'teaching',
+    'no-reset',
+    'forget',
+    )
+
+
 clefs_plain = (
     'treble',
     'violin',

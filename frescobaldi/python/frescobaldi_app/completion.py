@@ -116,6 +116,8 @@ def findMatches(view, word, invocationType):
                     return ('set-paper-size',)
             elif text.endswith("#:"):
                 return ly.words.markupcommands
+            elif text.endswith("#(set-accidental-style '"):
+                return ly.words.accidentalstyles
             return ly.words.schemefuncs
         
     if state.parser().token == "\\header":
