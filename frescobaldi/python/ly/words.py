@@ -1285,8 +1285,10 @@ all_user_grob_properties = (
 
 
 schemefuncs = (
+    'set-accidental-style',
     'set-global-staff-size',
     'set-octavation',
+    'define-public',
     'define-music-function',
     'define-markup-command',
     'markup',
@@ -1307,6 +1309,7 @@ schemefuncs = (
     'make-line-markup',
     'make-center-markup',
     'make-column-markup',
+    'make-musicglyph-markup',
     )
     
 
@@ -1364,6 +1367,8 @@ papervars = (
     'input-encoding',
     'left-margin',
     'line-width',
+    #'max-systems-per-page', # (LP 2.13)
+    #'min-systems-per-page', # (LP 2.13)
     'output-scale',
     'page-breaking-between-system-padding',
     'page-count',
@@ -1381,6 +1386,7 @@ papervars = (
     'ragged-right',
     'right-margin',
     'system-separator-markup',
+    #'systems-per-page', #(LP 2.13)
     'top-margin',
     # different markups
     'bookTitleMarkup',
