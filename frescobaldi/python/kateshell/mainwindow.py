@@ -159,7 +159,7 @@ class MainWindow(KParts.MainWindow):
         self.act('doc_back', KStandardAction.Back, self.app.back)
         self.act('doc_forward', KStandardAction.Forward, self.app.forward)
         self.showPath = self.act('options_show_full_path', i18n("Show Path"),
-            lambda: self.updateCaption(self.currentDocument()))
+            self.updateCaption)
         self.showPath.setCheckable(True)
         self.showTabs = self.act('options_show_tabs', i18n("Show Document Tabs"),
             lambda: self.viewTabs.setVisible(self.showTabs.isChecked()))
