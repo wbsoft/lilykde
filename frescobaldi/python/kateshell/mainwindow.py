@@ -109,6 +109,7 @@ class MainWindow(KParts.MainWindow):
         layout = QVBoxLayout()
         w.setLayout(layout)
         layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
         self.viewTabs = self.createViewTabBar()
         layout.addWidget(self.viewTabs)
         self.viewStack = QStackedWidget()
