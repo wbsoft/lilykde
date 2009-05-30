@@ -209,6 +209,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         man.jobStarted.connect(self.updateJobActions)
         man.jobFinished.connect(self.updateJobActions)
         self.progressBarManager(man) # show progress of jobs using progress bar
+        man.jobStarted.connect(self.viewTabs.setDocumentStatus)
+        man.jobFinished.connect(self.viewTabs.setDocumentStatus)
         return man
     
     @lazymethod

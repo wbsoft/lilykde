@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="frescobaldi" version="6">
+<kpartgui name="frescobaldi" version="7">
 
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -107,6 +107,7 @@
   <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
     <Merge name="StandardToolBarMenuHandler" />
     <Action name="options_show_full_path" />
+    <Action name="options_show_tabs" />
     <Action name="fullscreen" />
     <Separator />
     <Action name="options_toolviews" />

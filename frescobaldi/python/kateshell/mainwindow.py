@@ -23,7 +23,7 @@ from PyQt4.QtCore import (
     QEvent, QObject, QTimer, QVariant, Qt, SIGNAL, SLOT, pyqtSignature)
 from PyQt4.QtGui import (
     QAction, QActionGroup, QDialog, QLabel, QPixmap, QSplitter, QStackedWidget,
-    QVBoxLayout, QWidget)
+    QTabBar, QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, KPluginLoader, KToolInvocation, KUrl, i18n
 from PyKDE4.kdeui import (
     KAction, KActionMenu, KDialog, KEditToolBar, KHBox, KIcon, KMenu,
@@ -104,8 +104,16 @@ class MainWindow(KParts.MainWindow):
         
         self.docks[Top] = Dock(s1, tab_top, "go-up", i18n("Top Sidebar"))
         s1.addWidget(self.docks[Top])
-        self.viewPlace = QStackedWidget(s1)
-        s1.addWidget(self.viewPlace)
+        # tabbar and editor view widget stack together in one widget
+        w = QWidget()
+        layout = QVBoxLayout()
+        w.setLayout(layout)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.viewTabs = self.createViewTabBar()
+        layout.addWidget(self.viewTabs)
+        self.viewStack = QStackedWidget()
+        layout.addWidget(self.viewStack)
+        s1.addWidget(w)
         self.docks[Bottom] = Dock(s1, tab_bottom, "go-down", i18n("Bottom Sidebar"))
         s1.addWidget(self.docks[Bottom])
 
@@ -118,7 +126,7 @@ class MainWindow(KParts.MainWindow):
         # prevent the embedded terminal taking up a too large default space.
         s1.setSizes((140, 200, 140))
         
-        self.viewPlace.setMinimumSize(200, 100)
+        self.viewStack.setMinimumSize(200, 100)
 
         self._selectionActions = []
         self.setupActions() # Let subclasses add more actions
@@ -152,6 +160,10 @@ class MainWindow(KParts.MainWindow):
         self.showPath = self.act('options_show_full_path', i18n("Show Path"),
             lambda: self.updateCaption(self.currentDocument()))
         self.showPath.setCheckable(True)
+        self.showTabs = self.act('options_show_tabs', i18n("Show Document Tabs"),
+            lambda: self.viewTabs.setVisible(self.showTabs.isChecked()))
+        self.showTabs.setCheckable(True)
+        
         # full screen
         a = self.actionCollection().addAction(KStandardAction.FullScreen, 'fullscreen')
         QObject.connect(a, SIGNAL("toggled(bool)"), lambda t:
@@ -270,7 +282,7 @@ class MainWindow(KParts.MainWindow):
             self.guiFactory().removeClient(self._currentDoc.view)
         self._currentDoc = doc
         self.guiFactory().addClient(doc.view)
-        self.viewPlace.setCurrentWidget(doc.view)
+        self.viewStack.setCurrentWidget(doc.view)
         doc.urlChanged.connect(self.addToRecentFiles)
         doc.captionChanged.connect(self.updateCaption)
         doc.statusChanged.connect(self.updateStatusBar)
@@ -282,10 +294,10 @@ class MainWindow(KParts.MainWindow):
         doc.view.setFocus()
 
     def addDocument(self, doc):
-        self.viewPlace.addWidget(doc.view)
+        self.viewStack.addWidget(doc.view)
         
     def removeDocument(self, doc):
-        self.viewPlace.removeWidget(doc.view)
+        self.viewStack.removeWidget(doc.view)
         if doc is self._currentDoc:
             self.guiFactory().removeClient(doc.view)
             self._currentDoc = None
@@ -389,12 +401,17 @@ class MainWindow(KParts.MainWindow):
         self.openRecent.loadEntries(config("recent files"))
         self.showPath.setChecked(config().readEntry("show full path",
             QVariant(False)).toBool())
+        self.showTabs.setChecked(config().readEntry("show tabs",
+            QVariant(True)).toBool())
+        self.viewTabs.setVisible(self.showTabs.isChecked())
 
     def saveSettings(self):
         """ Store settings in our configfile. """
         self.openRecent.saveEntries(config("recent files"))
         config().writeEntry("show full path",
             QVariant(self.showPath.isChecked()))
+        config().writeEntry("show tabs",
+            QVariant(self.showTabs.isChecked()))
         # also all the tools:
         for tool in self.tools.itervalues():
             tool.saveSettings()
@@ -402,6 +419,62 @@ class MainWindow(KParts.MainWindow):
         self.app.editor.writeConfig()
         # write them back
         config().sync()
+
+    def createViewTabBar(self):
+        return ViewTabBar(self)
+
+
+class ViewTabBar(QTabBar):
+    """
+    The tab bar above the document editor view, used to switch
+    documents.
+    """
+    def __init__(self, mainwin):
+        QTabBar.__init__(self)
+        self.mainwin = mainwin
+        self.docs = []
+        # get the documents to create their tabs.
+        for d in mainwin.app.documents:
+            self.addDocument(d)
+        mainwin.app.documentCreated.connect(self.addDocument)
+        mainwin.app.documentClosed.connect(self.removeDocument)
+        mainwin.app.documentMaterialized.connect(self.setDocumentStatus)
+        
+        QObject.connect(self, SIGNAL("currentChanged(int)"),
+            lambda index: self.docs[index].setActive())
+        mainwin.currentDocumentChanged.connect(self.setCurrentDocument)
+        
+    def addDocument(self, doc):
+        if doc not in self.docs:
+            self.docs.append(doc)
+            self.blockSignals(True)
+            self.addTab('')
+            self.blockSignals(False)
+            self.setDocumentStatus(doc)
+            def setStatus():
+                self.setDocumentStatus(doc)
+            doc.urlChanged.connect(setStatus, doc)
+            doc.captionChanged.connect(setStatus, doc)
+
+    def removeDocument(self, doc):
+        if doc in self.docs:
+            index = self.docs.index(doc)
+            self.docs.remove(doc)
+            self.blockSignals(True)
+            self.removeTab(index)
+            self.blockSignals(False)
+
+    def setDocumentStatus(self, doc):
+        if doc in self.docs:
+            index = self.docs.index(doc)
+            self.setTabIcon(index, KIcon(doc.documentIcon() or "text-plain"))
+            self.setTabText(index, doc.documentName())
+    
+    def setCurrentDocument(self, doc):
+        """ Raise the tab belonging to this document."""
+        if doc in self.docs:
+            index = self.docs.index(doc)
+            self.setCurrentIndex(index)
 
 
 class TabBar(KMultiTabBar):
@@ -623,7 +696,9 @@ class Tool(object):
         if self._docked:
             self._active = False
             self._dock.hideTool(self)
-            self.mainwin.view().setFocus()
+            view = self.mainwin.view()
+            if view:
+                view.setFocus()
 
     def toggle(self):
         if self._docked:

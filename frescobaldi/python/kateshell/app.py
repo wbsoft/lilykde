@@ -274,8 +274,6 @@ class Document(DBusItem):
         self._cursor = None     # line, col. None = not set.
         self._encoding = encoding or self.app.defaultEncoding # encoding [UTF-8]
         self._cursorTranslator = None   # for translating cursor positions
-        self.app.addDocument(self)
-        self.app.documentCreated(self)
         
         self.urlChanged = Signal()
         self.captionChanged = Signal()
@@ -283,6 +281,9 @@ class Document(DBusItem):
         self.selectionChanged = Signal()
         self.saved = Signal()
         self.closed = Signal()
+        
+        self.app.addDocument(self)
+        self.app.documentCreated(self)
         
     def materialize(self):
         """ Really load the document, create doc and view etc. """
@@ -410,7 +411,7 @@ class Document(DBusItem):
         if self.doc:
             return self.doc.documentName()
         else:
-            return i18n("Untitled")
+            return self.url().fileName() or i18n("Untitled")
 
     def documentIcon(self):
         """Returns None or a suitable icon name for this document"""
