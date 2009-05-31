@@ -435,12 +435,13 @@ class ViewTabBar(QTabBar):
         self.mainwin = mainwin
         self.docs = []
         # get the documents to create their tabs.
-        for d in mainwin.app.documents:
-            self.addDocument(d)
+        for doc in mainwin.app.documents:
+            self.addDocument(doc)
+            if doc.isActive():
+                self.setCurrentDocument(doc)
         mainwin.app.documentCreated.connect(self.addDocument)
         mainwin.app.documentClosed.connect(self.removeDocument)
         mainwin.app.documentMaterialized.connect(self.setDocumentStatus)
-        
         QObject.connect(self, SIGNAL("currentChanged(int)"),
             lambda index: self.docs[index].setActive())
         mainwin.currentDocumentChanged.connect(self.setCurrentDocument)
