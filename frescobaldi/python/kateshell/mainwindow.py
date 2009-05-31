@@ -478,6 +478,34 @@ class ViewTabBar(QTabBar):
             index = self.docs.index(doc)
             self.setCurrentIndex(index)
 
+    def contextMenuEvent(self, ev):
+        """ Called when the right mous button is clicked on the tab bar. """
+        tab = self.tabAt(ev.pos())
+        if tab == -1:
+            return
+        menu = self.contextMenu(self.docs[tab])
+        if menu:
+            menu.popup(ev.globalPos())
+    
+    def contextMenu(self, doc, menu = None):
+        """
+        Return a menu with actions relevant for the document.
+        If the menu is given, actions are added to the given menu.
+        """
+        if menu is None:
+            menu = KMenu(self.mainwin)
+        g = KStandardGuiItem.save()
+        a = menu.addAction(g.icon(), g.text())
+        QObject.connect(a, SIGNAL("triggered()"), doc.save)
+        g = KStandardGuiItem.saveAs()
+        a = menu.addAction(g.icon(), g.text())
+        QObject.connect(a, SIGNAL("triggered()"), doc.saveAs)
+        menu.addSeparator()
+        g = KStandardGuiItem.close()
+        a = menu.addAction(g.icon(), g.text())
+        QObject.connect(a, SIGNAL("triggered()"), doc.close)
+        return menu
+        
 
 class TabBar(KMultiTabBar):
     """
