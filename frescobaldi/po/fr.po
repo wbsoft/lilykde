@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-05-23 20:57+0200\n"
+"POT-Creation-Date: 2009-06-01 21:32+0200\n"
 "PO-Revision-Date: 2008-04-11 16:36+0200\n"
 "Last-Translator: Valentin Villenave <v.villenave@gmail.com>\n"
 "Language-Team: France <kde-i18n-fr@kde.org>\n"
@@ -363,71 +363,75 @@ msgstr "Barre de droite"
 msgid "Top Sidebar"
 msgstr "Barre du haut"
 
-#: ../python/kateshell/mainwindow.py:109
+#: ../python/kateshell/mainwindow.py:118
 msgid "Bottom Sidebar"
 msgstr "Barre du bas"
 
-#: ../python/kateshell/mainwindow.py:152
+#: ../python/kateshell/mainwindow.py:161
 msgid "Show Path"
 msgstr "Voir les chemins"
 
-#: ../python/kateshell/mainwindow.py:169
+#: ../python/kateshell/mainwindow.py:164
+msgid "Show Document Tabs"
+msgstr ""
+
+#: ../python/kateshell/mainwindow.py:182
 msgid "&Tool Views"
 msgstr "Voir les ou&tils"
 
-#: ../python/kateshell/mainwindow.py:178
+#: ../python/kateshell/mainwindow.py:191
 msgid "Dock"
 msgstr "Fusionner"
 
-#: ../python/kateshell/mainwindow.py:181
+#: ../python/kateshell/mainwindow.py:194
 msgid "Show"
 msgstr "Voir"
 
-#: ../python/kateshell/mainwindow.py:259
+#: ../python/kateshell/mainwindow.py:272
 msgid "Please select some text first."
 msgstr "Sélectionnez d'abord du texte."
 
-#: ../python/kateshell/mainwindow.py:306
+#: ../python/kateshell/mainwindow.py:319
 msgid "modified"
 msgstr "modifié"
 
-#: ../python/kateshell/mainwindow.py:316
+#: ../python/kateshell/mainwindow.py:329
 msgid "Line: %1 Col: %2"
 msgstr "Ligne: %1 Col: %2"
 
-#: ../python/kateshell/mainwindow.py:325
+#: ../python/kateshell/mainwindow.py:338
 msgid "BLOCK"
 msgstr "BLOC"
 
-#: ../python/kateshell/mainwindow.py:325
+#: ../python/kateshell/mainwindow.py:338
 msgid "Block selection mode"
 msgstr "Mode sélection de blocs"
 
-#: ../python/kateshell/mainwindow.py:327
+#: ../python/kateshell/mainwindow.py:340
 msgid "LINE"
 msgstr "LIGNE"
 
-#: ../python/kateshell/mainwindow.py:327
+#: ../python/kateshell/mainwindow.py:340
 msgid "Line selection mode"
 msgstr "Mode sélection de ligne"
 
-#: ../python/kateshell/mainwindow.py:357
+#: ../python/kateshell/mainwindow.py:370
 msgid "All Files"
 msgstr "Tous les fichiers"
 
-#: ../python/kateshell/mainwindow.py:358
+#: ../python/kateshell/mainwindow.py:371
 msgid "Open File"
 msgstr "Ouvrir Fichier"
 
-#: ../python/kateshell/mainwindow.py:708
+#: ../python/kateshell/mainwindow.py:813
 msgid "Move To"
 msgstr "Aller à"
 
-#: ../python/kateshell/mainwindow.py:715
+#: ../python/kateshell/mainwindow.py:820
 msgid "Undock"
 msgstr "Séparer"
 
-#: ../python/kateshell/mainwindow.py:779
+#: ../python/kateshell/mainwindow.py:884
 msgid "Could not load %1"
 msgstr "Ne peut charger %1"
 
@@ -456,7 +460,7 @@ msgid "Play MIDI"
 msgstr "Jouer MIDI"
 
 #: ../python/frescobaldi_app/actions.py:101
-#: ../python/frescobaldi_app/mainapp.py:430
+#: ../python/frescobaldi_app/mainapp.py:433
 msgid "Email..."
 msgstr ""
 
@@ -542,7 +546,7 @@ msgid ""
 msgstr ""
 
 #: ../python/frescobaldi_app/document.py:119
-#: ../python/frescobaldi_app/mainapp.py:329
+#: ../python/frescobaldi_app/mainapp.py:332
 msgid "Pitch Name Language"
 msgstr ""
 
@@ -551,7 +555,7 @@ msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
 
 #: ../python/frescobaldi_app/document.py:169
-#: ../python/frescobaldi_app/mainapp.py:293
+#: ../python/frescobaldi_app/mainapp.py:296
 msgid "Cut and Assign"
 msgstr ""
 
@@ -625,7 +629,7 @@ msgid ""
 msgstr ""
 
 #: ../python/frescobaldi_app/hyphen.py:119
-#: ../python/frescobaldi_app/mainapp.py:406
+#: ../python/frescobaldi_app/mainapp.py:409
 msgid "Hyphenate Lyrics Text"
 msgstr "Séparer les syllabes des paroles"
 
@@ -685,36 +689,40 @@ msgstr ""
 msgid "LilyPond files"
 msgstr "Fichiers LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:224
+#: ../python/frescobaldi_app/mainapp.py:226
 #: ../python/frescobaldi_app/scorewiz/__init__.py:349
 msgid "LilyPond"
 msgstr "LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:235
+#: ../python/frescobaldi_app/mainapp.py:237
 msgid "Setup New Score..."
 msgstr "Commencer une nouvelle partition..."
 
-#: ../python/frescobaldi_app/mainapp.py:240
+#: ../python/frescobaldi_app/mainapp.py:242
 msgid "Run LilyPond (preview)"
 msgstr "Lancer LilyPond (aperçu)"
 
-#: ../python/frescobaldi_app/mainapp.py:244
+#: ../python/frescobaldi_app/mainapp.py:246
 msgid "Run LilyPond (publish)"
 msgstr "Lancer LilyPond (publication)"
 
-#: ../python/frescobaldi_app/mainapp.py:251
+#: ../python/frescobaldi_app/mainapp.py:252
+msgid "Can't process document"
+msgstr ""
+
+#: ../python/frescobaldi_app/mainapp.py:255
 msgid "There is already a LilyPond job running for this document."
 msgstr "Il y a déjà un processus Liypond en cours pour ce document."
 
-#: ../python/frescobaldi_app/mainapp.py:253
-msgid "Already Running"
-msgstr "Déjà en cours"
-
-#: ../python/frescobaldi_app/mainapp.py:256
+#: ../python/frescobaldi_app/mainapp.py:262
 msgid "Your document currently has no filename, please save first."
 msgstr "Votre document n'a pas de nom, sauver le d'abord."
 
-#: ../python/frescobaldi_app/mainapp.py:260
+#: ../python/frescobaldi_app/mainapp.py:266
+msgid "Your document has been modified, please save first."
+msgstr "Ce document a été modifié. Veuillez l'enregistrer."
+
+#: ../python/frescobaldi_app/mainapp.py:270
 msgid ""
 "Sorry, support for remote files is not yet implemented.\n"
 "Please save your document to a local file."
@@ -722,230 +730,226 @@ msgstr ""
 "Le traitement de fichiers distants n'est pas encore pris en charge.\n"
 "Enregistrez ce document dans un fichier local."
 
-#: ../python/frescobaldi_app/mainapp.py:267
-msgid "Your document has been modified, please save first."
-msgstr "Ce document a été modifié. Veuillez l'enregistrer."
-
-#: ../python/frescobaldi_app/mainapp.py:284
+#: ../python/frescobaldi_app/mainapp.py:287
 msgid "Interrupt LilyPond Job"
 msgstr "Interrompre le processus Lilypond"
 
-#: ../python/frescobaldi_app/mainapp.py:294
+#: ../python/frescobaldi_app/mainapp.py:297
 msgid "Cut selection and assign it to a LilyPond variable."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:298
+#: ../python/frescobaldi_app/mainapp.py:301
 msgid "Repeat last note or chord"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:299
+#: ../python/frescobaldi_app/mainapp.py:302
 msgid "Repeat the last music expression (note or chord)."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:303
+#: ../python/frescobaldi_app/mainapp.py:306
 msgid "Expand"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:304
+#: ../python/frescobaldi_app/mainapp.py:307
 msgid "Expand last word or open the expansions dialog."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:308
+#: ../python/frescobaldi_app/mainapp.py:311
 #, fuzzy
 msgid "Next blank line"
 msgstr "Pas de barres de mesures"
 
-#: ../python/frescobaldi_app/mainapp.py:309
+#: ../python/frescobaldi_app/mainapp.py:312
 msgid "Go to the next blank line."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:318
+#: ../python/frescobaldi_app/mainapp.py:321
 msgid "Previous blank line"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:319
+#: ../python/frescobaldi_app/mainapp.py:322
 msgid "Go to the previous blank line."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:330
+#: ../python/frescobaldi_app/mainapp.py:333
 msgid ""
 "Change the LilyPond language used for pitch names in this document or in the "
 "selection."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:337
+#: ../python/frescobaldi_app/mainapp.py:340
 msgid "Double durations"
 msgstr "Doubler les durées"
 
-#: ../python/frescobaldi_app/mainapp.py:338
+#: ../python/frescobaldi_app/mainapp.py:341
 msgid "Double all the durations in the selection."
 msgstr "Doubler toutes les durées dans la sélection."
 
-#: ../python/frescobaldi_app/mainapp.py:343
+#: ../python/frescobaldi_app/mainapp.py:346
 msgid "Halve durations"
 msgstr "Diviser les durées"
 
-#: ../python/frescobaldi_app/mainapp.py:344
+#: ../python/frescobaldi_app/mainapp.py:347
 msgid "Halve all the durations in the selection."
 msgstr "Diviser par deux les durées dans la sélection."
 
-#: ../python/frescobaldi_app/mainapp.py:349
+#: ../python/frescobaldi_app/mainapp.py:352
 msgid "Dot durations"
 msgstr "Durées pointées"
 
-#: ../python/frescobaldi_app/mainapp.py:350
+#: ../python/frescobaldi_app/mainapp.py:353
 msgid "Add a dot to all the durations in the selection."
 msgstr "Ajouter un point à toutes les durées dans la sélection."
 
-#: ../python/frescobaldi_app/mainapp.py:355
+#: ../python/frescobaldi_app/mainapp.py:358
 msgid "Undot durations"
 msgstr "Elever les points"
 
-#: ../python/frescobaldi_app/mainapp.py:356
+#: ../python/frescobaldi_app/mainapp.py:359
 msgid "Remove one dot from all the durations in the selection."
 msgstr "Enlever un point à toutes les durées de la sélection."
 
-#: ../python/frescobaldi_app/mainapp.py:361
+#: ../python/frescobaldi_app/mainapp.py:364
 msgid "Remove scaling"
 msgstr "Enlever les multiplicateurs"
 
-#: ../python/frescobaldi_app/mainapp.py:362
+#: ../python/frescobaldi_app/mainapp.py:365
 msgid "Remove all scaling (*n/m) from the durations in the selection."
 msgstr "Enlever tous les multiplicateurs des durées dans la sélection."
 
-#: ../python/frescobaldi_app/mainapp.py:367
+#: ../python/frescobaldi_app/mainapp.py:370
 msgid "Remove durations"
 msgstr "Enlever les durées"
 
-#: ../python/frescobaldi_app/mainapp.py:368
+#: ../python/frescobaldi_app/mainapp.py:371
 msgid "Remove all durations from the selection."
 msgstr "Enlever toutes les durées de la sélection."
 
-#: ../python/frescobaldi_app/mainapp.py:373
+#: ../python/frescobaldi_app/mainapp.py:376
 msgid "Make implicit"
 msgstr "Durées implicites"
 
-#: ../python/frescobaldi_app/mainapp.py:374
+#: ../python/frescobaldi_app/mainapp.py:377
 msgid "Make durations implicit (remove repeated durations)."
 msgstr "Rendre les durées implicites (enlever les durées répétées)."
 
-#: ../python/frescobaldi_app/mainapp.py:379
+#: ../python/frescobaldi_app/mainapp.py:382
 msgid "Make explicit"
 msgstr "Durées explicites"
 
-#: ../python/frescobaldi_app/mainapp.py:380
+#: ../python/frescobaldi_app/mainapp.py:383
 msgid ""
 "Make durations explicit (add duration to every note, even if it is the same "
 "as the preceding note)."
 msgstr "Rendre les durées explicites (ajouter une durée à chaque note)."
 
-#: ../python/frescobaldi_app/mainapp.py:386
+#: ../python/frescobaldi_app/mainapp.py:389
 msgid "Apply rhythm..."
 msgstr "Appliquer un rythme..."
 
-#: ../python/frescobaldi_app/mainapp.py:387
+#: ../python/frescobaldi_app/mainapp.py:390
 msgid "Apply an entered rhythm to the selected music."
 msgstr "Appliquer un rythme saisi à la musique sélectionnée."
 
-#: ../python/frescobaldi_app/mainapp.py:391
+#: ../python/frescobaldi_app/mainapp.py:394
 msgid "Copy rhythm"
 msgstr "Copier le rythme"
 
-#: ../python/frescobaldi_app/mainapp.py:392
+#: ../python/frescobaldi_app/mainapp.py:395
 msgid "Copy the rhythm of the selected music."
 msgstr "Copier le rythme de la musique sélectionnée."
 
-#: ../python/frescobaldi_app/mainapp.py:398
+#: ../python/frescobaldi_app/mainapp.py:401
 msgid "Paste rhythm"
 msgstr "Coller le rythme"
 
-#: ../python/frescobaldi_app/mainapp.py:399
+#: ../python/frescobaldi_app/mainapp.py:402
 msgid "Paste a rhythm to the selected music."
 msgstr "Coller le rythme de la musique sélectionnée."
 
-#: ../python/frescobaldi_app/mainapp.py:411
+#: ../python/frescobaldi_app/mainapp.py:414
 msgid "Remove hyphenation"
 msgstr "Réunir les syllabes des paroles"
 
-#: ../python/frescobaldi_app/mainapp.py:416
+#: ../python/frescobaldi_app/mainapp.py:419
 msgid "Insert LilyPond version"
 msgstr "Insérer la version de LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:421
+#: ../python/frescobaldi_app/mainapp.py:424
 msgid "Update with convert-ly"
 msgstr "Mettre à jour par convert-ly"
 
-#: ../python/frescobaldi_app/mainapp.py:426
+#: ../python/frescobaldi_app/mainapp.py:429
 msgid "Open Current Folder"
 msgstr "Ouvrir le répertoire courant"
 
-#: ../python/frescobaldi_app/mainapp.py:464
+#: ../python/frescobaldi_app/mainapp.py:467
 msgid "Abort the running LilyPond process"
 msgstr "Mettre fin au process Lilypond en cours d'exécution"
 
-#: ../python/frescobaldi_app/mainapp.py:467
+#: ../python/frescobaldi_app/mainapp.py:470
 msgid "Run LilyPond in preview mode"
 msgstr "Lancer LilyPond en mode aperçu"
 
-#: ../python/frescobaldi_app/mainapp.py:479
+#: ../python/frescobaldi_app/mainapp.py:482
 msgid "Apply Rhythm"
 msgstr "Appliquer un rythme"
 
-#: ../python/frescobaldi_app/mainapp.py:487
+#: ../python/frescobaldi_app/mainapp.py:490
 msgid "Enter a rhythm:"
 msgstr "Saisissez un rythme:"
 
-#: ../python/frescobaldi_app/mainapp.py:490
+#: ../python/frescobaldi_app/mainapp.py:493
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr "Entrez des durées séparées par des espaces (ex.: 8. 16 8 4 8)"
 
-#: ../python/frescobaldi_app/mainapp.py:513
+#: ../python/frescobaldi_app/mainapp.py:516
 msgid "Terminal"
 msgstr "Terminal"
 
-#: ../python/frescobaldi_app/mainapp.py:546
+#: ../python/frescobaldi_app/mainapp.py:549
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "S&ynchronise le terminal avec le document courant"
 
-#: ../python/frescobaldi_app/mainapp.py:566
+#: ../python/frescobaldi_app/mainapp.py:569
 #: ../python/frescobaldi_app/scorewiz/preview.py:46
 msgid "PDF Preview"
 msgstr "Aperçu PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:595
+#: ../python/frescobaldi_app/mainapp.py:598
 msgid "Show PDF Navigation Panel"
 msgstr "Afficher le panneau de navigation PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:596
+#: ../python/frescobaldi_app/mainapp.py:599
 msgid "Show PDF minipager"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:597
+#: ../python/frescobaldi_app/mainapp.py:600
 #, fuzzy
 msgid "Configure Okular..."
 msgstr "Réglages..."
 
-#: ../python/frescobaldi_app/mainapp.py:600
+#: ../python/frescobaldi_app/mainapp.py:603
 msgid "S&ynchronize Preview with Current Document"
 msgstr "S&ynchronise la prévisualisation avec le document courant"
 
-#: ../python/frescobaldi_app/mainapp.py:661
+#: ../python/frescobaldi_app/mainapp.py:664
 msgid "Quick Insert"
 msgstr "Insertion rapide"
 
-#: ../python/frescobaldi_app/mainapp.py:673
+#: ../python/frescobaldi_app/mainapp.py:676
 msgid "LilyPond Log"
 msgstr "Messages de LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:677
+#: ../python/frescobaldi_app/mainapp.py:680
 msgid "no log"
 msgstr "pas de messages"
 
-#: ../python/frescobaldi_app/mainapp.py:717
+#: ../python/frescobaldi_app/mainapp.py:720
 msgid "Only show on errors"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:737
+#: ../python/frescobaldi_app/mainapp.py:740
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -2345,6 +2349,9 @@ msgstr "Percussions"
 #: ../python/frescobaldi_app/scorewiz/parts.py:1272
 msgid "Special"
 msgstr "Spécial"
+
+#~ msgid "Already Running"
+#~ msgstr "Déjà en cours"
 
 #~ msgid "Language selection"
 #~ msgstr "Sélection de la langue"
