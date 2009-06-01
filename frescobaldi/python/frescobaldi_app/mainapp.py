@@ -248,26 +248,27 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             d = self.currentDocument()
             if not d:
                 return
-            elif self.jobManager().job(d):
-                return KMessageBox.sorry(self,
-                    i18n("There is already a LilyPond job running "
-                            "for this document."),
-                    i18n("Already Running"))
-            elif d.url().isEmpty():
-                return KMessageBox.sorry(self, i18n(
-                    "Your document currently has no filename, "
-                    "please save first."))
-            elif d.url().protocol() != "file":
-                return KMessageBox.sorry(self, i18n(
-                    "Sorry, support for remote files is not yet implemented.\n"
-                    "Please save your document to a local file."))
-            if d.isModified():
-                if config().readEntry("save on run", QVariant(False)).toBool():
-                    d.save()
+            sorry = lambda msg: KMessageBox.sorry(self, msg,
+                i18n("Can't process document"))
+            if self.jobManager().job(d):
+                return sorry(i18n(
+                    "There is already a LilyPond job running "
+                    "for this document."))
+            if (d.url().isEmpty() or d.isModified()) and not (
+                    config().readEntry("save on run", QVariant(False)).toBool()
+                    and d.save()):
+                if d.url().isEmpty():
+                    return sorry(i18n(
+                        "Your document currently has no filename, "
+                        "please save first."))
                 else:
-                    return KMessageBox.sorry(self, i18n(
+                    return sorry(i18n(
                         "Your document has been modified, "
                         "please save first."))
+            if d.url().protocol() != "file":
+                return sorry(i18n(
+                    "Sorry, support for remote files is not yet implemented.\n"
+                    "Please save your document to a local file."))
             # Run LilyPond; get a LogWidget and create a job
             def finished(success, job):
                 result = job.updatedFiles()
