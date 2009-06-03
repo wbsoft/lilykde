@@ -131,6 +131,16 @@ class Document(kateshell.app.Document):
         if config().readEntry("save metainfo", QVariant(False)).toBool():
             self.app.stateManager().saveState(self)
         
+    def setCursorPosition(self, line, column, translate=True):
+        shiftPressed = KApplication.keyboardModifiers() & Qt.ShiftModifier
+        if self.view and shiftPressed:
+            # select from the current cursor position.
+            oldcursor = self.view.cursorPosition()
+        super(Document, self).setCursorPosition(line, column, translate)
+        if self.view and shiftPressed:
+            newcursor = self.view.cursorPosition()
+            self.view.setSelection(KTextEditor.Range(oldcursor, newcursor))
+    
     def variables(self):
         """
         Returns a dictionary with variables put in specially formatted LilyPond
