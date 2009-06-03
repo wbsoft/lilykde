@@ -240,3 +240,11 @@ class DocumentManipulator(object):
             result = " " + result
         self.doc.view.insertText(result + " ")
     
+    def populateContextMenu(self, menu):
+        """
+        Called as soon as the user requests the context menu.
+        Displays relevant actions for the object clicked on.
+        """
+        menu.clear()
+        # TODO: add actions
+        

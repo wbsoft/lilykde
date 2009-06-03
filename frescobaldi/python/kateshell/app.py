@@ -334,9 +334,15 @@ class Document(DBusItem):
                 sip.delete(action)
         
         # set default context menu
-        self.view.setContextMenu(self.view.defaultContextMenu())
+        self.view.setContextMenu(self.contextMenu())
         self.app.documentMaterialized(self)
         self.viewCreated()
+    
+    def contextMenu(self):
+        """
+        Override this to set your own context menu.
+        """
+        return self.view.defaultContextMenu()
     
     def viewCreated(self):
         """

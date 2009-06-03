@@ -25,7 +25,7 @@ from PyQt4.QtGui import (
     QActionGroup, QLabel, QProgressBar, QStackedWidget, QWidget)
 from PyKDE4.kdecore import KConfig, KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
-    KActionMenu, KApplication, KDialog, KIcon, KLineEdit, KMessageBox,
+    KActionMenu, KApplication, KDialog, KIcon, KLineEdit, KMenu, KMessageBox,
     KStandardAction, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
@@ -126,7 +126,15 @@ class Document(kateshell.app.Document):
         iface = self.view.codeCompletionInterface()
         if iface:
             iface.registerCompletionModel(self.app.completionModel())
+            
+    def contextMenu(self):
+        menu = KMenu(self.view)
+        QObject.connect(menu, SIGNAL("aboutToShow()"), self.populateContextMenu)
+        return menu
         
+    def populateContextMenu(self):
+        self.manipulator().populateContextMenu(self.view.contextMenu())
+    
     def aboutToClose(self):
         if config().readEntry("save metainfo", QVariant(False)).toBool():
             self.app.stateManager().saveState(self)
