@@ -120,14 +120,16 @@ def findMatches(view, word, invocationType):
                 return ly.words.accidentalstyles
             return ly.words.schemefuncs
         
-    if state.parser().token == "\\header":
-        return ly.words.headervars
-    if state.parser().token == "\\paper":    
-        return ly.words.papervars
-    if state.parser().token == "\\layout":
-        return ly.words.layoutvars
-    if state.parser().token in ("\\context", "\\with"):
-        return ly.words.contextproperties
+    if col == 0 or text[-1] in " \t":
+        # all kinds of variables only at start of line or after whitespace
+        if state.parser().token == "\\header":
+            return ly.words.headervars
+        if state.parser().token == "\\paper":    
+            return ly.words.papervars
+        if state.parser().token == "\\layout":
+            return ly.words.layoutvars
+        if state.parser().token in ("\\context", "\\with"):
+            return ly.words.contextproperties
     
         
 def config(group):
