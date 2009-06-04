@@ -143,11 +143,12 @@ class Document(kateshell.app.Document):
         shiftPressed = KApplication.keyboardModifiers() & Qt.ShiftModifier
         if self.view and shiftPressed:
             # select from the current cursor position.
-            oldcursor = self.view.cursorPosition()
+            start = self.view.cursorPosition()
         super(Document, self).setCursorPosition(line, column, translate)
         if self.view and shiftPressed:
-            newcursor = self.view.cursorPosition()
-            self.view.setSelection(KTextEditor.Range(oldcursor, newcursor))
+            end = self.view.cursorPosition()
+            self.view.setSelection(KTextEditor.Range(start, end))
+            self.manipulator().fixSelection()
     
     def variables(self):
         """

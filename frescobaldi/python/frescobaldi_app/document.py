@@ -240,6 +240,46 @@ class DocumentManipulator(object):
             result = " " + result
         self.doc.view.insertText(result + " ")
     
+    def fixSelection(self):
+        """
+        Adjust the selection in the following way:
+        start:
+        - if at a pitch, check if we're inside a chord and if yes,
+          move to the beginning of that chord.
+        end:
+        - if at a pitch:
+            - if inside a chord: extend to contain chord + dur
+            - else: extend to contain pitch + dur
+        - if at a lyric word (i.e. not a command):
+            - extend selection to contain word (+ dur)
+        """
+        if not self.doc.view.selection():
+            return
+        start = self.doc.view.selectionRange().start()
+        end = self.doc.view.selectionRange().end()
+        # adjust start:
+        text = self.doc.line(start.line())
+        col = start.column()
+        if re.match(ly.rx.step, text[col:]):
+            for m in ly.rx.chord.finditer(text):
+                if (m.group('chord')
+                    and m.group('chord').startswith('<')
+                    and m.start('chord') <= col <= m.end('chord')):
+                    start.setColumn(m.start('chord'))
+                    break
+        # adjust end:
+        text = self.doc.line(end.line())
+        col = end.column()
+        if re.match(ly.rx.step + "|" + ly.rx.rest, text[col:]):
+            for m in ly.rx.chord_rest.finditer(text):
+                if (m.group('chord')
+                    and m.start('chord') <= col <= m.end('chord')):
+                    end.setColumn(m.end('full'))
+                    break
+        elif text[col] not in "\\-_^":
+            end.setColumn(col + len(text[col:].split()[0]))
+        self.doc.view.setSelection(KTextEditor.Range(start, end))
+    
     def populateContextMenu(self, menu):
         """
         Called as soon as the user requests the context menu.
