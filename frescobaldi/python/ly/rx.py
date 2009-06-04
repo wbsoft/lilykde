@@ -27,7 +27,7 @@ step = (
         r"(sharp){1,2}|(flat){1,2}|ss?|ff?)?"
     r"|(do|re|mi|fa|sol|la|si)(dd?|bb?|ss?|kk?)?"
     r"|as|asess?|es|esess?"
-    r")"
+    r")(?![A-Za-z])"
 )
 named_step = "(?P<step>" + step + ")"
 

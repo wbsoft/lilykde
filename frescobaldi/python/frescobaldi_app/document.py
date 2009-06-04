@@ -270,7 +270,7 @@ class DocumentManipulator(object):
         # adjust end:
         text = self.doc.line(end.line())
         col = end.column()
-        if re.match(ly.rx.step + "|" + ly.rx.rest, text[col:]):
+        if re.match("%s|%s" % (ly.rx.step, ly.rx.rest), text[col:]):
             for m in ly.rx.chord_rest.finditer(text):
                 if (m.group('chord')
                     and m.start('chord') <= col <= m.end('chord')):
