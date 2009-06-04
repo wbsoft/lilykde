@@ -246,6 +246,27 @@ class DocumentManipulator(object):
         Displays relevant actions for the object clicked on.
         """
         menu.clear()
+        self.addSpecialActionsToContextMenu(menu)
+        if menu.actions():
+            menu.addSeparator()
+        # standard actions
+        a = self.doc.app.mainwin.actionCollection().action("edit_cut_assign")
+        if a and a.isEnabled():
+            menu.addAction(a)
+        for action in ("edit_cut", "edit_copy", "edit_paste"):
+            a = self.doc.view.actionCollection().action(action)
+            if a and a.isEnabled():
+                menu.addAction(a)
+        a = self.doc.view.actionCollection().action("bookmarks")
+        if a and a.isEnabled():
+            menu.addSeparator()
+            menu.addAction(a)
+
+    def addSpecialActionsToContextMenu(self, menu):
+        """
+        Called by populateContextMenu, adds special actions dependent of
+        cursor position.
+        """
         cursor = self.doc.view.cursorPosition()
         line, col = cursor.line(), cursor.column()
         text = self.doc.line(line)
@@ -261,16 +282,6 @@ class DocumentManipulator(object):
                 a = menu.addAction(KIcon("document-open"), i18n("Open %1", fileName))
                 QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"),
                     lambda url=url: self.doc.app.openUrl(url))
-        # standard actions
-        a = self.doc.app.mainwin.actionCollection().action("edit_cut_assign")
-        if a and a.isEnabled():
-            menu.addAction(a)
-        for action in ("edit_cut", "edit_copy", "edit_paste"):
-            a = self.doc.view.actionCollection().action(action)
-            if a and a.isEnabled():
-                menu.addAction(a)
-        a = self.doc.view.actionCollection().action("bookmarks")
-        if a and a.isEnabled():
-            menu.addSeparator()
-            menu.addAction(a)
+                return
+        
         
