@@ -21,12 +21,12 @@
 Advanced manipulations on LilyPond documents.
 """
 
-import re
+import os, re
 
 from PyQt4 import QtCore, QtGui
 
 from PyKDE4.kdecore import i18n
-from PyKDE4.kdeui import KMessageBox
+from PyKDE4.kdeui import KIcon, KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
 import ly.rx, ly.pitch, ly.parse, ly.tokenize
@@ -246,5 +246,31 @@ class DocumentManipulator(object):
         Displays relevant actions for the object clicked on.
         """
         menu.clear()
-        # TODO: add actions
+        cursor = self.doc.view.cursorPosition()
+        line, col = cursor.line(), cursor.column()
+        text = self.doc.line(line)
+        selection = self.doc.view.selection() and self.doc.view.selectionRange()
+        # special actions
+        # \include file
+        m = re.search(r'\\include\s*"?([^"]+)', text)
+        if m and m.start() <= col <= m.end():
+            path = self.doc.localPath()
+            if path:
+                fileName = m.group(1)
+                url = os.path.join(os.path.dirname(path), fileName)
+                a = menu.addAction(KIcon("document-open"), i18n("Open %1", fileName))
+                QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"),
+                    lambda url=url: self.doc.app.openUrl(url))
+        # standard actions
+        a = self.doc.app.mainwin.actionCollection().action("edit_cut_assign")
+        if a and a.isEnabled():
+            menu.addAction(a)
+        for action in ("edit_cut", "edit_copy", "edit_paste"):
+            a = self.doc.view.actionCollection().action(action)
+            if a and a.isEnabled():
+                menu.addAction(a)
+        a = self.doc.view.actionCollection().action("bookmarks")
+        if a and a.isEnabled():
+            menu.addSeparator()
+            menu.addAction(a)
         
