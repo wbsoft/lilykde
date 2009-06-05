@@ -177,10 +177,13 @@ class DocumentManipulator(object):
         for token in ly.tokenize.tokenize(text, state=state):
             pass
         for s in reversed(state.state):
-            if isinstance(s, (ly.tokenize.LyricParser, )):
-                # TODO: add more modes to tokenizer
-                if isinstance(s, ly.tokenize.LyricParser):
+            if isinstance(s, ly.tokenize.InputModeParser):
+                if isinstance(s, ly.tokenize.LyricModeParser):
                     mode = " \\lyricmode"
+                elif isinstance(s, ly.tokenize.ChordModeParser):
+                    mode = " \\chordmode"
+                elif isinstance(s, ly.tokenize.FigureModeParser):
+                    mode = " \\figuremode"
                 break
         
         currentLine = self.doc.view.selectionRange().start().line()

@@ -193,8 +193,23 @@ class LyricMode(Command):
             argcount = 2
         else:
             argcount = 1
-        state.enter(LyricParser, self)
+        state.enter(LyricModeParser, self, argcount)
         
+class ChordMode(Command):
+    rx = r'\\(chords|chordmode)\b'
+    def __init__(self, matchObj, state):
+        state.enter(ChordModeParser, self)
+
+class FigureMode(Command):
+    rx = r'\\(figures|figuremode)\b'
+    def __init__(self, matchObj, state):
+        state.enter(FigureModeParser, self)
+
+class NoteMode(Command):
+    rx = r'\\(notes|notemode)\b'
+    def __init__(self, matchObj, state):
+        state.enter(NoteModeParser, self)
+
 class LyricWord(Item):
     rx = r'[^\W\d]+'
     
@@ -277,7 +292,7 @@ _lilybase = (
     EndSchemeLily,
     Scheme,
     Section,
-    LyricMode,
+    LyricMode, ChordMode, FigureMode, NoteMode,
     Markup,
     MarkupLines,
     Command,
@@ -316,13 +331,32 @@ class MarkupParser(Parser):
     ) + _lilybase)
     
 
-class LyricParser(Parser):
+class InputModeParser(Parser):
+    """
+    Abstract base class for input modes such as \lyricmode, \figuremode,
+    \chordmode etc.
+    """
     argcount = 1
+
+
+class LyricModeParser(InputModeParser):
     rx = make_re((
         OpenBracket, CloseBracket,
         LyricWord,
     ) + _lilybase)
 
+
+class ChordModeParser(ToplevelParser, InputModeParser):
+    argcount = 1
+    
+
+class FigureModeParser(ToplevelParser, InputModeParser):
+    argcount = 1
+    
+
+class NoteModeParser(ToplevelParser, InputModeParser):
+    argcount = 1
+    
 
 class SectionParser(Parser):
     argcount = 1
