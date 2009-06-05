@@ -6,6 +6,9 @@ Changes in 0.7.10 --
     first note and then shift-clicking on the last note.
 * Editor:
   - new powerful, context sensitive context menu
+* Cut and assign (Ctrl+Shift+C):
+  - obey inputmodes. If you e.g. cut out some lyrics, the resulting input will
+    be wrapped in a \lyricmode { } construct.
 * Completion:
   - add accidental styles
 * User Interface:

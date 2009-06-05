@@ -169,6 +169,20 @@ class DocumentManipulator(object):
             "text to:"), i18n("Cut and Assign"), rx="[a-zA-Z]*", help="cut-assign")
         if not name:
             return
+        
+        # find out in what input mode we are
+        mode = ""
+        state = ly.tokenize.State()
+        text = self.doc.textToCursor(self.doc.view.selectionRange().start())
+        for token in ly.tokenize.tokenize(text, state=state):
+            pass
+        for s in reversed(state.state):
+            if isinstance(s, (ly.tokenize.LyricParser, )):
+                # TODO: add more modes to tokenizer
+                if isinstance(s, ly.tokenize.LyricParser):
+                    mode = " \\lyricmode"
+                break
+        
         currentLine = self.doc.view.selectionRange().start().line()
         insertLine = self.findInsertPoint(currentLine)
         
@@ -178,9 +192,9 @@ class DocumentManipulator(object):
             lines = text.splitlines()
             indent = min(len(re.match(r'\s*', line).group()) for line in lines[1:])
             text = '\n  '.join(lines[:1] + [line[indent:] for line in lines[1:]])
-            result = "%s = {\n  %s\n}\n" % (name, text)
+            result = "%s =%s {\n  %s\n}\n" % (name, mode, text)
         else:
-            result = "%s = { %s }\n" % (name, text)
+            result = "%s =%s { %s }\n" % (name, mode, text)
             
         if self.doc.line(insertLine).strip():
             result += '\n'
