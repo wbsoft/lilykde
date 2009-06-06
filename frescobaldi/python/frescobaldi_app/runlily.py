@@ -19,7 +19,7 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
-import math, os, re, sip, time
+import math, os, re, time
 
 from PyQt4.QtCore import (
     QObject, QProcess, QSize, QTimer, QUrl, QVariant, Qt, SIGNAL)
@@ -355,7 +355,8 @@ class FileRef(object):
         """
         Deletes the binding to a document.
         """
-        sip.delete(self.smartCursor)
+        self.doc.closed.disconnect(self.unbind)
+        self.doc.urlChanged.disconnect(self.unbind)
         self.smartCursor = None
         self.doc = None
         # listen again
@@ -377,7 +378,7 @@ class FileRef(object):
         if not self.doc and doc.localPath() == self.path:
             self.bind(doc)
 
-
+        
 def textFormats():
     """ Return a dict with text formats """
     log = QTextCharFormat()

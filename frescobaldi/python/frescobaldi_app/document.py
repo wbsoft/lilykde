@@ -324,21 +324,39 @@ class DocumentManipulator(object):
         Called by populateContextMenu, adds special actions dependent of
         cursor position.
         """
-        cursor = self.doc.view.cursorPosition()
+        selection = self.doc.selectionText()
+        if selection:
+            cursor = self.doc.view.selectionRange().start()
+        else:
+            cursor = self.doc.view.cursorPosition()
         line, col = cursor.line(), cursor.column()
         text = self.doc.line(line)
-        selection = self.doc.view.selection() and self.doc.view.selectionRange()
         # special actions
         # \include file
-        m = re.search(r'\\include\s*"?([^"]+)', text)
-        if m and m.start() <= col <= m.end():
-            path = self.doc.localPath()
-            if path:
-                fileName = m.group(1)
-                url = os.path.join(os.path.dirname(path), fileName)
-                a = menu.addAction(KIcon("document-open"), i18n("Open %1", fileName))
-                QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"),
-                    lambda url=url: self.doc.app.openUrl(url))
-                return
+        path = self.doc.localPath()
+        if path:
+            for m in re.finditer(r'\\include\s*"?([^"]+)', text):
+                if m.start() <= col <= m.end():
+                    fileName = m.group(1)
+                    url = os.path.join(os.path.dirname(path), fileName)
+                    a = menu.addAction(KIcon("document-open"), i18n("Open %1", fileName))
+                    QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"),
+                        lambda url=url: self.doc.app.openUrl(url))
+                    return
         
+        # Rhythm submenu
+        if selection and ly.rx.chord_rest.search(selection):
+            menu.addMenu(self.doc.app.mainwin.factory().container(
+                "lilypond_edit_rhythm", self.doc.app.mainwin))
+                
+        # run the parser to know more about the current context...
+        state = ly.tokenize.State()
+        for token in ly.tokenize.tokenize(self.doc.textToCursor(cursor), state=state):
+            pass
         
+        # Hyphenate Lyrics
+        if selection and isinstance(state.parser(), ly.tokenize.LyricModeParser):
+            menu.addAction(
+                self.doc.app.mainwin.actionCollection().action("lyrics_hyphen"))
+                
+            
