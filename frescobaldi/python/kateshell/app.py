@@ -447,13 +447,14 @@ class Document(DBusItem):
 
     @method(iface, in_signature='', out_signature='b')
     def isActive(self):
-        return self.app.activeDocument() is self
+        return bool(self.doc) and self.app.activeDocument() is self
 
     @method(iface, in_signature='', out_signature='')
     def setActive(self):
         """ Make the document the active (shown) document """
-        self.materialize()
-        self.app.activeDocumentChanged(self)
+        if not self.isActive():
+            self.materialize()
+            self.app.activeDocumentChanged(self)
 
     @method(iface, in_signature='iib', out_signature='')
     def setCursorPosition(self, line, column, translate=True):
