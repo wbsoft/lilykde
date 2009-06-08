@@ -158,6 +158,8 @@ class GeneralPreferences(KVBox):
             "Enter a valid LilyPond version number, e.g. 2.12.0"))
         QObject.connect(self.customVersion, SIGNAL("textChanged(QString)"),
             lambda dummy: dialog.changed())
+        QObject.connect(self.versionOptions["custom"], SIGNAL("clicked()"),
+            lambda: self.customVersion.setFocus())
         
         grid.addWidget(self.versionOptions["lilypond"], 0, 0, 1, 2)
         grid.addWidget(self.versionOptions["convert-ly"], 1, 0, 1, 2)

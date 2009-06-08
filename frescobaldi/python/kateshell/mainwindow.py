@@ -443,7 +443,7 @@ class ViewTabBar(QTabBar):
         mainwin.app.documentClosed.connect(self.removeDocument)
         mainwin.app.documentMaterialized.connect(self.setDocumentStatus)
         QObject.connect(self, SIGNAL("currentChanged(int)"),
-            lambda index: self.docs[index].setActive())
+            self.slotCurrentChanged)
         mainwin.currentDocumentChanged.connect(self.setCurrentDocument)
         
     def addDocument(self, doc):
@@ -476,8 +476,14 @@ class ViewTabBar(QTabBar):
         """ Raise the tab belonging to this document."""
         if doc in self.docs:
             index = self.docs.index(doc)
+            self.blockSignals(True)
             self.setCurrentIndex(index)
+            self.blockSignals(False)
 
+    def slotCurrentChanged(self, index):
+        """ Called when the user clicks a tab. """
+        self.docs[index].setActive()
+        
     def contextMenuEvent(self, ev):
         """ Called when the right mous button is clicked on the tab bar. """
         tab = self.tabAt(ev.pos())

@@ -204,19 +204,18 @@ class MainApp(DBusItem):
     def addDocument(self, doc):
         self.documents.append(doc)
         self.history.append(doc)
+        self.documentCreated(doc)
 
     def removeDocument(self, doc):
         if doc in self.documents:
-            # Was this the active document?
-            wasActive = doc is self.activeDocument()
+            # Was this the active document? Then activate previous active doc.
+            if doc is self.activeDocument() and len(self.documents) > 1:
+                self.history[-2].setActive()
             self.documents.remove(doc)
             self.history.remove(doc)
             self.documentClosed(doc)
-            if len(self.documents) == 0:
-                self.createDocument()
-            # If we were the active document, switch to the previous active doc.
-            if wasActive:
-                self.history[-1].setActive()
+            # Create empty document if last closed
+            self.documents or self.createDocument().setActive()
 
     @signal(iface, signature='o')
     def activeDocumentChanged(self, doc):
@@ -283,7 +282,6 @@ class Document(DBusItem):
         self.closed = Signal()
         
         self.app.addDocument(self)
-        self.app.documentCreated(self)
         
     def materialize(self):
         """ Really load the document, create doc and view etc. """
