@@ -1,20 +1,21 @@
-Changes in 0.7.10 -- 
+Changes in 0.7.10 -- June 9th, 2009
 
-* Point and click:
-  - Shift-click in the PDF preview now selects from current cursor position to
-    new cursor position. So you can select a music fragment by clicking on the
-    first note and then shift-clicking on the last note.
+* Point and click: Shift-click in the PDF preview now selects music from current
+  cursor position to new cursor position. So you can select a music fragment by
+  clicking on the first note and then shift-clicking on the last note.
 * Editor:
-  - new powerful, context sensitive context menu
-* Cut and assign (Ctrl+Shift+C):
-  - obey inputmodes. If you e.g. cut out some lyrics, the resulting input will
-    be wrapped in a \lyricmode { } construct.
-* Completion:
-  - add accidental styles
+  - Context sensitive context (right-click) menu with, besides the usual cut,
+    copy and paste, commands to open \include file, hyphenate lyrics and
+    Cut & Assign text (if selected)
+  - The Cut & Assign command (Ctrl+Shift+C) now obeys inputmodes. If you e.g.
+    cut out some lyrics, the fragment will automatically be wrapped in a
+    \lyricmode { } block.
+  - Autocompletion for accidental styles
 * User Interface:
-  - new tab bar for open documents, can be hidden
+  - new document tab bar for easy navigation between open files, can be hidden
   - when running LilyPond and the option 'Save document when LilyPond is run' is
-    enabled, the Save As dialog is displayed when the document has no url yet.
+    enabled, the Save As dialog is displayed when the document has no filename
+    yet.
 * Translations:
   - German translation updated by Georg Hennig (thanks!)
 
