@@ -121,8 +121,12 @@ class Document(kateshell.app.Document):
         # activate completion
         iface = self.view.codeCompletionInterface()
         if iface:
-            iface.registerCompletionModel(CompletionModel(self.view))
-            
+            iface.registerCompletionModel(self.completionModel())
+
+    @lazymethod
+    def completionModel(self):
+        return CompletionModel(self.view)
+        
     def contextMenu(self):
         menu = KMenu(self.view)
         QObject.connect(menu, SIGNAL("aboutToShow()"), self.populateContextMenu)

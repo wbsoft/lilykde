@@ -17,7 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, sip
+import os, sip, weakref
 
 from PyQt4.QtCore import (
     QEvent, QObject, QTimer, QVariant, Qt, SIGNAL, SLOT, pyqtSignature)
@@ -206,14 +206,14 @@ class MainWindow(KParts.MainWindow):
         docGroup = QActionGroup(docMenu)
         docGroup.setExclusive(True)
         QObject.connect(docGroup, SIGNAL("triggered(QAction*)"),
-            lambda a: a.doc.setActive())
+            lambda a: a.doc().setActive())
         def populateDocMenu():
             for a in docGroup.actions():
                 sip.delete(a)
             for d in self.app.documents:
                 a = KAction(d.documentName(), docGroup)
                 a.setCheckable(True)
-                a.doc = d
+                a.doc = weakref.ref(d)
                 icon = d.documentIcon()
                 if icon:
                     a.setIcon(KIcon(icon))
@@ -453,10 +453,8 @@ class ViewTabBar(QTabBar):
             self.addTab('')
             self.blockSignals(False)
             self.setDocumentStatus(doc)
-            def setStatus():
-                self.setDocumentStatus(doc)
-            doc.urlChanged.connect(setStatus, doc)
-            doc.captionChanged.connect(setStatus, doc)
+            doc.urlChanged.connect(self.setDocumentStatus)
+            doc.captionChanged.connect(self.setDocumentStatus)
 
     def removeDocument(self, doc):
         if doc in self.docs:

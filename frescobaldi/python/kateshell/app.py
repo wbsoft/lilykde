@@ -62,7 +62,7 @@ class DBusItem(dbus.service.Object):
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(self.serviceName, bus)
         dbus.service.Object.__init__(self, bus_name, path)
-    
+
 
 class MainApp(DBusItem):
     """
@@ -245,12 +245,12 @@ class Document(DBusItem):
     we create the KTextEditor document and view.
     
     We emit these signals:
-    urlChanged()
-    captionChanged()
-    statusChanged()
-    selectionChanged()
-    saved(bool saveAs)
-    closed()
+    urlChanged(doc)
+    captionChanged(doc)
+    statusChanged(doc)
+    selectionChanged(doc)
+    saved(doc, bool saveAs)
+    closed(doc)
     """
     __instance_counter = 0
     iface = DBUS_IFACE_PREFIX + "Document"
@@ -305,24 +305,20 @@ class Document(DBusItem):
         
         QObject.connect(self.doc,
             SIGNAL("documentSavedOrUploaded(KTextEditor::Document*, bool)"),
-            lambda doc, saveAs: self.saved(saveAs))
+            self.slotDocumentSavedOrUploaded)
         QObject.connect(self.doc,
             SIGNAL("documentUrlChanged(KTextEditor::Document*)"),
-            lambda: self.urlChanged())
-        def captionChanged():
-            if not self.isModified():
-                self._edited = True
-            self.captionChanged()
-        for s in ("documentUrlChanged(KTextEditor::Document*)",
-                  "modifiedChanged(KTextEditor::Document*)"):
-            QObject.connect(self.doc, SIGNAL(s), captionChanged)
+            self.slotDocumentUrlChanged)
+        QObject.connect(self.doc,
+            SIGNAL("modifiedChanged(KTextEditor::Document*)"),
+            self.slotModifiedChanged)
         for s in (
             "cursorPositionChanged(KTextEditor::View*, const KTextEditor::Cursor&)",
             "viewModeChanged(KTextEditor::View*)",
             "informationMessage(KTextEditor::View*)"):
-            QObject.connect(self.view, SIGNAL(s), lambda: self.statusChanged())
+            QObject.connect(self.view, SIGNAL(s), self.slotViewStatusChanged)
         for s in ("selectionChanged(KTextEditor::View*)",):
-            QObject.connect(self.view, SIGNAL(s), lambda: self.selectionChanged())
+            QObject.connect(self.view, SIGNAL(s), self.slotSelectionChanged)
         
         # delete some actions from the view before plugging in GUI
         # trick found in kateviewmanager.cpp
@@ -335,6 +331,25 @@ class Document(DBusItem):
         self.view.setContextMenu(self.contextMenu())
         self.app.documentMaterialized(self)
         self.viewCreated()
+        
+    # some slots, to avoid lambdas for Qt signals, not to be inherited
+    def slotDocumentSavedOrUploaded(self, doc, saveAs):
+        self.saved(self, saveAs)
+        
+    def slotDocumentUrlChanged(self):
+        self.urlChanged(self)
+        self.captionChanged(self)
+        
+    def slotModifiedChanged(self):
+        if not self.isModified():
+            self._edited = True
+        self.captionChanged(self)
+        
+    def slotViewStatusChanged(self):
+        self.statusChanged(self)
+        
+    def slotSelectionChanged(self):
+        self.selectionChanged(self)
     
     def contextMenu(self):
         """
@@ -512,7 +527,7 @@ class Document(DBusItem):
                 return False
             if not self.doc.closeUrl(False):
                 return False # closing did not succeed, but that'd be abnormal
-        self.closed() # before we are really deleted
+        self.closed(self) # before we are really deleted
         self.aboutToClose()
         self.app.documentClosed(self)
         self._cursorTranslator = None

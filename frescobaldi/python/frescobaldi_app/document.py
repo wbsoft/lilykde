@@ -21,7 +21,7 @@
 Advanced manipulations on LilyPond documents.
 """
 
-import os, re
+import os, re, weakref
 
 from PyQt4 import QtCore, QtGui
 
@@ -37,8 +37,12 @@ class DocumentManipulator(object):
     Can perform manipulations on a LilyPond document.
     """
     def __init__(self, doc):
-        self.doc = doc
+        self._doc = weakref.ref(doc)
 
+    @property
+    def doc(self):
+        return self._doc()
+        
     def populateLanguageMenu(self, menu):
         menu.clear()
         # determine doc language
