@@ -121,10 +121,7 @@ class Document(kateshell.app.Document):
         # activate completion
         iface = self.view.codeCompletionInterface()
         if iface:
-            completer = CompletionModel(self.view)
-            iface.registerCompletionModel(completer)
-            self.closed.connect(
-                (lambda: iface.unregisterCompletionModel(completer)), self)
+            iface.registerCompletionModel(CompletionModel(self.view))
             
     def contextMenu(self):
         menu = KMenu(self.view)
@@ -844,8 +841,7 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
         self.matches = frescobaldi_app.completion.findMatches(
             view, word, invocationType) or []
 
-    def __del__(self):
-        print "CompletionModel deleted!"
+
 
 # Easily get our global config
 def config(group="preferences"):
