@@ -34,9 +34,7 @@ class Signal:
     
     If the slot is a member of a class, Signal will automatically detect
     when the method's class instance has been deleted and remove it
-    from its list of connected slots. If the member is a function, you
-    can optionally specify an owner object. If that owner disappears,
-    the function if also deleted from the list of connected slots.
+    from its list of connected slots.
     
     Emit the signal (to call all connected slots) by simply invoking it.
     The order in which the slots are called is undetermined.
@@ -44,7 +42,6 @@ class Signal:
     def __init__(self):
         self.functions = set()
         self.objects = weakref.WeakKeyDictionary()
-        self.ownedfunctions = weakref.WeakKeyDictionary()
 
     def __call__(self, *args, **kwargs):
         """ call all connected slots """
@@ -54,32 +51,29 @@ class Signal:
         for obj, methods in self.objects.items():
             for func in set(methods):
                 func(obj, *args[:func.func_code.co_argcount-1], **kwargs)
-        for functions in self.ownedfunctions.values():
-            for func in set(functions):
-                func(*args[:func.func_code.co_argcount], **kwargs)
     
-    def connect(self, func, owner = None):
+    def connect(self, func):
         if inspect.ismethod(func):
             self.objects.setdefault(func.im_self, set()).add(func.im_func)
-        elif owner is None:
-            self.functions.add(func)
         else:
-            self.ownedfunctions.setdefault(owner, set()).add(func)
+            self.functions.add(func)
 
-    def disconnect(self, func, owner = None):
+    def disconnect(self, func):
         if inspect.ismethod(func):
             s = self.objects.get(func.im_self)
             if s is not None:
                 s.discard(func.im_func)
-        elif owner is None:
-            self.functions.discard(func)
         else:
-            s = self.ownedfunctions.get(owner)
-            if s is not None:
-                s.discard(func)
+            self.functions.discard(func)
 
-    def disconnectAll(self):
+    def clear(self):
         self.functions.clear()
         self.objects.clear()
-        self.ownedfunctions.clear()
+
+    def disconnectObject(self, obj):
+        """ Remove all connections that are methods of given object obj """
+        try:
+            del self.objects[obj]
+        except KeyError:
+            pass
 
