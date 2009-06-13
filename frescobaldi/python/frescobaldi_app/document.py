@@ -297,7 +297,7 @@ class DocumentManipulator(object):
                     and m.start('chord') <= col <= m.end('chord')):
                     end.setColumn(m.end('full'))
                     break
-        elif text[col] not in "\\-_^":
+        elif col < len(text) and text[col] not in "\\-_^":
             end.setColumn(col + len(text[col:].split()[0]))
         self.doc.view.setSelection(KTextEditor.Range(start, end))
     
