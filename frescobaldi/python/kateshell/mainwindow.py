@@ -530,8 +530,10 @@ class TabBar(KMultiTabBar):
         self.appendTab(tool.icon().pixmap(16), tool._id, tool.title())
         tab = self.tab(tool._id)
         tab.setFocusPolicy(Qt.NoFocus)
+        tab.setContextMenuPolicy(Qt.CustomContextMenu)
         QObject.connect(tab, SIGNAL("clicked()"), tool.toggle)
-        tab.installEventFilter(self)
+        QObject.connect(tab, SIGNAL("customContextMenuRequested(const QPoint&)"),
+            lambda pos: tool.contextMenu().popup(tab.mapToGlobal(pos)))
 
     def removeTool(self, tool):
         self._tools.remove(tool)
@@ -547,14 +549,6 @@ class TabBar(KMultiTabBar):
         tab = self.tab(tool._id)
         tab.setIcon(tool.icon())
         tab.setText(tool.title())
-
-    def eventFilter(self, obj, ev):
-        if ev.type() == QEvent.ContextMenu:
-            for tool in self._tools:
-                if obj is self.tab(tool._id):
-                    tool.contextMenu().popup(ev.globalPos())
-                    return True
-        return False
 
 
 class Dock(QStackedWidget):
