@@ -726,6 +726,7 @@ class CursorTranslator(object):
             self.iface.useRevision(self.revision)
             cursor = self.iface.translateFromRevision(cursor,
                 KTextEditor.SmartCursor.MoveOnInsert)
+            self.iface.clearRevision()
             self.iface.smartMutex().unlock()
         return cursor
 
