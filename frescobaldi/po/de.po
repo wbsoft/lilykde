@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.9\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-06-09 09:22+0200\n"
+"POT-Creation-Date: 2009-06-15 13:37+0200\n"
 "PO-Revision-Date: 2009-05-15 16:55+0200\n"
 "Last-Translator: Georg Hennig <georg.hennig@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -419,15 +419,15 @@ msgstr "Alle Dateien"
 msgid "Open File"
 msgstr "Öffne Datei"
 
-#: ../python/kateshell/mainwindow.py:819
+#: ../python/kateshell/mainwindow.py:811
 msgid "Move To"
 msgstr "Verschiebe nach"
 
-#: ../python/kateshell/mainwindow.py:826
+#: ../python/kateshell/mainwindow.py:818
 msgid "Undock"
 msgstr "Entdocken"
 
-#: ../python/kateshell/mainwindow.py:890
+#: ../python/kateshell/mainwindow.py:882
 msgid "Could not load %1"
 msgstr "Konnte %1 nicht laden"
 
@@ -530,7 +530,7 @@ msgstr[1] ""
 "Point-And-Click-URLs zu erstellen, weil die PDF-Dateien dann kleiner sind."
 "fortfahren?"
 
-#: ../python/frescobaldi_app/document.py:105
+#: ../python/frescobaldi_app/document.py:109
 msgid ""
 "Can't perform the requested translation. The music contains quarter-tone "
 "alterations, but those are not available in the pitch language %1."
@@ -538,7 +538,7 @@ msgstr ""
 "Kann die angeforderte Übersetzung nicht durchführen. Die Musik enthält "
 "Viertelton-Schritte, die in der Tonlagensprache %1 nicht verfügbar sind."
 
-#: ../python/frescobaldi_app/document.py:116
+#: ../python/frescobaldi_app/document.py:120
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
@@ -546,23 +546,23 @@ msgstr ""
 "Die Tonlagensprache des ausgewählten Textes wurde aktualisiert, Sie müssen "
 "aber den folgenden Befehl zu Ihrem Dokument hinzufügen:"
 
-#: ../python/frescobaldi_app/document.py:119
+#: ../python/frescobaldi_app/document.py:123
 #: ../python/frescobaldi_app/mainapp.py:351
 msgid "Pitch Name Language"
 msgstr "Sprache für Tonlagen"
 
-#: ../python/frescobaldi_app/document.py:168
+#: ../python/frescobaldi_app/document.py:172
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
 "Bitte geben Sie den Namen der Variable ein, der der ausgewählte Text "
 "zugewiesen werden soll:"
 
-#: ../python/frescobaldi_app/document.py:169
+#: ../python/frescobaldi_app/document.py:173
 #: ../python/frescobaldi_app/mainapp.py:315
 msgid "Cut and Assign"
 msgstr "Ausschneiden und zuweisen"
 
-#: ../python/frescobaldi_app/document.py:342
+#: ../python/frescobaldi_app/document.py:346
 msgid "Open %1"
 msgstr "Öffne %1"
 

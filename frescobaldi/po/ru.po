@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-06-09 09:22+0200\n"
+"POT-Creation-Date: 2009-06-15 13:37+0200\n"
 "PO-Revision-Date: 2009-02-22 12:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -423,15 +423,15 @@ msgstr "Все файлы"
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: ../python/kateshell/mainwindow.py:819
+#: ../python/kateshell/mainwindow.py:811
 msgid "Move To"
 msgstr "Переместить"
 
-#: ../python/kateshell/mainwindow.py:826
+#: ../python/kateshell/mainwindow.py:818
 msgid "Undock"
 msgstr "Скрыть док"
 
-#: ../python/kateshell/mainwindow.py:890
+#: ../python/kateshell/mainwindow.py:882
 msgid "Could not load %1"
 msgstr "Невозможно запустить LilyPond: %1"
 
@@ -537,7 +537,7 @@ msgstr[2] ""
 "по электронной почте документы без \"point-and-click\", потому что они "
 "значительно меньше. Все равно продолжить?"
 
-#: ../python/frescobaldi_app/document.py:105
+#: ../python/frescobaldi_app/document.py:109
 msgid ""
 "Can't perform the requested translation. The music contains quarter-tone "
 "alterations, but those are not available in the pitch language %1."
@@ -545,7 +545,7 @@ msgstr ""
 "Невозможно выполнить требуемое преобразование. Музыка содержит "
 "четвертьтоновые альтерации, которые недоступны в языковой записи %1."
 
-#: ../python/frescobaldi_app/document.py:116
+#: ../python/frescobaldi_app/document.py:120
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
@@ -553,22 +553,22 @@ msgstr ""
 "Язык ввода нот выделенного текста был обновлен, но Вы должны вручную "
 "добавить следующую команду в документ:"
 
-#: ../python/frescobaldi_app/document.py:119
+#: ../python/frescobaldi_app/document.py:123
 #: ../python/frescobaldi_app/mainapp.py:351
 msgid "Pitch Name Language"
 msgstr "Язык нотной записи"
 
-#: ../python/frescobaldi_app/document.py:168
+#: ../python/frescobaldi_app/document.py:172
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
 "Введите имя для переменной, которая будет присвоена выделенному тексту:"
 
-#: ../python/frescobaldi_app/document.py:169
+#: ../python/frescobaldi_app/document.py:173
 #: ../python/frescobaldi_app/mainapp.py:315
 msgid "Cut and Assign"
 msgstr "Вырезать и Присвоить"
 
-#: ../python/frescobaldi_app/document.py:342
+#: ../python/frescobaldi_app/document.py:346
 #, fuzzy
 msgid "Open %1"
 msgstr "Открыть PDF"
