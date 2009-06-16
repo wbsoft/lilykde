@@ -30,12 +30,13 @@ besides the Python standard re module.
 import re
 
 lily_re = (
-    r"(?P<indent>%?\{|<<?)"
-    r"|(?P<dedent>>>?|%?\})"
+    r"(?P<indent>\{|<<?)"
+    r"|(?P<dedent>>>?|\})"
     r'|(?P<string>"(\\[\\"]|[^"])*")'
     r"|(?P<newline>\n[^\S\n]*)"
     r"|(?P<space>[^\S\n]+)"
     r"|(?P<scheme>#)"
+    r"|(?P<blockcomment>%\{.*?%\})"
     r"|(?P<longcomment>%%[^\n]*)"
     r"|(?P<comment>%[^\n]*)"
     )
@@ -95,6 +96,10 @@ def indent(text,
     indent = [start]    # stack with indent history
     curindent = -1      # current indent in count of spaces, -1 : not yet set
     
+    if usetabs:
+        makeindent = lambda i: '\t' * int(i / tabwidth) + ' ' * (i % tabwidth)
+    else:
+        makeindent = lambda i: ' ' * i
     
     m = mode[-1].search(text, pos)
     while m:
@@ -110,12 +115,21 @@ def indent(text,
             line = []
             curindent = -1
         else:
-            line.append(m.group())
+            token = m.group()
             if m.lastgroup == 'indent':
                 indent.append(indent[-1] + indentwidth)
             elif m.lastgroup == 'dedent' and len(indent) > 1:
                 indent.pop()
-        
+            elif m.lastgroup == 'blockcomment' and '\n' in token:
+                # keep the indent inside block comments.
+                bcindent = curindent - min(len(n.group(1).expandtabs())
+                    for n in re.finditer(r'\n([^\S\n]*)', token))
+                fixindent = lambda match: ('\n' +
+                    makeindent(len(match.group(1).expandtabs()) + bcindent))
+                token = re.sub(r'\n([^\S\n]*)', fixindent, token)
+
+            line.append(token)
+            
         pos = m.end()
         m = mode[-1].search(text, pos)
     if pos < len(text):
@@ -126,16 +140,7 @@ def indent(text,
         output.append( (curindent, ''.join(line)) )
     else:
         output.append( (start, '') )
-    # format the output:
-    if usetabs:
-        result = '\n'.join(
-            ('\t' * int(indent / tabwidth) + ' ' * (indent % tabwidth)) + line
-            for indent, line in output)
-    else:
-        result = '\n'.join(
-            (' ' * indent) + line
-            for indent, line in output)
-    
-    return result
+    # return formatted output
+    return '\n'.join(makeindent(indent) + line for indent, line in output)
 
     
