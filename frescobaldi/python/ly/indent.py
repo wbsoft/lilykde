@@ -30,18 +30,17 @@ besides the Python standard re module.
 import re
 
 lily_re = (
-    r"(?P<indent>\{|<<?)"
-    r"|(?P<dedent>>>?|\})"
+    r"(?P<indent>%?\{|<<?)"
+    r"|(?P<dedent>>>?|%?\})"
     r'|(?P<string>"(\\[\\"]|[^"])*")'
     r"|(?P<newline>\n[^\S\n]*)"
     r"|(?P<space>[^\S\n]+)"
     r"|(?P<scheme>#)"
     r"|(?P<longcomment>%%[^\n]*)"
-    r"|(?P<blockcomment>%{.*?%})"
     r"|(?P<comment>%[^\n]*)"
     )
 
-lily = re.compile(lily_re, re.M)
+lily = re.compile(lily_re, re.S)
 
 scheme_re = (
     r"(?P<indent>\()"
@@ -55,11 +54,11 @@ scheme_re = (
     r"|(?P<comment>;[^\n]*)"
     )
 
-scheme = re.compile(scheme_re, re.M)
+scheme = re.compile(scheme_re, re.S)
 
 schemelily_re = lily_re + r"|(?P<backtoscheme>#\})"
 
-schemelily = re.compile(schemelily_re, re.M)
+schemelily = re.compile(schemelily_re, re.S)
 
     
 def indent(text,
