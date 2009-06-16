@@ -29,7 +29,7 @@ from PyKDE4.kdecore import i18n
 from PyKDE4.kdeui import KIcon, KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly.rx, ly.pitch, ly.parse, ly.tokenize
+import ly.rx, ly.pitch, ly.indent, ly.parse, ly.tokenize
 from frescobaldi_app.widgets import promptText
 
 class DocumentManipulator(object):
@@ -261,6 +261,23 @@ class DocumentManipulator(object):
             result = " " + result
         self.doc.view.insertText(result + " ")
     
+    def selectLines(self):
+        """
+        Adjust the selection so that full lines are selected.
+        """
+        if not self.doc.view.selection():
+            return
+            
+        start = self.doc.view.selectionRange().start()
+        end = self.doc.view.selectionRange().end()
+        
+        if start.column() > 0:
+            start.setColumn(0)
+        if end.column() == 0 and end.line() > start.line():
+            end.setLine(end.line() - 1)
+        end.setColumn(len(self.doc.line(end.line())))
+        self.doc.view.setSelection(KTextEditor.Range(start, end))
+            
     def fixSelection(self):
         """
         Adjust the selection in the following way:
@@ -301,6 +318,26 @@ class DocumentManipulator(object):
             end.setColumn(col + len(text[col:].split()[0]))
         self.doc.view.setSelection(KTextEditor.Range(start, end))
     
+    def indent(self):
+        """
+        Indent the (selected) text.
+        """
+        selection = bool(self.doc.selectionText())
+        if selection:
+            self.selectLines()
+            text = self.doc.selectionText()
+        else:
+            text = self.doc.text()
+            
+        text = ly.indent.indent(text)
+        
+        if selection:
+            self.doc.replaceSelectionWith(text, keepSelection = False)
+        else:
+            cursor = self.doc.view.cursorPosition()
+            self.doc.doc.setText(text)
+            self.doc.view.setCursorPosition(cursor)
+
     def populateContextMenu(self, menu):
         """
         Called as soon as the user requests the context menu.

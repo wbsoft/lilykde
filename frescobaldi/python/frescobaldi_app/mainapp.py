@@ -435,6 +435,10 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             return text.replace(' -- ', '')
             
         # Other actions
+        @self.onAction(i18n("Indent"), "format-indent-more")
+        def source_indent():
+            self.currentDocument().manipulator().indent()
+        
         @self.onAction(i18n("Insert LilyPond version"), key="Ctrl+Shift+V")
         def version_insert():
             import frescobaldi_app.version
