@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-06-15 13:37+0200\n"
+"POT-Creation-Date: 2009-06-16 15:27+0200\n"
 "PO-Revision-Date: 2009-02-22 12:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -21,11 +21,11 @@ msgstr ""
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Lokalize 0.3\n"
 
-#: ../frescobaldi.py:32 dummy.py:12
+#: ../frescobaldi.py:32 dummy.py:13
 msgid "Frescobaldi"
 msgstr "Frescobaldi"
 
-#: ../frescobaldi.py:34 dummy.py:13
+#: ../frescobaldi.py:34 dummy.py:14
 msgid "LilyPond Music Editor"
 msgstr "Музыкальный нотатор LilyPond"
 
@@ -90,6 +90,10 @@ msgstr "&Ритм"
 #: dummy.py:9
 msgid "&Generated Files"
 msgstr "&Сгенерированные файлы"
+
+#: dummy.py:10
+msgid "&Source Text"
+msgstr ""
 
 #: ../python/ly/__init__.py:75
 msgid "Dedication"
@@ -460,7 +464,7 @@ msgid "Play MIDI"
 msgstr "Воспроизвести MIDI"
 
 #: ../python/frescobaldi_app/actions.py:101
-#: ../python/frescobaldi_app/mainapp.py:452
+#: ../python/frescobaldi_app/mainapp.py:456
 msgid "Email..."
 msgstr "Email..."
 
@@ -568,7 +572,7 @@ msgstr ""
 msgid "Cut and Assign"
 msgstr "Вырезать и Присвоить"
 
-#: ../python/frescobaldi_app/document.py:346
+#: ../python/frescobaldi_app/document.py:383
 #, fuzzy
 msgid "Open %1"
 msgstr "Открыть PDF"
@@ -888,86 +892,91 @@ msgid "Remove hyphenation"
 msgstr "Удалить переносы"
 
 #: ../python/frescobaldi_app/mainapp.py:438
+#, fuzzy
+msgid "Indent"
+msgstr "Инструмент"
+
+#: ../python/frescobaldi_app/mainapp.py:442
 msgid "Insert LilyPond version"
 msgstr "Вставить версию LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:443
+#: ../python/frescobaldi_app/mainapp.py:447
 msgid "Update with convert-ly"
 msgstr "Обновить с помощью convert-ly"
 
-#: ../python/frescobaldi_app/mainapp.py:448
+#: ../python/frescobaldi_app/mainapp.py:452
 msgid "Open Current Folder"
 msgstr "Открыть текущую папку"
 
-#: ../python/frescobaldi_app/mainapp.py:486
+#: ../python/frescobaldi_app/mainapp.py:490
 msgid "Abort the running LilyPond process"
 msgstr "Прервать запущенный процесс LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:489
+#: ../python/frescobaldi_app/mainapp.py:493
 msgid "Run LilyPond in preview mode"
 msgstr "Запустить LilyPond в режиме просмотра"
 
-#: ../python/frescobaldi_app/mainapp.py:501
+#: ../python/frescobaldi_app/mainapp.py:505
 msgid "Apply Rhythm"
 msgstr "Применить ритм"
 
-#: ../python/frescobaldi_app/mainapp.py:509
+#: ../python/frescobaldi_app/mainapp.py:513
 msgid "Enter a rhythm:"
 msgstr "Введите ритм:"
 
-#: ../python/frescobaldi_app/mainapp.py:512
+#: ../python/frescobaldi_app/mainapp.py:516
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr ""
 "Введите ритм, используя пробел в качестве разделителя длительностей, "
 "например, 8 16 8 4 8"
 
-#: ../python/frescobaldi_app/mainapp.py:535
+#: ../python/frescobaldi_app/mainapp.py:539
 msgid "Terminal"
 msgstr "Консоль"
 
-#: ../python/frescobaldi_app/mainapp.py:568
+#: ../python/frescobaldi_app/mainapp.py:572
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "Синхронизировать консоль с текущим документом"
 
-#: ../python/frescobaldi_app/mainapp.py:588
+#: ../python/frescobaldi_app/mainapp.py:592
 #: ../python/frescobaldi_app/scorewiz/preview.py:46
 msgid "PDF Preview"
 msgstr "Предпросмотр PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:617
+#: ../python/frescobaldi_app/mainapp.py:621
 msgid "Show PDF Navigation Panel"
 msgstr "Показать панель навигации по PDF документу"
 
-#: ../python/frescobaldi_app/mainapp.py:618
+#: ../python/frescobaldi_app/mainapp.py:622
 msgid "Show PDF minipager"
 msgstr "Показать PDF мини-пейджер"
 
-#: ../python/frescobaldi_app/mainapp.py:619
+#: ../python/frescobaldi_app/mainapp.py:623
 #, fuzzy
 msgid "Configure Okular..."
 msgstr "Настройка..."
 
-#: ../python/frescobaldi_app/mainapp.py:622
+#: ../python/frescobaldi_app/mainapp.py:626
 msgid "S&ynchronize Preview with Current Document"
 msgstr "Синхронизировать просмотр с текущим документом"
 
-#: ../python/frescobaldi_app/mainapp.py:683
+#: ../python/frescobaldi_app/mainapp.py:687
 msgid "Quick Insert"
 msgstr "Быстрая вставка"
 
-#: ../python/frescobaldi_app/mainapp.py:695
+#: ../python/frescobaldi_app/mainapp.py:699
 msgid "LilyPond Log"
 msgstr "LilyPond журнал"
 
-#: ../python/frescobaldi_app/mainapp.py:699
+#: ../python/frescobaldi_app/mainapp.py:703
 msgid "no log"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:739
+#: ../python/frescobaldi_app/mainapp.py:743
 msgid "Only show on errors"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:759
+#: ../python/frescobaldi_app/mainapp.py:763
 msgid "Rumor"
 msgstr "Rumor"
 

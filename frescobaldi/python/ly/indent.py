@@ -137,7 +137,6 @@ def indent(text,
             (' ' * indent) + line
             for indent, line in output)
     
-    print result #DEBUG
     return result
 
     

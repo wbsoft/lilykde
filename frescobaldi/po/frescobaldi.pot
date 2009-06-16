@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: frescobaldi 0.7.11\n"
+"Project-Id-Version: frescobaldi 0.7.12\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-06-15 13:37+0200\n"
+"POT-Creation-Date: 2009-06-16 15:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../frescobaldi.py:32 dummy.py:12
+#: ../frescobaldi.py:32 dummy.py:13
 msgid "Frescobaldi"
 msgstr ""
 
-#: ../frescobaldi.py:34 dummy.py:13
+#: ../frescobaldi.py:34 dummy.py:14
 msgid "LilyPond Music Editor"
 msgstr ""
 
@@ -85,6 +85,10 @@ msgstr ""
 
 #: dummy.py:9
 msgid "&Generated Files"
+msgstr ""
+
+#: dummy.py:10
+msgid "&Source Text"
 msgstr ""
 
 #: ../python/ly/__init__.py:75
@@ -456,7 +460,7 @@ msgid "Play MIDI"
 msgstr ""
 
 #: ../python/frescobaldi_app/actions.py:101
-#: ../python/frescobaldi_app/mainapp.py:452
+#: ../python/frescobaldi_app/mainapp.py:456
 msgid "Email..."
 msgstr ""
 
@@ -541,7 +545,7 @@ msgstr ""
 msgid "Cut and Assign"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:346
+#: ../python/frescobaldi_app/document.py:383
 msgid "Open %1"
 msgstr ""
 
@@ -852,83 +856,87 @@ msgid "Remove hyphenation"
 msgstr ""
 
 #: ../python/frescobaldi_app/mainapp.py:438
+msgid "Indent"
+msgstr ""
+
+#: ../python/frescobaldi_app/mainapp.py:442
 msgid "Insert LilyPond version"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:443
+#: ../python/frescobaldi_app/mainapp.py:447
 msgid "Update with convert-ly"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:448
+#: ../python/frescobaldi_app/mainapp.py:452
 msgid "Open Current Folder"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:486
+#: ../python/frescobaldi_app/mainapp.py:490
 msgid "Abort the running LilyPond process"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:489
+#: ../python/frescobaldi_app/mainapp.py:493
 msgid "Run LilyPond in preview mode"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:501
+#: ../python/frescobaldi_app/mainapp.py:505
 msgid "Apply Rhythm"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:509
+#: ../python/frescobaldi_app/mainapp.py:513
 msgid "Enter a rhythm:"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:512
+#: ../python/frescobaldi_app/mainapp.py:516
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:535
+#: ../python/frescobaldi_app/mainapp.py:539
 msgid "Terminal"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:568
+#: ../python/frescobaldi_app/mainapp.py:572
 msgid "S&ynchronize Terminal with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:588
+#: ../python/frescobaldi_app/mainapp.py:592
 #: ../python/frescobaldi_app/scorewiz/preview.py:46
 msgid "PDF Preview"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:617
+#: ../python/frescobaldi_app/mainapp.py:621
 msgid "Show PDF Navigation Panel"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:618
+#: ../python/frescobaldi_app/mainapp.py:622
 msgid "Show PDF minipager"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:619
+#: ../python/frescobaldi_app/mainapp.py:623
 msgid "Configure Okular..."
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:622
+#: ../python/frescobaldi_app/mainapp.py:626
 msgid "S&ynchronize Preview with Current Document"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:683
+#: ../python/frescobaldi_app/mainapp.py:687
 msgid "Quick Insert"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:695
+#: ../python/frescobaldi_app/mainapp.py:699
 msgid "LilyPond Log"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:699
+#: ../python/frescobaldi_app/mainapp.py:703
 msgid "no log"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:739
+#: ../python/frescobaldi_app/mainapp.py:743
 msgid "Only show on errors"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:759
+#: ../python/frescobaldi_app/mainapp.py:763
 msgid "Rumor"
 msgstr ""
 
