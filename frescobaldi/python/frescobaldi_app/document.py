@@ -29,7 +29,7 @@ from PyKDE4.kdecore import i18n
 from PyKDE4.kdeui import KIcon, KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly.rx, ly.pitch, ly.indent, ly.parse, ly.tokenize
+import ly.rx, ly.pitch, ly.parse, ly.tokenize
 from frescobaldi_app.widgets import promptText
 
 class DocumentManipulator(object):
@@ -324,15 +324,14 @@ class DocumentManipulator(object):
         """
         selection = bool(self.doc.selectionText())
         if selection:
+            start = None
             self.selectLines()
             text = self.doc.selectionText()
         else:
+            start = 0
             text = self.doc.text()
         
-        text = ly.indent.indent(text,
-            indentwidth = self.doc.indentationWidth(),
-            tabwidth = self.doc.tabWidth(),
-            usetabs = not self.doc.indentationSpaces())
+        text = self.doc.indent(text)
         
         if selection:
             self.doc.replaceSelectionWith(text, keepSelection = False)

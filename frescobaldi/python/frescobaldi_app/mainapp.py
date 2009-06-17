@@ -159,8 +159,6 @@ class Document(kateshell.app.Document):
         Varname should consist of lowercase letters, and may contain (but not
         end or start with) single hyphens.
         """
-        if not self.doc:
-            return {}
         return dict(_variables_re.findall(self.text()))
     
     def updatedFiles(self):
@@ -177,6 +175,18 @@ class Document(kateshell.app.Document):
         """
         import frescobaldi_app.document
         return frescobaldi_app.document.DocumentManipulator(self)
+
+    def indent(self, text, start = None):
+        """
+        Convenience method to indent text according to settings of this
+        document.
+        """
+        import ly.indent
+        return ly.indent.indent(text,
+            start = start,
+            indentwidth = self.indentationWidth(),
+            tabwidth = self.tabWidth(),
+            usetabs = not self.indentationSpaces())
 
 
 class MainWindow(kateshell.mainwindow.MainWindow):

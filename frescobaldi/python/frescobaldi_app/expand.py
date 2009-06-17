@@ -134,8 +134,10 @@ class ExpandManager(object):
         text = re.sub(r"@([a-z]+)(?!\.)", repl, text)
             
         # re-indent the text:
-        indent = re.match(r'\s*', doc.line()[:cursor.column()]).group()
-        text = text.replace('\n' , '\n' + indent)
+        if '\n' in text:
+            start = len(re.match(r'\s*',
+                    doc.line()[:cursor.column()]).group().expandtabs())
+            text = doc.indent(text, start).lstrip()
         
         # if the expansion starts with a backslash and the character just 
         # before the cursor is also a backslash, don't repeat it.
