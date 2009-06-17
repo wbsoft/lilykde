@@ -23,7 +23,7 @@ from dbus.service import method, signal
 from signals import Signal
 
 from PyQt4.QtCore import QObject, Qt, QVariant, SIGNAL
-from PyKDE4.kdecore import i18n, KGlobal, KUrl
+from PyKDE4.kdecore import i18n, KConfig, KGlobal, KUrl
 from PyKDE4.kdeui import KApplication, KGuiItem, KMessageBox, KStandardGuiItem
 from PyKDE4.kio import KEncodingFileDialog
 from PyKDE4.ktexteditor import KTextEditor
@@ -692,8 +692,71 @@ class Document(DBusItem):
         """
         if self.doc:
             self._cursorTranslator = CursorTranslator(self)
+    
+    def kateModeVariables(self):
+        """
+        Returns a dict with the katemoderc variables for the mode
+        of the current document, if available.
+        """
+        mode = self.doc and self.doc.mode() or self.app.defaultMode
+        if mode:
+            c = KConfig("katemoderc", KConfig.NoGlobals)
+            v = unicode(c.group(mode).readEntry("Variables"))
+            if v.startswith('kate:'):
+                return dict(re.findall(r"([a-z]+(?:-[a-z]+)*)\s+([^;]*)", v))
+    
+    def kateVariable(self, varName):
+        """
+        Returns the value of the kate variable varName, if set in the document
+        or in the modeline for the current document mode.
+        """
+        if self.doc:
+            iface = self.doc.variableInterface()
+            if iface:
+                v = unicode(iface.variable(varName))
+                if v:
+                    return v
+        d = self.kateModeVariables()
+        if d:
+            return d.get(varName)
+        
+    def tabWidth(self):
+        """
+        Returns the width of the tab character, valid for the current document.
+        """
+        v = self.kateVariable("tab-width")
+        if v and v.isdigit():
+            return int(v)
+        group = KGlobal.config().group("Kate Document Defaults")
+        res, ok = group.readEntry("Tab Width", QVariant(8)).toInt()
+        if ok:
+            return res
+        
+    def indentationWidth(self):
+        """
+        Returns the indent-width for the current document.
+        """
+        v = self.kateVariable("indent-width")
+        if v and v.isdigit():
+            return int(v)
+        group = KGlobal.config().group("Kate Document Defaults")
+        res, ok = group.readEntry("Indentation Width", QVariant(2)).toInt()
+        if ok:
+            return res
+    
+    def indentationSpaces(self):
+        """
+        Returns True if indent uses spaces, otherwise False.
+        """
+        v = self.kateVariable("space-indent")
+        if v in ('on', '1', 'yes', 'y', 'true'):
+            return True
+        group = KGlobal.config().group("Kate Document Defaults")
+        flags, ok = group.readEntry('Basic Config Flags', QVariant(0)).toInt()
+        if ok and flags & 0x2000000:
+            return True
 
-
+    
 class CursorTranslator(object):
     """
     This object makes a kind of snapshot of a document and makes it

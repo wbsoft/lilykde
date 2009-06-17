@@ -328,8 +328,11 @@ class DocumentManipulator(object):
             text = self.doc.selectionText()
         else:
             text = self.doc.text()
-            
-        text = ly.indent.indent(text)
+        
+        text = ly.indent.indent(text,
+            indentwidth = self.doc.indentationWidth(),
+            tabwidth = self.doc.tabWidth(),
+            usetabs = not self.doc.indentationSpaces())
         
         if selection:
             self.doc.replaceSelectionWith(text, keepSelection = False)
