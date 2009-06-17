@@ -1,3 +1,11 @@
+Changes in 0.7.12 -- 
+
+* Indentation: New indent action (LilyPond->Source Text->Indent) that properly
+  indents a document or selection of lines. This indenter is bit more robust
+  compared to the one built-in into KatePart. The Score Wizard and Expand
+  Manager now also obey the users indentation settings, instead of always using
+  two spaces indent.
+
 Changes in 0.7.11 -- June 15th, 2009
 
 * Stability improvements
