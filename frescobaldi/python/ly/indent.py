@@ -30,8 +30,8 @@ besides the Python standard re module.
 import re
 
 lily_re = (
-    r"(?P<indent>\{|<<?)"
-    r"|(?P<dedent>>>?|\})"
+    r"(?P<indent>\{|<<)"
+    r"|(?P<dedent>>>|\})"
     r'|(?P<string>"(\\[\\"]|[^"])*")'
     r"|(?P<newline>\n[^\S\n]*)"
     r"|(?P<space>[^\S\n]+)"
@@ -136,12 +136,15 @@ def indent(text,
             elif m.lastgroup == 'scheme':
                 mode.append(scheme())
             elif m.lastgroup == 'backtoscheme':
-                mode.pop()
                 indent.pop()
+                mode.pop()
         else:
-            # we are parsing in scheme mode.
+            # we are parsing in Scheme mode.
             if m.lastgroup == 'indent':
                 mode[-1].depth += 1 # count parentheses
+                # look max 10 characters forward to vertically align parentheses
+                # we shouldn't do this if previous searches in this line failed,
+                # but even now the output is acceptable.
                 w = indentwidth
                 for col, char in enumerate(text[m.end():m.end() + 10]):
                     if char == '(':
@@ -160,8 +163,13 @@ def indent(text,
             elif m.lastgroup == 'lilypond':
                 mode.append(schemelily())
                 indent.append(indent[-1] + indentwidth)
-            elif mode[-1].depth == 0 and stuff and m.lastgroup in ('newline', 'space'):
-                mode.pop()
+            elif mode[-1].depth == 0:
+                # jump out if we got one atom or are at a space or end of line
+                # and still no opening parenthesis. But stay if we only just
+                # had a hash(#).
+                if (m.lastgroup in ('string', 'comment', 'longcomment')
+                    or (stuff and m.lastgroup in ('newline', 'space'))):
+                    mode.pop()
         
         if m.lastgroup == 'newline':
             output.append( (curindent, ''.join(line)) )
