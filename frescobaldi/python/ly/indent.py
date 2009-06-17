@@ -37,7 +37,7 @@ lily_re = (
     r"|(?P<space>[^\S\n]+)"
     r"|(?P<scheme>#)"
     r"|(?P<blockcomment>%\{.*?%\})"
-    r"|(?P<longcomment>%%[^\n]*)"
+    r"|(?P<longcomment>%%%[^\n]*)"
     r"|(?P<comment>%[^\n]*)"
     )
 
@@ -51,7 +51,7 @@ scheme_re = (
     r"|(?P<newline>\n[^\S\n]*)"
     r"|(?P<space>[^\S\n]+)"
     r"|(?P<lilypond>#\{)"
-    r"|(?P<longcomment>;;[^\n]*)"
+    r"|(?P<longcomment>;;;[^\n]*)"
     r"|(?P<blockcomment>#!.*?!#)"
     r"|(?P<comment>;[^\n]*)"
     )
@@ -60,9 +60,9 @@ class scheme:
     rx = re.compile(scheme_re, re.S)
     depth = 0
 
-schemelily_re = lily_re + r"|(?P<backtoscheme>#\})"
+schemelily_re = r"(?P<backtoscheme>#\})|" + lily_re
 
-class schemelily:
+class schemelily(lily):
     rx = re.compile(schemelily_re, re.S)
 
     
@@ -71,6 +71,7 @@ def indent(text,
         indentwidth = 2,
         tabwidth = 8,
         usetabs = None,
+        startscheme = False
         ):
     """
     Properly indents the LilyPond input in text.
@@ -84,7 +85,8 @@ def indent(text,
     usetabs: whether to use tab characters in the indent:
         - None = determine from document
         - True = use tabs for the parts of the indent that exceed the tab width
-        = False = don't use tabs.
+        - False = don't use tabs.
+    startscheme: start in scheme mode (not very robust)
     """
     if start is None:
         start = len(re.match(r'[^\S\n]*', text).group().expandtabs(tabwidth))
@@ -93,13 +95,15 @@ def indent(text,
     if start:
         text = re.sub(r'^[^\S\n]*', '', text)
     
-    mode = [lily()]       # the mode to parse
+    mode = [lily()]     # the mode to parse in
     pos = 0             # position in text
     output = []         # list of output lines
     line = []           # list to build the output, per line
     indent = [start]    # stack with indent history
     curindent = -1      # current indent in count of spaces, -1 : not yet set
     
+    if startscheme:
+        mode.append(scheme())
     if usetabs:
         makeindent = lambda i: '\t' * int(i / tabwidth) + ' ' * (i % tabwidth)
     else:
@@ -107,33 +111,64 @@ def indent(text,
     
     m = mode[-1].rx.search(text, pos)
     while m:
-        if pos < m.start():
-            line.append(text[pos:m.start()])
+        # also append stuff before the found token
+        stuff = text[pos:m.start()]
+        line.append(stuff)
         if curindent == -1:
             if m.lastgroup == 'longcomment':
                 curindent = 0
-            elif m.lastgroup not in ('dedent', 'space'):
+            elif (stuff or m.lastgroup not in ('dedent', 'space', 'backtoscheme')):
                 curindent = indent[-1]
+        token = m.group()
+        if m.lastgroup == 'blockcomment' and '\n' in token:
+            # keep the indent inside block comments.
+            bcindent = curindent - min(len(n.group(1).expandtabs())
+                for n in re.finditer(r'\n([^\S\n]*)', token))
+            fixindent = lambda match: ('\n' +
+                makeindent(len(match.group(1).expandtabs()) + bcindent))
+            token = re.sub(r'\n([^\S\n]*)', fixindent, token)
+        elif isinstance(mode[-1], lily):
+            # we are parsing in LilyPond mode
+            if m.lastgroup == 'indent':
+                indent.append(indent[-1] + indentwidth)
+            elif m.lastgroup == 'dedent' and len(indent) > 1:
+                indent.pop()
+            elif m.lastgroup == 'scheme':
+                mode.append(scheme())
+            elif m.lastgroup == 'backtoscheme':
+                mode.pop()
+                indent.pop()
+        else:
+            # we are parsing in scheme mode.
+            if m.lastgroup == 'indent':
+                mode[-1].depth += 1 # count parentheses
+                w = indentwidth
+                for col, char in enumerate(text[m.end():m.end() + 10]):
+                    if char == '(':
+                        w = col + 1
+                        break
+                    elif char == '\n':
+                        break
+                indent.append(indent[-1] + w)
+            elif m.lastgroup == 'dedent':
+                if mode[-1].depth:
+                    indent.pop()
+                if mode[-1].depth <= 1:
+                    mode.pop()
+                else:
+                    mode[-1].depth -= 1
+            elif m.lastgroup == 'lilypond':
+                mode.append(schemelily())
+                indent.append(indent[-1] + indentwidth)
+            elif mode[-1].depth == 0 and stuff and m.lastgroup in ('newline', 'space'):
+                mode.pop()
+        
         if m.lastgroup == 'newline':
             output.append( (curindent, ''.join(line)) )
             line = []
             curindent = -1
         else:
-            token = m.group()
-            if m.lastgroup == 'indent':
-                indent.append(indent[-1] + indentwidth)
-            elif m.lastgroup == 'dedent' and len(indent) > 1:
-                indent.pop()
-            elif m.lastgroup == 'blockcomment' and '\n' in token:
-                # keep the indent inside block comments.
-                bcindent = curindent - min(len(n.group(1).expandtabs())
-                    for n in re.finditer(r'\n([^\S\n]*)', token))
-                fixindent = lambda match: ('\n' +
-                    makeindent(len(match.group(1).expandtabs()) + bcindent))
-                token = re.sub(r'\n([^\S\n]*)', fixindent, token)
-                
             line.append(token)
-            
         pos = m.end()
         m = mode[-1].rx.search(text, pos)
     if pos < len(text):

@@ -326,12 +326,20 @@ class DocumentManipulator(object):
         if selection:
             start = None
             self.selectLines()
+            # find out if the selected snippet is scheme code
+            state = ly.tokenize.State()
+            for token in ly.tokenize.tokenize(
+                self.doc.textToCursor(self.doc.view.selectionRange().start()),
+                state=state):
+                pass
+            startscheme = isinstance(state.parser(), ly.tokenize.SchemeParser)
             text = self.doc.selectionText()
         else:
             start = 0
+            startscheme = False
             text = self.doc.text()
         
-        text = self.doc.indent(text)
+        text = self.doc.indent(text, start = start, startscheme = startscheme)
         
         if selection:
             self.doc.replaceSelectionWith(text, keepSelection = False)

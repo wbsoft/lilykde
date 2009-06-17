@@ -176,7 +176,7 @@ class Document(kateshell.app.Document):
         import frescobaldi_app.document
         return frescobaldi_app.document.DocumentManipulator(self)
 
-    def indent(self, text, start = None):
+    def indent(self, text, start = None, startscheme = False):
         """
         Convenience method to indent text according to settings of this
         document.
@@ -186,7 +186,9 @@ class Document(kateshell.app.Document):
             start = start,
             indentwidth = self.indentationWidth(),
             tabwidth = self.tabWidth(),
-            usetabs = not self.indentationSpaces())
+            usetabs = not self.indentationSpaces(),
+            startscheme = startscheme,
+            )
 
 
 class MainWindow(kateshell.mainwindow.MainWindow):

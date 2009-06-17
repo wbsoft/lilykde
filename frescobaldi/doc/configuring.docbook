@@ -246,21 +246,29 @@ want to distribute them (via e-mail or the World-wide Web) to others.
 Frescobaldi uses the &lilypond; syntax highlighting and indenting algorithm from KDE's 
 editing component KatePart. By default, indenting is switched on, using spaces,
 and the indent-width is 2 spaces.
-(Using spaces for indenting works better with Point &amp; Click in some cases.)
-For most &lilypond; scores this indent-width will look good, and in some places
-this is currently hard-coded in Frescobaldi (e.g. the default snippets in the
-<link linkend="expand">expand dialog</link>).
 </para>
 
 <para>
-You can configure other indent settings using kate variables in your document,
-or globally by setting kate variables in the &lilypond; Kate mode.
+You can configure other indentation settings using kate variables in your document,
+by setting kate variables in the &lilypond; Kate mode, or by simply adjusting the
+default indentation in the
+<link linkend="settings-editor-component">Editor component settings</link>.
+</para>
+
+<para>
 Setting variables in the document is described
 <ulink url="help:/kate/config-variables.html">here in the Kate manual</ulink>.
-Setting variables globally for the &lilypond; Kate mode is described
+Setting variables globally for a specific file type (or Kate mode) is described
 in the Kate manual under
 &quot;<ulink url="help:/kate/config-dialog-editor.html#pref-open-save-modes-filetypes"
 >Modes &amp; Filetypes</ulink>.&quot;
+Select the <guilabel>Other/&lilypond;</guilabel> mode to enter settings that affect
+&lilypond; files. (Kate and KWrite will also use the settings configured here.)
+</para>
+
+<para>
+The default indentation settings will only have effect if they are not overridden
+by variables set in the &lilypond; Kate mode or in the current document.
 </para>
 
 </sect1>
