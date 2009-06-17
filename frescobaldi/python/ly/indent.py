@@ -41,7 +41,8 @@ lily_re = (
     r"|(?P<comment>%[^\n]*)"
     )
 
-lily = re.compile(lily_re, re.S)
+class lily:
+    rx = re.compile(lily_re, re.S)
 
 scheme_re = (
     r"(?P<indent>\()"
@@ -55,11 +56,14 @@ scheme_re = (
     r"|(?P<comment>;[^\n]*)"
     )
 
-scheme = re.compile(scheme_re, re.S)
+class scheme:
+    rx = re.compile(scheme_re, re.S)
+    depth = 0
 
 schemelily_re = lily_re + r"|(?P<backtoscheme>#\})"
 
-schemelily = re.compile(schemelily_re, re.S)
+class schemelily:
+    rx = re.compile(schemelily_re, re.S)
 
     
 def indent(text,
@@ -89,7 +93,7 @@ def indent(text,
     if start:
         text = re.sub(r'^[^\S\n]*', '', text)
     
-    mode = [lily]       # the mode to parse
+    mode = [lily()]       # the mode to parse
     pos = 0             # position in text
     output = []         # list of output lines
     line = []           # list to build the output, per line
@@ -101,7 +105,7 @@ def indent(text,
     else:
         makeindent = lambda i: ' ' * i
     
-    m = mode[-1].search(text, pos)
+    m = mode[-1].rx.search(text, pos)
     while m:
         if pos < m.start():
             line.append(text[pos:m.start()])
@@ -127,11 +131,11 @@ def indent(text,
                 fixindent = lambda match: ('\n' +
                     makeindent(len(match.group(1).expandtabs()) + bcindent))
                 token = re.sub(r'\n([^\S\n]*)', fixindent, token)
-
+                
             line.append(token)
             
         pos = m.end()
-        m = mode[-1].search(text, pos)
+        m = mode[-1].rx.search(text, pos)
     if pos < len(text):
         line.append(text[pos:])
     if line:
