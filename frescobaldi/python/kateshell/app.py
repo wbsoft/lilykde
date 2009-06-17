@@ -702,20 +702,36 @@ class Document(DBusItem):
         if mode:
             c = KConfig("katemoderc", KConfig.NoGlobals)
             v = unicode(c.group(mode).readEntry("Variables"))
-            if v.startswith('kate:'):
-                return dict(re.findall(r"([a-z]+(?:-[a-z]+)*)\s+([^;]*)", v))
+            return dict(re.findall(r"([a-z]+(?:-[a-z]+)*)\s+([^;]*)", v))
+    
+    #BUG: Reimplemented below as the variableInterface does not seem to work...
+    #def kateVariable(self, varName):
+        #"""
+        #Returns the value of the kate variable varName, if set in the document
+        #or in the modeline for the current document mode.
+        #"""
+        #if self.doc:
+            #iface = self.doc.variableInterface()
+            #if iface:
+                #v = unicode(iface.variable(varName))
+                #if v:
+                    #return v
+        #d = self.kateModeVariables()
+        #if d:
+            #return d.get(varName)
     
     def kateVariable(self, varName):
         """
         Returns the value of the kate variable varName, if set in the document
         or in the modeline for the current document mode.
         """
-        if self.doc:
-            iface = self.doc.variableInterface()
-            if iface:
-                v = unicode(iface.variable(varName))
-                if v:
-                    return v
+        lines = self.textLines()
+        del lines[10:-10] # only look at the first and last ten lines.
+        for line in lines:
+            if 'kate:' in line:
+                m = re.search(r"[:;]\s*\b%s\s+([^;]+)" % varName, line)
+                if m:
+                    return m.group(1)
         d = self.kateModeVariables()
         if d:
             return d.get(varName)
@@ -749,12 +765,11 @@ class Document(DBusItem):
         Returns True if indent uses spaces, otherwise False.
         """
         v = self.kateVariable("space-indent")
-        if v in ('on', '1', 'yes', 'y', 'true'):
-            return True
+        if v:
+            return v in ('on', '1', 'yes', 'y', 'true')
         group = KGlobal.config().group("Kate Document Defaults")
         flags, ok = group.readEntry('Basic Config Flags', QVariant(0)).toInt()
-        if ok and flags & 0x2000000:
-            return True
+        return bool(ok and flags & 0x2000000)
 
     
 class CursorTranslator(object):
