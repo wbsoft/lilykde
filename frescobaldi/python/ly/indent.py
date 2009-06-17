@@ -113,7 +113,8 @@ def indent(text,
     while m:
         # also append stuff before the found token
         stuff = text[pos:m.start()]
-        line.append(stuff)
+        if stuff:
+            line.append(stuff)
         if curindent == -1:
             if m.lastgroup == 'longcomment':
                 curindent = 0
