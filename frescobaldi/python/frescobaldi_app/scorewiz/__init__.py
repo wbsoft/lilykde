@@ -22,7 +22,7 @@ Score Wizard
 """
 
 import os, re, sip, string, sys
-import ly, ly.dom
+import ly, ly.dom, ly.indent
 from rational import Rational
 
 from PyQt4.QtCore import (
@@ -115,7 +115,14 @@ class ScoreWizard(KPageDialog):
         self.saveCompletions()
         self.settings.saveConfig()
         if result:
-            self.mainwin.view().insertText(self.builder().ly())
+            # indent the text again using the user (document) settings:
+            text = self.builder().ly()
+            doc = self.mainwin.currentDocument()
+            text = ly.indent.indent(text,
+                indentwidth = doc.indentationWidth(),
+                tabwidth = doc.tabWidth(),
+                usetabs = not doc.indentationSpaces())
+            self.mainwin.view().insertText(text)
         KPageDialog.done(self, result)
 
     def builder(self):
