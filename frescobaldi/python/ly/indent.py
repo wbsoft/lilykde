@@ -192,3 +192,40 @@ def indent(text,
     return '\n'.join(makeindent(indent) + line for indent, line in output)
 
     
+if __name__ == '__main__':
+    
+    import sys, optparse
+    
+    op = optparse.OptionParser(usage='usage: %prog [options] [filename]')
+    op.add_option('-o', '--output',
+        help='write to this file instead of standard output')
+    op.add_option('-i', '--indent-width', type='int', default=2,
+        help='indent width in characters to use [default: %default]')
+    op.add_option('-t', '--tab-width', type='int', default=8,
+        help='tab width to assume [default: %default]')
+    op.add_option('-s', '--start-indent', type='int', default=0,
+        help='start indent [default: %default]')
+    op.add_option('--scheme', action='store_true',
+        help='start indenting in Scheme mode')
+    op.add_option('-u', '--use-tabs', action='store_true',
+        help='use tabs instead of spaces for indent')
+    options, args = op.parse_args()
+    # TODO: encoding
+    # TODO: error handling
+    infile = args and file(args[0]) or sys.stdin
+    text = infile.read()
+    text = indent(text,
+        start=options.start_indent,
+        indentwidth=options.indent_width,
+        tabwidth=options.tab_width,
+        usetabs=options.use_tabs,
+        startscheme=options.scheme
+        )
+    outfile = options.output and (options.output) or sys.stdout
+    outfile.write(text)
+    
+    if infile is not sys.stdin:
+        infile.close()
+    if outfile is not sys.stdout:    
+        outfile.close()
+    sys.exit(0)
