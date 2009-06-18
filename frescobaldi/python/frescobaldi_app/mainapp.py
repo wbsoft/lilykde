@@ -447,7 +447,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             return text.replace(' -- ', '')
             
         # Other actions
-        @self.onAction(i18n("Indent"), "format-indent-more")
+        @self.onAction(i18n("Align"), "format-indent-more")
         def source_indent():
             self.currentDocument().manipulator().indent()
         

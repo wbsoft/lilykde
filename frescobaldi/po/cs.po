@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.5\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-06-17 21:59+0200\n"
+"POT-Creation-Date: 2009-06-18 14:24+0200\n"
 "PO-Revision-Date: 2009-03-01 11:22+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@lists.kde.org>\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Lokalize 0.3\n"
 
-#: ../frescobaldi.py:32 dummy.py:13
+#: ../frescobaldi.py:32 dummy.py:14
 msgid "Frescobaldi"
 msgstr "Frescobaldi"
 
-#: ../frescobaldi.py:34 dummy.py:14
+#: ../frescobaldi.py:34 dummy.py:15
 msgid "LilyPond Music Editor"
 msgstr "LilyPond hudební editor"
 
@@ -72,28 +72,34 @@ msgstr ""
 "adresy"
 
 #: dummy.py:5
+#, fuzzy
+msgid "&Insert"
+msgstr "Rychle vložit"
+
+#: dummy.py:6
 msgid "&Document"
 msgstr "&Dokument"
 
-#: dummy.py:6
+#: dummy.py:7
 msgid "&Pitch"
 msgstr "&Výška tónu"
 
-#: dummy.py:7
+#: dummy.py:8
 msgid "&Lyrics"
 msgstr "&Slova písně"
 
-#: dummy.py:8
+#: dummy.py:9
 msgid "&Rhythm"
 msgstr "&Rytmus"
 
-#: dummy.py:9
+#: dummy.py:10
 msgid "&Generated Files"
 msgstr "&Vytvořené soubory"
 
-#: dummy.py:10
-msgid "&Source Text"
-msgstr ""
+#: dummy.py:11
+#, fuzzy
+msgid "&Source Document"
+msgstr "&Dokument"
 
 #: ../python/ly/__init__.py:75
 msgid "Dedication"
@@ -913,8 +919,8 @@ msgstr "Odstranit dělení slov"
 
 #: ../python/frescobaldi_app/mainapp.py:450
 #, fuzzy
-msgid "Indent"
-msgstr "Nástroj"
+msgid "Align"
+msgstr "Éolský"
 
 #: ../python/frescobaldi_app/mainapp.py:454
 msgid "Insert LilyPond version"
@@ -2397,6 +2403,10 @@ msgstr "Bicí nástroje"
 #: ../python/frescobaldi_app/scorewiz/parts.py:1272
 msgid "Special"
 msgstr "Speciální"
+
+#, fuzzy
+#~ msgid "Indent"
+#~ msgstr "Nástroj"
 
 #~ msgid "Already Running"
 #~ msgstr "Již běží"

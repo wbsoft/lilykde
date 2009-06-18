@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-06-17 21:59+0200\n"
-"PO-Revision-Date: 2009-06-16 15:27+0200\n"
+"POT-Creation-Date: 2009-06-18 14:24+0200\n"
+"PO-Revision-Date: 2009-06-18 14:25+0200\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,11 +18,11 @@ msgstr ""
 "X-Generator: Lokalize 0.3\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: ../frescobaldi.py:32 dummy.py:13
+#: ../frescobaldi.py:32 dummy.py:14
 msgid "Frescobaldi"
 msgstr "Frescobaldi"
 
-#: ../frescobaldi.py:34 dummy.py:14
+#: ../frescobaldi.py:34 dummy.py:15
 msgid "LilyPond Music Editor"
 msgstr "Muziek-editor voor LilyPond"
 
@@ -69,28 +69,32 @@ msgid "LilyPond files to open, may also be textedit URLs"
 msgstr "Te openen LilyPond-bestanden, mogen ook textedit URLs zijn"
 
 #: dummy.py:5
+msgid "&Insert"
+msgstr "Inv&oegen"
+
+#: dummy.py:6
 msgid "&Document"
 msgstr "&Document"
 
-#: dummy.py:6
+#: dummy.py:7
 msgid "&Pitch"
 msgstr "&Toonhoogte"
 
-#: dummy.py:7
+#: dummy.py:8
 msgid "&Lyrics"
 msgstr "&Liedteksten"
 
-#: dummy.py:8
+#: dummy.py:9
 msgid "&Rhythm"
 msgstr "&Ritme"
 
-#: dummy.py:9
+#: dummy.py:10
 msgid "&Generated Files"
 msgstr "&Aangemaakte bestanden"
 
-#: dummy.py:10
-msgid "&Source Text"
-msgstr "&Brontekst"
+#: dummy.py:11
+msgid "&Source Document"
+msgstr "&Brondocument"
 
 #: ../python/ly/__init__.py:75
 msgid "Dedication"
@@ -904,7 +908,7 @@ msgid "Remove hyphenation"
 msgstr "Liedtekst-afbreking verwijderen"
 
 #: ../python/frescobaldi_app/mainapp.py:450
-msgid "Indent"
+msgid "Align"
 msgstr "Uitlijnen"
 
 #: ../python/frescobaldi_app/mainapp.py:454
@@ -2384,6 +2388,12 @@ msgstr "Percussie"
 #: ../python/frescobaldi_app/scorewiz/parts.py:1272
 msgid "Special"
 msgstr "Speciaal"
+
+#~ msgid "&Source Text"
+#~ msgstr "&Brontekst"
+
+#~ msgid "Indent"
+#~ msgstr "Uitlijnen"
 
 #~ msgid "Already Running"
 #~ msgstr "Reeds actief"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-06-17 21:59+0200\n"
+"POT-Creation-Date: 2009-06-18 14:24+0200\n"
 "PO-Revision-Date: 2009-01-10 01:54+0100\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
 "Language-Team: Spanish\n"
@@ -17,11 +17,11 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: ../frescobaldi.py:32 dummy.py:13
+#: ../frescobaldi.py:32 dummy.py:14
 msgid "Frescobaldi"
 msgstr ""
 
-#: ../frescobaldi.py:34 dummy.py:14
+#: ../frescobaldi.py:34 dummy.py:15
 msgid "LilyPond Music Editor"
 msgstr "Editor de música para LilyPond"
 
@@ -68,28 +68,34 @@ msgid "LilyPond files to open, may also be textedit URLs"
 msgstr "Archivos de LilyPond que abrir, también pueden ser URLs de textedit"
 
 #: dummy.py:5
+#, fuzzy
+msgid "&Insert"
+msgstr "Inserción rápida"
+
+#: dummy.py:6
 msgid "&Document"
 msgstr "&Documento"
 
-#: dummy.py:6
+#: dummy.py:7
 msgid "&Pitch"
 msgstr ""
 
-#: dummy.py:7
+#: dummy.py:8
 msgid "&Lyrics"
 msgstr "&Letra"
 
-#: dummy.py:8
+#: dummy.py:9
 msgid "&Rhythm"
 msgstr "&Duraciones"
 
-#: dummy.py:9
+#: dummy.py:10
 msgid "&Generated Files"
 msgstr "Archivos &generados"
 
-#: dummy.py:10
-msgid "&Source Text"
-msgstr ""
+#: dummy.py:11
+#, fuzzy
+msgid "&Source Document"
+msgstr "&Documento"
 
 #: ../python/ly/__init__.py:75
 msgid "Dedication"
@@ -890,8 +896,8 @@ msgstr "Quitar el enguionado"
 
 #: ../python/frescobaldi_app/mainapp.py:450
 #, fuzzy
-msgid "Indent"
-msgstr "Instrumento"
+msgid "Align"
+msgstr "Eolio"
 
 #: ../python/frescobaldi_app/mainapp.py:454
 msgid "Insert LilyPond version"
@@ -2380,6 +2386,10 @@ msgstr "Percusión"
 #: ../python/frescobaldi_app/scorewiz/parts.py:1272
 msgid "Special"
 msgstr "Especial"
+
+#, fuzzy
+#~ msgid "Indent"
+#~ msgstr "Instrumento"
 
 #~ msgid "Already Running"
 #~ msgstr "Ya funcionando"

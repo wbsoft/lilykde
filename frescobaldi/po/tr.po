@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-06-17 21:59+0200\n"
+"POT-Creation-Date: 2009-06-18 14:24+0200\n"
 "PO-Revision-Date: 2009-03-04 11:36+0200\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 0.3\n"
 
-#: ../frescobaldi.py:32 dummy.py:13
+#: ../frescobaldi.py:32 dummy.py:14
 msgid "Frescobaldi"
 msgstr "Frescobaldi"
 
-#: ../frescobaldi.py:34 dummy.py:14
+#: ../frescobaldi.py:34 dummy.py:15
 msgid "LilyPond Music Editor"
 msgstr "LilyPond Müzik Düzenleyicisi"
 
@@ -71,28 +71,34 @@ msgstr ""
 "Açılacak LilyPond dosyaları, bunlardan bazıları metin işlemeli URL'lerdir."
 
 #: dummy.py:5
+#, fuzzy
+msgid "&Insert"
+msgstr "Hızılı Ekle"
+
+#: dummy.py:6
 msgid "&Document"
 msgstr "&Belge"
 
-#: dummy.py:6
+#: dummy.py:7
 msgid "&Pitch"
 msgstr "Ses noktası"
 
-#: dummy.py:7
+#: dummy.py:8
 msgid "&Lyrics"
 msgstr "Şarkı &Sözleri"
 
-#: dummy.py:8
+#: dummy.py:9
 msgid "&Rhythm"
 msgstr "&Ritm"
 
-#: dummy.py:9
+#: dummy.py:10
 msgid "&Generated Files"
 msgstr "İşlenecek &Dosyalar"
 
-#: dummy.py:10
-msgid "&Source Text"
-msgstr ""
+#: dummy.py:11
+#, fuzzy
+msgid "&Source Document"
+msgstr "&Belge"
 
 #: ../python/ly/__init__.py:75
 msgid "Dedication"
@@ -899,8 +905,8 @@ msgstr "Tirelemeyi kaldır"
 
 #: ../python/frescobaldi_app/mainapp.py:450
 #, fuzzy
-msgid "Indent"
-msgstr "Çalgı"
+msgid "Align"
+msgstr "Aolyan"
 
 #: ../python/frescobaldi_app/mainapp.py:454
 msgid "Insert LilyPond version"
@@ -2375,6 +2381,10 @@ msgstr "Vurmalı Çalgılar"
 #: ../python/frescobaldi_app/scorewiz/parts.py:1272
 msgid "Special"
 msgstr "Özel"
+
+#, fuzzy
+#~ msgid "Indent"
+#~ msgstr "Çalgı"
 
 #~ msgid "Already Running"
 #~ msgstr "Şu Anda Çalışıyor"

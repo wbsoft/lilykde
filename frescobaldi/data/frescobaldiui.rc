@@ -30,17 +30,13 @@
   <Menu name="edit"><text>&amp;Edit</text>
     <DefineGroup name="edit_undo_merge"/>
     <Separator/>
+    <Action name="edit_cut_assign"/>
     <DefineGroup name="edit_paste_merge"/>
-    <Menu name="edit_lilypond"><text>&amp;LilyPond</text>
-      <Action name="edit_cut_assign"/>
-      <Action name="edit_repeat_last"/>
-      <Action name="edit_expand"/>
-      <Separator/>
-      <Action name="edit_prev_blank_line"/>
-      <Action name="edit_next_blank_line"/>
-    </Menu>
     <Separator/>
     <DefineGroup name="edit_select_merge"/>
+    <Separator/>
+    <Action name="edit_prev_blank_line"/>
+    <Action name="edit_next_blank_line"/>
     <Separator/>
     <DefineGroup name="edit_find_merge"/>
     <Separator/>
@@ -69,6 +65,13 @@
       <Action name="actions_email"/>
     </Menu>
     <Separator />
+    <Menu name="insert"><text>&amp;Insert</text>
+      <Action name="version_insert"/>
+      <Separator />
+      <Action name="edit_repeat_last"/>
+      <Action name="edit_expand"/>
+    </Menu>
+    <Separator />
     <Menu name="lilypond_edit_pitch"><text>&amp;Pitch</text>
       <Action name="pitch_change_language"/>
     </Menu>
@@ -94,12 +97,10 @@
       <Action name="lyrics_dehyphen"/>
     </Menu>
     <Separator />
-    <Menu name="lilypond_source"><text>&amp;Source Text</text>
+    <Menu name="lilypond_source"><text>&amp;Source Document</text>
       <Action name="source_indent"/>
+      <Action name="version_convert_ly"/>
     </Menu>
-    <Separator />
-    <Action name="version_insert"/>
-    <Action name="version_convert_ly"/>
   </Menu>
 
   <Merge/>
