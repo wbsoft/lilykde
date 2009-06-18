@@ -326,27 +326,36 @@ class DocumentManipulator(object):
         if selection:
             start = None
             self.selectLines()
+            cursor = self.doc.view.selectionRange().start()
+            startline = cursor.line()
             # find out if the selected snippet is scheme code
             state = ly.tokenize.State()
-            for token in ly.tokenize.tokenize(
-                self.doc.textToCursor(self.doc.view.selectionRange().start()),
-                state=state):
+            for token in ly.tokenize.tokenize(self.doc.textToCursor(cursor), state=state):
                 pass
             startscheme = isinstance(state.parser(), ly.tokenize.SchemeParser)
             text = self.doc.selectionText()
         else:
             start = 0
+            startline = 0
             startscheme = False
             text = self.doc.text()
         
+        # save the old indents
+        ind = lambda line: re.compile(r'[^\S\n]*').match(line).group()
+        oldindents = map(ind, text.splitlines())
         text = self.doc.indent(text, start = start, startscheme = startscheme)
+        newindents = map(ind, text.splitlines())
         
-        if selection:
-            self.doc.replaceSelectionWith(text, keepSelection = False)
-        else:
-            cursor = self.doc.view.cursorPosition()
-            self.doc.doc.setText(text)
-            self.doc.view.setCursorPosition(cursor)
+        # We don't just replace the text, because that would destroy smart
+        # point and click. We only replace the indents.
+        self.doc.doc.startEditing()
+        for old, new in zip(oldindents, newindents):
+            if old != new:
+                self.doc.doc.replaceText(
+                    KTextEditor.Range(startline, 0, startline, len(old)), new)
+            startline += 1
+        self.doc.doc.endEditing()
+        self.doc.view.removeSelection()
 
     def populateContextMenu(self, menu):
         """
