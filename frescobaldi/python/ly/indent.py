@@ -92,8 +92,8 @@ def indent(text,
         start = len(re.match(r'[^\S\n]*', text).group().expandtabs(tabwidth))
     if usetabs is None:
         usetabs = '\t' in text
-    if start:
-        text = re.sub(r'^[^\S\n]*', '', text)
+    # strip indent of first line
+    text = re.sub(r'^[^\S\n]*', '', text)
     
     mode = [lily()]     # the mode to parse in
     pos = 0             # position in text
