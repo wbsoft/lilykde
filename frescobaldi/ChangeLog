@@ -4,6 +4,9 @@ Changes in 0.7.12 --
   indents a document or selection of lines. This indenter is a bit more robust
   than the one built into KatePart. The Score Wizard and Expand Manager now also
   use the users indentation settings, instead of always using two spaces indent.
+* New shortcuts to insert nice typographical quotes: Ctrl+' for single and
+  Ctrl+" for double quotes. Left and right quotes are automatically determined.
+  If text is selected, the selected text is put between quotes.
 
 Changes in 0.7.11 -- June 15th, 2009
 

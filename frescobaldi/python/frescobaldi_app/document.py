@@ -419,4 +419,25 @@ class DocumentManipulator(object):
             menu.addAction(
                 self.doc.app.mainwin.actionCollection().action("lyrics_hyphen"))
                 
-            
+    def insertTypographicalQuote(self, double = False):
+        """
+        Insert a single or double quotation mark at the current cursor position.
+        If the character left to the cursor is a space or a double quote,
+        use the left typographical quote, otherwise the right.
+        """
+        selection = self.doc.selectionText()
+        if selection:
+            repl = double and u'\u201C%s\u201D' or u'\u2018%s\u2019'
+            self.doc.replaceSelectionWith(repl % selection, keepSelection=False)
+        else:
+            cursor = self.doc.view.cursorPosition()
+            line, col = cursor.line(), cursor.column()
+            right = col > 0 and self.doc.line(line)[col-1] not in '" \t'
+            self.doc.view.insertText({
+                (False, False): u'\u2018',     # LEFT SINGLE QUOTATION MARK
+                (False, True ): u'\u2019',     # RIGHT SINGLE QUOTATION MARK
+                (True,  False): u'\u201C',     # LEFT DOUBLE QUOTATION MARK
+                (True,  True ): u'\u201D',     # RIGHT DOUBLE QUOTATION MARK
+                }[(double, right)])
+
+

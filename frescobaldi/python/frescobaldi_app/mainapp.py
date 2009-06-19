@@ -447,6 +447,14 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             return text.replace(' -- ', '')
             
         # Other actions
+        @self.onAction(i18n("Single Quote"), key="Ctrl+'")
+        def insert_quote_single():
+            self.currentDocument().manipulator().insertTypographicalQuote()
+            
+        @self.onAction(i18n("Double Quote"), key='Ctrl+"')
+        def insert_quote_double():
+            self.currentDocument().manipulator().insertTypographicalQuote(True)
+
         @self.onAction(i18n("Align"), "format-indent-more")
         def source_indent():
             self.currentDocument().manipulator().indent()

@@ -151,7 +151,7 @@ def indent(text,
                     if char == '(':
                         w = col + 1
                         break
-                    elif char == '\n':
+                    elif char in '")\n':
                         break
                 indent.append(indent[-1] + w)
             elif m.lastgroup == 'dedent':

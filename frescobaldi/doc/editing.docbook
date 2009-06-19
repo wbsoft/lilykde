@@ -164,6 +164,22 @@ or, if no existing mnemonic was typed, show the Expand Manager dialog
 </row>
 
 <row>
+<entry><para><keycombo><keycap>Ctrl+'</keycap></keycombo></para></entry>
+<entry><para>
+Insert a single typographical quote. Left or right is automatically determined.
+If text is selected, that text is put between left and right single quotes.
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+&quot;</keycap></keycombo></para></entry>
+<entry><para>
+Insert a double typographical quote. Left or right is automatically determined.
+If text is selected, that text is put between left and right double quotes.
+</para></entry>
+</row>
+
+<row>
 <entry><para><keycombo><keycap>Ctrl+Shift+C</keycap></keycombo></para></entry>
 <entry><para><link linkend="cut-assign">Cut and assign</link></para></entry>
 </row>
