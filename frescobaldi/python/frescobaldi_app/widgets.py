@@ -206,7 +206,11 @@ class ExecArgsLineEdit(ExecLineEdit):
     An ExecLineEdit that allows arguments in the command string.
     """
     def _get(self, filename):
-        return unicode(filename).split()[0]
+        if filename:
+            return unicode(filename).split()[0]
+        else:
+            return ''
+
 
 # some handy "static" functions
 def promptText(parent, message, title = None, text="", rx=None, help=None):

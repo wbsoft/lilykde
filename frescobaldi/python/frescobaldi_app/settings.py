@@ -50,9 +50,14 @@ class SettingsDialog(KPageDialog):
         QObject.connect(self, SIGNAL("applyClicked()"), self.saveSettings)
         QObject.connect(self, SIGNAL("defaultClicked()"), self.defaultClicked)
         QObject.connect(self, SIGNAL("resetClicked()"), self.loadSettings)
+        QObject.connect(self,
+            SIGNAL("currentPageChanged(KPageWidgetItem*, KPageWidgetItem*)"),
+            self.slotCurrentPageChanged)
+            
         self.pages = [
             GeneralPreferences(self),
             Commands(self),
+            RumorSettings(self),
             EditorComponent(self),
         ]
         self.loadSettings()
@@ -60,7 +65,7 @@ class SettingsDialog(KPageDialog):
         tree = self.findChild(QTreeView)
         if tree:
             tree.setIconSize(QSize(22, 22))
-        
+    
     def changed(self, changed=True):
         self.enableButton(KPageDialog.Apply, changed)
         
@@ -84,6 +89,13 @@ class SettingsDialog(KPageDialog):
             page.saveSettings()
         self.changed(False)
             
+    def slotCurrentPageChanged(self, current, before):
+        w = current.widget()
+        if hasattr(w, "help"):
+            self.setHelp(w.help)
+        else:
+            self.setHelp("settings-dialog")
+        
 
 class EditorComponent(object):
     def __init__(self, dialog):
@@ -100,6 +112,7 @@ class EditorComponent(object):
             item = dialog.addSubPage(editorItem, cPage, editor.configPageName(i))
             item.setHeader(editor.configPageFullName(i))
             item.setIcon(editor.configPageIcon(i))
+            cPage.help = 'settings-editor-component'
 
     def defaults(self):
         pass # not available
@@ -215,6 +228,7 @@ class Commands(QWidget):
         item = dialog.addPage(self, i18n("Paths"))
         item.setHeader(i18n("Paths to programs or data used by Frescobaldi"))
         item.setIcon(KIcon("utilities-terminal"))
+        self.help = 'settings-paths'
         
         layout = QGridLayout(self)
         
@@ -225,19 +239,16 @@ class Commands(QWidget):
                 i18n("Name or full path of the LilyPond program.")),
             ('convert-ly', 'convert-ly', "Convert-ly:", ExecLineEdit,
                 i18n("Name or full path of the convert-ly program.")),
+            ('pdf viewer', '', i18n("PDF Viewer:"), ExecArgsLineEdit,
+                i18n("PDF Viewer") + " " +
+                i18n("(leave empty for operating system default)")),
+            ('midi player', '', i18n("MIDI Player:"), ExecArgsLineEdit,
+                i18n("MIDI Player") + " " +
+                i18n("(leave empty for operating system default)")),
             ('lpr', 'lpr', i18n("Printcommand:"), ExecArgsLineEdit,
                 i18n("Command to print a PDF file, for example lpr or "
                   "kprinter. You may add some arguments, e.g. "
                   "lpr -P myprinter.")),
-            ('rumor', 'rumor', "Rumor:", ExecLineEdit,
-                i18n("Name or full path of the Rumor program.")),
-            ('aconnect', 'aconnect', "Aconnect:", ExecLineEdit,
-                i18n("Name or full path of the aconnect program (part of ALSA, "
-                  "for MIDI input and playback using Rumor).")),
-            ('timidity', frescobaldi_app.rumor.default_timidity_command,
-                "Timidity:", ExecArgsLineEdit,
-                i18n("Full command to start Timidity (or any other program) "
-                  "as an ALSA MIDI client.")),
         ):
             label = QLabel(title)
             widget = lineedit()
@@ -303,7 +314,7 @@ class Commands(QWidget):
     def saveSettings(self):
         conf = config("commands")
         for widget, name, default in self.commands:
-            if widget.text():
+            if widget.text() or not default:
                 conf.writeEntry(name, widget.text())
         paths = [p for p in unicode(self.hyphenPaths.toPlainText()).splitlines()
             if p]
@@ -312,6 +323,64 @@ class Commands(QWidget):
         frescobaldi_app.hyphen.findDicts()
         config("preferences").writePathEntry("default directory",
             self.folder.url().path())
+
+
+class RumorSettings(KVBox):
+    """
+    Settings regarding commands of lilypond and associated programs
+    """
+    def __init__(self, dialog):
+        QWidget.__init__(self, dialog)
+        item = dialog.addPage(self, i18n("Rumor MIDI input"))
+        item.setHeader(i18n("Rumor MIDI input plugin settings"))
+        item.setIcon(KIcon("media-record"))
+        self.help = 'rumor'
+        
+        layout = QGridLayout(QGroupBox(i18n(
+            "Commands used by the Rumor MIDI input module"), self))
+        row = 0
+        
+        # Rumor related commands
+        self.commands = []
+        for name, default, title, lineedit, tooltip in (
+            ('rumor', 'rumor', "Rumor:", ExecLineEdit,
+                i18n("Name or full path of the Rumor program.")),
+            ('aconnect', 'aconnect', "Aconnect:", ExecLineEdit,
+                i18n("Name or full path of the aconnect program (part of ALSA, "
+                  "for MIDI input and playback using Rumor).")),
+            ('timidity', frescobaldi_app.rumor.default_timidity_command,
+                "Timidity:", ExecArgsLineEdit,
+                i18n("Full command to start Timidity (or any other program) "
+                  "as an ALSA MIDI client.")),
+        ):
+            label = QLabel(title)
+            widget = lineedit()
+            QObject.connect(widget, SIGNAL("textEdited(const QString&)"),
+                lambda: dialog.changed())
+            label.setBuddy(widget)
+            label.setToolTip(tooltip)
+            widget.setToolTip(tooltip)
+            layout.addWidget(label, row, 0)
+            layout.addWidget(widget, row, 1)
+            self.commands.append((widget, name, default))
+            row += 1
+        self.layout().addStretch(1)
+        
+    def defaults(self):
+        for widget, name, default in self.commands:
+            widget.setText(default)
+        
+    def loadSettings(self):
+        conf = config("commands")
+        for widget, name, default in self.commands:
+            widget.setText(conf.readEntry(name, default))
+        
+    def saveSettings(self):
+        conf = config("commands")
+        for widget, name, default in self.commands:
+            if widget.text():
+                conf.writeEntry(name, widget.text())
+    
 
 
 def config(group):

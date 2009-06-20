@@ -54,7 +54,7 @@ class ActionManager(object):
             a = menu.addAction(KIcon("application-pdf"),
                 i18n("Open %1 in external viewer", name))
             QObject.connect(a, SIGNAL("triggered()"),
-                lambda pdf=pdf: self.openFile(pdf))
+                lambda pdf=pdf: self.openPDF(pdf))
             a = menu.addAction(KIcon("document-print"), i18n("Print %1", name))
             QObject.connect(a, SIGNAL("triggered()"),
                 lambda pdf=pdf: self.printPDF(pdf))
@@ -65,7 +65,7 @@ class ActionManager(object):
             name = '"%s"' % os.path.basename(midi)
             a = menu.addAction(KIcon("media-playback-start"), i18n("Play %1", name))
             QObject.connect(a, SIGNAL("triggered()"),
-                lambda midi=midi: self.openFile(midi))
+                lambda midi=midi: self.openMIDI(midi))
 
     def addActionsToLog(self, updatedFiles, log):
         """
@@ -92,9 +92,9 @@ class ActionManager(object):
                             lambda item=item: func(item))
 
         pdfs = updatedFiles("pdf")
-        make_action(pdfs, self.openFile, "application-pdf", i18n("Open PDF"))
+        make_action(pdfs, self.openPDF, "application-pdf", i18n("Open PDF"))
         make_action(pdfs, self.printPDF, "document-print", i18n("Print"))
-        make_action(updatedFiles("mid*"), self.openFile, "media-playback-start",
+        make_action(updatedFiles("mid*"), self.openMIDI, "media-playback-start",
             i18n("Play MIDI"))
         # if any actions were added, also add the email action and show.
         if len(bar.actions()) > 0:
@@ -105,8 +105,35 @@ class ActionManager(object):
                 self.email(updatedFiles, log.preview))
             log.checkScroll(bar.show)
         
-    def openFile(self, fileName):
-        """ Opens a file in its default viewer."""
+    def openPDF(self, fileName):
+        """
+        Opens a PDF in the configured external PDF viewer, or in the
+        KDE default one.
+        """
+        self.openFile(fileName, config("commands").readEntry("pdf viewer", ""))
+    
+    def openMIDI(self, fileName):
+        """
+        Opens a MIDI in the configured external MIDI player, or in the
+        KDE default one.
+        """
+        self.openFile(fileName, config("commands").readEntry("midi player", ""))
+    
+    def openFile(self, fileName, cmd = None):
+        """
+        Opens a file with command cmd (string, read from config)
+        or with the KDE default application (via KRun).
+        """
+        if cmd:
+            cmd, err = KShell.splitArgs(cmd)
+            if err == KShell.NoError:
+                cmd = map(unicode, cmd)
+                cmd.append(fileName)
+                try:
+                    Popen(cmd)
+                    return
+                except OSError:
+                    pass
         # let C++ own the KRun object, it will delete itself.
         sip.transferto(KRun(KUrl.fromPath(fileName), self.mainwin), None)
         
@@ -115,7 +142,7 @@ class ActionManager(object):
         cmd, err = KShell.splitArgs(
             config("commands").readEntry("lpr", "lpr"))
         if err == KShell.NoError:
-            cmd = [unicode(arg) for arg in cmd]
+            cmd = map(unicode, cmd)
             cmd.append(pdfFileName)
             try:
                 p = Popen(cmd, stderr=PIPE)
