@@ -611,13 +611,14 @@ class Document(DBusItem):
         if okline and okcolumn and line < self.doc.lines():
             self.view.setCursorPosition(KTextEditor.Cursor(line, column))
         # bookmarks
-        marks = str(group.readEntry("bookmarks", ""))
-        if re.match(r"\d+:\d+(,\d+:\d+)*$", marks):
-            markiface = self.doc.markInterface()
-            for m in marks.split(','):
-                line, mark = map(int, m.split(':'))
-                if line < self.doc.lines():
-                    markiface.addMark(line, mark)
+        markiface = self.doc.markInterface()
+        if markiface:
+            marks = str(group.readEntry("bookmarks", ""))
+            if re.match(r"\d+:\d+(,\d+:\d+)*$", marks):
+                for m in marks.split(','):
+                    line, mark = map(int, m.split(':'))
+                    if line < self.doc.lines():
+                        markiface.addMark(line, mark)
 
     def writeConfig(self, group):
         """
@@ -634,12 +635,13 @@ class Document(DBusItem):
         # bookmarks
         # markInterface().marks() crashes so we use mark() instead...
         markiface = self.doc.markInterface()
-        marks = []
-        for line in range(self.doc.lines()):
-            m = markiface.mark(line)
-            if m:
-                marks.append("%d:%d" % (line, m))
-        group.writeEntry("bookmarks", ','.join(marks))
+        if markiface:
+            marks = []
+            for line in range(self.doc.lines()):
+                m = markiface.mark(line)
+                if m:
+                    marks.append("%d:%d" % (line, m))
+            group.writeEntry("bookmarks", ','.join(marks))
 
     def line(self, lineNumber = None):
         """

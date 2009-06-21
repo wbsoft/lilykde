@@ -1,4 +1,5 @@
 TODO for Frescobaldi
+====================
 
 Music length related (needs infrastructure to compute duration of music
 expressions):
@@ -30,6 +31,14 @@ MIDI:
 - embed MIDI player for playback of files (with stop/start, memory for positions)
 
 
+User interface:
+
+- list view for opened documents (like Kate)
+
+
+DONE:
+=====
+
 Editing:
 
 - Cut and assign: check mode of cut-out fragment and reuse (e.g. \lyricmode)
@@ -37,6 +46,3 @@ Editing:
   cursor position or text selection
 
 
-User interface:
-
-- list view for opened documents (like Kate)
