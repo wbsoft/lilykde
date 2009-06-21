@@ -27,7 +27,7 @@ from PyQt4.QtGui import (
 from PyKDE4.kdecore import i18n
 from PyKDE4.kdeui import KHBox
 
-import ly.articulation, ly.rx
+import ly.articulation
 
 from frescobaldi_app.widgets import LilyIcon
 
@@ -121,18 +121,8 @@ class Articulations(Lqi):
             art = '^-_'[self.direction.currentIndex()] + ly.articulation.shorthands[sign]
         else:
             art = ('^', '', '_')[self.direction.currentIndex()] + '\\' + sign
-
         doc = self.mainwin.currentDocument()
-        text = doc.selectionText()
-        if text:
-            def repl(m):
-                if m.group('chord'):
-                    return m.group('full') + art
-                else:
-                    return m.group()
-            doc.replaceSelectionWith(ly.rx.chord.sub(repl, text), keepSelection=False)
-        else:
-            doc.view.insertText(art)
+        doc.manipulator().addArticulation(art)
         doc.view.setFocus()
         
 

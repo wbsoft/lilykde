@@ -439,7 +439,31 @@ class DocumentManipulator(object):
                 (True,  True ): u'\u201D',     # RIGHT DOUBLE QUOTATION MARK
                 }[(double, right)])
 
-
+    def addArticulation(self, art):
+        """
+        Add artication to selected notes or chord, or just insert it.
+        """
+        d, v = self.doc.doc, self.doc.view
+        text = self.doc.selectionText()
+        if text:
+            pos = 0
+            insertions = []
+            cur = ly.tokenize.Cursor()
+            cur.walk(self.doc.textToCursor(self.doc.view.selectionRange().start()))
+            for m in ly.rx.chord.finditer(text):
+                if m.group('chord'):
+                    cur.walk(text[pos:m.end('full')])
+                    pos = m.end('full')
+                    insertions.append(KTextEditor.Cursor(cur.line, cur.column))
+            d.startEditing()
+            for i in reversed(insertions):
+                d.insertText(i, art)
+            d.endEditing()
+            v.removeSelection()
+        else:
+            v.insertText(art)
+        
+        
 class ChangeList(object):
     """
     Represents a list of changes to a KTextEditor.Document.
