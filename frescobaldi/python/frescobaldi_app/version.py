@@ -93,9 +93,8 @@ def convertLy(mainwin):
                 stdin=PIPE, stdout=PIPE, stderr=PIPE
                 ).communicate(text.encode('utf8'))
             if out:
-                doc.doc.setText(u"%s\n\n%%{\n%s\n%%}\n" %
+                doc.setText(u"%s\n\n%%{\n%s\n%%}\n" %
                     (out.decode('utf8'), err.decode('utf8')))
-                doc.resetCursorTranslations()
                 KMessageBox.information(mainwin, i18n(
                  "The document has been processed with convert-ly. You'll find "
                  "the messages of convert-ly in a comment block at the end. "

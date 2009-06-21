@@ -504,6 +504,17 @@ class Document(DBusItem):
         else:
             return ''
     
+    @method(iface, in_signature='s', out_signature='b')
+    def setText(self, text):
+        """
+        Set the given text as new document content.
+        """
+        self.materialize()
+        if self.doc.setText(text):
+            self.resetCursorTranslations()
+            return True
+        return False
+        
     @method(iface, in_signature='', out_signature='i')
     def lines(self):
         """

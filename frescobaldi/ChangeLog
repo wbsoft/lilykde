@@ -9,6 +9,9 @@ Changes in 0.7.12 --
   If text is selected, the selected text is put between quotes.
 * It is now possible to configure external applications for PDF and MIDI files.
   These will then be used instead of the KDE default configured applications.
+* Bug fixes:
+  - Smart Point and Click remains working if pitches are translated.
+  - Text editor keeps keyboard focus again when clicked in PDF preview
 
 Changes in 0.7.11 -- June 15th, 2009
 

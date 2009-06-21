@@ -197,23 +197,20 @@ class DocumentManipulator(object):
         
         text = self.doc.selectionText().strip()
         if '\n' in text:
-            # re-indent the text
-            lines = text.splitlines()
-            indent = min(len(re.match(r'\s*', line).group()) for line in lines[1:])
-            text = '\n  '.join(lines[:1] + [line[indent:] for line in lines[1:]])
-            result = "%s =%s {\n  %s\n}\n" % (name, mode, text)
+            result = "%s =%s {\n%s\n}\n" % (name, mode, text)
+            result = self.doc.indent(result)
         else:
             result = "%s =%s { %s }\n" % (name, mode, text)
             
-        if self.doc.line(insertLine).strip():
+        if not isblank(self.doc.line(insertLine)):
             result += '\n'
-        if insertLine > 0 and self.doc.line(insertLine - 1).strip():
+        if insertLine > 0 and not isblank(self.doc.line(insertLine - 1)):
             result = '\n' + result
         
         # add space if necessary
         variable = "\\%s" % name
         end = self.doc.view.selectionRange().end()
-        if self.doc.line(end.line())[end.column():end.column()+1].strip():
+        if not isblank(self.doc.line(end.line())[end.column():end.column()+1]):
             variable += " "
 
         # do it:
@@ -230,7 +227,7 @@ class DocumentManipulator(object):
         # find the last non-empty line
         curPos = self.doc.view.cursorPosition()
         lineNum = curPos.line()
-        while lineNum > 0 and not self.doc.line(lineNum).strip():
+        while lineNum > 0 and isblank(self.doc.line(lineNum)):
             lineNum -= 1
             
         text = unicode(self.doc.doc.text(
@@ -259,7 +256,7 @@ class DocumentManipulator(object):
         
         # write it in the document, add a space if necessary
         col = curPos.column()
-        if col > 0 and self.doc.line()[col-1].strip():
+        if col > 0 and not isblank(self.doc.line()[col-1]):
             result = " " + result
         self.doc.view.insertText(result + " ")
     
@@ -445,7 +442,13 @@ class DocumentManipulator(object):
 
 class ChangeList(object):
     """
-    Represents a list of changes.
+    Represents a list of changes to a KTextEditor.Document.
+    A change consists of a token (from which the range is saved) and a 
+    replacement string.
+    
+    Changes must be appended in sequential order.  Call applyChanges() with
+    the document from which the text originated to have the changes applied.
+    (This is done in reverse order, so the ranges remain valid.)
     """
     def __init__(self):
         self._changes = []
@@ -471,13 +474,14 @@ class ChangeList(object):
         doc.endEditing()
 
 
-def tokenizeRange(text, pos = 0, state = None):
+def tokenizeRange(text, pos = 0, state = None, cursor = None):
     """
     Iterate over the tokens returned by tokenize(), adding a
     KTextEditor.Range to every token, describing its place.
     See the ly.tokenize module.
     """
-    cursor = ly.tokenize.Cursor()
+    if cursor is None:
+        cursor = ly.tokenize.Cursor()
     if pos:
         cursor.walk(text[:pos])
     start = KTextEditor.Cursor(cursor.line, cursor.column)
@@ -488,3 +492,6 @@ def tokenizeRange(text, pos = 0, state = None):
         start = end
         yield token
  
+def isblank(text):
+    """ Returns True if text is None, empty or only contains spaces. """
+    return not text or text.isspace()
