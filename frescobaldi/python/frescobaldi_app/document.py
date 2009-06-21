@@ -60,10 +60,10 @@ class DocumentManipulator(object):
         Change the LilyPond pitch name language in our document to lang.
         """
         start = KTextEditor.Cursor(0, 0)
-        selection = bool(self.doc.selectionText())
+        selection = bool(self.doc.selectionText()) and self.doc.view.selectionRange()
         
         if selection:
-            end = self.doc.view.selectionRange().end()
+            end = selection.end()
         else:
             # directly using doc.documentRange().end() causes a crash...
             docRange = self.doc.doc.documentRange()
@@ -87,7 +87,7 @@ class DocumentManipulator(object):
                     langName = token[1:-4]
                     if langName in ly.pitch.pitchInfo.keys():
                         reader = ly.pitch.pitchReader[langName]
-                if token.range.overlaps(self.doc.view.selectionRange()):
+                if selection.contains(token.range.end()):
                     break
         
          # Now walk through the part that needs to be translated.
