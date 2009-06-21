@@ -443,7 +443,6 @@ class DocumentManipulator(object):
         """
         Add artication to selected notes or chord, or just insert it.
         """
-        d, v = self.doc.doc, self.doc.view
         text = self.doc.selectionText()
         if text:
             pos = 0
@@ -455,13 +454,13 @@ class DocumentManipulator(object):
                     cur.walk(text[pos:m.end('full')])
                     pos = m.end('full')
                     insertions.append(KTextEditor.Cursor(cur.line, cur.column))
-            d.startEditing()
+            self.doc.doc.startEditing()
             for i in reversed(insertions):
-                d.insertText(i, art)
-            d.endEditing()
-            v.removeSelection()
+                self.doc.doc.insertText(i, art)
+            self.doc.doc.endEditing()
+            self.doc.view.removeSelection()
         else:
-            v.insertText(art)
+            self.doc.view.insertText(art)
         
         
 class ChangeList(object):
