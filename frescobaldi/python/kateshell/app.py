@@ -468,6 +468,7 @@ class Document(DBusItem):
         if not self.isActive():
             self.materialize()
             self.app.activeDocumentChanged(self)
+        self.view.setFocus()
 
     @method(iface, in_signature='iib', out_signature='')
     def setCursorPosition(self, line, column, translate=True):
@@ -490,7 +491,6 @@ class Document(DBusItem):
                 column = resolvetabs_text(column, self.line(line))
                 cursor = KTextEditor.Cursor(line, column)
             self.view.setCursorPosition(cursor)
-            self.view.setFocus()
         else:
             self._cursor = (line, column)
 

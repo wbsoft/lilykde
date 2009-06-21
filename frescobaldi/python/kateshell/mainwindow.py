@@ -292,7 +292,6 @@ class MainWindow(KParts.MainWindow):
         self.updateStatusBar()
         self.updateSelection()
         self.currentDocumentChanged(doc) # emit our signal
-        doc.view.setFocus()
 
     def addDocument(self, doc):
         self.viewStack.addWidget(doc.view)
