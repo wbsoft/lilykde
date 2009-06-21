@@ -54,41 +54,46 @@ class DocumentManipulator(object):
                 a.setChecked(True)
             QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"),
                 lambda lang=lang: self.changeLanguage(lang))
-                
+    
     def changeLanguage(self, lang):
         """
         Change the LilyPond pitch name language in our document to lang.
         """
-        if self.doc.view.selection():
-            changetext = unicode(self.doc.view.selectionText())
-            pretext = unicode(self.doc.doc.text(
-                KTextEditor.Range(
-                    KTextEditor.Cursor(0, 0),
-                    self.doc.view.selectionRange().start())))
+        start = KTextEditor.Cursor(0, 0)
+        selection = bool(self.doc.selectionText())
+        
+        if selection:
+            end = self.doc.view.selectionRange().end()
         else:
-            changetext = self.doc.text()
-            pretext = ''
-
-        # iterate over the document and replace pitches in the text section.
+            # directly using doc.documentRange().end() causes a crash...
+            docRange = self.doc.doc.documentRange()
+            end = docRange.end()
+        text = unicode(self.doc.doc.text(KTextEditor.Range(start, end)))
+        
         state = ly.tokenize.State()
         lastCommand = None
         writer = ly.pitch.pitchWriter[lang]
         reader = ly.pitch.pitchReader["nederlands"]
+        tokenizer = tokenizeRange(text, state=state)
+        
         # Walk through not-selected text, to track the state and the 
         # current pitch language.
-        for token in ly.tokenize.tokenize(pretext, state=state):
-            if isinstance(token, ly.tokenize.Command):
-                lastCommand = token
-            elif (isinstance(token, ly.tokenize.String)
-                and lastCommand == "\\include"):
-                langName = token[1:-4]
-                if langName in ly.pitch.pitchInfo.keys():
-                    reader = ly.pitch.pitchReader[langName]
-
-        # Now walk through the part that needs to be translated.
-        output = []
+        if selection:
+            for token in tokenizer:
+                if isinstance(token, ly.tokenize.Command):
+                    lastCommand = token
+                elif (isinstance(token, ly.tokenize.String)
+                    and lastCommand == "\\include"):
+                    langName = token[1:-4]
+                    if langName in ly.pitch.pitchInfo.keys():
+                        reader = ly.pitch.pitchReader[langName]
+                if token.range.overlaps(self.doc.view.selectionRange()):
+                    break
+        
+         # Now walk through the part that needs to be translated.
+        changes = ChangeList()
         includeCommandChanged = False
-        for token in ly.tokenize.tokenize(changetext, state=state):
+        for token in tokenizer:
             if isinstance(token, ly.tokenize.Command):
                 lastCommand = token
             elif (isinstance(token, ly.tokenize.String)
@@ -96,37 +101,34 @@ class DocumentManipulator(object):
                 langName = token[1:-4]
                 if langName in ly.pitch.pitchInfo.keys():
                     reader = ly.pitch.pitchReader[langName]
-                    token = '"%s.ly"' % lang
+                    changes.append(token, '"%s.ly"' % lang)
                     includeCommandChanged = True
             elif isinstance(token, ly.tokenize.PitchWord):
                 result = reader(token)
                 if result:
                     note, alter = result
                     # Write out the translated pitch.
-                    token = writer(note, alter, warn=True)
-                    if not token:
+                    replacement = writer(note, alter, warn=True)
+                    if not replacement:
                         KMessageBox.sorry(self.doc.app.mainwin, i18n(
                             "Can't perform the requested translation. "
                             "The music contains quarter-tone alterations, but "
                             "those are not available in the pitch language %1.",
                             lang))
                         return
-            output.append(token)
-        if self.doc.view.selection():
-            self.doc.replaceSelectionWith("".join(output))
-            if not includeCommandChanged:
-                KMessageBox.information(self.doc.app.mainwin,
-                    '<p>%s</p><p><tt>\\include "%s.ly"</tt></p>' %
-                    (i18n("The pitch language of the selected text has been "
-                          "updated, but you need to manually add the following "
-                          "command to your document:"), lang),
-                    i18n("Pitch Name Language"))
-        else:
-            self.doc.doc.startEditing()
-            self.doc.doc.setText("".join(output))
-            if not includeCommandChanged:
-                self.addLineToTop('\\include "%s.ly"' % lang)
-            self.doc.doc.endEditing()
+                    changes.append(token, replacement)
+        self.doc.doc.startEditing()
+        changes.applyChanges(self.doc.doc)
+        if not selection and not includeCommandChanged:
+            self.addLineToTop('\\include "%s.ly"' % lang)
+        self.doc.doc.endEditing()
+        if selection and not includeCommandChanged:
+            KMessageBox.information(self.doc.app.mainwin,
+                '<p>%s</p><p><tt>\\include "%s.ly"</tt></p>' %
+                (i18n("The pitch language of the selected text has been "
+                        "updated, but you need to manually add the following "
+                        "command to your document:"), lang),
+                i18n("Pitch Name Language"))
 
     def addLineToTop(self, text):
         """
@@ -441,3 +443,48 @@ class DocumentManipulator(object):
                 }[(double, right)])
 
 
+class ChangeList(object):
+    """
+    Represents a list of changes.
+    """
+    def __init__(self):
+        self._changes = []
+        
+    def append(self, token, replacement):
+        """
+        Adds a token and its replacement.
+        The token must have a range attribute with the KTextEditor.Range it
+        represents. See the tokenizeRange function.
+        """
+        if token != replacement:
+            self._changes.append((token.range, replacement))
+
+    def applyChanges(self, doc):
+        """
+        Apply the changes to KTextEditor.Document doc.
+        This is done in a way that does not disturb smart point and click.
+        """
+        doc.startEditing()
+        for r, text in reversed(self._changes):
+            doc.insertText(r.end(), text)
+            doc.removeText(r)
+        doc.endEditing()
+
+
+def tokenizeRange(text, pos = 0, state = None):
+    """
+    Iterate over the tokens returned by tokenize(), adding a
+    KTextEditor.Range to every token, describing its place.
+    See the ly.tokenize module.
+    """
+    cursor = ly.tokenize.Cursor()
+    if pos:
+        cursor.walk(text[:pos])
+    start = KTextEditor.Cursor(cursor.line, cursor.column)
+    for token in ly.tokenize.tokenize(text, pos, state):
+        cursor.walk(token)
+        end = KTextEditor.Cursor(cursor.line, cursor.column)
+        token.range = KTextEditor.Range(start, end)
+        start = end
+        yield token
+ 
