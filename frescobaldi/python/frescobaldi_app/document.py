@@ -90,7 +90,7 @@ class DocumentManipulator(object):
                 if selection.contains(token.range.end()):
                     break
         
-         # Now walk through the part that needs to be translated.
+        # Now walk through the part that needs to be translated.
         changes = ChangeList()
         includeCommandChanged = False
         for token in tokenizer:
@@ -117,6 +117,8 @@ class DocumentManipulator(object):
                             lang))
                         return
                     changes.append(token, replacement)
+        
+        # Apply the changes.
         self.doc.doc.startEditing()
         changes.applyChanges(self.doc.doc)
         if not selection and not includeCommandChanged:
