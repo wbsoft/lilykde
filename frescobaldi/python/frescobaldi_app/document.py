@@ -501,11 +501,10 @@ class Cursor(ly.tokenize.Cursor):
     A Cursor that can easily interchange with KTextEditor.Cursor.
     """
     def __init__(self, ktecursor = None):
+        super(Cursor, self).__init__()
         if ktecursor:
             self.line = ktecursor.line()
             self.column = ktecursor.column()
-        else:
-            super(Cursor, self).__init__()
             
     def kteCursor(self):
         """ Return a corresponding KTextEditor.Cursor instance """
