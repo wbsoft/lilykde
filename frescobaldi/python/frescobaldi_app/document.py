@@ -447,14 +447,12 @@ class DocumentManipulator(object):
         if text:
             pos = 0
             insertions = []
-            cur = ly.tokenize.Cursor()
-            cur.line = self.doc.view.selectionRange().start().line()
-            cur.column = self.doc.view.selectionRange().start().column()
+            cur = Cursor(self.doc.view.selectionRange().start())
             for m in ly.rx.chord.finditer(text):
                 if m.group('chord'):
                     cur.walk(text[pos:m.end('full')])
                     pos = m.end('full')
-                    insertions.append(KTextEditor.Cursor(cur.line, cur.column))
+                    insertions.append(cur.kteCursor())
             self.doc.doc.startEditing()
             for i in reversed(insertions):
                 self.doc.doc.insertText(i, art)
@@ -498,6 +496,22 @@ class ChangeList(object):
         doc.endEditing()
 
 
+class Cursor(ly.tokenize.Cursor):
+    """
+    A Cursor that can easily interchange with KTextEditor.Cursor.
+    """
+    def __init__(self, ktecursor = None):
+        if ktecursor:
+            self.line = ktecursor.line()
+            self.column = ktecursor.column()
+        else:
+            super(Cursor, self).__init__()
+            
+    def kteCursor(self):
+        """ Return a corresponding KTextEditor.Cursor instance """
+        return KTextEditor.Cursor(self.line, self.column)
+    
+
 def tokenizeRange(text, pos = 0, state = None, cursor = None):
     """
     Iterate over the tokens returned by tokenize(), adding a
@@ -505,13 +519,13 @@ def tokenizeRange(text, pos = 0, state = None, cursor = None):
     See the ly.tokenize module.
     """
     if cursor is None:
-        cursor = ly.tokenize.Cursor()
+        cursor = Cursor()
     if pos:
         cursor.walk(text[:pos])
-    start = KTextEditor.Cursor(cursor.line, cursor.column)
+    start = cursor.kteCursor()
     for token in ly.tokenize.tokenize(text, pos, state):
         cursor.walk(token)
-        end = KTextEditor.Cursor(cursor.line, cursor.column)
+        end = cursor.kteCursor()
         token.range = KTextEditor.Range(start, end)
         start = end
         yield token

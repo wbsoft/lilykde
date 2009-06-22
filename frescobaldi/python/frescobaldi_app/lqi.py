@@ -117,10 +117,16 @@ class Articulations(Lqi):
         layout.addWidget(l, row, 0, 4, cols)
 
     def writeSign(self, sign):
+        """
+        Write the clicked articulation to the document
+        (or add it to all selected pitches).
+        """
         if self.shorthands.isChecked() and sign in ly.articulation.shorthands:
             art = '^-_'[self.direction.currentIndex()] + ly.articulation.shorthands[sign]
         else:
             art = ('^', '', '_')[self.direction.currentIndex()] + '\\' + sign
+        
+        # the actual writing is performed by the manipulator (see document.py)
         doc = self.mainwin.currentDocument()
         doc.manipulator().addArticulation(art)
         doc.view.setFocus()
