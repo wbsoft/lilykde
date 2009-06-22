@@ -448,7 +448,8 @@ class DocumentManipulator(object):
             pos = 0
             insertions = []
             cur = ly.tokenize.Cursor()
-            cur.walk(self.doc.textToCursor(self.doc.view.selectionRange().start()))
+            cur.line = self.doc.view.selectionRange().start().line()
+            cur.column = self.doc.view.selectionRange().start().column()
             for m in ly.rx.chord.finditer(text):
                 if m.group('chord'):
                     cur.walk(text[pos:m.end('full')])
