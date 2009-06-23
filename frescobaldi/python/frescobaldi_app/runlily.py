@@ -395,7 +395,8 @@ class LocalFileManager(object):
     def __init__(self, doc):
         self.doc = doc
         self.directory = tempfile.mkdtemp()
-        self.filename = unicode(self.doc.url().path() or "music.ly")
+        path = unicode(self.doc.url().path())
+        self.filename = path and os.path.basename(path) or "music.ly"
 
     def __del__(self):
         shutil.rmtree(self.directory, ignore_errors=True)

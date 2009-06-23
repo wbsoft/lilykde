@@ -33,15 +33,17 @@ button again to abort the running &lilypond; process.
 </para>
 
 <para>
-When you want to run &lilypond; on your text document, it needs to be saved to
-disk first, so &lilypond; can read it. (Currently, you can not run &lilypond; on
-non-local &lilypond; documents.) If your document has not been saved yet,
-&frescobaldi; asks you to save it to a local file. If your document has been
-modified, &frescobaldi; asks you to save it first.
+When you want to run &lilypond; but your document has not been saved yet,
+or has been saved to a non-local directory,
+&frescobaldi; copies the document contents to a file in a temporary directory
+on you local drive, and then runs &lilypond; on it.
 </para>
 
 <para>
-If you want &frescobaldi; to always save your last modifications before running
+If your document is on the local drive but has been modified,
+&frescobaldi; asks you to save it first. (Frescobaldi does not use a temporary directory
+for files that are already on the local drive.)
+If you want &frescobaldi; to always save your last local modifications before running
 &lilypond;, you can go to
 <menuchoice>
   <guimenu>Settings</guimenu>
@@ -178,6 +180,10 @@ where every source file has it's own score section. If you e.g. use
 <userinput>%%master-publish</userinput>, running in preview mode will just show the current document,
 but running in publish mode will compile the master document so you get a view
 on the whole score or book. 
+</para>
+
+<para>
+"Master" and include files only work with documents that are on your local hard drive.
 </para>
 </sect1>
 
