@@ -310,6 +310,9 @@ class Document(DBusItem):
             SIGNAL("documentUrlChanged(KTextEditor::Document*)"),
             self.slotDocumentUrlChanged)
         QObject.connect(self.doc,
+            SIGNAL("completed()"),
+            self.slotCompleted)
+        QObject.connect(self.doc,
             SIGNAL("modifiedChanged(KTextEditor::Document*)"),
             self.slotModifiedChanged)
         for s in (
@@ -338,6 +341,9 @@ class Document(DBusItem):
         
     def slotDocumentUrlChanged(self):
         self.urlChanged(self)
+        self.captionChanged(self)
+        
+    def slotCompleted(self):
         self.captionChanged(self)
         
     def slotModifiedChanged(self):
