@@ -52,11 +52,6 @@ class MainApp(kateshell.app.MainApp):
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
         os.environ["FRESCOBALDI_PID"] = str(os.getpid())
-        # keep references to managers that manage remote or nameless files
-        # so that LilyPond can be run on that documents too. See the
-        # (un)registerLocalFileManager methods and the LocalFileManager
-        # class in runlily.py.
-        self._lfms = set()
         # check if stuff needs to be run after an update of Frescobaldi
         if self.version() != config("").readEntry("version", "0.0"):
             from frescobaldi_app.install import install
@@ -192,8 +187,7 @@ class Document(kateshell.app.Document):
         """
         Returns a function that can list updated files based on extension.
         """
-        if ((self.url().isEmpty() or self.url().protocol() != "file")
-                and self.localFileManager()):
+        if self.localFileManager():
             path = self.localFileManager().path()
         else:
             path = self.localPath()

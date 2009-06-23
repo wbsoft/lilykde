@@ -162,22 +162,21 @@ class ActionManager(object):
                 i18n("The print command contains errors. "
                         "Please check your settings."))
 
-    def openDirectory(self, directory=None):
+    def openDirectory(self, path=None):
         """
         Opens a folder. If None, opes the document folder if any, or else
         the current working directory in the default KDE file manager.
         """
-        d = self.mainwin.currentDocument()
-        if directory is not None:
-            url = KUrl(directory)
-        elif d.url().isEmpty():
-            if d.localFileManager():
-                url = KUrl.fromPath(d.localFileManager().directory)
+        if path is None:
+            d = self.mainwin.currentDocument()
+            if d.url().isEmpty():
+                if d.localFileManager():
+                    path = d.localFileManager().directory
+                else:
+                    path = self.mainwin.app.defaultDirectory() or os.getcwd()
             else:
-                url = KUrl.fromPath(self.mainwin.app.defaultDirectory()
-                    or os.getcwd())
-        else:
-            url = KUrl(self.mainwin.currentDocument().url().resolved(KUrl('.')))
+                path = d.url().resolved(KUrl('.'))
+        url = KUrl(path)
         url.adjustPath(KUrl.RemoveTrailingSlash)
         sip.transferto(KRun(url, self.mainwin), None) # C++ will delete it
 
