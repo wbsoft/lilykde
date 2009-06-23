@@ -1,5 +1,6 @@
 Changes in 0.7.12 -- 
 
+* Repeat last note/chord: only keep articulations and ties.
 * Indentation: New indent action (LilyPond->Source Text->Indent) that properly
   indents a document or selection of lines. This indenter is a bit more robust
   than the one built into KatePart. The Score Wizard and Expand Manager now also

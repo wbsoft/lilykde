@@ -249,12 +249,23 @@ class DocumentManipulator(object):
             lambda m: m.group('step') + m.group('cautionary'), result, 1)
         
         # add articulations, etc
-        stuff = text[matchObj.start() + len(matchObj.group()):]
-        if stuff and not stuff.isspace():
+        stuff = text[matchObj.end():]
+        if not isblank(stuff):
             stuff = stuff.splitlines()[0]
-            # remove bar check pypesymbols
-            stuff = re.sub(r"([^-_^]|^)\|", r"\1", stuff)
-            result += stuff.strip()
+            # Filter the things we want to repeat.  E.g. slur events don't
+            # make much sense, but artications do.  We delete comments and
+            # strings to avoid matching stuff inside those.
+            result += ''.join(
+                m.group(1)
+                for m in re.compile(
+                    r'('                            # keep:
+                        r'[-_^][_.+|>^-]'           # - articulation shorthands
+                        r'|[_^]?~'                  # - ties
+                    r')'                            # delete:
+                        r'|"(?:\\\\|\\\"|[^\"])*"'  # - quoted strings
+                        r'|%.*?$'                   # - comments
+                    ).finditer(stuff)
+                if m.group(1))
         
         # write it in the document, add a space if necessary
         col = curPos.column()
