@@ -52,6 +52,11 @@ class MainApp(kateshell.app.MainApp):
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
         os.environ["FRESCOBALDI_PID"] = str(os.getpid())
+        # keep references to managers that manage remote or nameless files
+        # so that LilyPond can be run on that documents too. See the
+        # (un)registerLocalFileManager methods and the LocalFileManager
+        # class in runlily.py.
+        self._lfms = set()
         # check if stuff needs to be run after an update of Frescobaldi
         if self.version() != config("").readEntry("version", "0.0"):
             from frescobaldi_app.install import install
@@ -99,9 +104,30 @@ class MainApp(kateshell.app.MainApp):
     def stateManager(self):
         return StateManager(self)
 
+    def findDocument(self, url):
+        """
+        Finds the document at KUrl url.
+        Also non-local or nameless documents are checked: see runlily.py
+        """
+        d = super(MainApp, self).findDocument(url)
+        if d:
+            return d
+        # now check for our LocalFileManagers ...
+        for d in self.documents:
+            manager = d.localFileManager()
+            if manager:
+                if manager.path() == url:
+                    return d
+        return False
+
 
 class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """
+    def __init__(self, *args, **kwargs):
+        super(Document, self).__init__(*args, **kwargs)
+        self.resetLocalFileManager()
+        self.urlChanged.connect(self.resetLocalFileManager)
+
     def documentIcon(self):
         if self.app.mainwin.jobManager().job(self):
             return "run-lilypond"
@@ -138,6 +164,7 @@ class Document(kateshell.app.Document):
     def aboutToClose(self):
         if config().readEntry("save metainfo", QVariant(False)).toBool():
             self.app.stateManager().saveState(self)
+        self.resetLocalFileManager()
         
     def setCursorPosition(self, line, column, translate=True):
         shiftPressed = KApplication.keyboardModifiers() & Qt.ShiftModifier
@@ -165,7 +192,12 @@ class Document(kateshell.app.Document):
         """
         Returns a function that can list updated files based on extension.
         """
-        return updatedFiles(self.localPath())
+        if ((self.url().isEmpty() or self.url().protocol() != "file")
+                and self.localFileManager()):
+            path = self.localFileManager().path()
+        else:
+            path = self.localPath()
+        return updatedFiles(path)
 
     @lazymethod
     def manipulator(self):
@@ -189,6 +221,18 @@ class Document(kateshell.app.Document):
             usetabs = not self.indentationSpaces(),
             startscheme = startscheme,
             )
+
+    def needsLocalFileManager(self):
+        return self.url().isEmpty() or self.url().protocol() != "file"
+        
+    def localFileManager(self, create = False):
+        if create and not self._localFileManager:
+            import frescobaldi_app.runlily
+            self._localFileManager = frescobaldi_app.runlily.LocalFileManager(self)
+        return self._localFileManager
+
+    def resetLocalFileManager(self):
+        self._localFileManager = None
 
 
 class MainWindow(kateshell.mainwindow.MainWindow):
@@ -285,21 +329,12 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                 return sorry(i18n(
                     "There is already a LilyPond job running "
                     "for this document."))
-            if (d.url().isEmpty() or d.isModified()) and not (
+            if (d.url().protocol() == "file" and d.isModified()) and not (
                     config().readEntry("save on run", QVariant(False)).toBool()
                     and d.save()):
-                if d.url().isEmpty():
-                    return sorry(i18n(
-                        "Your document currently has no filename, "
-                        "please save first."))
-                else:
-                    return sorry(i18n(
-                        "Your document has been modified, "
-                        "please save first."))
-            if d.url().protocol() != "file":
                 return sorry(i18n(
-                    "Sorry, support for remote files is not yet implemented.\n"
-                    "Please save your document to a local file."))
+                    "Your document has been modified, "
+                    "please save first."))
             # Run LilyPond; get a LogWidget and create a job
             def finished(success, job):
                 result = job.updatedFiles()
@@ -625,7 +660,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             super(PDFTool, self).openUrl(self._currentUrl)
 
     def sync(self, doc):
-        if self._config["sync"] and not doc.url().isEmpty():
+        if self._config["sync"]:
             pdfs = doc.updatedFiles()("pdf")
             if pdfs:
                 self.openUrl(KUrl(pdfs[0]))

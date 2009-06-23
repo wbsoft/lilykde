@@ -409,8 +409,15 @@ class Document(DBusItem):
         else:
             self._encoding = encoding
 
+    @method(iface, in_signature='', out_signature='s')
+    def encoding(self):
+        if self.doc:
+            return str(self.doc.encoding())
+        else:
+            return self._encoding
+            
     def url(self):
-        """Returns the URL of this document"""
+        """ Returns the KUrl of this document """
         if self.doc:
             return self.doc.url()
         else:

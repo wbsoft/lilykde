@@ -1,6 +1,10 @@
 Changes in 0.7.12 -- 
 
-* Repeat last note/chord: only keep articulations and ties.
+* It is now possible to run LilyPond on remote documents and documents that have
+  not been saved yet. This is done by saving the LilyPond file to a local
+  temporary directory.  Point and click also works on such documents.
+  This makes it easy to paste something from an email and run LilyPond directly
+  on it, without bothering to save it first under a suitable file name.
 * Indentation: New indent action (LilyPond->Source Text->Indent) that properly
   indents a document or selection of lines. This indenter is a bit more robust
   than the one built into KatePart. The Score Wizard and Expand Manager now also
@@ -10,6 +14,7 @@ Changes in 0.7.12 --
   If text is selected, the selected text is put between quotes.
 * It is now possible to configure external applications for PDF and MIDI files.
   These will then be used instead of the KDE default configured applications.
+* Repeat last note/chord: only keep articulations and ties.
 * Bug fixes:
   - Smart Point and Click remains working if pitches are translated.
   - Text editor keeps keyboard focus again when clicked in PDF preview

@@ -167,10 +167,15 @@ class ActionManager(object):
         Opens a folder. If None, opes the document folder if any, or else
         the current working directory in the default KDE file manager.
         """
+        d = self.mainwin.currentDocument()
         if directory is not None:
             url = KUrl(directory)
-        elif self.mainwin.currentDocument().url().isEmpty():
-            url = KUrl.fromPath(self.mainwin.app.defaultDirectory() or os.getcwd())
+        elif d.url().isEmpty():
+            if d.localFileManager():
+                url = KUrl.fromPath(d.localFileManager().directory)
+            else:
+                url = KUrl.fromPath(self.mainwin.app.defaultDirectory()
+                    or os.getcwd())
         else:
             url = KUrl(self.mainwin.currentDocument().url().resolved(KUrl('.')))
         url.adjustPath(KUrl.RemoveTrailingSlash)

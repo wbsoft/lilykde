@@ -19,7 +19,7 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
-import math, os, re, time
+import math, os, re, shutil, tempfile, time
 
 from PyQt4.QtCore import (
     QObject, QProcess, QSize, QTimer, QUrl, QVariant, Qt, SIGNAL)
@@ -160,11 +160,16 @@ class LyDoc2PDF(Ly2PDF):
     """
     def __init__(self, doc, log, preview):
         self.preview = preview
-        lyfile = doc.localPath()
-        lvars = doc.variables()
-        ly = lvars.get(preview and 'master-preview' or 'master-publish') or lvars.get('master')
-        if ly:
-            lyfile = os.path.join(os.path.dirname(lyfile), ly)
+        if doc.needsLocalFileManager():
+            # handle nonlocal or unnamed documents
+            lyfile = doc.localFileManager(True).makeLocalFile()
+        else:
+            lyfile = doc.localPath()
+            lvars = doc.variables()
+            ly = (lvars.get(preview and 'master-preview' or 'master-publish')
+                  or lvars.get('master'))
+            if ly:
+                lyfile = os.path.join(os.path.dirname(lyfile), ly)
         super(LyDoc2PDF, self).__init__(lyfile, log)
         doc.closed.connect(self.kill)
         
@@ -378,9 +383,44 @@ class FileRef(object):
         if not self.doc and doc.localPath() == self.path:
             self.bind(doc)
 
+
+class LocalFileManager(object):
+    """
+    Manages the local storage of remote or unnamed LilyPond files,
+    so LilyPond can be run on those files.
+    This is instantiated upon request (to save a remote or unnamed LilyPond
+    document to a local file), and is deleted (by the Document) as soon as the
+    url of the document changes or the document closes.
+    """
+    def __init__(self, doc):
+        self.doc = doc
+        self.directory = tempfile.mkdtemp()
+        self.filename = unicode(self.doc.url().path() or "music.ly")
+
+    def __del__(self):
+        shutil.rmtree(self.directory, ignore_errors=True)
         
+    def path(self):
+        """
+        Return the path, without actually saving the document contents.
+        """
+        return os.path.join(self.directory, self.filename)
+        
+    def makeLocalFile(self):
+        """
+        Return the path of the LilyPond file the unnamed or remote
+        file is cached to.  If needed the contents of the document are saved
+        into this file as well.
+        """
+        lyfile = self.path()
+        # Save the file to our local storage
+        # TODO: error handling
+        file(lyfile, 'w').write(self.doc.text().encode(self.doc.encoding() or 'utf-8'))
+        return lyfile
+ 
+
 def textFormats():
-    """ Return a dict with text formats """
+    """ Return a dict with text formats for the log view """
     log = QTextCharFormat()
     log.setFontFamily("monospace")
     
