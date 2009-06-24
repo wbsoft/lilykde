@@ -17,7 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, re, sip, weakref, dbus, dbus.service, dbus.mainloop.qt
+import os, re, sip, sys, weakref, dbus, dbus.service, dbus.mainloop.qt
 from dbus.service import method, signal
 
 from signals import Signal
@@ -86,6 +86,12 @@ class MainApp(DBusItem):
         self.documentCreated = Signal()
         self.documentMaterialized = Signal()
         self.documentClosed = Signal()
+
+        # make it easy to connect more error handlers
+        self.excepthook = Signal()
+        self.excepthook.connect(sys.excepthook)
+        sys.excepthook = self.excepthook
+        
         # We manage our own documents.
         self.documents = []
         self.history = []       # latest shown documents
@@ -155,6 +161,7 @@ class MainApp(DBusItem):
         """
         if len(self.documents) == 0:
             self.createDocument().setActive()
+        self.excepthook.connect(self.showException)
         self.kapp.exec_()
         KGlobal.config().sync()
        
@@ -236,6 +243,15 @@ class MainApp(DBusItem):
         Returns the version of our app.
         """
         return unicode(KGlobal.mainComponent().aboutData().version())
+
+    def showException(self, exctype, excvalue, exctb):
+        """
+        Called when a Python exception goes unhandled
+        """
+        import traceback
+        tbtext = ''.join(traceback.format_exception(exctype, excvalue, exctb))
+        KMessageBox.sorry(self.mainwin, tbtext,
+            i18n("Python Error: %1", exctype.__name__))
 
 
 class Document(DBusItem):
