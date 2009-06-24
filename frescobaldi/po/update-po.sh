@@ -17,6 +17,7 @@ xgettext \
     ../frescobaldi.py \
     dummy.py \
     ../python/ly/*.py \
+    ../python/kateshell/exception.py \
     ../python/kateshell/mainwindow.py \
     ../python/frescobaldi_app/*.py \
     ../python/frescobaldi_app/scorewiz/*.py
