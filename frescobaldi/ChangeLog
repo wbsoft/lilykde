@@ -1,10 +1,12 @@
 Changes in 0.7.12 -- 
 
 * It is now possible to run LilyPond on remote documents and documents that have
-  not been saved yet. This is done by saving the LilyPond file to a local
-  temporary directory.  Point and click also works on such documents.
-  This makes it easy to paste something from an email and run LilyPond directly
-  on it, without bothering to save it first under a suitable file name.
+  not been saved yet. In such cases Frescobaldi internally saves the LilyPond
+  file to a local temporary directory. Point and click also works on remote or
+  unnamed documents. This makes it easy to paste something from an email and run
+  LilyPond immediately, without bothering to save it first under a suitable file
+  name. The local cache is deleted when the document is closed or saved to a
+  directory on the local file system.
 * Indentation: New indent action (LilyPond->Source Text->Indent) that properly
   indents a document or selection of lines. This indenter is a bit more robust
   than the one built into KatePart. The Score Wizard and Expand Manager now also
