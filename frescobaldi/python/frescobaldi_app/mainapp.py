@@ -17,7 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import glob, os, re, sip, time
+import os, re, sip, time
 from dbus.service import method
 
 from PyQt4.QtCore import QObject, QString, QTimer, QVariant, Qt, SIGNAL
@@ -913,15 +913,20 @@ def updatedFiles(lyfile, reftime=None):
     Calling the generator with some extension
     returns files newer than lyfile, with that extension.
     """
+    import fnmatch
     if lyfile and os.path.exists(lyfile):
         if reftime is None:
             reftime = os.path.getmtime(lyfile)
-        basename = os.path.splitext(lyfile)[0]
+        directory, name = os.path.split(lyfile)
+        escname = re.escape(os.path.splitext(name)[0]) # remove ext, escape
         def generatorfunc(ext = "*"):
-            files = (
-                glob.glob(basename + "." + ext) +
-                glob.glob(basename + "-[0-9]*." + ext) +
-                glob.glob(basename + "-?*-[0-9]*." + ext))
+            ext = fnmatch.translate(ext)
+            pat = re.compile(r'%s(-[^-]+)*\.%s' % (escname, ext))
+            try:
+                files = [os.path.join(directory, f)
+                    for f in os.listdir(directory) if pat.match(f)]
+            except OSError:
+                return []
             return [f for f in files if os.path.getmtime(f) >= reftime]
     else:
         def generatorfunc(ext=None):
