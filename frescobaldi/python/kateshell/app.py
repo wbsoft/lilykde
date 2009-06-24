@@ -248,10 +248,8 @@ class MainApp(DBusItem):
         """
         Called when a Python exception goes unhandled
         """
-        import traceback
-        tbtext = ''.join(traceback.format_exception(exctype, excvalue, exctb))
-        KMessageBox.sorry(self.mainwin, tbtext,
-            i18n("Python Error: %1", exctype.__name__))
+        import kateshell.exception
+        kateshell.exception.showException(self, exctype, excvalue, exctb)
 
 
 class Document(DBusItem):
