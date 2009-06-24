@@ -26,8 +26,8 @@ import traceback
 
 from PyQt4.QtCore import QObject, SIGNAL
 from PyQt4.QtGui import QLabel, QTextBrowser, QTextCursor, QVBoxLayout
-from PyKDE4.kdecore import i18n
-from PyKDE4.kdeui import KBugReport, KDialog, KIcon, KLineEdit, KTextEdit
+from PyKDE4.kdecore import KGlobal, KToolInvocation, i18n
+from PyKDE4.kdeui import KDialog, KIcon
 
 class ExceptionDialog(KDialog):
     
@@ -47,24 +47,23 @@ class ExceptionDialog(KDialog):
         self.setButtons(KDialog.ButtonCode(
             KDialog.User1 | KDialog.Close))
         self.setButtonIcon(KDialog.User1, KIcon("tools-report-bug"))
-        self.setButtonText(KDialog.User1, i18n("Report Bug..."))
+        self.setButtonText(KDialog.User1, i18n("Email Bug Report..."))
         QObject.connect(self, SIGNAL("user1Clicked()"), self.reportBug)
         self.resize(600,300)
         self.exec_()
 
     def reportBug(self):
         self.accept()
-        bug = KBugReport()
-        subject = bug.findChild(KLineEdit)
-        if subject:
-            subject.setText("[v%s] %s" % (self.app.version(), self.tbshort))
-        bug.setMessageBody("%s\n%s\n\n" % (self.tbfull,
-            i18n("Optionally describe what you were doing below:")))
-        body = bug.findChild(KTextEdit)
-        if body:
-            body.setFocus()
-            body.moveCursor(QTextCursor.End)
-        bug.exec_()
+        
+        about = KGlobal.mainComponent().aboutData()
+        subject = "[%s %s] %s" % (
+            about.programName(), about.version(), self.tbshort)
+        body = "%s %s\n\n%s\n%s\n\n" % (
+            about.programName(), about.version(), self.tbfull,
+            i18n("Optionally describe what you were doing below:"))
+        to = about.bugAddress()
+        cc, bcc = '', ''
+        KToolInvocation.invokeMailer(to, cc, bcc, subject, body)
 
 
 def showException(parent, exctype, excvalue, exctb):
