@@ -42,8 +42,9 @@ class ExceptionDialog(KDialog):
             "An internal error has occurred:")))
         b = QTextBrowser()
         l.addWidget(b)
-        self.setCaption(self.tbshort)
+        self.setCaption(i18n("Internal Error"))
         b.setText(self.tbfull)
+        b.moveCursor(QTextCursor.End)
         self.setButtons(KDialog.ButtonCode(
             KDialog.User1 | KDialog.Close))
         self.setButtonIcon(KDialog.User1, KIcon("tools-report-bug"))
