@@ -237,6 +237,12 @@ It is therefore better to build PDF documents in publish mode when you
 want to distribute them (via e-mail or the World-wide Web) to others.
 </para></note>
 
+<warning><para>
+In KDE 4.2, Okular's built-in Point &amp; Click support sometimes doesn't work
+if the path of your &lilypond; source document contains spaces or accented characters.
+This is due to Okular not fully understanding the way &lilypond; encodes URLs.
+</para></warning>
+
 </sect1>
 
 <sect1 id="syntax">
