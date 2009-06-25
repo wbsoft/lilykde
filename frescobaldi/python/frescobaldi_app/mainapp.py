@@ -920,13 +920,18 @@ def updatedFiles(lyfile, reftime=None):
         directory, name = os.path.split(lyfile)
         escname = re.escape(os.path.splitext(name)[0]) # remove ext, escape
         def generatorfunc(ext = "*"):
-            ext = fnmatch.translate(ext)
-            pat = re.compile(r'%s(-[^-]+)*\.%s' % (escname, ext))
+            ext = fnmatch.translate(ext.lstrip('.'))
+            pat = re.compile(r'%s((?:-[^-]+)*)\.%s' % (escname, ext))
             try:
-                files = [os.path.join(directory, f)
-                    for f in os.listdir(directory) if pat.match(f)]
+                # get matching files and keep their matchObjects
+                matches = filter(None, map(pat.match, os.listdir(directory)))
             except OSError:
                 return []
+            # sort the files on the part after the basename
+            matches.sort(key=lambda m: naturalsortkey(m.group(1)))
+            # add the directory
+            files = [os.path.join(directory, m.group(0)) for m in matches]
+            # remove files that are older
             return [f for f in files if os.path.getmtime(f) >= reftime]
     else:
         def generatorfunc(ext=None):
@@ -938,4 +943,24 @@ def updatedFiles(lyfile, reftime=None):
 # is string an empty or blank line?
 def isblank(text):
     return not text or text.isspace()
-    
+
+# from http://code.activestate.com/recipes/285264/ comment#4
+def naturalsortkey(string):
+    r'''A natural sort helper function for sort() and sorted()
+    without using regular expression.
+
+    >>> items = ('Z', 'a', '10', '1', '9')
+    >>> sorted(items)
+    ['1', '10', '9', 'Z', 'a']
+    >>> sorted(items, key=keynat)
+    ['1', '9', '10', 'Z', 'a']
+    '''
+    r = []
+    for c in string:
+        try:
+            c = int(c)
+            try: r[-1] = r[-1] * 10 + c
+            except: r.append(c)
+        except:
+            r.append(c)
+    return r
