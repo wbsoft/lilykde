@@ -948,4 +948,4 @@ def filenamekey(filename):
     l = [m.group(2) or int(m.group(1))
             for m in re.finditer(r'(\d+)|(\D+)', name)]
     return l, ext
-    
+
