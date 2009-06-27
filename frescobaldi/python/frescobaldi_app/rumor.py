@@ -130,8 +130,7 @@ class RumorPanel(QWidget):
         # Button 'More Settings'
         sb = QPushButton(i18n("Configure..."))
         sb.setToolTip(i18n("Adjust more settings, like MIDI input and output."))
-        QObject.connect(sb, SIGNAL("clicked()"),
-            lambda: RumorSettings(self.mainwin).exec_())
+        QObject.connect(sb, SIGNAL("clicked()"), self.slotSettingsButtonClicked)
         hb.addWidget(sb)
 
         # Save Button
@@ -151,6 +150,9 @@ class RumorPanel(QWidget):
             msg = unicode(e)
             self.showMessage(i18n("Could not find Rumor: %1", msg), 5000)
 
+    def slotSettingsButtonClicked(self):
+        RumorSettings(self.mainwin).exec_()
+        
     def saveSettings(self):
         conf = config("rumor")
         conf.writeEntry("tempo", QVariant(self.tempo.tempo()))

@@ -74,7 +74,7 @@ class ProcessButtonBase(object):
         """ Starts the process, calling the initializeProcess method first."""
         p = KProcess()    # create a new one (FIXME: really needed?)
         self._p = p
-        QObject.connect(self, SIGNAL("destroyed()"), p.kill)
+        QObject.connect(self, SIGNAL("destroyed()"), p.terminate)
         QObject.connect(p, SIGNAL("finished(int, QProcess::ExitStatus)"), self.slotFinished)
         QObject.connect(p, SIGNAL("error(QProcess::ProcessError)"), self.slotError)
         QObject.connect(p, SIGNAL("started()"), self.slotStarted)
