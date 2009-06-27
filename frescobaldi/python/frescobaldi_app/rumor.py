@@ -630,4 +630,4 @@ def setComboBox(c, text):
         c.setCurrentIndex(index)
         
 
-default_timidity_command = "timidity -iA -B2,8 -Os -EFreverb=0"
+default_timidity_command = "timidity -iA -B2,8 -EFreverb=0"

@@ -58,13 +58,14 @@ class ProcessButtonBase(object):
         super(ProcessButtonBase, self).__init__(*args)
         self.setCheckable(True)
         self._p = KProcess()
-        @onSignal(self, "clicked()")
-        def clicked():
-            if self.isRunning():
-                self.setChecked(True) # keep pressed down
-                self.stop()
-            else:
-                self.start()
+        QObject.connect(self, SIGNAL("clicked()"), self.slotClicked)
+    
+    def slotClicked(self):
+        if self.isRunning():
+            self.setChecked(True) # keep pressed down
+            self.stop()
+        else:
+            self.start()
 
     def isRunning(self):
         return self._p.state() != QProcess.NotRunning
@@ -73,30 +74,37 @@ class ProcessButtonBase(object):
         """ Starts the process, calling the initializeProcess method first."""
         p = KProcess()    # create a new one (FIXME: really needed?)
         self._p = p
-        @onSignal(p, "finished(int, QProcess::ExitStatus)")
-        def finished(exitCode, exitStatus):
-            self.setChecked(False)
-            self.finished(exitCode, exitStatus)
-        @onSignal(p, "error(QProcess::ProcessError)")
-        def error(errorCode):
-            self.setChecked(False)
-            self.error(errorCode)
-        @onSignal(p, "started()")
-        def started():
-            self.setChecked(True)
-            self.started()
-        @onSignal(p, "readyRead()")
-        def readOutput():
-            self.readOutput(self._p.readAll())
-        @onSignal(p, "readyReadStandardError")
-        def readStderr():
-            self.readStderr(self._p.readAllStandardError())
-        @onSignal(p, "readyReadStandardOutput")
-        def readStdout():
-            self.readStdout(self._p.readAllStandardOutput())
+        QObject.connect(self, SIGNAL("destroyed()"), p.kill)
+        QObject.connect(p, SIGNAL("finished(int, QProcess::ExitStatus)"), self.slotFinished)
+        QObject.connect(p, SIGNAL("error(QProcess::ProcessError)"), self.slotError)
+        QObject.connect(p, SIGNAL("started()"), self.slotStarted)
+        QObject.connect(p, SIGNAL("readyRead()"), self.slotReadyRead)
+        QObject.connect(p, SIGNAL("readyReadStandardError()"), self.slotReadyReadStandardError)
+        QObject.connect(p, SIGNAL("readyReadStandardOutput()"), self.slotReadyReadStandardOutput)
         self.initializeProcess(p)
         p.start()
         
+    def slotFinished(self, exitCode, exitStatus):
+        self.setChecked(False)
+        self.finished(exitCode, exitStatus)
+    
+    def slotError(self, errorCode):
+        self.setChecked(False)
+        self.error(errorCode)
+    
+    def slotStarted(self):
+        self.setChecked(True)
+        self.started()
+    
+    def slotReadyRead(self):
+        self.readOutput(self._p.readAll())
+    
+    def slotReadyReadStandardError(self):
+        self.readStderr(self._p.readAllStandardError())
+    
+    def slotReadyReadStandardOutput(self):
+        self.readStdout(self._p.readAllStandardOutput())
+    
     def stop(self):
         """ Abort the running process """
         self._p.terminate()
@@ -242,14 +250,6 @@ def promptText(parent, message, title = None, text="", rx=None, help=None):
 
 
 # utility functions used by above classes:
-
-def onSignal(obj, signalName):
-    """ decorator to easily add connect a Qt signal to a Python slot."""
-    def decorator(func):
-        QObject.connect(obj, SIGNAL(signalName), func)
-        return func
-    return decorator
-
 def isexe(path):
     """
     Return path if it is an executable file, otherwise False

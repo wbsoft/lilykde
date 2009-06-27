@@ -29,7 +29,7 @@ STDIN, STDOUT = 0, 1
 
 master, slave = pty.openpty()
 p = subprocess.Popen(sys.argv[1:],
-    stdin = slave, stdout = slave, close_fds = True)
+    stdin = slave, stdout = STDOUT, close_fds = True)
 
 def terminate(signalnum, frame):
     os.kill(p.pid, signalnum)
@@ -45,12 +45,10 @@ except tty.error:
 
 while p.poll() is None:
     try:
-        fds = select.select([master, STDIN], [], [])[0]
+        fds = select.select([STDIN], [], [], 0.5)[0]
     except select.error:
         pass
     else:
-        if master in fds:
-            os.write(STDOUT, os.read(master, 1024))
         if STDIN in fds:
             data = os.read(STDIN, 1024)
             while data:
