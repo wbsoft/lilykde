@@ -30,7 +30,7 @@ from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QHBoxLayout, QLabel, QPushButton,
     QRegExpValidator, QToolButton, QTreeWidget, QTreeWidgetItem, QWidget)
 from PyKDE4.kdecore import KGlobal, KProcess, KShell, i18n
-from PyKDE4.kdeui import KDialog, KIcon
+from PyKDE4.kdeui import KDialog, KIcon, KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
 import ly.key, ly.parse
@@ -145,10 +145,10 @@ class RumorPanel(QWidget):
         cmd = unicode(config("commands").readEntry("rumor", "rumor"))
         try:
             v = Popen([cmd, '--version'], stdout=PIPE).communicate()[0].strip()
-            self.showMessage(i18n("Found rumor version %1.", v), 5000)
+            self.showMessage(i18n("Found rumor version %1.", v), 1000)
         except OSError, e:
-            msg = unicode(e)
-            self.showMessage(i18n("Could not find Rumor: %1", msg), 5000)
+            KMessageBox.error(self.mainwin,
+                i18n("Could not find Rumor: %1", unicode(e[1])))
 
     def slotSettingsButtonClicked(self):
         RumorSettings(self.mainwin).exec_()
