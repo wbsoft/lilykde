@@ -52,6 +52,7 @@ class MainWindow(KParts.MainWindow):
     
     Emits the following (Python) signals:
     currentDocumentChanged(Document)
+    aboutToClose() when the window will be closed.
     """
     def __init__(self, app):
         KParts.MainWindow.__init__(self)
@@ -60,7 +61,8 @@ class MainWindow(KParts.MainWindow):
         self.docks = {}
         self.tools = {}
         self.currentDocumentChanged = Signal()
-
+        self.aboutToClose = Signal()
+        
         # status bar
         sb = self.statusBar()
         self.sb_linecol = QLabel(sb)
@@ -394,6 +396,7 @@ class MainWindow(KParts.MainWindow):
                 return False
         # save some settings
         self.saveSettings()
+        self.aboutToClose()
         return True
         
     def loadSettings(self):
