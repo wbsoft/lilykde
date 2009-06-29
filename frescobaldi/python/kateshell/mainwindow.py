@@ -485,7 +485,7 @@ class ViewTabBar(QTabBar):
         self.docs[index].setActive()
         
     def contextMenuEvent(self, ev):
-        """ Called when the right mous button is clicked on the tab bar. """
+        """ Called when the right mouse button is clicked on the tab bar. """
         tab = self.tabAt(ev.pos())
         if tab == -1:
             return

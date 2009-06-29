@@ -318,6 +318,7 @@ class RumorButton(ProcessButtonBase, QToolButton):
         self.setToolTip(i18n("Start or stop Rumor MIDI-recording."))
         self.panel = panel
         self._lastkey = None
+        self.panel.mainwin.aboutToClose.connect(self.quit)
         
     def initializeProcess(self, p):
         rumor = config("commands").readEntry("rumor", "rumor")
@@ -344,7 +345,14 @@ class RumorButton(ProcessButtonBase, QToolButton):
             QTimer.singleShot(100, stop)
         else:
             stop()
-            
+    
+    def quit(self):
+        """ Called when mainwindow will close. """
+        if self.isRunning():
+            os.kill(self.process().pid(), 2)
+            if not self.process().waitForFinished(3000):
+                self.process().kill()
+        
     def readOutput(self, text):
         self.panel.insertRumorOutput(unicode(text))
 
@@ -381,11 +389,12 @@ class RumorButton(ProcessButtonBase, QToolButton):
 
             
 class TimidityButton(ProcessButtonBase, QPushButton):
-    def __init__(self, *args):
-        super(TimidityButton, self).__init__(*args)
+    def __init__(self, panel):
+        super(TimidityButton, self).__init__(panel)
         self.setText(i18n("TiMidity"))
         self.setToolTip(i18n("Start or stop the TiMidity ALSA MIDI client."))
         self.setIcon(KIcon("media-playback-start"))
+        panel.mainwin.aboutToClose.connect(self.quit)
 
     def initializeProcess(self, p):
         cmd, err = KShell.splitArgs(config("commands").readEntry("timidity",

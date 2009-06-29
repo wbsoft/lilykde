@@ -109,6 +109,16 @@ class ProcessButtonBase(object):
         """ Abort the running process """
         self._p.terminate()
     
+    def quit(self):
+        """
+        Really stop. After return of this function, the process
+        has been stopped neatly.
+        """
+        if self.isRunning():
+            self.stop()
+            if not self._p.waitForFinished(3000):
+                self._p.kill()
+        
     def process(self):
         """ Return the current KProcess instance. """
         return self._p
