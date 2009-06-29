@@ -403,7 +403,9 @@ class RumorSettings(KDialog):
     def __init__(self, mainwin):
         KDialog.__init__(self, mainwin)
         self.setCaption(i18n("Rumor Settings"))
-        self.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel))
+        self.setButtons(KDialog.ButtonCode(
+            KDialog.Ok | KDialog.Cancel | KDialog.Help))
+        self.setHelp("rumor")
 
         layout = QGridLayout(self.mainWidget())
         # MIDI input and output.

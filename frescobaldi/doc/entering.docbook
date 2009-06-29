@@ -79,14 +79,16 @@ for more information.
 </sect1>
 
 <sect1 id="rumor">
-<title>MIDI input via Rumor (Linux only)</title>
+<title>MIDI input via Rumor (&linux; only)</title>
 
 <para>
 &frescobaldi; can use an external program called
 <productname>Rumor</productname>, enabling you to enter music just by playing it on a
 MIDI keyboard (or even your computer keyboard). This has some limitations: you
 can only play monophonic music (notes or chords). Rumor also does not support
-tuplets.
+tuplets. To use Rumor within Frescobaldi, you must have installed it separately.
+Refer to the <ulink url="http://www.volny.cz/smilauer/rumor/">Rumor homepage</ulink>
+for download and install information.
 </para>
 
 <sect2>
@@ -94,17 +96,16 @@ tuplets.
 <para>
 Start the Rumor plugin by clicking on its tab in the bottom of the
 &frescobaldi; window. The Rumor panel appears at the bottom. In the panel is a
-settings dialog where you can configure which MIDI input and output you want to
+settings button where you can configure which MIDI input and output you want to
 use.
 </para>
 
 <para>
 If you have a MIDI keyboard controller but no audible output device you can run
-an ALSA MIDI-client like TiMidity++. &frescobaldi; can do this for you when you
-press the TiMidity-button (you can configure it to run any command in the main
-config dialog under &menu.settings.paths;).
-&frescobaldi; remembers the settings, so the next time it will automatically start the MIDI
-client.
+an ALSA MIDI-client like &timidity;. Many &linux; distributions already start
+&timidity; by default on bootup. But &frescobaldi; can also run it for you when you
+press the TiMidity-button. You can configure the command to run
+in the main settings dialog under &menu.settings.rumor;.
 </para>
 
 <para>
