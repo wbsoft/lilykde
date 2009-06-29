@@ -143,16 +143,13 @@ class MainApp(DBusItem):
             and self.documents[0].isEmpty())
         d = (not url.isEmpty() and self.findDocument(url)
             or self.createDocument(url, encoding))
-        d.setActive()
         if close0:
             self.documents[0].close()
         return d
 
     @method(iface, in_signature='', out_signature='o')
     def new(self):
-        d = self.createDocument()
-        d.setActive()
-        return d
+        return self.createDocument()
 
     def run(self, sender=None):
         """

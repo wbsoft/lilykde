@@ -149,7 +149,7 @@ class MainWindow(KParts.MainWindow):
         app.documentClosed.connect(self.removeDocument)
         
     def setupActions(self):
-        self.act('file_new', KStandardAction.New, self.app.new)
+        self.act('file_new', KStandardAction.New, self.newDocument)
         self.act('file_open', KStandardAction.Open, self.openDocument)
         self.act('file_close', KStandardAction.Close,
             lambda: self.app.activeDocument().close())
@@ -363,6 +363,10 @@ class MainWindow(KParts.MainWindow):
         QObject.connect(dlg, SIGNAL("newToolbarConfig()"), newToolbarConfig)
         dlg.exec_()
 
+    def newDocument(self):
+        """ Create a new empty document """
+        self.app.createDocument().setActive()
+        
     def openDocument(self):
         """ Open an existing document. """
         res = KEncodingFileDialog.getOpenUrlsAndEncoding(
@@ -370,9 +374,10 @@ class MainWindow(KParts.MainWindow):
             self.currentDocument().url().url() or self.app.defaultDirectory(),
             '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
             self, i18n("Open File"))
-        for url in res.URLs:
-            if not url.isEmpty():
-                self.app.openUrl(url, res.encoding)
+        docs = [self.app.openUrl(url, res.encoding) for url in res.URLs
+                    if not url.isEmpty()]
+        if docs:
+            docs[-1].setActive()
     
     def addToRecentFiles(self, doc=None):
         """ Add url of document to recently opened files. """
@@ -385,7 +390,7 @@ class MainWindow(KParts.MainWindow):
     @pyqtSignature("KUrl")
     def slotOpenRecent(self, url):
         """ Called by the open recent files action """
-        self.app.openUrl(url)
+        self.app.openUrl(url).setActive()
 
     def queryClose(self):
         """ Quit the application, also called by closing the window """

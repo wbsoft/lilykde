@@ -61,13 +61,13 @@ KCmdLineArgs.addCmdLineOptions(options)
 args = KCmdLineArgs.parsedArgs()
 
 app = not args.isSet("new") and runningApp() or newApp()
-nav = args.isSet("line") or args.isSet("column")
-line = int(args.getOption("line") or 1)
-col = int(args.getOption("column") or 0)
-for c in range(args.count()):
-    doc = app.openUrl(args.url(c), args.getOption("encoding"))
-    if doc and nav:
-        doc.setCursorPosition(line, col, args.isSet("smart"))
-        nav = False # only first doc
+docs = [app.openUrl(args.url(c), args.getOption("encoding"))
+        for c in range(args.count())]
+if docs:
+    docs[-1].setActive()
+    if args.isSet("line") or args.isSet("column"):
+        line = int(args.getOption("line") or 1)
+        col = int(args.getOption("column") or 0)
+        docs[-1].setCursorPosition(line, col, args.isSet("smart"))
     
 app.run()

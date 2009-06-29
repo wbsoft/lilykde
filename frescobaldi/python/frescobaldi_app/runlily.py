@@ -371,13 +371,14 @@ class FileRef(object):
         """
         Open our file and put the cursor in the right place.
         """
+        doc = self.doc or self.app.openUrl(self.path)
+        doc.setActive() # this binds our document! (via documentMaterialized)
+        # If we're still not bound, it's because there wasn't a smartInterface.
+        # In that case we just position the cursor ourselves.
         if self.doc:
-            self.doc.setActive()
             self.doc.view.setCursorPosition(self.smartCursor)
         else:
-            doc = self.app.openUrl(self.path)
-            if doc:
-                doc.setCursorPosition(self.line, self.column, translate=False)
+            doc.setCursorPosition(self.line, self.column, translate=False)
 
     def documentOpened(self, doc):
         if not self.doc and doc.localPath() == self.path:

@@ -413,7 +413,7 @@ class DocumentManipulator(object):
                     url = os.path.join(os.path.dirname(path), fileName)
                     a = menu.addAction(KIcon("document-open"), i18n("Open %1", fileName))
                     QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"),
-                        lambda url=url: self.doc.app.openUrl(url))
+                        lambda url=url: self.doc.app.openUrl(url).setActive())
                     return
         
         # Rhythm submenu
