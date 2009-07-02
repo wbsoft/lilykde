@@ -537,6 +537,8 @@ class TabBar(KMultiTabBar):
         self.appendTab(tool.icon().pixmap(16), tool._id, tool.title())
         tab = self.tab(tool._id)
         tab.setFocusPolicy(Qt.NoFocus)
+        tab.setToolTip("<b>%s</b><br/>%s" % (tool.title(),
+            i18n("Right-click for tab options")))
         tab.setContextMenuPolicy(Qt.CustomContextMenu)
         QObject.connect(tab, SIGNAL("clicked()"), tool.toggle)
         QObject.connect(tab, SIGNAL("customContextMenuRequested(const QPoint&)"),
@@ -868,6 +870,11 @@ class Tool(object):
 
 
 class KPartTool(Tool):
+    # set this to the library name you want to load
+    _partlibrary = ""
+    # set this to the name of the app containing this part
+    _partappname = ""
+    
     def __init__(self, mainwin, name, title="", icon="", dock=Right):
         self.part = None
         self.failed = False
@@ -885,8 +892,9 @@ class KPartTool(Tool):
                 QTimer.singleShot(0, self.partLoaded)
                 return part.widget()
         self.failed = True
-        libmsg = "<br/><b><tt>%s</tt></b><br/>" % self._partlibrary
-        return QLabel("<center>%s</center>" % i18n("Could not load %1", libmsg))
+        return QLabel("<center><p>%s</p><p>%s</p></center>" % (
+            i18n("Could not load %1", self._partlibrary),
+            i18n("Please install %1", self._partappname or self._partlibrary)))
 
     def partLoaded(self):
         """ Called when part is loaded. Use this to apply settings, etc."""

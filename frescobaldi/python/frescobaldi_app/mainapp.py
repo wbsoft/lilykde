@@ -583,6 +583,7 @@ class ApplyRhythmDialog(KDialog):
 class KonsoleTool(kateshell.mainwindow.KPartTool):
     """ A tool embedding a Konsole """
     _partlibrary = "libkonsolepart"
+    _partappname = "Konsole"
     def __init__(self, mainwin):
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "konsole", i18n("Terminal"), "terminal",
@@ -635,6 +636,7 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
 
 class PDFTool(kateshell.mainwindow.KPartTool):
     _partlibrary = "okularpart"
+    _partappname = "Okular"
     def __init__(self, mainwin):
         self._config = {}
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
@@ -731,6 +733,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         
 class QuickInsertTool(kateshell.mainwindow.Tool):
     helpAnchor = "quickinsert"
+    defaultWidth = 160
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "quickinsert", i18n("Quick Insert"), "document-properties",
