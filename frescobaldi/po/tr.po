@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
 "POT-Creation-Date: 2009-07-01 22:38+0200\n"
-"PO-Revision-Date: 2009-03-04 11:36+0200\n"
+"PO-Revision-Date: 2009-07-02 12:25+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
-"Language-Team: Turkish <yerellestirme@kde.org.tr>\n"
+"Language-Team: Turkish <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,9 +27,8 @@ msgid "LilyPond Music Editor"
 msgstr "LilyPond Müzik Düzenleyicisi"
 
 #: ../frescobaldi.py:36
-#, fuzzy
 msgid "Copyright (c) 2008-2009, Wilbert Berendsen"
-msgstr "Copyright (c) 2008, Wilbert Berendsen"
+msgstr "Copyright (c) 2008-2009, Wilbert Berendsen"
 
 #: ../frescobaldi.py:45
 msgctxt "NAME OF TRANSLATORS"
@@ -63,7 +62,7 @@ msgstr "Gidilecek sütun numarası, sıra numarası 0'dan başlamaktadır."
 
 #: ../frescobaldi.py:57
 msgid "Try to use smart line and column numbers"
-msgstr ""
+msgstr "Akıllı satır ve sütun numaralarını kullanmaya çalış"
 
 #: ../frescobaldi.py:58
 msgid "LilyPond files to open, may also be textedit URLs"
@@ -71,9 +70,8 @@ msgstr ""
 "Açılacak LilyPond dosyaları, bunlardan bazıları metin işlemeli URL'lerdir."
 
 #: dummy.py:5
-#, fuzzy
 msgid "&Insert"
-msgstr "Hızılı Ekle"
+msgstr "&Ekle"
 
 #: dummy.py:6
 msgid "&Document"
@@ -96,9 +94,8 @@ msgid "&Generated Files"
 msgstr "İşlenecek &Dosyalar"
 
 #: dummy.py:11
-#, fuzzy
 msgid "&Source Document"
-msgstr "&Belge"
+msgstr "&Kaynak Belgesi"
 
 #: ../python/ly/__init__.py:75
 msgid "Dedication"
@@ -361,21 +358,20 @@ msgid "Right toe"
 msgstr "Right toe"
 
 #: ../python/kateshell/exception.py:42
-#, fuzzy
 msgid "An internal error has occurred:"
-msgstr "Bilinmeyen bir hata meydana geldi."
+msgstr "Bir iç hata oluştu:"
 
 #: ../python/kateshell/exception.py:45
 msgid "Internal Error"
-msgstr ""
+msgstr "İç Hata"
 
 #: ../python/kateshell/exception.py:51
 msgid "Email Bug Report..."
-msgstr ""
+msgstr "Hata Raporunu E-posta ile gönder..."
 
 #: ../python/kateshell/exception.py:64
 msgid "Optionally describe what you were doing below:"
-msgstr ""
+msgstr "Aşağıya ne yaptığını opsiyonel olarak tanımla:"
 
 #: ../python/kateshell/mainwindow.py:91
 msgid "Left Sidebar"
@@ -399,7 +395,7 @@ msgstr "Yolu Göster"
 
 #: ../python/kateshell/mainwindow.py:166
 msgid "Show Document Tabs"
-msgstr ""
+msgstr "Belge Sekmelerini Göster"
 
 #: ../python/kateshell/mainwindow.py:184
 msgid "&Tool Views"
@@ -586,9 +582,8 @@ msgid "Cut and Assign"
 msgstr "Kes ve Ata:"
 
 #: ../python/frescobaldi_app/document.py:414
-#, fuzzy
 msgid "Open %1"
-msgstr "PDF aç"
+msgstr "Aç %1"
 
 #: ../python/frescobaldi_app/expand.py:172
 msgid "Expansion Manager"
@@ -754,7 +749,7 @@ msgstr "LilyPond'u çalıştır (yayınla)"
 
 #: ../python/frescobaldi_app/mainapp.py:321
 msgid "Can't process document"
-msgstr ""
+msgstr "Belgeyi işleyemiyor"
 
 #: ../python/frescobaldi_app/mainapp.py:324
 msgid "There is already a LilyPond job running for this document."
@@ -910,17 +905,15 @@ msgstr "Tirelemeyi kaldır"
 
 #: ../python/frescobaldi_app/mainapp.py:479
 msgid "Single Quote"
-msgstr ""
+msgstr "Tek Tırnak"
 
 #: ../python/frescobaldi_app/mainapp.py:483
-#, fuzzy
 msgid "Double Quote"
-msgstr "Katlı süreler"
+msgstr "Çift Tırnak"
 
 #: ../python/frescobaldi_app/mainapp.py:487
-#, fuzzy
 msgid "Align"
-msgstr "Aolyan"
+msgstr "Yasla"
 
 #: ../python/frescobaldi_app/mainapp.py:491
 msgid "Insert LilyPond version"
@@ -998,7 +991,7 @@ msgstr "log kaydı yok"
 
 #: ../python/frescobaldi_app/mainapp.py:792
 msgid "Only show on errors"
-msgstr ""
+msgstr "Sadece hatalarda göster"
 
 #: ../python/frescobaldi_app/mainapp.py:812
 msgid "Rumor"
@@ -1344,14 +1337,12 @@ msgid "Name or full path of the convert-ly program."
 msgstr "Convert-ly programının tam yolunun adı."
 
 #: ../python/frescobaldi_app/settings.py:242
-#, fuzzy
 msgid "PDF Viewer:"
-msgstr "PDF Önizleme"
+msgstr "PDF Görüntüleyici:"
 
 #: ../python/frescobaldi_app/settings.py:243
-#, fuzzy
 msgid "PDF Viewer"
-msgstr "PDF Önizleme"
+msgstr "PDF Görüntüleyici"
 
 #: ../python/frescobaldi_app/settings.py:244
 #: ../python/frescobaldi_app/settings.py:247
@@ -1360,11 +1351,11 @@ msgstr ""
 
 #: ../python/frescobaldi_app/settings.py:245
 msgid "MIDI Player:"
-msgstr ""
+msgstr "MIDI Çalıcı:"
 
 #: ../python/frescobaldi_app/settings.py:246
 msgid "MIDI Player"
-msgstr ""
+msgstr "MIDI Çalıcı"
 
 #: ../python/frescobaldi_app/settings.py:248
 msgid "Printcommand:"
@@ -1397,17 +1388,16 @@ msgstr ""
 "KDEDIRS ortam değişkenlerinin önekleri kendiliğinden eklenir."
 
 #: ../python/frescobaldi_app/settings.py:334
-#, fuzzy
 msgid "Rumor MIDI input"
-msgstr "MIDI girişi:"
+msgstr "Rumor MIDI girişi"
 
 #: ../python/frescobaldi_app/settings.py:335
 msgid "Rumor MIDI input plugin settings"
-msgstr ""
+msgstr "Rumor MIDI girişi eklentisi ayarları"
 
 #: ../python/frescobaldi_app/settings.py:340
 msgid "Commands used by the Rumor MIDI input module"
-msgstr ""
+msgstr "Rumor MIDI giriş modülünde kullanılan komutlar"
 
 #: ../python/frescobaldi_app/settings.py:347
 msgid "Name or full path of the Rumor program."
@@ -1776,15 +1766,16 @@ msgid "French"
 msgstr "Fransız"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:390
-#, fuzzy
 msgid "Guitar fret diagrams"
-msgstr "Gitar akordu"
+msgstr "Gitar fret diyagramları"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:392
 msgid ""
 "Show predefined guitar fret diagrams below the chord names (LilyPond 2.12 "
 "and above)."
 msgstr ""
+"Akor adlarının üzerine önceden tanımlanmış olan gitar fret diyagramlarını "
+"göster (LilyPond 2.12 veya üzeri için)."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:398
 msgid "Figured Bass"
