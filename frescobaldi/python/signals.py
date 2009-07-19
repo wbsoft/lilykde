@@ -47,10 +47,22 @@ class Signal:
         """ call all connected slots """
         # make copies because the sets might change...
         for func in set(self.functions):
-            func(*args[:func.func_code.co_argcount], **kwargs)
+            # if possible determine the number of arguments the function 
+            # expects, and discard the superfluous arguments.
+            try:
+                func.func_code.co_argcount
+            except AttributeError:
+                func(*args, **kwargs)
+            else:
+                func(*args[:func.func_code.co_argcount], **kwargs)
         for obj, methods in self.objects.items():
             for func in set(methods):
-                func(obj, *args[:func.func_code.co_argcount-1], **kwargs)
+                try:
+                    func.func_code.co_argcount
+                except AttributeError:
+                    func(obj, *args, **kwargs)
+                else:
+                    func(obj, *args[:func.func_code.co_argcount-1], **kwargs)
     
     def connect(self, func):
         if inspect.ismethod(func):
