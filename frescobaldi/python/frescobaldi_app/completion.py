@@ -23,6 +23,7 @@ LilyPond auto completion
 
 import re
 
+from PyQt4.QtCore import QVariant
 from PyKDE4.kdecore import KGlobal
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -136,5 +137,5 @@ def config(group):
     return KGlobal.config().group(group)
 
 def command(cmd):
-    return unicode(config("commands").readEntry(cmd, cmd))
+    return unicode(config("commands").readEntry(cmd, QVariant(cmd)).toString())
         

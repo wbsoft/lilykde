@@ -193,8 +193,8 @@ class GeneralPreferences(KVBox):
         for widget, name, default in self.checks:
             widget.setChecked(conf.readEntry(name, QVariant(default)).toBool())
         # lily version:
-        self.customVersion.setText(conf.readEntry("custom version", ""))
-        name = unicode(conf.readEntry("default version", ""))
+        self.customVersion.setText(conf.readEntry("custom version", QVariant("")).toString())
+        name = unicode(conf.readEntry("default version", QVariant("")).toString())
         if name not in self.versionOptions:
             name = "lilypond"
         self.versionOptions[name].setChecked(True)
@@ -304,9 +304,9 @@ class Commands(QWidget):
     def loadSettings(self):
         conf = config("commands")
         for widget, name, default in self.commands:
-            widget.setText(conf.readEntry(name, default))
+            widget.setText(conf.readEntry(name, QVariant(default)).toString())
         paths = config("hyphenation").readEntry("paths",
-            frescobaldi_app.hyphen.defaultPaths)
+            QVariant(frescobaldi_app.hyphen.defaultPaths)).toStringList()
         self.setHyphenPaths(paths)
         self.folder.setPath(
             config("preferences").readPathEntry("default directory", ""))
@@ -373,7 +373,7 @@ class RumorSettings(KVBox):
     def loadSettings(self):
         conf = config("commands")
         for widget, name, default in self.commands:
-            widget.setText(conf.readEntry(name, default))
+            widget.setText(conf.readEntry(name, QVariant(default)).toString())
         
     def saveSettings(self):
         conf = config("commands")
@@ -387,4 +387,4 @@ def config(group):
     return KGlobal.config().group(group)
 
 def command(cmd):
-    return unicode(config("commands").readEntry(cmd, cmd))
+    return unicode(config("commands").readEntry(cmd, QVariant(cmd)).toString())

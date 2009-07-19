@@ -142,7 +142,7 @@ class RumorPanel(QWidget):
         self.loadSettings()
         
         # display Rumor version on first start.
-        cmd = unicode(config("commands").readEntry("rumor", "rumor"))
+        cmd = unicode(config("commands").readEntry("rumor", QVariant("rumor")).toString())
         try:
             v = Popen([cmd, '--version'], stdout=PIPE).communicate()[0].strip()
             self.showMessage(i18n("Found rumor version %1.", v), 1000)
@@ -167,11 +167,11 @@ class RumorPanel(QWidget):
     def loadSettings(self):
         conf = config("rumor")
         self.tempo.setTempo(conf.readEntry("tempo", QVariant(100)).toInt()[0])
-        setComboBox(self.quantize, conf.readEntry("quantize", "16"))
+        setComboBox(self.quantize, conf.readEntry("quantize", QVariant("16")).toString())
         self.step.setChecked(conf.readEntry("step", QVariant(False)).toBool())
         self.mono.setChecked(conf.readEntry("mono", QVariant(False)).toBool())
-        setComboBox(self.meter, unautofy(conf.readEntry("meter", "auto")))
-        setComboBox(self.keysig, unautofy(conf.readEntry("meter", "auto")))
+        setComboBox(self.meter, unautofy(conf.readEntry("meter", QVariant("auto")).toString()))
+        setComboBox(self.keysig, unautofy(conf.readEntry("meter", QVariant("auto")).toString()))
         if conf.readEntry("timidity", QVariant(False)).toBool():
             self.timidity.start()
 
@@ -194,7 +194,7 @@ class RumorPanel(QWidget):
         text = doc.textToCursor(cursor)
         
         # Language
-        lang = unicode(conf.readEntry("language", "auto"))
+        lang = unicode(conf.readEntry("language", QVariant("auto")).toString())
         if lang not in (
                 'ne', 'en', 'en-short', 'de', 'no', 'sv', 'it', 'ca', 'es'):
             # determine lily language from document
@@ -274,7 +274,7 @@ class RumorPanel(QWidget):
             args.append("--strip")
 
         # Guile scripts?
-        scripts = map(unicode, conf.readEntry("scripts", ()))
+        scripts = map(unicode, conf.readEntry("scripts", QVariant(())).toStringList())
         if scripts:
             paths = dict((os.path.basename(path), path) for path in rumorScripts())
             for s in scripts:
@@ -282,8 +282,8 @@ class RumorPanel(QWidget):
                     args.append("--script=%s" % paths[s])
 
         # input/output
-        i = unicode(conf.readEntry("midi in", "oss:1"))
-        o = unicode(conf.readEntry("midi out", "oss:1"))
+        i = unicode(conf.readEntry("midi in", QVariant("oss:1")).toString())
+        o = unicode(conf.readEntry("midi out", QVariant("oss:1")).toString())
         if o.startswith('oss:'):
             args.append("--oss=%s" % o.split(":")[1])
         elif re.match(r"\d", o) and re.match(r"\d", i):
@@ -321,7 +321,7 @@ class RumorButton(ProcessButtonBase, QToolButton):
         self.panel.mainwin.aboutToClose.connect(self.quit)
         
     def initializeProcess(self, p):
-        rumor = config("commands").readEntry("rumor", "rumor")
+        rumor = config("commands").readEntry("rumor", QVariant("rumor")).toString()
         cmd = [rumor] + self.panel.getRumorArguments()
         if self.panel.keyboardEmu:
             # Run Rumor in a pty when keyboard input is used.
@@ -398,7 +398,7 @@ class TimidityButton(ProcessButtonBase, QPushButton):
 
     def initializeProcess(self, p):
         cmd, err = KShell.splitArgs(config("commands").readEntry("timidity",
-            default_timidity_command))
+            QVariant(default_timidity_command)).toString())
         if err == KShell.NoError:
             p.setProgram(cmd)
         else:
@@ -530,13 +530,13 @@ class RumorSettings(KDialog):
         else:
             idefault = 'kbd'
             odefault = self.olist[max(1, len(self.olist)-1)]
-        i = conf.readEntry("midi in", idefault)
-        o = conf.readEntry("midi out", odefault)
+        i = conf.readEntry("midi in", QVariant(idefault)).toString()
+        o = conf.readEntry("midi out", QVariant(odefault)).toString()
         if i in self.ilist:
             self.ibut.setCurrentIndex(self.ilist.index(i))
         if o in self.olist:
             self.obut.setCurrentIndex(self.olist.index(o))
-        setComboBox(self.lang, unautofy(conf.readEntry("language", "auto")))
+        setComboBox(self.lang, unautofy(conf.readEntry("language", QVariant("auto")).toString()))
         self.absPitches.setChecked(conf.readEntry("absolute pitches", QVariant(False)).toBool())
         self.explDur.setChecked(conf.readEntry("explicit durations", QVariant(False)).toBool())
         self.noBar.setChecked(conf.readEntry("no barlines", QVariant(False)).toBool())
@@ -545,7 +545,7 @@ class RumorSettings(KDialog):
         self.stripRests.setChecked(conf.readEntry("strip rests", QVariant(False)).toBool())
         # Guile scripts
         self.scripts.clear()
-        scripts = conf.readEntry("scripts", ())
+        scripts = conf.readEntry("scripts", QVariant(())).toStringList()
         for path in rumorScripts():
             name = os.path.basename(path)
             try:
@@ -590,7 +590,7 @@ def parseAconnect(channel):
     or writing (channel = 'o')
     """
     option = channel == 'i' and '--input' or '--output'
-    cmd = unicode(config("commands").readEntry("aconnect", "aconnect"))
+    cmd = unicode(config("commands").readEntry("aconnect", QVariant("aconnect")).toString())
     res = []
     for line in Popen([cmd, option], stdout=PIPE).communicate()[0].splitlines():
         m = re.match(r"client\s*(\d+)|\s*(\d+)\s+'([^']+)'", line)

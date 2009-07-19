@@ -637,7 +637,7 @@ class Document(DBusItem):
         # bookmarks
         markiface = self.doc.markInterface()
         if markiface:
-            marks = str(group.readEntry("bookmarks", ""))
+            marks = str(group.readEntry("bookmarks", QVariant("")).toString())
             if re.match(r"\d+:\d+(,\d+:\d+)*$", marks):
                 for m in marks.split(','):
                     line, mark = map(int, m.split(':'))
@@ -739,7 +739,7 @@ class Document(DBusItem):
         mode = self.doc and self.doc.mode() or self.app.defaultMode
         if mode:
             c = KConfig("katemoderc", KConfig.NoGlobals)
-            v = unicode(c.group(mode).readEntry("Variables"))
+            v = unicode(c.group(mode).readEntry("Variables", QVariant("")).toString())
             return dict(re.findall(r"([a-z]+(?:-[a-z]+)*)\s+([^;]*)", v))
     
     #BUG: Reimplemented below as the variableInterface does not seem to work...

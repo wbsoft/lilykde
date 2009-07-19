@@ -53,7 +53,7 @@ class MainApp(kateshell.app.MainApp):
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
         os.environ["FRESCOBALDI_PID"] = str(os.getpid())
         # check if stuff needs to be run after an update of Frescobaldi
-        if self.version() != config("").readEntry("version", "0.0"):
+        if self.version() != config("").readEntry("version", QVariant("0.0")).toString():
             from frescobaldi_app.install import install
             install(self)
         

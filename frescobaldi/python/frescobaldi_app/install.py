@@ -34,7 +34,7 @@ def install(app):
     """
     conf = KGlobal.config().group("")
     version = tuple(map(int,
-        re.findall(r'\d+', unicode(conf.readEntry("version", "")))))
+        re.findall(r'\d+', unicode(conf.readEntry("version", QVariant("")).toString()))))
     
     if not version:
         installKateModeRC()

@@ -22,7 +22,7 @@ Expand Manager, manages expansions.
 """
 import re
 
-from PyQt4.QtCore import QObject, QString, QTimer, Qt, SIGNAL
+from PyQt4.QtCore import QObject, QString, QTimer, Qt, QVariant, SIGNAL
 from PyQt4.QtGui import (
     QFont, QSplitter, QTextEdit, QTreeWidget, QTreeWidgetItem, QVBoxLayout)
 
@@ -101,7 +101,7 @@ class ExpandManager(object):
         """
         Return the description for the expansion name.
         """
-        return unicode(self.expansions.group(name).readEntry("Name", ""))
+        return unicode(self.expansions.group(name).readEntry("Name", QVariant("")).toString())
     
     def doExpand(self, expansion, remove=None):
         """
@@ -111,7 +111,7 @@ class ExpandManager(object):
         doc = self.mainwin.currentDocument()
         
         group = self.expansions.group(expansion)
-        text = unicode(group.readEntry("Text", ""))
+        text = unicode(group.readEntry("Text", QVariant("")).toString())
         
         # where to insert the text:
         cursor = remove and remove.start() or doc.view.cursorPosition()
@@ -254,7 +254,7 @@ class ExpansionDialog(KDialog):
         # load the expansions
         for groupName in sorted(self.manager.expansions.groupList()):
             group = expansions.group(groupName)
-            description = group.readEntry("Name", "")
+            description = group.readEntry("Name", QVariant("")).toString()
             if description:
                 makeItem(groupName, description)
 
@@ -316,7 +316,7 @@ class ExpansionDialog(KDialog):
             if items:
                 self.saveEditIfNecessary()
                 edit.setPlainText(expansions.group(
-                    items[0].text(0)).readEntry("Text", ""))
+                    items[0].text(0)).readEntry("Text", QVariant("")).toString())
                 edit.item = items[0]
                 edit.dirty = False
         
@@ -330,7 +330,7 @@ class ExpansionDialog(KDialog):
                 else:
                     KMessageBox.error(self.manager.mainwin, i18n(
                         "Please don't leave the description empty."))
-                    item.setText(1, group.readEntry("Name", ""))
+                    item.setText(1, group.readEntry("Name", QVariant("")).toString())
                     tree.editItem(item, 1)
             elif item.groupName != item.text(0):
                 items = [i for i in self.items() if i.text(0) == item.text(0)]
@@ -350,7 +350,7 @@ class ExpansionDialog(KDialog):
                     group = expansions.group(item.text(0))
                     group.writeEntry("Name", item.text(1))
                     group.writeEntry("Text",
-                        expansions.group(item.groupName).readEntry("Text", ""))
+                        expansions.group(item.groupName).readEntry("Text", QVariant("")).toString())
                     expansions.deleteGroup(item.groupName)
                     item.groupName = item.text(0)
                     tree.scrollToItem(item)

@@ -108,7 +108,7 @@ class ScoreWizard(KPageDialog):
         for name, widget in self.completableWidgets.iteritems():
             c = widget.completionObject()
             c.setOrder(KCompletion.Sorted)
-            c.setItems(conf.readEntry(name, QStringList()))
+            c.setItems(conf.readEntry(name, QVariant(QStringList())).toStringList())
 
     def done(self, result):
         self.saveDialogSize(config("dialogsize"))
@@ -567,14 +567,14 @@ class Settings(QWidget):
 
     def loadConfig(self):
         conf = config()
-        self.setLanguage(conf.readEntry('language', 'default'))
+        self.setLanguage(conf.readEntry('language', QVariant('default')).toString())
         self.typq.setChecked(conf.readEntry('typographical', QVariant(True)).toBool())
         self.tagl.setChecked(conf.readEntry('remove tagline', QVariant(False)).toBool())
         self.barnum.setChecked(conf.readEntry('remove barnumbers', QVariant(False)).toBool())
         self.midi.setChecked(conf.readEntry('midi', QVariant(True)).toBool())
         self.metro.setChecked(conf.readEntry('metronome mark', QVariant(False)).toBool())
 
-        psize = conf.readEntry('paper size', '')
+        psize = conf.readEntry('paper size', QVariant('')).toString()
         if psize in paperSizes:
             self.paper.setCurrentIndex(paperSizes.index(psize) + 1)
         self.paperLandscape.setChecked(conf.readEntry('paper landscape', QVariant(False)).toBool())
@@ -582,7 +582,7 @@ class Settings(QWidget):
 
         g = config('instrument names')
         def readconf(entry, itemlist, defaultIndex):
-            item = g.readEntry(entry, itemlist[defaultIndex])
+            item = g.readEntry(entry, QVariant(itemlist[defaultIndex])).toString()
             if item in itemlist:
                 return itemlist.index(item)
             else:

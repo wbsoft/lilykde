@@ -25,6 +25,7 @@ from glob import glob
 import ly.rx
 from hyphenator import Hyphenator
 
+from PyQt4.QtCore import QVariant
 from PyQt4.QtGui import QLabel, QListWidget
 from PyKDE4.kdecore import KConfig, KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KVBox
@@ -58,7 +59,7 @@ def findDicts():
         prefixes = unicode(KGlobal.dirs().kfsstnd_prefixes()).split(os.pathsep)
         prefixes = set(prefixes + ['/usr/', '/usr/local/'])
         # if the path is not absolute, add it to all prefixes.
-        for path in conf.readEntry("paths", defaultPaths):
+        for path in conf.readEntry("paths", QVariant(defaultPaths)).toStringList():
             path = unicode(path)
             if os.path.isabs(path):
                 yield path
@@ -96,7 +97,7 @@ def findDicts():
             hyphdicts[lang] = dic
 
     # if not used before, write the current locale (if existing) as default
-    if defaultlang and unicode(conf.readEntry("lastused", "")) not in hyphdicts:
+    if defaultlang and unicode(conf.readEntry("lastused", QVariant("")).toString()) not in hyphdicts:
         conf.writeEntry("lastused", defaultlang)
         conf.sync()
 
@@ -109,7 +110,7 @@ def hyphenate(text, mainwindow):
     Returns None if the user cancels the dialog.
     """
     conf = config("hyphenation")
-    lang = conf.readEntry("lastused", "")
+    lang = conf.readEntry("lastused", QVariant("")).toString()
     langs = list(sorted(hyphdicts.keys()))
     index = lang in langs and langs.index(lang) or 0
     

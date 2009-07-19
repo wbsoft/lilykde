@@ -63,7 +63,7 @@ class Ly2PDF(object):
         self.p = KProcess()
         self.p.setOutputChannelMode(KProcess.MergedChannels)
         self.p.setWorkingDirectory(self.directory)
-        cmd = [config("commands").readEntry("lilypond", "lilypond"), "--pdf"]
+        cmd = [config("commands").readEntry("lilypond", QVariant("lilypond")).toString(), "--pdf"]
         cmd.append(self.preview and "-dpoint-and-click" or "-dno-point-and-click")
         if config("preferences").readEntry("delete intermediate files",
                                            QVariant(True)).toBool():
