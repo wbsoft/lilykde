@@ -38,10 +38,14 @@ class Signal:
     
     Emit the signal (to call all connected slots) by simply invoking it.
     The order in which the slots are called is undetermined.
+    
+    If you create the signal instance with fireonce=True, it will clear
+    all connections after being invoked.
     """
-    def __init__(self):
+    def __init__(self, fireonce=False):
         self.functions = set()
         self.objects = weakref.WeakKeyDictionary()
+        self.fireonce = fireonce
 
     def __call__(self, *args, **kwargs):
         """ call all connected slots """
@@ -63,7 +67,9 @@ class Signal:
                     func(obj, *args, **kwargs)
                 else:
                     func(obj, *args[:func.func_code.co_argcount-1], **kwargs)
-    
+        if self.fireonce:
+            self.clear()
+            
     def connect(self, func):
         if inspect.ismethod(func):
             self.objects.setdefault(func.im_self, set()).add(func.im_func)

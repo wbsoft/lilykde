@@ -51,7 +51,7 @@ class Ly2PDF(object):
     """
     preview = False
     def __init__(self, lyfile, log):
-        self.done = Signal()
+        self.done = Signal(fireonce=True)
         # save this so the log knows if we built a PDF with point and click:
         log.preview = self.preview
         self.log = log
