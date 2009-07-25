@@ -19,7 +19,7 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
-import math, os, re, shutil, tempfile, time
+import math, os, re, shutil, sys, tempfile, time
 
 from PyQt4.QtCore import (
     QObject, QProcess, QSize, QTimer, QUrl, QVariant, Qt, SIGNAL)
@@ -131,7 +131,8 @@ class Ly2PDF(object):
         self.done(False, self)
         
     def readOutput(self):
-        text = str(self.p.readAllStandardOutput()).decode('utf-8')
+        encoding = sys.getfilesystemencoding() or 'utf-8'
+        text = str(self.p.readAllStandardOutput()).decode(encoding)
         parts = _ly_message_re.split(text)
         # parts has an odd length(1, 6, 11 etc)
         # message, <url, path, line, col, message> etc.
