@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-07-01 22:38+0200\n"
+"POT-Creation-Date: 2009-07-27 21:11+0200\n"
 "PO-Revision-Date: 2009-01-10 01:54+0100\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
 "Language-Team: Spanish\n"
@@ -447,17 +447,25 @@ msgstr "Todos los archivos"
 msgid "Open File"
 msgstr "Abrir archivo"
 
-#: ../python/kateshell/mainwindow.py:818
+#: ../python/kateshell/mainwindow.py:541
+msgid "Right-click for tab options"
+msgstr ""
+
+#: ../python/kateshell/mainwindow.py:820
 msgid "Move To"
 msgstr "Mover a"
 
-#: ../python/kateshell/mainwindow.py:825
+#: ../python/kateshell/mainwindow.py:827
 msgid "Undock"
 msgstr "Desempotrar"
 
-#: ../python/kateshell/mainwindow.py:889
+#: ../python/kateshell/mainwindow.py:896
 msgid "Could not load %1"
 msgstr "No se ha podido cargar %1"
+
+#: ../python/kateshell/mainwindow.py:897
+msgid "Please install %1"
+msgstr ""
 
 #: ../python/frescobaldi_app/actions.py:55
 msgid "Open %1 in external viewer"
@@ -658,12 +666,12 @@ msgid ""
 "expansion name."
 msgstr ""
 
-#: ../python/frescobaldi_app/hyphen.py:119
+#: ../python/frescobaldi_app/hyphen.py:120
 #: ../python/frescobaldi_app/mainapp.py:469
 msgid "Hyphenate Lyrics Text"
 msgstr "Enguionar el texto de la letra"
 
-#: ../python/frescobaldi_app/hyphen.py:123
+#: ../python/frescobaldi_app/hyphen.py:124
 msgid "Please select a language:"
 msgstr "Seleccione un idioma:"
 
@@ -947,53 +955,53 @@ msgstr ""
 "Introducir un ritmo utilizando valores de duración separados por espacios (p."
 "ej. 8. 16 8 4 8)"
 
-#: ../python/frescobaldi_app/mainapp.py:588
+#: ../python/frescobaldi_app/mainapp.py:589
 msgid "Terminal"
 msgstr "Terminal"
 
-#: ../python/frescobaldi_app/mainapp.py:621
+#: ../python/frescobaldi_app/mainapp.py:622
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "&Sincronizar el terminal con el documento actual"
 
-#: ../python/frescobaldi_app/mainapp.py:641
+#: ../python/frescobaldi_app/mainapp.py:643
 #: ../python/frescobaldi_app/scorewiz/preview.py:46
 msgid "PDF Preview"
 msgstr "Vista previa del PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:670
+#: ../python/frescobaldi_app/mainapp.py:672
 msgid "Show PDF Navigation Panel"
 msgstr "Mostrar el panel de navegación de PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:671
+#: ../python/frescobaldi_app/mainapp.py:673
 msgid "Show PDF minipager"
 msgstr "Mostrar el mini-paginador de PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:672
+#: ../python/frescobaldi_app/mainapp.py:674
 #, fuzzy
 msgid "Configure Okular..."
 msgstr "Configurar..."
 
-#: ../python/frescobaldi_app/mainapp.py:675
+#: ../python/frescobaldi_app/mainapp.py:677
 msgid "S&ynchronize Preview with Current Document"
 msgstr "&Sincronizar la vista previa con el documento actual"
 
-#: ../python/frescobaldi_app/mainapp.py:736
+#: ../python/frescobaldi_app/mainapp.py:739
 msgid "Quick Insert"
 msgstr "Inserción rápida"
 
-#: ../python/frescobaldi_app/mainapp.py:748
+#: ../python/frescobaldi_app/mainapp.py:751
 msgid "LilyPond Log"
 msgstr "Registro de LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:752
+#: ../python/frescobaldi_app/mainapp.py:755
 msgid "no log"
 msgstr "no guardar registro"
 
-#: ../python/frescobaldi_app/mainapp.py:792
+#: ../python/frescobaldi_app/mainapp.py:795
 msgid "Only show on errors"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:812
+#: ../python/frescobaldi_app/mainapp.py:815
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -1262,7 +1270,7 @@ msgstr "No se ha podido leer a partir del proceso LilyPond."
 msgid "An unknown error occured."
 msgstr "Se ha producido un error desconocido."
 
-#: ../python/frescobaldi_app/runlily.py:304
+#: ../python/frescobaldi_app/runlily.py:305
 msgid "Click to edit this file"
 msgstr "Pulse para editar este archivo"
 
@@ -1424,16 +1432,16 @@ msgstr ""
 "Instrucción completa para iniciar Timidity (o cualquier otro programa) como "
 "cliente de MIDI ALSA."
 
-#: ../python/frescobaldi_app/version.py:54
+#: ../python/frescobaldi_app/version.py:55
 msgid "Your document has already a LilyPond version statement."
 msgstr "El documento ya tiene una declaración de la versión de LilyPond."
 
-#: ../python/frescobaldi_app/version.py:55
+#: ../python/frescobaldi_app/version.py:56
 msgid "Version already set"
 msgstr "Versión ya establecida"
 
-#: ../python/frescobaldi_app/version.py:63
-#: ../python/frescobaldi_app/version.py:81
+#: ../python/frescobaldi_app/version.py:64
+#: ../python/frescobaldi_app/version.py:82
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
@@ -1441,7 +1449,7 @@ msgstr ""
 "No es posible determinar la versión de LilyPond. Revise la instalación de "
 "LilyPond."
 
-#: ../python/frescobaldi_app/version.py:77
+#: ../python/frescobaldi_app/version.py:78
 msgid ""
 "Can't determine the LilyPond version of the current document. Please add a "
 "\\version statement with the correct version."
@@ -1449,11 +1457,11 @@ msgstr ""
 "No es posible determinar la versión de LilyPond del documento actual. "
 "Escriba una declaración \\version con la versión correcta."
 
-#: ../python/frescobaldi_app/version.py:85
+#: ../python/frescobaldi_app/version.py:86
 msgid "This LilyPond document is already up-to-date."
 msgstr "Este documento de LilyPond ya está actualizado."
 
-#: ../python/frescobaldi_app/version.py:99
+#: ../python/frescobaldi_app/version.py:100
 msgid ""
 "The document has been processed with convert-ly. You'll find the messages of "
 "convert-ly in a comment block at the end. You still may have to edit some "
@@ -1463,7 +1471,7 @@ msgstr ""
 "convert-ly en un bloque de comentario al final. Posiblemente tenga que "
 "editar algunas partes de forma manual."
 
-#: ../python/frescobaldi_app/version.py:105
+#: ../python/frescobaldi_app/version.py:106
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
 "This is the message given by convert-ly: %1"
@@ -1471,7 +1479,7 @@ msgstr ""
 "El documento ha sido procesado con convert-ly, pero ha permanecido sin "
 "cambios. Éste es el mensaje que ha dado convert-ly: %1"
 
-#: ../python/frescobaldi_app/version.py:110
+#: ../python/frescobaldi_app/version.py:111
 msgid "Could not start convert-ly: %1"
 msgstr "No ha sido posible iniciar convert-ly: %1"
 

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-07-01 22:38+0200\n"
-"PO-Revision-Date: 2009-06-24 21:32+0200\n"
+"POT-Creation-Date: 2009-07-27 21:11+0200\n"
+"PO-Revision-Date: 2009-07-27 21:13+0200\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -444,17 +444,25 @@ msgstr "Alle bestanden"
 msgid "Open File"
 msgstr "Bestand openen"
 
-#: ../python/kateshell/mainwindow.py:818
+#: ../python/kateshell/mainwindow.py:541
+msgid "Right-click for tab options"
+msgstr "Klik rechts voor tab-opties"
+
+#: ../python/kateshell/mainwindow.py:820
 msgid "Move To"
 msgstr "Verplaatsen naar"
 
-#: ../python/kateshell/mainwindow.py:825
+#: ../python/kateshell/mainwindow.py:827
 msgid "Undock"
 msgstr "Losmaken"
 
-#: ../python/kateshell/mainwindow.py:889
+#: ../python/kateshell/mainwindow.py:896
 msgid "Could not load %1"
 msgstr "Kan %1 niet laden"
+
+#: ../python/kateshell/mainwindow.py:897
+msgid "Please install %1"
+msgstr "Installeer %1"
 
 #: ../python/frescobaldi_app/actions.py:55
 msgid "Open %1 in external viewer"
@@ -676,12 +684,12 @@ msgid ""
 msgstr ""
 "Gebruik alleen letters, cijfers en het onderstreepteken voor de sneltekst."
 
-#: ../python/frescobaldi_app/hyphen.py:119
+#: ../python/frescobaldi_app/hyphen.py:120
 #: ../python/frescobaldi_app/mainapp.py:469
 msgid "Hyphenate Lyrics Text"
 msgstr "Liedteksten afbreken"
 
-#: ../python/frescobaldi_app/hyphen.py:123
+#: ../python/frescobaldi_app/hyphen.py:124
 msgid "Please select a language:"
 msgstr "Selecteer een taal:"
 
@@ -956,52 +964,52 @@ msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr ""
 "Voer een ritme in met nootlengtes en spaties ertussen (bijv. 8. 16 8 4 8)"
 
-#: ../python/frescobaldi_app/mainapp.py:588
+#: ../python/frescobaldi_app/mainapp.py:589
 msgid "Terminal"
 msgstr "Terminal"
 
-#: ../python/frescobaldi_app/mainapp.py:621
+#: ../python/frescobaldi_app/mainapp.py:622
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "Terminal met huidig document s&ynchroniseren"
 
-#: ../python/frescobaldi_app/mainapp.py:641
+#: ../python/frescobaldi_app/mainapp.py:643
 #: ../python/frescobaldi_app/scorewiz/preview.py:46
 msgid "PDF Preview"
 msgstr "PDF vooruitblik"
 
-#: ../python/frescobaldi_app/mainapp.py:670
+#: ../python/frescobaldi_app/mainapp.py:672
 msgid "Show PDF Navigation Panel"
 msgstr "PDF-navigatiepaneel tonen"
 
-#: ../python/frescobaldi_app/mainapp.py:671
+#: ../python/frescobaldi_app/mainapp.py:673
 msgid "Show PDF minipager"
 msgstr "PDF-minipager tonen"
 
-#: ../python/frescobaldi_app/mainapp.py:672
+#: ../python/frescobaldi_app/mainapp.py:674
 msgid "Configure Okular..."
 msgstr "Okular instellen..."
 
-#: ../python/frescobaldi_app/mainapp.py:675
+#: ../python/frescobaldi_app/mainapp.py:677
 msgid "S&ynchronize Preview with Current Document"
 msgstr "Vooruitblik met huidig document s&ynchroniseren"
 
-#: ../python/frescobaldi_app/mainapp.py:736
+#: ../python/frescobaldi_app/mainapp.py:739
 msgid "Quick Insert"
 msgstr "Quick Insert"
 
-#: ../python/frescobaldi_app/mainapp.py:748
+#: ../python/frescobaldi_app/mainapp.py:751
 msgid "LilyPond Log"
 msgstr "LilyPond-uitvoer"
 
-#: ../python/frescobaldi_app/mainapp.py:752
+#: ../python/frescobaldi_app/mainapp.py:755
 msgid "no log"
 msgstr "geen log"
 
-#: ../python/frescobaldi_app/mainapp.py:792
+#: ../python/frescobaldi_app/mainapp.py:795
 msgid "Only show on errors"
 msgstr "Alleen tonen bij fouten"
 
-#: ../python/frescobaldi_app/mainapp.py:812
+#: ../python/frescobaldi_app/mainapp.py:815
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -1269,7 +1277,7 @@ msgstr "Kan de uitvoer van het LilyPond-proces niet lezen."
 msgid "An unknown error occured."
 msgstr "Er is een onbekende fout opgetreden."
 
-#: ../python/frescobaldi_app/runlily.py:304
+#: ../python/frescobaldi_app/runlily.py:305
 msgid "Click to edit this file"
 msgstr "Klik om dit bestand te bewerken"
 
@@ -1427,23 +1435,23 @@ msgstr ""
 "Commandoregel om Timidity (of een ander programma) te starten als ALSA MIDI-"
 "client."
 
-#: ../python/frescobaldi_app/version.py:54
+#: ../python/frescobaldi_app/version.py:55
 msgid "Your document has already a LilyPond version statement."
 msgstr "Uw document heeft reeds een LilyPond versie-commando."
 
-#: ../python/frescobaldi_app/version.py:55
+#: ../python/frescobaldi_app/version.py:56
 msgid "Version already set"
 msgstr "Versie al ingesteld"
 
-#: ../python/frescobaldi_app/version.py:63
-#: ../python/frescobaldi_app/version.py:81
+#: ../python/frescobaldi_app/version.py:64
+#: ../python/frescobaldi_app/version.py:82
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
 msgstr ""
 "Kan de versie van LilyPond niet bepalen. Controleer uw LilyPond-installatie."
 
-#: ../python/frescobaldi_app/version.py:77
+#: ../python/frescobaldi_app/version.py:78
 msgid ""
 "Can't determine the LilyPond version of the current document. Please add a "
 "\\version statement with the correct version."
@@ -1451,11 +1459,11 @@ msgstr ""
 "Kan de LilyPond-versie van het huidige document niet bepalen. Voeg een "
 "\\version commando toe met de correcte versie van het document."
 
-#: ../python/frescobaldi_app/version.py:85
+#: ../python/frescobaldi_app/version.py:86
 msgid "This LilyPond document is already up-to-date."
 msgstr "Dit LilyPond-document is reeds bijgewerkt."
 
-#: ../python/frescobaldi_app/version.py:99
+#: ../python/frescobaldi_app/version.py:100
 msgid ""
 "The document has been processed with convert-ly. You'll find the messages of "
 "convert-ly in a comment block at the end. You still may have to edit some "
@@ -1465,7 +1473,7 @@ msgstr ""
 "u aan het eind in een commentaarblok. Het kan zijn dat u bepaalde "
 "wijzigingen nog handmatig dient door te voeren."
 
-#: ../python/frescobaldi_app/version.py:105
+#: ../python/frescobaldi_app/version.py:106
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
 "This is the message given by convert-ly: %1"
@@ -1473,7 +1481,7 @@ msgstr ""
 "Het document is verwerkt door convert-ly, maar bleef ongewijzigd. Dit is de "
 "melding die convert-ly gaf: %1"
 
-#: ../python/frescobaldi_app/version.py:110
+#: ../python/frescobaldi_app/version.py:111
 msgid "Could not start convert-ly: %1"
 msgstr "Kan convert-ly niet starten: %1"
 

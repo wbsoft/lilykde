@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.5\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-07-01 22:38+0200\n"
+"POT-Creation-Date: 2009-07-27 21:11+0200\n"
 "PO-Revision-Date: 2009-03-01 11:22+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@lists.kde.org>\n"
@@ -450,17 +450,25 @@ msgstr "Všechny soubory"
 msgid "Open File"
 msgstr "Otevřít soubor"
 
-#: ../python/kateshell/mainwindow.py:818
+#: ../python/kateshell/mainwindow.py:541
+msgid "Right-click for tab options"
+msgstr ""
+
+#: ../python/kateshell/mainwindow.py:820
 msgid "Move To"
 msgstr "Přesunout do"
 
-#: ../python/kateshell/mainwindow.py:825
+#: ../python/kateshell/mainwindow.py:827
 msgid "Undock"
 msgstr "Vyplout z doku"
 
-#: ../python/kateshell/mainwindow.py:889
+#: ../python/kateshell/mainwindow.py:896
 msgid "Could not load %1"
 msgstr "Nešlo nahrát %1"
+
+#: ../python/kateshell/mainwindow.py:897
+msgid "Please install %1"
+msgstr ""
 
 #: ../python/frescobaldi_app/actions.py:55
 msgid "Open %1 in external viewer"
@@ -688,12 +696,12 @@ msgid ""
 msgstr ""
 "V názvu rozšíření použijte, prosím, pouze písmena, číslice a podtržítka."
 
-#: ../python/frescobaldi_app/hyphen.py:119
+#: ../python/frescobaldi_app/hyphen.py:120
 #: ../python/frescobaldi_app/mainapp.py:469
 msgid "Hyphenate Lyrics Text"
 msgstr "Rozdělit spojovníkem text se slovy písně"
 
-#: ../python/frescobaldi_app/hyphen.py:123
+#: ../python/frescobaldi_app/hyphen.py:124
 msgid "Please select a language:"
 msgstr "Vyberte, prosím, jazyk:"
 
@@ -970,53 +978,53 @@ msgstr ""
 "Zadat rytmus za použití mezerou oddělených hodnot dob trvání (např. 8. 16 8 "
 "4 8)"
 
-#: ../python/frescobaldi_app/mainapp.py:588
+#: ../python/frescobaldi_app/mainapp.py:589
 msgid "Terminal"
 msgstr "Terminál"
 
-#: ../python/frescobaldi_app/mainapp.py:621
+#: ../python/frescobaldi_app/mainapp.py:622
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "Se&řídit terminál s aktuálním dokumentem"
 
-#: ../python/frescobaldi_app/mainapp.py:641
+#: ../python/frescobaldi_app/mainapp.py:643
 #: ../python/frescobaldi_app/scorewiz/preview.py:46
 msgid "PDF Preview"
 msgstr "Náhled PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:670
+#: ../python/frescobaldi_app/mainapp.py:672
 msgid "Show PDF Navigation Panel"
 msgstr "Ukázat navigační panel PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:671
+#: ../python/frescobaldi_app/mainapp.py:673
 msgid "Show PDF minipager"
 msgstr "Ukázat miniaturní PDF číslovač stran"
 
-#: ../python/frescobaldi_app/mainapp.py:672
+#: ../python/frescobaldi_app/mainapp.py:674
 #, fuzzy
 msgid "Configure Okular..."
 msgstr "Nastavit..."
 
-#: ../python/frescobaldi_app/mainapp.py:675
+#: ../python/frescobaldi_app/mainapp.py:677
 msgid "S&ynchronize Preview with Current Document"
 msgstr "Se&řídit náhled s aktuálním dokumentem"
 
-#: ../python/frescobaldi_app/mainapp.py:736
+#: ../python/frescobaldi_app/mainapp.py:739
 msgid "Quick Insert"
 msgstr "Rychle vložit"
 
-#: ../python/frescobaldi_app/mainapp.py:748
+#: ../python/frescobaldi_app/mainapp.py:751
 msgid "LilyPond Log"
 msgstr "Záznam o průběhu činnosti od LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:752
+#: ../python/frescobaldi_app/mainapp.py:755
 msgid "no log"
 msgstr "Žádný záznam o průběhu činnosti"
 
-#: ../python/frescobaldi_app/mainapp.py:792
+#: ../python/frescobaldi_app/mainapp.py:795
 msgid "Only show on errors"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:812
+#: ../python/frescobaldi_app/mainapp.py:815
 msgid "Rumor"
 msgstr "Rumor"
 
@@ -1285,7 +1293,7 @@ msgstr "Z LilyPond procesu nešlo číst."
 msgid "An unknown error occured."
 msgstr "Vyskytla se neznámá chyba."
 
-#: ../python/frescobaldi_app/runlily.py:304
+#: ../python/frescobaldi_app/runlily.py:305
 msgid "Click to edit this file"
 msgstr "Klepněte, abyste mohl upravovat tento soubor"
 
@@ -1448,16 +1456,16 @@ msgstr ""
 "Úplný příkaz pro spuštění Timidity (nebo jakéhokoli jiného programu) jako "
 "ALSA MIDI klienta."
 
-#: ../python/frescobaldi_app/version.py:54
+#: ../python/frescobaldi_app/version.py:55
 msgid "Your document has already a LilyPond version statement."
 msgstr "Váš dokument má již uvedenu verzi programu LilyPond."
 
-#: ../python/frescobaldi_app/version.py:55
+#: ../python/frescobaldi_app/version.py:56
 msgid "Version already set"
 msgstr "Verze je již nastavena"
 
-#: ../python/frescobaldi_app/version.py:63
-#: ../python/frescobaldi_app/version.py:81
+#: ../python/frescobaldi_app/version.py:64
+#: ../python/frescobaldi_app/version.py:82
 msgid ""
 "Can't determine the version of LilyPond. Please check your LilyPond "
 "installation."
@@ -1465,7 +1473,7 @@ msgstr ""
 "Nelze určit verzi programu LilyPond. Zkontrolujte, prosím, vaši instalaci "
 "programu LilyPond. "
 
-#: ../python/frescobaldi_app/version.py:77
+#: ../python/frescobaldi_app/version.py:78
 msgid ""
 "Can't determine the LilyPond version of the current document. Please add a "
 "\\version statement with the correct version."
@@ -1473,11 +1481,11 @@ msgstr ""
 "Nelze určit verzi aktuálního dokumentu programu LilyPond. Přidejte, prosím, "
 "\\správné označení verze."
 
-#: ../python/frescobaldi_app/version.py:85
+#: ../python/frescobaldi_app/version.py:86
 msgid "This LilyPond document is already up-to-date."
 msgstr "Tento LilyPond dokument je již aktuální."
 
-#: ../python/frescobaldi_app/version.py:99
+#: ../python/frescobaldi_app/version.py:100
 msgid ""
 "The document has been processed with convert-ly. You'll find the messages of "
 "convert-ly in a comment block at the end. You still may have to edit some "
@@ -1487,7 +1495,7 @@ msgstr ""
 "komentáři na konci. Je možnéže ještě budete muset upravovat některé části "
 "ručně."
 
-#: ../python/frescobaldi_app/version.py:105
+#: ../python/frescobaldi_app/version.py:106
 msgid ""
 "The document has been processed with convert-ly, but remained unchanged. "
 "This is the message given by convert-ly: %1"
@@ -1495,7 +1503,7 @@ msgstr ""
 "Tento dokument byl zpracován s convert-ly, ale zůstal nezměněn. Toto hlášení "
 "bylo podáno convert-ly: %1"
 
-#: ../python/frescobaldi_app/version.py:110
+#: ../python/frescobaldi_app/version.py:111
 msgid "Could not start convert-ly: %1"
 msgstr "Nepodařilo sa spustit convert-ly: %1"
 
