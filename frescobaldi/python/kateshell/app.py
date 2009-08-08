@@ -704,10 +704,11 @@ class Document(DBusItem):
         If keepSelection is true, select the newly inserted text again.
         """
         v, d = self.view, self.doc
-        cur = v.selection() and v.selectionRange().start() or v.cursorPosition()
+        selRange = v.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
+        cur = v.selection() and selRange.start() or v.cursorPosition()
         line, col = cur.line(), cur.column()
         if v.selection():
-            d.replaceText(v.selectionRange(), text)
+            d.replaceText(selRange, text)
         else:
             v.insertText(text)
         if keepSelection:

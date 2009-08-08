@@ -181,7 +181,8 @@ class DocumentManipulator(object):
         # find out in what input mode we are
         mode = ""
         state = ly.tokenize.State()
-        text = self.doc.textToCursor(self.doc.view.selectionRange().start())
+        selRange = self.doc.view.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
+        text = self.doc.textToCursor(selRange.start())
         for token in ly.tokenize.tokenize(text, state=state):
             pass
         for s in reversed(state.state):
@@ -194,7 +195,7 @@ class DocumentManipulator(object):
                     mode = " \\figuremode"
                 break
         
-        currentLine = self.doc.view.selectionRange().start().line()
+        currentLine = selRange.start().line()
         insertLine = self.findInsertPoint(currentLine)
         
         text = self.doc.selectionText().strip()
@@ -211,7 +212,7 @@ class DocumentManipulator(object):
         
         # add space if necessary
         variable = "\\%s" % name
-        end = self.doc.view.selectionRange().end()
+        end = selRange.end()
         if not isblank(self.doc.line(end.line())[end.column():end.column()+1]):
             variable += " "
 
@@ -280,8 +281,9 @@ class DocumentManipulator(object):
         if not self.doc.view.selection():
             return
             
-        start = self.doc.view.selectionRange().start()
-        end = self.doc.view.selectionRange().end()
+        selRange = self.doc.view.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
+        start = selRange.start()
+        end = selRange.end()
         
         if start.column() > 0:
             start.setColumn(0)
@@ -305,8 +307,11 @@ class DocumentManipulator(object):
         """
         if not self.doc.view.selection():
             return
-        start = self.doc.view.selectionRange().start()
-        end = self.doc.view.selectionRange().end()
+        # We need to save the selectionRange Range instance otherwise
+        # we crash in KDE 4.3 / PyQt 4.5.x.
+        selRange = self.doc.view.selectionRange()
+        start = selRange.start()
+        end = selRange.end()
         # adjust start:
         text = self.doc.line(start.line())
         col = start.column()
@@ -338,7 +343,8 @@ class DocumentManipulator(object):
         if selection:
             start = None
             self.selectLines()
-            cursor = self.doc.view.selectionRange().start()
+            selRange = self.doc.view.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
+            cursor = selRange.start()
             startline = cursor.line()
             # find out if the selected snippet is scheme code
             state = ly.tokenize.State()
@@ -398,7 +404,8 @@ class DocumentManipulator(object):
         """
         selection = self.doc.selectionText()
         if selection:
-            cursor = self.doc.view.selectionRange().start()
+            selRange = self.doc.view.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
+            cursor = selRange.start()
         else:
             cursor = self.doc.view.cursorPosition()
         line, col = cursor.line(), cursor.column()
@@ -460,7 +467,8 @@ class DocumentManipulator(object):
         if text:
             pos = 0
             insertions = []
-            cur = Cursor(self.doc.view.selectionRange().start())
+            selRange = self.doc.view.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
+            cur = Cursor(selRange.start())
             for m in ly.rx.chord.finditer(text):
                 if m.group('chord'):
                     cur.walk(text[pos:m.end('full')])
