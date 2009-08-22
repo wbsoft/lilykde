@@ -594,12 +594,13 @@ def parseAconnect(channel):
     res = []
     for line in Popen([cmd, option], stdout=PIPE).communicate()[0].splitlines():
         m = re.match(r"client\s*(\d+)|\s*(\d+)\s+'([^']+)'", line)
-        if m.group(1):
-            client = m.group(1)
-        elif client != "0":
-            port = "%s:%s" % (client, m.group(2))
-            name = "%s (%s)" % (port, m.group(3).strip())
-            res.append((port, name))
+        if m:
+            if m.group(1):
+                client = m.group(1)
+            elif client != "0":
+                port = "%s:%s" % (client, m.group(2))
+                name = "%s (%s)" % (port, m.group(3).strip())
+                res.append((port, name))
     return res
 
 def getOSSnrMIDIs():
