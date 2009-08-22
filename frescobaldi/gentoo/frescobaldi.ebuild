@@ -8,7 +8,7 @@ inherit cmake-utils
 DESCRIPTION="An easy to use LilyPond sheet music editor"
 HOMEPAGE="http://www.frescobaldi.org/"
 LICENSE="GPL"
-KEYWORDS="~x86"
+KEYWORDS="~x86 ~amd64"
 SLOT="0"
 SRC_URI="http://lilykde.googlecode.com/files/${P}.tar.gz"
 
