@@ -132,7 +132,7 @@ class Ly2PDF(object):
         
     def readOutput(self):
         encoding = sys.getfilesystemencoding() or 'utf-8'
-        text = str(self.p.readAllStandardOutput()).decode(encoding)
+        text = str(self.p.readAllStandardOutput()).decode(encoding, 'replace')
         parts = _ly_message_re.split(text)
         # parts has an odd length(1, 6, 11 etc)
         # message, <url, path, line, col, message> etc.
