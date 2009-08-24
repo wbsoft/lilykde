@@ -317,8 +317,8 @@ class MainWindow(KParts.MainWindow):
         if len(name) > 72:
             name = '...' + name[-69:]
         if doc.isModified():
-            self.setCaption(name + " [%s]" % i18n("modified"))
-            self.sb_modified.setPixmap(KIcon("document-properties").pixmap(16))
+            self.setCaption("%s [%s]" % (name, i18n("modified")))
+            self.sb_modified.setPixmap(KIcon("document-save").pixmap(16))
         else:
             self.setCaption(name)
             self.sb_modified.setPixmap(QPixmap())
