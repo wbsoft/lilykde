@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-08-09 19:37+0200\n"
+"POT-Creation-Date: 2009-08-28 21:01+0200\n"
 "PO-Revision-Date: 2009-06-12 21:37+0200\n"
 "Last-Translator: BOURIAUD <david.bouriaud@ac-rouen.fr>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
@@ -1243,7 +1243,7 @@ msgstr ""
 "script commence par un point-virgule (;), cette ligne sera affichée comme "
 "description."
 
-#: ../python/frescobaldi_app/rumor.py:628
+#: ../python/frescobaldi_app/rumor.py:629
 msgid "Auto"
 msgstr "Auto"
 
@@ -1267,23 +1267,23 @@ msgstr "LilyPond [%1]: interruption avec le code %2."
 msgid "LilyPond [%1] exited with exit status %2."
 msgstr "LilyPond [%1]: interruption avec le code %2."
 
-#: ../python/frescobaldi_app/runlily.py:93
-msgid "LilyPond [%1] finished."
-msgstr "LilyPond [%1]: traitement achevé."
+#: ../python/frescobaldi_app/runlily.py:99
+msgid "LilyPond [%1] finished (%2)."
+msgstr "LilyPond [%1]: traitement achevé (%2)."
 
-#: ../python/frescobaldi_app/runlily.py:101
+#: ../python/frescobaldi_app/runlily.py:107
 msgid "Could not start LilyPond. Please check path and permissions."
 msgstr "Ne peut pas démarrer LilyPond. Vérifier les chemins et permissions."
 
-#: ../python/frescobaldi_app/runlily.py:104
+#: ../python/frescobaldi_app/runlily.py:110
 msgid "Could not read from the LilyPond process."
 msgstr "Ne peut pas lire à partir du processus LilyPond."
 
-#: ../python/frescobaldi_app/runlily.py:107
+#: ../python/frescobaldi_app/runlily.py:113
 msgid "An unknown error occured."
 msgstr "Une erreur inconnue est survenue."
 
-#: ../python/frescobaldi_app/runlily.py:305
+#: ../python/frescobaldi_app/runlily.py:312
 msgid "Click to edit this file"
 msgstr "Cliquer pour éditer ce fichier"
 

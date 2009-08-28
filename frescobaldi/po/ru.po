@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-08-09 19:37+0200\n"
+"POT-Creation-Date: 2009-08-28 21:01+0200\n"
 "PO-Revision-Date: 2009-07-31 02:18+0400\n"
 "Last-Translator: Serj Poltavski\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -1239,7 +1239,7 @@ msgstr ""
 "можете добавить собственные скрипты в %1. Если первая строка Вашего скрипта "
 "начинается с точки с запятой (;), она будет показана как описание."
 
-#: ../python/frescobaldi_app/rumor.py:628
+#: ../python/frescobaldi_app/rumor.py:629
 msgid "Auto"
 msgstr "Автоматически"
 
@@ -1263,24 +1263,24 @@ msgstr "Программа LilyPond [%1] завершилась с кодом %2
 msgid "LilyPond [%1] exited with exit status %2."
 msgstr "Программа LilyPond [%1] завершилась с кодом %2."
 
-#: ../python/frescobaldi_app/runlily.py:93
-msgid "LilyPond [%1] finished."
-msgstr "LilyPond [%1] завершен."
+#: ../python/frescobaldi_app/runlily.py:99
+msgid "LilyPond [%1] finished (%2)."
+msgstr "LilyPond [%1] завершен (%2)."
 
-#: ../python/frescobaldi_app/runlily.py:101
+#: ../python/frescobaldi_app/runlily.py:107
 msgid "Could not start LilyPond. Please check path and permissions."
 msgstr ""
 "Невозможно запустить LilyPond/ Проверьте путь к программе и разрешения."
 
-#: ../python/frescobaldi_app/runlily.py:104
+#: ../python/frescobaldi_app/runlily.py:110
 msgid "Could not read from the LilyPond process."
 msgstr "Невозможно чтение из процесса LilyPond/"
 
-#: ../python/frescobaldi_app/runlily.py:107
+#: ../python/frescobaldi_app/runlily.py:113
 msgid "An unknown error occured."
 msgstr "Неизвестная ошибка произошла."
 
-#: ../python/frescobaldi_app/runlily.py:305
+#: ../python/frescobaldi_app/runlily.py:312
 msgid "Click to edit this file"
 msgstr "Кликните, для редактирования этого файла"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-08-09 19:37+0200\n"
+"POT-Creation-Date: 2009-08-28 21:01+0200\n"
 "PO-Revision-Date: 2009-07-02 12:25+0300\n"
 "Last-Translator: Server Acim <sacim@kde.org.tr>\n"
 "Language-Team: Turkish <kde-i18n-doc@kde.org>\n"
@@ -1228,7 +1228,7 @@ msgstr ""
 "betiğinizin ilk satırı bir noktalı virgül ile (;) başlarsa, bu satır "
 "tanımlama olarak gösterilecektir."
 
-#: ../python/frescobaldi_app/rumor.py:628
+#: ../python/frescobaldi_app/rumor.py:629
 msgid "Auto"
 msgstr "Otomatik"
 
@@ -1252,23 +1252,23 @@ msgstr "LilyPond [%1] dönüş koduyla çıktı %2."
 msgid "LilyPond [%1] exited with exit status %2."
 msgstr "LilyPond [%1] dönüş koduyla çıktı %2."
 
-#: ../python/frescobaldi_app/runlily.py:93
-msgid "LilyPond [%1] finished."
-msgstr "LilyPond [%1] tamamlandı."
+#: ../python/frescobaldi_app/runlily.py:99
+msgid "LilyPond [%1] finished (%2)."
+msgstr "LilyPond [%1] tamamlandı (%2)."
 
-#: ../python/frescobaldi_app/runlily.py:101
+#: ../python/frescobaldi_app/runlily.py:107
 msgid "Could not start LilyPond. Please check path and permissions."
 msgstr "LilyPond başlayamıyor. Lütfen yolu ve izinleri denetleyiniz."
 
-#: ../python/frescobaldi_app/runlily.py:104
+#: ../python/frescobaldi_app/runlily.py:110
 msgid "Could not read from the LilyPond process."
 msgstr "Lilypond işlemi okunamadı"
 
-#: ../python/frescobaldi_app/runlily.py:107
+#: ../python/frescobaldi_app/runlily.py:113
 msgid "An unknown error occured."
 msgstr "Bilinmeyen bir hata meydana geldi."
 
-#: ../python/frescobaldi_app/runlily.py:305
+#: ../python/frescobaldi_app/runlily.py:312
 msgid "Click to edit this file"
 msgstr "Bu dosyayı düzenlemek için tıklayınız."
 

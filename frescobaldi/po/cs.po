@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.5\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-08-09 19:37+0200\n"
+"POT-Creation-Date: 2009-08-28 21:01+0200\n"
 "PO-Revision-Date: 2009-08-24 08:42+0200\n"
 "Last-Translator: Pavel Fric\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -1246,7 +1246,7 @@ msgstr ""
 "řádek vašeho skriptu začínal středníkem (;), bude tento řádek ukazován jako "
 "popis."
 
-#: ../python/frescobaldi_app/rumor.py:628
+#: ../python/frescobaldi_app/rumor.py:629
 msgid "Auto"
 msgstr "A&utomaticky"
 
@@ -1270,23 +1270,23 @@ msgstr "LilyPond [%1] skončil se zpátečním kódem %2."
 msgid "LilyPond [%1] exited with exit status %2."
 msgstr "LilyPond [%1] skončil ve stavu ukončení %2."
 
-#: ../python/frescobaldi_app/runlily.py:93
-msgid "LilyPond [%1] finished."
-msgstr "LilyPond [%1] skončil."
+#: ../python/frescobaldi_app/runlily.py:99
+msgid "LilyPond [%1] finished (%2)."
+msgstr "LilyPond [%1] skončil (%2)."
 
-#: ../python/frescobaldi_app/runlily.py:101
+#: ../python/frescobaldi_app/runlily.py:107
 msgid "Could not start LilyPond. Please check path and permissions."
 msgstr "LilyPond nešel spustit. Zkontrolujte, prosím, cestu a oprávnění."
 
-#: ../python/frescobaldi_app/runlily.py:104
+#: ../python/frescobaldi_app/runlily.py:110
 msgid "Could not read from the LilyPond process."
 msgstr "Z LilyPond procesu nešlo číst."
 
-#: ../python/frescobaldi_app/runlily.py:107
+#: ../python/frescobaldi_app/runlily.py:113
 msgid "An unknown error occured."
 msgstr "Vyskytla se neznámá chyba."
 
-#: ../python/frescobaldi_app/runlily.py:305
+#: ../python/frescobaldi_app/runlily.py:312
 msgid "Click to edit this file"
 msgstr "Klepněte, abyste mohl upravovat tento soubor"
 
@@ -1799,8 +1799,8 @@ msgid ""
 "Show predefined guitar fret diagrams below the chord names (LilyPond 2.12 "
 "and above)."
 msgstr ""
-"Ukázat přednastavené kytarové hmaty pod názvy akordů (LilyPond 2.12 "
-"a a vyšší)."
+"Ukázat přednastavené kytarové hmaty pod názvy akordů (LilyPond 2.12 a a "
+"vyšší)."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:398
 msgid "Figured Bass"
