@@ -79,7 +79,7 @@ class Ly2PDF(object):
         self.log.clear()
         mode = unicode(self.preview and i18n("preview mode") or i18n("publish mode"))
         self.log.writeLine(i18n("LilyPond [%1] starting (%2)...", self.lyfile_arg, mode))
-        self.startTime = math.floor(time.time())
+        self.startTime = time.time()
         self.p.start()
         
     def finished(self, exitCode, exitStatus):
@@ -90,8 +90,14 @@ class Ly2PDF(object):
             self.log.writeMsg(i18n("LilyPond [%1] exited with exit status %2.",
                 self.lyfile_arg, exitStatus), "msgerr")
         else:
-            self.log.writeMsg(i18n("LilyPond [%1] finished.", self.lyfile_arg),
-                "msgok")
+            # We finished successfully, show elapsed time...
+            seconds = time.time() - self.startTime
+            if seconds < 60:
+                elapsed = '%.1f"' % seconds
+            else:
+                elapsed = "%i'%i\"" % divmod(seconds, 60)
+            self.log.writeMsg(i18n("LilyPond [%1] finished (%2).",
+                self.lyfile_arg, elapsed), "msgok")
         self.bye(not (exitCode or exitStatus))
     
     def error(self, errCode):
@@ -152,7 +158,8 @@ class Ly2PDF(object):
         """
         Returns a function that can list updated files based on extension.
         """
-        return frescobaldi_app.mainapp.updatedFiles(self.lyfile, self.startTime)
+        return frescobaldi_app.mainapp.updatedFiles(self.lyfile,
+            math.floor(self.startTime))
         
 
 class LyDoc2PDF(Ly2PDF):
