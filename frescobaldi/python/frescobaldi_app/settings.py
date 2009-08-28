@@ -139,6 +139,8 @@ class GeneralPreferences(KVBox):
                 "save on run", False),
             (i18n("Let LilyPond delete intermediate output files"),
                 "delete intermediate files", True),
+            (i18n("Run LilyPond with verbose output"),
+                "verbose lilypond output", False),
             (i18n("Remember cursor position, bookmarks, etc."),
                 "save metainfo", False),
             (i18n("Disable the built-in PDF preview"),
