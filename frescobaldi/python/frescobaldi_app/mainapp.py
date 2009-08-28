@@ -340,6 +340,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                 log = self.tools["log"].log(d)
                 if log:
                     self.actionManager().addActionsToLog(result, log)
+                    if not success:
+                        log.show() # even if LP didn't show an error location
             log = self.tools["log"].createLog(d)
             job = self.jobManager().createJob(d, log, preview)
             job.done.connect(finished)
