@@ -59,6 +59,16 @@ Here you can set some general preferences to influence the behaviour of &frescob
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>Run &lilypond; with verbose output</guilabel></term>
+<listitem>
+  <para>
+  If checked, &frescobaldi; will run &lilypond; with the <option>verbose</option> option,
+  displaying more information during the compile process.
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><guilabel>Remember cursor position, bookmarks, etc.</guilabel></term>
 <listitem>
   <para>
