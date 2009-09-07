@@ -242,7 +242,7 @@ class RumorPanel(QWidget):
             else:
                 acc = 0
         else:
-            acc == int(acc)
+            acc = int(acc)
         acc += 2    # use sharps for half tones leading to second, fifth, sixth
         args.append("--key=%s" % ly.key.num2key[lang][bound(acc, -8, 12)])
 
@@ -592,7 +592,12 @@ def parseAconnect(channel):
     option = channel == 'i' and '--input' or '--output'
     cmd = unicode(config("commands").readEntry("aconnect", QVariant("aconnect")).toString())
     res = []
-    for line in Popen([cmd, option], stdout=PIPE).communicate()[0].splitlines():
+    # run aconnect in the english (standard language)
+    env = dict(os.environ)
+    for key in "LANG", "LC_ALL", "LC_MESSAGES":
+        if key in env:
+            del env[key]
+    for line in Popen([cmd, option], stdout=PIPE, env=env).communicate()[0].splitlines():
         m = re.match(r"client\s*(\d+)|\s*(\d+)\s+'([^']+)'", line)
         if m:
             if m.group(1):
