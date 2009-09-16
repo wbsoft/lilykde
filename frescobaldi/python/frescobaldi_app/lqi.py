@@ -95,7 +95,7 @@ class Articulations(Lqi):
                 b = QToolButton(self)
                 b.setAutoRaise(True)
                 # load and convert the icon to the default text color
-                b.setIcon(LilyIcon('articulation_%s' % sign, 22))
+                b.setIcon(LilyIcon('articulation_%s' % sign))
                 b.setIconSize(QSize(22, 22))
                 b.setToolTip('%s (\\%s)' % (title, sign))
                 QObject.connect(b, SIGNAL("clicked()"),

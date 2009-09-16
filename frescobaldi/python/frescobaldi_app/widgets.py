@@ -26,10 +26,10 @@ from time import time
 
 from PyQt4.QtCore import QObject, QProcess, QRegExp, QString, Qt, SIGNAL
 from PyQt4.QtGui import (
-    QIcon, QLabel, QLineEdit, QPalette, QPixmap, QPushButton, QSlider, QSpinBox,
+    QLabel, QLineEdit, QPalette, QPixmap, QPushButton, QSlider, QSpinBox,
     QToolButton, QRegExpValidator)
 from PyKDE4.kdecore import i18n, KProcess
-from PyKDE4.kdeui import KApplication, KDialog, KIconLoader, KLineEdit, KVBox
+from PyKDE4.kdeui import KApplication, KDialog, KIcon, KLineEdit, KVBox
 
 class TapButton(QPushButton):
     """
@@ -230,6 +230,22 @@ class ExecArgsLineEdit(ExecLineEdit):
             return ''
 
 
+class LilyIcon(KIcon):
+    """
+    Returns the named LilyPond icon from the pics/ directory, with the black
+    foreground color changed to the current default foreground text color.
+    """
+    def pixmap(self, *args, **kwargs):
+        pixmap = KIcon.pixmap(self, *args, **kwargs)
+        if pixmap:
+            alpha = pixmap.alphaChannel()
+            pixmap = QPixmap(alpha.size())
+            pixmap.fill(KApplication.palette().color(
+                QPalette.Active, QPalette.WindowText))
+            pixmap.setAlphaChannel(alpha)
+        return pixmap
+
+
 # some handy "static" functions
 def promptText(parent, message, title = None, text="", rx=None, help=None):
     """
@@ -278,18 +294,4 @@ def findexe(filename):
         if isexe(os.path.join(p, filename)):
             return os.path.join(p, filename)
     return False
-
-# convert black icons with LilyPond (symbols) to the default text color
-def LilyIcon(name, size = 22):
-    """
-    Returns the named LilyPond icon from the pics/ directory, with the black
-    foreground color changed to the current default foreground text color.
-    """
-    alpha = KIconLoader.global_().loadIcon(
-        name, KIconLoader.User, size).alphaChannel()
-    pixmap = QPixmap(alpha.size())
-    pixmap.fill(KApplication.palette().color(
-        QPalette.Active, QPalette.WindowText))
-    pixmap.setAlphaChannel(alpha)
-    return QIcon(pixmap)
 
