@@ -392,6 +392,18 @@ class DocumentManipulator(object):
             a = self.doc.view.actionCollection().action(action)
             if a and a.isEnabled():
                 menu.addAction(a)
+        
+        # Add selection to Expansion Manager
+        selection = self.doc.selectionText()
+        if selection:
+            a = menu.addAction(KIcon("list-add"), i18n("Add to Expansion Manager"))
+            def addToExpandManager(text = selection):
+                dlg = self.doc.app.mainwin.expandManager().expansionDialog()
+                dlg.show()
+                dlg.addItem(text)
+            QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"), addToExpandManager)
+        
+        # Bookmarks
         a = self.doc.view.actionCollection().action("bookmarks")
         if a and a.isEnabled():
             menu.addSeparator()

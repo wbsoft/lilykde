@@ -348,8 +348,11 @@ class ExpansionDialog(KDialog):
             self.edit.item = item
             self.saveEditIfNecessary()
         self.setCurrentItem(item)
+        self.treeWidget.setFocus()
         self.treeWidget.editItem(item, 0)
         self.edit.dirty = True # so that our (empty) text gets saved
+        if text is not None:
+            self.edit.setText(text)
     
     def items(self):
         """ Return an iterator over all the items in our dialog. """
