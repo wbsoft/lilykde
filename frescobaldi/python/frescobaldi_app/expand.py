@@ -242,31 +242,16 @@ class ExpansionDialog(KDialog):
         
         expansions = self.manager.expansions
         
-        def makeItem(name, description):
-            item = QTreeWidgetItem(tree)
-            item.groupName = name
-            item.setFont(0, QFont("monospace"))
-            item.setText(0, name)
-            item.setText(1, description)
-            item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
-            return item
-        
         # load the expansions
-        for groupName in sorted(self.manager.expansions.groupList()):
+        for groupName in sorted(expansions.groupList()):
             group = expansions.group(groupName)
             description = group.readEntry("Name", QVariant("")).toString()
             if description:
-                makeItem(groupName, description)
+                self.createItem(groupName, description)
 
         tree.sortByColumn(1, Qt.AscendingOrder)
         tree.setSortingEnabled(True)
         
-        def setCurrent(item):
-            item.setSelected(True)
-            updateSelection()
-            tree.setCurrentItem(item)
-            tree.scrollToItem(item)
-
         @onSignal(self, "user1Clicked()")
         def removeButton():
             item = self.currentItem()
@@ -276,30 +261,12 @@ class ExpansionDialog(KDialog):
                 expansions.deleteGroup(item.groupName)
                 tree.takeTopLevelItem(index)
                 if setIndex:
-                    setCurrent(tree.topLevelItem(index))
+                    self.setCurrentItem(tree.topLevelItem(index))
                 
         @onSignal(self, "user2Clicked()")
         def addButton():
-            num = 0
-            name = "new"
-            while self.manager.expansionExists(name):
-                num += 1
-                name = "new%d" % num
-            description = i18n("New Item")
-            if num:
-                description += " %d" % num
-            expansions.group(name).writeEntry("Name", description)
-            search.clear() # otherwise strange things happen...
-            item = makeItem(name, description)
-            if edit.item is None:
-                # the user might have typed/pasted text in the edit already,
-                # intending to add a new expansion.
-                edit.item = item
-                self.saveEditIfNecessary()
-            setCurrent(item)
-            tree.editItem(item, 0)
-            edit.dirty = True # so that our (empty) text gets saved
-            
+            self.addItem()
+        
         @onSignal(edit, "textChanged()")
         def textChanged():
             edit.dirty = True
@@ -308,17 +275,11 @@ class ExpansionDialog(KDialog):
         def checkMatch(text):
             items = tree.findItems(text, Qt.MatchExactly, 0)
             if len(items) == 1:
-                setCurrent(items[0])
+                self.setCurrentItem(items[0])
                 
         @onSignal(tree, "itemSelectionChanged()")
         def updateSelection():
-            items = tree.selectedItems()
-            if items:
-                self.saveEditIfNecessary()
-                edit.setPlainText(expansions.group(
-                    items[0].text(0)).readEntry("Text", QVariant("")).toString())
-                edit.item = items[0]
-                edit.dirty = False
+            self.updateSelection()
         
         @onSignal(tree, "itemChanged(QTreeWidgetItem*, int)", shot=True)
         def itemChanged(item, column):
@@ -355,6 +316,41 @@ class ExpansionDialog(KDialog):
                     item.groupName = item.text(0)
                     tree.scrollToItem(item)
                 
+    def createItem(self, name, description):
+        item = QTreeWidgetItem(self.treeWidget)
+        item.groupName = name
+        item.setFont(0, QFont("monospace"))
+        item.setText(0, name)
+        item.setText(1, description)
+        item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
+        return item
+    
+    def addItem(self, text=None):
+        """
+        Add a new empty item (or use the text in the edit if no previous item
+        is selected). The new item becomes the selected item.
+        If text is given, put it in the text edit widget.
+        """
+        num = 0
+        name = "new"
+        while self.manager.expansionExists(name):
+            num += 1
+            name = "new%d" % num
+        description = i18n("New Item")
+        if num:
+            description += " %d" % num
+        self.manager.expansions.group(name).writeEntry("Name", description)
+        self.searchLine.clear() # otherwise strange things happen...
+        item = self.createItem(name, description)
+        if self.edit.item is None:
+            # the user might have typed/pasted text in the edit already,
+            # intending to add a new expansion.
+            self.edit.item = item
+            self.saveEditIfNecessary()
+        self.setCurrentItem(item)
+        self.treeWidget.editItem(item, 0)
+        self.edit.dirty = True # so that our (empty) text gets saved
+    
     def items(self):
         """ Return an iterator over all the items in our dialog. """
         return (self.treeWidget.topLevelItem(i)
@@ -366,7 +362,25 @@ class ExpansionDialog(KDialog):
         if items and not items[0].isHidden():
             return items[0]
             
+    def setCurrentItem(self, item):
+        """ Sets the item to be the current and selected item. """
+        item.setSelected(True)
+        self.updateSelection()
+        self.treeWidget.setCurrentItem(item)
+        self.treeWidget.scrollToItem(item)
+
+    def updateSelection(self):
+        """ (Internal use) update the edit widget when selection changes. """
+        items = self.treeWidget.selectedItems()
+        if items:
+            self.saveEditIfNecessary()
+            self.edit.setPlainText(self.manager.expansions.group(
+                items[0].text(0)).readEntry("Text", QVariant("")).toString())
+            self.edit.item = items[0]
+            self.edit.dirty = False
+    
     def saveEditIfNecessary(self):
+        """ (Internal use) save the edit if it has changed. """
         if self.edit.dirty and self.edit.item:
             self.manager.expansions.group(self.edit.item.text(0)).writeEntry(
                 "Text", self.edit.toPlainText())
