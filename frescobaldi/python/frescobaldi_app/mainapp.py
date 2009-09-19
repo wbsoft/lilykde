@@ -370,6 +370,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         def edit_expand():
             self.expandManager().expand()
         
+        # (this action is currently only displayed in the contextmenu)
+        @self.onSelAction(i18n("Add to Expansions"), "list-add")
+        def edit_expand_add(text):
+            self.expandManager().addExpansion(text)
+        
         @self.onAction(i18n("Next blank line"), "go-down-search", key="Alt+Down",
             tooltip=i18n("Go to the next blank line."))
         def edit_next_blank_line():

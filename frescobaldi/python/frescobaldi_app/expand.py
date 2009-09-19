@@ -163,7 +163,13 @@ class ExpandManager(object):
             doc.doc.insertText(cursor, text)
         if newcursor:
             doc.view.setCursorPosition(newcursor)
-    
+
+    def addExpansion(self, text = None):
+        """ Open the expansion dialog with a new expansion given in text. """
+        dlg = self.expansionDialog()
+        dlg.show()
+        dlg.addItem(text)
+
 
 class ExpansionDialog(KDialog):
     def __init__(self, manager):
