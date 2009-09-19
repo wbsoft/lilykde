@@ -35,6 +35,7 @@ import ly.parse, ly.pitch
 
 from kateshell.app import lazymethod
 from frescobaldi_app.highlight import LilyPondHighlighter
+import frescobaldi_app.document
 
 def config():
     return KGlobal.config().group("expand manager")
@@ -115,7 +116,9 @@ class ExpandManager(object):
         
         # where to insert the text:
         cursor = remove and remove.start() or doc.view.cursorPosition()
-        newcursor = False
+        
+        # place to set cursor or range to select after writing out the expansion
+        newcursors = []
         
         # translate pitches (marked by @)
         # find the current language
@@ -146,23 +149,21 @@ class ExpandManager(object):
             text = text[1:]
         
         # "(|)" is the place to position the cursor after inserting
+        # if this sequence appears twice, the range is selected.
         if "(|)" in text:
-            col = cursor.column()
-            line = cursor.line()
-            t1, t2 = text.split("(|)", 1)
-            if "\n" in t1:
-                line += t1.count("\n")
-                col = len(t1) - t1.rfind("\n") - 1
-            else:
-                col += len(t1)
-            text = t1 + t2
-            newcursor = KTextEditor.Cursor(line, col)
+            newcur = frescobaldi_app.document.Cursor(cursor)
+            for t in text.split("(|)", 2)[:-1]:
+                newcur.walk(t)
+                newcursors.append(newcur.kteCursor())
+            text = text.replace("(|)", "")
         if remove:
             doc.doc.replaceText(remove, text)
         else:
             doc.doc.insertText(cursor, text)
-        if newcursor:
-            doc.view.setCursorPosition(newcursor)
+        if newcursors:
+            doc.view.setCursorPosition(newcursors[0])
+            if len(newcursors) > 1:
+                doc.view.setSelection(KTextEditor.Range(*newcursors[:2]))
 
     def addExpansion(self, text = None):
         """ Open the expansion dialog with a new expansion given in text. """
