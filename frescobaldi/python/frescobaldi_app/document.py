@@ -466,6 +466,12 @@ class DocumentManipulator(object):
                 (True,  True ): u'\u201D',     # RIGHT DOUBLE QUOTATION MARK
                 }[(double, right)])
 
+    def insertBarLine(self, bar):
+        """
+        Insert a \\bar ".." command with the given type.
+        """
+        self.doc.view.insertText('\\bar "%s"' % bar)
+        
     def addArticulation(self, art):
         """
         Add artication to selected notes or chord, or just insert it.

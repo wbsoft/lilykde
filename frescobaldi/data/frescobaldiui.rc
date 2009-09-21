@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="frescobaldi" version="8">
+<kpartgui name="frescobaldi" version="9">
 
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -94,6 +94,26 @@
       <Action name="durations_copy_rhythm"/>
       <Action name="durations_paste_rhythm"/>
       <Action name="durations_apply_rhythm"/>
+    </Menu>
+    <Menu name="lilypond_barlines"><text>&amp;Bar Lines</text>
+      <Action name="bar_double"/>
+      <Action name="bar_end"/>
+      <Separator />
+      <Action name="bar_dotted"/>
+      <Action name="bar_dashed"/>
+      <Action name="bar_invisible"/>
+      <Separator />
+      <Action name="bar_repeat_start"/>
+      <Action name="bar_repeat_double"/>
+      <Action name="bar_repeat_end"/>
+      <Separator />
+      <Action name="bar_tick"/>
+      <Action name="bar_single"/>
+      <Action name="bar_sws"/>
+      <Action name="bar_ws"/>
+      <Action name="bar_ww"/>
+      <Action name="bar_cswc"/>
+      <Action name="bar_cswsc"/>
     </Menu>
     <Menu name="lilypond_lyrics"><text>&amp;Lyrics</text>
       <Action name="lyrics_hyphen"/>

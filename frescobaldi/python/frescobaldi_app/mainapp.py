@@ -20,13 +20,14 @@
 import os, re, sip, time
 from dbus.service import method
 
-from PyQt4.QtCore import QObject, QString, QTimer, QVariant, Qt, SIGNAL
+from PyQt4.QtCore import QEvent, QObject, QString, QTimer, QVariant, Qt, SIGNAL
 from PyQt4.QtGui import (
-    QActionGroup, QLabel, QProgressBar, QStackedWidget, QWidget)
+    QActionGroup, QColor, QIcon, QLabel, QPalette, QPixmap, QProgressBar,
+    QStackedWidget, QWidget)
 from PyKDE4.kdecore import KConfig, KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
-    KActionMenu, KApplication, KDialog, KIcon, KLineEdit, KMenu, KMessageBox,
-    KStandardAction, KVBox)
+    KActionMenu, KApplication, KDialog, KIcon, KIconLoader, KLineEdit, KMenu,
+    KMessageBox, KStandardAction, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -247,6 +248,22 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             PDFTool(self)
         
         self.currentDocumentChanged.connect(self.updateJobActions)
+    
+    def changeEvent(self, ev):
+        """
+        Respond to events, in particular palette events,
+        to recolor LilyPond symbol icons.
+        """
+        if ev.type() == QEvent.PaletteChange:
+            self.symbolManager().recolor()
+            
+    @lazymethod
+    def symbolManager(self):
+        """
+        Returns the SymbolManager instance, responsible for the foreground
+        color of the LilyPond symbol icons used in Frescobaldi.
+        """
+        return SymbolManager(self)
         
     @lazymethod
     def actionManager(self):
@@ -472,6 +489,28 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             rhythm = unicode(KApplication.clipboard().text())
             return ly.duration.applyRhythm(text, rhythm)
         
+        # Bar lines
+        for name, text, title, key in (
+            ("bar_double", "||", i18n("Double bar line"), "Alt+;"),
+            ("bar_end", "|.", i18n("Ending bar line"), "Alt+."),
+            ("bar_dotted", ":", i18n("Dotted bar line"), None),
+            ("bar_dashed", "dashed", i18n("Dashed bar line"), None),
+            ("bar_invisible", "", i18n("Invisible bar line"), None),
+            ("bar_repeat_start", "|:", i18n("Repeat start"), None),
+            ("bar_repeat_double", ":|:", i18n("Repeat both"), None),
+            ("bar_repeat_end", ":|", i18n("Repeat end"), None),
+            ("bar_tick", "'", i18n("Tick bar line"), "Alt+'"),
+            ("bar_single", "|", i18n("Single bar line"), None),
+            ("bar_sws", "|.|", i18n("Small-Wide-Small bar line"), None),
+            ("bar_ws", ".|", i18n("Wide-Small bar line"), None),
+            ("bar_ww", ".|.", i18n("Double wide bar line"), None),
+            ("bar_cswc", ":|.:", i18n("Repeat both (old)"), None),
+            ("bar_cswsc", ":|.|:", i18n("Repeat both (classic)"), None),
+            ):
+            a = self.act(name, title, key=key, func=lambda text=text:
+                    self.currentDocument().manipulator().insertBarLine(text))
+            self.symbolManager().addAction(a, name, True)
+            
         # Setup lyrics hyphen and de-hyphen action
         @self.onSelAction(i18n("Hyphenate Lyrics Text"), keepSelection=False, key="Ctrl+L")
         def lyrics_hyphen(text):
@@ -908,6 +947,111 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
         self.matches = frescobaldi_app.completion.findMatches(
             view, word, invocationType) or []
 
+
+class SymbolManager(object):
+    """
+    Keeps a list of actions etc. that need their icons updated when
+    the application foreground palette changes.
+    
+    The manager assumes the symbol icons are black by default,
+    only if the text color is lighter than the background color,
+    the icons are painted white.
+    """
+    def __init__(self, mainwin):
+        self.functions = {}     # functions to call when palette changes
+        self.currentColor = self.newColor()
+        self.todo = []          # functions to call initially
+        self.timer = QTimer()   # timer to call those
+        self.timer.setInterval(0)
+        self.timer.setSingleShot(True)
+        QObject.connect(self.timer, SIGNAL("timeout()"), self.slotTimeOut)
+        
+    def recolor(self):
+        """
+        Called as soon as the palette has changed.
+        """
+        newcolor = self.newColor()
+        if newcolor != self.currentColor:
+            self.currentColor = newcolor
+            # call all the saved functions with a newly colored icon
+            for name, funcs in self.functions.iteritems():
+                icon = self.icon(name)
+                for f in funcs:
+                    f(icon)
+            
+    def addAction(self, action, icon, call=False):
+        """
+        Adds an action and an icon name. If the palette changes,
+        the action's icon will be replaced with a newly painted icon.
+        
+        If the current color is not black, the icon will already
+        been painted as soon as the user's event queue is entered.
+        
+        If call is True, the action's setIcon method is called anyway.
+        """
+        self.addFunction(action.setIcon, icon, call)
+    
+    def addFunction(self, function, icon, call=False):
+        """
+        Adds a function and an icon name. If the palette changes,
+        the function will be called with a newly painted icon.
+        
+        If the current color is not black, the icon will already
+        been painted as soon as the user's event queue is entered.
+        
+        If call is True, the function is called always.
+        """
+        self.functions.setdefault(icon, []).append(function)
+        if call or self.newColor() != Qt.black:
+            self.todo.append((icon, function))
+            self.timer.start()
+    
+    def removeAction(self, action, icon):
+        """
+        Remove an action and icon.
+        """
+        self.removeFunction(action.setIcon, icon)
+        
+    def removeFunction(self, function, icon):
+        """
+        Remove a function and icon.
+        """
+        try:
+            self.functions[icon].remove(function)
+            if not self.functions[icon]:
+                del self.functions[icon]
+        except (KeyError, ValueError):
+            pass
+        
+    def slotTimeOut(self):
+        while self.todo:
+            name, func = self.todo.pop()
+            func(self.icon(name))
+            
+    def icon(self, icon, size=22):
+        """
+        Return a symbol icon painted in the current color.
+        Does not keep any references. Use this for short-lived
+        dialogs etc.
+        """
+        if self.currentColor == Qt.black:
+            return KIcon(icon)
+        pixmap = KIconLoader.global_().loadIcon(icon, KIconLoader.User, size) 
+        alpha = pixmap.alphaChannel()
+        pixmap.fill(self.currentColor)
+        pixmap.setAlphaChannel(alpha)
+        return QIcon(pixmap)
+
+    def newColor(self):
+        """
+        Determine a new color, based on the current fore- and background
+        colors.
+        """
+        p = KApplication.palette()
+        if p.color(QPalette.ButtonText).black() > p.color(QPalette.Button).black():
+            return Qt.black
+        else:
+            return Qt.white
 
 
 # Easily get our global config

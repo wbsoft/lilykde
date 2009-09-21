@@ -29,8 +29,6 @@ from PyKDE4.kdeui import KHBox
 
 import ly.articulation
 
-from frescobaldi_app.widgets import LilyIcon
-
 
 class ToolBox(QToolBox):
     def __init__(self, tool):
@@ -45,12 +43,13 @@ class Lqi(QWidget):
 
     def __init__(self, toolbox, label, icon="", tooltip=""):
         QWidget.__init__(self, toolbox)
+        self.mainwin = toolbox.mainwin
         i = toolbox.addItem(self, label)
         if icon:
-            toolbox.setItemIcon(i, LilyIcon(icon))
+            self.mainwin.symbolManager().addFunction(
+                lambda icon: toolbox.setItemIcon(i, icon), icon, True)
         if tooltip:
             toolbox.setItemToolTip(i, tooltip)
-        self.mainwin = toolbox.mainwin
 
 
 class Articulations(Lqi):
@@ -95,7 +94,8 @@ class Articulations(Lqi):
                 b = QToolButton(self)
                 b.setAutoRaise(True)
                 # load and convert the icon to the default text color
-                b.setIcon(LilyIcon('articulation_%s' % sign, 22))
+                self.mainwin.symbolManager().addFunction(
+                    b.setIcon, 'articulation_%s' % sign, True)
                 b.setIconSize(QSize(22, 22))
                 b.setToolTip('%s (\\%s)' % (title, sign))
                 QObject.connect(b, SIGNAL("clicked()"),
