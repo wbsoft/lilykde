@@ -79,7 +79,7 @@ endmacro(lilypond_png_image)
 
 
 # Make icons for articulations and notes etc.
-file(GLOB lilypond_files articulation_*.ly note_*.ly time_*.ly)
+file(GLOB lilypond_files articulation_*.ly note_*.ly time_*.ly bar_*.ly)
 foreach(_ly ${lilypond_files})
   lilypond_png_icon(${_ly})
 endforeach(_ly ${lilypond_files})
