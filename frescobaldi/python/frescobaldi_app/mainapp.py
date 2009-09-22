@@ -636,17 +636,14 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
             dock=kateshell.mainwindow.Bottom)
         mainwin.currentDocumentChanged.connect(self.sync)
             
-    def factory(self):
-        w = super(KonsoleTool, self).factory()
-        if self.part:
-            d = self.mainwin.currentDocument()
-            if d and not d.url().isEmpty():
-                url = d.url()
-            else:
-                url = KUrl.fromPath(
-                    self.mainwin.app.defaultDirectory() or os.getcwd())
-            self.openUrl(url)
-        return w
+    def partLoaded(self):
+        d = self.mainwin.currentDocument()
+        if d and not d.url().isEmpty():
+            url = d.url()
+        else:
+            url = KUrl.fromPath(
+                self.mainwin.app.defaultDirectory() or os.getcwd())
+        self.openUrl(url)
 
     def show(self):
         super(KonsoleTool, self).show()
