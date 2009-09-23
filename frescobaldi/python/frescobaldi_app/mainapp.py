@@ -203,15 +203,20 @@ class Document(kateshell.app.Document):
         import frescobaldi_app.document
         return frescobaldi_app.document.DocumentManipulator(self)
 
-    def currentIndent(self, cursor=None):
+    def currentIndent(self, cursor=None, checkColumn=True):
         """
         Returns the indent of the line the given cursor is on, or
         of the current line.
+        
+        If checkColumn is True (default), the indent returned is not deeper
+        than the column the cursor is on.
         """
         if cursor is None:
             cursor = self.view.cursorPosition()
-        return len(re.match(r'\s*', self.line(
-            cursor.line())[:cursor.column()]).group().expandtabs(self.tabWidth()))
+        text = self.line(cursor.line())
+        if checkColumn:
+            text = text[:cursor.column()]
+        return len(re.match(r'\s*', text).group().expandtabs(self.tabWidth()))
         
     def indent(self, text, start = None, startscheme = False):
         """
@@ -571,12 +576,8 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         @self.onSelAction(i18n("Repeat selected music"), key="Ctrl+Shift+R",
             keepSelection=False)
         def edit_repeat(text):
-            if '\n' not in text:
-                return "\\repeat volta 2 { %s }" % text.strip()
-            d = self.currentDocument()
-            r = d.view.selectionRange()
-            return d.indent("\\repeat volta 2 {\n%s\n}" % text.strip(),
-                d.currentIndent(r.start())).lstrip()
+            return self.currentDocument().manipulator().wrapBrace(text, 
+                "\\repeat volta 2")
 
     def setupGeneratedMenus(self):
         super(MainWindow, self).setupGeneratedMenus()

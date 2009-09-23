@@ -500,7 +500,27 @@ class DocumentManipulator(object):
         else:
             self.doc.view.insertText(art)
         
-        
+    def wrapBrace(self, text, command, alwaysMultiLine=False):
+        """
+        Wrap a piece of text inside a brace construct. Returns the replacement.
+        The piece of text is also expected to be the selection of the document,
+        because this routine needs to know the indent of the resulting text.
+        E.g.:
+        wrapBrace("c d e f", "\\relative c'") returns
+        "\\relative c' { c d e f }"
+        """
+        if not alwaysMultiLine and '\n' not in text:
+            return "%s { %s }" % (command, text.strip())
+        r = self.doc.view.selectionRange()
+        # determine indent of starting line
+        indent = self.doc.currentIndent(r.start(), False)
+        # preserve space at start and end of selection
+        s1, text, s2 = re.compile(
+            r'^(\s*)(.*?)(\s*)$', re.DOTALL).match(text).groups()
+        result = self.doc.indent("%s {\n%s\n}" % (command, text), indent).lstrip()
+        return ''.join((s1, result, s2))
+
+
 class ChangeList(object):
     """
     Represents a list of changes to a KTextEditor.Document.
