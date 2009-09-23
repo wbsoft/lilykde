@@ -1,8 +1,14 @@
 Changes in 0.7.15 -- 
 
+* New "Repeat selected music" command that wraps the selection in a
+  \repeat volta 2 { music... } construct
+* New bar lines submenu to enter different types of bar lines
 * Expansion Manager:
   - Two cursormarks (|) can be used to select a range of text after expanding
   - New contextmenu command to add selected text to expansions
+* LilyPond symbol icons are displayed white if the users color palette settings
+  have light text on a dark background. The icons are automatically recolored
+  if the user changes the color preferences while Frescobaldi is running.
 * Translations:
   - Turkish updated by S. Acim
 

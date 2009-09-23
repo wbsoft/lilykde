@@ -203,6 +203,16 @@ class Document(kateshell.app.Document):
         import frescobaldi_app.document
         return frescobaldi_app.document.DocumentManipulator(self)
 
+    def currentIndent(self, cursor=None):
+        """
+        Returns the indent of the line the given cursor is on, or
+        of the current line.
+        """
+        if cursor is None:
+            cursor = self.view.cursorPosition()
+        return len(re.match(r'\s*',
+            self.line(cursor.line())[:cursor.column()]).group().expandtabs())
+        
     def indent(self, text, start = None, startscheme = False):
         """
         Convenience method to indent text according to settings of this
@@ -557,6 +567,16 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         def options_configure():
             import frescobaldi_app.settings
             frescobaldi_app.settings.SettingsDialog(self).show()
+        
+        @self.onSelAction(i18n("Repeat selected music"), key="Ctrl+Shift+R",
+            keepSelection=False)
+        def edit_repeat(text):
+            if '\n' not in text:
+                return "\\repeat volta 2 { %s }" % text.strip()
+            d = self.currentDocument()
+            r = d.view.selectionRange()
+            return d.indent("\\repeat volta 2 {\n%s\n}" % text.strip(),
+                d.currentIndent(r.start())).lstrip()
 
     def setupGeneratedMenus(self):
         super(MainWindow, self).setupGeneratedMenus()

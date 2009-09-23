@@ -138,9 +138,7 @@ class ExpandManager(object):
             
         # re-indent the text:
         if '\n' in text:
-            start = len(re.match(r'\s*',
-                    doc.line()[:cursor.column()]).group().expandtabs())
-            text = doc.indent(text, start).lstrip()
+            text = doc.indent(text, doc.currentIndent(cursor)).lstrip()
         
         # if the expansion starts with a backslash and the character just 
         # before the cursor is also a backslash, don't repeat it.

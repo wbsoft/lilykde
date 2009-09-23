@@ -434,7 +434,12 @@ class DocumentManipulator(object):
         if selection and ly.rx.chord_rest.search(selection):
             menu.addMenu(self.doc.app.mainwin.factory().container(
                 "lilypond_edit_rhythm", self.doc.app.mainwin))
-                
+        
+        # Repeat selected music
+        a = self.doc.app.mainwin.actionCollection().action("edit_repeat")
+        if a and a.isEnabled():
+            menu.addAction(a)
+        
         # run the parser to know more about the current context...
         state = ly.tokenize.State()
         for token in ly.tokenize.tokenize(self.doc.textToCursor(cursor), state=state):
