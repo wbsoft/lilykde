@@ -210,8 +210,8 @@ class Document(kateshell.app.Document):
         """
         if cursor is None:
             cursor = self.view.cursorPosition()
-        return len(re.match(r'\s*',
-            self.line(cursor.line())[:cursor.column()]).group().expandtabs())
+        return len(re.match(r'\s*', self.line(
+            cursor.line())[:cursor.column()]).group().expandtabs(self.tabWidth()))
         
     def indent(self, text, start = None, startscheme = False):
         """
