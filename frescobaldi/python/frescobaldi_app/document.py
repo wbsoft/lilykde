@@ -509,17 +509,18 @@ class DocumentManipulator(object):
         wrapBrace("c d e f", "\\relative c'") returns
         "\\relative c' { c d e f }"
         """
-        if not alwaysMultiLine and '\n' not in text:
-            return "%s { %s }" % (command, text.strip())
-        r = self.doc.view.selectionRange()
-        # determine indent of starting line
-        indent = self.doc.currentIndent(r.start(), False)
         # preserve space at start and end of selection
-        s1, text, s2 = re.compile(
+        space1, sel, space2 = re.compile(
             r'^(\s*)(.*?)(\s*)$', re.DOTALL).match(text).groups()
-        result = self.doc.indent("%s {\n%s\n}" % (command, text), indent).lstrip()
-        return ''.join((s1, result, s2))
-
+        if alwaysMultiLine or '\n' in text:
+            # determine indent of starting line
+            r = self.doc.view.selectionRange()
+            indent = self.doc.currentIndent(r.start(), False)
+            result = self.doc.indent("%s {\n%s\n}" % (command, sel), indent).lstrip()
+        else:
+            result = "%s { %s }" % (command, sel)
+        return ''.join((space1, result, space2))
+        
 
 class ChangeList(object):
     """
