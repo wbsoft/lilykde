@@ -513,10 +513,11 @@ class DocumentManipulator(object):
         space1, sel, space2 = re.compile(
             r'^(\s*)(.*?)(\s*)$', re.DOTALL).match(text).groups()
         if alwaysMultiLine or '\n' in text:
-            # determine indent of starting line
-            r = self.doc.view.selectionRange()
-            indent = self.doc.currentIndent(r.start(), False)
-            result = self.doc.indent("%s {\n%s\n}" % (command, sel), indent).lstrip()
+            result = "%s {\n%s\n}" % (command, sel)
+            # indent the result corresponding with the first selection line.
+            selRange = self.doc.view.selectionRange()
+            indentDepth = self.doc.currentIndent(selRange.start(), False)
+            result = self.doc.indent(result, indentDepth).lstrip()
         else:
             result = "%s { %s }" % (command, sel)
         return ''.join((space1, result, space2))
