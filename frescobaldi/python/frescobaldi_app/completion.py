@@ -23,30 +23,135 @@ LilyPond auto completion
 
 import re
 
-from PyQt4.QtCore import QVariant
+from PyQt4.QtCore import QModelIndex, Qt, QVariant
+from PyQt4.QtGui import QBrush, QColor, QTextFormat
 from PyKDE4.kdecore import KGlobal
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly, ly.font, ly.tokenize, ly.version, ly.words
+import ly, ly.font, ly.tokenize, ly.version, ly.words, ly.colors
 import frescobaldi_app.version
 
-@ly.lazy
-def musicglyph_names():
-    datadir = ly.version.datadir(command("lilypond"))
-    if datadir:
-        font = ly.font.emmentaler20(datadir)
-        if font:
-            return tuple(font.glyphs())
-    return ()
 
-@ly.lazy
-def lilypondVersion():
-    ver = frescobaldi_app.version.defaultVersion()
-    return ver and ('version "%s"' % ver,) or ()
-    
-def findMatches(view, word, invocationType):
+class CompletionHelper(object):
     """
-    Return the list of matches that are useful in the current context.
+    Helper class that contains a list of completions.
+    """
+    # roles on the Name column
+    roles = {
+        KTextEditor.CodeCompletionModel.CompletionRole:
+            QVariant(
+                KTextEditor.CodeCompletionModel.FirstProperty |
+                KTextEditor.CodeCompletionModel.Public |
+                KTextEditor.CodeCompletionModel.LastProperty ),
+        KTextEditor.CodeCompletionModel.ScopeIndex:
+            QVariant(0),
+        KTextEditor.CodeCompletionModel.MatchQuality:
+            QVariant(10),
+        KTextEditor.CodeCompletionModel.HighlightingMethod:
+            QVariant(QVariant.Invalid),
+        KTextEditor.CodeCompletionModel.InheritanceDepth:
+            QVariant(0),
+    }
+    
+    def __init__(self, model, resultList=None):
+        """
+        model is the KTextEditor.CodeCompletionModel helped
+        by this object.
+        """
+        self.model = model
+        self.resultList = resultList or []
+    
+    def index(self, row, column, parent):
+        if (row < 0 or row >= len(self.resultList) or
+            column < 0 or column >= KTextEditor.CodeCompletionModel.ColumnCount or
+            parent.isValid()):
+            return QModelIndex()
+        return self.model.createIndex(row, column, 0)
+        
+    def rowCount(self, parent):
+        if parent.isValid():
+            return 0 # Do not make the model look hierarchical
+        else:
+            return len(self.resultList)
+
+    def data(self, index, role):
+        if index.column() == KTextEditor.CodeCompletionModel.Name:
+            if role == Qt.DisplayRole:
+                return QVariant(self.resultList[index.row()])
+            try:
+                return self.roles[role]
+            except KeyError:
+                pass
+        return QVariant()
+    
+    def executeCompletionItem(self, doc, word, row):
+        pass
+
+
+class CompletionList(CompletionHelper):
+    """
+    Contains completions presented as a simple list.
+    """
+    def executeCompletionItem(self, doc, word, row):
+        text = self.resultList[row]
+        if '{}' in text:
+            text = text.replace('{}', '{\n(|)\n}')
+            self.model.doc.manipulator().insertTemplate(text, word.start(), word)
+            return True
+
+
+class VarCompletions(CompletionHelper):
+    """
+    List of vars, that get ' = ' after themselves.
+    """
+    def executeCompletionItem(self, doc, word, row):
+        text = self.resultList[row]
+        line = unicode(doc.line(word.end().line()))[word.end().column():]
+        if not line.lstrip().startswith('='):
+            text += ' = '
+        doc.replaceText(word, text)
+        return True
+
+
+class ColorCompletions(CompletionHelper):
+    """
+    Completions with color, that show the color name highlighted
+    """
+    roles = CompletionHelper.roles.copy()
+    roles.update({
+        KTextEditor.CodeCompletionModel.HighlightingMethod:
+            QVariant(KTextEditor.CodeCompletionModel.CustomHighlighting)
+    })
+    
+    def data(self, index, role):
+        if index.column() == KTextEditor.CodeCompletionModel.Name:
+            name, (r, g, b) = self.resultList[index.row()]
+            if role == Qt.DisplayRole:
+                return QVariant(name)
+            elif role == KTextEditor.CodeCompletionModel.CustomHighlight:
+                format = QTextFormat()
+                foreground = QColor.fromRgbF(r, g, b)
+                format.setForeground(QBrush(foreground))
+                return QVariant([0, len(name), format])
+        return super(ColorCompletions, self).data(index, role)
+
+
+def getCompletions(model, view, word, invocationType):
+    """
+    Returns an object that describes the matches that
+    are useful in the current context.
+    """
+    matches = findMatches(model, view, word, invocationType)
+    if isinstance(matches, CompletionHelper):
+        return matches
+    else:
+        return CompletionList(model, matches)
+        
+def findMatches(model, view, word, invocationType):
+    """
+    Return either a simple list of matches that are useful in the current
+    context, or a CompletionHelper instance that can handle specialized
+    completions itself.
     """
     doc = view.document()
     line, col = word.start().line(), word.start().column()
@@ -85,9 +190,9 @@ def findMatches(view, word, invocationType):
     if re.search(r"\\clef\s+$", text):
         return ly.words.clefs_plain
     if re.search(r"\bcolor\s*=?\s*#$", text):
-        return ly.words.colors_predefined
-    if re.search(r"\bx11-color\s*$", text):
-        return ly.words.colors_x11
+        return ColorCompletions(model, ly.colors.colors_predefined)
+    if re.search(r"\bx11-color\s*'$", text):
+        return ColorCompletions(model, ly.colors.colors_x11)
     
     # parse to get current context
     fragment = unicode(doc.text(KTextEditor.Range(
@@ -127,19 +232,35 @@ def findMatches(view, word, invocationType):
         
     if col == 0 or text[-1] in " \t":
         # all kinds of variables only at start of line or after whitespace
+        # the VarCompletions model can add ' = ' after them
         if state.parser().token == "\\header":
-            return ly.words.headervars
+            return VarCompletions(model, ly.words.headervars)
         if state.parser().token == "\\paper":    
-            return ly.words.papervars
+            return VarCompletions(model, ly.words.papervars)
         if state.parser().token == "\\layout":
-            return ly.words.layoutvars
+            return VarCompletions(model, ly.words.layoutvars)
         if state.parser().token in ("\\context", "\\with"):
-            return ly.words.contextproperties
+            return VarCompletions(model, ly.words.contextproperties)
     
-        
+
+# lazy-load and cache some data
+@ly.lazy
+def musicglyph_names():
+    datadir = ly.version.datadir(command("lilypond"))
+    if datadir:
+        font = ly.font.emmentaler20(datadir)
+        if font:
+            return tuple(font.glyphs())
+    return ()
+
+@ly.lazy
+def lilypondVersion():
+    ver = frescobaldi_app.version.defaultVersion()
+    return ver and ('version "%s"' % ver,) or ()
+
+# utility functions
 def config(group):
     return KGlobal.config().group(group)
 
 def command(cmd):
     return unicode(config("commands").readEntry(cmd, QVariant(cmd)).toString())
-        

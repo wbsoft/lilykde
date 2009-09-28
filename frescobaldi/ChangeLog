@@ -1,11 +1,20 @@
 Changes in 0.7.15 -- 
 
-* New "Repeat selected music" command that wraps the selection in a
-  \repeat volta 2 { music... } construct
-* New bar lines submenu to enter different types of bar lines
+* New shortcuts:
+  - Repeat selected music, Ctrl+Shift+R: wraps the selection in a
+    \repeat volta 2 { music... } construct
+  - Insert pair of braces, Ctrl+{: wraps the selection in braces, or inserts
+    { newline newline } and places the cursor on the middle indented line.
+* New bar lines submenu to insert different types of bar lines
 * Expansion Manager:
   - Two cursormarks (|) can be used to select a range of text after expanding
   - New contextmenu command to add selected text to expansions
+* Autocompletion:
+  - named colors are shown in the right color
+  - some often used block commands like \header now also insert the braces,
+    and place the cursor between them.
+  - names of variables (like composer in the header) automagically insert ' = ' 
+    after them if the rest of the line does not start with the '=' character.
 * LilyPond symbol icons are displayed white if the users color palette settings
   have light text on a dark background. The icons are automatically recolored
   if the user changes the color preferences while Frescobaldi is running.

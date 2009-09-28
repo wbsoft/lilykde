@@ -17,7 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, re, sip, time
+import os, re, sip, time, weakref
 from dbus.service import method
 
 from PyQt4.QtCore import QEvent, QObject, QString, QTimer, QVariant, Qt, SIGNAL
@@ -147,7 +147,7 @@ class Document(kateshell.app.Document):
 
     @lazymethod
     def completionModel(self):
-        return CompletionModel(self.view)
+        return CompletionModel(self)
         
     def contextMenu(self):
         menu = KMenu(self.view)
@@ -578,7 +578,16 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         def edit_repeat(text):
             return self.currentDocument().manipulator().wrapBrace(text, 
                 "\\repeat volta 2")
-
+        
+        @self.onAction(i18n("Insert pair of braces"), key="Ctrl+{")
+        def edit_insert_braces():
+            d = self.currentDocument()
+            if d.selectionText():
+                d.replaceSelectionWith(d.manipulator().wrapBrace(
+                    d.selectionText()), keepSelection=False)
+            else:
+                self.currentDocument().manipulator().insertTemplate("{\n(|)\n}")
+            
     def setupGeneratedMenus(self):
         super(MainWindow, self).setupGeneratedMenus()
         # Generated file menu:
@@ -922,48 +931,34 @@ class StateManager(object):
 
 
 class CompletionModel(KTextEditor.CodeCompletionModel):
-    def __init__(self, parent):
-        KTextEditor.CodeCompletionModel.__init__(self, parent)
-        self.matches = []
-
-    def index(self, row, column, parent):
-        if (row < 0 or row >= len(self.matches) or
-            column < 0 or column >= KTextEditor.CodeCompletionModel.ColumnCount or
-            parent.isValid()):
-            return QModelIndex()
-        return self.createIndex(row, column, 0)
+    def __init__(self, doc):
+        KTextEditor.CodeCompletionModel.__init__(self, doc.view)
+        self._doc = weakref.ref(doc)
+        self.result = None
+    
+    @property
+    def doc(self):
+        return self._doc()
         
-    def data(self, index, role):
-        if index.column() != KTextEditor.CodeCompletionModel.Name:
-            return QVariant()
-        if role == Qt.DisplayRole:
-            return QVariant(self.matches[index.row()])
-        elif role == KTextEditor.CodeCompletionModel.CompletionRole:
-            return QVariant(
-                KTextEditor.CodeCompletionModel.FirstProperty |
-                KTextEditor.CodeCompletionModel.Public |
-                KTextEditor.CodeCompletionModel.LastProperty )
-        elif role == KTextEditor.CodeCompletionModel.ScopeIndex:
-            return QVariant(0)
-        elif role == KTextEditor.CodeCompletionModel.MatchQuality:
-            return QVariant(10)
-        elif role == KTextEditor.CodeCompletionModel.HighlightingMethod:
-            return QVariant(QVariant.Invalid)
-        elif role == KTextEditor.CodeCompletionModel.InheritanceDepth:
-            return QVariant(0)
-        else:
-            return QVariant()
-            
-    def rowCount(self, parent):
-        if parent.isValid():
-            return 0 # Do not make the model look hierarchical
-        else:
-            return len(self.matches)
-            
     def completionInvoked(self, view, word, invocationType):
         import frescobaldi_app.completion
-        self.matches = frescobaldi_app.completion.findMatches(
-            view, word, invocationType) or []
+        self.result = frescobaldi_app.completion.getCompletions(
+            self, view, word, invocationType)
+        self.reset()
+    
+    def index(self, row, column, parent):
+        return self.result.index(row, column, parent)
+        
+    def data(self, index, role):
+        return self.result.data(index, role)
+    
+    def executeCompletionItem(self, doc, word, row):
+        if not self.result.executeCompletionItem(doc, word, row):
+            KTextEditor.CodeCompletionModel.executeCompletionItem(
+                self, doc, word, row)
+    
+    def rowCount(self, parent):
+        return self.result.rowCount(parent)
 
 
 class SymbolManager(object):

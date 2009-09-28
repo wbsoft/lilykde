@@ -435,6 +435,13 @@ class DocumentManipulator(object):
             menu.addMenu(self.doc.app.mainwin.factory().container(
                 "lilypond_edit_rhythm", self.doc.app.mainwin))
         
+        # Brace selection
+        if selection:
+            a = self.doc.app.mainwin.actionCollection().action(
+                "edit_insert_braces")
+            if a and a.isEnabled():
+                menu.addAction(a)
+        
         # Repeat selected music
         a = self.doc.app.mainwin.actionCollection().action("edit_repeat")
         if a and a.isEnabled():
@@ -477,6 +484,44 @@ class DocumentManipulator(object):
         """
         self.doc.view.insertText('\\bar "%s"' % bar)
         
+    def insertTemplate(self, text, cursor=None, remove=None, doIndent=True):
+        """
+        Inserts text into the document.  If cursor is not given,
+        use the view's current cursor position.  If remove is given,
+        it is expected to be a KTextEditor.Range() to replace with the
+        text.
+        
+        If the text contains '(|)', the cursor is set there. If the string
+        '(|)' appears twice, that range is selected after inserting the text.
+        
+        The text is also indented.
+        """
+        cursor = cursor or self.doc.view.cursorPosition()
+        
+        # place to set cursor or range to select after writing out the expansion
+        newcursors = []
+        
+        # re-indent the text:
+        if doIndent and '\n' in text:
+            text = self.doc.indent(text, self.doc.currentIndent(cursor)).lstrip()
+        
+        # "(|)" is the place to position the cursor after inserting
+        # if this sequence appears twice, the range is selected.
+        if "(|)" in text:
+            newcur = Cursor(cursor)
+            for t in text.split("(|)", 2)[:-1]:
+                newcur.walk(t)
+                newcursors.append(newcur.kteCursor())
+            text = text.replace("(|)", "")
+        if remove:
+            self.doc.doc.replaceText(remove, text)
+        else:
+            self.doc.doc.insertText(cursor, text)
+        if newcursors:
+            self.doc.view.setCursorPosition(newcursors[0])
+            if len(newcursors) > 1:
+                self.doc.view.setSelection(KTextEditor.Range(*newcursors[:2]))
+        
     def addArticulation(self, art):
         """
         Add artication to selected notes or chord, or just insert it.
@@ -500,7 +545,7 @@ class DocumentManipulator(object):
         else:
             self.doc.view.insertText(art)
         
-    def wrapBrace(self, text, command, alwaysMultiLine=False):
+    def wrapBrace(self, text, command='', alwaysMultiLine=False):
         """
         Wrap a piece of text inside a brace construct. Returns the replacement.
         The piece of text is also expected to be the selection of the document,
@@ -509,17 +554,19 @@ class DocumentManipulator(object):
         wrapBrace("c d e f", "\\relative c'") returns
         "\\relative c' { c d e f }"
         """
+        if command != '':
+            command += ' '
         # preserve space at start and end of selection
         space1, sel, space2 = re.compile(
             r'^(\s*)(.*?)(\s*)$', re.DOTALL).match(text).groups()
         if alwaysMultiLine or '\n' in text:
-            result = "%s {\n%s\n}" % (command, sel)
+            result = "%s{\n%s\n}" % (command, sel)
             # indent the result corresponding with the first selection line.
             selRange = self.doc.view.selectionRange()
             indentDepth = self.doc.currentIndent(selRange.start(), False)
             result = self.doc.indent(result, indentDepth).lstrip()
         else:
-            result = "%s { %s }" % (command, sel)
+            result = "%s{ %s }" % (command, sel)
         return ''.join((space1, result, space2))
         
 
