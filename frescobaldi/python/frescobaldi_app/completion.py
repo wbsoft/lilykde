@@ -84,6 +84,10 @@ def findMatches(view, word, invocationType):
         return ly.words.clefs
     if re.search(r"\\clef\s+$", text):
         return ly.words.clefs_plain
+    if re.search(r"\bcolor\s*=?\s*#$", text):
+        return ly.words.colors_predefined
+    if re.search(r"\bx11-color\s*$", text):
+        return ly.words.colors_x11
     
     # parse to get current context
     fragment = unicode(doc.text(KTextEditor.Range(
