@@ -866,6 +866,9 @@ class LogTool(kateshell.mainwindow.Tool):
             QObject.connect(a, SIGNAL("triggered()"),
                 lambda: self.toggleAction(name))
         act("errors only", i18n("Only show on errors"))
+        # context menu options of the Log, if there...
+        if hasattr(self.widget.currentWidget(), "addContextMenuActions"):
+            self.widget.currentWidget().addContextMenuActions(m)
         
     def toggleAction(self, name):
         self._config[name] = not self._config[name]

@@ -27,6 +27,9 @@ from PyQt4.QtGui import (
     QBrush, QColor, QFont, QFrame, QTextBrowser, QTextCharFormat, QTextCursor,
     QToolBar, QVBoxLayout)
 from PyKDE4.kdecore import KGlobal, KProcess, i18n
+from PyKDE4.kdeui import (
+    KApplication, KIcon, KMenu, KMessageBox, KStandardGuiItem)
+from PyKDE4.kio import KEncodingFileDialog
 
 from signals import Signal
 
@@ -297,6 +300,11 @@ class Log(LogWidget):
         LogWidget.__init__(self, tool.widget)
         QObject.connect(self.textBrowser, SIGNAL("anchorClicked(QUrl)"),
             self.anchorClicked)
+        # context menu:
+        self.textBrowser.setContextMenuPolicy(Qt.CustomContextMenu)
+        QObject.connect(self.textBrowser,
+            SIGNAL("customContextMenuRequested(QPoint)"),
+            self.showContextMenu)
     
     def clear(self):
         self.anchors.clear()
@@ -321,6 +329,48 @@ class Log(LogWidget):
         if ref:
             ref.activate()
     
+    def showContextMenu(self, pos):
+        m = KMenu(self.textBrowser)
+        m.addTitle(i18n("LilyPond Log"))
+        self.addContextMenuActions(m)
+        m.exec_(self.textBrowser.mapToGlobal(pos))
+        
+    def addContextMenuActions(self, menu):
+        a = menu.addAction(KIcon("edit-copy"), i18n("&Copy"))
+        QObject.connect(a, SIGNAL("triggered()"), self.copyLog)
+        g = KStandardGuiItem.saveAs()
+        a = menu.addAction(g.icon(), g.text())
+        QObject.connect(a, SIGNAL("triggered()"), self.saveLogAs)
+
+    def copyLog(self):
+        text = (self.textBrowser.textCursor().selection().toPlainText()
+                or self.textBrowser.toPlainText())
+        if text:
+            KApplication.clipboard().setText(text)
+        
+    def saveLogAs(self):
+        startDir, fileName = os.path.split(self.doc.localPath())
+        fileName = (os.path.splitext(fileName)[0] or "lilypond") + ".log"
+        dlg = KEncodingFileDialog(startDir, 'utf-8', '',
+            i18n("Save LilyPond Log as"),
+            KEncodingFileDialog.Saving, self.textBrowser)
+        dlg.setSelection(fileName)
+        dlg.setConfirmOverwrite(True)
+        result = dlg.exec_()
+        if not result:
+            return # Cancelled
+        encoding = str(dlg.selectedEncoding())
+        fileName = unicode(dlg.selectedFile())
+        text = unicode(self.textBrowser.textCursor().selection().toPlainText()
+                or self.textBrowser.toPlainText())
+        try:
+            f = open(fileName, 'w')
+            f.write(text.encode(encoding, 'replace'))
+            f.close()
+        except (OSError, IOError), e:
+            KMessageBox.error(self.textBrowser,
+                i18n("Could not save LilyPond log:\n\n%1", unicode(e)))
+
 
 class FileRef(object):
     """
