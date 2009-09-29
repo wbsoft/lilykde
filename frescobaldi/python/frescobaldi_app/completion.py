@@ -130,8 +130,8 @@ class ColorCompletions(CompletionHelper):
                 return QVariant(name)
             elif role == KTextEditor.CodeCompletionModel.CustomHighlight:
                 format = QTextFormat()
-                foreground = QColor.fromRgbF(r, g, b)
-                format.setForeground(QBrush(foreground))
+                color = QColor.fromRgbF(r, g, b)
+                format.setBackground(QBrush(color))
                 return QVariant([0, len(name), format])
         return super(ColorCompletions, self).data(index, role)
 
