@@ -15,10 +15,12 @@ Changes in 0.7.15 --
     and place the cursor between them.
   - names of variables (like composer in the header) automagically insert ' = ' 
     after them if the rest of the line does not start with the '=' character.
+* New commands in the Log context menu to copy or save its contents.
 * LilyPond symbol icons are displayed white if the users color palette settings
   have light text on a dark background. The icons are automatically recolored
   if the user changes the color preferences while Frescobaldi is running.
-* Copy and Save As commands for the LilyPond Log view context menu
+* The Save As... dialog now really opens in the default directory if the
+  document has no filename yet.
 * Translations:
   - Turkish updated by S. Acim
 
