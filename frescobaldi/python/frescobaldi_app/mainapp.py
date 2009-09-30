@@ -867,6 +867,7 @@ class LogTool(kateshell.mainwindow.Tool):
                 lambda: self.toggleAction(name))
         act("errors only", i18n("Only show on errors"))
         # context menu options of the Log, if there...
+        # (check it without importing runlily module)
         if hasattr(self.widget.currentWidget(), "addContextMenuActions"):
             self.widget.currentWidget().addContextMenuActions(m)
         
