@@ -17,7 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, re, sip, time, weakref
+import os, re, sip, weakref
 from dbus.service import method
 
 from PyQt4.QtCore import QEvent, QObject, QString, QTimer, QVariant, Qt, SIGNAL
@@ -73,12 +73,6 @@ class MainApp(kateshell.app.MainApp):
             else:
                 # We can't open malformed textedit urls
                 url = KUrl()
-        # If valid url but no encoding given, check if we can remember it
-        if not encoding and not url.isEmpty():
-            if config().readEntry("save metainfo", QVariant(False)).toBool():
-                group = self.stateManager().groupForUrl(url)
-                if group:
-                    encoding = group.readEntry("encoding", QVariant('')).toString()
         d = kateshell.app.MainApp.openUrl(self, url, encoding)
         if nav:
             d.setCursorPosition(line, col, False)
@@ -102,10 +96,6 @@ class MainApp(kateshell.app.MainApp):
     def defaultDirectory(self):
         return config().readPathEntry("default directory", "")
     
-    @lazymethod
-    def stateManager(self):
-        return StateManager(self)
-
     def findDocument(self, url):
         """
         Finds the document at KUrl url.
@@ -121,6 +111,9 @@ class MainApp(kateshell.app.MainApp):
                 if manager.path() == url:
                     return d
         return False
+    
+    def keepMetaInfo(self):
+        return config().readEntry("save metainfo", QVariant(False)).toBool()
 
 
 class Document(kateshell.app.Document):
@@ -143,9 +136,6 @@ class Document(kateshell.app.Document):
             action = self.view.actionCollection().action(name)
             if action:
                 sip.delete(action)
-        # read state information (view settings etc.)
-        if config().readEntry("save metainfo", QVariant(False)).toBool():
-            self.app.stateManager().loadState(self)
         # activate completion
         iface = self.view.codeCompletionInterface()
         if iface:
@@ -164,14 +154,7 @@ class Document(kateshell.app.Document):
         self.manipulator().populateContextMenu(self.view.contextMenu())
     
     def aboutToClose(self):
-        if config().readEntry("save metainfo", QVariant(False)).toBool():
-            self.app.stateManager().saveState(self)
         self.resetLocalFileManager()
-        
-    def writeConfig(self, group):
-        # also save the encoding
-        super(Document, self).writeConfig(group)
-        group.writeEntry("encoding", QVariant(self.encoding()))
     
     def setCursorPosition(self, line, column, translate=True):
         shiftPressed = KApplication.keyboardModifiers() & Qt.ShiftModifier
@@ -906,46 +889,6 @@ class RumorTool(kateshell.mainwindow.Tool):
     def factory(self):
         import frescobaldi_app.rumor
         return frescobaldi_app.rumor.RumorPanel(self)
-
-
-class StateManager(object):
-    """
-    Manages state and meta-info for documents, like bookmarks
-    and cursor position, etc.
-    """
-    def __init__(self, app):
-        self.app = app
-        self.metainfos = KConfig("metainfos", KConfig.NoGlobals, "appdata")
-        
-    def groupForUrl(self, url):
-        if not url.isEmpty() and self.metainfos.hasGroup(url.prettyUrl()):
-            return self.metainfos.group(url.prettyUrl())
-            
-    def loadState(self, doc):
-        group = self.groupForUrl(doc.url())
-        if group:
-            last = group.readEntry("time", QVariant(0.0)).toDouble()[0]
-            # when it is a local file, only load the state when the
-            # file was not modified later
-            if not doc.localPath() or (
-                    os.path.exists(doc.localPath()) and
-                    os.path.getmtime(doc.localPath()) <= last):
-                doc.readConfig(group)
-            
-    def saveState(self, doc):
-        if doc.view and not doc.url().isEmpty():
-            group = self.metainfos.group(doc.url().prettyUrl())
-            group.writeEntry("time", QVariant(time.time()))
-            doc.writeConfig(group)
-            group.sync()
-            
-    def cleanup(self):
-        """ Purge entries that are not used for more than a month. """
-        for g in self.metainfos.groupList():
-            last = self.metainfos.group(g).readEntry("time", QVariant(0.0)).toDouble()[0]
-            if (time.time() - last) / 86400 > 31:
-                self.metainfos.deleteGroup(g)
-        self.metainfos.sync()
 
 
 class CompletionModel(KTextEditor.CodeCompletionModel):

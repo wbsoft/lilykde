@@ -17,7 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, re, sip, sys, weakref, dbus, dbus.service, dbus.mainloop.qt
+import os, re, sip, sys, time, weakref, dbus, dbus.service, dbus.mainloop.qt
 from dbus.service import method, signal
 
 from signals import Signal
@@ -113,6 +113,10 @@ class MainApp(DBusItem):
 
         # restore session etc.
         
+    @lazymethod
+    def stateManager(self):
+        return StateManager(self)
+
     def defaultDirectory(self):
         return ''
 
@@ -133,8 +137,14 @@ class MainApp(DBusItem):
     def openUrl(self, url, encoding=None):
         if not isinstance(url, KUrl):
             url = KUrl(url)
+        # If no encoding given, set default or check if we can remember it
         if not encoding:
             encoding = self.defaultEncoding
+            if not url.isEmpty():
+                if self.keepMetaInfo():
+                    group = self.stateManager().groupForUrl(url)
+                    if group:
+                        encoding = group.readEntry("encoding", QVariant('')).toString()
         # If there is only one document open and it is empty, nameless and
         # unmodified, close it.
         close0 = (not url.isEmpty() and len(self.documents) == 1
@@ -248,6 +258,16 @@ class MainApp(DBusItem):
         import kateshell.exception
         kateshell.exception.showException(self, exctype, excvalue, exctb)
 
+    def keepMetaInfo(self):
+        """
+        Returns whether meta information about documents should be kept
+        (e.g. state of view, cursor position, encoding etc.)
+        
+        The default is to return False, reimplement this to return e.g.
+        a user's configured setting.
+        """
+        return False
+
 
 class Document(DBusItem):
     """
@@ -343,6 +363,10 @@ class Document(DBusItem):
         
         # set default context menu
         self.view.setContextMenu(self.contextMenu())
+        # read state information (view settings etc.)
+        if self.app.keepMetaInfo():
+            self.app.stateManager().loadState(self)
+        # Let the world know ...
         self.app.documentMaterialized(self)
         self.viewCreated()
         
@@ -559,6 +583,8 @@ class Document(DBusItem):
                 return False
             if not self.doc.closeUrl(False):
                 return False # closing did not succeed, but that'd be abnormal
+            if self.app.keepMetaInfo():
+                self.app.stateManager().saveState(self)
         self.closed(self) # before we are really deleted
         self.aboutToClose()
         self.app.documentClosed(self)
@@ -662,6 +688,8 @@ class Document(DBusItem):
                 if m:
                     marks.append("%d:%d" % (line, m))
             group.writeEntry("bookmarks", ','.join(marks))
+        # also save the encoding
+        group.writeEntry("encoding", QVariant(self.encoding()))
 
     def line(self, lineNumber = None):
         """
@@ -807,6 +835,46 @@ class Document(DBusItem):
         return bool(ok and flags & 0x2000000)
 
     
+class StateManager(object):
+    """
+    Manages state and meta-info for documents, like bookmarks
+    and cursor position, etc.
+    """
+    def __init__(self, app):
+        self.app = app
+        self.metainfos = KConfig("metainfos", KConfig.NoGlobals, "appdata")
+        
+    def groupForUrl(self, url):
+        if not url.isEmpty() and self.metainfos.hasGroup(url.prettyUrl()):
+            return self.metainfos.group(url.prettyUrl())
+            
+    def loadState(self, doc):
+        group = self.groupForUrl(doc.url())
+        if group:
+            last = group.readEntry("time", QVariant(0.0)).toDouble()[0]
+            # when it is a local file, only load the state when the
+            # file was not modified later
+            if not doc.localPath() or (
+                    os.path.exists(doc.localPath()) and
+                    os.path.getmtime(doc.localPath()) <= last):
+                doc.readConfig(group)
+            
+    def saveState(self, doc):
+        if doc.view and not doc.url().isEmpty():
+            group = self.metainfos.group(doc.url().prettyUrl())
+            group.writeEntry("time", QVariant(time.time()))
+            doc.writeConfig(group)
+            group.sync()
+            
+    def cleanup(self):
+        """ Purge entries that are not used for more than a month. """
+        for g in self.metainfos.groupList():
+            last = self.metainfos.group(g).readEntry("time", QVariant(0.0)).toDouble()[0]
+            if (time.time() - last) / 86400 > 31:
+                self.metainfos.deleteGroup(g)
+        self.metainfos.sync()
+
+
 class CursorTranslator(object):
     """
     This object makes a kind of snapshot of a document and makes it
