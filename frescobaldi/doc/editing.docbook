@@ -149,6 +149,14 @@ shortcuts outlined below, you can also use the many keyboard shortcuts available
 </row>
 
 <row>
+<entry><para><keycombo><keycap>Ctrl+{</keycap></keycombo></para></entry>
+<entry><para>
+Insert a pair of braces <userinput>{ }</userinput> with an empty,
+indented line in between and places the cursor there.
+</para></entry>
+</row>
+
+<row>
 <entry><para><keycombo><keycap>Ctrl+.</keycap></keycombo></para></entry>
 <entry><para>
 Replace the entered mnemonic with the corresponding snippet from the
@@ -189,6 +197,14 @@ If text is selected, that text is put between left and right double quotes.
 Insert a <userinput>\version</userinput> command with the default &lilypond; version number.
 Which version number is used can be configured in the
 <link linkend="settings-general-preferences">Settings dialog</link>.
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+Shift+R</keycap></keycombo></para></entry>
+<entry><para>
+Wrap the selected music in a <userinput>\repeat volta 2 { ... }</userinput>
+construct.
 </para></entry>
 </row>
 

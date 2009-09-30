@@ -167,5 +167,14 @@ symbols to all notes or chords in a selected music fragment.
 </menuchoice> repeats the last entered note or chord with
 all its suffixes (ties, articulations, etc.)
 </para>
+
+<para>
+<menuchoice>
+  <shortcut><keycombo><keycap>Ctrl+{</keycap></keycombo></shortcut>
+  <guimenuitem>Insert pair of braces</guimenuitem>
+</menuchoice> inserts a pair of braces <userinput>{ }</userinput> with an empty,
+indented line in between and places the cursor there.
+</para>
+
 </sect1>
 </chapter>
