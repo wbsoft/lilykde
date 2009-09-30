@@ -7,6 +7,7 @@ i18n("&Document")
 i18n("&Pitch")
 i18n("&Lyrics")
 i18n("&Rhythm")
+i18n("&Bar Lines")
 i18n("&Generated Files")
 i18n("&Source Document")
 

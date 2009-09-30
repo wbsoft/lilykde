@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.1\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-09-30 15:26+0200\n"
+"POT-Creation-Date: 2009-09-30 15:43+0200\n"
 "PO-Revision-Date: 2009-03-12 21:56+0100\n"
 "Last-Translator: Piotr Komorowski <piotr-komorowski@wp.pl>\n"
 "Language-Team: Polish \\t <LL@li.org>\n"
@@ -14,11 +14,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../frescobaldi.py:32 dummy.py:14
+#: ../frescobaldi.py:32 dummy.py:15
 msgid "Frescobaldi"
 msgstr "Frescobaldi"
 
-#: ../frescobaldi.py:34 dummy.py:15
+#: ../frescobaldi.py:34 dummy.py:16
 msgid "LilyPond Music Editor"
 msgstr "Edytor nutowy LilyPond"
 
@@ -86,10 +86,14 @@ msgid "&Rhythm"
 msgstr "&Rytm"
 
 #: dummy.py:10
+msgid "&Bar Lines"
+msgstr ""
+
+#: dummy.py:11
 msgid "&Generated Files"
 msgstr "&Wygenerowane Pliki"
 
-#: dummy.py:11
+#: dummy.py:12
 #, fuzzy
 msgid "&Source Document"
 msgstr "$Dokument"
