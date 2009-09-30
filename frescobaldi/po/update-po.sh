@@ -4,9 +4,6 @@ package=$(sed -n 's/^project\s*(\s*\(.*\)\s*).*/\1/p' ../CMakeLists.txt)
 version=$(sed -n 's/.*VERSION "\(.*\)".*/\1/p' ../CMakeLists.txt)
 email=$(sed -n 's/^bugs\s*=\s*"\(.*\)".*/\1/p' ../frescobaldi.py)
 
-# Find translatable strings in expansions
-python desktop2py.py ../data/expansions > expansions.py
-
 # Update pot file:
 xgettext \
     --language=python \
@@ -19,7 +16,6 @@ xgettext \
     -kI18N_NOOP:1 -kI18N_NOOP2:1c,2 \
     ../frescobaldi.py \
     dummy.py \
-    expansions.py \
     ../python/ly/*.py \
     ../python/kateshell/exception.py \
     ../python/kateshell/mainwindow.py \
