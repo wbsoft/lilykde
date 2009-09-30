@@ -73,6 +73,12 @@ class MainApp(kateshell.app.MainApp):
             else:
                 # We can't open malformed textedit urls
                 url = KUrl()
+        # If valid url but no encoding given, check if we can remember it
+        if not encoding and not url.isEmpty():
+            if config().readEntry("save metainfo", QVariant(False)).toBool():
+                group = self.stateManager().groupForUrl(url)
+                if group:
+                    encoding = group.readEntry("encoding", QVariant('')).toString()
         d = kateshell.app.MainApp.openUrl(self, url, encoding)
         if nav:
             d.setCursorPosition(line, col, False)
@@ -162,6 +168,11 @@ class Document(kateshell.app.Document):
             self.app.stateManager().saveState(self)
         self.resetLocalFileManager()
         
+    def writeConfig(self, group):
+        # also save the encoding
+        super(Document, self).writeConfig(group)
+        group.writeEntry("encoding", QVariant(self.encoding()))
+    
     def setCursorPosition(self, line, column, translate=True):
         shiftPressed = KApplication.keyboardModifiers() & Qt.ShiftModifier
         if self.view and shiftPressed:
@@ -906,10 +917,13 @@ class StateManager(object):
         self.app = app
         self.metainfos = KConfig("metainfos", KConfig.NoGlobals, "appdata")
         
+    def groupForUrl(self, url):
+        if not url.isEmpty() and self.metainfos.hasGroup(url.prettyUrl()):
+            return self.metainfos.group(url.prettyUrl())
+            
     def loadState(self, doc):
-        if (not doc.url().isEmpty() and
-                self.metainfos.hasGroup(doc.url().prettyUrl())):
-            group = self.metainfos.group(doc.url().prettyUrl())
+        group = self.groupForUrl(doc.url())
+        if group:
             last = group.readEntry("time", QVariant(0.0)).toDouble()[0]
             # when it is a local file, only load the state when the
             # file was not modified later
