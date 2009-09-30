@@ -404,6 +404,7 @@ class Document(DBusItem):
             dlg.setConfirmOverwrite(True)
             if not dlg.exec_():
                 return False # Cancelled
+            self.doc.setEncoding(dlg.selectedEncoding())
             return self.doc.saveAs(dlg.selectedUrl())
         return True
             
