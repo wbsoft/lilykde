@@ -393,23 +393,18 @@ class Document(DBusItem):
     @method(iface, in_signature='', out_signature='b')
     def saveAs(self):
         if self.doc:
-            res = KEncodingFileDialog.getSaveUrlAndEncoding(
+            dlg = KEncodingFileDialog(
+                self.app.defaultDirectory(),
                 self.doc.encoding(),
-                self.url().url() or self.app.defaultDirectory(),
                 '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
-                self.app.mainwin, i18n("Save File"))
-            if not res.URLs:
-                return False
-            url = res.URLs[0]
-            if (url.isLocalFile() and os.path.exists(unicode(url.path())) and
-                    KMessageBox.warningContinueCancel(self.app.mainwin,
-                    i18n("A file named \"%1\" already exists. "
-                         "Are you sure you want to overwrite it?",
-                         url.fileName()),
-                    i18n("Overwrite File?"), KGuiItem(i18n("&Overwrite"))) ==
-                    KMessageBox.Cancel):
-                return False
-            return self.doc.saveAs(url)
+                i18n("Save File"),
+                KEncodingFileDialog.Saving,
+                self.app.mainwin)
+            dlg.setSelection(self.url().url())
+            dlg.setConfirmOverwrite(True)
+            if not dlg.exec_():
+                return False # Cancelled
+            return self.doc.saveAs(dlg.selectedUrl())
         return True
             
     def openUrl(self, url):
