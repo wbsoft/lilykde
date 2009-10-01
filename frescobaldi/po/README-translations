@@ -1,13 +1,10 @@
 How to translate Frescobaldi to your (favorite) language:
-=====================================================
-kate: encoding utf8;
-
+=========================================================
 
 First create an empty but initialized po file for your language.
 (PO means: Portable Object)
 
-If you want to translate Frescobaldi to your current locale,
-simply enter:
+If you want to translate Frescobaldi to your current locale, simply enter:
 
 $ cd po/
 $ msginit -i frescobaldi.pot
@@ -18,19 +15,47 @@ $ msginit -i frescobaldi.pot -l xx_CC
 
 where xx_CC is e.g. en_GB.
 
-Now you can edit the xx.po file with a tool like KBabel.  If done,
-you can send the translated po file to the Frescobaldi author if you 
-like, to contribute it to the Frescobaldi project.
+Now you can edit the xx.po file with a tool like Lokalize. If done, you can send
+the translated po file to the Frescobaldi author if you like, to contribute it
+to the Frescobaldi project.
 
-There are many instrument names in Frescobaldi, with the full name and
-abridged name in one string, separated by a pipe symbol (|). This is done
-so that you can understand how to translate the short names. You should
-translate both the full and abridged names and also include the pipe symbol
-in the resulting string, so
+There are many instrument names in Frescobaldi, with the full name and abridged
+name in one string, separated by a pipe symbol (|). This is done so that you can
+understand how to translate the short names. You should translate both the full
+and abridged names and also include the pipe symbol in the resulting string, so:
 
 "Soprano|S." becomes "Sopraan|S." (dutch)
 "Organ|Org." becomes "Orgue|Org." (french)
 "Organ|Org." becomes "Órgano|Órg." (spanish)
 
-Note that this use of the pipe symbol in translations differs from the
+Note that this use of the pipe symbol in translations differs from the 
 convention in some projects that the pipe symbol denotes a comment.
+
+
+Translating the texts in the expansions and frescobaldi.desktop files
+=====================================================================
+
+In the data/ directory there are two files that also contain texts that can be
+translated. The expansions file contains LilyPond snippets with their
+descriptions for the Expansions Manager. Translate the descriptions by adding
+a Name[xx] key for your locale, e.g.:
+
+[a4]
+Name=Paper Size A4
+Name[nl]=Papierformaat A4
+Name[de]=Papierformat A4
+Text=#(set-paper-size "a4")
+
+The frescobaldi.desktop file contains a description of Frescobaldi for the menu.
+You can translate the GenericName key so the translated description appears in
+the menu, like:
+
+[Desktop Entry]
+GenericName=LilyPond Music Editor
+GenericName[nl]=Muziek-editor voor LilyPond
+GenericName[it]=Editor musicale per LilyPond
+
+Etcetera. Enjoy and thanks for your contribution!
+
+
+kate: encoding utf-8;
