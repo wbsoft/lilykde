@@ -255,6 +255,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         RumorTool(self)
         if not config().readEntry("disable pdf preview", QVariant(False)).toBool():
             PDFTool(self)
+        LilyDocTool(self)
         
         self.currentDocumentChanged.connect(self.updateJobActions)
     
@@ -889,6 +890,17 @@ class RumorTool(kateshell.mainwindow.Tool):
     def factory(self):
         import frescobaldi_app.rumor
         return frescobaldi_app.rumor.RumorPanel(self)
+
+
+class LilyDocTool(kateshell.mainwindow.Tool):
+    def __init__(self, mainwin):
+        kateshell.mainwindow.Tool.__init__(self, mainwin,
+            "doc", i18n("LilyPond Documentation"), "lilydoc",
+            dock=kateshell.mainwindow.Right)
+    
+    def factory(self):
+        import frescobaldi_app.lilydoc
+        return frescobaldi_app.lilydoc.LilyDoc(self)
 
 
 class CompletionModel(KTextEditor.CodeCompletionModel):
