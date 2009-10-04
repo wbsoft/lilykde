@@ -18,14 +18,43 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 
-from PyQt4.QtCore import QUrl
+from PyQt4.QtCore import QObject, Qt, QUrl, SIGNAL
+from PyQt4.QtGui import QToolBar, QVBoxLayout, QWidget
 from PyQt4.QtWebKit import QWebView
 
+from PyKDE4.kdecore import i18n
+from PyKDE4.kdeui import KStandardGuiItem
 
 
-class LilyDoc(QWebView):
+class LilyDoc(QWidget):
     def __init__(self, tool):
-        QWebView.__init__(self)
+        QWidget.__init__(self)
         self.mainwin = tool.mainwin
-        self.load(QUrl("http://lilypond.org/doc"))
+        layout = QVBoxLayout(self)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.toolBar = QToolBar(self)
+        layout.addWidget(self.toolBar)
+        self.view = QWebView(self)
+        layout.addWidget(self.view)
+        
+        self.toolBar.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        g = KStandardGuiItem.back()
+        self.back = self.toolBar.addAction(g.icon(), g.text())
+        self.back.setEnabled(False)
+        g = KStandardGuiItem.forward()
+        self.forward = self.toolBar.addAction(g.icon(), g.text())
+        self.forward.setEnabled(False)
+        
+        # signals
+        QObject.connect(self.view, SIGNAL("urlChanged(QUrl)"), self.slotUrlChanged)
+        QObject.connect(self.back, SIGNAL("triggered()"), self.view.back)
+        QObject.connect(self.forward, SIGNAL("triggered()"), self.view.forward)
+        # load initial view.
+        self.view.load(QUrl("http://lilypond.org/doc"))
 
+
+    def slotUrlChanged(self, url):
+        self.back.setEnabled(self.view.history().canGoBack())
+        self.forward.setEnabled(self.view.history().canGoForward())
+        
