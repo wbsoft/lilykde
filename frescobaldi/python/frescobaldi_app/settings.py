@@ -25,7 +25,7 @@ from PyQt4.QtCore import QObject, QSize, QString, QVariant, SIGNAL
 from PyQt4.QtGui import (
     QCheckBox, QGridLayout, QGroupBox, QLabel, QLineEdit, QRadioButton,
     QTextEdit, QTreeView, QWidget)
-from PyKDE4.kdecore import KGlobal, i18n
+from PyKDE4.kdecore import KGlobal, KUrl, i18n
 from PyKDE4.kdeui import KIcon, KPageDialog, KVBox
 from PyKDE4.kio import KFile, KUrlRequester
 
@@ -280,6 +280,22 @@ class Commands(QWidget):
         QObject.connect(self.folder, SIGNAL("textChanged(const QString&)"),
             lambda dummy: dialog.changed())
         
+        # LilyPond documentation URL
+        l = QLabel(i18n("LilyPond documentation:"))
+        self.lilydoc = KUrlRequester()
+        l.setBuddy(self.lilydoc)
+        row = layout.rowCount()
+        tooltip = i18n(
+            "Url or path to the LilyPond documentation.")
+        l.setToolTip(tooltip)
+        self.lilydoc.setToolTip(tooltip)
+        layout.addWidget(l, row, 0)
+        layout.addWidget(self.lilydoc, row, 1)
+        self.lilydoc.setMode(KFile.Mode(
+            KFile.File | KFile.Directory | KFile.ExistingOnly))
+        QObject.connect(self.lilydoc, SIGNAL("textChanged(const QString&)"),
+            lambda dummy: dialog.changed())
+        
         # hyphen paths
         l = QLabel(i18n(
             "Paths to search for hyphenation dictionaries of OpenOffice.org, "
@@ -302,6 +318,7 @@ class Commands(QWidget):
             widget.setText(default)
         self.setHyphenPaths(frescobaldi_app.hyphen.defaultPaths)
         self.folder.setPath('')
+        self.lilydoc.setUrl(KUrl())
         
     def loadSettings(self):
         conf = config("commands")
@@ -312,7 +329,9 @@ class Commands(QWidget):
         self.setHyphenPaths(paths)
         self.folder.setPath(
             config("preferences").readPathEntry("default directory", ""))
-        
+        self.lilydoc.setUrl(KUrl(
+            config("preferences").readEntry("lilypond documentation", QVariant('')).toString()))
+
     def saveSettings(self):
         conf = config("commands")
         for widget, name, default in self.commands:
@@ -325,6 +344,8 @@ class Commands(QWidget):
         frescobaldi_app.hyphen.findDicts()
         config("preferences").writePathEntry("default directory",
             self.folder.url().path())
+        config("preferences").writeEntry("lilypond documentation",
+            self.lilydoc.url().url())
 
 
 class RumorSettings(KVBox):
