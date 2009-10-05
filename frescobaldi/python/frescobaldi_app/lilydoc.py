@@ -175,8 +175,10 @@ class LilyDoc(QWidget):
         # looking for "% ly snippet"
         iface = self.doc.searchInterface()
         if iface:
-            r = iface.searchText(self.doc.documentRange(), "% ly snippet")[0]
+            d = self.doc.documentRange()
+            r = iface.searchText(d, "% ly snippet")[0]
             if r.isValid():
+                self.edit.setCursorPosition(d.end())
                 self.edit.setCursorPosition(r.start())
                 
     def slotLarger(self):
