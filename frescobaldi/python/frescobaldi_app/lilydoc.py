@@ -24,7 +24,7 @@ from PyQt4.QtGui import QStackedWidget, QToolBar, QVBoxLayout, QWidget
 from PyQt4.QtWebKit import QWebPage, QWebView
 
 from PyKDE4.kdecore import KGlobal, KUrl, i18n
-from PyKDE4.kdeui import KIcon, KStandardGuiItem
+from PyKDE4.kdeui import KIcon, KShortcut, KStandardAction, KStandardGuiItem
 from PyKDE4.kio import KRun
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -122,6 +122,7 @@ class LilyDoc(QWidget):
             self.edit = None
         if url.path().endsWith('.ly'):
             self.edit = self.doc.createView(self)
+            self.stack.addWidget(self.edit)
             # remember the view font size
             if self.editFontSize != 0:
                 a = self.edit.actionCollection().action(
@@ -130,7 +131,10 @@ class LilyDoc(QWidget):
                 if a:
                     for dummy in range(abs(self.editFontSize)):
                         a.trigger()
-            self.stack.addWidget(self.edit)
+            # make backspace go out
+            a = self.edit.actionCollection().action("backspace")
+            if a:
+                QObject.connect(a, SIGNAL("triggered()"), self.slotBack)
             self.doc.openUrl(KUrl(url))
             self.stack.setCurrentWidget(self.edit)
             self.forward.setEnabled(False)
