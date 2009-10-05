@@ -105,6 +105,9 @@ class LilyDoc(QWidget):
         
         # load initial view.
         self.editFontSize = 0
+        styleSheet = KGlobal.dirs().findResource("appdata", "lilydoc.css")
+        if styleSheet:
+            self.view.page().settings().setUserStyleSheetUrl(QUrl(styleSheet))
         self.stack.setCurrentWidget(self.view)
         self.view.load(self.homeUrl())
 
