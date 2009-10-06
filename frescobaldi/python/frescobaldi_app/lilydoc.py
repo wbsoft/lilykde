@@ -271,10 +271,13 @@ class RellinksParser(HTMLParser.HTMLParser):
         self._finished = False
         # Don't feed the whole document, just quit when the
         # HTML header is parsed.
-        while html and not self._finished:
-            self.feed(html[:1024])
-            html = html[1024:]
-    
+        try:
+            while html and not self._finished:
+                self.feed(html[:1024])
+                html = html[1024:]
+        except HTMLParser.HTMLParseError:
+            pass
+
     def links(self):
         """
         Returns the found links as a dictionary. The key is the rel attribute,
