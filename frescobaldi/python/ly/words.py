@@ -1599,6 +1599,7 @@ clefs_plain = (
     'G',
     'alto',
     'C',
+    'tenor',
     'bass',
     'subbass',
     'F',
