@@ -17,7 +17,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, sip
+"""
+A browser tool for the LilyPond documentation.
+"""
+
+import glob, os, sip
 import HTMLParser
 
 from PyQt4.QtCore import QObject, Qt, QUrl, QVariant, SIGNAL
@@ -25,7 +29,7 @@ from PyQt4.QtGui import QStackedWidget, QToolBar, QVBoxLayout, QWidget
 from PyQt4.QtWebKit import QWebPage, QWebView
 
 from PyKDE4.kdecore import KGlobal, KUrl, i18n
-from PyKDE4.kdeui import KIcon, KShortcut, KStandardAction, KStandardGuiItem
+from PyKDE4.kdeui import KIcon, KMenu, KShortcut, KStandardAction, KStandardGuiItem
 from PyKDE4.kio import KRun
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -38,19 +42,19 @@ docPrefixes = (
     )
 
 docLocations = (
-    'packages/lilypond/html',
-    'packages/lilypond',
-    'lilypond/html',
-    'lilypond',
+    'packages/lilypond*/html',
+    'packages/lilypond*',
+    'lilypond*/html',
+    'lilypond*',
     )
 
 def docHomeUrl():
     """
-    Returns the configured or found url (QUrl) where the LilyPond documentation
-    is to be found.
+    Returns the configured or found url (as a string) where the LilyPond
+    documentation is to be found.
     """
     url = config().readEntry("lilypond documentation", QVariant('')).toString()
-    return QUrl(url or findLocalDocIndex() or "http://lilypond.org/doc")
+    return unicode(url or findLocalDocIndex() or "http://lilypond.org/doc")
 
 def findLocalDocIndex():
     """
@@ -58,9 +62,10 @@ def findLocalDocIndex():
     """
     for p in docPrefixes:
         for l in docLocations:
-            i = os.path.join(p, l, 'Documentation', 'index.html')
-            if os.path.exists(i):
-                return i
+            path = os.path.join(p, l, 'Documentation', 'index.html')
+            files = glob.glob(path)
+            if files:
+                return files[-1]
 
 
 class LilyDoc(QWidget):
@@ -134,13 +139,18 @@ class LilyDoc(QWidget):
         QObject.connect(self.view.page(), SIGNAL("unsupportedContent(QNetworkReply*)"),
             self.slotUnsupported)
         
+        # context menu:
+        self.view.setContextMenuPolicy(Qt.CustomContextMenu)
+        QObject.connect(self.view, SIGNAL("customContextMenuRequested(QPoint)"),
+            self.slotShowContextMenu)
+        
         # load initial view.
         self.editFontSize = 0
         styleSheet = KGlobal.dirs().findResource("appdata", "lilydoc.css")
         if styleSheet:
             self.view.page().settings().setUserStyleSheetUrl(QUrl(styleSheet))
         self.stack.setCurrentWidget(self.view)
-        self.view.load(docHomeUrl())
+        self.slotHome()
 
     def openUrl(self, url):
         # handle .ly urls and load them read-only in KatePart
@@ -211,7 +221,7 @@ class LilyDoc(QWidget):
                 self.forward.setEnabled(False)
     
     def slotHome(self):
-        self.openUrl(docHomeUrl())
+        self.openUrl(QUrl(docHomeUrl()))
     
     def slotLoadFinished(self, success):
         # Called when the HTML doc has loaded.
@@ -257,10 +267,38 @@ class LilyDoc(QWidget):
         
     def slotUnsupported(self, reply):
         """ Called when the webview opens a non-HTML document. """
-        sip.transferto(KRun(KUrl(reply.url()), self), None) # C++ will delete it
+        self.slotNewWindow(reply.url())
             
-            
-            
+    def slotShowContextMenu(self, pos):
+        hit = self.view.page().currentFrame().hitTestContent(pos)
+        menu = KMenu()
+        if hit.linkUrl().isValid():
+            a = self.view.pageAction(QWebPage.CopyLinkToClipboard)
+            a.setIcon(KIcon("edit-copy"))
+            a.setText(i18n("Copy &Link"))
+            menu.addAction(a)
+            menu.addSeparator()
+            a = menu.addAction(KIcon("window-new"), i18n("Open Link in &New Window"))
+            QObject.connect(a, SIGNAL("triggered()"),
+                lambda url=hit.linkUrl(): self.slotNewWindow(url))
+        else:
+            if hit.isContentSelected():
+                a = self.view.pageAction(QWebPage.Copy)
+                a.setIcon(KIcon("edit-copy"))
+                a.setText(i18n("&Copy"))
+                menu.addAction(a)
+                menu.addSeparator()
+            a = menu.addAction(KIcon("window-new"), i18n("Open Document in &New Window"))
+            QObject.connect(a, SIGNAL("triggered()"),
+                lambda url=self.view.url(): self.slotNewWindow(url))
+        if len(menu.actions()):
+            menu.exec_(self.view.mapToGlobal(pos))
+    
+    def slotNewWindow(self, url):
+        """ Open url in new window """
+        sip.transferto(KRun(KUrl(url), self), None) # C++ will delete it
+
+
 
 class RellinksParser(HTMLParser.HTMLParser):
     """
