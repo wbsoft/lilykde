@@ -18,6 +18,7 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 import os, sip
+import HTMLParser
 
 from PyQt4.QtCore import QObject, Qt, QUrl, QVariant, SIGNAL
 from PyQt4.QtGui import QStackedWidget, QToolBar, QVBoxLayout, QWidget
@@ -41,6 +42,7 @@ docLocations = (
     'lilypond/html',
     'lilypond',
     )
+
 
 def findLocalDocIndex():
     for p in docPrefixes:
@@ -88,6 +90,24 @@ class LilyDoc(QWidget):
         self.textLarger = self.toolBar.addAction(KIcon("zoom-in"), i18n("Larger text"))
         self.textSmaller = self.toolBar.addAction(KIcon("zoom-out"), i18n("Smaller text"))
         
+        self.toolBar.addSeparator()
+        
+        # rellinks
+        self.linkActions = {}   # all rellinks with their actions
+        self.rellinks = {}      # links for the current view
+        for name, icon, title in (
+                # name, icon, default title
+                ('start', 'arrow-left-double', i18n("First Page")),
+                ('prev', 'arrow-left', i18n("Previous")),
+                ('up', 'arrow-up', i18n("Up one level")),
+                ('next', 'arrow-right', i18n("Next")),
+                ('contents', 'view-table-of-contents-ltr', i18n("Table of contents")),
+                ('index', 'arrow-right-double', i18n("Index")),
+            ):
+            self.linkActions[name] = a = self.toolBar.addAction(KIcon(icon), title)
+            a.setEnabled(False)
+            QObject.connect(a, SIGNAL("triggered()"), lambda name=name: self.slotRellink(name))
+
         # signals
         QObject.connect(self.doc, SIGNAL("completed()"), self.slotCompleted)
         QObject.connect(self.back, SIGNAL("triggered()"), self.slotBack)
@@ -97,6 +117,7 @@ class LilyDoc(QWidget):
         QObject.connect(self.textSmaller, SIGNAL("triggered()"), self.slotSmaller)
         
         QObject.connect(self.view, SIGNAL("urlChanged(QUrl)"), self.updateActions)
+        QObject.connect(self.view, SIGNAL("loadFinished(bool)"), self.slotLoadFinished)
         self.view.page().setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         QObject.connect(self.view.page(), SIGNAL("linkClicked(QUrl)"), self.openUrl)
         self.view.page().setForwardUnsupportedContent(True)
@@ -141,6 +162,7 @@ class LilyDoc(QWidget):
             self.doc.openUrl(KUrl(url))
             self.stack.setCurrentWidget(self.edit)
             self.forward.setEnabled(False)
+            self.disableLinkActions()
         else:
             self.view.load(url)
 
@@ -148,11 +170,29 @@ class LilyDoc(QWidget):
         self.back.setEnabled(self.view.history().canGoBack())
         self.forward.setEnabled(bool(
             self.view.history().canGoForward() or self.edit))
-        
+    
+    def updateLinkActions(self):
+        for name, action in self.linkActions.iteritems():
+            enable = name in self.rellinks and self.rellinks[name][1].isValid()
+            action.setEnabled(enable)
+            action.setToolTip(enable and self.rellinks[name][0] or '')
+    
+    def disableLinkActions(self):
+        for action in self.linkActions.itervalues():
+            action.setEnabled(False)
+            action.setToolTip('')
+            
+    def slotRellink(self, name):
+        if name in self.rellinks:
+            url = self.rellinks[name][1]
+            if url.isValid():
+                self.openUrl(url)
+    
     def slotBack(self):
         if self.stack.currentWidget() == self.edit:
             self.stack.setCurrentWidget(self.view)
             self.forward.setEnabled(True)
+            self.updateLinkActions()
             self.back.setEnabled(self.view.history().canGoBack())
         elif self.view.history().canGoBack():
             self.view.back()
@@ -163,12 +203,21 @@ class LilyDoc(QWidget):
                 self.view.forward()
             elif self.edit:
                 self.stack.setCurrentWidget(self.edit)
+                self.disableLinkActions()
                 self.back.setEnabled(True)
                 self.forward.setEnabled(False)
     
     def slotHome(self):
         self.openUrl(self.homeUrl())
-        
+    
+    def slotLoadFinished(self, success):
+        # Called when the HTML doc has loaded.
+        # Parse HTML and display link rel='' buttons
+        if success:
+            html = unicode(self.view.page().mainFrame().toHtml())
+            self.rellinks = RellinksParser(html, self.view.url()).links()
+            self.updateLinkActions()
+    
     def slotCompleted(self):
         # called when the ktexteditor document has loaded.
         # we then jump to the start of the relevant snippet
@@ -207,6 +256,43 @@ class LilyDoc(QWidget):
         """ Called when the webview opens a non-HTML document. """
         sip.transferto(KRun(KUrl(reply.url()), self), None) # C++ will delete it
             
+            
+            
+
+class RellinksParser(HTMLParser.HTMLParser):
+    """
+    Parses a string of HTML for the <link rel=...> tags in the HTML header.
+    The dictionary with links is returned by the links() method.
+    """
+    def __init__(self, html, url):
+        HTMLParser.HTMLParser.__init__(self)
+        self._url = url
+        self._links = {}
+        self._finished = False
+        # Don't feed the whole document, just quit when the
+        # HTML header is parsed.
+        while html and not self._finished:
+            self.feed(html[:1024])
+            html = html[1024:]
+    
+    def links(self):
+        """
+        Returns the found links as a dictionary. The key is the rel attribute,
+        the value a tuple (title, QUrl).
+        """
+        return self._links
+        
+    def handle_starttag(self, tag, attrs):
+        if tag == 'link':
+            get = dict(attrs).get
+            rel, href, title = get('rel', ''), get('href', ''), get('title', '')
+            url = self._url.resolved(QUrl(href))
+            self._links[rel] = (title, url)
+            
+    def handle_endtag(self, tag):
+        if tag == 'head':
+            self._finished = True
+
 
 # Easily get our global config
 def config(group="preferences"):
