@@ -24,12 +24,12 @@ A browser tool for the LilyPond documentation.
 import glob, os, sip
 import HTMLParser
 
-from PyQt4.QtCore import QObject, Qt, QUrl, QVariant, SIGNAL
-from PyQt4.QtGui import QStackedWidget, QToolBar, QVBoxLayout, QWidget
+from PyQt4.QtCore import QEvent, QObject, Qt, QUrl, QVariant, SIGNAL
+from PyQt4.QtGui import QGridLayout, QStackedWidget, QToolBar, QWidget
 from PyQt4.QtWebKit import QWebPage, QWebView
 
 from PyKDE4.kdecore import KGlobal, KUrl, i18n
-from PyKDE4.kdeui import KIcon, KMenu, KShortcut, KStandardAction, KStandardGuiItem
+from PyKDE4.kdeui import KIcon, KMenu, KLineEdit, KStandardGuiItem
 from PyKDE4.kio import KRun
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -68,29 +68,25 @@ def findLocalDocIndex():
                 return files[-1]
 
 
+
 class LilyDoc(QWidget):
     def __init__(self, tool):
         QWidget.__init__(self)
         self.mainwin = tool.mainwin
-        layout = QVBoxLayout(self)
+        layout = QGridLayout(self)
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
         self.toolBar = QToolBar(self)
-        layout.addWidget(self.toolBar)
+        layout.addWidget(self.toolBar, 0, 0)
         self.stack = QStackedWidget(self)
-        layout.addWidget(self.stack)
+        layout.addWidget(self.stack, 1, 0, 1, 2)
         
         # WebView
         self.view = QWebView(self.stack)
         self.stack.addWidget(self.view)
         
-        # Kate Editor part
-        self._editor = KTextEditor.EditorChooser.editor()
-        self._editor.readConfig()
-        self.doc = self._editor.createDocument(self)
-        self.doc.setMode('LilyPond')
-        self.doc.setEncoding('UTF-8')
-        self.doc.setReadWrite(False)
+        # Kate Editor part is loaded on demand
+        self.doc = None
         self.edit = None # we create the views later because of scrollbar issues
         
         # Toolbar, buttons
@@ -122,9 +118,13 @@ class LilyDoc(QWidget):
             self.linkActions[name] = a = self.toolBar.addAction(KIcon(icon), title)
             a.setEnabled(False)
             QObject.connect(a, SIGNAL("triggered()"), lambda name=name: self.slotRellink(name))
-
+        
+        # search text entry
+        self.search = KLineEdit()
+        self.toolBar.addWidget(self.search)
+        self.search.setClearButtonShown(True)
+        
         # signals
-        QObject.connect(self.doc, SIGNAL("completed()"), self.slotCompleted)
         QObject.connect(self.back, SIGNAL("triggered()"), self.slotBack)
         QObject.connect(self.forward, SIGNAL("triggered()"), self.slotForward)
         QObject.connect(self.home, SIGNAL("triggered()"), self.slotHome)
@@ -139,6 +139,9 @@ class LilyDoc(QWidget):
         QObject.connect(self.view.page(), SIGNAL("unsupportedContent(QNetworkReply*)"),
             self.slotUnsupported)
         
+        QObject.connect(self.search, SIGNAL("textEdited(QString)"), self.slotSearch)
+        QObject.connect(self.search, SIGNAL("returnPressed()"), self.slotSearch)
+        
         # context menu:
         self.view.setContextMenuPolicy(Qt.CustomContextMenu)
         QObject.connect(self.view, SIGNAL("customContextMenuRequested(QPoint)"),
@@ -151,27 +154,50 @@ class LilyDoc(QWidget):
             self.view.page().settings().setUserStyleSheetUrl(QUrl(styleSheet))
         self.stack.setCurrentWidget(self.view)
         self.slotHome()
-
+    
+    def keyPressEvent(self, ev):
+        if ev.text() == "/":
+            self.search.setFocus()
+        elif ev.key() == Qt.Key_Escape:
+            # focus ourselves
+            if self.stack.currentWidget() == self.edit:
+                self.edit.setFocus()
+            else:
+                self.view.setFocus()
+        else:
+            QWidget.keyPressEvent(self, ev)
+            
+    def createEditView(self):
+        if self.doc is None:
+            editor = KTextEditor.EditorChooser.editor()
+            editor.readConfig()
+            self.doc = editor.createDocument(self)
+            self.doc.setMode('LilyPond')
+            self.doc.setEncoding('UTF-8')
+            self.doc.setReadWrite(False)
+            QObject.connect(self.doc, SIGNAL("completed()"), self.slotCompleted)
+        self.edit = self.doc.createView(self)
+        # remember the view font size
+        if self.editFontSize != 0:
+            a = self.edit.actionCollection().action(
+                self.editFontSize > 0 and 
+                "view_inc_font_sizes" or "view_dec_font_sizes")
+            if a:
+                for dummy in range(abs(self.editFontSize)):
+                    a.trigger()
+        # make backspace go out
+        a = self.edit.actionCollection().action("backspace")
+        if a:
+            QObject.connect(a, SIGNAL("triggered()"), self.slotBack)
+        
     def openUrl(self, url):
         # handle .ly urls and load them read-only in KatePart
         if self.edit:
             sip.delete(self.edit)
             self.edit = None
         if url.path().endsWith('.ly'):
-            self.edit = self.doc.createView(self)
+            self.createEditView()
             self.stack.addWidget(self.edit)
-            # remember the view font size
-            if self.editFontSize != 0:
-                a = self.edit.actionCollection().action(
-                    self.editFontSize > 0 and 
-                    "view_inc_font_sizes" or "view_dec_font_sizes")
-                if a:
-                    for dummy in range(abs(self.editFontSize)):
-                        a.trigger()
-            # make backspace go out
-            a = self.edit.actionCollection().action("backspace")
-            if a:
-                QObject.connect(a, SIGNAL("triggered()"), self.slotBack)
             self.doc.openUrl(KUrl(url))
             self.stack.setCurrentWidget(self.edit)
             self.forward.setEnabled(False)
@@ -180,6 +206,7 @@ class LilyDoc(QWidget):
             self.view.load(url)
 
     def updateActions(self):
+        self.search.clear()
         self.back.setEnabled(self.view.history().canGoBack())
         self.forward.setEnabled(bool(
             self.view.history().canGoForward() or self.edit))
@@ -207,6 +234,7 @@ class LilyDoc(QWidget):
             self.forward.setEnabled(True)
             self.updateLinkActions()
             self.back.setEnabled(self.view.history().canGoBack())
+            self.search.clear()
         elif self.view.history().canGoBack():
             self.view.back()
         
@@ -219,6 +247,7 @@ class LilyDoc(QWidget):
                 self.disableLinkActions()
                 self.back.setEnabled(True)
                 self.forward.setEnabled(False)
+                self.search.clear()
     
     def slotHome(self):
         self.openUrl(QUrl(docHomeUrl()))
@@ -298,7 +327,9 @@ class LilyDoc(QWidget):
         """ Open url in new window """
         sip.transferto(KRun(KUrl(url), self), None) # C++ will delete it
 
-
+    def slotSearch(self):
+        self.view.page().findText(self.search.text(), QWebPage.FindWrapsAroundDocument)
+        
 
 class RellinksParser(HTMLParser.HTMLParser):
     """
