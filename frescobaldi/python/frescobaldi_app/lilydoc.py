@@ -123,6 +123,7 @@ class LilyDoc(QWidget):
         self.search = KLineEdit()
         self.toolBar.addWidget(self.search)
         self.search.setClearButtonShown(True)
+        self.search.setClickMessage(i18n("Search..."))
         
         # signals
         QObject.connect(self.back, SIGNAL("triggered()"), self.slotBack)
@@ -328,7 +329,32 @@ class LilyDoc(QWidget):
         sip.transferto(KRun(KUrl(url), self), None) # C++ will delete it
 
     def slotSearch(self):
-        self.view.page().findText(self.search.text(), QWebPage.FindWrapsAroundDocument)
+        text = self.search.text()
+        if self.stack.currentWidget() == self.view:
+            self.view.page().findText(text, QWebPage.FindWrapsAroundDocument)
+        elif self.edit:
+            iface = self.doc.searchInterface()
+            if text == "":
+                self.edit.removeSelection()
+            elif iface:
+                docRange = self.doc.documentRange()
+                if self.edit.selection():
+                    selRange = self.edit.selectionRange()
+                    if text == self.edit.selectionText():
+                        cursor = selRange.end()
+                    else:
+                        cursor = selRange.start()
+                else:
+                    cursor = self.edit.cursorPosition()
+                for searchRange in (
+                        KTextEditor.Range(cursor, docRange.end()),
+                        KTextEditor.Range(docRange.start(), cursor)):
+                    r = iface.searchText(searchRange, text)[0]
+                    if r.isValid():
+                        self.edit.setCursorPosition(r.start())
+                        self.edit.setSelection(r)
+                        return
+
         
 
 class RellinksParser(HTMLParser.HTMLParser):
