@@ -574,7 +574,7 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             return self.currentDocument().manipulator().wrapBrace(text, 
                 "\\repeat volta 2")
         
-        @self.onAction(i18n("Insert pair of braces"), key="Ctrl+{")
+        @self.onAction(i18n("Insert pair of braces"), "code-context", key="Ctrl+{")
         def edit_insert_braces():
             d = self.currentDocument()
             if d.selectionText():

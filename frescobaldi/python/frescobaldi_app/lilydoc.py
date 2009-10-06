@@ -36,6 +36,7 @@ docPrefixes = (
     '/usr/share/doc',
     '/usr/doc',
     )
+
 docLocations = (
     'packages/lilypond/html',
     'packages/lilypond',
@@ -43,14 +44,23 @@ docLocations = (
     'lilypond',
     )
 
+def docHomeUrl():
+    """
+    Returns the configured or found url (QUrl) where the LilyPond documentation
+    is to be found.
+    """
+    url = config().readEntry("lilypond documentation", QVariant('')).toString()
+    return QUrl(url or findLocalDocIndex() or "http://lilypond.org/doc")
 
 def findLocalDocIndex():
+    """
+    Tries to find LilyPond documentation in the local file system.
+    """
     for p in docPrefixes:
         for l in docLocations:
             i = os.path.join(p, l, 'Documentation', 'index.html')
             if os.path.exists(i):
                 return i
-    return "http://lilypond.org/doc"
 
 
 class LilyDoc(QWidget):
@@ -130,14 +140,7 @@ class LilyDoc(QWidget):
         if styleSheet:
             self.view.page().settings().setUserStyleSheetUrl(QUrl(styleSheet))
         self.stack.setCurrentWidget(self.view)
-        self.view.load(self.homeUrl())
-
-    def homeUrl(self):
-        """
-        Returns the configured or default home url.
-        """
-        url = config().readEntry("lilypond documentation", QVariant('')).toString()
-        return QUrl(url or findLocalDocIndex())
+        self.view.load(docHomeUrl())
 
     def openUrl(self, url):
         # handle .ly urls and load them read-only in KatePart
@@ -208,7 +211,7 @@ class LilyDoc(QWidget):
                 self.forward.setEnabled(False)
     
     def slotHome(self):
-        self.openUrl(self.homeUrl())
+        self.openUrl(docHomeUrl())
     
     def slotLoadFinished(self, success):
         # Called when the HTML doc has loaded.
