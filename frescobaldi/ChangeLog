@@ -1,6 +1,16 @@
 Changes in 0.7.15 -- 
 
-* A simple LilyPond documentation browser has been added
+* A simple LilyPond documentation browser has been added:
+  - tries to find locally installed documentation and then falls back to online
+    documentation, the documentation URL can be configured in Settings/Paths
+  - opens .ly snippets in a nicely highlighted editor view
+  - basic Search in Page functionality: hit '/' and type some text, works both
+    in the HTML view and the snippet view. Press Enter to search next 
+    occurrence, ESC to exit search.
+  - besides normal Back/Forward navigation there are also buttons for "rellinks"
+    if they are in the HTML page. ("Rellinks" are links to related pages, like
+    Next, Previous, Start, Table of Contents, etc. embedded in the HTML pages.)
+  - right-click a link to open it in the default browser.
 * New shortcuts:
   - Repeat selected music, Ctrl+Shift+R: wraps the selection in a
     \repeat volta 2 { music... } construct
@@ -14,8 +24,8 @@ Changes in 0.7.15 --
   - named colors are shown in the right color
   - some often used block commands like \header now also insert the braces,
     and place the cursor between them.
-  - names of variables (like composer in the header) automagically insert ' = ' 
-    after them if the rest of the line does not start with the '=' character.
+  - names of variables (like composer in the header) automagically append ' = ' 
+    if the remainder of the line does not start with the '=' character.
 * New commands in the Log context menu to copy or save its contents.
 * LilyPond symbol icons are displayed white if the users color palette settings
   have light text on a dark background. The icons are automatically recolored
