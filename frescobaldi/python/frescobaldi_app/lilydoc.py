@@ -30,9 +30,10 @@ from PyQt4.QtWebKit import QWebPage, QWebView
 
 from PyKDE4.kdecore import KGlobal, KUrl, i18n
 from PyKDE4.kdeui import KIcon, KMenu, KLineEdit, KStandardGuiItem
-from PyKDE4.kio import KRun
+from PyKDE4.kio import KIO, KRun
 from PyKDE4.ktexteditor import KTextEditor
 
+from signals import Signal
 
 docPrefixes = (
     '/usr/local/share/doc',
@@ -353,16 +354,13 @@ class LilyDoc(QWidget):
                         self.edit.setSelection(r)
                         return
 
-        
-class RellinksParser(HTMLParser.HTMLParser):
+
+class HeaderParser(HTMLParser.HTMLParser):
     """
-    Parses a string of HTML for the <link rel=...> tags in the HTML header.
-    The dictionary with links is returned by the links() method.
+    Parses just the header or a piece of HTML. Subclass this.
     """
-    def __init__(self, html, url):
+    def __init__(self, html):
         HTMLParser.HTMLParser.__init__(self)
-        self._url = url
-        self._links = {}
         self._finished = False
         # Don't feed the whole document, just quit when the
         # HTML header is parsed.
@@ -372,6 +370,21 @@ class RellinksParser(HTMLParser.HTMLParser):
                 html = html[1024:]
         except HTMLParser.HTMLParseError:
             pass
+        
+    def handle_endtag(self, tag):
+        if tag == 'head':
+            self._finished = True
+        
+
+class RellinksParser(HeaderParser):
+    """
+    Parses a string of HTML for the <link rel=...> tags in the HTML header.
+    The dictionary with links is returned by the links() method.
+    """
+    def __init__(self, html, url):
+        self._url = url
+        self._links = {}
+        HeaderParser.__init__(self, html)
 
     def links(self):
         """
@@ -386,11 +399,87 @@ class RellinksParser(HTMLParser.HTMLParser):
             rel, href, title = get('rel', ''), get('href', ''), get('title', '')
             url = self._url.resolved(QUrl(href))
             self._links[rel] = (title, url)
-            
-    def handle_endtag(self, tag):
-        if tag == 'head':
-            self._finished = True
 
+
+class HttpEquivParser(HeaderParser):
+    """
+    Parses a piece of HTML, looking for META HTTP-EQUIV tag.
+    """
+    def __init__(self, html):
+        self._redir = None
+        HeaderParser.__init__(self, html)
+        
+    def handle_starttag(self, tag, attrs):
+        if tag == 'meta':
+            a = dict(attrs)
+            http_equiv = a.get('http-equiv', '')
+            content = a.get('content', '')
+            if http_equiv == "refresh" and '=' in content:
+                self._redir = content.split('=', 1)[1].strip()
+                self._finished = True # stop asap
+
+    def redirection(self):
+        """ Returns the redirection if found, else None. """
+        return self._redir
+            
+
+class RedirectFollower(object):
+    """
+    Tries to load an url using KIO and follows HTTP and HTML redirects.
+    Sends the done(self, finalUrl) Python signal if done.
+    """
+    def __init__(self, url):
+        self.initialUrl = url
+        self.done = Signal()
+        self.startJob(url)
+    
+    def startJob(self, url):
+        self.url = url
+        self.data = ''
+        self.job = KIO.get(url)
+        QObject.connect(self.job, SIGNAL("data(KIO::Job*, QByteArray)"), self.slotData)
+        QObject.connect(self.job, SIGNAL("redirection(KIO::Job*, KUrl)"), self.slotRedirection)
+        QObject.connect(self.job, SIGNAL("result(KJob*)"), self.slotResult)
+        self.job.start()
+    
+    def slotData(self, job, data):
+        self.data += data
+    
+    def slotRedirection(self, job, url):
+        self.url = url
+        
+    def slotResult(self, job):
+        redir = HttpEquivParser(str(self.data)).redirection()
+        if redir:
+            self.startJob(KUrl(self.url.resolved(QUrl(redir))))
+        else:
+            self.done(self, self.url)
+        
+
+class DocFinder(object):
+    """
+    Find and pre-parse LilyPond documentation.
+    Expects a KUrl with the initial page of the documentation (following
+    redirects).
+    """
+    def __init__(self, url):
+        self.follower = RedirectFollower(url)
+        self.follower.done.connect(self.findDocs)
+        ### FIXME: init stuff
+        
+        
+    def findDocs(self, follower, url):
+        """ Called when the redir follower has found the HTML start page. """
+        self.lilypondCommandIndex = url.resolved(QUrl(
+            'user/lilypond/LilyPond-command-index.html'))
+        ### FIXME: find and parse the command index to make help pages
+        ### available via the context menu in the editor.
+        
+        ### Also eventually look in the internals reference to find the pages
+        ### for the grobs, contexts, etc.
+        
+        
+        
 
 # Easily get our global config
 def config(group="preferences"):
