@@ -68,7 +68,6 @@ def findLocalDocIndex():
                 return files[-1]
 
 
-
 class LilyDoc(QWidget):
     def __init__(self, tool):
         QWidget.__init__(self)
@@ -90,7 +89,6 @@ class LilyDoc(QWidget):
         self.edit = None # we create the views later because of scrollbar issues
         
         # Toolbar, buttons
-        #self.toolBar.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
         g = KStandardGuiItem.back()
         self.back = self.toolBar.addAction(g.icon(), g.text())
         self.back.setEnabled(False)
@@ -356,7 +354,6 @@ class LilyDoc(QWidget):
                         return
 
         
-
 class RellinksParser(HTMLParser.HTMLParser):
     """
     Parses a string of HTML for the <link rel=...> tags in the HTML header.
