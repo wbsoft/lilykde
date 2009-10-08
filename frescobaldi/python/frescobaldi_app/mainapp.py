@@ -900,7 +900,7 @@ class LilyDocTool(kateshell.mainwindow.Tool):
         self._docFinder = None
         
     def factory(self):
-        self.newDocFinder()
+        self.docFinder()
         import frescobaldi_app.lilydoc
         return frescobaldi_app.lilydoc.LilyDoc(self)
 
@@ -909,9 +909,9 @@ class LilyDocTool(kateshell.mainwindow.Tool):
             self.newDocFinder()
         return self._docFinder
         
-    def newDocFinder(self, url=None):
+    def newDocFinder(self):
         import frescobaldi_app.lilydoc
-        self._docFinder = frescobaldi_app.lilydoc.DocFinder(url)
+        self._docFinder = frescobaldi_app.lilydoc.DocFinder(self)
         
 
 class CompletionModel(KTextEditor.CodeCompletionModel):

@@ -21,7 +21,7 @@
 A browser tool for the LilyPond documentation.
 """
 
-import glob, os, sip
+import glob, os, re, sip
 import HTMLParser
 
 from PyQt4.QtCore import QEvent, QObject, Qt, QUrl, QVariant, SIGNAL
@@ -471,7 +471,7 @@ class HtmlLoader(object):
         print "Start Job", url
         self._url = KUrl(url)
         self._data = ''
-        self._job = KIO.get(KUrl(url))
+        self._job = KIO.get(KUrl(url), KIO.NoReload, KIO.HideProgressInfo)
         QObject.connect(self._job, SIGNAL("data(KIO::Job*, QByteArray)"), self.slotData)
         QObject.connect(self._job, SIGNAL("redirection(KIO::Job*, KUrl)"), self.slotRedirection)
         QObject.connect(self._job, SIGNAL("result(KJob*)"), self.slotResult)
@@ -489,15 +489,18 @@ class HtmlLoader(object):
         print "Result, URL=",self._url
         redir = RedirectionParser(str(self._data)).redirection()
         if redir:
-            print "HTML redirect", self._url.resolved(KUrl(redir))
-            self.startJob(KUrl(self._url.resolved(KUrl(redir))))
+            print "HTML redirect", self.resolveUrl(redir)
+            self.startJob(KUrl(self.resolveUrl(redir)))
         else:
             print "Url Loaded:", self.url()
             self.done(self)
         
     def url(self):
         return self._url
-
+    
+    def resolveUrl(self, url):
+        return KUrl(self._url.resolved(KUrl(url)))
+    
     def html(self):
         if self._html is None:
             self._html = HtmlEncodingParser(str(self._data)).html()
@@ -541,27 +544,86 @@ class DocFinder(object):
     Expects a KUrl with the initial page of the documentation (following
     redirects).
     """
-    def __init__(self, url=None):
-        if url is None:
-            url = KUrl(docHomeUrl())
-        self.index = HtmlLoader(url)
+    def __init__(self, tool):
+        self.tool = tool
+        self.index = HtmlLoader(KUrl(docHomeUrl()))
         self.index.done.connect(self.findDocs)
+        # init stuff
+        self._commandIndex = None
         
     def findDocs(self, loader):
         """ Called when the Html Loader has loaded the HTML start page. """
         if not loader.error():
             url = loader.url()
-            
-            self.commandIndex = HtmlMultiLoader([
+            # Load the command index
+            self._commandIndexLoader = HtmlMultiLoader([
                 url.resolved(KUrl('user/lilypond/LilyPond-command-index')),
                 url.resolved(KUrl('user/lilypond/LilyPond-command-index.html')),
+                # from 2.13 on the url scheme changed slightly
+                url.resolved(KUrl('notation/LilyPond-command-index')),
+                url.resolved(KUrl('notation/LilyPond-command-index.html')),
                 ])
-            self.commandIndex.done.connect(self.commandIndexLoaded)
+            self._commandIndexLoader.done.connect(self.commandIndexLoaded)
             
     def commandIndexLoaded(self, loader):
         if loader:
-            print "Command index loaded!"
+            items = CommandIndexParser(loader.url(), loader.html()).items
+            self._commandItems = items
+            print items
+
+
+class CommandIndexParser(HTMLParser.HTMLParser):
+    """
+    This class parses the LilyPond command index. It support
+    different types of HTML pages of LilyPond 2.10, 2.12 and 2.13.
+    """
+    def __init__(self, url, html):
+        HTMLParser.HTMLParser.__init__(self)
+        self.url = url
+        self._parsing = False
+        self._tableTag = None
+        self.items = []
+        self.initLine()
+        self.feed(html)
+    
+    def initLine(self):
+        self._anchors = []
+        self._code = False
+        self._title = None
+        
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if not self._parsing:
+            if attrs.get('class') == 'index-ky':
+                self._parsing = True
+                self._tableTag = tag
+            return
+        elif tag == 'a' and 'href' in attrs:
+            self._anchors.append(attrs['href'])
+        elif tag == 'code':
+            self._code = True
+    
+    def handle_data(self, data):
+        if self._code is True:
+            self._code = data
+        elif self._title is None and len(self._anchors) == 2:
+            self._title = data
+    
+    def handle_endtag(self, tag):
+        if not self._parsing:
+            return
+        elif tag == self._tableTag:
+            self._parsing = False
+        elif tag in ('li', 'tr'):
+            if self._code and self._title and len(self._anchors) == 2:
+                # end a line of items.
+                self.items.append((
+                    self._code, self._anchors[0],
+                    self._title, self._anchors[1]))
+            self.initLine()
             
+        
+        
 
 # Easily get our global config
 def config(group="preferences"):
