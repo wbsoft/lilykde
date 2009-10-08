@@ -405,25 +405,59 @@ class HttpEquivParser(HeaderParser):
     """
     Parses a piece of HTML, looking for META HTTP-EQUIV tag.
     """
-    def __init__(self, html):
-        self._redir = None
-        HeaderParser.__init__(self, html)
-        
     def handle_starttag(self, tag, attrs):
         if tag == 'meta':
             a = dict(attrs)
             http_equiv = a.get('http-equiv', '')
             content = a.get('content', '')
-            if http_equiv == "refresh" and '=' in content:
-                self._redir = content.split('=', 1)[1].strip()
-                self._finished = True # stop asap
+            if http_equiv and content:
+                self.handle_http_equiv(http_equiv, content)
+
+    def handle_http_equiv(self, http_equiv, content):
+        """ Reimplement to do something with the META HTTP-EQUIV tag. """
+        pass
+
+
+class RedirectionParser(HttpEquivParser):
+    """
+    Parses a piece of HTML, looking for META HTTP-EQUIV redirects.
+    """
+    def __init__(self, html):
+        self._redir = None
+        HttpEquivParser.__init__(self, html)
+        
+    def handle_http_equiv(self, http_equiv, content):
+        if http_equiv == "refresh" and '=' in content:
+            self._redir = content.split('=', 1)[1].strip()
+            self._finished = True # stop asap
 
     def redirection(self):
         """ Returns the redirection if found, else None. """
         return self._redir
             
 
-class RedirectFollower(object):
+class HtmlEncodingParser(HttpEquivParser):
+    """
+    Parses HTML and stores it in the right encoding.
+    """
+    def __init__(self, html, defaultEncoding='UTF-8'):
+        self._encoding = defaultEncoding
+        HttpEquivParser.__init__(self, html)
+        self._html = html.decode(self._encoding, 'replace')
+        
+    def handle_http_equiv(self, http_equiv, content):
+        if http_equiv == "Content-Type":
+            m = re.search(r'\bcharset\s*=\s*(\S+)', content)
+            if m:
+                self._encoding = m.group(1)
+                self._finished = True
+                    
+    def html(self):
+        return self._html
+
+
+
+class RedirectionFollower(object):
     """
     Tries to load an url using KIO and follows HTTP and HTML redirects.
     Sends the done(self, finalUrl) Python signal if done.
@@ -449,7 +483,7 @@ class RedirectFollower(object):
         self.url = url
         
     def slotResult(self, job):
-        redir = HttpEquivParser(str(self.data)).redirection()
+        redir = RedirectionParser(str(self.data)).redirection()
         if redir:
             self.startJob(KUrl(self.url.resolved(QUrl(redir))))
         else:
@@ -463,7 +497,7 @@ class DocFinder(object):
     redirects).
     """
     def __init__(self, url):
-        self.follower = RedirectFollower(url)
+        self.follower = RedirectionFollower(url)
         self.follower.done.connect(self.findDocs)
         ### FIXME: init stuff
         
