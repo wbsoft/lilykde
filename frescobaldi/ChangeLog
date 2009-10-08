@@ -3,6 +3,9 @@ Changes in 0.7.15 --
 * A simple LilyPond documentation browser has been added:
   - tries to find locally installed documentation and then falls back to online
     documentation, the documentation URL can be configured in Settings/Paths
+  - makes it easy to browse the LilyPond documentation
+  - shows relevant Help pages in context menu when a LilyPond command is right-
+    clicked in the editor.
   - opens .ly snippets in a nicely highlighted editor view
   - basic Search in Page functionality: hit '/' and type some text, works both
     in the HTML view and the snippet view. Press Enter to search next 

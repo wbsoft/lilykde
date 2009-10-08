@@ -665,7 +665,7 @@ class CommandIndex(Index):
         
     def addMenuActions(self, menu, text, column):
         tokens = []
-        for m in re.finditer(r'(\\?([a-z][A-Za-z]*))(?![A-Za-z])', text):
+        for m in re.finditer(r'(\\?([a-z][A-Za-z]*(-[A-Za-z]+)*))(?![A-Za-z])', text):
             if m.start() <= column <= m.end():
                 tokens.extend(m.group(1, 2))
                 break
