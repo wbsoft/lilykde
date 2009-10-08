@@ -541,7 +541,9 @@ class DocFinder(object):
     Expects a KUrl with the initial page of the documentation (following
     redirects).
     """
-    def __init__(self, url):
+    def __init__(self, url=None):
+        if url is None:
+            url = KUrl(docHomeUrl())
         self.index = HtmlLoader(url)
         self.index.done.connect(self.findDocs)
         

@@ -227,6 +227,7 @@ class Commands(QWidget):
     """
     def __init__(self, dialog):
         QWidget.__init__(self, dialog)
+        self.mainwin = dialog.mainwin
         item = dialog.addPage(self, i18n("Paths"))
         item.setHeader(i18n("Paths to programs or data used by Frescobaldi"))
         item.setIcon(KIcon("utilities-terminal"))
@@ -346,6 +347,9 @@ class Commands(QWidget):
             self.folder.url().path())
         config("preferences").writeEntry("lilypond documentation",
             self.lilydoc.url().url())
+        lilydoc = self.mainwin.tools.get('lilydoc')
+        if lilydoc:
+            lilydoc.newDocFinder()
 
 
 class RumorSettings(KVBox):

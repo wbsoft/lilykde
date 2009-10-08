@@ -895,13 +895,24 @@ class RumorTool(kateshell.mainwindow.Tool):
 class LilyDocTool(kateshell.mainwindow.Tool):
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,
-            "doc", i18n("LilyPond Documentation"), "lilydoc",
+            "lilydoc", i18n("LilyPond Documentation"), "lilydoc",
             dock=kateshell.mainwindow.Right)
-    
+        self._docFinder = None
+        
     def factory(self):
+        self.newDocFinder()
         import frescobaldi_app.lilydoc
         return frescobaldi_app.lilydoc.LilyDoc(self)
 
+    def docFinder(self):
+        if self._docFinder is None:
+            self.newDocFinder()
+        return self._docFinder
+        
+    def newDocFinder(self, url=None):
+        import frescobaldi_app.lilydoc
+        self._docFinder = frescobaldi_app.lilydoc.DocFinder(url)
+        
 
 class CompletionModel(KTextEditor.CodeCompletionModel):
     def __init__(self, doc):
