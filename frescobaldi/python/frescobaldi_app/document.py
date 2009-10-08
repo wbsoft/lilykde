@@ -398,6 +398,14 @@ class DocumentManipulator(object):
         if a and a.isEnabled():
             menu.addAction(a)
         
+        # LilyPond Help
+        if not self.doc.selectionText():
+            tool = self.doc.app.mainwin.tools.get('lilydoc')
+            if tool:
+                cursor = self.doc.view.cursorPosition()
+                line, col = cursor.line(), cursor.column()
+                tool.docFinder().addHelpMenu(menu, self.doc.line(line), col)
+        
         # Bookmarks
         a = self.doc.view.actionCollection().action("bookmarks")
         if a and a.isEnabled():
@@ -456,7 +464,7 @@ class DocumentManipulator(object):
         if selection and isinstance(state.parser(), ly.tokenize.LyricModeParser):
             menu.addAction(
                 self.doc.app.mainwin.actionCollection().action("lyrics_hyphen"))
-                
+        
     def insertTypographicalQuote(self, double = False):
         """
         Insert a single or double quotation mark at the current cursor position.

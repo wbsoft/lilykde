@@ -456,6 +456,55 @@ class HtmlEncodingParser(HttpEquivParser):
         return self._html
 
 
+class CommandIndexParser(HTMLParser.HTMLParser):
+    """
+    This class parses the LilyPond command index. It support
+    different types of HTML pages of LilyPond 2.10, 2.12 and 2.13.
+    """
+    def __init__(self, html):
+        HTMLParser.HTMLParser.__init__(self)
+        self._parsing = False
+        self._tableTag = None
+        self.items = {}
+        self.initLine()
+        self.feed(html)
+    
+    def initLine(self):
+        self._anchors = []
+        self._code = False
+        self._title = None
+        
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if not self._parsing:
+            if attrs.get('class') == 'index-ky':
+                self._parsing = True
+                self._tableTag = tag
+            return
+        elif tag == 'a' and 'href' in attrs:
+            self._anchors.append(attrs['href'])
+        elif tag == 'code':
+            self._code = True
+    
+    def handle_data(self, data):
+        if self._code is True:
+            self._code = data
+        elif self._title is None and len(self._anchors) == 2:
+            self._title = data
+    
+    def handle_endtag(self, tag):
+        if not self._parsing:
+            return
+        elif tag == self._tableTag:
+            self._parsing = False
+        elif tag in ('li', 'tr'):
+            if self._code and self._title and len(self._anchors) == 2:
+                # end a line of items.
+                self.items.setdefault(self._code, []).append((
+                    self._code, self._anchors[0],
+                    self._title, self._anchors[1]))
+            self.initLine()
+            
 
 class HtmlLoader(object):
     """
@@ -468,7 +517,6 @@ class HtmlLoader(object):
         self.startJob(url)
     
     def startJob(self, url):
-        print "Start Job", url
         self._url = KUrl(url)
         self._data = ''
         self._job = KIO.get(KUrl(url), KIO.NoReload, KIO.HideProgressInfo)
@@ -482,17 +530,13 @@ class HtmlLoader(object):
     
     def slotRedirection(self, job, url):
         self._data = ''
-        print "HTTP redirect", url
         self._url = KUrl(url)
         
     def slotResult(self, job):
-        print "Result, URL=",self._url
         redir = RedirectionParser(str(self._data)).redirection()
         if redir:
-            print "HTML redirect", self.resolveUrl(redir)
             self.startJob(KUrl(self.resolveUrl(redir)))
         else:
-            print "Url Loaded:", self.url()
             self.done(self)
         
     def url(self):
@@ -538,92 +582,121 @@ class HtmlMultiLoader(object):
             self.done(loader)
         
 
+class Index(object):
+    """
+    Encapsulates a loading, loaded or failed-to-load LilyPond help index.
+    It expects a HtmlLoader that is loading the documentation start page,
+    and a Tool that is the help browser tool (see kateshell/mainwindow).
+    The attribute loaded = None: pending, True: loaded, False: failed.
+    
+    To be subclassed.
+    """
+    
+    urls = []
+    
+    def __init__(self, loader, tool):
+        self.loaded = None
+        self.loadFinished = Signal()
+        self._loader = loader
+        self.tool = tool
+        loader.done.connect(self._initialLoaderDone)
+        
+    def _initialLoaderDone(self, loader):
+        if not loader.error():
+            self._loader = HtmlMultiLoader(map(loader.resolveUrl, self.urls))
+            self._loader.done.connect(self._multiLoadDone)
+        else:
+            self.loaded = False
+            self.loadFinished(False)
+            
+    def _multiLoadDone(self, loader):
+        if loader:
+            self.url = loader.url()
+            self.loaded = bool(self.parse(loader.html()))
+        else:
+            self.loaded = False # failed
+        self.loadFinished(self.loaded)
+        
+    def parse(self, html):
+        """
+        Implement this to parse the loaded html.
+        Should return True if the parsing succeeded and the results are usable.
+        """
+        return False
+        
+    def addMenuActionsWhenLoaded(self, menu, *args):
+        if self.loaded:
+            self.addMenuActions(menu, *args)
+        elif self.loaded is None:
+            loading = menu.addAction(i18n("Loading..."))
+            def addHelp():
+                sip.delete(loading)
+                self.addMenuActions(menu, *args)
+            self.loadFinished.connect(addHelp)
+    
+    def addMenuActions(self, menu, *args):
+        """ Implement this in your subclass. """
+        pass
+    
+    def addUrlToMenu(self, menu, title, url):
+        """
+        Adds an action to the menu with an url relative
+        to the current command index. The Url opens in the help browser.
+        
+        Only call this if the loading was successful!
+        """
+        a = menu.addAction(title)
+        QObject.connect(a, SIGNAL("triggered()"),
+            lambda: self.tool.openUrl(self.url.resolved(KUrl(url))))
+
+
+class CommandIndex(Index):
+    urls = (
+        'user/lilypond/LilyPond-command-index',
+        'user/lilypond/LilyPond-command-index.html',
+        # from 2.13 on the url scheme changed slightly
+        'notation/LilyPond-command-index',
+        'notation/LilyPond-command-index.html',
+        )
+    
+    def parse(self, html):
+        self.items = CommandIndexParser(html).items
+        return True
+        
+    def addMenuActions(self, menu, text, column):
+        tokens = []
+        for m in re.finditer(r'(\\?([a-z][A-Za-z]*))(?![A-Za-z])', text):
+            if m.start() <= column <= m.end():
+                tokens.extend(m.group(1, 2))
+                break
+        chars = text[:column + 1][-1:-3:-1] # char after and before cursor
+        tokens.extend(re.sub(r'\w+', '', chars))
+        for token in tokens:
+            if token in self.items:
+                for command, command_url, section, section_url in self.items[token]:
+                    # each entry has cmdname, direct url, section title, section url
+                    self.addUrlToMenu(menu, command, command_url)
+                    self.addUrlToMenu(menu, section, section_url)
+                    menu.addSeparator()
+                break
+        self.addUrlToMenu(menu, i18n("LilyPond Command Index"), self.url)
+        
+            
 class DocFinder(object):
     """
     Find and pre-parse LilyPond documentation.
-    Expects a KUrl with the initial page of the documentation (following
-    redirects).
     """
     def __init__(self, tool):
-        self.tool = tool
-        self.index = HtmlLoader(KUrl(docHomeUrl()))
-        self.index.done.connect(self.findDocs)
-        # init stuff
-        self._commandIndex = None
-        
-    def findDocs(self, loader):
-        """ Called when the Html Loader has loaded the HTML start page. """
-        if not loader.error():
-            url = loader.url()
-            # Load the command index
-            self._commandIndexLoader = HtmlMultiLoader([
-                url.resolved(KUrl('user/lilypond/LilyPond-command-index')),
-                url.resolved(KUrl('user/lilypond/LilyPond-command-index.html')),
-                # from 2.13 on the url scheme changed slightly
-                url.resolved(KUrl('notation/LilyPond-command-index')),
-                url.resolved(KUrl('notation/LilyPond-command-index.html')),
-                ])
-            self._commandIndexLoader.done.connect(self.commandIndexLoaded)
+        loader = HtmlLoader(KUrl(docHomeUrl()))
+        self.commandIndex = CommandIndex(loader, tool)
             
-    def commandIndexLoaded(self, loader):
-        if loader:
-            items = CommandIndexParser(loader.url(), loader.html()).items
-            self._commandItems = items
-            print items
+    def addHelpMenu(self, menu, text, column):
+        if self.commandIndex.loaded is False:
+            return # no docs available
+        menu = menu.addMenu(KIcon("lilydoc"), i18n("LilyPond Help"))
+        self.commandIndex.addMenuActionsWhenLoaded(menu, text, column)
 
 
-class CommandIndexParser(HTMLParser.HTMLParser):
-    """
-    This class parses the LilyPond command index. It support
-    different types of HTML pages of LilyPond 2.10, 2.12 and 2.13.
-    """
-    def __init__(self, url, html):
-        HTMLParser.HTMLParser.__init__(self)
-        self.url = url
-        self._parsing = False
-        self._tableTag = None
-        self.items = []
-        self.initLine()
-        self.feed(html)
-    
-    def initLine(self):
-        self._anchors = []
-        self._code = False
-        self._title = None
-        
-    def handle_starttag(self, tag, attrs):
-        attrs = dict(attrs)
-        if not self._parsing:
-            if attrs.get('class') == 'index-ky':
-                self._parsing = True
-                self._tableTag = tag
-            return
-        elif tag == 'a' and 'href' in attrs:
-            self._anchors.append(attrs['href'])
-        elif tag == 'code':
-            self._code = True
-    
-    def handle_data(self, data):
-        if self._code is True:
-            self._code = data
-        elif self._title is None and len(self._anchors) == 2:
-            self._title = data
-    
-    def handle_endtag(self, tag):
-        if not self._parsing:
-            return
-        elif tag == self._tableTag:
-            self._parsing = False
-        elif tag in ('li', 'tr'):
-            if self._code and self._title and len(self._anchors) == 2:
-                # end a line of items.
-                self.items.append((
-                    self._code, self._anchors[0],
-                    self._title, self._anchors[1]))
-            self.initLine()
-            
-        
-        
 
 # Easily get our global config
 def config(group="preferences"):

@@ -913,6 +913,11 @@ class LilyDocTool(kateshell.mainwindow.Tool):
         import frescobaldi_app.lilydoc
         self._docFinder = frescobaldi_app.lilydoc.DocFinder(self)
         
+    def openUrl(self, url):
+        self.materialize()
+        self.widget.openUrl(url)
+        self.show()
+
 
 class CompletionModel(KTextEditor.CodeCompletionModel):
     def __init__(self, doc):
