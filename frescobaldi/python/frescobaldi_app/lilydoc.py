@@ -457,37 +457,82 @@ class HtmlEncodingParser(HttpEquivParser):
 
 
 
-class RedirectionFollower(object):
+class HtmlLoader(object):
     """
     Tries to load an url using KIO and follows HTTP and HTML redirects.
-    Sends the done(self, finalUrl) Python signal if done.
+    Sends the done(self) Python signal if done.
     """
     def __init__(self, url):
-        self.initialUrl = url
         self.done = Signal()
+        self._html = None
         self.startJob(url)
     
     def startJob(self, url):
-        self.url = url
-        self.data = ''
-        self.job = KIO.get(url)
-        QObject.connect(self.job, SIGNAL("data(KIO::Job*, QByteArray)"), self.slotData)
-        QObject.connect(self.job, SIGNAL("redirection(KIO::Job*, KUrl)"), self.slotRedirection)
-        QObject.connect(self.job, SIGNAL("result(KJob*)"), self.slotResult)
-        self.job.start()
+        print "Start Job", url
+        self._url = KUrl(url)
+        self._data = ''
+        self._job = KIO.get(KUrl(url))
+        QObject.connect(self._job, SIGNAL("data(KIO::Job*, QByteArray)"), self.slotData)
+        QObject.connect(self._job, SIGNAL("redirection(KIO::Job*, KUrl)"), self.slotRedirection)
+        QObject.connect(self._job, SIGNAL("result(KJob*)"), self.slotResult)
+        self._job.start()
     
     def slotData(self, job, data):
-        self.data += data
+        self._data += data
     
     def slotRedirection(self, job, url):
-        self.url = url
+        self._data = ''
+        print "HTTP redirect", url
+        self._url = KUrl(url)
         
     def slotResult(self, job):
-        redir = RedirectionParser(str(self.data)).redirection()
+        print "Result, URL=",self._url
+        redir = RedirectionParser(str(self._data)).redirection()
         if redir:
-            self.startJob(KUrl(self.url.resolved(QUrl(redir))))
+            print "HTML redirect", self._url.resolved(KUrl(redir))
+            self.startJob(KUrl(self._url.resolved(KUrl(redir))))
         else:
-            self.done(self, self.url)
+            print "Url Loaded:", self.url()
+            self.done(self)
+        
+    def url(self):
+        return self._url
+
+    def html(self):
+        if self._html is None:
+            self._html = HtmlEncodingParser(str(self._data)).html()
+        return self._html
+
+    def error(self):
+        """
+        Returns True if there was an error.
+        Only call this after done(self) has been called.
+        """
+        return self._job.error() or self._job.isErrorPage()
+
+
+class HtmlMultiLoader(object):
+    """
+    Loads the first URL of a list that succeeds.
+    Calls done() when done with the correct Loader or with None.
+    """
+    def __init__(self, urls):
+        self._urls = urls
+        self.done = Signal()
+        self.loadNext()
+        
+    def loadNext(self):
+        if self._urls:
+            self._loader = HtmlLoader(self._urls.pop(0))
+            self._loader.done.connect(self.loaded)
+        else:
+            self.done(None)
+            
+    def loaded(self, loader):
+        if loader.error():
+            self.loadNext()
+        else:
+            self.done(loader)
         
 
 class DocFinder(object):
@@ -497,23 +542,24 @@ class DocFinder(object):
     redirects).
     """
     def __init__(self, url):
-        self.follower = RedirectionFollower(url)
-        self.follower.done.connect(self.findDocs)
-        ### FIXME: init stuff
+        self.index = HtmlLoader(url)
+        self.index.done.connect(self.findDocs)
         
-        
-    def findDocs(self, follower, url):
-        """ Called when the redir follower has found the HTML start page. """
-        self.lilypondCommandIndex = url.resolved(QUrl(
-            'user/lilypond/LilyPond-command-index.html'))
-        ### FIXME: find and parse the command index to make help pages
-        ### available via the context menu in the editor.
-        
-        ### Also eventually look in the internals reference to find the pages
-        ### for the grobs, contexts, etc.
-        
-        
-        
+    def findDocs(self, loader):
+        """ Called when the Html Loader has loaded the HTML start page. """
+        if not loader.error():
+            url = loader.url()
+            
+            self.commandIndex = HtmlMultiLoader([
+                url.resolved(KUrl('user/lilypond/LilyPond-command-index')),
+                url.resolved(KUrl('user/lilypond/LilyPond-command-index.html')),
+                ])
+            self.commandIndex.done.connect(self.commandIndexLoaded)
+            
+    def commandIndexLoaded(self, loader):
+        if loader:
+            print "Command index loaded!"
+            
 
 # Easily get our global config
 def config(group="preferences"):
