@@ -471,8 +471,7 @@ class CommandIndexParser(HTMLParser.HTMLParser):
     
     def initLine(self):
         self._anchors = []
-        self._code = False
-        self._title = ''
+        self._titles = [None]
         
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -483,26 +482,26 @@ class CommandIndexParser(HTMLParser.HTMLParser):
             return
         elif tag == 'a' and 'href' in attrs:
             self._anchors.append(attrs['href'])
-        elif tag == 'code' and len(self._anchors) == 1:
-            self._code = True
+            self._titles.append('')
     
     def handle_data(self, data):
-        if self._code is True:
-            self._code = data
-        elif len(self._anchors) == 2:
-            self._title += data
+        if self._titles[-1] is not None:
+            self._titles[-1] += data
     
     def handle_endtag(self, tag):
         if not self._parsing:
             return
         elif tag == self._tableTag:
             self._parsing = False
+        elif tag == 'a':
+            self._titles.append(None)
         elif tag in ('li', 'tr'):
-            if self._code and self._title and len(self._anchors) == 2:
-                # end a line of items.
-                self.items.setdefault(self._code, []).append((
-                    self._code, self._anchors[0],
-                    self._title.strip(), self._anchors[1]))
+            # end a line of items.
+            if len(self._titles) == 5:
+                code, title = [s.strip() for s in self._titles[1::2]]
+                self.items.setdefault(code, []).append((
+                    code, self._anchors[0],
+                    title, self._anchors[1]))
             self.initLine()
             
 
