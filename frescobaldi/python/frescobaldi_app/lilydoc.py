@@ -29,7 +29,7 @@ from PyQt4.QtGui import QGridLayout, QStackedWidget, QToolBar, QWidget
 from PyQt4.QtWebKit import QWebPage, QWebView
 
 from PyKDE4.kdecore import KGlobal, KUrl, i18n
-from PyKDE4.kdeui import KIcon, KMenu, KLineEdit, KStandardGuiItem
+from PyKDE4.kdeui import KAction, KIcon, KMenu, KLineEdit, KStandardGuiItem
 from PyKDE4.kio import KIO, KRun
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -470,11 +470,17 @@ class HtmlEncodingParser(HttpEquivParser):
         return self._html
 
 
-class CommandIndexParser(HtmlParser):
+class IndexParser(HtmlParser):
     """
-    This class parses the LilyPond command index. It support
-    different types of HTML pages of LilyPond 2.10, 2.12 and 2.13.
+    This class parses a LilyPond index. It supports the different types
+    of HTML pages of LilyPond 2.10, 2.12 and 2.13.
+    
+    Subclass this for different indexes.
     """
+    
+    # html classname of the table or ul that forms the index.
+    indexClass = ''
+    
     def __init__(self, html):
         HtmlParser.__init__(self)
         self._parsing = False
@@ -490,7 +496,7 @@ class CommandIndexParser(HtmlParser):
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         if not self._parsing:
-            if attrs.get('class') == 'index-ky':
+            if attrs.get('class') == self.indexClass:
                 self._parsing = True
                 self._tableTag = tag
             return
@@ -513,13 +519,21 @@ class CommandIndexParser(HtmlParser):
             # end a line of items.
             if len(self._titles) == 5:
                 code = self._titles[1].strip()
-                code = code.replace('&gt;', '>').replace('&lt;', '<')
-                title = self._titles[3].strip()
-                self.items.setdefault(code, []).append((
-                    code, self._anchors[0],
-                    title, self._anchors[1]))
+                # don't store index entries with spaces, we won't use them
+                if " " not in code:
+                    title = self._titles[3].strip()
+                    self.items.setdefault(code, []).append((
+                        code, self._anchors[0],
+                        title, self._anchors[1]))
             self.initLine()
             
+
+class NotationReferenceIndexParser(IndexParser):
+    indexClass = 'index-ky'
+    
+class LearningManualIndexParser(IndexParser):
+    indexClass = 'index-cp'
+    
 
 class HtmlLoader(object):
     """
@@ -638,21 +652,45 @@ class Index(object):
         Should return True if the parsing succeeded and the results are usable.
         """
         return False
-        
+    
+    def menuTitle(self):
+        """
+        Implement this to return a meaningful title for the menu.
+        """
+        pass
+    
     def addMenuActionsWhenLoaded(self, menu, *args):
+        if self.loaded is False:
+            return # not available
+        title = self.menuTitle()
+        if title:
+            menu.addTitle(title)
         if self.loaded:
+            self.loadingAction = None
             self.addMenuActions(menu, *args)
-        elif self.loaded is None:
-            loading = menu.addAction(i18n("Loading..."))
-            def addHelp():
-                sip.delete(loading)
-                self.addMenuActions(menu, *args)
+        else:
+            self.loadingAction = menu.addAction(i18n("Loading..."))
+            def addHelp(success):
+                if success:
+                    self.addMenuActions(menu, *args)
+                    sip.delete(self.loadingAction)
+                else:
+                    self.loadingAction.setText(i18n("Not available"))
             self.loadFinished.connect(addHelp)
     
     def addMenuActions(self, menu, *args):
         """ Implement this in your subclass. """
         pass
     
+    def addSeparator(self, menu):
+        """
+        Add a separator. Use this instead of menu.addSeparator, because
+        different indexex may add entries asynchroneously to the same menu.
+        """
+        a = KAction(menu)
+        a.setSeparator(True)
+        menu.insertAction(self.loadingAction, a)
+        
     def addUrlToMenu(self, menu, title, url):
         """
         Adds an action to the menu with an url relative
@@ -660,12 +698,13 @@ class Index(object):
         
         Only call this if the loading was successful!
         """
-        a = menu.addAction(title)
+        a = KAction(title, menu)
+        menu.insertAction(self.loadingAction, a) 
         QObject.connect(a, SIGNAL("triggered()"),
             lambda: self.tool.openUrl(self.url.resolved(KUrl(url))))
 
 
-class CommandIndex(Index):
+class NotationReferenceIndex(Index):
     urls = (
         'user/lilypond/LilyPond-command-index',
         'user/lilypond/LilyPond-command-index.html',
@@ -675,8 +714,11 @@ class CommandIndex(Index):
         )
     
     def parse(self, html):
-        self.items = CommandIndexParser(html).items
+        self.items = NotationReferenceIndexParser(html).items
         return True
+    
+    def menuTitle(self):
+        return i18n("Notation Reference")
         
     def addMenuActions(self, menu, text, column):
         tokens = []
@@ -694,9 +736,46 @@ class CommandIndex(Index):
                     # each entry has cmdname, direct url, section title, section url
                     self.addUrlToMenu(menu, command, command_url)
                     self.addUrlToMenu(menu, section, section_url)
-                    menu.addSeparator()
+                    self.addSeparator(menu)
                 break
         self.addUrlToMenu(menu, i18n("LilyPond Command Index"), self.url)
+        
+            
+class LearningManualIndex(Index):
+    urls = (
+        'user/lilypond-learning/LilyPond-index',
+        'user/lilypond-learning/LilyPond-index.html',
+        # from 2.13 on the url scheme changed slightly
+        'learning/LilyPond-index',
+        'learning/LilyPond-index.html',
+        )
+    
+    def parse(self, html):
+        self.items = LearningManualIndexParser(html).items
+        return True
+    
+    def menuTitle(self):
+        return i18n("Learning Manual")
+        
+    def addMenuActions(self, menu, text, column):
+        tokens = []
+        for m in re.finditer(
+                r"(\\?("
+                r"[A-Za-z]+(-[A-Za-z]+)*" # also allow starting capitals
+                r"|[-!',./:<=>?[()]"
+                r"))(?![A-Za-z])", text):
+            if m.start() <= column <= m.end():
+                tokens.extend(m.group(1, 2))
+                break
+        for token in tokens:
+            if token in self.items:
+                for command, command_url, section, section_url in self.items[token]:
+                    # each entry has cmdname, direct url, section title, section url
+                    self.addUrlToMenu(menu, command, command_url)
+                    self.addUrlToMenu(menu, section, section_url)
+                    self.addSeparator(menu)
+                break
+        self.addUrlToMenu(menu, i18n("Learning Manual Index"), self.url)
         
             
 class DocFinder(object):
@@ -705,12 +784,17 @@ class DocFinder(object):
     """
     def __init__(self, tool):
         loader = HtmlLoader(KUrl(docHomeUrl()))
-        self.commandIndex = CommandIndex(loader, tool)
+        self.commandIndex = NotationReferenceIndex(loader, tool)
+        self.learningIndex = LearningManualIndex(loader, tool)
             
-    def addHelpMenu(self, menu, text, column):
-        if self.commandIndex.loaded is False:
+    def addHelpMenu(self, contextMenu, text, column):
+        if (self.commandIndex.loaded is False
+            and self.learningIndex is False):
             return # no docs available
-        menu = menu.addMenu(KIcon("lilydoc"), i18n("LilyPond &Help"))
+        menu = KMenu(i18n("LilyPond &Help"), contextMenu)
+        menu.setIcon(KIcon("lilydoc"))
+        contextMenu.addMenu(menu)
+        self.learningIndex.addMenuActionsWhenLoaded(menu, text, column)
         self.commandIndex.addMenuActionsWhenLoaded(menu, text, column)
 
 
