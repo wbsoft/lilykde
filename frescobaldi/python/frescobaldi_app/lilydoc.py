@@ -355,12 +355,26 @@ class LilyDoc(QWidget):
                         return
 
 
-class HeaderParser(HTMLParser.HTMLParser):
+class HtmlParser(HTMLParser.HTMLParser):
+    """
+    Slightly altered from HTMLParser: feeds entityrefs to handle_data.
+    """
+    def handle_entityref(self, name):
+        char = {
+            'gt': '>',
+            'lt': '<',
+            'amp': '&',
+            }.get(name)
+        if char:
+            self.handle_data(char)
+
+
+class HeaderParser(HtmlParser):
     """
     Parses just the header or a piece of HTML. Subclass this.
     """
     def __init__(self, html):
-        HTMLParser.HTMLParser.__init__(self)
+        HtmlParser.__init__(self)
         self._finished = False
         # Don't feed the whole document, just quit when the
         # HTML header is parsed.
@@ -456,13 +470,13 @@ class HtmlEncodingParser(HttpEquivParser):
         return self._html
 
 
-class CommandIndexParser(HTMLParser.HTMLParser):
+class CommandIndexParser(HtmlParser):
     """
     This class parses the LilyPond command index. It support
     different types of HTML pages of LilyPond 2.10, 2.12 and 2.13.
     """
     def __init__(self, html):
-        HTMLParser.HTMLParser.__init__(self)
+        HtmlParser.__init__(self)
         self._parsing = False
         self._tableTag = None
         self.items = {}
@@ -487,15 +501,6 @@ class CommandIndexParser(HTMLParser.HTMLParser):
     def handle_data(self, data):
         if self._titles[-1] is not None:
             self._titles[-1] += data
-    
-    def handle_entityref(self, name):
-        char = {
-            'gt': '>',
-            'lt': '<',
-            'amp': '&',
-            }.get(name)
-        if char:
-            self.handle_data(char)
     
     def handle_endtag(self, tag):
         if not self._parsing:
@@ -683,8 +688,6 @@ class CommandIndex(Index):
             if m.start() <= column <= m.end():
                 tokens.extend(m.group(1, 2))
                 break
-        #chars = text[:column + 1][-1:-3:-1] # char after and before cursor
-        #tokens.extend(re.sub(r'\w+', '', chars))
         for token in tokens:
             if token in self.items:
                 for command, command_url, section, section_url in self.items[token]:
