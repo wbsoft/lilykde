@@ -685,7 +685,7 @@ class Index(object):
     def addSeparator(self, menu):
         """
         Add a separator. Use this instead of menu.addSeparator, because
-        different indexex may add entries asynchroneously to the same menu.
+        different indexes may add entries asynchroneously to the same menu.
         """
         a = KAction(menu)
         a.setSeparator(True)
@@ -789,7 +789,7 @@ class DocFinder(object):
             
     def addHelpMenu(self, contextMenu, text, column):
         if (self.commandIndex.loaded is False
-            and self.learningIndex is False):
+            and self.learningIndex.loaded is False):
             return # no docs available
         menu = KMenu(i18n("LilyPond &Help"), contextMenu)
         menu.setIcon(KIcon("lilydoc"))
