@@ -488,6 +488,15 @@ class CommandIndexParser(HTMLParser.HTMLParser):
         if self._titles[-1] is not None:
             self._titles[-1] += data
     
+    def handle_entityref(self, name):
+        char = {
+            'gt': '>',
+            'lt': '<',
+            'amp': '&',
+            }.get(name)
+        if char:
+            self.handle_data(char)
+    
     def handle_endtag(self, tag):
         if not self._parsing:
             return
@@ -499,6 +508,7 @@ class CommandIndexParser(HTMLParser.HTMLParser):
             # end a line of items.
             if len(self._titles) == 5:
                 code = self._titles[1].strip()
+                code = code.replace('&gt;', '>').replace('&lt;', '<')
                 title = self._titles[3].strip()
                 self.items.setdefault(code, []).append((
                     code, self._anchors[0],
@@ -665,12 +675,16 @@ class CommandIndex(Index):
         
     def addMenuActions(self, menu, text, column):
         tokens = []
-        for m in re.finditer(r'(\\?([a-z][A-Za-z]*(-[A-Za-z]+)*))(?![A-Za-z])', text):
+        for m in re.finditer(
+                r"(\\?("
+                r"[a-z][A-Za-z]*(-[A-Za-z]+)*"
+                r"|[-!',./:<=>?[()]"
+                r"))(?![A-Za-z])", text):
             if m.start() <= column <= m.end():
                 tokens.extend(m.group(1, 2))
                 break
-        chars = text[:column + 1][-1:-3:-1] # char after and before cursor
-        tokens.extend(re.sub(r'\w+', '', chars))
+        #chars = text[:column + 1][-1:-3:-1] # char after and before cursor
+        #tokens.extend(re.sub(r'\w+', '', chars))
         for token in tokens:
             if token in self.items:
                 for command, command_url, section, section_url in self.items[token]:
