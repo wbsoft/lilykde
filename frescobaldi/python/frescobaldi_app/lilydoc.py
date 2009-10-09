@@ -498,7 +498,8 @@ class CommandIndexParser(HTMLParser.HTMLParser):
         elif tag in ('li', 'tr'):
             # end a line of items.
             if len(self._titles) == 5:
-                code, title = [s.strip() for s in self._titles[1::2]]
+                code = self._titles[1].strip()
+                title = self._titles[3].strip()
                 self.items.setdefault(code, []).append((
                     code, self._anchors[0],
                     title, self._anchors[1]))
@@ -692,7 +693,7 @@ class DocFinder(object):
     def addHelpMenu(self, menu, text, column):
         if self.commandIndex.loaded is False:
             return # no docs available
-        menu = menu.addMenu(KIcon("lilydoc"), i18n("LilyPond Help"))
+        menu = menu.addMenu(KIcon("lilydoc"), i18n("LilyPond &Help"))
         self.commandIndex.addMenuActionsWhenLoaded(menu, text, column)
 
 
