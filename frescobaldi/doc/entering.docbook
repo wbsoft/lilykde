@@ -94,10 +94,10 @@ for download and install information.
 <sect2>
 <title>Setup</title>
 <para>
-Start the Rumor plugin by clicking on its tab in the bottom of the
-&frescobaldi; window. The Rumor panel appears at the bottom. In the panel is a
-settings button where you can configure which MIDI input and output you want to
-use.
+Start the Rumor plugin with <keycap>Meta+Alt+R</keycap> or by clicking on its
+tab in the bottom of the &frescobaldi; window. The Rumor panel appears at the
+bottom. In the panel is a settings button where you can configure which MIDI
+input and output you want to use.
 </para>
 
 <para>
@@ -135,8 +135,8 @@ notes.
 </para>
 
 <para>
-Under the <guibutton>Settings</guibutton> button you can configure some more settings. A powerful
-feature of Rumor is that it can load special scripts that change the Rumor
+Under the <guibutton>Settings</guibutton> button you can configure some more settings.
+A powerful feature of Rumor is that it can load special scripts that change the Rumor
 output. This is useful when you write e.g. music with complicated rhythms. You
 can configure which scripts to load, and even put your own Rumor Guile scripts
 in <filename class="directory">~/.kde/share/apps/frescobaldi/rumor/</filename>.
@@ -150,9 +150,9 @@ More information about writing Rumor scripts is on the
 <title>Quick Insert Panel</title>
 
 <para>
-The Quick Insert Panel is available in the left dock. It currently has one panel
-to add articulations and other symbols to your music. It can also add those
-symbols to all notes or chords in a selected music fragment.
+The Quick Insert Panel (<keycap>Meta+Alt+I</keycap>) is available in the left dock.
+It currently has one panel to add articulations and other symbols to your music.
+It can also add those symbols to all notes or chords in a selected music fragment.
 </para>
 
 </sect1>
