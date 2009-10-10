@@ -243,20 +243,10 @@ class MainWindow(kateshell.mainwindow.MainWindow):
     """ Our customized Frescobaldi MainWindow """
     def __init__(self, app):
         kateshell.mainwindow.MainWindow.__init__(self, app)
-        
         self.progressBar = QProgressBar()
         self.progressBar.setMaximumHeight(16)
         self.statusBar().addPermanentWidget(self.progressBar)
         self.progressBar.hide()
-
-        KonsoleTool(self)
-        LogTool(self)
-        QuickInsertTool(self)
-        RumorTool(self)
-        if not config().readEntry("disable pdf preview", QVariant(False)).toBool():
-            PDFTool(self)
-        LilyDocTool(self)
-        
         self.currentDocumentChanged.connect(self.updateJobActions)
     
     def changeEvent(self, ev):
@@ -583,6 +573,15 @@ class MainWindow(kateshell.mainwindow.MainWindow):
             else:
                 self.currentDocument().manipulator().insertTemplate("{\n(|)\n}")
             
+    def setupTools(self):
+        KonsoleTool(self)
+        LogTool(self)
+        QuickInsertTool(self)
+        RumorTool(self)
+        if not config().readEntry("disable pdf preview", QVariant(False)).toBool():
+            PDFTool(self)
+        LilyDocTool(self)
+    
     def setupGeneratedMenus(self):
         super(MainWindow, self).setupGeneratedMenus()
         # Generated file menu:
@@ -658,7 +657,7 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
     def __init__(self, mainwin):
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "konsole", i18n("Terminal"), "terminal",
-            dock=kateshell.mainwindow.Bottom)
+            key="Meta+Alt+T", dock=kateshell.mainwindow.Bottom)
         mainwin.currentDocumentChanged.connect(self.sync)
             
     def partLoaded(self):
@@ -686,7 +685,6 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
             self.openUrl(doc.url())
 
     def addMenuActions(self, m):
-        m.addSeparator()
         a = m.addAction(i18n("S&ynchronize Terminal with Current Document"))
         a.setCheckable(True)
         a.setChecked(self._sync)
@@ -709,7 +707,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         self._config = {}
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "pdf", i18n("PDF Preview"), "application-pdf",
-            dock=kateshell.mainwindow.Right)
+            key="Meta+Alt+P", dock=kateshell.mainwindow.Right)
         mainwin.currentDocumentChanged.connect(self.sync)
         self._currentUrl = None
         # We open urls with a timer otherwise Okular is called 
@@ -730,7 +728,6 @@ class PDFTool(kateshell.mainwindow.KPartTool):
                 self.openUrl(KUrl(pdfs[0]))
 
     def addMenuActions(self, m):
-        m.addSeparator()
         def act(name, title):
             a = m.addAction(title)
             a.setCheckable(True)
@@ -805,7 +802,7 @@ class QuickInsertTool(kateshell.mainwindow.Tool):
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "quickinsert", i18n("Quick Insert"), "document-properties",
-            dock=kateshell.mainwindow.Left)
+            key="Meta+Alt+I", dock=kateshell.mainwindow.Left)
             
     def factory(self):
         import frescobaldi_app.lqi
@@ -817,7 +814,7 @@ class LogTool(kateshell.mainwindow.Tool):
         self._config = {}
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "log", i18n("LilyPond Log"), "run-lilypond",
-            dock=kateshell.mainwindow.Bottom,
+            key="Meta+Alt+L", dock=kateshell.mainwindow.Bottom,
             widget=QStackedWidget())
         self.logs = {}
         self.widget.addWidget(QLabel("<center>(%s)</center>" % i18n("no log")))
@@ -853,7 +850,6 @@ class LogTool(kateshell.mainwindow.Tool):
                 self.hide()
     
     def addMenuActions(self, m):
-        m.addSeparator()
         def act(name, title):
             a = m.addAction(title)
             a.setCheckable(True)
@@ -885,7 +881,7 @@ class RumorTool(kateshell.mainwindow.Tool):
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "rumor", i18n("Rumor"), "media-record",
-            dock=kateshell.mainwindow.Bottom)
+            key="Meta+Alt+R", dock=kateshell.mainwindow.Bottom)
             
     def factory(self):
         import frescobaldi_app.rumor
@@ -896,7 +892,7 @@ class LilyDocTool(kateshell.mainwindow.Tool):
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "lilydoc", i18n("LilyPond Documentation"), "lilydoc",
-            dock=kateshell.mainwindow.Right)
+            key="Meta+Alt+D", dock=kateshell.mainwindow.Right)
         self._docFinder = None
         
     def factory(self):

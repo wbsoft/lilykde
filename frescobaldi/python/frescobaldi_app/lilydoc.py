@@ -201,6 +201,7 @@ class LilyDoc(QWidget):
             self.doc.openUrl(KUrl(url))
             self.stack.setCurrentWidget(self.edit)
             self.forward.setEnabled(False)
+            self.back.setEnabled(True)
             self.disableLinkActions()
         else:
             self.view.load(url)

@@ -133,6 +133,7 @@ class MainWindow(KParts.MainWindow):
 
         self._selectionActions = []
         self.setupActions() # Let subclasses add more actions
+        self.setupTools()   # Initialize the tools before loading ui.rc
         self.setStandardToolBarMenuEnabled(True)
         self.createShellGUI(True) # ui.rc is loaded automagically
         
@@ -187,20 +188,19 @@ class MainWindow(KParts.MainWindow):
         def populate():
             menu.clear()
             for tool in self.tools.itervalues():
-                title = menu.addTitle(tool.icon(), tool.title())
-                count = len(menu.children())
-                if not tool.isDocked():
-                    a = menu.addAction(KIcon("tab-detach"), i18n("Dock"))
-                    QObject.connect(a, SIGNAL("triggered()"), tool.dock)
-                elif not tool.isActive():
-                    a = menu.addAction(i18n("Show"))
-                    QObject.connect(a, SIGNAL("triggered()"), tool.show)
+                menu.addSeparator()
+                menu.addAction(tool.action())
                 tool.addMenuActions(menu)
-                # remove title if the tool did not add any menu items
-                if count == len(menu.children()):
-                    sip.delete(title)
         QObject.connect(menu, SIGNAL("aboutToShow()"), populate)
 
+    def setupTools(self):
+        """
+        Implement this to create the Tool instances. This is called before the
+        ui.rc file s loaded, so the user can configure the keyboard shortcuts
+        for the tools.
+        """
+        pass
+    
     def setupGeneratedMenus(self):
         """ This should setup menus that are generated on show. """
         # Set up the documents menu so that it shows all open documents.
@@ -677,7 +677,7 @@ class Tool(object):
     __instance_counter = 0
     
     def __init__(self, mainwin, name,
-            title="", icon="", dock=Right,
+            title="", icon="", key="", dock=Right,
             widget=None):
         self._id = Tool.__instance_counter
         self._active = False
@@ -689,6 +689,11 @@ class Tool(object):
         self.mainwin = mainwin
         self.name = name
         mainwin.tools[name] = self
+        action = KAction(mainwin) # action to toggle our view
+        QObject.connect(action, SIGNAL("triggered()"), self.toggle)
+        mainwin.actionCollection().addAction("tool_%s" % name, action)
+        if key:
+            action.setShortcut(KShortcut(key))
         self.widget = widget
         self.setTitle(title)
         self.setIcon(icon)
@@ -696,6 +701,9 @@ class Tool(object):
         Tool.__instance_counter += 1
         self.loadSettings()
     
+    def action(self):
+        return self.mainwin.actionCollection().action("tool_%s" % self.name)
+        
     def materialize(self):
         if self.widget is None:
             self.widget = self.factory()
@@ -716,7 +724,8 @@ class Tool(object):
             sip.delete(self.widget)
         if self._dialog:
             sip.delete(self._dialog)
-        del self._dock, self.widget, self._dialog
+        sip.delete(self.action())
+        del self._dock, self.widget, self._dialog, self.action
         del self.mainwin.tools[self.name]
 
     def show(self):
@@ -791,6 +800,7 @@ class Tool(object):
         
     def setIcon(self, icon):
         self._icon = icon and KIcon(icon) or KIcon()
+        self.action().setIcon(self._icon)
         self.updateState()
 
     def title(self):
@@ -798,6 +808,7 @@ class Tool(object):
     
     def setTitle(self, title):
         self._title = title
+        self.action().setText(self._title)
         self.updateState()
             
     def updateState(self):
@@ -875,10 +886,10 @@ class KPartTool(Tool):
     # set this to the name of the app containing this part
     _partappname = ""
     
-    def __init__(self, mainwin, name, title="", icon="", dock=Right):
+    def __init__(self, mainwin, name, title="", icon="", key="", dock=Right):
         self.part = None
         self.failed = False
-        Tool.__init__(self, mainwin, name, title, icon, dock)
+        Tool.__init__(self, mainwin, name, title, icon, key, dock)
     
     def factory(self):
         if self.part:
