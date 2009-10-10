@@ -20,6 +20,7 @@
   <!ENTITY frescobaldi-running SYSTEM "running.docbook">
   <!ENTITY frescobaldi-entering SYSTEM "entering.docbook">
   <!ENTITY frescobaldi-editing SYSTEM "editing.docbook">
+  <!ENTITY frescobaldi-lilydoc SYSTEM "lilydoc.docbook">
   <!ENTITY frescobaldi-configuring SYSTEM "configuring.docbook">
   <!ENTITY frescobaldi-about SYSTEM "about.docbook">
   
@@ -67,7 +68,7 @@
   </copyright>
 
 <!--   <legalnotice>&FDLNotice;</legalnotice> -->
-  <date>2009-02-25</date>
+  <date>2009-10-11</date>
   <releaseinfo>1.0</releaseinfo>
 
   <abstract>
@@ -80,14 +81,24 @@
   </keywordset>
 </bookinfo>
 
-<preface>
+<preface id="introduction">
 <title>Introduction</title>
+
 <para>
-Frescobaldi is an application designed to make editing LilyPond music scores
-faster and easier. You still will need to learn the LilyPond input language. If
-you read the "First Steps" section you'll also pickup some LilyPond basics. Then
-you can continue to learn LilyPond using the Tutorial from 
-<ulink url="http://lilypond.org/doc/v2.12/Documentation/">LilyPond's excellent online documentation</ulink>.
+&lilypond; (<ulink url="http://lilypond.org/">lilypond.org</ulink>)
+is an open-source music engraving program, producing very high-quality sheet music
+printouts from fairly simple text input files. Those text files can be created with
+any text editor, and &lilypond; then loads the text file and outputs a beatiful
+engraving, by default in PDF format.
+</para>
+
+<para>
+&frescobaldi; is an application designed to make editing those &lilypond; music scores
+faster and easier. You still will need to learn the &lilypond; input language.
+If you read the "First Steps" section of this User Guide,
+you'll also pickup some &lilypond; basics.
+Then you can continue to learn using the Tutorial from 
+<ulink url="http://lilypond.org/doc/">LilyPond's excellent online documentation</ulink>.
 </para>
 </preface>
 
@@ -95,6 +106,7 @@ you can continue to learn LilyPond using the Tutorial from
 &frescobaldi-running;
 &frescobaldi-entering;
 &frescobaldi-editing;
+&frescobaldi-lilydoc;
 &frescobaldi-configuring;
 &frescobaldi-about;
 

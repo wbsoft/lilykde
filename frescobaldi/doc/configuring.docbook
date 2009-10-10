@@ -8,14 +8,15 @@
 
 <para>
 The <guimenu>Settings</guimenu> menu has options to show the full path of the
-file currently being edited in the window title bar or just the filename, to show or
-hide the toolbar and to switch the &frescobaldi; window to full screen mode.
+file currently being edited in the window title bar or just the filename, to
+show or hide the toolbar and to switch the &frescobaldi; window to full screen
+mode.
 </para>
 
 <para>
-The <guisubmenu>Tool Views</guisubmenu> sub menu lets you alter some settings of the
-tools in the sidebar docks of the &frescobaldi; window. (Note that you can right-click
-on the tabs in the sidebar docks for more tool options.)
+The <guisubmenu>Tool Views</guisubmenu> sub menu lets you alter some settings of
+the tools in the sidebar docks of the &frescobaldi; window. (Note that you can
+right-click on the tabs in the sidebar docks for more tool options.)
 </para>
 
 <para>
@@ -34,7 +35,8 @@ Finally, &frescobaldi; has the usual menu entries
 <title>General Preferences</title>
 
 <para>
-Here you can set some general preferences to influence the behaviour of &frescobaldi; and &lilypond;:
+Here you can set some general preferences to influence the behaviour of
+&frescobaldi; and &lilypond;:
 </para>
 
 <variablelist>
@@ -43,7 +45,8 @@ Here you can set some general preferences to influence the behaviour of &frescob
 <term><guilabel>Save Document when &lilypond; is run</guilabel></term>
 <listitem>
   <para>
-  If checked, &frescobaldi; will save the document (if modified) before running &lilypond;.
+  If checked, &frescobaldi; will save the document (if modified) before running
+  &lilypond;.
   </para>
 </listitem>
 </varlistentry>
@@ -52,8 +55,9 @@ Here you can set some general preferences to influence the behaviour of &frescob
 <term><guilabel>Let &lilypond; delete intermediate files</guilabel></term>
 <listitem>
   <para>
-  If checked, &frescobaldi; will run &lilypond; with the <option>delete-intermediate-files</option> option,
-  so that e.g. PostScript files are deleted after the PDF file has been generated.
+  If checked, &frescobaldi; will run &lilypond; with the
+  <option>delete-intermediate-files</option> option, so that e.g. PostScript
+  files are deleted after the PDF file has been generated.
   </para>
 </listitem>
 </varlistentry>
@@ -62,8 +66,9 @@ Here you can set some general preferences to influence the behaviour of &frescob
 <term><guilabel>Run &lilypond; with verbose output</guilabel></term>
 <listitem>
   <para>
-  If checked, &frescobaldi; will run &lilypond; with the <option>verbose</option> option,
-  displaying more information during the compile process.
+  If checked, &frescobaldi; will run &lilypond; with the
+  <option>verbose</option> option, displaying more information during the
+  compile process.
   </para>
 </listitem>
 </varlistentry>
@@ -72,8 +77,9 @@ Here you can set some general preferences to influence the behaviour of &frescob
 <term><guilabel>Remember cursor position, bookmarks, etc.</guilabel></term>
 <listitem>
   <para>
-  If checked, &frescobaldi; will save the cursor position, bookmarks and some view settings
-  for a document when it is closed. This meta-information is retained for one month.
+  If checked, &frescobaldi; will save the cursor position, bookmarks and some
+  view settings for a document when it is closed. This meta-information is
+  retained for one month.
   </para>
 </listitem>
 </varlistentry>
@@ -82,8 +88,8 @@ Here you can set some general preferences to influence the behaviour of &frescob
 <term><guilabel>Disable the built-in PDF preview</guilabel></term>
 <listitem>
   <para>
-  If checked, the built-in PDF preview will be disabled. This is useful if you prefer an
-  external PDF viewer (e.g. <productname>Okular</productname>).
+  If checked, the built-in PDF preview will be disabled. This is useful if you
+  prefer an external PDF viewer (e.g. <productname>Okular</productname>).
   </para>
 </listitem>
 </varlistentry>
@@ -92,22 +98,23 @@ Here you can set some general preferences to influence the behaviour of &frescob
 <term><guilabel>&lilypond; version number to use for new documents</guilabel></term>
 <listitem>
   <para>
-  Here you can set which version number you want &frescobaldi; to insert by default with
-  the <guilabel>Insert &lilypond; Version</guilabel> command or the Score Wizard.
-  Choose one of three options:
+  Here you can set which version number you want &frescobaldi; to insert by
+  default with the <guilabel>Insert &lilypond; Version</guilabel> command or the
+  Score Wizard. Choose one of three options:
   </para>
   <variablelist>
     <varlistentry>
     <term><guilabel>Use version number of installed &lilypond;</guilabel></term>
     <listitem>
       <para>
-      &frescobaldi; will use the version number of the installed &lilypond; by default.
+      &frescobaldi; will use the version number of the installed &lilypond; by
+      default.
       </para>
       
       <para>
       (&frescobaldi; determines the version by running
-      <command>lilypond</command> <option>-v</option> and looking at the first line
-      of the output.)
+      <command>lilypond</command> <option>-v</option> and looking at the first
+      line of the output.)
       </para>
     </listitem>
     </varlistentry>
@@ -117,22 +124,23 @@ Here you can set some general preferences to influence the behaviour of &frescob
     <listitem>
       <para>
       &frescobaldi; will use the version number of last rule of the installed
-      <command>convert-ly</command> program by default. This is useful if you just want
-      your document to conform to the latest &lilypond; syntax without requiring the most
-      recent available version.
+      <command>convert-ly</command> program by default. This is useful if you
+      just want your document to conform to the latest &lilypond; syntax without
+      requiring the most recent available version.
       </para>
       
       <para>
       This makes document exchange easier.
-      E.g. when you use <userinput>\version "2.12.2"</userinput>, another user's &lilypond;
-      version 2.12.0 might complain about your document's version being to new, even though there
-      are no syntax changes and the older &lilypond; would just compile the document fine.
+      E.g. when you use <userinput>\version "2.12.2"</userinput>, another user's
+      &lilypond; version 2.12.0 might complain about your document's version
+      being to new, even though there are no syntax changes and the older
+      &lilypond; would just compile the document fine.
       </para>
       
       <para>
       (&frescobaldi; determines the last convert-ly rule version by running
-      <command>convert-ly</command> <option>--show-rules</option> and looking at the last line
-      that starts with a version number.)
+      <command>convert-ly</command> <option>--show-rules</option> and looking at
+      the last line that starts with a version number.)
       </para>
     </listitem>
     </varlistentry>
@@ -141,8 +149,8 @@ Here you can set some general preferences to influence the behaviour of &frescob
     <term><guilabel>Use custom version number</guilabel></term>
     <listitem>
       <para>
-      Enables you to explicitly specify the version number you want to use by default
-      for new documents.
+      Enables you to explicitly specify the version number you want to use by
+      default for new documents.
       </para>
     </listitem>
     </varlistentry>
@@ -155,8 +163,8 @@ Here you can set some general preferences to influence the behaviour of &frescob
 <note><para>
 Note that the Score Wizard is able to adjust its output depending on the version
 you specify in the Score Wizard. It is therefore possible to write documents for
-older &lilypond; versions, although in general using the most recent stable &lilypond;
-release is recommended.
+older &lilypond; versions, although in general using the most recent stable
+&lilypond; release is recommended.
 </para></note>
 
 </sect2>
@@ -165,15 +173,27 @@ release is recommended.
 <title>Paths</title>
 
 <para>
-Here you can specify the paths to use for different commands. Normally you would just
-leave the defaults, but if you have multiple versions of &lilypond; installed,
-you can specify which one to run by entering the exact path.
+Here you can specify the paths to use for different commands. Normally you would
+just leave the defaults, but if you have multiple versions of &lilypond;
+installed, you can specify which one to run by entering the exact path.
 </para>
 
 <note><para>
-If you change the path to the <command>lilypond</command> command, be sure to also point the
-<command>convert-ly</command> command to the same directory.
+If you change the path to the <command>lilypond</command> command, be sure to
+also point the <command>convert-ly</command> command to the same directory.
 </para></note>
+
+<para>
+You can also set a default directory for all your &lilypond; documents, and
+provide the URL or path to the documentation for the built-in
+<link linkend="lilydoc">&lilypond; documentation browser</link>.
+</para>
+
+<para>
+Finally, at the bottom of the Paths section, you can configure a list of
+directories to search for hyphenation pattern files that can be used to break
+<link linkend="lyrics">lyrics</link> into syllables.
+</para>
 
 </sect2>
 

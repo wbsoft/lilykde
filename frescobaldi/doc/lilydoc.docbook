@@ -1,0 +1,103 @@
+<chapter id="lilydoc">
+<title>The &lilypond; Documentation Browser</title>
+
+<para>
+Frescobaldi has a built-in browser for &lilypond;'s extensive documentation,
+accessible by clicking on its tab at the right or by pressing
+<keycap>Meta+Alt+D</keycap>. The browser can display locally installed documentation
+(e.g. installed in a local directory or via your operating system distribution)
+or the documentation at the &lilypond; website.
+</para>
+
+<para>
+&frescobaldi; first searches the &lilypond; documentation on the local system;
+if it isn't found the documentation pages from
+<ulink url="http://lilypond.org/doc">lilypond.org/doc</ulink> are shown.
+You can configure the URL or path to the &lilypond; documentation under
+&menu.settings.paths;. If you configure a local path, specify it including the
+<filename>index.html</filename> filename.
+</para>
+
+<para>
+The documentation browser works just like a normal browser. The Home button
+brings up the documentation start page. By right-clicking the browser view you
+can open any page in your default browser. By right-clicking a link in the
+browser view you can open the link in a new browser or other suitable application.
+</para>
+
+<para>
+You can also get context-sensitive help by right-clicking a &lilypond; statement
+in the text editor. The <guimenuitem>&lilypond; Help</guimenuitem> context submenu
+then displays the relevant entries both from the Learning Manual and the Notation
+Reference.
+</para>
+
+<para>
+The other small buttons correspond with the so-called "rellinks" (related links)
+in the &lilypond; documentation. This way you can easily navigate the documentation
+or jump to the table of contents, etcetera. (Different versions of the &lilypond;
+documentation have subtle differences in the navigation.)
+</para>
+
+<para>
+If you click an image of music that links to a &lilypond; snippet, the snippet is
+shown in a read-only editor view with LilyPond syntax highlighting.
+</para>
+
+<sect1 id="lilydoc-shortcuts">
+<title>Keyboard shortcuts</title>
+
+<para>
+(Click once in the browser view to give it the keyboard focus, by default
+the keyboard focus remains in the text editor when the browser is opened.)
+</para>
+
+<informaltable>
+<tgroup cols="2">
+<tbody>
+
+<row>
+<entry><para><keycombo><keycap>BackSpace</keycap></keycombo></para></entry>
+<entry><para>
+Go back a page in the browser view.
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>/</keycap></keycombo></para></entry>
+<entry><para>
+Start entering a short search phrase to search for in the current page.
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>ESC</keycap></keycombo></para></entry>
+<entry><para>
+Quit entering a search phrase.
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Enter</keycap></keycombo></para></entry>
+<entry><para>
+When in the search phrase entry, finds the next occurence.
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Tab</keycap></keycombo></para></entry>
+<entry><para>
+Navigate the links in the page.
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo>
+<keycap>Arrows / PgUp / PgDn</keycap></keycombo></para></entry>
+<entry><para> Scroll the page or move the cursor. </para></entry>
+</row>
+
+</tbody></tgroup></informaltable>
+
+</sect1>
+</chapter>
