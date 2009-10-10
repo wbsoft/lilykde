@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.5\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-10-07 11:39+0200\n"
+"POT-Creation-Date: 2009-10-11 01:42+0200\n"
 "PO-Revision-Date: 2009-08-24 08:42+0200\n"
 "Last-Translator: Pavel Fric\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -395,25 +395,17 @@ msgstr "Zpráva nahoře"
 msgid "Bottom Sidebar"
 msgstr "Zpráva dole"
 
-#: ../python/kateshell/mainwindow.py:163
+#: ../python/kateshell/mainwindow.py:164
 msgid "Show Path"
 msgstr "Ukázat cestu"
 
-#: ../python/kateshell/mainwindow.py:166
+#: ../python/kateshell/mainwindow.py:167
 msgid "Show Document Tabs"
 msgstr "Ukázat karty dokumentu"
 
-#: ../python/kateshell/mainwindow.py:184
+#: ../python/kateshell/mainwindow.py:185
 msgid "&Tool Views"
 msgstr "&Zobrazení nástrojů"
-
-#: ../python/kateshell/mainwindow.py:193
-msgid "Dock"
-msgstr "Vplout do doku"
-
-#: ../python/kateshell/mainwindow.py:196
-msgid "Show"
-msgstr "Ukázat"
 
 #: ../python/kateshell/mainwindow.py:274
 msgid "Please select some text first."
@@ -455,19 +447,19 @@ msgstr "Otevřít soubor"
 msgid "Right-click for tab options"
 msgstr "Pravé klepnutí pro zobrazení voleb karet"
 
-#: ../python/kateshell/mainwindow.py:820
+#: ../python/kateshell/mainwindow.py:831
 msgid "Move To"
 msgstr "Přesunout do"
 
-#: ../python/kateshell/mainwindow.py:827
+#: ../python/kateshell/mainwindow.py:838
 msgid "Undock"
 msgstr "Vyplout z doku"
 
-#: ../python/kateshell/mainwindow.py:896
+#: ../python/kateshell/mainwindow.py:907
 msgid "Could not load %1"
 msgstr "Nešlo nahrát %1"
 
-#: ../python/kateshell/mainwindow.py:897
+#: ../python/kateshell/mainwindow.py:908
 msgid "Please install %1"
 msgstr "Nainstalujte, prosím, %1"
 
@@ -496,7 +488,7 @@ msgid "Play MIDI"
 msgstr "Přehrát MIDI"
 
 #: ../python/frescobaldi_app/actions.py:101
-#: ../python/frescobaldi_app/mainapp.py:561
+#: ../python/frescobaldi_app/mainapp.py:551
 msgid "Email..."
 msgstr "E-mail..."
 
@@ -594,7 +586,7 @@ msgstr ""
 "do vašeho dokumentu vlastnoručně přidat následující příkaz:"
 
 #: ../python/frescobaldi_app/document.py:133
-#: ../python/frescobaldi_app/mainapp.py:426
+#: ../python/frescobaldi_app/mainapp.py:416
 msgid "Pitch Name Language"
 msgstr "Jazyk názvu polohy tónu"
 
@@ -603,11 +595,11 @@ msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr "Zadejte, prosím, název proměnné, aby byl vybraný text přidělen do:"
 
 #: ../python/frescobaldi_app/document.py:177
-#: ../python/frescobaldi_app/mainapp.py:385
+#: ../python/frescobaldi_app/mainapp.py:375
 msgid "Cut and Assign"
 msgstr "Vyjmout a přidělit"
 
-#: ../python/frescobaldi_app/document.py:428
+#: ../python/frescobaldi_app/document.py:436
 msgid "Open %1"
 msgstr "Otevřít %1"
 
@@ -616,7 +608,7 @@ msgid "Expansion Manager"
 msgstr "Správce rozšíření "
 
 #: ../python/frescobaldi_app/expand.py:168
-#: ../python/frescobaldi_app/lilydoc.py:126
+#: ../python/frescobaldi_app/lilydoc.py:125
 msgid "Search..."
 msgstr "Hledat..."
 
@@ -698,7 +690,7 @@ msgid "New Item"
 msgstr "Nová položka"
 
 #: ../python/frescobaldi_app/hyphen.py:120
-#: ../python/frescobaldi_app/mainapp.py:525
+#: ../python/frescobaldi_app/mainapp.py:515
 msgid "Hyphenate Lyrics Text"
 msgstr "Rozdělit spojovníkem text se slovy písně"
 
@@ -706,40 +698,40 @@ msgstr "Rozdělit spojovníkem text se slovy písně"
 msgid "Please select a language:"
 msgstr "Vyberte, prosím, jazyk:"
 
-#: ../python/frescobaldi_app/lilydoc.py:100
+#: ../python/frescobaldi_app/lilydoc.py:99
 msgid "Home"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:101
+#: ../python/frescobaldi_app/lilydoc.py:100
 msgid "Larger text"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:102
+#: ../python/frescobaldi_app/lilydoc.py:101
 msgid "Smaller text"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:111
+#: ../python/frescobaldi_app/lilydoc.py:110
 #, fuzzy
 msgid "First Page"
 msgstr "První systém:"
 
-#: ../python/frescobaldi_app/lilydoc.py:112
+#: ../python/frescobaldi_app/lilydoc.py:111
 msgid "Previous"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:113
+#: ../python/frescobaldi_app/lilydoc.py:112
 msgid "Up one level"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:114
+#: ../python/frescobaldi_app/lilydoc.py:113
 msgid "Next"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:115
+#: ../python/frescobaldi_app/lilydoc.py:114
 msgid "Table of contents"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:116
+#: ../python/frescobaldi_app/lilydoc.py:115
 #, fuzzy
 msgid "Index"
 msgstr "Nástroj"
@@ -760,6 +752,36 @@ msgstr ""
 #: ../python/frescobaldi_app/lilydoc.py:321
 msgid "Open Document in &New Window"
 msgstr ""
+
+#: ../python/frescobaldi_app/lilydoc.py:673
+msgid "Loading..."
+msgstr ""
+
+#: ../python/frescobaldi_app/lilydoc.py:679
+#, fuzzy
+msgid "Not available"
+msgstr "Nejsou dostupná žádná nastavení."
+
+#: ../python/frescobaldi_app/lilydoc.py:722
+msgid "Notation Reference"
+msgstr ""
+
+#: ../python/frescobaldi_app/lilydoc.py:742
+msgid "LilyPond Command Index"
+msgstr ""
+
+#: ../python/frescobaldi_app/lilydoc.py:759
+msgid "Learning Manual"
+msgstr ""
+
+#: ../python/frescobaldi_app/lilydoc.py:779
+msgid "Learning Manual Index"
+msgstr ""
+
+#: ../python/frescobaldi_app/lilydoc.py:795
+#, fuzzy
+msgid "LilyPond &Help"
+msgstr "LilyPond"
 
 #: ../python/frescobaldi_app/lqi.py:62
 msgid "Articulations"
@@ -813,80 +835,80 @@ msgstr ""
 msgid "LilyPond files"
 msgstr "Soubory LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:322
+#: ../python/frescobaldi_app/mainapp.py:312
 #: ../python/frescobaldi_app/scorewiz/__init__.py:352
 msgid "LilyPond"
 msgstr "LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:333
+#: ../python/frescobaldi_app/mainapp.py:323
 msgid "Setup New Score..."
 msgstr "Nastavit nový notový zápis..."
 
-#: ../python/frescobaldi_app/mainapp.py:338
+#: ../python/frescobaldi_app/mainapp.py:328
 msgid "Run LilyPond (preview)"
 msgstr "Spustit LilyPond (náhled)"
 
-#: ../python/frescobaldi_app/mainapp.py:342
+#: ../python/frescobaldi_app/mainapp.py:332
 msgid "Run LilyPond (publish)"
 msgstr "Spustit LilyPond (vydat)"
 
-#: ../python/frescobaldi_app/mainapp.py:348
+#: ../python/frescobaldi_app/mainapp.py:338
 msgid "Can't process document"
 msgstr "Dokument nelze zpracovat"
 
-#: ../python/frescobaldi_app/mainapp.py:351
+#: ../python/frescobaldi_app/mainapp.py:341
 msgid "There is already a LilyPond job running for this document."
 msgstr "LilyPond je již spuštěn a pracuje na tomto dokumentu."
 
-#: ../python/frescobaldi_app/mainapp.py:357
+#: ../python/frescobaldi_app/mainapp.py:347
 msgid "Your document has been modified, please save first."
 msgstr "Váš dokument byl upraven. Nejprve jej, prosím, uložte."
 
-#: ../python/frescobaldi_app/mainapp.py:376
+#: ../python/frescobaldi_app/mainapp.py:366
 msgid "Interrupt LilyPond Job"
 msgstr "Přerušit práci programu LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:386
+#: ../python/frescobaldi_app/mainapp.py:376
 msgid "Cut selection and assign it to a LilyPond variable."
 msgstr "Vyjmout výběr a přidělit jej proměnné programu LilyPond."
 
-#: ../python/frescobaldi_app/mainapp.py:390
+#: ../python/frescobaldi_app/mainapp.py:380
 msgid "Repeat last note or chord"
 msgstr "Opakovat poslední notu nebo akord"
 
-#: ../python/frescobaldi_app/mainapp.py:391
+#: ../python/frescobaldi_app/mainapp.py:381
 msgid "Repeat the last music expression (note or chord)."
 msgstr "Opakovat poslední hudební výraz (notu nebo akord)."
 
-#: ../python/frescobaldi_app/mainapp.py:395
+#: ../python/frescobaldi_app/mainapp.py:385
 msgid "Expand"
 msgstr "Rozšířit"
 
-#: ../python/frescobaldi_app/mainapp.py:396
+#: ../python/frescobaldi_app/mainapp.py:386
 msgid "Expand last word or open the expansions dialog."
 msgstr "Rozšířit poslední slovo nebo otevřít dialog rozšíření."
 
-#: ../python/frescobaldi_app/mainapp.py:401
+#: ../python/frescobaldi_app/mainapp.py:391
 msgid "Add to Expansions"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:405
+#: ../python/frescobaldi_app/mainapp.py:395
 msgid "Next blank line"
 msgstr "Další prázdný řádek"
 
-#: ../python/frescobaldi_app/mainapp.py:406
+#: ../python/frescobaldi_app/mainapp.py:396
 msgid "Go to the next blank line."
 msgstr "Přejít na další prázdný řádek."
 
-#: ../python/frescobaldi_app/mainapp.py:415
+#: ../python/frescobaldi_app/mainapp.py:405
 msgid "Previous blank line"
 msgstr "Předchozí prázdný řádek"
 
-#: ../python/frescobaldi_app/mainapp.py:416
+#: ../python/frescobaldi_app/mainapp.py:406
 msgid "Go to the previous blank line."
 msgstr "Přejít na předchozí prázdný řádek."
 
-#: ../python/frescobaldi_app/mainapp.py:427
+#: ../python/frescobaldi_app/mainapp.py:417
 msgid ""
 "Change the LilyPond language used for pitch names in this document or in the "
 "selection."
@@ -894,67 +916,67 @@ msgstr ""
 "Změnit jazyk LilyPondu, který se používá pro názvy výšek tónů v tomto "
 "dokumentu nebo ve výběru."
 
-#: ../python/frescobaldi_app/mainapp.py:434
+#: ../python/frescobaldi_app/mainapp.py:424
 msgid "Double durations"
 msgstr "Zdvojnásobit doby trvání"
 
-#: ../python/frescobaldi_app/mainapp.py:435
+#: ../python/frescobaldi_app/mainapp.py:425
 msgid "Double all the durations in the selection."
 msgstr "Zdvojnásobit všechny doby trvání ve výběru."
 
-#: ../python/frescobaldi_app/mainapp.py:440
+#: ../python/frescobaldi_app/mainapp.py:430
 msgid "Halve durations"
 msgstr "Zkrátit na polovinu doby trvání"
 
-#: ../python/frescobaldi_app/mainapp.py:441
+#: ../python/frescobaldi_app/mainapp.py:431
 msgid "Halve all the durations in the selection."
 msgstr "Zkrátit na polovinu všechny doby trvání ve výběru."
 
-#: ../python/frescobaldi_app/mainapp.py:446
+#: ../python/frescobaldi_app/mainapp.py:436
 msgid "Dot durations"
 msgstr "Udělat tečky na dobách trvání"
 
-#: ../python/frescobaldi_app/mainapp.py:447
+#: ../python/frescobaldi_app/mainapp.py:437
 msgid "Add a dot to all the durations in the selection."
 msgstr "Přidat tečku ke všem dobám trvání ve výběru."
 
-#: ../python/frescobaldi_app/mainapp.py:452
+#: ../python/frescobaldi_app/mainapp.py:442
 msgid "Undot durations"
 msgstr "Odstranit tečky na dobách trvání"
 
-#: ../python/frescobaldi_app/mainapp.py:453
+#: ../python/frescobaldi_app/mainapp.py:443
 msgid "Remove one dot from all the durations in the selection."
 msgstr "Odstranit tečku ze všech dob trvání ve výběru."
 
-#: ../python/frescobaldi_app/mainapp.py:458
+#: ../python/frescobaldi_app/mainapp.py:448
 msgid "Remove scaling"
 msgstr "Odstranit rozdělování do stupnic"
 
-#: ../python/frescobaldi_app/mainapp.py:459
+#: ../python/frescobaldi_app/mainapp.py:449
 msgid "Remove all scaling (*n/m) from the durations in the selection."
 msgstr "Odstranit rozdělování do stupnic (*n/m) z dob trvání ve výběru."
 
-#: ../python/frescobaldi_app/mainapp.py:464
+#: ../python/frescobaldi_app/mainapp.py:454
 msgid "Remove durations"
 msgstr "Odstranit doby trvání"
 
-#: ../python/frescobaldi_app/mainapp.py:465
+#: ../python/frescobaldi_app/mainapp.py:455
 msgid "Remove all durations from the selection."
 msgstr "Odstranit všechny doby trvání ve výběru."
 
-#: ../python/frescobaldi_app/mainapp.py:470
+#: ../python/frescobaldi_app/mainapp.py:460
 msgid "Make implicit"
 msgstr "Odstranit doby trvání, které jsou stejné jako u předchozí noty"
 
-#: ../python/frescobaldi_app/mainapp.py:471
+#: ../python/frescobaldi_app/mainapp.py:461
 msgid "Make durations implicit (remove repeated durations)."
 msgstr "Skrýt doby trvání (odstranit opakované doby trvání)"
 
-#: ../python/frescobaldi_app/mainapp.py:476
+#: ../python/frescobaldi_app/mainapp.py:466
 msgid "Make explicit"
 msgstr "Přidat dobu trvání ke každé notě"
 
-#: ../python/frescobaldi_app/mainapp.py:477
+#: ../python/frescobaldi_app/mainapp.py:467
 msgid ""
 "Make durations explicit (add duration to every note, even if it is the same "
 "as the preceding note)."
@@ -962,207 +984,207 @@ msgstr ""
 "Přímo vyjádřit doby trvání (přidat dobu trvání ke každé notě, i když se "
 "jedná o tu samou jako je předcházející nota)."
 
-#: ../python/frescobaldi_app/mainapp.py:483
+#: ../python/frescobaldi_app/mainapp.py:473
 msgid "Apply rhythm..."
 msgstr "Použít rytmus..."
 
-#: ../python/frescobaldi_app/mainapp.py:484
+#: ../python/frescobaldi_app/mainapp.py:474
 msgid "Apply an entered rhythm to the selected music."
 msgstr "Použít zadaný rytmus na vybrané noty."
 
-#: ../python/frescobaldi_app/mainapp.py:488
+#: ../python/frescobaldi_app/mainapp.py:478
 msgid "Copy rhythm"
 msgstr "Kopírovat rytmus"
 
-#: ../python/frescobaldi_app/mainapp.py:489
+#: ../python/frescobaldi_app/mainapp.py:479
 msgid "Copy the rhythm of the selected music."
 msgstr "Kopírovat rytmus vybraných not."
 
-#: ../python/frescobaldi_app/mainapp.py:495
+#: ../python/frescobaldi_app/mainapp.py:485
 msgid "Paste rhythm"
 msgstr "Vložit rytmus"
 
-#: ../python/frescobaldi_app/mainapp.py:496
+#: ../python/frescobaldi_app/mainapp.py:486
 msgid "Paste a rhythm to the selected music."
 msgstr "Vložit rytmus do vybraných not."
 
-#: ../python/frescobaldi_app/mainapp.py:504
+#: ../python/frescobaldi_app/mainapp.py:494
 #, fuzzy
 msgid "Double bar line"
 msgstr "Žádné taktové čáry"
 
-#: ../python/frescobaldi_app/mainapp.py:505
+#: ../python/frescobaldi_app/mainapp.py:495
 #, fuzzy
 msgid "Ending bar line"
 msgstr "Žádné taktové čáry"
 
-#: ../python/frescobaldi_app/mainapp.py:506
+#: ../python/frescobaldi_app/mainapp.py:496
 #, fuzzy
 msgid "Dotted bar line"
 msgstr "Žádné taktové čáry"
 
-#: ../python/frescobaldi_app/mainapp.py:507
+#: ../python/frescobaldi_app/mainapp.py:497
 #, fuzzy
 msgid "Dashed bar line"
 msgstr "Žádné taktové čáry"
 
-#: ../python/frescobaldi_app/mainapp.py:508
+#: ../python/frescobaldi_app/mainapp.py:498
 msgid "Invisible bar line"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:509
+#: ../python/frescobaldi_app/mainapp.py:499
 msgid "Repeat start"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:510
+#: ../python/frescobaldi_app/mainapp.py:500
 msgid "Repeat both"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:511
+#: ../python/frescobaldi_app/mainapp.py:501
 msgid "Repeat end"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:512
+#: ../python/frescobaldi_app/mainapp.py:502
 #, fuzzy
 msgid "Tick bar line"
 msgstr "Žádné taktové čáry"
 
-#: ../python/frescobaldi_app/mainapp.py:513
+#: ../python/frescobaldi_app/mainapp.py:503
 #, fuzzy
 msgid "Single bar line"
 msgstr "Žádné taktové čáry"
 
-#: ../python/frescobaldi_app/mainapp.py:514
+#: ../python/frescobaldi_app/mainapp.py:504
 msgid "Small-Wide-Small bar line"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:515
+#: ../python/frescobaldi_app/mainapp.py:505
 msgid "Wide-Small bar line"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:516
+#: ../python/frescobaldi_app/mainapp.py:506
 #, fuzzy
 msgid "Double wide bar line"
 msgstr "Zdvojnásobit doby trvání"
 
-#: ../python/frescobaldi_app/mainapp.py:517
+#: ../python/frescobaldi_app/mainapp.py:507
 msgid "Repeat both (old)"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:518
+#: ../python/frescobaldi_app/mainapp.py:508
 msgid "Repeat both (classic)"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:530
+#: ../python/frescobaldi_app/mainapp.py:520
 msgid "Remove hyphenation"
 msgstr "Odstranit dělení slov"
 
-#: ../python/frescobaldi_app/mainapp.py:535
+#: ../python/frescobaldi_app/mainapp.py:525
 msgid "Single Quote"
 msgstr "Jednoduché uvozovky"
 
-#: ../python/frescobaldi_app/mainapp.py:539
+#: ../python/frescobaldi_app/mainapp.py:529
 msgid "Double Quote"
 msgstr "Dvojité uvozovky"
 
-#: ../python/frescobaldi_app/mainapp.py:543
+#: ../python/frescobaldi_app/mainapp.py:533
 msgid "Align"
 msgstr "Zarovnat"
 
-#: ../python/frescobaldi_app/mainapp.py:547
+#: ../python/frescobaldi_app/mainapp.py:537
 msgid "Insert LilyPond version"
 msgstr "Vložit číslo verze aplikace LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:552
+#: ../python/frescobaldi_app/mainapp.py:542
 msgid "Update with convert-ly"
 msgstr "Zaktualizovat s pomocí convert-ly"
 
-#: ../python/frescobaldi_app/mainapp.py:557
+#: ../python/frescobaldi_app/mainapp.py:547
 msgid "Open Current Folder"
 msgstr "Otevřít aktuální složku"
 
-#: ../python/frescobaldi_app/mainapp.py:571
+#: ../python/frescobaldi_app/mainapp.py:561
 #, fuzzy
 msgid "Repeat selected music"
 msgstr "Vložit rytmus do vybraných not."
 
-#: ../python/frescobaldi_app/mainapp.py:577
+#: ../python/frescobaldi_app/mainapp.py:567
 msgid "Insert pair of braces"
 msgstr ""
 
-#: ../python/frescobaldi_app/mainapp.py:610
+#: ../python/frescobaldi_app/mainapp.py:609
 msgid "Abort the running LilyPond process"
 msgstr "Zrušit běžící proces aplikace LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:613
+#: ../python/frescobaldi_app/mainapp.py:612
 msgid "Run LilyPond in preview mode"
 msgstr "Spustit LilyPond v režimu náhledu"
 
-#: ../python/frescobaldi_app/mainapp.py:625
+#: ../python/frescobaldi_app/mainapp.py:624
 msgid "Apply Rhythm"
 msgstr "Použít rytmus"
 
-#: ../python/frescobaldi_app/mainapp.py:633
+#: ../python/frescobaldi_app/mainapp.py:632
 msgid "Enter a rhythm:"
 msgstr "Zadat rytmus:"
 
-#: ../python/frescobaldi_app/mainapp.py:636
+#: ../python/frescobaldi_app/mainapp.py:635
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr ""
 "Zadat rytmus za použití mezerou oddělených hodnot dob trvání (např. 8. 16 8 "
 "4 8)"
 
-#: ../python/frescobaldi_app/mainapp.py:660
+#: ../python/frescobaldi_app/mainapp.py:659
 msgid "Terminal"
 msgstr "Terminál"
 
-#: ../python/frescobaldi_app/mainapp.py:690
+#: ../python/frescobaldi_app/mainapp.py:688
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "Se&řídit terminál s aktuálním dokumentem"
 
-#: ../python/frescobaldi_app/mainapp.py:711
+#: ../python/frescobaldi_app/mainapp.py:709
 #: ../python/frescobaldi_app/scorewiz/preview.py:46
 msgid "PDF Preview"
 msgstr "Náhled PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:740
+#: ../python/frescobaldi_app/mainapp.py:737
 msgid "Show PDF Navigation Panel"
 msgstr "Ukázat navigační panel PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:741
+#: ../python/frescobaldi_app/mainapp.py:738
 msgid "Show PDF minipager"
 msgstr "Ukázat miniaturní PDF číslovač stran"
 
-#: ../python/frescobaldi_app/mainapp.py:742
+#: ../python/frescobaldi_app/mainapp.py:739
 msgid "Configure Okular..."
 msgstr "Nastavit Okular..."
 
-#: ../python/frescobaldi_app/mainapp.py:745
+#: ../python/frescobaldi_app/mainapp.py:742
 msgid "S&ynchronize Preview with Current Document"
 msgstr "Se&řídit náhled s aktuálním dokumentem"
 
-#: ../python/frescobaldi_app/mainapp.py:807
+#: ../python/frescobaldi_app/mainapp.py:804
 msgid "Quick Insert"
 msgstr "Rychle vložit"
 
-#: ../python/frescobaldi_app/mainapp.py:819
+#: ../python/frescobaldi_app/mainapp.py:816
 #: ../python/frescobaldi_app/runlily.py:334
 msgid "LilyPond Log"
 msgstr "Záznam o průběhu činnosti od LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:823
+#: ../python/frescobaldi_app/mainapp.py:820
 msgid "no log"
 msgstr "Žádný záznam o průběhu činnosti"
 
-#: ../python/frescobaldi_app/mainapp.py:863
+#: ../python/frescobaldi_app/mainapp.py:859
 msgid "Only show on errors"
 msgstr "Ukázat pouze na chybách"
 
-#: ../python/frescobaldi_app/mainapp.py:887
+#: ../python/frescobaldi_app/mainapp.py:883
 msgid "Rumor"
 msgstr "Rumor"
 
-#: ../python/frescobaldi_app/mainapp.py:898
+#: ../python/frescobaldi_app/mainapp.py:894
 msgid "LilyPond Documentation"
 msgstr ""
 
@@ -1509,48 +1531,48 @@ msgstr "Použít vlastní číslo verze:"
 msgid "Enter a valid LilyPond version number, e.g. 2.12.0"
 msgstr "Zadat platné číslo verze programu LilyPond, např. 2.12.0"
 
-#: ../python/frescobaldi_app/settings.py:230
+#: ../python/frescobaldi_app/settings.py:231
 msgid "Paths"
 msgstr "Cesty"
 
-#: ../python/frescobaldi_app/settings.py:231
+#: ../python/frescobaldi_app/settings.py:232
 msgid "Paths to programs or data used by Frescobaldi"
 msgstr "Cesty k programům nebo datům používaným programem Frescobaldi"
 
-#: ../python/frescobaldi_app/settings.py:241
+#: ../python/frescobaldi_app/settings.py:242
 msgid "Name or full path of the LilyPond program."
 msgstr "Název nebo úplná cesta k programu LilyPond."
 
-#: ../python/frescobaldi_app/settings.py:243
+#: ../python/frescobaldi_app/settings.py:244
 msgid "Name or full path of the convert-ly program."
 msgstr "Název nebo úplná cesta k programu convert-ly"
 
-#: ../python/frescobaldi_app/settings.py:244
+#: ../python/frescobaldi_app/settings.py:245
 msgid "PDF Viewer:"
 msgstr "Prohlížeč PDF:"
 
-#: ../python/frescobaldi_app/settings.py:245
+#: ../python/frescobaldi_app/settings.py:246
 msgid "PDF Viewer"
 msgstr "Prohlížeč PDF"
 
-#: ../python/frescobaldi_app/settings.py:246
-#: ../python/frescobaldi_app/settings.py:249
+#: ../python/frescobaldi_app/settings.py:247
+#: ../python/frescobaldi_app/settings.py:250
 msgid "(leave empty for operating system default)"
 msgstr "(ponechat prázdné pro výchozí nastavení operačního systému)"
 
-#: ../python/frescobaldi_app/settings.py:247
+#: ../python/frescobaldi_app/settings.py:248
 msgid "MIDI Player:"
 msgstr "Přehrávač MIDI:"
 
-#: ../python/frescobaldi_app/settings.py:248
+#: ../python/frescobaldi_app/settings.py:249
 msgid "MIDI Player"
 msgstr "Přehrávač MIDI"
 
-#: ../python/frescobaldi_app/settings.py:250
+#: ../python/frescobaldi_app/settings.py:251
 msgid "Printcommand:"
 msgstr "Tiskový příkaz:"
 
-#: ../python/frescobaldi_app/settings.py:251
+#: ../python/frescobaldi_app/settings.py:252
 msgid ""
 "Command to print a PDF file, for example lpr or kprinter. You may add some "
 "arguments, e.g. lpr -P myprinter."
@@ -1558,24 +1580,24 @@ msgstr ""
 "Příkaz pro tisk PDF souboru; například lpr nebo kprinter. Můžete přidat "
 "některé nezávisle proměnné; např. lpr -P myprinter."
 
-#: ../python/frescobaldi_app/settings.py:267
+#: ../python/frescobaldi_app/settings.py:268
 msgid "Default directory:"
 msgstr "Výchozí adresář:"
 
-#: ../python/frescobaldi_app/settings.py:272
+#: ../python/frescobaldi_app/settings.py:273
 msgid "The default folder for your LilyPond documents (optional)."
 msgstr "Výchozí složka pro vaše dokumenty LilyPond (volitelná)."
 
-#: ../python/frescobaldi_app/settings.py:284
+#: ../python/frescobaldi_app/settings.py:285
 msgid "LilyPond documentation:"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:289
+#: ../python/frescobaldi_app/settings.py:290
 #, fuzzy
 msgid "Url or path to the LilyPond documentation."
 msgstr "Název nebo úplná cesta k programu LilyPond."
 
-#: ../python/frescobaldi_app/settings.py:301
+#: ../python/frescobaldi_app/settings.py:302
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
@@ -1586,23 +1608,23 @@ msgstr ""
 "Jestliže vynecháte počáteční lomítko, jsou na začátek přidány předpony z "
 "proměnné prostředí KDEDIRS."
 
-#: ../python/frescobaldi_app/settings.py:357
+#: ../python/frescobaldi_app/settings.py:361
 msgid "Rumor MIDI input"
 msgstr "MIDI vstup Rumor"
 
-#: ../python/frescobaldi_app/settings.py:358
+#: ../python/frescobaldi_app/settings.py:362
 msgid "Rumor MIDI input plugin settings"
 msgstr "Nastavení přídavného modulu pro MIDI vstup Rumor"
 
-#: ../python/frescobaldi_app/settings.py:363
+#: ../python/frescobaldi_app/settings.py:367
 msgid "Commands used by the Rumor MIDI input module"
 msgstr "Příkazy používané modulem pro MIDI vstup Rumor"
 
-#: ../python/frescobaldi_app/settings.py:370
+#: ../python/frescobaldi_app/settings.py:374
 msgid "Name or full path of the Rumor program."
 msgstr "Název nebo úplná cesta k programu Rumor."
 
-#: ../python/frescobaldi_app/settings.py:372
+#: ../python/frescobaldi_app/settings.py:376
 msgid ""
 "Name or full path of the aconnect program (part of ALSA, for MIDI input and "
 "playback using Rumor)."
@@ -1610,7 +1632,7 @@ msgstr ""
 "Název nebo úplná cesta k programu aconnect (část ALSA, určen pro MIDI vstup "
 "a přehrávání s využitím programu Rumor)."
 
-#: ../python/frescobaldi_app/settings.py:376
+#: ../python/frescobaldi_app/settings.py:380
 msgid ""
 "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
@@ -2623,6 +2645,12 @@ msgstr "Bicí nástroje"
 #: ../python/frescobaldi_app/scorewiz/parts.py:1272
 msgid "Special"
 msgstr "Speciální"
+
+#~ msgid "Dock"
+#~ msgstr "Vplout do doku"
+
+#~ msgid "Show"
+#~ msgstr "Ukázat"
 
 #, fuzzy
 #~ msgid "Paper Section"
