@@ -5,13 +5,14 @@
 # Serj Poltavski
 #
 # Serj Poltavski <serge.uliss@gmail.com>, 2009.
+# Artem Zolochevskiy <artem.zolochevskiy@gmail.com>, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-10-11 02:48+0200\n"
-"PO-Revision-Date: 2009-07-31 02:18+0400\n"
-"Last-Translator: Serj Poltavski\n"
+"POT-Creation-Date: 2009-10-11 03:52+0200\n"
+"PO-Revision-Date: 2009-10-08 21:17+0300\n"
+"Last-Translator: Artem Zolochevskiy <artem.zolochevskiy@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +20,7 @@ msgstr ""
 "#-#-#-#-#  ru.po (ru)  #-#-#-#-#\n"
 "Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 0.3\n"
+"X-Generator: Lokalize 1.0\n"
 
 #: ../frescobaldi.py:32 dummy.py:15
 msgid "Frescobaldi"
@@ -36,12 +37,12 @@ msgstr "Copyright (c) 2008-2009, Wilbert Berendsen"
 #: ../frescobaldi.py:45
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your name"
-msgstr "Сергей Полтавский"
+msgstr "Сергей Полтавский,Артём Золочевский"
 
 #: ../frescobaldi.py:46
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "i18n@frescobaldi.org"
-msgstr "serge.uliss@gmail.com"
+msgstr "serge.uliss@gmail.com,artem.zolochevskiy@gmail.com"
 
 #: ../frescobaldi.py:52
 msgid "Session to start"
@@ -65,7 +66,7 @@ msgstr "Столбец для перехода, начиная с 0"
 
 #: ../frescobaldi.py:57
 msgid "Try to use smart line and column numbers"
-msgstr ""
+msgstr "Пытаться использовать интеллигентные номера сток и столбцов"
 
 #: ../frescobaldi.py:58
 msgid "LilyPond files to open, may also be textedit URLs"
@@ -93,7 +94,7 @@ msgstr "&Ритм"
 
 #: dummy.py:10
 msgid "&Bar Lines"
-msgstr ""
+msgstr "&Тактовые черты"
 
 #: dummy.py:11
 msgid "&Generated Files"
@@ -197,27 +198,27 @@ msgstr "Артикуляция"
 
 #: ../python/ly/articulation.py:34
 msgid "Accent"
-msgstr "Accent"
+msgstr "Акцент"
 
 #: ../python/ly/articulation.py:35
 msgid "Marcato"
-msgstr "Marcato"
+msgstr "Маркато"
 
 #: ../python/ly/articulation.py:36
 msgid "Staccatissimo"
-msgstr "Staccatissimo"
+msgstr "Стаккатиссимо"
 
 #: ../python/ly/articulation.py:37
 msgid "Staccato"
-msgstr "Staccato"
+msgstr "Стаккато"
 
 #: ../python/ly/articulation.py:38
 msgid "Portato"
-msgstr "Portato"
+msgstr "Портато"
 
 #: ../python/ly/articulation.py:39
 msgid "Tenuto"
-msgstr "Tenuto"
+msgstr "Тенуто"
 
 #: ../python/ly/articulation.py:40
 msgid "Espressivo"
@@ -457,11 +458,11 @@ msgstr "Скрыть док"
 
 #: ../python/kateshell/mainwindow.py:907
 msgid "Could not load %1"
-msgstr "Невозможно запустить LilyPond: %1"
+msgstr "Не удалось загрузить %1"
 
 #: ../python/kateshell/mainwindow.py:908
 msgid "Please install %1"
-msgstr ""
+msgstr "Пожалуйста, установите %1"
 
 #: ../python/frescobaldi_app/actions.py:55
 msgid "Open %1 in external viewer"
@@ -635,9 +636,9 @@ msgid ""
 msgstr ""
 "Это список определенных сокращений.\n"
 "\n"
-"Кликните на строке, чтобы увидеть или изменить связанный текст. Двойной клик "
-"на сокращении или его описании изменит его. Вы можете также нажать F2 для "
-"редактирования текущего сокращения. \n"
+"Щёлкните на строке, чтобы увидеть или изменить связанный текст. Двойной "
+"щелчок на сокращении или его описании изменит его. Вы можете также нажать F2 "
+"для редактирования текущего сокращения. \n"
 "\n"
 "Используйте кнопки ниже для добавления или удаления сокращений.\n"
 "\n"
@@ -710,13 +711,12 @@ msgid "Smaller text"
 msgstr ""
 
 #: ../python/frescobaldi_app/lilydoc.py:110
-#, fuzzy
 msgid "First Page"
-msgstr "Первая система:"
+msgstr "Первая страница"
 
 #: ../python/frescobaldi_app/lilydoc.py:111
 msgid "Previous"
-msgstr ""
+msgstr "Предыдущий"
 
 #: ../python/frescobaldi_app/lilydoc.py:112
 msgid "Up one level"
@@ -724,11 +724,11 @@ msgstr ""
 
 #: ../python/frescobaldi_app/lilydoc.py:113
 msgid "Next"
-msgstr ""
+msgstr "Далее"
 
 #: ../python/frescobaldi_app/lilydoc.py:114
 msgid "Table of contents"
-msgstr ""
+msgstr "Оглавление"
 
 #: ../python/frescobaldi_app/lilydoc.py:115
 #, fuzzy
@@ -737,20 +737,20 @@ msgstr "Инструмент"
 
 #: ../python/frescobaldi_app/lilydoc.py:308
 msgid "Copy &Link"
-msgstr ""
+msgstr "Копировать &ссылку"
 
 #: ../python/frescobaldi_app/lilydoc.py:311
 msgid "Open Link in &New Window"
-msgstr ""
+msgstr "Открыть ссылку в &новом окне"
 
 #: ../python/frescobaldi_app/lilydoc.py:318
 #: ../python/frescobaldi_app/runlily.py:339
 msgid "&Copy"
-msgstr ""
+msgstr "&Копировать"
 
 #: ../python/frescobaldi_app/lilydoc.py:321
 msgid "Open Document in &New Window"
-msgstr ""
+msgstr "Открыть документ в &новом окне"
 
 #: ../python/frescobaldi_app/lilydoc.py:673
 msgid "Loading..."
@@ -822,7 +822,7 @@ msgstr "Направление используемое для артикуля�
 
 #: ../python/frescobaldi_app/lqi.py:113
 msgid "Click an articulation sign to add it to your document."
-msgstr "Кликните на артикуляционном знаке, чтобы добавить его в документ."
+msgstr "Щёлкните на артикуляционном знаке, чтобы добавить его в документ."
 
 #: ../python/frescobaldi_app/lqi.py:114
 msgid ""
@@ -1006,14 +1006,12 @@ msgid "Paste a rhythm to the selected music."
 msgstr "Вставить ритм в выделенную музыку."
 
 #: ../python/frescobaldi_app/mainapp.py:494
-#, fuzzy
 msgid "Double bar line"
-msgstr "Без тактовых черт"
+msgstr "Двойная тактовая черта"
 
 #: ../python/frescobaldi_app/mainapp.py:495
-#, fuzzy
 msgid "Ending bar line"
-msgstr "Без тактовых черт"
+msgstr "Заключительная тактовая черта"
 
 #: ../python/frescobaldi_app/mainapp.py:496
 #, fuzzy
@@ -1023,11 +1021,11 @@ msgstr "Без тактовых черт"
 #: ../python/frescobaldi_app/mainapp.py:497
 #, fuzzy
 msgid "Dashed bar line"
-msgstr "Без тактовых черт"
+msgstr "Пункти́рная та́ктовая черта́"
 
 #: ../python/frescobaldi_app/mainapp.py:498
 msgid "Invisible bar line"
-msgstr ""
+msgstr "Невидимая тактовая черта"
 
 #: ../python/frescobaldi_app/mainapp.py:499
 msgid "Repeat start"
@@ -1049,7 +1047,7 @@ msgstr "Без тактовых черт"
 #: ../python/frescobaldi_app/mainapp.py:503
 #, fuzzy
 msgid "Single bar line"
-msgstr "Без тактовых черт"
+msgstr "Одиночная тактовая черта"
 
 #: ../python/frescobaldi_app/mainapp.py:504
 msgid "Small-Wide-Small bar line"
@@ -1115,7 +1113,7 @@ msgstr "Прервать запущенный процесс LilyPond"
 
 #: ../python/frescobaldi_app/mainapp.py:612
 msgid "Run LilyPond in preview mode"
-msgstr "Запустить LilyPond в режиме просмотра"
+msgstr "Запустить LilyPond в режиме предварительного просмотра"
 
 #: ../python/frescobaldi_app/mainapp.py:624
 msgid "Apply Rhythm"
@@ -1183,7 +1181,7 @@ msgstr "Rumor"
 
 #: ../python/frescobaldi_app/mainapp.py:895
 msgid "LilyPond Documentation"
-msgstr ""
+msgstr "Документация LilyPond"
 
 #: ../python/frescobaldi_app/rumor.py:72
 msgid ""
@@ -1360,7 +1358,7 @@ msgstr "Удалять тактовые черты из вывода Rumor."
 
 #: ../python/frescobaldi_app/rumor.py:483
 msgid "No dots"
-msgstr "Без точек."
+msgstr "Без точек"
 
 #: ../python/frescobaldi_app/rumor.py:485
 msgid "Do not use dotted notes, but ties instead."
@@ -1380,7 +1378,7 @@ msgstr "Удалить паузы"
 
 #: ../python/frescobaldi_app/rumor.py:497
 msgid "Strip leading and trialing rests from output."
-msgstr "Удалить паузы в начале и в конце документа"
+msgstr "Удалить паузы в начале и в конце документа."
 
 #: ../python/frescobaldi_app/rumor.py:501
 msgid "Guile scripts to load:"
@@ -1441,7 +1439,7 @@ msgstr ""
 
 #: ../python/frescobaldi_app/runlily.py:117
 msgid "Could not read from the LilyPond process."
-msgstr "Невозможно чтение из процесса LilyPond/"
+msgstr "Невозможно чтение из процесса LilyPond."
 
 #: ../python/frescobaldi_app/runlily.py:120
 msgid "An unknown error occured."
@@ -1449,20 +1447,21 @@ msgstr "Неизвестная ошибка произошла."
 
 #: ../python/frescobaldi_app/runlily.py:324
 msgid "Click to edit this file"
-msgstr "Кликните, для редактирования этого файла"
+msgstr "Щёлкните, для редактирования этого файла"
 
 #: ../python/frescobaldi_app/runlily.py:355
-#, fuzzy
 msgid "Save LilyPond Log as"
-msgstr "LilyPond журнал"
+msgstr "Сохранить журнал LilyPond как"
 
 #: ../python/frescobaldi_app/runlily.py:372
-#, fuzzy
 msgid ""
 "Could not save LilyPond log:\n"
 "\n"
 "%1"
-msgstr "Невозможно запустить LilyPond: %1"
+msgstr ""
+"Не удалось сохранить журнал LilyPond в файле:\n"
+"\n"
+"%1"
 
 #: ../python/frescobaldi_app/settings.py:47
 msgid "Configure"
@@ -1493,9 +1492,8 @@ msgid "Let LilyPond delete intermediate output files"
 msgstr "Удалить служебные файлы LilyPond."
 
 #: ../python/frescobaldi_app/settings.py:142
-#, fuzzy
 msgid "Run LilyPond with verbose output"
-msgstr "Запустить LilyPond в режиме просмотра"
+msgstr "Запускать LilyPond в режиме вывода подробной информации"
 
 #: ../python/frescobaldi_app/settings.py:144
 msgid "Remember cursor position, bookmarks, etc."
@@ -1584,12 +1582,11 @@ msgstr "Каталог по умолчанию для Ваших LilyPond док
 
 #: ../python/frescobaldi_app/settings.py:285
 msgid "LilyPond documentation:"
-msgstr ""
+msgstr "Документация LilyPond:"
 
 #: ../python/frescobaldi_app/settings.py:290
-#, fuzzy
 msgid "Url or path to the LilyPond documentation."
-msgstr "Имя или полный путь к программе LilyPond"
+msgstr "Url или путь к документации LilyPond."
 
 #: ../python/frescobaldi_app/settings.py:302
 msgid ""
@@ -1682,11 +1679,11 @@ msgstr " Невозможно запустить convert-ly: %1"
 
 #: ../python/frescobaldi_app/widgets.py:42
 msgid "Tap"
-msgstr "Кликните"
+msgstr "Щёлкните"
 
 #: ../python/frescobaldi_app/widgets.py:48
 msgid "Click this button a few times to set the tempo."
-msgstr "Кликните по кнопке несколько раз, чтобы установить темп"
+msgstr "Щёлкните по кнопке несколько раз, чтобы установить темп."
 
 #: ../python/frescobaldi_app/widgets.py:174
 msgid "The tempo in beats per minute."
@@ -1702,7 +1699,7 @@ msgstr "Заголовки"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:154
 msgid "Click to enter a value."
-msgstr "Кликните для ввода значения."
+msgstr "Щёлкните для ввода значения."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:156
 msgid "bottom of first page"
@@ -2378,9 +2375,8 @@ msgid "Bass|B."
 msgstr "Bass|B."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:767
-#, fuzzy
 msgid "Lead sheet"
-msgstr "Lead sheet"
+msgstr "Нотный стан"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:823
 msgid ""
