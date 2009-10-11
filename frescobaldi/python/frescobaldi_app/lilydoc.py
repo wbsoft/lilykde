@@ -672,18 +672,21 @@ class Index(object):
         else:
             self.loadingAction = menu.addAction(i18n("Loading..."))
             def addHelp(success):
-                if success:
-                    self.addMenuActions(menu, *args)
-                    sip.delete(self.loadingAction)
-                else:
-                    self.loadingAction.setText(i18n("Not available"))
+                try:
+                    if success:
+                        self.addMenuActions(menu, *args)
+                        sip.delete(self.loadingAction)
+                    else:
+                        self.loadingAction.setText(i18n("Not available"))
+                except RuntimeError:
+                    pass # underlying C/C++ object has been deleted
             self.loadFinished.connect(addHelp)
     
     def addMenuActions(self, menu, *args):
         """ Implement this in your subclass. """
         pass
     
-    def addSeparator(self, menu):
+    def addMenuSeparator(self, menu):
         """
         Add a separator. Use this instead of menu.addSeparator, because
         different indexes may add entries asynchroneously to the same menu.
@@ -692,7 +695,7 @@ class Index(object):
         a.setSeparator(True)
         menu.insertAction(self.loadingAction, a)
         
-    def addUrlToMenu(self, menu, title, url):
+    def addMenuUrl(self, menu, title, url):
         """
         Adds an action to the menu with an url relative
         to the current command index. The Url opens in the help browser.
@@ -715,8 +718,11 @@ class NotationReferenceIndex(Index):
         )
     
     def parse(self, html):
-        self.items = NotationReferenceIndexParser(html).items
-        return True
+        try:
+            self.items = NotationReferenceIndexParser(html).items
+            return True
+        except HTMLParser.HTMLParseError:
+            return False
     
     def menuTitle(self):
         return i18n("Notation Reference")
@@ -735,11 +741,11 @@ class NotationReferenceIndex(Index):
             if token in self.items:
                 for command, command_url, section, section_url in self.items[token]:
                     # each entry has cmdname, direct url, section title, section url
-                    self.addUrlToMenu(menu, command, command_url)
-                    self.addUrlToMenu(menu, section, section_url)
-                    self.addSeparator(menu)
+                    self.addMenuUrl(menu, command, command_url)
+                    self.addMenuUrl(menu, section, section_url)
+                    self.addMenuSeparator(menu)
                 break
-        self.addUrlToMenu(menu, i18n("LilyPond Command Index"), self.url)
+        self.addMenuUrl(menu, i18n("LilyPond Command Index"), self.url)
         
             
 class LearningManualIndex(Index):
@@ -752,8 +758,11 @@ class LearningManualIndex(Index):
         )
     
     def parse(self, html):
-        self.items = LearningManualIndexParser(html).items
-        return True
+        try:
+            self.items = LearningManualIndexParser(html).items
+            return True
+        except HTMLParser.HTMLParseError:
+            return False
     
     def menuTitle(self):
         return i18n("Learning Manual")
@@ -772,11 +781,11 @@ class LearningManualIndex(Index):
             if token in self.items:
                 for command, command_url, section, section_url in self.items[token]:
                     # each entry has cmdname, direct url, section title, section url
-                    self.addUrlToMenu(menu, command, command_url)
-                    self.addUrlToMenu(menu, section, section_url)
-                    self.addSeparator(menu)
+                    self.addMenuUrl(menu, command, command_url)
+                    self.addMenuUrl(menu, section, section_url)
+                    self.addMenuSeparator(menu)
                 break
-        self.addUrlToMenu(menu, i18n("Learning Manual Index"), self.url)
+        self.addMenuUrl(menu, i18n("Learning Manual Index"), self.url)
         
             
 class DocFinder(object):
