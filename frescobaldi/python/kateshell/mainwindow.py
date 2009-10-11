@@ -494,17 +494,14 @@ class ViewTabBar(QTabBar):
         tab = self.tabAt(ev.pos())
         if tab == -1:
             return
-        menu = self.contextMenu(self.docs[tab])
-        if menu:
-            menu.popup(ev.globalPos())
-    
-    def contextMenu(self, doc, menu = None):
+        menu = KMenu()
+        self.addMenuActions(menu, self.docs[tab])
+        menu.exec_(ev.globalPos())
+
+    def addMenuActions(self, menu, doc):
         """
-        Return a menu with actions relevant for the document.
-        If the menu is given, actions are added to the given menu.
+        Populate the menu with actions relevant for the document.
         """
-        if menu is None:
-            menu = KMenu(self.mainwin)
         g = KStandardGuiItem.save()
         a = menu.addAction(g.icon(), g.text())
         QObject.connect(a, SIGNAL("triggered()"), doc.save)
@@ -515,7 +512,6 @@ class ViewTabBar(QTabBar):
         g = KStandardGuiItem.close()
         a = menu.addAction(g.icon(), g.text())
         QObject.connect(a, SIGNAL("triggered()"), doc.close)
-        return menu
         
 
 class TabBar(KMultiTabBar):
@@ -542,7 +538,7 @@ class TabBar(KMultiTabBar):
         tab.setContextMenuPolicy(Qt.CustomContextMenu)
         QObject.connect(tab, SIGNAL("clicked()"), tool.toggle)
         QObject.connect(tab, SIGNAL("customContextMenuRequested(const QPoint&)"),
-            lambda pos: tool.contextMenu().popup(tab.mapToGlobal(pos)))
+            lambda pos: tool.contextMenu().exec_(tab.mapToGlobal(pos)))
 
     def removeTool(self, tool):
         self._tools.remove(tool)
@@ -823,7 +819,7 @@ class Tool(object):
         Return a popup menu to manipulate this tool.
         Do not subclass this method, but use addMenuActions instead.
         """
-        m = KMenu(self.mainwin)
+        m = KMenu()
         places = [place for place in Left, Right, Top, Bottom
             if place in self.allowedPlaces
             and self.mainwin.docks.get(place, self._dock) is not self._dock]
