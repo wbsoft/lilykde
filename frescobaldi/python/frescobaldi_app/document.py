@@ -37,11 +37,7 @@ class DocumentManipulator(object):
     Can perform manipulations on a LilyPond document.
     """
     def __init__(self, doc):
-        self._doc = weakref.ref(doc)
-
-    @property
-    def doc(self):
-        return self._doc()
+        self.doc = weakref.proxy(doc)
         
     def populateLanguageMenu(self, menu):
         menu.clear()

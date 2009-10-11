@@ -919,12 +919,8 @@ class LilyDocTool(kateshell.mainwindow.Tool):
 class CompletionModel(KTextEditor.CodeCompletionModel):
     def __init__(self, doc):
         KTextEditor.CodeCompletionModel.__init__(self, doc.view)
-        self._doc = weakref.ref(doc)
+        self.doc = weakref.proxy(doc)
         self.result = None
-    
-    @property
-    def doc(self):
-        return self._doc()
         
     def completionInvoked(self, view, word, invocationType):
         import frescobaldi_app.completion
