@@ -1,19 +1,6 @@
 Changes in 0.7.15 -- 
 
-* A simple LilyPond documentation browser has been added:
-  - tries to find locally installed documentation and then falls back to online
-    documentation, the documentation URL can be configured in Settings/Paths
-  - makes it easy to browse the LilyPond documentation
-  - shows relevant Help pages in context menu when a LilyPond command is right-
-    clicked in the editor.
-  - opens .ly snippets in a nicely highlighted editor view
-  - basic Search in Page functionality: hit '/' and type some text, works both
-    in the HTML view and the snippet view. Press Enter to search next 
-    occurrence, ESC to exit search.
-  - besides normal Back/Forward navigation there are also buttons for "rellinks"
-    if they are in the HTML page. ("Rellinks" are links to related pages, like
-    Next, Previous, Start, Table of Contents, etc. embedded in the HTML pages.)
-  - right-click a link to open it in the default browser.
+* New LilyPond documentation browser providing context-sensitive help
 * New shortcuts:
   - Repeat selected music, Ctrl+Shift+R: wraps the selection in a
     \repeat volta 2 { music... } construct
@@ -36,6 +23,7 @@ Changes in 0.7.15 --
 * The Save As... dialog now really opens in the default directory if the
   document has no filename yet.
 * Tools can be shown/hidden with configurable keyboard shortcuts
+* Documentation updates
 * Translations:
   - Turkish updated by S. Acim
 

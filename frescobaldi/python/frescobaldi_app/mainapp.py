@@ -889,6 +889,7 @@ class RumorTool(kateshell.mainwindow.Tool):
 
 
 class LilyDocTool(kateshell.mainwindow.Tool):
+    helpAnchor = "lilydoc"
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "lilydoc", i18n("LilyPond Documentation"), "lilydoc",
