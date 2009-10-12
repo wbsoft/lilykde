@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-10-11 02:48+0200\n"
+"POT-Creation-Date: 2009-10-12 11:18+0200\n"
 "PO-Revision-Date: 2009-09-12 23:25+0200\n"
 "Last-Translator: Server Acim <serveracim@gmail.com>\n"
 "Language-Team: Turkish <kde-i18n-doc@kde.org>\n"
@@ -440,23 +440,23 @@ msgstr "Tüm dosyalar"
 msgid "Open File"
 msgstr "Dosya Aç"
 
-#: ../python/kateshell/mainwindow.py:541
+#: ../python/kateshell/mainwindow.py:537
 msgid "Right-click for tab options"
 msgstr "Sekme seçenekleri için sağ-tıklayınız"
 
-#: ../python/kateshell/mainwindow.py:831
+#: ../python/kateshell/mainwindow.py:827
 msgid "Move To"
 msgstr "Buraya Taşı"
 
-#: ../python/kateshell/mainwindow.py:838
+#: ../python/kateshell/mainwindow.py:834
 msgid "Undock"
 msgstr "Uzat"
 
-#: ../python/kateshell/mainwindow.py:907
+#: ../python/kateshell/mainwindow.py:903
 msgid "Could not load %1"
 msgstr "Yüklenemedi %s"
 
-#: ../python/kateshell/mainwindow.py:908
+#: ../python/kateshell/mainwindow.py:904
 msgid "Please install %1"
 msgstr "Lütfen kurunuz %1"
 
@@ -554,7 +554,7 @@ msgstr[0] ""
 "kipinde yeniden derlemeyi deneyiniz, böylece PDF dosya boyutu daha "
 "küçülecektir."
 
-#: ../python/frescobaldi_app/document.py:114
+#: ../python/frescobaldi_app/document.py:110
 msgid ""
 "Can't perform the requested translation. The music contains quarter-tone "
 "alterations, but those are not available in the pitch language %1."
@@ -562,7 +562,7 @@ msgstr ""
 "İstenen çeviriyi uygulayamaz. Müzik, çeyrek ses değişimleri içermektedir, "
 "fakat bunlar %1 ses dili için mümkün değildir."
 
-#: ../python/frescobaldi_app/document.py:130
+#: ../python/frescobaldi_app/document.py:126
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
@@ -570,21 +570,21 @@ msgstr ""
 "Seçilmiş olan metindeki ses noktası dili güncellendi, fakat belgeniz "
 "aşağıdaki komutu elle eklemelisiniz:"
 
-#: ../python/frescobaldi_app/document.py:133
+#: ../python/frescobaldi_app/document.py:129
 #: ../python/frescobaldi_app/mainapp.py:416
 msgid "Pitch Name Language"
 msgstr "Ses Adı Dili"
 
-#: ../python/frescobaldi_app/document.py:176
+#: ../python/frescobaldi_app/document.py:172
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr "Lütfen, metne atamak üzere değişkene bir ad veriniz:"
 
-#: ../python/frescobaldi_app/document.py:177
+#: ../python/frescobaldi_app/document.py:173
 #: ../python/frescobaldi_app/mainapp.py:375
 msgid "Cut and Assign"
 msgstr "Kes ve Ata:"
 
-#: ../python/frescobaldi_app/document.py:436
+#: ../python/frescobaldi_app/document.py:432
 msgid "Open %1"
 msgstr "Aç %1"
 
@@ -720,49 +720,49 @@ msgstr ""
 msgid "Index"
 msgstr "Çalgı"
 
-#: ../python/frescobaldi_app/lilydoc.py:308
+#: ../python/frescobaldi_app/lilydoc.py:312
 msgid "Copy &Link"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:311
+#: ../python/frescobaldi_app/lilydoc.py:315
 msgid "Open Link in &New Window"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:318
+#: ../python/frescobaldi_app/lilydoc.py:322
 #: ../python/frescobaldi_app/runlily.py:339
 msgid "&Copy"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:321
+#: ../python/frescobaldi_app/lilydoc.py:325
 msgid "Open Document in &New Window"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:673
+#: ../python/frescobaldi_app/lilydoc.py:677
 msgid "Loading..."
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:679
+#: ../python/frescobaldi_app/lilydoc.py:684
 #, fuzzy
 msgid "Not available"
 msgstr "Hiç bir ayarlama yapılamaz."
 
-#: ../python/frescobaldi_app/lilydoc.py:722
+#: ../python/frescobaldi_app/lilydoc.py:732
 msgid "Notation Reference"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:742
+#: ../python/frescobaldi_app/lilydoc.py:752
 msgid "LilyPond Command Index"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:759
+#: ../python/frescobaldi_app/lilydoc.py:772
 msgid "Learning Manual"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:779
+#: ../python/frescobaldi_app/lilydoc.py:792
 msgid "Learning Manual Index"
 msgstr ""
 
-#: ../python/frescobaldi_app/lilydoc.py:795
+#: ../python/frescobaldi_app/lilydoc.py:808
 #, fuzzy
 msgid "LilyPond &Help"
 msgstr "LilyPond"
