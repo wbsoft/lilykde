@@ -203,7 +203,10 @@ class LilyDoc(QWidget):
             self.forward.setEnabled(False)
             self.back.setEnabled(True)
             self.disableLinkActions()
+            # were there pages to go forward when we switch to the editor?
+            self.fwCount = len(self.view.page().history().forwardItems(1000))
         else:
+            self.fwCount = 0
             self.view.load(url)
 
     def updateActions(self):
@@ -241,14 +244,15 @@ class LilyDoc(QWidget):
         
     def slotForward(self):
         if self.stack.currentWidget() == self.view:
-            if self.view.history().canGoForward():
-                self.view.forward()
-            elif self.edit:
+            if (self.edit and len(self.view.page().history().forwardItems(1000))
+                    <= self.fwCount):
                 self.stack.setCurrentWidget(self.edit)
                 self.disableLinkActions()
                 self.back.setEnabled(True)
                 self.forward.setEnabled(False)
                 self.search.clear()
+            elif self.view.history().canGoForward():
+                self.view.forward()
     
     def slotHome(self):
         self.openUrl(QUrl(docHomeUrl()))
