@@ -233,6 +233,7 @@ class Parts(QSplitter):
         allParts.setRootIsDecorated(False)
         allParts.headerItem().setHidden(True)
         score.setSelectionMode(QListWidget.ExtendedSelection)
+        score.setDragDropMode(QListWidget.InternalMove)
 
         class PartItem(QListWidgetItem):
             """

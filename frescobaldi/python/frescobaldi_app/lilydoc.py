@@ -817,4 +817,3 @@ class DocFinder(object):
 def config(group="preferences"):
     return KGlobal.config().group(group)
     
-  
