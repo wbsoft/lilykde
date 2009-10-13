@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="frescobaldi" version="9">
+<kpartgui name="frescobaldi" version="10">
 
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -124,6 +124,10 @@
     <Menu name="lilypond_source"><text>&amp;Source Document</text>
       <Action name="source_indent"/>
       <Action name="version_convert_ly"/>
+    </Menu>
+    <Separator />
+    <Menu name="lilypond_extra_tools"><text>&amp;Extra Tools</text>
+      <Action name="wizard_blank_staff_paper"/>
     </Menu>
   </Menu>
 

@@ -304,6 +304,11 @@ class MainWindow(kateshell.mainwindow.MainWindow):
         import frescobaldi_app.progress
         return frescobaldi_app.progress.ProgressBarManager(jobmanager,
             self.progressBar)
+    
+    @lazymethod
+    def blankStaffPaperWizard(self):
+        import frescobaldi_app.blankpaper
+        return frescobaldi_app.blankpaper.Dialog(self)
         
     def setupActions(self):
         super(MainWindow, self).setupActions()
@@ -572,6 +577,12 @@ class MainWindow(kateshell.mainwindow.MainWindow):
                     d.selectionText()), keepSelection=False)
             else:
                 self.currentDocument().manipulator().insertTemplate("{\n(|)\n}")
+        
+        # Other wizards/tools:
+        @self.onAction(i18n("Create blank staff paper"), "text-plain")
+        def wizard_blank_staff_paper():
+            self.blankStaffPaperWizard().show()
+
             
     def setupTools(self):
         KonsoleTool(self)
