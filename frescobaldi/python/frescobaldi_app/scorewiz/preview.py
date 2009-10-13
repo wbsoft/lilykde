@@ -22,74 +22,35 @@ Preview dialog for the Score Wizard (scorewiz/__init__.py).
 In separate file to ease maintenance.
 """
 
-import math, os, sip, shutil, tempfile
+import math
 import ly, ly.dom
 
 from PyQt4.QtCore import QSize
-from PyQt4.QtGui import QStackedWidget, QWidget
-from PyKDE4.kdecore import KGlobal, KPluginLoader, KUrl, i18n
+from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KDialog
-from PyKDE4.kio import KRun
-
-from signals import Signal
 
 from frescobaldi_app.scorewiz import config, onSignal
-from frescobaldi_app.runlily import LogWidget, Ly2PDF
+from frescobaldi_app.runlily import LilyPreviewWidget
 
 
 class PreviewDialog(KDialog):
     def __init__(self, scorewiz):
-        self.closed = Signal()
         self.scorewiz = scorewiz
         KDialog.__init__(self, scorewiz)
         self.setModal(True)
         self.setCaption(i18n("PDF Preview"))
         self.setButtons(KDialog.ButtonCode(KDialog.Close))
 
-        self.stack = QStackedWidget()
-        self.setMainWidget(self.stack)
-
-        # The widget stack has two widgets, a log and a PDF preview.
-        # the Log:
-        self.log = LogWidget(self.stack)
-        self.stack.addWidget(self.log)
-        
-        # the PDF preview, load Okular part.
-        # If not, we just run the default PDF viewer.
-        self.part = None
-        factory = KPluginLoader("okularpart").factory()
-        if factory:
-            part = factory.create(self)
-            if part:
-                self.part = part
-                self.stack.addWidget(part.widget())
-                # hide mini pager
-                w = part.widget().findChild(QWidget, "miniBar")
-                if w:
-                    w.parent().hide()
-                # hide left panel
-                a = part.actionCollection().action("show_leftpanel")
-                if a and a.isChecked():
-                    a.toggle()
-                # default to single page layout
-                a = part.actionCollection().action("view_render_mode_single")
-                if a and not a.isChecked():
-                    a.trigger()
+        self.preview = LilyPreviewWidget(self)
+        self.setMainWidget(self.preview)
         self.setMinimumSize(QSize(400, 300))
-        self.restoreDialogSize(config("scorewiz").group("preview"))
-        self.directory = None
+        self.restoreDialogSize(config("preview"))
         @onSignal(self, "finished()")
         def close():
-            self.saveDialogSize(config("scorewiz").group("preview"))
-            self.closed()
-            if self.directory:
-                shutil.rmtree(self.directory)
+            self.saveDialogSize(config("preview"))
+            self.preview.cleanup()
         
     def showPreview(self):
-        self.directory = tempfile.mkdtemp()
-        self.show()
-        self.stack.setCurrentWidget(self.log)
-        
         builder = self.scorewiz.builder()
         builder.midi = False # not needed
         doc = builder.document()
@@ -129,29 +90,8 @@ class PreviewDialog(KDialog):
             elif isinstance(stub, ly.dom.DrumMode):
                 addItems(stub, drumGen())
 
-        # write the doc to a temporary file...
-        lyfile = os.path.join(self.directory, 'preview.ly')
-        text = builder.ly(doc)
-        file(lyfile, 'w').write(text.encode('utf-8'))
-        
-        # ... and run LilyPond.
-        self.job = Ly2PDF(lyfile, self.log)
-        self.closed.connect(self.job.abort)
-        self.job.done.connect(self.finished)
-    
-    def finished(self):
-        pdfs = self.job.updatedFiles()("pdf")
-        if pdfs:
-            self.openPDF(pdfs[0])
-        del self.job
-    
-    def openPDF(self, fileName):
-        if self.part:
-            if self.part.openUrl(KUrl.fromPath(fileName)):
-                self.stack.setCurrentWidget(self.part.widget())
-        else:
-            sip.transferto(
-                KRun(KUrl.fromPath(fileName), self.scorewiz.mainwin), None)
+        self.show()
+        self.preview.preview(builder.ly(doc))
 
 
 # Generators for different kinds of example input
@@ -189,7 +129,4 @@ def drumGen():
             yield ly.dom.TextDur(s)
 
 
-# Easily get our global config
-def config(group="preferences"):
-    return KGlobal.config().group(group)
  

@@ -19,17 +19,17 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
-import math, os, re, shutil, sys, tempfile, time
+import math, os, re, shutil, sip, subprocess, sys, tempfile, time
 
 from PyQt4.QtCore import (
     QObject, QProcess, QSize, QTimer, QUrl, QVariant, Qt, SIGNAL)
 from PyQt4.QtGui import (
-    QBrush, QColor, QFont, QFrame, QTextBrowser, QTextCharFormat, QTextCursor,
-    QToolBar, QVBoxLayout)
-from PyKDE4.kdecore import KGlobal, KProcess, i18n
+    QBrush, QColor, QFont, QFrame, QStackedWidget, QTextBrowser,
+    QTextCharFormat, QTextCursor, QToolBar, QVBoxLayout, QWidget)
+from PyKDE4.kdecore import KGlobal, KPluginLoader, KProcess, KShell, KUrl, i18n
 from PyKDE4.kdeui import (
     KApplication, KIcon, KMenu, KMessageBox, KStandardGuiItem)
-from PyKDE4.kio import KEncodingFileDialog
+from PyKDE4.kio import KEncodingFileDialog, KRun
 
 from signals import Signal
 
@@ -482,6 +482,104 @@ class LocalFileManager(object):
         file(lyfile, 'w').write(self.doc.text().encode(self.doc.encoding() or 'utf-8'))
         return lyfile
  
+
+class LilyPreviewWidget(QStackedWidget):
+    """
+    A widget that can display a string of LilyPond code as a PDF.
+    If the code is changed, the PDF is automagically rebuilt.
+    """
+    def __init__(self, *args):
+        QStackedWidget.__init__(self, *args)
+        self._directory = None
+        self._success = None
+        self.job = None
+        # The widget stack has two widgets, a log and a PDF preview.
+        # the Log:
+        self.log = LogWidget(self)
+        self.addWidget(self.log)
+        self.setCurrentWidget(self.log)
+        
+        # the PDF preview, load Okular part.
+        # If not, we just run the default PDF viewer.
+        self.part = None
+        factory = KPluginLoader("okularpart").factory()
+        if factory:
+            part = factory.create(self)
+            if part:
+                self.part = part
+                self.addWidget(part.widget())
+                self.setCurrentWidget(part.widget())
+                # hide mini pager
+                w = part.widget().findChild(QWidget, "miniBar")
+                if w:
+                    w.parent().hide()
+                # hide left panel
+                a = part.actionCollection().action("show_leftpanel")
+                if a and a.isChecked():
+                    a.toggle()
+                # default to single page layout
+                a = part.actionCollection().action("view_render_mode_single")
+                if a and not a.isChecked():
+                    a.trigger()
+            
+    def directory(self):
+        if self._directory is None:
+            self._directory = tempfile.mkdtemp()
+        return self._directory
+        
+    def cleanup(self):
+        """
+        Stop a job if running and remove temporary files.
+        """
+        if self.job:
+            self.job.done.disconnect(self.finished)
+            self.job.abort()
+            self.job = None
+        if self._directory:
+            shutil.rmtree(self._directory)
+            self._directory = None
+
+    def preview(self, text):
+        """
+        Runs LilyPond on the text and update the preview.
+        """
+        if self.job:
+            self.job.disconnect(self.finished)
+            self.job.abort()
+        # write the text to a temporary file...
+        lyfile = os.path.join(self.directory(), 'preview.ly')
+        file(lyfile, 'w').write(text.encode('utf-8'))
+        # ... and run LilyPond.
+        self.job = Ly2PDF(lyfile, self.log)
+        self.job.done.connect(self.finished)
+        self.setCurrentWidget(self.log)
+    
+    def finished(self):
+        pdfs = self.job.updatedFiles()("pdf")
+        if pdfs:
+            self.openPDF(pdfs[0])
+        self.job = None
+
+    def openPDF(self, fileName):
+        if self.part:
+            if self.part.openUrl(KUrl.fromPath(fileName)):
+                self.setCurrentWidget(self.part.widget())
+        else:
+            cmd = config("commands").readEntry("pdf viewer", QVariant("")).toString()
+            if cmd:
+                cmd, err = KShell.splitArgs(cmd)
+                if err == KShell.NoError:
+                    cmd = map(unicode, cmd)
+                    cmd.append(fileName)
+                    try:
+                        subprocess.Popen(cmd)
+                        return
+                    except OSError:
+                        pass
+            # let C++ own the KRun object, it will delete itself.
+            sip.transferto(KRun(KUrl.fromPath(fileName), self.window()), None)
+
+    
 
 def textFormats():
     """ Return a dict with text formats for the log view """
