@@ -24,10 +24,10 @@ Some special widgets
 import os
 from time import time
 
-from PyQt4.QtCore import QObject, QProcess, QRegExp, QString, Qt, SIGNAL
+from PyQt4.QtCore import QObject, QProcess, QRegExp, QString, QTimeLine, Qt, SIGNAL
 from PyQt4.QtGui import (
-    QLabel, QLineEdit, QPushButton, QSlider, QSpinBox, QToolButton,
-    QRegExpValidator)
+    QLabel, QLineEdit, QPainter, QPixmap, QPushButton, QSlider, QSpinBox,
+    QToolButton, QRegExpValidator, QWidget)
 from PyKDE4.kdecore import i18n, KProcess
 from PyKDE4.kdeui import KApplication, KDialog, KLineEdit, KVBox
 
@@ -228,6 +228,46 @@ class ExecArgsLineEdit(ExecLineEdit):
             return unicode(filename).split()[0]
         else:
             return ''
+
+
+class StackFader(QWidget):
+    """
+    A widget that creates smooth transitions in a QStackedWidget.
+    """
+    def __init__(self, stackedWidget):
+        QWidget.__init__(self, stackedWidget)
+        self.curIndex = None
+        self.timeline = QTimeLine()
+        self.timeline.setDuration(333)
+        QObject.connect(self.timeline, SIGNAL("finished()"), self.hide)
+        QObject.connect(self.timeline, SIGNAL("valueChanged(qreal)"), self.animate)
+        QObject.connect(stackedWidget, SIGNAL("currentChanged(int)"), self.start)
+        self.hide()
+    
+    def start(self, index):
+        if self.curIndex is not None:
+            stack = self.parent()
+            old, new = stack.widget(self.curIndex), stack.widget(index)
+            if old and new:
+                self.old_pixmap = QPixmap(new.size())
+                old.render(self.old_pixmap)
+                self.pixmap_opacity = 1.0
+                self.resize(new.size())
+                self.timeline.start()
+                self.show()
+        self.curIndex = index
+        
+    def paintEvent(self, ev):
+        painter = QPainter()
+        painter.begin(self)
+        painter.setOpacity(self.pixmap_opacity)
+        painter.drawPixmap(0, 0, self.old_pixmap)
+        painter.end()
+        
+    def animate(self, value):
+        self.pixmap_opacity = 1.0 - value
+        self.repaint()
+
 
 
 # some handy "static" functions
