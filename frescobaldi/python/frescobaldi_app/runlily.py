@@ -488,6 +488,8 @@ class LilyPreviewWidget(QStackedWidget):
     A widget that can display a string of LilyPond code as a PDF.
     If the code is changed, the PDF is automagically rebuilt.
     Also the signal done(success) is then emitted.
+    The attribute updated: None = pending or not started, False is failed,
+    True is succeeded.
     """
     def __init__(self, *args):
         QStackedWidget.__init__(self, *args)
@@ -495,7 +497,7 @@ class LilyPreviewWidget(QStackedWidget):
         self._success = None
         self.job = None
         self.done = Signal()
-        self.updated = False
+        self.updated = None
         # The widget stack has two widgets, a log and a PDF preview.
         # the Log:
         self.log = LogWidget(self)
@@ -541,7 +543,7 @@ class LilyPreviewWidget(QStackedWidget):
         if self._directory:
             shutil.rmtree(self._directory)
             self._directory = None
-        self.updated = False
+        self.updated = None
 
     def preview(self, text):
         """
@@ -550,7 +552,7 @@ class LilyPreviewWidget(QStackedWidget):
         if self.job:
             self.job.disconnect(self.finished)
             self.job.abort()
-        self.updated = False
+        self.updated = None
         # write the text to a temporary file...
         lyfile = os.path.join(self.directory(), 'preview.ly')
         file(lyfile, 'w').write(text.encode('utf-8'))
@@ -563,7 +565,7 @@ class LilyPreviewWidget(QStackedWidget):
         pdfs = self.job.updatedFiles()("pdf")
         if pdfs:
             self.openPDF(pdfs[0])
-            self.updated = True
+        self.updated = bool(pdfs)
         self.done(self.updated)
         self.job = None
 

@@ -36,7 +36,8 @@ class Dialog(KDialog):
         self.mainwin = mainwin
         self.setButtons(KDialog.ButtonCode(
             KDialog.Try | KDialog.Help |
-            KDialog.Ok | KDialog.Close | KDialog.Default))
+            KDialog.Details | KDialog.Reset |
+            KDialog.Ok | KDialog.Cancel))
         self.setButtonIcon(KDialog.Try, KIcon("run-lilypond"))
         self.setCaption(i18n("Create blank staff paper"))
         self.setHelp("blankpaper")
@@ -44,25 +45,24 @@ class Dialog(KDialog):
         layout = QGridLayout(self.mainWidget())
         self.typeChooser = QComboBox()
         self.stack = QStackedWidget()
-        paperLayout = QHBoxLayout()
+        paperSettings = QWidget(self)
+        paperSettings.setLayout(QHBoxLayout())
         self.actionChooser = QComboBox(self)
         layout.addWidget(self.typeChooser, 0, 1)
         layout.addWidget(self.stack, 1, 0, 1, 3)
-        layout.addLayout(paperLayout, 2, 0, 1, 3)
-        layout.addWidget(self.actionChooser, 3, 1)
-        l = QLabel(i18n("Type:"))
+        layout.addWidget(self.actionChooser, 2, 1)
         l = QLabel(i18n("Type:"))
         l.setBuddy(self.typeChooser)
         layout.addWidget(l, 0, 0, Qt.AlignRight)
         l = QLabel(i18n("Action:"))
         l.setBuddy(self.actionChooser)
-        layout.addWidget(l, 3, 0, Qt.AlignRight)
+        layout.addWidget(l, 2, 0, Qt.AlignRight)
         
         # paper stuff
         paper = QGroupBox(i18n("Paper"))
-        paperLayout.addWidget(paper)
+        paperSettings.layout().addWidget(paper)
         settings = QGroupBox(i18n("Settings"))
-        paperLayout.addWidget(settings)
+        paperSettings.layout().addWidget(settings)
         
         paper.setLayout(QGridLayout())
         
@@ -132,6 +132,10 @@ class Dialog(KDialog):
         for actor in self.actors:
             self.actionChooser.addItem(actor.name())
         
+        self.setDetailsWidget(paperSettings)
+        
+        # buttons
+        QObject.connect(self, SIGNAL("resetClicked()"), self.default)
         self.default()
 
     def default(self):
@@ -147,18 +151,39 @@ class Dialog(KDialog):
         self.pageNumStart.setEnabled(False)
         self.typeChooser.setCurrentIndex(0)
         self.actionChooser.setCurrentIndex(0)
+        for widget in self.typeWidgets:
+            widget.default()
 
 
 class SingleStaff(QWidget):
+    def __init__(self, dialog):
+        QWidget.__init__(self, dialog)
+        self.dialog = dialog
+        self.setLayout(QGridLayout())
+        self.systems = QSpinBox()
+        self.systems.setRange(1, 64)
+        l = QLabel(i18n("Systems per page:"))
+        l.setBuddy(self.systems)
+        self.layout().addWidget(l, 0, 1, Qt.AlignRight)
+        self.layout().addWidget(self.systems, 0, 2)
+        self.layout().setColumnStretch(0, 1)
+        self.layout().setColumnStretch(3, 1)
+        
     def name(self):
         return i18n("Single Staff")
         
+    def default(self):
+        self.systems.setValue(12)
+
 
 class PianoStaff(QWidget):
     def name(self):
         return i18n("Piano Staff")
         
-        
+    def default(self):
+        pass
+
+
 class OpenPDF(object):
     def name(self):
         return i18n("Open in PDF viewer")
