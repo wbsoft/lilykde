@@ -21,8 +21,8 @@ macro(lilypond_deps _varname _lyfile)
 endmacro(lilypond_deps)
 
 
-# convert a ly file to a PNG icon 22x22 pix.
-macro(lilypond_png_icon _lyfile)
+# convert a ly file to a PNG icon (e.g. 22x22) pix.
+macro(lilypond_png_icon _lyfile _size)
   lilypond_deps(_deps ${_lyfile})
   get_filename_component(_base ${_lyfile} NAME_WE)
   set(_outp "${CMAKE_CURRENT_BINARY_DIR}/${_base}.png")
@@ -37,9 +37,9 @@ macro(lilypond_png_icon _lyfile)
     COMMAND convert
         "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
         -trim
-        -bordercolor transparent -border 20
+        -bordercolor transparent -border ${_size}
         +repage
-        -gravity Center -crop 22x22+0+0
+        -gravity Center -crop "${_size}x${_size}+0+0"
         +repage
         "${_outp}"
     COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
@@ -78,14 +78,20 @@ macro(lilypond_png_image _lyfile_arg)
 endmacro(lilypond_png_image)
 
 
-# Make icons for articulations and notes etc.
+# Make icons for articulations and notes etc. at 22px
 file(GLOB lilypond_files articulation_*.ly note_*.ly time_*.ly bar_*.ly)
 foreach(_ly ${lilypond_files})
-  lilypond_png_icon(${_ly})
+  lilypond_png_icon(${_ly} 22)
+endforeach(_ly ${lilypond_files})
+
+# Clefs at 64px
+file(GLOB lilypond_files clef_*.ly)
+foreach(_ly ${lilypond_files})
+  lilypond_png_icon(${_ly} 64)
 endforeach(_ly ${lilypond_files})
 
 # Make misc. larger images
-file(GLOB lilypond_files clef_*.ly scorewiz.ly)
+file(GLOB lilypond_files scorewiz.ly)
 foreach(_ly ${lilypond_files})
   lilypond_png_image(${_ly})
 endforeach(_ly ${lilypond_files})

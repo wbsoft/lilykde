@@ -21,9 +21,9 @@
 A wizard to create empty staff paper with LilyPond
 """
 
-from PyQt4.QtCore import QObject, Qt, SIGNAL
+from PyQt4.QtCore import QObject, QSize, Qt, SIGNAL
 from PyQt4.QtGui import (
-    QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QSpinBox,
+    QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QIcon, QLabel, QPixmap, QSpinBox,
     QStackedWidget, QVBoxLayout, QWidget)
 
 from PyKDE4.kdecore import KGlobal, i18n
@@ -178,7 +178,7 @@ class SingleStaff(StaffBase):
         self.layout().addWidget(self.systems, 0, 2)
         self.clef = ClefSelector()
         l = QLabel(i18n("Clef:"))
-        l.setBuddy(self.clef.combo)
+        l.setBuddy(self.clef)
         self.layout().addWidget(l, 1, 1, Qt.AlignRight)
         self.layout().addWidget(self.clef, 1, 2)
         
@@ -231,15 +231,9 @@ class CopyToEditor(object):
 
 
 
-class ClefSelector(QWidget):
+class ClefSelector(QComboBox):
     def __init__(self, parent=None, noclef=True):
-        QWidget.__init__(self, parent)
-        self.setLayout(QHBoxLayout())
-        self.combo = QComboBox()
-        self.layout().setContentsMargins(0, 0, 0, 0)
-        self.layout().addWidget(self.combo)
-        self.label = QLabel()
-        self.layout().addWidget(self.label)
+        QComboBox.__init__(self, parent)
         self.clefs = [
             ('treble', i18n("Treble")),
             ('alto', i18n("Alto")),
@@ -248,14 +242,16 @@ class ClefSelector(QWidget):
             ('bass', i18n("Bass")),
             ]
         if noclef:
-            self.clefs.insert(0, ('none', i18n("No Clef")))
-        self.combo.addItems([title for name, title in self.clefs])
-        QObject.connect(self.combo, SIGNAL("currentIndexChanged(int)"), self.updateLabel)
-        self.updateLabel(0)
-
-    def updateLabel(self, index):
-        img = KGlobal.dirs().findResource('appdata', 'pics/clef_%s.png' % self.clefs[index][0])
-        self.label.setText('<img style="background: white;" src="%s">' % img)
+            self.clefs.insert(0, ('', i18n("No Clef")))
+        self.addItems([title for name, title in self.clefs])
+        for index, (name, title) in enumerate(self.clefs):
+            filename = KGlobal.dirs().findResource('appdata',
+                'pics/clef_%s.png' % (name or 'none'))
+            self.setItemIcon(index, QIcon(QPixmap(filename)))
+        self.setIconSize(QSize(64, 64))
+    
+    def clef(self):
+        return self.clefs[self.currentIndex()][0]
     
 
 paperSizes = ['a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17']
