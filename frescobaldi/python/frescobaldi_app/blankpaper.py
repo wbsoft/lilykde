@@ -155,19 +155,33 @@ class Dialog(KDialog):
             widget.default()
 
 
-class SingleStaff(QWidget):
+class StaffBase(QWidget):
     def __init__(self, dialog):
         QWidget.__init__(self, dialog)
         self.dialog = dialog
         self.setLayout(QGridLayout())
         self.systems = QSpinBox()
         self.systems.setRange(1, 64)
-        l = QLabel(i18n("Systems per page:"))
+        self.layout().setColumnStretch(0, 1)
+        self.layout().setColumnStretch(3, 1)
+
+    def systemCount(self):
+        return self.systems.value()
+    
+
+class SingleStaff(StaffBase):
+    def __init__(self, dialog):
+        StaffBase.__init__(self, dialog)
+        l = QLabel(i18n("Staves per page:"))
         l.setBuddy(self.systems)
         self.layout().addWidget(l, 0, 1, Qt.AlignRight)
         self.layout().addWidget(self.systems, 0, 2)
-        self.layout().setColumnStretch(0, 1)
-        self.layout().setColumnStretch(3, 1)
+        self.clef = ClefSelector()
+        l = QLabel(i18n("Clef:"))
+        l.setBuddy(self.clef.combo)
+        self.layout().addWidget(l, 1, 1, Qt.AlignRight)
+        self.layout().addWidget(self.clef, 1, 2)
+        
         
     def name(self):
         return i18n("Single Staff")
@@ -176,12 +190,24 @@ class SingleStaff(QWidget):
         self.systems.setValue(12)
 
 
-class PianoStaff(QWidget):
+class PianoStaff(StaffBase):
+    def __init__(self, dialog):
+        StaffBase.__init__(self, dialog)
+        l = QLabel(i18n("Systems per page:"))
+        l.setBuddy(self.systems)
+        self.layout().addWidget(l, 0, 1, Qt.AlignRight)
+        self.layout().addWidget(self.systems, 0, 2)
+    
     def name(self):
         return i18n("Piano Staff")
         
     def default(self):
         pass
+
+
+
+
+
 
 
 class OpenPDF(object):
@@ -205,9 +231,32 @@ class CopyToEditor(object):
 
 
 
-        
-        
+class ClefSelector(QWidget):
+    def __init__(self, parent=None, noclef=True):
+        QWidget.__init__(self, parent)
+        self.setLayout(QHBoxLayout())
+        self.combo = QComboBox()
+        self.layout().setContentsMargins(0, 0, 0, 0)
+        self.layout().addWidget(self.combo)
+        self.label = QLabel()
+        self.layout().addWidget(self.label)
+        self.clefs = [
+            ('treble', i18n("Treble")),
+            ('alto', i18n("Alto")),
+            ('tenor', i18n("Tenor")),
+            ('treble_8', i18n("Treble 8")),
+            ('bass', i18n("Bass")),
+            ]
+        if noclef:
+            self.clefs.insert(0, ('none', i18n("No Clef")))
+        self.combo.addItems([title for name, title in self.clefs])
+        QObject.connect(self.combo, SIGNAL("currentIndexChanged(int)"), self.updateLabel)
+        self.updateLabel(0)
 
+    def updateLabel(self, index):
+        img = KGlobal.dirs().findResource('appdata', 'pics/clef_%s.png' % self.clefs[index][0])
+        self.label.setText('<img style="background: white;" src="%s">' % img)
+    
 
 paperSizes = ['a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17']
         

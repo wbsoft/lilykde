@@ -84,8 +84,11 @@ foreach(_ly ${lilypond_files})
   lilypond_png_icon(${_ly})
 endforeach(_ly ${lilypond_files})
 
-# Make misc. other images
-lilypond_png_image(scorewiz.ly)
+# Make misc. larger images
+file(GLOB lilypond_files clef_*.ly scorewiz.ly)
+foreach(_ly ${lilypond_files})
+  lilypond_png_image(${_ly})
+endforeach(_ly ${lilypond_files})
 
 # Build and install all LilyPond-generaged pictures
 add_custom_target(lilypond_pngs ALL DEPENDS ${all_pngs})
