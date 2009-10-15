@@ -1,5 +1,5 @@
 \version "2.10.0"
-
+#(set-global-staff-size 14.2857)
 \paper {
   oddFooterMarkup = ##f
   evenFooterMarkup = ##f

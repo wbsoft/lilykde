@@ -1,5 +1,5 @@
 \header { tagline = ##f }
-#(set-global-staff-size 14)
+#(set-global-staff-size 14.2857)
 
 \layout {
   indent = #0

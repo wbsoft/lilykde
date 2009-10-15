@@ -249,8 +249,8 @@ class ClefSelector(SymbolManager, QComboBox):
         self.addItems([title for name, title in self.clefs])
         for index, (name, title) in enumerate(self.clefs):
             self.addItemSymbol(self, index, 'clef_%s' % (name or 'none'))
-        self.setDefaultSymbolSize(64)
-        self.setSymbolSize(self, 64)
+        self.setDefaultSymbolSize(48)
+        self.setSymbolSize(self, 48)
     
     def clef(self):
         return self.clefs[self.currentIndex()][0]

@@ -5,7 +5,7 @@ set(all_pngs)
 
 # find out which local files a LilyPond file includes
 macro(lilypond_deps _varname _lyfile)
-  set(_deps)
+  set(_deps ${_lyfile})
   file(READ ${_lyfile} _contents)
   string(REGEX MATCHALL "\\\\include *\"[^\"]+\"" _includes ${_contents})
   foreach(_incl ${_includes})
@@ -87,7 +87,7 @@ endforeach(_ly ${lilypond_files})
 # Clefs at 64px
 file(GLOB lilypond_files clef_*.ly)
 foreach(_ly ${lilypond_files})
-  lilypond_png_icon(${_ly} 64)
+  lilypond_png_icon(${_ly} 48)
 endforeach(_ly ${lilypond_files})
 
 # Make misc. larger images
