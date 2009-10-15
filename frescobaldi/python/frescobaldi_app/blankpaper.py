@@ -29,6 +29,8 @@ from PyQt4.QtGui import (
 from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KIcon
 
+from frescobaldi_app.mainapp import SymbolManager
+
 
 class Dialog(KDialog):
     def __init__(self, mainwin):
@@ -231,8 +233,9 @@ class CopyToEditor(object):
 
 
 
-class ClefSelector(QComboBox):
+class ClefSelector(SymbolManager, QComboBox):
     def __init__(self, parent=None, noclef=True):
+        SymbolManager.__init__(self)
         QComboBox.__init__(self, parent)
         self.clefs = [
             ('treble', i18n("Treble")),
@@ -245,10 +248,9 @@ class ClefSelector(QComboBox):
             self.clefs.insert(0, ('', i18n("No Clef")))
         self.addItems([title for name, title in self.clefs])
         for index, (name, title) in enumerate(self.clefs):
-            filename = KGlobal.dirs().findResource('appdata',
-                'pics/clef_%s.png' % (name or 'none'))
-            self.setItemIcon(index, QIcon(QPixmap(filename)))
-        self.setIconSize(QSize(64, 64))
+            self.addItemSymbol(self, index, 'clef_%s' % (name or 'none'))
+        self.setDefaultSymbolSize(64)
+        self.setSymbolSize(self, 64)
     
     def clef(self):
         return self.clefs[self.currentIndex()][0]

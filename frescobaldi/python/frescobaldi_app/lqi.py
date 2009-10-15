@@ -28,15 +28,16 @@ from PyKDE4.kdecore import i18n
 from PyKDE4.kdeui import KHBox
 
 import ly.articulation
+from frescobaldi_app.mainapp import SymbolManager
 
 
-class ToolBox(QToolBox):
+class ToolBox(SymbolManager, QToolBox):
     def __init__(self, tool):
         QToolBox.__init__(self)
+        SymbolManager.__init__(self)
         self.mainwin = tool.mainwin
         Articulations(self)
         self.setMinimumWidth(self.sizeHint().width())
-
 
 class Lqi(QWidget):
     """ Abstract base class for LilyPond Quick Insert tools """
@@ -46,8 +47,7 @@ class Lqi(QWidget):
         self.mainwin = toolbox.mainwin
         i = toolbox.addItem(self, label)
         if icon:
-            self.mainwin.symbolManager().addFunction(
-                lambda icon: toolbox.setItemIcon(i, icon), icon, True)
+            toolbox.addItemSymbol(toolbox, i, icon)
         if tooltip:
             toolbox.setItemToolTip(i, tooltip)
 
@@ -94,8 +94,7 @@ class Articulations(Lqi):
                 b = QToolButton(self)
                 b.setAutoRaise(True)
                 # load and convert the icon to the default text color
-                self.mainwin.symbolManager().addFunction(
-                    b.setIcon, 'articulation_%s' % sign, True)
+                toolbox.addSymbol(b, 'articulation_%s' % sign, 22)
                 b.setIconSize(QSize(22, 22))
                 b.setToolTip('%s (\\%s)' % (title, sign))
                 QObject.connect(b, SIGNAL("clicked()"),

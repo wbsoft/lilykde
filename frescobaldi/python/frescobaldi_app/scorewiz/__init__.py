@@ -37,6 +37,7 @@ from PyKDE4.kdeui import (
     KStandardGuiItem, KVBox)
 
 from kateshell.app import lazymethod
+from frescobaldi_app.mainapp import SymbolManager
 from frescobaldi_app.widgets import TapButton
 from frescobaldi_app.version import defaultVersion
 
@@ -337,12 +338,13 @@ class Parts(QSplitter):
         return [self.score.item(row).part for row in range(self.score.count())]
 
 
-class Settings(QWidget):
+class Settings(SymbolManager, QWidget):
     """
     The widget where users can set other preferences.
     """
     def __init__(self, parent):
         QWidget.__init__(self, parent)
+        SymbolManager.__init__(self)
         parent.addPage(self, i18n("Score settings"))
 
         h = QHBoxLayout(self)
@@ -382,9 +384,8 @@ class Settings(QWidget):
             '3/8', '5/8', '6/8', '7/8', '8/8', '9/8', '12/8',
             '3/16', '6/16', '12/16'])
         # palette sensitive icons for the first two items
-        add = parent.mainwin.symbolManager().addFunction
-        add(lambda icon: self.time.setItemIcon(0, icon), 'time_c44', True)
-        add(lambda icon: self.time.setItemIcon(1, icon), 'time_c22', True)
+        self.addItemSymbol(self.time, 0, 'time_c44')
+        self.addItemSymbol(self.time, 1, 'time_c22')
         l.setBuddy(self.time)
 
         h = KHBox()
@@ -395,8 +396,7 @@ class Settings(QWidget):
         self.pickup.insertSeparator(1)
         durs = [('note_%s' % d.replace('.', 'd'), d) for d in durations]
         for icon, text in durs:
-            add(lambda icon, index=self.pickup.count():
-                self.pickup.setItemIcon(index, icon), icon, True)
+            self.addItemSymbol(self.pickup, self.pickup.count(), icon)
             self.pickup.addItem(text)
         l.setBuddy(self.pickup)
 
@@ -407,8 +407,7 @@ class Settings(QWidget):
 
         l.setBuddy(self.metroDur)
         for icon, text in durs:
-            add(lambda icon, index=self.metroDur.count():
-                self.metroDur.setItemIcon(index, icon), icon, True)
+            self.addItemSymbol(self.metroDur, self.metroDur.count(), icon)
             self.metroDur.addItem('')
         l = QLabel('=', h)
         l.setAlignment(Qt.AlignCenter)
