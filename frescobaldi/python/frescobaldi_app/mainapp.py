@@ -257,6 +257,7 @@ class SymbolManager(object):
         self._itemobjs = {}
         # objs that need to have setIconSize called after drawing the icons
         self._sizeobjs = {}
+        self._ownsize = None # must setIconSize() be called on us?
         # TODO: add support for models or objects with a special property
         self._defaultSize = 22
         self._timer = QTimer()
@@ -271,7 +272,10 @@ class SymbolManager(object):
         self._itemobjs.setdefault(obj, []).append((index, icon_name, size))
         
     def setSymbolSize(self, obj, size):
-        self._sizeobjs[obj] = size
+        if obj is self:
+            self._ownsize = size
+        else:
+            self._sizeobjs[obj] = size
         
     def defaultSymbolSize(self):
         return self._defaultSize
@@ -293,13 +297,18 @@ class SymbolManager(object):
                 for index, icon_name, size in items:
                     obj.setItemIcon(index, self.symbolIcon(icon_name, size))
             except RuntimeError:  # underlying C/C++ object has been deleted
-                del sel._itemobjs[obj]
+                del self._itemobjs[obj]
         for obj, size in self._sizeobjs.items()[:]: # copy
             try:
                 obj.setIconSize(QSize(size, size))
             except RuntimeError:  # underlying C/C++ object has been deleted
-                del sel._sizeobjs[obj]
-
+                del self._sizeobjs[obj]
+        if self._ownsize:
+            try:
+                self.setIconSize(QSize(self._ownsize, self._ownsize))
+            except RuntimeError:  # underlying C/C++ object has been deleted
+                self._ownsize = None
+            
     def symbolIcon(self, name, size=0):
         size = size or self._defaultSize
         pixmap = KIconLoader.global_().loadIcon(name, KIconLoader.User, size) 
