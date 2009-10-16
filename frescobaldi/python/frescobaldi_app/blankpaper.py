@@ -200,10 +200,11 @@ class Dialog(KDialog):
         output.append("ragged-last-bottom = ##f")
         output.append("}\n")
         # output.expression
-        output.append("music = \\repeat unfold %s {\n\\repeat unfold %s {\n\\repeat unfold %s {" %
-            (self.pageCount.value(), staff.systemCount(),
+        output.append("music = \\repeat unfold %d { %% pages" % self.pageCount.value())
+        output.append("\\repeat unfold %d { %% systems" % staff.systemCount())
+        output.append("\\repeat unfold %d { %% bars" % (
             self.barLines.isChecked() and self.barsPerLine.value() or 1))
-        output.append("s1\n\\noBreak\n}\n\\break\n\\noPageBreak\n}\n\\pageBreak\n}\n")
+        output.extend(("s1", "\\noBreak", "}", "\\break", "\\noPageBreak", "}", "\\pageBreak", "}"))
 
         # get the layout
         layout = LayoutContexts()
