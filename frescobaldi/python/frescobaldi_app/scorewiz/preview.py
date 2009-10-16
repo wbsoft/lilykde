@@ -26,13 +26,19 @@ import math
 import ly, ly.dom
 
 from frescobaldi_app.runlily import LilyPreviewDialog
-
+from frescobaldi_app.scorewiz import config
 
 class PreviewDialog(LilyPreviewDialog):
     def __init__(self, scorewiz):
         self.scorewiz = scorewiz
         LilyPreviewDialog.__init__(self, scorewiz)
     
+    def loadSettings(self):
+        self.restoreDialogSize(config("preview"))
+        
+    def saveSettings(self):
+        self.saveDialogSize(config("preview"))
+        
     def showPreview(self):
         builder = self.scorewiz.builder()
         builder.midi = False # not needed
