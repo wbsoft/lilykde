@@ -30,7 +30,16 @@ from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KIcon
 
 import ly.indent
+from kateshell.app import lazymethod
 from frescobaldi_app.mainapp import SymbolManager
+from frescobaldi_app.runlily import LilyPreviewWidget
+
+
+def config(group=None):
+    c = KGlobal.config().group("blankpaper")
+    if group:
+        c = c.group(group)
+    return c
 
 
 class Dialog(KDialog):
@@ -140,6 +149,7 @@ class Dialog(KDialog):
         
         # buttons
         QObject.connect(self, SIGNAL("resetClicked()"), self.default)
+        QObject.connect(self, SIGNAL("tryClicked()"), self.showPreview)
         self.default()
     
     def done(self, r):
@@ -162,6 +172,13 @@ class Dialog(KDialog):
         self.actionChooser.setCurrentIndex(0)
         for widget in self.typeWidgets:
             widget.default()
+
+    def showPreview(self):
+        self.previewDialog().showPreview(self.ly())
+
+    @lazymethod
+    def previewDialog(self):
+        return PreviewDialog(self)
 
     def ly(self):
         """
@@ -202,11 +219,37 @@ class Dialog(KDialog):
         music.append('}\n\\context {\n\\Staff')
         music.append('\\remove "Time_signature_engraver"')
         if not self.barLines.isChecked():
-            music.append('\\remove "Bar_engraver"')
+            music.append("\\override BarLine #'stencil = ##f")
         music.extend(staff.layoutStaff())
-        music.append('}\n}')
+        music.append('}\n}\n')
+        
+        # score
+        music.append('\\score {')
+        music.append(staff.music())
+        music.append('}')
+        
         
         return ly.indent.indent('\n'.join(music))
+
+
+class PreviewDialog(KDialog):
+    def __init__(self, parent):
+        KDialog.__init__(self, parent)
+        self.setCaption(i18n("Blank staff paper preview"))
+        self.setButtons(KDialog.ButtonCode(KDialog.Close))
+        self.preview = LilyPreviewWidget(self)
+        self.setMainWidget(self.preview)
+        self.setMinimumSize(QSize(400, 300))
+        self.restoreDialogSize(config("preview"))
+        
+    def done(self, r):
+        self.saveDialogSize(config("preview"))
+        self.preview.cleanup()
+        KDialog.done(self, r)
+    
+    def showPreview(self, ly):
+        self.preview.preview(ly)
+        self.exec_()
 
 
 class StaffBase(QWidget):
@@ -230,6 +273,10 @@ class StaffBase(QWidget):
         """ Returns input lines for the Score layout context """
         return []
 
+    def music(self):
+        """ Returns the stuff for the \score { ... } block """
+        return ''
+
 
 class SingleStaff(StaffBase):
     def __init__(self, dialog):
@@ -244,7 +291,6 @@ class SingleStaff(StaffBase):
         self.layout().addWidget(l, 1, 1, Qt.AlignRight)
         self.layout().addWidget(self.clef, 1, 2)
         
-        
     def name(self):
         return i18n("Single Staff")
         
@@ -252,13 +298,17 @@ class SingleStaff(StaffBase):
         self.systems.setValue(12)
 
     def layoutStaff(self):
-        staff = []
-        if not self.clef.clef():
-             staff.append('\\remove "Clef_engraver"')
-        staff.append("\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 4)")
-        return staff
+        return ["\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 4)"]
 
-
+    def music(self):
+        if self.clef.clef():
+            return '\\new Staff { \\clef %s \\music }' % self.clef.clef()
+        else:
+            return '\\new Staff \\with {\n\\remove "Clef_engraver"\n} { \\music }'
+        
+        
+        
+        
 class PianoStaff(StaffBase):
     def __init__(self, dialog):
         StaffBase.__init__(self, dialog)

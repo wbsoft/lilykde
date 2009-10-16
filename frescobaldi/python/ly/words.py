@@ -1619,6 +1619,16 @@ clefs = clefs_plain + (
     )
 
 
+break_visibility = (
+    'all-invisible',
+    'begin-of-line-visible',
+    'end-of-line-visible',
+    'all-visible',
+    'begin-of-line-invisible',
+    'end-of-line-invisible',
+    'center-invisible',
+    )
+
 set_context_re = re.compile(r'\\(un)?set\s+(' + '|'.join(contexts) + r')\s*.\s*$')
 context_re = re.compile(r'\b(' + '|'.join(contexts) + r')\s*\.\s*$')
 grob_re = re.compile(r'\b(' + '|'.join(grobs) + r')\s*$')

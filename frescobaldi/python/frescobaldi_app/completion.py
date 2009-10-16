@@ -193,7 +193,8 @@ def findMatches(model, view, word, invocationType):
         return ColorCompletions(model, ly.colors.colors_predefined)
     if re.search(r"\bx11-color\s*'$", text):
         return ColorCompletions(model, ly.colors.colors_x11)
-    
+    if re.search(r"#'break-visibility\s*=\s*#$", text):
+        return ly.words.break_visibility
     # parse to get current context
     fragment = unicode(doc.text(KTextEditor.Range(
         KTextEditor.Cursor(0, 0), word.start())))
