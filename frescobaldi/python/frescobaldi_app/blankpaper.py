@@ -23,23 +23,16 @@ A wizard to create empty staff paper with LilyPond
 
 from PyQt4.QtCore import QObject, QSize, Qt, SIGNAL
 from PyQt4.QtGui import (
-    QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QIcon, QLabel, QPixmap, QSpinBox,
-    QStackedWidget, QVBoxLayout, QWidget)
+    QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QIcon, QLabel,
+    QPixmap, QSpinBox, QStackedWidget, QVBoxLayout, QWidget)
 
-from PyKDE4.kdecore import KGlobal, i18n
+from PyKDE4.kdecore import i18n
 from PyKDE4.kdeui import KDialog, KIcon
 
 import ly.indent
 from kateshell.app import lazymethod
 from frescobaldi_app.mainapp import SymbolManager
 from frescobaldi_app.runlily import LilyPreviewDialog
-
-
-def config(group=None):
-    c = KGlobal.config().group("blankpaper")
-    if group:
-        c = c.group(group)
-    return c
 
 
 class Dialog(KDialog):
@@ -227,8 +220,6 @@ class Dialog(KDialog):
         music.append('\\score {')
         music.append(staff.music())
         music.append('}')
-        
-        
         return ly.indent.indent('\n'.join(music))
 
 
@@ -337,6 +328,10 @@ class CopyToEditor(object):
 
 
 class ClefSelector(SymbolManager, QComboBox):
+    """
+    A ComboBox to select a clef.
+    Call with noclef=False to remove the option to select no clef.
+    """
     def __init__(self, parent=None, noclef=True):
         SymbolManager.__init__(self)
         QComboBox.__init__(self, parent)
@@ -356,6 +351,10 @@ class ClefSelector(SymbolManager, QComboBox):
             self.addItemSymbol(self, index, 'clef_%s' % (name or 'none'))
     
     def clef(self):
+        """
+        Returns the LilyPond name of the selected clef, or the empty string
+        for no clef.
+        """
         return self.clefs[self.currentIndex()][0]
     
 
