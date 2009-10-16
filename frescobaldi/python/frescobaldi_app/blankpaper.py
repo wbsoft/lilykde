@@ -178,62 +178,91 @@ class Dialog(KDialog):
         Return the LilyPond document to print the empty staff paper.
         """
         staff = self.stack.currentWidget()
-        music = ['\\version "2.12.0"']
-        music.append('#(set-global-staff-size %d)' % self.staffSize.value())
+        output = ['\\version "2.12.0"']
+        output.append('#(set-global-staff-size %d)' % self.staffSize.value())
         # paper section
-        music.append('\\paper {')
+        output.append('\\paper {')
         if self.paperSize.currentIndex() > 0:
-            music.append('#(set-paper-size "%s")' % paperSizes[self.paperSize.currentIndex()-1])
+            output.append('#(set-paper-size "%s")' % paperSizes[self.paperSize.currentIndex()-1])
         if self.pageNumbers.isChecked():
-            music.append('first-page-number = #%d' % self.pageNumStart.value())
-            music.append('oddHeaderMarkup = \\markup \\fill-line {')
-            music.append("\\null\n\\fromproperty #'page:page-number-string\n}")
+            output.append('first-page-number = #%d' % self.pageNumStart.value())
+            output.append('oddHeaderMarkup = \\markup \\fill-line {')
+            output.append("\\null\n\\fromproperty #'page:page-number-string\n}")
         else:
-            music.append('oddHeaderMarkup = ##f')
-        music.append('evenHeaderMarkup = ##f')
-        music.append('oddFooterMarkup = \\markup \\fill-line {')
-        music.append("\\null\n\\sans \\fontsize #-8 { %s }\n}" % "FRESCOBALDI.ORG")
-        music.append("head-separation = 0.1\\in")
-        music.append("foot-separation = 0.1\\in")
-        music.append("top-margin = 0.5\\in")
-        music.append("bottom-margin = 0.5\\in")
-        music.append("ragged-last-bottom = ##f")
-        music.append("}\n")
-        # music expression
-        music.append("music = \\repeat unfold %s {\n\\repeat unfold %s {\n\\repeat unfold %s {" %
+            output.append('oddHeaderMarkup = ##f')
+        output.append('evenHeaderMarkup = ##f')
+        output.append('oddFooterMarkup = \\markup \\fill-line {')
+        output.append("\\null\n\\sans \\fontsize #-8 { %s }\n}" % "FRESCOBALDI.ORG")
+        output.append("head-separation = 0.1\\in")
+        output.append("foot-separation = 0.1\\in")
+        output.append("top-margin = 0.5\\in")
+        output.append("bottom-margin = 0.5\\in")
+        output.append("ragged-last-bottom = ##f")
+        output.append("}\n")
+        # output.expression
+        output.append("music = \\repeat unfold %s {\n\\repeat unfold %s {\n\\repeat unfold %s {" %
             (self.pageCount.value(), staff.systemCount(),
             self.barLines.isChecked() and self.barsPerLine.value() or 1))
-        music.append("s1\n\\noBreak\n}\n\\break\n\\noPageBreak\n}\n\\pageBreak\n}\n")
+        output.append("s1\n\\noBreak\n}\n\\break\n\\noPageBreak\n}\n\\pageBreak\n}\n")
 
         # get the layout
-        layout = dict.fromkeys(["Score"] + staff.staffTypes(), [])
-        layout["Score"].append('\\remove "Bar_number_engraver"')
-        for s in staff.staffTypes():
-            layout[s].append('\\remove "Time_signature_engraver"')
-            if not self.barLines.isChecked():
-                layout[s].append("\\override BarLine #'stencil = ##f")
-            layout[s].extend(staff.getLayout(s))
+        layout = LayoutContexts()
+        layout.add("Score", '\\remove "Bar_number_engraver"')
+        music = staff.music(layout)
+        layout.addToStaffContexts('\\remove "Time_signature_engraver"')
+        if not self.barLines.isChecked():
+            layout.addToStaffContexts("\\override BarLine #'stencil = ##f")
         
         # write it out
-        music.append('\\layout {\nindent = #0')
-        for context, contents in layout.iteritems():
-            if contents:
-                music.append('\\context {\n\\%s' % context)
-                music.extend(contents)
-                music.append('}')
-        music.append('}\n')
+        output.append('\\layout {\nindent = #0')
+        output.extend(layout.ly())
+        output.append('}\n')
         
         # score
-        music.append('\\score {')
-        music.append(staff.music())
-        music.append('}')
-        return ly.indent.indent('\n'.join(music))
+        output.append('\\score {')
+        output.extend(music)
+        output.append('}')
+        return ly.indent.indent('\n'.join(output))
 
 
 class PreviewDialog(LilyPreviewDialog):
     def __init__(self, parent):
         LilyPreviewDialog.__init__(self, parent)
         self.setCaption(i18n("Blank staff paper preview"))
+
+
+class LayoutContexts(object):
+    """
+    A class to manage the \context { \Staff ... } type constructs.
+    """
+    def __init__(self):
+        self._contexts = {}
+        self._staffContexts = ['Staff']
+    
+    def setStaffContexts(self, staffContexts):
+        """
+        Specify which contexts must get visible or invisible barlines, etc.
+        """
+        self._staffContexts = staffContexts
+    
+    def add(self, context, line):
+        """ Add a line to the given context """
+        self._contexts.setdefault(context, []).append(line)
+    
+    def addToStaffContexts(self, line):
+        for s in self._staffContexts:
+            self.add(s, line)
+
+    def ly(self):
+        """ Return a list of LilyPond lines. """
+        result = []
+        for name, lines in self._contexts.iteritems():
+            result.append('\\context {')
+            result.append('\\%s' % name)
+            result.extend(lines)
+            result.append('}')
+        return result
+
 
 
 class StaffBase(QWidget):
@@ -249,20 +278,9 @@ class StaffBase(QWidget):
     def systemCount(self):
         return self.systems.value()
     
-    def staffTypes(self):
-        """
-        Must return a list of staff-like types this widget creates.
-        E.g. ["Staff", "TabStaff"]
-        """
+    def music(self, layout):
+        """ add lines to layout contexts and returns the music, also in lines """
         return []
-        
-    def getLayout(self, context):
-        """ Returns input lines for the given layout context """
-        return []
-        
-    def music(self):
-        """ Returns the stuff for the \score { ... } block """
-        return ''
 
 
 class SingleStaff(StaffBase):
@@ -284,23 +302,16 @@ class SingleStaff(StaffBase):
     def default(self):
         self.systems.setValue(12)
 
-    def staffTypes(self):
+    def music(self, layout):
         if self.clef.clef() == 'tab':
-            return ["TabStaff"]
+            layout.setStaffContexts(['TabStaff'])
+            return ['\\new TabStaff { \\music }']
         else:
-            return ["Staff"]
-            
-    def getLayout(self, context):
-        return ["\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 4)"]
-    
-    def music(self):
-        clef = self.clef.clef()
-        if clef == 'tab':
-            return '\\new TabStaff { \\music }'
-        elif clef:
-            return '\\new Staff { \\clef %s \\music }' % clef
-        else:
-            return '\\new Staff \\with {\n\\remove "Clef_engraver"\n} { \\music }'
+            layout.setStaffContexts(['Staff'])
+            if self.clef.clef():
+                return ['\\new Staff { \\clef %s \\music }' % self.clef.clef()]
+            else:
+                return ['\\new Staff { \\music }']
         
         
         
