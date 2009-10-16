@@ -28,7 +28,7 @@ from PyQt4.QtGui import (
     QTextCharFormat, QTextCursor, QToolBar, QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, KPluginLoader, KProcess, KShell, KUrl, i18n
 from PyKDE4.kdeui import (
-    KApplication, KIcon, KMenu, KMessageBox, KStandardGuiItem)
+    KApplication, KDialog, KIcon, KMenu, KMessageBox, KStandardGuiItem)
 from PyKDE4.kio import KEncodingFileDialog, KRun
 
 from signals import Signal
@@ -589,6 +589,32 @@ class LilyPreviewWidget(QStackedWidget):
             sip.transferto(KRun(KUrl.fromPath(fileName), self.window()), None)
 
     
+class LilyPreviewDialog(KDialog):
+    def __init__(self, parent):
+        KDialog.__init__(self, parent)
+        self.setCaption(i18n("PDF Preview"))
+        self.setButtons(KDialog.ButtonCode(KDialog.Close))
+        self.preview = LilyPreviewWidget(self)
+        self.setMainWidget(self.preview)
+        self.setMinimumSize(QSize(400, 300))
+        self.loadSettings()
+        QObject.connect(self, SIGNAL("finished()"), self.slotFinished)
+        
+    def loadSettings(self):
+        self.restoreDialogSize(config("preview dialog"))
+        
+    def saveSettings(self):
+        self.saveDialogSize(config("preview dialog"))
+        
+    def slotFinished(self):
+        self.saveSettings()
+        self.preview.cleanup()
+    
+    def showPreview(self, ly):
+        self.preview.preview(ly)
+        self.exec_()
+
+
 
 def textFormats():
     """ Return a dict with text formats for the log view """

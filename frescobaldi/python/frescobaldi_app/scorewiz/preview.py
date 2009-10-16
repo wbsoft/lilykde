@@ -25,30 +25,14 @@ In separate file to ease maintenance.
 import math
 import ly, ly.dom
 
-from PyQt4.QtCore import QSize
-from PyKDE4.kdecore import KGlobal, i18n
-from PyKDE4.kdeui import KDialog
-
-from frescobaldi_app.scorewiz import config
-from frescobaldi_app.runlily import LilyPreviewWidget
+from frescobaldi_app.runlily import LilyPreviewDialog
 
 
-class PreviewDialog(KDialog):
+class PreviewDialog(LilyPreviewDialog):
     def __init__(self, scorewiz):
         self.scorewiz = scorewiz
-        KDialog.__init__(self, scorewiz)
-        self.setCaption(i18n("PDF Preview"))
-        self.setButtons(KDialog.ButtonCode(KDialog.Close))
-        self.preview = LilyPreviewWidget(self)
-        self.setMainWidget(self.preview)
-        self.setMinimumSize(QSize(400, 300))
-        self.restoreDialogSize(config("preview"))
-        
-    def done(self, r):
-        self.saveDialogSize(config("preview"))
-        self.preview.cleanup()
-        KDialog.done(self, r)
-        
+        LilyPreviewDialog.__init__(self, scorewiz)
+    
     def showPreview(self):
         builder = self.scorewiz.builder()
         builder.midi = False # not needed
@@ -89,8 +73,7 @@ class PreviewDialog(KDialog):
             elif isinstance(stub, ly.dom.DrumMode):
                 addItems(stub, drumGen())
 
-        self.preview.preview(builder.ly(doc))
-        self.exec_()
+        LilyPreviewDialog.showPreview(self, builder.ly(doc))
 
 
 # Generators for different kinds of example input

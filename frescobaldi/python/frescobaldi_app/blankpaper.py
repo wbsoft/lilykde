@@ -32,7 +32,7 @@ from PyKDE4.kdeui import KDialog, KIcon
 import ly.indent
 from kateshell.app import lazymethod
 from frescobaldi_app.mainapp import SymbolManager
-from frescobaldi_app.runlily import LilyPreviewWidget
+from frescobaldi_app.runlily import LilyPreviewDialog
 
 
 def config(group=None):
@@ -232,24 +232,10 @@ class Dialog(KDialog):
         return ly.indent.indent('\n'.join(music))
 
 
-class PreviewDialog(KDialog):
+class PreviewDialog(LilyPreviewDialog):
     def __init__(self, parent):
-        KDialog.__init__(self, parent)
+        LilyPreviewDialog.__init__(self, parent)
         self.setCaption(i18n("Blank staff paper preview"))
-        self.setButtons(KDialog.ButtonCode(KDialog.Close))
-        self.preview = LilyPreviewWidget(self)
-        self.setMainWidget(self.preview)
-        self.setMinimumSize(QSize(400, 300))
-        self.restoreDialogSize(config("preview"))
-        
-    def done(self, r):
-        self.saveDialogSize(config("preview"))
-        self.preview.cleanup()
-        KDialog.done(self, r)
-    
-    def showPreview(self, ly):
-        self.preview.preview(ly)
-        self.exec_()
 
 
 class StaffBase(QWidget):
