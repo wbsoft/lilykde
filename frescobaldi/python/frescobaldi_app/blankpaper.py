@@ -80,12 +80,12 @@ class Dialog(KDialog):
         self.paperSize.addItem(i18n("Default"))
         self.paperSize.addItems(paperSizes)
 
-        self.pointSize = QSpinBox()
-        l = QLabel(i18n("Pointsize:"))
-        l.setBuddy(self.pointSize)
+        self.staffSize = QSpinBox()
+        l = QLabel(i18n("Staff Size:"))
+        l.setBuddy(self.staffSize)
         paper.layout().addWidget(l, 1, 0, Qt.AlignRight)
-        paper.layout().addWidget(self.pointSize, 1, 1)
-        self.pointSize.setRange(8, 40)
+        paper.layout().addWidget(self.staffSize, 1, 1)
+        self.staffSize.setRange(8, 40)
         
         self.pageCount = QSpinBox()
         l = QLabel(i18n("Page count:"))
@@ -153,7 +153,7 @@ class Dialog(KDialog):
     def default(self):
         """ Set everything to default """
         self.paperSize.setCurrentIndex(0)
-        self.pointSize.setValue(20)
+        self.staffSize.setValue(20)
         self.pageCount.setValue(1)
         self.barLines.setChecked(False)
         self.barsPerLine.setValue(4)
@@ -179,7 +179,7 @@ class Dialog(KDialog):
         """
         staff = self.stack.currentWidget()
         music = ['\\version "2.12.0"']
-        music.append('#(set-global-staff-size %d)' % self.pointSize.value())
+        music.append('#(set-global-staff-size %d)' % self.staffSize.value())
         # paper section
         music.append('\\paper {')
         if self.paperSize.currentIndex() > 0:
