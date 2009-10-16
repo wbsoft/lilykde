@@ -29,6 +29,7 @@ from PyQt4.QtGui import (
 from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KIcon
 
+import ly.indent
 from frescobaldi_app.mainapp import SymbolManager
 
 
@@ -43,6 +44,7 @@ class Dialog(KDialog):
         self.setButtonIcon(KDialog.Try, KIcon("run-lilypond"))
         self.setCaption(i18n("Create blank staff paper"))
         self.setHelp("blankpaper")
+        self.setDefaultButton(KDialog.Ok)
 
         layout = QGridLayout(self.mainWidget())
         self.typeChooser = QComboBox()
@@ -139,6 +141,11 @@ class Dialog(KDialog):
         # buttons
         QObject.connect(self, SIGNAL("resetClicked()"), self.default)
         self.default()
+    
+    def done(self, r):
+        if r:
+            print self.ly()
+        KDialog.done(self, r)
 
     def default(self):
         """ Set everything to default """
@@ -156,6 +163,51 @@ class Dialog(KDialog):
         for widget in self.typeWidgets:
             widget.default()
 
+    def ly(self):
+        """
+        Return the LilyPond document to print the empty staff paper.
+        """
+        staff = self.stack.currentWidget()
+        music = ['\\version "2.12.0"']
+        music.append('#(set-global-staff-size %d)' % self.pointSize.value())
+        # paper section
+        music.append('\\paper {')
+        if self.paperSize.currentIndex() > 0:
+            music.append('#(set-paper-size "%s")' % paperSizes[self.paperSize.currentIndex()-1])
+        if self.pageNumbers.isChecked():
+            music.append('first-page-number = #%d' % self.pageNumStart.value())
+            music.append('oddHeaderMarkup = \\markup \\fill-line {')
+            music.append("\\null\n\\fromproperty #'page:page-number-string\n}")
+        else:
+            music.append('oddHeaderMarkup = ##f')
+        music.append('evenHeaderMarkup = ##f')
+        music.append('oddFooterMarkup = \\markup \\fill-line {')
+        music.append("\\null\n\\sans \\fontsize #-8 { %s }\n}" % "FRESCOBALDI.ORG")
+        music.append("head-separation = 0.1\\in")
+        music.append("foot-separation = 0.1\\in")
+        music.append("top-margin = 0.5\\in")
+        music.append("bottom-margin = 0.5\\in")
+        music.append("ragged-last-bottom = ##f")
+        music.append("}\n")
+        # music expression
+        music.append("music = \\repeat unfold %s {\n\\repeat unfold %s {\n\\repeat unfold %s {" %
+            (self.pageCount.value(), staff.systemCount(),
+            self.barLines.isChecked() and self.barsPerLine.value() or 1))
+        music.append("s1\n\\noBreak\n}\n\\break\n\\noPageBreak\n}\n\\pageBreak\n}\n")
+
+        # layout
+        music.append('\\layout {\nindent = #0\n\\context {\n\\Score')
+        music.append('\\remove "Bar_number_engraver"')
+        music.extend(staff.layoutScore())
+        music.append('}\n\\context {\n\\Staff')
+        music.append('\\remove "Time_signature_engraver"')
+        if not self.barLines.isChecked():
+            music.append('\\remove "Bar_engraver"')
+        music.extend(staff.layoutStaff())
+        music.append('}\n}')
+        
+        return ly.indent.indent('\n'.join(music))
+
 
 class StaffBase(QWidget):
     def __init__(self, dialog):
@@ -170,6 +222,14 @@ class StaffBase(QWidget):
     def systemCount(self):
         return self.systems.value()
     
+    def layoutStaff(self):
+        """ Returns input lines for the Staff layout context """
+        return []
+        
+    def layoutScore(self):
+        """ Returns input lines for the Score layout context """
+        return []
+
 
 class SingleStaff(StaffBase):
     def __init__(self, dialog):
@@ -190,6 +250,13 @@ class SingleStaff(StaffBase):
         
     def default(self):
         self.systems.setValue(12)
+
+    def layoutStaff(self):
+        staff = []
+        if not self.clef.clef():
+             staff.append('\\remove "Clef_engraver"')
+        staff.append("\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 4)")
+        return staff
 
 
 class PianoStaff(StaffBase):
@@ -257,4 +324,6 @@ class ClefSelector(SymbolManager, QComboBox):
     
 
 paperSizes = ['a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17']
-        
+
+
+
