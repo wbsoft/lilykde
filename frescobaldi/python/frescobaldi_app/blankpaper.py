@@ -205,16 +205,23 @@ class Dialog(KDialog):
             self.barLines.isChecked() and self.barsPerLine.value() or 1))
         music.append("s1\n\\noBreak\n}\n\\break\n\\noPageBreak\n}\n\\pageBreak\n}\n")
 
-        # layout
-        music.append('\\layout {\nindent = #0\n\\context {\n\\Score')
-        music.append('\\remove "Bar_number_engraver"')
-        music.extend(staff.layoutScore())
-        music.append('}\n\\context {\n\\Staff')
-        music.append('\\remove "Time_signature_engraver"')
-        if not self.barLines.isChecked():
-            music.append("\\override BarLine #'stencil = ##f")
-        music.extend(staff.layoutStaff())
-        music.append('}\n}\n')
+        # get the layout
+        layout = dict.fromkeys(["Score"] + staff.staffTypes(), [])
+        layout["Score"].append('\\remove "Bar_number_engraver"')
+        for s in staff.staffTypes():
+            layout[s].append('\\remove "Time_signature_engraver"')
+            if not self.barLines.isChecked():
+                layout[s].append("\\override BarLine #'stencil = ##f")
+            layout[s].extend(staff.getLayout(s))
+        
+        # write it out
+        music.append('\\layout {\nindent = #0')
+        for context, contents in layout.iteritems():
+            if contents:
+                music.append('\\context {\n\\%s' % context)
+                music.extend(contents)
+                music.append('}')
+        music.append('}\n')
         
         # score
         music.append('\\score {')
@@ -242,14 +249,17 @@ class StaffBase(QWidget):
     def systemCount(self):
         return self.systems.value()
     
-    def layoutStaff(self):
-        """ Returns input lines for the Staff layout context """
+    def staffTypes(self):
+        """
+        Must return a list of staff-like types this widget creates.
+        E.g. ["Staff", "TabStaff"]
+        """
         return []
         
-    def layoutScore(self):
-        """ Returns input lines for the Score layout context """
+    def getLayout(self, context):
+        """ Returns input lines for the given layout context """
         return []
-
+        
     def music(self):
         """ Returns the stuff for the \score { ... } block """
         return ''
@@ -262,7 +272,7 @@ class SingleStaff(StaffBase):
         l.setBuddy(self.systems)
         self.layout().addWidget(l, 0, 1, Qt.AlignRight)
         self.layout().addWidget(self.systems, 0, 2)
-        self.clef = ClefSelector()
+        self.clef = ClefSelector(noclef=True, tab=True)
         l = QLabel(i18n("Clef:"))
         l.setBuddy(self.clef)
         self.layout().addWidget(l, 1, 1, Qt.AlignRight)
@@ -274,12 +284,21 @@ class SingleStaff(StaffBase):
     def default(self):
         self.systems.setValue(12)
 
-    def layoutStaff(self):
+    def staffTypes(self):
+        if self.clef.clef() == 'tab':
+            return ["TabStaff"]
+        else:
+            return ["Staff"]
+            
+    def getLayout(self, context):
         return ["\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 4)"]
-
+    
     def music(self):
-        if self.clef.clef():
-            return '\\new Staff { \\clef %s \\music }' % self.clef.clef()
+        clef = self.clef.clef()
+        if clef == 'tab':
+            return '\\new TabStaff { \\music }'
+        elif clef:
+            return '\\new Staff { \\clef %s \\music }' % clef
         else:
             return '\\new Staff \\with {\n\\remove "Clef_engraver"\n} { \\music }'
         
@@ -330,9 +349,11 @@ class CopyToEditor(object):
 class ClefSelector(SymbolManager, QComboBox):
     """
     A ComboBox to select a clef.
-    Call with noclef=False to remove the option to select no clef.
+    
+    Set resp. noclef and/or tab to True for those allowing the user
+    to choose those clef/staff types.
     """
-    def __init__(self, parent=None, noclef=True):
+    def __init__(self, parent=None, noclef=False, tab=False):
         SymbolManager.__init__(self)
         QComboBox.__init__(self, parent)
         self.setDefaultSymbolSize(48)
@@ -343,7 +364,10 @@ class ClefSelector(SymbolManager, QComboBox):
             ('tenor', i18n("Tenor")),
             ('treble_8', i18n("Treble 8")),
             ('bass', i18n("Bass")),
+            ('percussion', i18n("Percussion")),
             ]
+        if tab:
+            self.clefs.append(('tab', i18n("Tab clef")))
         if noclef:
             self.clefs.insert(0, ('', i18n("No Clef")))
         self.addItems([title for name, title in self.clefs])
