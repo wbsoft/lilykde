@@ -615,6 +615,55 @@ class LilyPreviewDialog(KDialog):
         self.exec_()
 
 
+class BackgroundJob(object):
+    """
+    Manages one LilyPond job in the background. Can display a dialog if there
+    was an error with the log output. The text to run through LilyPond is given
+    in the ly parameter.
+    
+    The signal done(result) is emitted, where result is the updatedFiles()
+    generator of the LilyPond job.
+    """
+    def __init__(self, ly, log=None, fileName='output.ly'):
+        self.log = log or LogWidget()
+        self._directory = tempfile.mkdtemp()
+        self.done = Signal()
+        self.result = None
+        lyfile = os.path.join(self._directory, fileName)
+        file(lyfile, 'w').write(text.encode('utf-8'))
+        # ... and run LilyPond.
+        self.job = Ly2PDF(lyfile, self.log)
+        self.job.done.connect(self.finished)
+
+    def finished(self):
+        self.result = self.job.updatedFiles()
+        self.job = None
+        self.done(self.result)
+    
+    def showLog(self, message, title='', parent=None):
+        """
+        Show the log in a simple modal dialog.
+        """
+        dlg = KDialog(parent)
+        if title:
+            dlg.setCaption(title)
+        dlg.setButtons(KDialog.ButtonCode(KDialog.Close))
+        dlg.setMainWidget(self.log)
+        self.log.writeMsg(message, 'msgerr')
+        return dlg.exec_()
+            
+    def cleanup(self):
+        """
+        Stop a job if running and remove temporary files.
+        """
+        if self.job:
+            self.job.done.disconnect(self.finished)
+            self.job.abort()
+            self.job = None
+        shutil.rmtree(self._directory)
+
+
+
 
 def textFormats():
     """ Return a dict with text formats for the log view """

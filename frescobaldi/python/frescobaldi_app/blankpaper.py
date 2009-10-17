@@ -33,12 +33,13 @@ import ly.indent
 from kateshell.app import lazymethod
 from frescobaldi_app.widgets import StackFader
 from frescobaldi_app.mainapp import SymbolManager
-from frescobaldi_app.runlily import LilyPreviewDialog
+from frescobaldi_app.runlily import BackgroundJob, LilyPreviewDialog
 
 
 class Dialog(KDialog):
     def __init__(self, mainwin):
         KDialog.__init__(self, mainwin)
+        self._jobs = []
         self.mainwin = mainwin
         self.setButtons(KDialog.ButtonCode(
             KDialog.Try | KDialog.Help |
@@ -143,15 +144,16 @@ class Dialog(KDialog):
         
         self.setDetailsWidget(paperSettings)
         
+        QObject.connect(self, SIGNAL("destroyed()"), self.slotDestroyed)
         # buttons
         QObject.connect(self, SIGNAL("resetClicked()"), self.default)
         QObject.connect(self, SIGNAL("tryClicked()"), self.showPreview)
         self.default()
     
     def done(self, r):
-        if r:
-            print self.ly()
         KDialog.done(self, r)
+        if r:
+            self.actors[self.actionChooser.currentIndex()].doIt(self)
 
     def default(self):
         """ Set everything to default """
@@ -224,8 +226,31 @@ class Dialog(KDialog):
         # score
         output.append('\\score {')
         output.extend(music)
-        output.append('}')
+        output.append('}\n')
         return ly.indent.indent('\n'.join(output))
+
+    def createJob(self):
+        job = PDFJob(self.ly())
+        self._jobs.append(job)
+        return job
+    
+    def removeJob(self, job):
+        if job in self._jobs:
+            self._jobs.remove(job)
+            job.cleanup()
+        
+    def slotDestroyed(self):
+        for job in self._jobs:
+            job.cleanup()
+            
+
+
+class PDFJob(BackgroundJob):
+    def pdf(self):
+        """ return the filename of the created PDF file. """
+        pdfs = self.result("pdf")
+        if pdfs:
+            return pdfs[0]
 
 
 class PreviewDialog(LilyPreviewDialog):
@@ -415,7 +440,9 @@ class PrintPDF(object):
 class CopyToEditor(object):
     def name(self):
         return i18n("Copy LilyPond code to editor")
-
+    
+    def doIt(self, dialog):
+        dialog.mainwin.currentDocument().view.insertText(dialog.ly())
 
 
 class ClefSelector(SymbolManager, QComboBox):
