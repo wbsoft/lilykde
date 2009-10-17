@@ -28,18 +28,20 @@ from PyQt4.QtGui import (
 
 from PyKDE4.kdecore import i18n
 from PyKDE4.kdeui import KDialog, KIcon
+from PyKDE4.kio import KFileDialog
 
 import ly.indent
 from kateshell.app import lazymethod
 from frescobaldi_app.widgets import StackFader
 from frescobaldi_app.mainapp import SymbolManager
 from frescobaldi_app.runlily import BackgroundJob, LilyPreviewDialog
+from frescobaldi_app.actions import openPDF, printPDF
 
 
 class Dialog(KDialog):
     def __init__(self, mainwin):
         KDialog.__init__(self, mainwin)
-        self._jobs = []
+        self.jobs = []
         self.mainwin = mainwin
         self.setButtons(KDialog.ButtonCode(
             KDialog.Try | KDialog.Help |
@@ -134,10 +136,10 @@ class Dialog(KDialog):
 
 
         self.actors = [
-            OpenPDF(),
-            SavePDF(),
-            PrintPDF(),
-            CopyToEditor(),
+            OpenPDF,
+            SavePDF,
+            PrintPDF,
+            CopyToEditor,
             ]
         for actor in self.actors:
             self.actionChooser.addItem(actor.name())
@@ -153,7 +155,7 @@ class Dialog(KDialog):
     def done(self, r):
         KDialog.done(self, r)
         if r:
-            self.actors[self.actionChooser.currentIndex()].doIt(self)
+            self.actors[self.actionChooser.currentIndex()](self)
 
     def default(self):
         """ Set everything to default """
@@ -229,34 +231,76 @@ class Dialog(KDialog):
         output.append('}\n')
         return ly.indent.indent('\n'.join(output))
 
-    def createJob(self):
-        job = PDFJob(self.ly())
-        self._jobs.append(job)
-        return job
-    
-    def removeJob(self, job):
-        if job in self._jobs:
-            self._jobs.remove(job)
-            job.cleanup()
-        
     def slotDestroyed(self):
-        for job in self._jobs:
+        for job in self.jobs[:]: # copy
             job.cleanup()
             
-
-
-class PDFJob(BackgroundJob):
-    def pdf(self):
-        """ return the filename of the created PDF file. """
-        pdfs = self.result("pdf")
-        if pdfs:
-            return pdfs[0]
 
 
 class PreviewDialog(LilyPreviewDialog):
     def __init__(self, parent):
         LilyPreviewDialog.__init__(self, parent)
         self.setCaption(i18n("Blank staff paper preview"))
+
+
+class BlankPaperJob(BackgroundJob):
+    def __init__(self, dialog):
+        BackgroundJob.__init__(self)
+        self.dialog = dialog
+        dialog.jobs.append(self)
+        self.run(dialog.ly(), 'staffpaper.ly')
+    
+    def finished(self):
+        """
+        Returns the filename of the created PDF or None.
+        Displays the error dialog if none was created.
+        """
+        pdfs = self.job.updatedFiles()("pdf")
+        if pdfs:
+            self.handlePDF(pdfs[0])
+        else:
+            self.showLog("No PDF was created.", '', self.dialog)
+        
+    def cleanup(self):
+        BackgroundJob.cleanup(self)
+        self.dialog.jobs.remove(self)
+
+
+# The actions that can be taken on a blank paper job
+class OpenPDF(BlankPaperJob):
+    @staticmethod
+    def name():
+        return i18n("Open in PDF viewer")
+    
+    def handlePDF(self, fileName):
+        openPDF(fileName, self.dialog)
+
+
+class SavePDF(BlankPaperJob):
+    @staticmethod
+    def name():
+        return i18n("Save PDF As...")
+
+    def __init__(self, dialog):
+        BlankPaperJob.__init__(self, dialog)
+
+
+class PrintPDF(BlankPaperJob):
+    @staticmethod
+    def name():
+        return i18n("Directly print PDF on default printer")
+
+    def __init__(self, dialog):
+        BlankPaperJob.__init__(self, dialog)
+
+
+class CopyToEditor(object):
+    @staticmethod
+    def name():
+        return i18n("Copy LilyPond code to editor")
+    
+    def __init__(self, dialog):
+        dialog.mainwin.currentDocument().view.insertText(dialog.ly())
 
 
 class LayoutContexts(object):
@@ -417,32 +461,6 @@ class OrganStaff(StaffBase):
             '\\new Staff { \\clef bass \\music }',
             '>>']
 
-
-
-
-
-
-class OpenPDF(object):
-    def name(self):
-        return i18n("Open in PDF viewer")
-    
-
-class SavePDF(object):
-    def name(self):
-        return i18n("Save PDF As...")
-
-
-class PrintPDF(object):
-    def name(self):
-        return i18n("Directly print PDF on default printer")
-
-
-class CopyToEditor(object):
-    def name(self):
-        return i18n("Copy LilyPond code to editor")
-    
-    def doIt(self, dialog):
-        dialog.mainwin.currentDocument().view.insertText(dialog.ly())
 
 
 class ClefSelector(SymbolManager, QComboBox):

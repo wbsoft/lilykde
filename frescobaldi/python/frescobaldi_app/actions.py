@@ -110,57 +110,18 @@ class ActionManager(object):
         Opens a PDF in the configured external PDF viewer, or in the
         KDE default one.
         """
-        self.openFile(fileName, config("commands").readEntry("pdf viewer", QVariant("")).toString())
+        openPDF(fileName, self.mainwin)
     
     def openMIDI(self, fileName):
         """
         Opens a MIDI in the configured external MIDI player, or in the
         KDE default one.
         """
-        self.openFile(fileName, config("commands").readEntry("midi player", QVariant("")).toString())
+        openMIDI(fileName, self.mainwin)
     
-    def openFile(self, fileName, cmd = None):
-        """
-        Opens a file with command cmd (string, read from config)
-        or with the KDE default application (via KRun).
-        """
-        if cmd:
-            cmd, err = KShell.splitArgs(cmd)
-            if err == KShell.NoError:
-                cmd = map(unicode, cmd)
-                cmd.append(fileName)
-                try:
-                    Popen(cmd)
-                    return
-                except OSError:
-                    pass
-        # let C++ own the KRun object, it will delete itself.
-        sip.transferto(KRun(KUrl.fromPath(fileName), self.mainwin), None)
-        
     def printPDF(self, pdfFileName):
         """ Prints the PDF using the configured print command """
-        cmd, err = KShell.splitArgs(
-            config("commands").readEntry("lpr", QVariant("lpr")).toString())
-        if err == KShell.NoError:
-            cmd = map(unicode, cmd)
-            cmd.append(pdfFileName)
-            try:
-                p = Popen(cmd, stderr=PIPE)
-                if p.wait() != 0:
-                    KMessageBox.error(self.mainwin,
-                        i18n("Printing failed: %1", p.stderr.read()))
-                else:
-                    KMessageBox.information(self.mainwin,
-                        i18n("The document has been sent to the printer."))
-            except OSError, e:
-                KMessageBox.error(self.mainwin, i18n(
-                    "Printing failed: %1\n\nThe print command %2 does "
-                    "probably not exist. Please check your settings.",
-                    unicode(e), cmd[0]))
-        else:
-            KMessageBox.error(self.mainwin,
-                i18n("The print command contains errors. "
-                        "Please check your settings."))
+        printPDF(pdfFileName, self.mainwin)
 
     def openDirectory(self, path=None):
         """
@@ -275,3 +236,60 @@ class EmailDialog(KDialog):
         
         
         
+def openPDF(fileName, window):
+    """
+    Opens a PDF in the configured external PDF viewer, or in the
+    KDE default one.
+    """
+    openFile(fileName, window, config("commands").readEntry("pdf viewer", QVariant("")).toString())
+
+def openMIDI(fileName, window):
+    """
+    Opens a MIDI in the configured external MIDI player, or in the
+    KDE default one.
+    """
+    openFile(fileName, window, config("commands").readEntry("midi player", QVariant("")).toString())
+
+def openFile(fileName, window, cmd = None):
+    """
+    Opens a file with command cmd (string, read from config)
+    or with the KDE default application (via KRun).
+    """
+    if cmd:
+        cmd, err = KShell.splitArgs(cmd)
+        if err == KShell.NoError:
+            cmd = map(unicode, cmd)
+            cmd.append(fileName)
+            try:
+                Popen(cmd)
+                return
+            except OSError:
+                pass
+    # let C++ own the KRun object, it will delete itself.
+    sip.transferto(KRun(KUrl.fromPath(fileName), window), None)
+    
+def printPDF(pdfFileName, window):
+    """ Prints the PDF using the configured print command """
+    cmd, err = KShell.splitArgs(
+        config("commands").readEntry("lpr", QVariant("lpr")).toString())
+    if err == KShell.NoError:
+        cmd = map(unicode, cmd)
+        cmd.append(pdfFileName)
+        try:
+            p = Popen(cmd, stderr=PIPE)
+            if p.wait() != 0:
+                KMessageBox.error(window,
+                    i18n("Printing failed: %1", p.stderr.read()))
+            else:
+                KMessageBox.information(window,
+                    i18n("The document has been sent to the printer."))
+        except OSError, e:
+            KMessageBox.error(window, i18n(
+                "Printing failed: %1\n\nThe print command %2 does "
+                "probably not exist. Please check your settings.",
+                unicode(e), cmd[0]))
+    else:
+        KMessageBox.error(window,
+            i18n("The print command contains errors. "
+                    "Please check your settings."))
+

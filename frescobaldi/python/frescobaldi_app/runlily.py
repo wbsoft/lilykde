@@ -19,21 +19,22 @@
 
 """ Code to run LilyPond and display its output in a LogWidget """
 
-import math, os, re, shutil, sip, subprocess, sys, tempfile, time
+import math, os, re, shutil, sys, tempfile, time
 
 from PyQt4.QtCore import (
     QObject, QProcess, QSize, QTimer, QUrl, QVariant, Qt, SIGNAL)
 from PyQt4.QtGui import (
     QBrush, QColor, QFont, QFrame, QStackedWidget, QTextBrowser,
     QTextCharFormat, QTextCursor, QToolBar, QVBoxLayout, QWidget)
-from PyKDE4.kdecore import KGlobal, KPluginLoader, KProcess, KShell, KUrl, i18n
+from PyKDE4.kdecore import KGlobal, KPluginLoader, KProcess, KUrl, i18n
 from PyKDE4.kdeui import (
     KApplication, KDialog, KIcon, KMenu, KMessageBox, KStandardGuiItem)
-from PyKDE4.kio import KEncodingFileDialog, KRun
+from PyKDE4.kio import KEncodingFileDialog
 
 from signals import Signal
 
 from kateshell.app import resolvetabs_text
+from frescobaldi_app.actions import openPDF
 import frescobaldi_app.mainapp
 
 def config(group):
@@ -150,8 +151,6 @@ class Ly2PDF(object):
         # parts has an odd length(1, 6, 11 etc)
         # message, <url, path, line, col, message> etc.
         self.log.write(parts.pop(0))
-        if parts:
-            self.log.show() # warnings or errors will be printed
         while len(parts[:5]) == 5:
             url, path, line, col, msg = parts[:5]
             path = os.path.join(self.directory, path)
@@ -323,6 +322,7 @@ class Log(LogWidget):
         f.setAnchorHref(anchor)
         f.setToolTip(tooltip or i18n("Click to edit this file"))
         self.write(text, format)
+        self.show() # because this refers to a warning or error
     
     def anchorClicked(self, url):
         ref = self.anchors.get(str(url.path()))
@@ -483,24 +483,72 @@ class LocalFileManager(object):
         return lyfile
  
 
-class LilyPreviewWidget(QStackedWidget):
+class BackgroundJob(object):
+    """
+    Manages LilyPond jobs in the background. Can display a dialog with the log
+    output if there was an error.
+    Subclass this at your liking.
+    """
+    def __init__(self, log=None):
+        self.log = log or LogWidget()
+        self._directory = None
+        self.job = None
+        
+    def directory(self):
+        if self._directory is None:
+            self._directory = tempfile.mkdtemp()
+        return self._directory
+        
+    def run(self, text, fileName='output.ly'):
+        lyfile = os.path.join(self.directory(), fileName)
+        file(lyfile, 'w').write(text.encode('utf-8'))
+        # ... and run LilyPond.
+        self.job = Ly2PDF(lyfile, self.log)
+        self.job.done.connect(self.finished)
+    
+    def finished(self):
+        """
+        Called when the job is done.
+        """
+        pass
+    
+    def cleanup(self):
+        """
+        Stop a job if running and remove temporary files.
+        """
+        if self.job:
+            self.job.done.disconnect(self.finished)
+            self.job.abort()
+            self.job = None
+        if self._directory:
+            shutil.rmtree(self._directory)
+            self._directory = None
+    
+    def showLog(self, message, title='', parent=None):
+        """
+        Show the log in a simple modal dialog.
+        """
+        dlg = KDialog(parent)
+        if title:
+            dlg.setCaption(title)
+        dlg.setButtons(KDialog.ButtonCode(KDialog.Close))
+        dlg.setMainWidget(self.log)
+        self.log.writeMsg(message, 'msgerr')
+        dlg.setInitialSize(QSize(500, 300))
+        return dlg.exec_()
+            
+
+class LilyPreviewWidget(BackgroundJob, QStackedWidget):
     """
     A widget that can display a string of LilyPond code as a PDF.
     If the code is changed, the PDF is automagically rebuilt.
     Also the signal done(success) is then emitted.
-    The attribute updated: None = pending or not started, False is failed,
-    True is succeeded.
     """
     def __init__(self, *args):
         QStackedWidget.__init__(self, *args)
-        self._directory = None
-        self._success = None
-        self.job = None
-        self.done = Signal()
-        self.updated = None
+        BackgroundJob.__init__(self)
         # The widget stack has two widgets, a log and a PDF preview.
-        # the Log:
-        self.log = LogWidget(self)
+        # the Log is already created in BackgroundJob
         self.addWidget(self.log)
         self.setCurrentWidget(self.log)
         
@@ -527,24 +575,6 @@ class LilyPreviewWidget(QStackedWidget):
                 if a and not a.isChecked():
                     a.trigger()
             
-    def directory(self):
-        if self._directory is None:
-            self._directory = tempfile.mkdtemp()
-        return self._directory
-        
-    def cleanup(self):
-        """
-        Stop a job if running and remove temporary files.
-        """
-        if self.job:
-            self.job.done.disconnect(self.finished)
-            self.job.abort()
-            self.job = None
-        if self._directory:
-            shutil.rmtree(self._directory)
-            self._directory = None
-        self.updated = None
-
     def preview(self, text):
         """
         Runs LilyPond on the text and update the preview.
@@ -552,21 +582,13 @@ class LilyPreviewWidget(QStackedWidget):
         if self.job:
             self.job.disconnect(self.finished)
             self.job.abort()
-        self.updated = None
-        # write the text to a temporary file...
-        lyfile = os.path.join(self.directory(), 'preview.ly')
-        file(lyfile, 'w').write(text.encode('utf-8'))
-        # ... and run LilyPond.
-        self.job = Ly2PDF(lyfile, self.log)
-        self.job.done.connect(self.finished)
+        self.run(text, 'preview.ly')
         self.setCurrentWidget(self.log)
     
     def finished(self):
         pdfs = self.job.updatedFiles()("pdf")
         if pdfs:
             self.openPDF(pdfs[0])
-        self.updated = bool(pdfs)
-        self.done(self.updated)
         self.job = None
 
     def openPDF(self, fileName):
@@ -574,19 +596,7 @@ class LilyPreviewWidget(QStackedWidget):
             if self.part.openUrl(KUrl.fromPath(fileName)):
                 self.setCurrentWidget(self.part.widget())
         else:
-            cmd = config("commands").readEntry("pdf viewer", QVariant("")).toString()
-            if cmd:
-                cmd, err = KShell.splitArgs(cmd)
-                if err == KShell.NoError:
-                    cmd = map(unicode, cmd)
-                    cmd.append(fileName)
-                    try:
-                        subprocess.Popen(cmd)
-                        return
-                    except OSError:
-                        pass
-            # let C++ own the KRun object, it will delete itself.
-            sip.transferto(KRun(KUrl.fromPath(fileName), self.window()), None)
+            openPDF(fileName, self.window())
 
     
 class LilyPreviewDialog(KDialog):
@@ -613,55 +623,6 @@ class LilyPreviewDialog(KDialog):
     def showPreview(self, ly):
         self.preview.preview(ly)
         self.exec_()
-
-
-class BackgroundJob(object):
-    """
-    Manages one LilyPond job in the background. Can display a dialog if there
-    was an error with the log output. The text to run through LilyPond is given
-    in the ly parameter.
-    
-    The signal done(result) is emitted, where result is the updatedFiles()
-    generator of the LilyPond job.
-    """
-    def __init__(self, ly, log=None, fileName='output.ly'):
-        self.log = log or LogWidget()
-        self._directory = tempfile.mkdtemp()
-        self.done = Signal()
-        self.result = None
-        lyfile = os.path.join(self._directory, fileName)
-        file(lyfile, 'w').write(text.encode('utf-8'))
-        # ... and run LilyPond.
-        self.job = Ly2PDF(lyfile, self.log)
-        self.job.done.connect(self.finished)
-
-    def finished(self):
-        self.result = self.job.updatedFiles()
-        self.job = None
-        self.done(self.result)
-    
-    def showLog(self, message, title='', parent=None):
-        """
-        Show the log in a simple modal dialog.
-        """
-        dlg = KDialog(parent)
-        if title:
-            dlg.setCaption(title)
-        dlg.setButtons(KDialog.ButtonCode(KDialog.Close))
-        dlg.setMainWidget(self.log)
-        self.log.writeMsg(message, 'msgerr')
-        return dlg.exec_()
-            
-    def cleanup(self):
-        """
-        Stop a job if running and remove temporary files.
-        """
-        if self.job:
-            self.job.done.disconnect(self.finished)
-            self.job.abort()
-            self.job = None
-        shutil.rmtree(self._directory)
-
 
 
 
