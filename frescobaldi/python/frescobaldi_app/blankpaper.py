@@ -28,7 +28,7 @@ from PyQt4.QtGui import (
 
 from PyKDE4.kdecore import KUrl, i18n
 from PyKDE4.kdeui import KDialog, KIcon
-from PyKDE4.kio import KFileDialog
+from PyKDE4.kio import KFileDialog, KIO
 
 import ly.indent
 from kateshell.app import lazymethod
@@ -297,14 +297,14 @@ class SavePDF(BlankPaperJob):
             self.cleanup()
         
     def handlePDF(self, fileName):
-        self.sourcePDF = KUrl.fromPath(fileName)
+        self.sourcePDF = fileName
         self.savePDF()
         
     def savePDF(self):
         """ Initiates a copy operation if source and target are both there. """
         if self.sourcePDF and self.targetPDF:
-            print "Copy", self.sourcePDF, self.targetPDF
-            pass # TODO: implement
+            KIO.NetAccess.upload(self.sourcePDF, self.targetPDF, self.dialog.mainwin)
+            
         
 
 
