@@ -31,6 +31,7 @@ from PyKDE4.kdeui import KDialog, KIcon
 
 import ly.indent
 from kateshell.app import lazymethod
+from frescobaldi_app.widgets import StackFader
 from frescobaldi_app.mainapp import SymbolManager
 from frescobaldi_app.runlily import LilyPreviewDialog
 
@@ -51,6 +52,7 @@ class Dialog(KDialog):
         layout = QGridLayout(self.mainWidget())
         self.typeChooser = QComboBox()
         self.stack = QStackedWidget()
+        StackFader(self.stack)
         paperSettings = QWidget(self)
         paperSettings.setLayout(QHBoxLayout())
         self.actionChooser = QComboBox(self)
@@ -121,6 +123,7 @@ class Dialog(KDialog):
         self.typeWidgets = [
             SingleStaff(self),
             PianoStaff(self),
+            OrganStaff(self),
             ]
         for widget in self.typeWidgets:
             self.stack.addWidget(widget)
@@ -204,7 +207,7 @@ class Dialog(KDialog):
         output.append("\\repeat unfold %d { %% systems" % staff.systemCount())
         output.append("\\repeat unfold %d { %% bars" % (
             self.barLines.isChecked() and self.barsPerLine.value() or 1))
-        output.extend(("s1", "\\noBreak", "}", "\\break", "\\noPageBreak", "}", "\\pageBreak", "}"))
+        output.extend(("s1", "\\noBreak", "}", "\\break", "\\noPageBreak", "}", "\\pageBreak", "}\n"))
 
         # get the layout
         layout = LayoutContexts()
@@ -212,8 +215,7 @@ class Dialog(KDialog):
         music = staff.music(layout)
         layout.addToStaffContexts('\\remove "Time_signature_engraver"')
         if not self.barLines.isChecked():
-            layout.addToStaffContexts("\\override BarLine #'stencil = ##f")
-        
+            layout.disableBarLines()
         # write it out
         output.append('\\layout {\nindent = #0')
         output.extend(layout.ly())
@@ -239,13 +241,21 @@ class LayoutContexts(object):
     def __init__(self):
         self._contexts = {}
         self._staffContexts = ['Staff']
+        self._spanBarContexts = []
     
     def setStaffContexts(self, staffContexts):
         """
         Specify which contexts must get visible or invisible barlines, etc.
         """
         self._staffContexts = staffContexts
-    
+
+    def setSpanBarContexts(self, spanBarContexts):
+        """
+        Specify which contexts must have the Span_bar_engraver removed
+        if no barlines are requested.
+        """
+        self._spanBarContexts = spanBarContexts
+        
     def add(self, context, line):
         """ Add a line to the given context """
         self._contexts.setdefault(context, []).append(line)
@@ -254,6 +264,11 @@ class LayoutContexts(object):
         for s in self._staffContexts:
             self.add(s, line)
 
+    def disableBarLines(self):
+        self.addToStaffContexts("\\override BarLine #'stencil = ##f")
+        for c in self._spanBarContexts:
+            self.add(c, '\\remove "Span_bar_engraver"')
+    
     def ly(self):
         """ Return a list of LilyPond lines. """
         result = []
@@ -308,10 +323,10 @@ class SingleStaff(StaffBase):
             layout.setStaffContexts(['TabStaff'])
             return ['\\new TabStaff { \\music }']
         else:
-            layout.setStaffContexts(['Staff'])
             if self.clef.clef():
                 return ['\\new Staff { \\clef %s \\music }' % self.clef.clef()]
             else:
+                layout.add('Staff', '\\remove "Clef_engraver"')
                 return ['\\new Staff { \\music }']
         
         
@@ -324,13 +339,58 @@ class PianoStaff(StaffBase):
         l.setBuddy(self.systems)
         self.layout().addWidget(l, 0, 1, Qt.AlignRight)
         self.layout().addWidget(self.systems, 0, 2)
-    
+        self.clefs = QCheckBox(i18n("Clefs"))
+        self.layout().addWidget(self.clefs, 1, 1, 2, 1)
+        
     def name(self):
         return i18n("Piano Staff")
         
     def default(self):
-        pass
+        self.systems.setValue(6)
+        self.clefs.setChecked(True)
+    
+    def music(self, layout):
+        layout.setSpanBarContexts(['PianoStaff'])
+        if not self.clefs.isChecked():
+            layout.add('Staff', '\\remove "Clef_engraver"')
+        return ['\\new PianoStaff <<',
+            '\\new Staff { \\clef treble \\music }',
+            '\\new Staff \\with {',
+            "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-3 . 6)",
+            '} { \\clef bass \\music }',
+            '>>']
 
+
+class OrganStaff(StaffBase):
+    def __init__(self, dialog):
+        StaffBase.__init__(self, dialog)
+        l = QLabel(i18n("Systems per page:"))
+        l.setBuddy(self.systems)
+        self.layout().addWidget(l, 0, 1, Qt.AlignRight)
+        self.layout().addWidget(self.systems, 0, 2)
+        self.clefs = QCheckBox(i18n("Clefs"))
+        self.layout().addWidget(self.clefs, 1, 1, 2, 1)
+        
+    def name(self):
+        return i18n("Organ Staff")
+        
+    def default(self):
+        self.systems.setValue(4)
+        self.clefs.setChecked(True)
+    
+    def music(self, layout):
+        layout.setSpanBarContexts(['PianoStaff'])
+        if not self.clefs.isChecked():
+            layout.add('Staff', '\\remove "Clef_engraver"')
+        return ['<<',
+            '\\new PianoStaff <<',
+            '\\new Staff { \\clef treble \\music }',
+            '\\new Staff \\with {',
+            "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 6)",
+            '} { \\clef bass \\music }',
+            '>>',
+            '\\new Staff { \\clef bass \\music }',
+            '>>']
 
 
 

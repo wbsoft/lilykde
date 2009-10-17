@@ -254,6 +254,7 @@ class StackFader(QWidget):
                 self.pixmap_opacity = 1.0
                 self.resize(new.size())
                 self.timeline.start()
+                self.raise_()
                 self.show()
         self.curIndex = index
         
