@@ -26,7 +26,7 @@ from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QIcon, QLabel,
     QPixmap, QSpinBox, QStackedWidget, QVBoxLayout, QWidget)
 
-from PyKDE4.kdecore import i18n
+from PyKDE4.kdecore import KUrl, i18n
 from PyKDE4.kdeui import KDialog, KIcon
 from PyKDE4.kio import KFileDialog
 
@@ -283,6 +283,29 @@ class SavePDF(BlankPaperJob):
 
     def __init__(self, dialog):
         BlankPaperJob.__init__(self, dialog)
+        self.sourcePDF = None
+        self.targetPDF = None
+        dlg = KFileDialog(KUrl(), '*.pdf|%s\n*|%s' % (
+            i18n("PDF Files"), i18n("All Files")), dialog)
+        dlg.setOperationMode(KFileDialog.Saving)
+        dlg.setConfirmOverwrite(True)
+        dlg.setSelection('staffpaper.pdf')
+        if dlg.exec_():
+            self.targetPDF = dlg.selectedUrl()
+            self.savePDF()
+        else:
+            self.cleanup()
+        
+    def handlePDF(self, fileName):
+        self.sourcePDF = KUrl.fromPath(fileName)
+        self.savePDF()
+        
+    def savePDF(self):
+        """ Initiates a copy operation if source and target are both there. """
+        if self.sourcePDF and self.targetPDF:
+            print "Copy", self.sourcePDF, self.targetPDF
+            pass # TODO: implement
+        
 
 
 class PrintPDF(BlankPaperJob):
