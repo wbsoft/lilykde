@@ -27,7 +27,7 @@ from PyQt4.QtGui import (
     QPixmap, QSpinBox, QStackedWidget, QVBoxLayout, QWidget)
 
 from PyKDE4.kdecore import KUrl, i18n
-from PyKDE4.kdeui import KDialog, KIcon
+from PyKDE4.kdeui import KDialog, KIcon, KMessageBox
 from PyKDE4.kio import KFileDialog, KIO
 
 import ly.indent
@@ -134,7 +134,6 @@ class Dialog(KDialog):
         QObject.connect(self.typeChooser, SIGNAL("currentIndexChanged(int)"),
             lambda index: self.stack.setCurrentWidget(self.typeWidgets[index]))
 
-
         self.actors = [
             OpenPDF,
             SavePDF,
@@ -145,7 +144,7 @@ class Dialog(KDialog):
             self.actionChooser.addItem(actor.name())
         
         self.setDetailsWidget(paperSettings)
-        
+        # cleanup on exit
         QObject.connect(self, SIGNAL("destroyed()"), self.slotDestroyed)
         # buttons
         QObject.connect(self, SIGNAL("resetClicked()"), self.default)
@@ -303,9 +302,9 @@ class SavePDF(BlankPaperJob):
     def savePDF(self):
         """ Initiates a copy operation if source and target are both there. """
         if self.sourcePDF and self.targetPDF:
-            KIO.NetAccess.upload(self.sourcePDF, self.targetPDF, self.dialog.mainwin)
-            
-        
+            if not KIO.NetAccess.upload(self.sourcePDF, self.targetPDF, self.dialog.mainwin):
+                KMessageBox.error(self.dialog, KIO.NetAccess.lastErrorString())
+            self.cleanup()
 
 
 class PrintPDF(BlankPaperJob):
@@ -313,8 +312,8 @@ class PrintPDF(BlankPaperJob):
     def name():
         return i18n("Directly print PDF on default printer")
 
-    def __init__(self, dialog):
-        BlankPaperJob.__init__(self, dialog)
+    def handlePDF(self, fileName):
+        printPDF(fileName, self.dialog)
 
 
 class CopyToEditor(object):
@@ -323,7 +322,8 @@ class CopyToEditor(object):
         return i18n("Copy LilyPond code to editor")
     
     def __init__(self, dialog):
-        dialog.mainwin.currentDocument().view.insertText(dialog.ly())
+        doc = dialog.mainwin.currentDocument()
+        doc.view.insertText(doc.indent(dialog.ly()))
 
 
 class LayoutContexts(object):
@@ -370,7 +370,6 @@ class LayoutContexts(object):
             result.extend(lines)
             result.append('}')
         return result
-
 
 
 class StaffBase(QWidget):
@@ -420,8 +419,6 @@ class SingleStaff(StaffBase):
             else:
                 layout.add('Staff', '\\remove "Clef_engraver"')
                 return ['\\new Staff { \\music }']
-        
-        
         
         
 class PianoStaff(StaffBase):
@@ -485,7 +482,6 @@ class OrganStaff(StaffBase):
             '>>']
 
 
-
 class ClefSelector(SymbolManager, QComboBox):
     """
     A ComboBox to select a clef.
@@ -523,6 +519,4 @@ class ClefSelector(SymbolManager, QComboBox):
     
 
 paperSizes = ['a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17']
-
-
 
