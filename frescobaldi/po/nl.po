@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-10-13 10:43+0200\n"
+"POT-Creation-Date: 2009-10-18 17:37+0200\n"
 "PO-Revision-Date: 2009-10-11 01:45+0200\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: ../frescobaldi.py:32 dummy.py:15
+#: ../frescobaldi.py:32 dummy.py:16
 msgid "Frescobaldi"
 msgstr "Frescobaldi"
 
-#: ../frescobaldi.py:34 dummy.py:16
+#: ../frescobaldi.py:34 dummy.py:17
 msgid "LilyPond Music Editor"
 msgstr "Muziek-editor voor LilyPond"
 
@@ -99,6 +99,10 @@ msgstr "&Aangemaakte bestanden"
 #: dummy.py:12
 msgid "&Source Document"
 msgstr "&Brondocument"
+
+#: dummy.py:13
+msgid "&Extra Tools"
+msgstr ""
 
 #: ../python/ly/__init__.py:75
 msgid "Dedication"
@@ -433,6 +437,7 @@ msgid "Line selection mode"
 msgstr "Regelselectiemodus"
 
 #: ../python/kateshell/mainwindow.py:375
+#: ../python/frescobaldi_app/blankpaper.py:306
 msgid "All Files"
 msgstr "Alle bestanden"
 
@@ -485,49 +490,27 @@ msgid "Play MIDI"
 msgstr "MIDI afspelen"
 
 #: ../python/frescobaldi_app/actions.py:101
-#: ../python/frescobaldi_app/mainapp.py:551
+#: ../python/frescobaldi_app/mainapp.py:628
 msgid "Email..."
 msgstr "Verzenden..."
 
-#: ../python/frescobaldi_app/actions.py:151
-msgid "Printing failed: %1"
-msgstr "Het afdrukken is mislukt: %1"
-
 #: ../python/frescobaldi_app/actions.py:154
-msgid "The document has been sent to the printer."
-msgstr "Het document is naar de printer gestuurd."
-
-#: ../python/frescobaldi_app/actions.py:157
-msgid ""
-"Printing failed: %1\n"
-"\n"
-"The print command %2 does probably not exist. Please check your settings."
-msgstr ""
-"Het afdrukken is mislukt: %1\n"
-"\n"
-"Het printcommando %2 bestaat waarschijnlijk niet. Controleer uw instellingen."
-
-#: ../python/frescobaldi_app/actions.py:162
-msgid "The print command contains errors. Please check your settings."
-msgstr "Het printcommando bevat fouten. Controleer uw instellingen."
-
-#: ../python/frescobaldi_app/actions.py:193
 msgid "There are no files to send via email."
 msgstr "Er zijn geen bestanden om te verzenden."
 
-#: ../python/frescobaldi_app/actions.py:194
+#: ../python/frescobaldi_app/actions.py:155
 msgid "No files to send"
 msgstr "Geen bestanden te verzenden"
 
-#: ../python/frescobaldi_app/actions.py:201
+#: ../python/frescobaldi_app/actions.py:162
 msgid "Email documents"
 msgstr "Documenten verzenden"
 
-#: ../python/frescobaldi_app/actions.py:205
+#: ../python/frescobaldi_app/actions.py:166
 msgid "Please select the files you want to send:"
 msgstr "Selecteer de bestanden die u wilt verzenden:"
 
-#: ../python/frescobaldi_app/actions.py:210
+#: ../python/frescobaldi_app/actions.py:171
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document).  Also LilyPond files included by the source document are shown."
@@ -536,7 +519,7 @@ msgstr ""
 "brondocument). Ook LilyPond-bestanden die door het brondocument ge\"include"
 "\"t worden zijn hier weergegeven."
 
-#: ../python/frescobaldi_app/actions.py:220
+#: ../python/frescobaldi_app/actions.py:181
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -558,6 +541,215 @@ msgstr[1] ""
 "is beter om de documenten opnieuw aan te maken via de optie 'publiceren', "
 "zodat de PDF-bestanden veel kleiner zijn."
 
+#: ../python/frescobaldi_app/actions.py:282
+msgid "Printing failed: %1"
+msgstr "Het afdrukken is mislukt: %1"
+
+#: ../python/frescobaldi_app/actions.py:285
+msgid "The document has been sent to the printer."
+msgstr "Het document is naar de printer gestuurd."
+
+#: ../python/frescobaldi_app/actions.py:288
+msgid ""
+"Printing failed: %1\n"
+"\n"
+"The print command %2 does probably not exist. Please check your settings."
+msgstr ""
+"Het afdrukken is mislukt: %1\n"
+"\n"
+"Het printcommando %2 bestaat waarschijnlijk niet. Controleer uw instellingen."
+
+#: ../python/frescobaldi_app/actions.py:293
+msgid "The print command contains errors. Please check your settings."
+msgstr "Het printcommando bevat fouten. Controleer uw instellingen."
+
+#: ../python/frescobaldi_app/blankpaper.py:51
+#: ../python/frescobaldi_app/mainapp.py:654
+msgid "Create blank staff paper"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:65
+msgid "Type:"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:68
+#, fuzzy
+msgid "Action:"
+msgstr "Acties"
+
+#: ../python/frescobaldi_app/blankpaper.py:74
+msgid "Choose what kind of empty staves you want to create."
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:76
+msgid "Choose which action happens when clicking \"Ok\"."
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:78
+msgid "Preview the empty staff paper"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:80
+#, fuzzy
+msgid "Click to see more settings."
+msgstr "Partituur-instellingen"
+
+#: ../python/frescobaldi_app/blankpaper.py:83
+#, fuzzy
+msgid "Paper"
+msgstr "Papiergrootte:"
+
+#: ../python/frescobaldi_app/blankpaper.py:85
+#, fuzzy
+msgid "Settings"
+msgstr "Snaarinstrumenten"
+
+#: ../python/frescobaldi_app/blankpaper.py:91
+#: ../python/frescobaldi_app/scorewiz/__init__.py:509
+msgid "Paper size:"
+msgstr "Papiergrootte:"
+
+#: ../python/frescobaldi_app/blankpaper.py:95
+#: ../python/frescobaldi_app/scorewiz/__init__.py:448
+#: ../python/frescobaldi_app/scorewiz/__init__.py:513
+#: ../python/frescobaldi_app/scorewiz/__init__.py:547
+#: ../python/frescobaldi_app/scorewiz/parts.py:169
+#: ../python/frescobaldi_app/scorewiz/parts.py:385
+msgid "Default"
+msgstr "Standaard"
+
+#: ../python/frescobaldi_app/blankpaper.py:99
+#, fuzzy
+msgid "Staff Size:"
+msgstr "Type balk:"
+
+#: ../python/frescobaldi_app/blankpaper.py:106
+msgid "Page count:"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:114
+#, fuzzy
+msgid "Print Bar Lines"
+msgstr "&Maatstrepen"
+
+#: ../python/frescobaldi_app/blankpaper.py:116
+#, fuzzy
+msgid "Bars per line:"
+msgstr "Papiergrootte:"
+
+#: ../python/frescobaldi_app/blankpaper.py:123
+msgid "Show Page Numbers"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:125
+msgid "Start with:"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:260
+msgid "Blank staff paper preview"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:279
+msgid "No PDF was created."
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:290
+#, fuzzy
+msgid "Open in PDF viewer"
+msgstr "%1 openen in externe viewer"
+
+#: ../python/frescobaldi_app/blankpaper.py:299
+msgid "Save PDF As..."
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:306
+#, fuzzy
+msgid "PDF Files"
+msgstr "Alle bestanden"
+
+#: ../python/frescobaldi_app/blankpaper.py:331
+msgid "Directly print on default printer"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:340
+#, fuzzy
+msgid "Copy LilyPond code to editor"
+msgstr "Muziek-editor voor LilyPond"
+
+#: ../python/frescobaldi_app/blankpaper.py:414
+msgid "Staves per page:"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:419
+msgid "Clef:"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:425
+#, fuzzy
+msgid "Single Staff"
+msgstr "Enkel aanhalingsteken"
+
+#: ../python/frescobaldi_app/blankpaper.py:445
+#: ../python/frescobaldi_app/blankpaper.py:501
+msgid "Systems per page:"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:449
+#, fuzzy
+msgid "Clefs"
+msgstr "Celesta"
+
+#: ../python/frescobaldi_app/blankpaper.py:453
+#, fuzzy
+msgid "Piano Staff"
+msgstr "Nieuwe pianobalk (PianoStaff)"
+
+#: ../python/frescobaldi_app/blankpaper.py:473
+#, fuzzy
+msgid "Organ Staff"
+msgstr "Orgel"
+
+#: ../python/frescobaldi_app/blankpaper.py:497
+#, fuzzy
+msgid "Staves per system:"
+msgstr "Volgende systemen:"
+
+#: ../python/frescobaldi_app/blankpaper.py:507
+#, fuzzy
+msgid "Clefs:"
+msgstr "Celesta"
+
+#: ../python/frescobaldi_app/blankpaper.py:514
+msgid ""
+"Enter as much letters (S, A, T or B) as there are staves.\n"
+"See \"What's This\" for more information."
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:517
+msgid ""
+"To configure clefs, first set the number of staves per system. Then enter as "
+"much letters (S, A, T or B) as there are staves.\n"
+"\n"
+"S or A: treble clef,\n"
+"T: treble clef with an \"8\" below,\n"
+"B: bass clef\n"
+"\n"
+"So when you want to create music paper for a four-part mixed choir score, "
+"first set the number of staves per system to 4. Then enter \"SATB\" (without "
+"the quotes) here."
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:531
+#, fuzzy
+msgid "Choir Staff"
+msgstr "Nieuwe koorbalk (ChoirStaff)"
+
+#: ../python/frescobaldi_app/blankpaper.py:538
+#: ../python/frescobaldi_app/scorewiz/__init__.py:395
+#: ../python/frescobaldi_app/scorewiz/__init__.py:538
+msgid "None"
+msgstr "Geen"
+
 #: ../python/frescobaldi_app/document.py:110
 msgid ""
 "Can't perform the requested translation. The music contains quarter-tone "
@@ -575,7 +767,7 @@ msgstr ""
 "dient handmatig het volgende commando aan uw document toe te voegen:"
 
 #: ../python/frescobaldi_app/document.py:129
-#: ../python/frescobaldi_app/mainapp.py:416
+#: ../python/frescobaldi_app/mainapp.py:493
 msgid "Pitch Name Language"
 msgstr "Taal voor nootnamen"
 
@@ -585,7 +777,7 @@ msgstr ""
 "Geef de naam van de variable om de geselecteerde tekst aan toe te wijzen:"
 
 #: ../python/frescobaldi_app/document.py:173
-#: ../python/frescobaldi_app/mainapp.py:375
+#: ../python/frescobaldi_app/mainapp.py:452
 msgid "Cut and Assign"
 msgstr "Knippen en toewijzen"
 
@@ -682,7 +874,7 @@ msgid "New Item"
 msgstr "Nieuw item"
 
 #: ../python/frescobaldi_app/hyphen.py:120
-#: ../python/frescobaldi_app/mainapp.py:515
+#: ../python/frescobaldi_app/mainapp.py:592
 msgid "Hyphenate Lyrics Text"
 msgstr "Liedteksten afbreken"
 
@@ -807,11 +999,11 @@ msgstr "Onder"
 msgid "The direction to use for the articulations."
 msgstr "Plaatsing van de articulaties: onder of boven de balk of neutraal."
 
-#: ../python/frescobaldi_app/lqi.py:113
+#: ../python/frescobaldi_app/lqi.py:112
 msgid "Click an articulation sign to add it to your document."
 msgstr "Klik op een articulatie-teken om het aan uw document toe te voegen."
 
-#: ../python/frescobaldi_app/lqi.py:114
+#: ../python/frescobaldi_app/lqi.py:113
 msgid ""
 "If you select some music first, the articulation will be added to all notes "
 "in the selection."
@@ -819,85 +1011,85 @@ msgstr ""
 "Als u eerst muziek selecteert, wordt het articulatie-teken aan alle noten in "
 "de selectie toegevoegd."
 
-#: ../python/frescobaldi_app/mainapp.py:52
+#: ../python/frescobaldi_app/mainapp.py:53
 msgid "LilyPond files"
 msgstr "LilyPond-bestanden"
 
-#: ../python/frescobaldi_app/mainapp.py:312
-#: ../python/frescobaldi_app/scorewiz/__init__.py:353
+#: ../python/frescobaldi_app/mainapp.py:389
+#: ../python/frescobaldi_app/scorewiz/__init__.py:355
 msgid "LilyPond"
 msgstr "LilyPond"
 
-#: ../python/frescobaldi_app/mainapp.py:323
+#: ../python/frescobaldi_app/mainapp.py:400
 msgid "Setup New Score..."
 msgstr "Nieuwe partituur maken..."
 
-#: ../python/frescobaldi_app/mainapp.py:328
+#: ../python/frescobaldi_app/mainapp.py:405
 msgid "Run LilyPond (preview)"
 msgstr "LilyPond starten (vooruitblik)"
 
-#: ../python/frescobaldi_app/mainapp.py:332
+#: ../python/frescobaldi_app/mainapp.py:409
 msgid "Run LilyPond (publish)"
 msgstr "LilyPond starten (publiceren)"
 
-#: ../python/frescobaldi_app/mainapp.py:338
+#: ../python/frescobaldi_app/mainapp.py:415
 msgid "Can't process document"
 msgstr "Can document niet verwerken"
 
-#: ../python/frescobaldi_app/mainapp.py:341
+#: ../python/frescobaldi_app/mainapp.py:418
 msgid "There is already a LilyPond job running for this document."
 msgstr "Er is reeds een LilyPond-proces actief voor dit document."
 
-#: ../python/frescobaldi_app/mainapp.py:347
+#: ../python/frescobaldi_app/mainapp.py:424
 msgid "Your document has been modified, please save first."
 msgstr "Uw document is gewijzigd, gelieve het eerst op te slaan."
 
-#: ../python/frescobaldi_app/mainapp.py:366
+#: ../python/frescobaldi_app/mainapp.py:443
 msgid "Interrupt LilyPond Job"
 msgstr "LilyPond-taak afbreken"
 
-#: ../python/frescobaldi_app/mainapp.py:376
+#: ../python/frescobaldi_app/mainapp.py:453
 msgid "Cut selection and assign it to a LilyPond variable."
 msgstr ""
 "De geselecteerde tekst knippen en toewijzen aan een LilyPond variabele."
 
-#: ../python/frescobaldi_app/mainapp.py:380
+#: ../python/frescobaldi_app/mainapp.py:457
 msgid "Repeat last note or chord"
 msgstr "Laatste noot of akkoord herhalen"
 
-#: ../python/frescobaldi_app/mainapp.py:381
+#: ../python/frescobaldi_app/mainapp.py:458
 msgid "Repeat the last music expression (note or chord)."
 msgstr "Herhaalt de laatstgetypte muziekexpressie (noot of akkoord)."
 
-#: ../python/frescobaldi_app/mainapp.py:385
+#: ../python/frescobaldi_app/mainapp.py:462
 msgid "Expand"
 msgstr "Sneltekst"
 
-#: ../python/frescobaldi_app/mainapp.py:386
+#: ../python/frescobaldi_app/mainapp.py:463
 msgid "Expand last word or open the expansions dialog."
 msgstr "Laatst getypte woord uitbreiden of de lijst met snelteksten openen."
 
-#: ../python/frescobaldi_app/mainapp.py:391
+#: ../python/frescobaldi_app/mainapp.py:468
 msgid "Add to Expansions"
 msgstr "Aan snelteksten toevoegen"
 
-#: ../python/frescobaldi_app/mainapp.py:395
+#: ../python/frescobaldi_app/mainapp.py:472
 msgid "Next blank line"
 msgstr "Volgende blanco regel"
 
-#: ../python/frescobaldi_app/mainapp.py:396
+#: ../python/frescobaldi_app/mainapp.py:473
 msgid "Go to the next blank line."
 msgstr "Ga naar de volgende blanco regel."
 
-#: ../python/frescobaldi_app/mainapp.py:405
+#: ../python/frescobaldi_app/mainapp.py:482
 msgid "Previous blank line"
 msgstr "Vorige blanco regel"
 
-#: ../python/frescobaldi_app/mainapp.py:406
+#: ../python/frescobaldi_app/mainapp.py:483
 msgid "Go to the previous blank line."
 msgstr "Ga naar de vorige blanco regel."
 
-#: ../python/frescobaldi_app/mainapp.py:417
+#: ../python/frescobaldi_app/mainapp.py:494
 msgid ""
 "Change the LilyPond language used for pitch names in this document or in the "
 "selection."
@@ -905,67 +1097,67 @@ msgstr ""
 "De LilyPond-taal voor de nootnamen aanpassen in het document of het "
 "geselecteerde gedeelte."
 
-#: ../python/frescobaldi_app/mainapp.py:424
+#: ../python/frescobaldi_app/mainapp.py:501
 msgid "Double durations"
 msgstr "Tijdsduur verdubbelen"
 
-#: ../python/frescobaldi_app/mainapp.py:425
+#: ../python/frescobaldi_app/mainapp.py:502
 msgid "Double all the durations in the selection."
 msgstr "Alle nootlengtes in de selectie verdubbelen."
 
-#: ../python/frescobaldi_app/mainapp.py:430
+#: ../python/frescobaldi_app/mainapp.py:507
 msgid "Halve durations"
 msgstr "Tijdsduur halveren"
 
-#: ../python/frescobaldi_app/mainapp.py:431
+#: ../python/frescobaldi_app/mainapp.py:508
 msgid "Halve all the durations in the selection."
 msgstr "Alle nootlengtes in de selectie halveren."
 
-#: ../python/frescobaldi_app/mainapp.py:436
+#: ../python/frescobaldi_app/mainapp.py:513
 msgid "Dot durations"
 msgstr "Punt toevoegen"
 
-#: ../python/frescobaldi_app/mainapp.py:437
+#: ../python/frescobaldi_app/mainapp.py:514
 msgid "Add a dot to all the durations in the selection."
 msgstr "Een punt toevoegen aan alle noten in de selectie."
 
-#: ../python/frescobaldi_app/mainapp.py:442
+#: ../python/frescobaldi_app/mainapp.py:519
 msgid "Undot durations"
 msgstr "Punt verwijderen"
 
-#: ../python/frescobaldi_app/mainapp.py:443
+#: ../python/frescobaldi_app/mainapp.py:520
 msgid "Remove one dot from all the durations in the selection."
 msgstr "Een punt verwijderen van alle noten in de selectie."
 
-#: ../python/frescobaldi_app/mainapp.py:448
+#: ../python/frescobaldi_app/mainapp.py:525
 msgid "Remove scaling"
 msgstr "Schaling verwijderen"
 
-#: ../python/frescobaldi_app/mainapp.py:449
+#: ../python/frescobaldi_app/mainapp.py:526
 msgid "Remove all scaling (*n/m) from the durations in the selection."
 msgstr "Alle schaling (*n/m) verwijderen van de nootlengtes in de selectie."
 
-#: ../python/frescobaldi_app/mainapp.py:454
+#: ../python/frescobaldi_app/mainapp.py:531
 msgid "Remove durations"
 msgstr "Tijdsduur verwijderen"
 
-#: ../python/frescobaldi_app/mainapp.py:455
+#: ../python/frescobaldi_app/mainapp.py:532
 msgid "Remove all durations from the selection."
 msgstr "De volledige tijdsduur-informatie verwijderen uit de selectie."
 
-#: ../python/frescobaldi_app/mainapp.py:460
+#: ../python/frescobaldi_app/mainapp.py:537
 msgid "Make implicit"
 msgstr "Impliciet maken"
 
-#: ../python/frescobaldi_app/mainapp.py:461
+#: ../python/frescobaldi_app/mainapp.py:538
 msgid "Make durations implicit (remove repeated durations)."
 msgstr "Tijdsduren impliciet maken (herhaalde lengtes verwijderen)."
 
-#: ../python/frescobaldi_app/mainapp.py:466
+#: ../python/frescobaldi_app/mainapp.py:543
 msgid "Make explicit"
 msgstr "Expliciet maken"
 
-#: ../python/frescobaldi_app/mainapp.py:467
+#: ../python/frescobaldi_app/mainapp.py:544
 msgid ""
 "Make durations explicit (add duration to every note, even if it is the same "
 "as the preceding note)."
@@ -973,198 +1165,198 @@ msgstr ""
 "De toonduur na elke noot weergeven, ook als deze hetzelfde is als de vorige "
 "noot."
 
-#: ../python/frescobaldi_app/mainapp.py:473
+#: ../python/frescobaldi_app/mainapp.py:550
 msgid "Apply rhythm..."
 msgstr "Ritme toepassen..."
 
-#: ../python/frescobaldi_app/mainapp.py:474
+#: ../python/frescobaldi_app/mainapp.py:551
 msgid "Apply an entered rhythm to the selected music."
 msgstr "Een ingevoerd ritme op de geselecteerde muziek toepassen."
 
-#: ../python/frescobaldi_app/mainapp.py:478
+#: ../python/frescobaldi_app/mainapp.py:555
 msgid "Copy rhythm"
 msgstr "Ritme kopiëren"
 
-#: ../python/frescobaldi_app/mainapp.py:479
+#: ../python/frescobaldi_app/mainapp.py:556
 msgid "Copy the rhythm of the selected music."
 msgstr "Het ritme van de geselecteerde muziek kopiëren."
 
-#: ../python/frescobaldi_app/mainapp.py:485
+#: ../python/frescobaldi_app/mainapp.py:562
 msgid "Paste rhythm"
 msgstr "Ritme plakken"
 
-#: ../python/frescobaldi_app/mainapp.py:486
+#: ../python/frescobaldi_app/mainapp.py:563
 msgid "Paste a rhythm to the selected music."
 msgstr "Een ritme in de geselecteerde muziek plakken."
 
-#: ../python/frescobaldi_app/mainapp.py:494
+#: ../python/frescobaldi_app/mainapp.py:571
 msgid "Double bar line"
 msgstr "Dubbele maatstreep"
 
-#: ../python/frescobaldi_app/mainapp.py:495
+#: ../python/frescobaldi_app/mainapp.py:572
 msgid "Ending bar line"
 msgstr "Eindmaatstreep"
 
-#: ../python/frescobaldi_app/mainapp.py:496
+#: ../python/frescobaldi_app/mainapp.py:573
 msgid "Dotted bar line"
 msgstr "Gestippelde maatstreep"
 
-#: ../python/frescobaldi_app/mainapp.py:497
+#: ../python/frescobaldi_app/mainapp.py:574
 msgid "Dashed bar line"
 msgstr "Gestreepte maatstreep"
 
-#: ../python/frescobaldi_app/mainapp.py:498
+#: ../python/frescobaldi_app/mainapp.py:575
 msgid "Invisible bar line"
 msgstr "Onzichtbare maatstreep"
 
-#: ../python/frescobaldi_app/mainapp.py:499
+#: ../python/frescobaldi_app/mainapp.py:576
 msgid "Repeat start"
 msgstr "Start herhaling"
 
-#: ../python/frescobaldi_app/mainapp.py:500
+#: ../python/frescobaldi_app/mainapp.py:577
 msgid "Repeat both"
 msgstr "Herhaal beide"
 
-#: ../python/frescobaldi_app/mainapp.py:501
+#: ../python/frescobaldi_app/mainapp.py:578
 msgid "Repeat end"
 msgstr "Eind herhaling"
 
-#: ../python/frescobaldi_app/mainapp.py:502
+#: ../python/frescobaldi_app/mainapp.py:579
 msgid "Tick bar line"
 msgstr "Hoge maatstreep"
 
-#: ../python/frescobaldi_app/mainapp.py:503
+#: ../python/frescobaldi_app/mainapp.py:580
 msgid "Single bar line"
 msgstr "Enkele maatstreep"
 
-#: ../python/frescobaldi_app/mainapp.py:504
+#: ../python/frescobaldi_app/mainapp.py:581
 msgid "Small-Wide-Small bar line"
 msgstr "Dun-dik-dunne maatstreep"
 
-#: ../python/frescobaldi_app/mainapp.py:505
+#: ../python/frescobaldi_app/mainapp.py:582
 msgid "Wide-Small bar line"
 msgstr "Dik-dunne maatstreep"
 
-#: ../python/frescobaldi_app/mainapp.py:506
+#: ../python/frescobaldi_app/mainapp.py:583
 msgid "Double wide bar line"
 msgstr "Dubbele dikke maatstreep"
 
-#: ../python/frescobaldi_app/mainapp.py:507
+#: ../python/frescobaldi_app/mainapp.py:584
 msgid "Repeat both (old)"
 msgstr "Herhaal beide (oud)"
 
-#: ../python/frescobaldi_app/mainapp.py:508
+#: ../python/frescobaldi_app/mainapp.py:585
 msgid "Repeat both (classic)"
 msgstr "Herhaal beide (klassiek)"
 
-#: ../python/frescobaldi_app/mainapp.py:520
+#: ../python/frescobaldi_app/mainapp.py:597
 msgid "Remove hyphenation"
 msgstr "Liedtekst-afbreking verwijderen"
 
-#: ../python/frescobaldi_app/mainapp.py:525
+#: ../python/frescobaldi_app/mainapp.py:602
 msgid "Single Quote"
 msgstr "Enkel aanhalingsteken"
 
-#: ../python/frescobaldi_app/mainapp.py:529
+#: ../python/frescobaldi_app/mainapp.py:606
 msgid "Double Quote"
 msgstr "Dubbel aanhalingsteken"
 
-#: ../python/frescobaldi_app/mainapp.py:533
+#: ../python/frescobaldi_app/mainapp.py:610
 msgid "Align"
 msgstr "Uitlijnen"
 
-#: ../python/frescobaldi_app/mainapp.py:537
+#: ../python/frescobaldi_app/mainapp.py:614
 msgid "Insert LilyPond version"
 msgstr "LilyPond-versie invoegen"
 
-#: ../python/frescobaldi_app/mainapp.py:542
+#: ../python/frescobaldi_app/mainapp.py:619
 msgid "Update with convert-ly"
 msgstr "Bijwerken met convert-ly"
 
-#: ../python/frescobaldi_app/mainapp.py:547
+#: ../python/frescobaldi_app/mainapp.py:624
 msgid "Open Current Folder"
 msgstr "Huidige map openen"
 
-#: ../python/frescobaldi_app/mainapp.py:561
+#: ../python/frescobaldi_app/mainapp.py:638
 msgid "Repeat selected music"
 msgstr "Geselecteerde muziek herhalen"
 
-#: ../python/frescobaldi_app/mainapp.py:567
+#: ../python/frescobaldi_app/mainapp.py:644
 msgid "Insert pair of braces"
 msgstr "Accolades invoegen"
 
-#: ../python/frescobaldi_app/mainapp.py:609
+#: ../python/frescobaldi_app/mainapp.py:692
 msgid "Abort the running LilyPond process"
 msgstr "Het actieve LilyPond-proces afbreken"
 
-#: ../python/frescobaldi_app/mainapp.py:612
+#: ../python/frescobaldi_app/mainapp.py:695
 msgid "Run LilyPond in preview mode"
 msgstr "LilyPond starten (vooruitblik)"
 
-#: ../python/frescobaldi_app/mainapp.py:624
+#: ../python/frescobaldi_app/mainapp.py:707
 msgid "Apply Rhythm"
 msgstr "Ritme toepassen"
 
-#: ../python/frescobaldi_app/mainapp.py:632
+#: ../python/frescobaldi_app/mainapp.py:715
 msgid "Enter a rhythm:"
 msgstr "Voer een ritme in:"
 
-#: ../python/frescobaldi_app/mainapp.py:635
+#: ../python/frescobaldi_app/mainapp.py:718
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr ""
 "Voer een ritme in met nootlengtes en spaties ertussen (bijv. 8. 16 8 4 8)"
 
-#: ../python/frescobaldi_app/mainapp.py:659
+#: ../python/frescobaldi_app/mainapp.py:742
 msgid "Terminal"
 msgstr "Terminal"
 
-#: ../python/frescobaldi_app/mainapp.py:688
+#: ../python/frescobaldi_app/mainapp.py:771
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "Terminal met huidig document s&ynchroniseren"
 
-#: ../python/frescobaldi_app/mainapp.py:709
-#: ../python/frescobaldi_app/scorewiz/preview.py:46
+#: ../python/frescobaldi_app/mainapp.py:792
+#: ../python/frescobaldi_app/runlily.py:605
 msgid "PDF Preview"
 msgstr "PDF vooruitblik"
 
-#: ../python/frescobaldi_app/mainapp.py:737
+#: ../python/frescobaldi_app/mainapp.py:820
 msgid "Show PDF Navigation Panel"
 msgstr "PDF-navigatiepaneel tonen"
 
-#: ../python/frescobaldi_app/mainapp.py:738
+#: ../python/frescobaldi_app/mainapp.py:821
 msgid "Show PDF minipager"
 msgstr "PDF-minipager tonen"
 
-#: ../python/frescobaldi_app/mainapp.py:739
+#: ../python/frescobaldi_app/mainapp.py:822
 msgid "Configure Okular..."
 msgstr "Okular instellen..."
 
-#: ../python/frescobaldi_app/mainapp.py:742
+#: ../python/frescobaldi_app/mainapp.py:825
 msgid "S&ynchronize Preview with Current Document"
 msgstr "Vooruitblik met huidig document s&ynchroniseren"
 
-#: ../python/frescobaldi_app/mainapp.py:804
+#: ../python/frescobaldi_app/mainapp.py:887
 msgid "Quick Insert"
 msgstr "Quick Insert"
 
-#: ../python/frescobaldi_app/mainapp.py:816
+#: ../python/frescobaldi_app/mainapp.py:899
 #: ../python/frescobaldi_app/runlily.py:334
 msgid "LilyPond Log"
 msgstr "LilyPond-uitvoer"
 
-#: ../python/frescobaldi_app/mainapp.py:820
+#: ../python/frescobaldi_app/mainapp.py:903
 msgid "no log"
 msgstr "geen log"
 
-#: ../python/frescobaldi_app/mainapp.py:859
+#: ../python/frescobaldi_app/mainapp.py:942
 msgid "Only show on errors"
 msgstr "Alleen tonen bij fouten"
 
-#: ../python/frescobaldi_app/mainapp.py:883
+#: ../python/frescobaldi_app/mainapp.py:966
 msgid "Rumor"
 msgstr "Rumor"
 
-#: ../python/frescobaldi_app/mainapp.py:895
+#: ../python/frescobaldi_app/mainapp.py:978
 msgid "LilyPond Documentation"
 msgstr "LilyPond-documentatie"
 
@@ -1305,7 +1497,7 @@ msgid "MIDI output to use."
 msgstr "Het te gebruiken MIDI-uitvoerapparaat."
 
 #: ../python/frescobaldi_app/rumor.py:449
-#: ../python/frescobaldi_app/scorewiz/__init__.py:545
+#: ../python/frescobaldi_app/scorewiz/__init__.py:544
 msgid "Language:"
 msgstr "Taal:"
 
@@ -1396,43 +1588,43 @@ msgstr ""
 msgid "Auto"
 msgstr "Auto"
 
-#: ../python/frescobaldi_app/runlily.py:87
+#: ../python/frescobaldi_app/runlily.py:88
 msgid "preview mode"
 msgstr "vooruitblik"
 
-#: ../python/frescobaldi_app/runlily.py:87
+#: ../python/frescobaldi_app/runlily.py:88
 msgid "publish mode"
 msgstr "publiceren"
 
-#: ../python/frescobaldi_app/runlily.py:88
+#: ../python/frescobaldi_app/runlily.py:89
 msgid "LilyPond [%1] starting (%2)..."
 msgstr "LilyPond [%1] wordt gestart (%2)..."
 
-#: ../python/frescobaldi_app/runlily.py:94
+#: ../python/frescobaldi_app/runlily.py:95
 msgid "LilyPond [%1] exited with return code %2."
 msgstr "LilyPond [%1] stopte met foutcode %2."
 
-#: ../python/frescobaldi_app/runlily.py:97
+#: ../python/frescobaldi_app/runlily.py:98
 msgid "LilyPond [%1] exited with exit status %2."
 msgstr "LilyPond [%1] stopte met status %2."
 
-#: ../python/frescobaldi_app/runlily.py:106
+#: ../python/frescobaldi_app/runlily.py:107
 msgid "LilyPond [%1] finished (%2)."
 msgstr "LilyPond [%1] voltooid (%2)."
 
-#: ../python/frescobaldi_app/runlily.py:114
+#: ../python/frescobaldi_app/runlily.py:115
 msgid "Could not start LilyPond. Please check path and permissions."
 msgstr "Kon LilyPond niet starten. Controleer uw installatie."
 
-#: ../python/frescobaldi_app/runlily.py:117
+#: ../python/frescobaldi_app/runlily.py:118
 msgid "Could not read from the LilyPond process."
 msgstr "Kan de uitvoer van het LilyPond-proces niet lezen."
 
-#: ../python/frescobaldi_app/runlily.py:120
+#: ../python/frescobaldi_app/runlily.py:121
 msgid "An unknown error occured."
 msgstr "Er is een onbekende fout opgetreden."
 
-#: ../python/frescobaldi_app/runlily.py:324
+#: ../python/frescobaldi_app/runlily.py:323
 msgid "Click to edit this file"
 msgstr "Klik om dit bestand te bewerken"
 
@@ -1666,160 +1858,185 @@ msgstr ""
 msgid "Could not start convert-ly: %1"
 msgstr "Kan convert-ly niet starten: %1"
 
-#: ../python/frescobaldi_app/widgets.py:42
+#: ../python/frescobaldi_app/widgets.py:45
 msgid "Tap"
 msgstr "Tik"
 
-#: ../python/frescobaldi_app/widgets.py:48
+#: ../python/frescobaldi_app/widgets.py:51
 msgid "Click this button a few times to set the tempo."
 msgstr "Klik een paar keer op deze knop om het tempo in te stellen."
 
-#: ../python/frescobaldi_app/widgets.py:174
+#: ../python/frescobaldi_app/widgets.py:177
 msgid "The tempo in beats per minute."
 msgstr "Het tempo in tellen per minuut."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:67
+#: ../python/frescobaldi_app/widgets.py:289
+#, fuzzy
+msgid "Treble"
+msgstr "Triool"
+
+#: ../python/frescobaldi_app/widgets.py:290
+#: ../python/frescobaldi_app/scorewiz/parts.py:747
+msgid "Alto"
+msgstr "Alt"
+
+#: ../python/frescobaldi_app/widgets.py:291
+#: ../python/frescobaldi_app/scorewiz/parts.py:753
+msgid "Tenor"
+msgstr "Tenor"
+
+#: ../python/frescobaldi_app/widgets.py:292
+msgid "Treble 8"
+msgstr ""
+
+#: ../python/frescobaldi_app/widgets.py:293
+#: ../python/frescobaldi_app/scorewiz/parts.py:524
+#: ../python/frescobaldi_app/scorewiz/parts.py:760
+msgid "Bass"
+msgstr "Bas"
+
+#: ../python/frescobaldi_app/widgets.py:294
+#: ../python/frescobaldi_app/scorewiz/parts.py:1263
+msgid "Percussion"
+msgstr "Percussie"
+
+#: ../python/frescobaldi_app/widgets.py:297
+msgid "Tab clef"
+msgstr ""
+
+#: ../python/frescobaldi_app/widgets.py:299
+msgid "No Clef"
+msgstr ""
+
+#: ../python/frescobaldi_app/scorewiz/__init__.py:68
 msgid "Score Setup Wizard"
 msgstr "Partituur opzetten"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:136
+#: ../python/frescobaldi_app/scorewiz/__init__.py:137
 msgid "Titles and Headers"
 msgstr "Titels en koppen"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:154
+#: ../python/frescobaldi_app/scorewiz/__init__.py:155
 msgid "Click to enter a value."
 msgstr "Klik om een waarde in te voeren."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:156
+#: ../python/frescobaldi_app/scorewiz/__init__.py:157
 msgid "bottom of first page"
 msgstr "onderaan eerste pagina"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:157
+#: ../python/frescobaldi_app/scorewiz/__init__.py:158
 msgid "bottom of last page"
 msgstr "onderaan laatste pagina"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:200
+#: ../python/frescobaldi_app/scorewiz/__init__.py:201
 msgid "Parts"
 msgstr "Partijen"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:205
+#: ../python/frescobaldi_app/scorewiz/__init__.py:206
 msgid "Available parts:"
 msgstr "Beschikbare partijen:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:208
+#: ../python/frescobaldi_app/scorewiz/__init__.py:209
 msgid "Add selected part to your score."
 msgstr "Geselecteerde partij aan uw partituur toevoegen."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:213
+#: ../python/frescobaldi_app/scorewiz/__init__.py:214
 msgid "Score:"
 msgstr "Partituur:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:346
-#: ../python/frescobaldi_app/scorewiz/__init__.py:351
+#: ../python/frescobaldi_app/scorewiz/__init__.py:348
+#: ../python/frescobaldi_app/scorewiz/__init__.py:353
 msgid "Score settings"
 msgstr "Partituur-instellingen"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:358
+#: ../python/frescobaldi_app/scorewiz/__init__.py:360
 msgid "General preferences"
 msgstr "Algemene voorkeuren"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:360
+#: ../python/frescobaldi_app/scorewiz/__init__.py:362
 msgid "Instrument names"
 msgstr "Instrumentnamen"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:367
+#: ../python/frescobaldi_app/scorewiz/__init__.py:369
 msgid "Key signature:"
 msgstr "Toonsoort:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:375
+#: ../python/frescobaldi_app/scorewiz/__init__.py:377
 msgid "Time signature:"
 msgstr "Maatsoort:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:392
+#: ../python/frescobaldi_app/scorewiz/__init__.py:393
 msgid "Pickup measure:"
 msgstr "Opmaat:"
-
-#: ../python/frescobaldi_app/scorewiz/__init__.py:394
-#: ../python/frescobaldi_app/scorewiz/__init__.py:539
-msgid "None"
-msgstr "Geen"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:405
 msgid "Metronome mark:"
 msgstr "Metronoomgetal:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:435
+#: ../python/frescobaldi_app/scorewiz/__init__.py:434
 msgid "Tempo indication:"
 msgstr "Tempo-aanduiding:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:439
+#: ../python/frescobaldi_app/scorewiz/__init__.py:438
 msgid "A tempo indication, e.g. \"Allegro.\""
 msgstr "Een tempo-aanduiding, zoals \"Allegro.\""
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:445
+#: ../python/frescobaldi_app/scorewiz/__init__.py:444
 msgid "Pitch name language:"
 msgstr "Taal voor nootnamen:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:449
-#: ../python/frescobaldi_app/scorewiz/__init__.py:514
-#: ../python/frescobaldi_app/scorewiz/__init__.py:548
-#: ../python/frescobaldi_app/scorewiz/parts.py:169
-#: ../python/frescobaldi_app/scorewiz/parts.py:385
-msgid "Default"
-msgstr "Standaard"
-
-#: ../python/frescobaldi_app/scorewiz/__init__.py:453
+#: ../python/frescobaldi_app/scorewiz/__init__.py:452
 msgid "The LilyPond language you want to use for the pitch names."
 msgstr "De LilyPond-taal die u wilt gebruiken voor de toonhoogtes."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:470
+#: ../python/frescobaldi_app/scorewiz/__init__.py:469
 msgid "Version:"
 msgstr "Versie:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:479
+#: ../python/frescobaldi_app/scorewiz/__init__.py:478
 msgid "The LilyPond version you will be using for this document."
 msgstr "De LilyPond-versie die u wilt gebruiken voor dit document."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:483
+#: ../python/frescobaldi_app/scorewiz/__init__.py:482
 msgid "Use typographical quotes"
 msgstr "Typografische aanhalingstekens"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:485
+#: ../python/frescobaldi_app/scorewiz/__init__.py:484
 msgid "Replace normal quotes in titles with nice typographical quotes."
 msgstr ""
 "Vervang normale aanhalingstekens in titels met fraaie typografische "
 "aanhalingstekens."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:487
+#: ../python/frescobaldi_app/scorewiz/__init__.py:486
 msgid "Remove default tagline"
 msgstr "Standaard-tagline verwijderen"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:489
+#: ../python/frescobaldi_app/scorewiz/__init__.py:488
 msgid "Suppress the default tagline output by LilyPond."
 msgstr "Onderdrukt de weergave van de standaard tagline door LilyPond."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:491
+#: ../python/frescobaldi_app/scorewiz/__init__.py:490
 msgid "Remove bar numbers"
 msgstr "Maatnummers verwijderen"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:493
+#: ../python/frescobaldi_app/scorewiz/__init__.py:492
 msgid ""
 "Suppress the display of measure numbers at the beginning of every system."
 msgstr "Onderdrukt de weergave van maatnummers aan het begin van elk systeem."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:496
+#: ../python/frescobaldi_app/scorewiz/__init__.py:495
 msgid "Create MIDI output"
 msgstr "MIDI uitvoer aanmaken"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:498
+#: ../python/frescobaldi_app/scorewiz/__init__.py:497
 msgid "Create a MIDI file in addition to the PDF file."
 msgstr "Maak, behalve een PDF, ook een MIDI-bestand aan."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:500
+#: ../python/frescobaldi_app/scorewiz/__init__.py:499
 msgid "Show metronome mark"
 msgstr "Metronoomgetal weergeven"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:502
+#: ../python/frescobaldi_app/scorewiz/__init__.py:501
 msgid ""
 "If checked, show the metronome mark at the beginning of the score. The MIDI "
 "output also uses the metronome setting."
@@ -1827,50 +2044,46 @@ msgstr ""
 "Indien aangekruist, toont het metronoomgetal aan het begin van de partituur. "
 "De MIDI-uitvoer gebruikt deze instelling ook."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:510
-msgid "Paper size:"
-msgstr "Papiergrootte:"
-
-#: ../python/frescobaldi_app/scorewiz/__init__.py:513
+#: ../python/frescobaldi_app/scorewiz/__init__.py:512
 msgid "Landscape"
 msgstr "Oblong"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:527
+#: ../python/frescobaldi_app/scorewiz/__init__.py:526
 msgid "First system:"
 msgstr "Eerste systeem:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:530
-#: ../python/frescobaldi_app/scorewiz/__init__.py:539
+#: ../python/frescobaldi_app/scorewiz/__init__.py:529
+#: ../python/frescobaldi_app/scorewiz/__init__.py:538
 msgid "Long"
 msgstr "Lang"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:530
-#: ../python/frescobaldi_app/scorewiz/__init__.py:539
+#: ../python/frescobaldi_app/scorewiz/__init__.py:529
+#: ../python/frescobaldi_app/scorewiz/__init__.py:538
 msgid "Short"
 msgstr "Kort"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:532
+#: ../python/frescobaldi_app/scorewiz/__init__.py:531
 msgid "Use long or short instrument names before the first system."
 msgstr "Gebruik lange of korte instrumentnamen voor het eerste systeem."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:536
+#: ../python/frescobaldi_app/scorewiz/__init__.py:535
 msgid "Other systems:"
 msgstr "Volgende systemen:"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:541
+#: ../python/frescobaldi_app/scorewiz/__init__.py:540
 msgid "Use short, long or no instrument names before the next systems."
 msgstr ""
 "Gebruik korte, lange of geen instrumentnamen voor de volgende systemen."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:549
+#: ../python/frescobaldi_app/scorewiz/__init__.py:548
 msgid "Which language to use for the instrument names."
 msgstr "De taal die u wilt gebruiken voor de instrumentnamen."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:720
+#: ../python/frescobaldi_app/scorewiz/__init__.py:719
 msgid "Remove default LilyPond tagline"
 msgstr "Standaard LilyPond-tagline verwijderen"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:999
+#: ../python/frescobaldi_app/scorewiz/__init__.py:998
 msgid "No settings available."
 msgstr "Geen instellingen beschikbaar."
 
@@ -2095,11 +2308,6 @@ msgstr "Jazzgitaar"
 #: ../python/frescobaldi_app/scorewiz/parts.py:519
 msgid "Jazz guitar|J.Gt."
 msgstr "Jazzgitaar|J.gt."
-
-#: ../python/frescobaldi_app/scorewiz/parts.py:524
-#: ../python/frescobaldi_app/scorewiz/parts.py:760
-msgid "Bass"
-msgstr "Bas"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:525
 msgid "Bass|Bs."
@@ -2341,17 +2549,9 @@ msgstr "Mezzosopraan"
 msgid "Mezzo-soprano|Ms."
 msgstr "Mezzosopraan|Ms."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:747
-msgid "Alto"
-msgstr "Alt"
-
 #: ../python/frescobaldi_app/scorewiz/parts.py:748
 msgid "Alto|A."
 msgstr "Alt|A."
-
-#: ../python/frescobaldi_app/scorewiz/parts.py:753
-msgid "Tenor"
-msgstr "Tenor"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:754
 msgid "Tenor|T."
@@ -2615,10 +2815,6 @@ msgstr "Vocaal"
 msgid "Keyboard instruments"
 msgstr "Toetsinstrumenten"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1263
-msgid "Percussion"
-msgstr "Percussie"
-
 #: ../python/frescobaldi_app/scorewiz/parts.py:1272
 msgid "Special"
 msgstr "Speciaal"
@@ -2704,12 +2900,6 @@ msgstr "Speciaal"
 #~ msgid "Midi: Set Tempo"
 #~ msgstr "Midi: tempo instellen"
 
-#~ msgid "New ChoirStaff"
-#~ msgstr "Nieuwe koorbalk (ChoirStaff)"
-
-#~ msgid "New PianoStaff"
-#~ msgstr "Nieuwe pianobalk (PianoStaff)"
-
 #~ msgid "New Staff"
 #~ msgstr "Nieuwe balk (Staff)"
 
@@ -2790,9 +2980,6 @@ msgstr "Speciaal"
 
 #~ msgid "New Lyrics"
 #~ msgstr "Nieuwe liedtekst (Lyrics)"
-
-#~ msgid "Triplet"
-#~ msgstr "Triool"
 
 #~ msgid "Your document currently has no filename, please save first."
 #~ msgstr "Uw document heeft geen bestandsnaam, gelieve het eerst op te slaan."
@@ -2908,9 +3095,6 @@ msgstr "Speciaal"
 
 #~ msgid "Hyphenation"
 #~ msgstr "Afbreking"
-
-#~ msgid "Actions"
-#~ msgstr "Acties"
 
 #~ msgid ""
 #~ "Check the actions you want to display (if applicable) after LilyPond has "
