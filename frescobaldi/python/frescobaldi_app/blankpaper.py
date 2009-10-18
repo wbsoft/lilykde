@@ -75,7 +75,7 @@ class Dialog(KDialog):
         self.actionChooser.setToolTip(i18n(
             "Choose which action happens when clicking \"Ok\"."))
         self.setButtonToolTip(KDialog.Try, i18n(
-            "Preview the empty staff paper"))
+            "Preview the empty staff paper."))
         self.setButtonToolTip(KDialog.Details, i18n(
             "Click to see more settings."))
         
