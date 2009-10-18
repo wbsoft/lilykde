@@ -511,7 +511,7 @@ class Settings(SymbolManager, QWidget):
         l.setBuddy(self.paper)
         self.paperLandscape = QCheckBox(i18n("Landscape"), h)
         self.paper.addItem(i18n("Default"))
-        self.paper.addItems(paperSizes)
+        self.paper.addItems(ly.paperSizes)
         @onSignal(self.paper, "activated(int)")
         def checkLandscape(i):
             self.paperLandscape.setEnabled(bool(i))
@@ -564,7 +564,7 @@ class Settings(SymbolManager, QWidget):
         conf.writeEntry('midi', QVariant(self.midi.isChecked()))
         conf.writeEntry('metronome mark', QVariant(self.metro.isChecked()))
         if self.paper.currentIndex() > 0:
-            conf.writeEntry('paper size', paperSizes[self.paper.currentIndex() - 1])
+            conf.writeEntry('paper size', ly.paperSizes[self.paper.currentIndex() - 1])
         conf.writeEntry('paper landscape', QVariant(self.paperLandscape.isChecked()))
         g = config('instrument names')
         g.writeEntry('show', QVariant(self.instr.isChecked()))
@@ -582,10 +582,10 @@ class Settings(SymbolManager, QWidget):
         self.metro.setChecked(conf.readEntry('metronome mark', QVariant(False)).toBool())
 
         psize = conf.readEntry('paper size', QVariant('')).toString()
-        if psize in paperSizes:
-            self.paper.setCurrentIndex(paperSizes.index(psize) + 1)
+        if psize in ly.paperSizes:
+            self.paper.setCurrentIndex(ly.paperSizes.index(psize) + 1)
         self.paperLandscape.setChecked(conf.readEntry('paper landscape', QVariant(False)).toBool())
-        self.paperLandscape.setEnabled(psize in paperSizes)
+        self.paperLandscape.setEnabled(psize in ly.paperSizes)
 
         g = config('instrument names')
         def readconf(entry, itemlist, defaultIndex):
@@ -1046,5 +1046,3 @@ a {
 durations = ['16', '16.', '8', '8.', '4', '4.', '2', '2.', '1', '1.']
 midiDurations = ((16,1),(32,3),(8,1),(16,3),(4,1),(8,3),(2,1),(4,3),(1,1),(2,3))
 partialDurations = ((4,0),(4,1),(3,0),(3,1),(2,0),(2,1),(1,0),(1,1),(0,0),(0,1))
-
-paperSizes = ['a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17']

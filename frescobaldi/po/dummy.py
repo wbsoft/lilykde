@@ -10,6 +10,7 @@ i18n("&Rhythm")
 i18n("&Bar Lines")
 i18n("&Generated Files")
 i18n("&Source Document")
+i18n("&Extra Tools")
 
 # frescobaldi.desktop :
 i18n("Frescobaldi")

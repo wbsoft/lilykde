@@ -183,3 +183,5 @@ keyNames['svenska'] = keyNames['norsk']
 keyNames['suomi'] = keyNames['deutsch']
 keyNames['catalan'] = keyNames['italiano']
 keyNames['portugues'] = keyNames['espanol']
+
+paperSizes = ['a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17']

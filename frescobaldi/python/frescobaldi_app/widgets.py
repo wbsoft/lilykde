@@ -26,10 +26,13 @@ from time import time
 
 from PyQt4.QtCore import QObject, QProcess, QRegExp, QString, QTimeLine, Qt, SIGNAL
 from PyQt4.QtGui import (
-    QLabel, QLineEdit, QPainter, QPixmap, QPushButton, QSlider, QSpinBox,
-    QToolButton, QRegExpValidator, QWidget)
+    QComboBox, QLabel, QLineEdit, QPainter, QPixmap, QPushButton, QSlider,
+    QSpinBox, QToolButton, QRegExpValidator, QWidget)
 from PyKDE4.kdecore import i18n, KProcess
 from PyKDE4.kdeui import KApplication, KDialog, KLineEdit, KVBox
+
+from frescobaldi_app.mainapp import SymbolManager
+
 
 class TapButton(QPushButton):
     """
@@ -269,6 +272,42 @@ class StackFader(QWidget):
         self.pixmap_opacity = 1.0 - value
         self.repaint()
 
+
+class ClefSelector(SymbolManager, QComboBox):
+    """
+    A ComboBox to select a clef.
+    
+    Set resp. noclef and/or tab to True for those allowing the user
+    to choose those clef/staff types.
+    """
+    def __init__(self, parent=None, noclef=False, tab=False):
+        SymbolManager.__init__(self)
+        QComboBox.__init__(self, parent)
+        self.setDefaultSymbolSize(48)
+        self.setSymbolSize(self, 48)
+        self.clefs = [
+            ('treble', i18n("Treble")),
+            ('alto', i18n("Alto")),
+            ('tenor', i18n("Tenor")),
+            ('treble_8', i18n("Treble 8")),
+            ('bass', i18n("Bass")),
+            ('percussion', i18n("Percussion")),
+            ]
+        if tab:
+            self.clefs.append(('tab', i18n("Tab clef")))
+        if noclef:
+            self.clefs.insert(0, ('', i18n("No Clef")))
+        self.addItems([title for name, title in self.clefs])
+        for index, (name, title) in enumerate(self.clefs):
+            self.addItemSymbol(self, index, 'clef_%s' % (name or 'none'))
+    
+    def clef(self):
+        """
+        Returns the LilyPond name of the selected clef, or the empty string
+        for no clef.
+        """
+        return self.clefs[self.currentIndex()][0]
+    
 
 
 # some handy "static" functions

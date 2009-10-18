@@ -30,10 +30,10 @@ from PyKDE4.kdecore import KUrl, i18n
 from PyKDE4.kdeui import KDialog, KIcon, KMessageBox
 from PyKDE4.kio import KFileDialog, KIO
 
-import ly.indent
+import ly, ly.indent
 from kateshell.app import lazymethod
-from frescobaldi_app.widgets import StackFader
-from frescobaldi_app.mainapp import SymbolManager
+from frescobaldi_app.version import defaultVersion
+from frescobaldi_app.widgets import StackFader, ClefSelector
 from frescobaldi_app.runlily import BackgroundJob, LilyPreviewDialog
 from frescobaldi_app.actions import openPDF, printPDF
 
@@ -69,6 +69,16 @@ class Dialog(KDialog):
         l.setBuddy(self.actionChooser)
         layout.addWidget(l, 2, 0, Qt.AlignRight)
         
+        # tool tips
+        self.typeChooser.setToolTip(i18n(
+            "Choose what kind of empty staves you want to create."))
+        self.actionChooser.setToolTip(i18n(
+            "Choose which action happens when clicking \"Ok\"."))
+        self.setButtonToolTip(KDialog.Try, i18n(
+            "Preview the empty staff paper"))
+        self.setButtonToolTip(KDialog.Details, i18n(
+            "Click to see more settings."))
+        
         # paper stuff
         paper = QGroupBox(i18n("Paper"))
         paperSettings.layout().addWidget(paper)
@@ -83,7 +93,7 @@ class Dialog(KDialog):
         paper.layout().addWidget(l, 0, 0, Qt.AlignRight)
         paper.layout().addWidget(self.paperSize, 0, 1)
         self.paperSize.addItem(i18n("Default"))
-        self.paperSize.addItems(paperSizes)
+        self.paperSize.addItems(ly.paperSizes)
 
         self.staffSize = QSpinBox()
         l = QLabel(i18n("Staff Size:"))
@@ -127,6 +137,7 @@ class Dialog(KDialog):
             SingleStaff(self),
             PianoStaff(self),
             OrganStaff(self),
+            ChoirStaff(self),
             ]
         for widget in self.typeWidgets:
             self.stack.addWidget(widget)
@@ -159,7 +170,7 @@ class Dialog(KDialog):
     def default(self):
         """ Set everything to default """
         self.paperSize.setCurrentIndex(0)
-        self.staffSize.setValue(20)
+        self.staffSize.setValue(22)
         self.pageCount.setValue(1)
         self.barLines.setChecked(False)
         self.barsPerLine.setValue(4)
@@ -184,33 +195,40 @@ class Dialog(KDialog):
         Return the LilyPond document to print the empty staff paper.
         """
         staff = self.stack.currentWidget()
-        output = ['\\version "2.12.0"']
-        output.append('#(set-global-staff-size %d)' % self.staffSize.value())
+        output = []
+        version = defaultVersion()
+        if version:
+            output.append('\\version "%s"\n' % version)
+        output.append('#(set-global-staff-size %d)\n' % self.staffSize.value())
         # paper section
         output.append('\\paper {')
         if self.paperSize.currentIndex() > 0:
-            output.append('#(set-paper-size "%s")' % paperSizes[self.paperSize.currentIndex()-1])
+            output.append('#(set-paper-size "%s")' % ly.paperSizes[self.paperSize.currentIndex()-1])
         if self.pageNumbers.isChecked():
             output.append('first-page-number = #%d' % self.pageNumStart.value())
             output.append('oddHeaderMarkup = \\markup \\fill-line {')
-            output.append("\\null\n\\fromproperty #'page:page-number-string\n}")
+            output.append('\\null')
+            output.append("\\fromproperty #'page:page-number-string")
+            output.append('}')
         else:
-            output.append('oddHeaderMarkup = ##f')
+            output.append('oddHeaderMarkup = \\markup \\strut')
         output.append('evenHeaderMarkup = ##f')
         output.append('oddFooterMarkup = \\markup \\fill-line {')
-        output.append("\\null\n\\sans \\fontsize #-8 { %s }\n}" % "FRESCOBALDI.ORG")
-        output.append("head-separation = 0.1\\in")
-        output.append("foot-separation = 0.1\\in")
-        output.append("top-margin = 0.5\\in")
-        output.append("bottom-margin = 0.5\\in")
-        output.append("ragged-last-bottom = ##f")
-        output.append("}\n")
-        # output.expression
-        output.append("music = \\repeat unfold %d { %% pages" % self.pageCount.value())
-        output.append("\\repeat unfold %d { %% systems" % staff.systemCount())
-        output.append("\\repeat unfold %d { %% bars" % (
+        output.append('\\sans \\fontsize #-8 { %s }' % "FRESCOBALDI.ORG")
+        output.append('\\null')
+        output.append('}')
+        output.append('head-separation = 3\\mm')
+        output.append('foot-separation = 5\\mm')
+        output.append('top-margin = 10\\mm')
+        output.append('bottom-margin = 10\\mm')
+        output.append('ragged-last-bottom = ##f')
+        output.append('}\n')
+        # music expression
+        output.append('music = \\repeat unfold %d { %% pages' % self.pageCount.value())
+        output.append('\\repeat unfold %d { %% systems' % staff.systemCount())
+        output.append('\\repeat unfold %d { %% bars' % (
             self.barLines.isChecked() and self.barsPerLine.value() or 1))
-        output.extend(("s1", "\\noBreak", "}", "\\break", "\\noPageBreak", "}", "\\pageBreak", "}\n"))
+        output.extend(('s1', '\\noBreak', '}', '\\break', '\\noPageBreak', '}', '\\pageBreak', '}\n'))
 
         # get the layout
         layout = LayoutContexts()
@@ -258,7 +276,7 @@ class BlankPaperJob(BackgroundJob):
         if pdfs:
             self.handlePDF(pdfs[0])
         else:
-            self.showLog("No PDF was created.", '', self.dialog)
+            self.showLog(i18n("No PDF was created."), '', self.dialog)
         
     def cleanup(self):
         BackgroundJob.cleanup(self)
@@ -310,7 +328,7 @@ class SavePDF(BlankPaperJob):
 class PrintPDF(BlankPaperJob):
     @staticmethod
     def name():
-        return i18n("Directly print PDF on default printer")
+        return i18n("Directly print on default printer")
 
     def handlePDF(self, fileName):
         printPDF(fileName, self.dialog)
@@ -464,48 +482,96 @@ class OrganStaff(PianoStaff):
             '\\new PianoStaff <<',
             '\\new Staff { \\clef treble \\music }',
             '\\new Staff \\with {',
-            "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 6)",
+            "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-5 . 6)",
             '} { \\clef bass \\music }',
             '>>',
             '\\new Staff { \\clef bass \\music }',
             '>>']
 
 
-class ClefSelector(SymbolManager, QComboBox):
-    """
-    A ComboBox to select a clef.
+class ChoirStaff(StaffBase):
+    def __init__(self, dialog):
+        StaffBase.__init__(self, dialog)
+        self.staffCount = QSpinBox()
+        self.staffCount.setRange(2, 8)
+        l = QLabel(i18n("Staves per system:"))
+        l.setBuddy(self.staffCount)
+        self.layout().addWidget(l, 0, 1, Qt.AlignRight)
+        self.layout().addWidget(self.staffCount, 0, 2)
+        l = QLabel(i18n("Systems per page:"))
+        l.setBuddy(self.systems)
+        self.layout().addWidget(l, 1, 1, Qt.AlignRight)
+        self.layout().addWidget(self.systems, 1, 2)
+        self.clefs = QComboBox()
+        self.clefs.setEditable(True)
+        l = QLabel(i18n("Clefs:"))
+        l.setBuddy(self.clefs)
+        self.layout().addWidget(l, 2, 1, Qt.AlignRight)
+        self.layout().addWidget(self.clefs, 2, 2)
+        
+        # tool tips
+        self.clefs.setToolTip(i18n(
+            "Enter as much letters (S, A, T or B) as there are staves.\n"
+            "See \"What's This\" for more information."))
+        self.clefs.setWhatsThis(i18n(
+            "To configure clefs, first set the number of staves per system. "
+            "Then enter as much letters (S, A, T or B) as there are staves.\n\n"
+            "S or A: treble clef,\n"
+            "T: treble clef with an \"8\" below,\n"
+            "B: bass clef\n\n"
+            "So when you want to create music paper for a four-part mixed "
+            "choir score, first set the number of staves per system to 4. "
+            "Then enter \"SATB\" (without the quotes) here."))
+        
+        QObject.connect(self.staffCount, SIGNAL("valueChanged(int)"),
+            self.slotStaffCountChanged)
+        self.slotStaffCountChanged(2)    
+        
+    def name(self):
+        return i18n("Choir Staff")
+        
+    def default(self):
+        self.staffCount.setValue(2)
     
-    Set resp. noclef and/or tab to True for those allowing the user
-    to choose those clef/staff types.
-    """
-    def __init__(self, parent=None, noclef=False, tab=False):
-        SymbolManager.__init__(self)
-        QComboBox.__init__(self, parent)
-        self.setDefaultSymbolSize(48)
-        self.setSymbolSize(self, 48)
-        self.clefs = [
-            ('treble', i18n("Treble")),
-            ('alto', i18n("Alto")),
-            ('tenor', i18n("Tenor")),
-            ('treble_8', i18n("Treble 8")),
-            ('bass', i18n("Bass")),
-            ('percussion', i18n("Percussion")),
-            ]
-        if tab:
-            self.clefs.append(('tab', i18n("Tab clef")))
-        if noclef:
-            self.clefs.insert(0, ('', i18n("No Clef")))
-        self.addItems([title for name, title in self.clefs])
-        for index, (name, title) in enumerate(self.clefs):
-            self.addItemSymbol(self, index, 'clef_%s' % (name or 'none'))
-    
-    def clef(self):
-        """
-        Returns the LilyPond name of the selected clef, or the empty string
-        for no clef.
-        """
-        return self.clefs[self.currentIndex()][0]
-    
+    def slotStaffCountChanged(self, value):
+        self.clefs.clear()
+        self.clefs.addItem(i18n("None"))
+        self.clefs.addItems((
+            ('SB', 'SS', 'ST', 'TT', 'TB', 'BB'), # 2
+            ('SSB', 'SSS', 'TTB', 'TTT', 'TTB'), # 3
+            ('SATB', 'STTB', 'TTBB'), # 4
+            ('SSATB', 'SATTB'), # 5
+            ('SSATTB', 'SSATBB'), #6
+            ('SSATTBB', ), # 7
+            ('SATBSATB', 'SSAATTBB') #8
+            )[value - 2])
+        self.clefs.setCurrentIndex(0)
+        systemCount = int(12 / value)
+        if systemCount == 1 and self.dialog.staffSize.value() <= 18:
+            systemCount = 2
+        self.systems.setValue(systemCount)
 
-paperSizes = ['a3', 'a4', 'a5', 'a6', 'a7', 'legal', 'letter', '11x17']
+    def music(self, layout):
+        clefs = unicode(self.clefs.currentText()).upper()
+        length = self.staffCount.value()
+        if clefs and set(clefs) <= set("SATB"):
+            # pad to staff count if necessary
+            clefs = (clefs + clefs[-1] * length)[:length]
+        else:
+            clefs = [None] * length
+            layout.add("Staff", '\\remove "Clef_engraver"')
+        layout.add("Staff",
+            "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 4)")
+        music = ['\\new ChoirStaff <<']
+        for clef in clefs:
+            music.append('\\new Staff {%s \\music }' % {
+                'S': ' \\clef treble',
+                'A': ' \\clef treble',
+                'T': ' \\clef "treble_8"',
+                'B': ' \\clef bass',
+                None: '',
+                }[clef])
+        music.append('>>')
+        return music
+
 
