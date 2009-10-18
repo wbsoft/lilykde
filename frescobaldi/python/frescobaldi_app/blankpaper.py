@@ -450,16 +450,7 @@ class PianoStaff(StaffBase):
             '>>']
 
 
-class OrganStaff(StaffBase):
-    def __init__(self, dialog):
-        StaffBase.__init__(self, dialog)
-        l = QLabel(i18n("Systems per page:"))
-        l.setBuddy(self.systems)
-        self.layout().addWidget(l, 0, 1, Qt.AlignRight)
-        self.layout().addWidget(self.systems, 0, 2)
-        self.clefs = QCheckBox(i18n("Clefs"))
-        self.layout().addWidget(self.clefs, 1, 1, 2, 1)
-        
+class OrganStaff(PianoStaff):
     def name(self):
         return i18n("Organ Staff")
         
@@ -468,9 +459,7 @@ class OrganStaff(StaffBase):
         self.clefs.setChecked(True)
     
     def music(self, layout):
-        layout.setSpanBarContexts(['PianoStaff'])
-        if not self.clefs.isChecked():
-            layout.add('Staff', '\\remove "Clef_engraver"')
+        PianoStaff.music(self, layout)
         return ['<<',
             '\\new PianoStaff <<',
             '\\new Staff { \\clef treble \\music }',
