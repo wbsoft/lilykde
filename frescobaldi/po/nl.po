@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
 "POT-Creation-Date: 2009-10-18 17:37+0200\n"
-"PO-Revision-Date: 2009-10-11 01:45+0200\n"
+"PO-Revision-Date: 2009-10-18 17:48+0200\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "#-#-#-#-#  nl.po (nl)  #-#-#-#-#\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: Lokalize 0.3\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: ../frescobaldi.py:32 dummy.py:16
@@ -102,7 +102,7 @@ msgstr "&Brondocument"
 
 #: dummy.py:13
 msgid "&Extra Tools"
-msgstr ""
+msgstr "&Extra gereedschappen"
 
 #: ../python/ly/__init__.py:75
 msgid "Dedication"
@@ -566,43 +566,39 @@ msgstr "Het printcommando bevat fouten. Controleer uw instellingen."
 #: ../python/frescobaldi_app/blankpaper.py:51
 #: ../python/frescobaldi_app/mainapp.py:654
 msgid "Create blank staff paper"
-msgstr ""
+msgstr "Blanco muziekpapier maken"
 
 #: ../python/frescobaldi_app/blankpaper.py:65
 msgid "Type:"
-msgstr ""
+msgstr "Type:"
 
 #: ../python/frescobaldi_app/blankpaper.py:68
-#, fuzzy
 msgid "Action:"
-msgstr "Acties"
+msgstr "Actie:"
 
 #: ../python/frescobaldi_app/blankpaper.py:74
 msgid "Choose what kind of empty staves you want to create."
-msgstr ""
+msgstr "Kies welk type muziekbalken u wilt maken."
 
 #: ../python/frescobaldi_app/blankpaper.py:76
 msgid "Choose which action happens when clicking \"Ok\"."
-msgstr ""
+msgstr "Kies wat er gebeurt als u op \"Ok\" klikt."
 
 #: ../python/frescobaldi_app/blankpaper.py:78
 msgid "Preview the empty staff paper"
-msgstr ""
+msgstr "Klik voor een vooruitblik"
 
 #: ../python/frescobaldi_app/blankpaper.py:80
-#, fuzzy
 msgid "Click to see more settings."
-msgstr "Partituur-instellingen"
+msgstr "Klik voor meer instellingen."
 
 #: ../python/frescobaldi_app/blankpaper.py:83
-#, fuzzy
 msgid "Paper"
-msgstr "Papiergrootte:"
+msgstr "Papier:"
 
 #: ../python/frescobaldi_app/blankpaper.py:85
-#, fuzzy
 msgid "Settings"
-msgstr "Snaarinstrumenten"
+msgstr "Instellingen"
 
 #: ../python/frescobaldi_app/blankpaper.py:91
 #: ../python/frescobaldi_app/scorewiz/__init__.py:509
@@ -619,111 +615,101 @@ msgid "Default"
 msgstr "Standaard"
 
 #: ../python/frescobaldi_app/blankpaper.py:99
-#, fuzzy
 msgid "Staff Size:"
-msgstr "Type balk:"
+msgstr "Balkgrootte:"
 
 #: ../python/frescobaldi_app/blankpaper.py:106
 msgid "Page count:"
-msgstr ""
+msgstr "Aantal pagina's:"
 
 #: ../python/frescobaldi_app/blankpaper.py:114
-#, fuzzy
 msgid "Print Bar Lines"
-msgstr "&Maatstrepen"
+msgstr "Maatstrepen afdrukken"
 
 #: ../python/frescobaldi_app/blankpaper.py:116
-#, fuzzy
 msgid "Bars per line:"
-msgstr "Papiergrootte:"
+msgstr "Aantal maten per systeem:"
 
 #: ../python/frescobaldi_app/blankpaper.py:123
 msgid "Show Page Numbers"
-msgstr ""
+msgstr "Paginanummers afdrukken"
 
 #: ../python/frescobaldi_app/blankpaper.py:125
 msgid "Start with:"
-msgstr ""
+msgstr "Beginnen met:"
 
 #: ../python/frescobaldi_app/blankpaper.py:260
 msgid "Blank staff paper preview"
-msgstr ""
+msgstr "Vooruitblik blanco muziekpapier"
 
 #: ../python/frescobaldi_app/blankpaper.py:279
 msgid "No PDF was created."
-msgstr ""
+msgstr "Er is geen PDF aangemaakt."
 
 #: ../python/frescobaldi_app/blankpaper.py:290
-#, fuzzy
 msgid "Open in PDF viewer"
-msgstr "%1 openen in externe viewer"
+msgstr "Openen in PDF-viewer"
 
 #: ../python/frescobaldi_app/blankpaper.py:299
 msgid "Save PDF As..."
-msgstr ""
+msgstr "PDF opslaan als..."
 
 #: ../python/frescobaldi_app/blankpaper.py:306
-#, fuzzy
 msgid "PDF Files"
-msgstr "Alle bestanden"
+msgstr "PDF-bestanden"
 
 #: ../python/frescobaldi_app/blankpaper.py:331
 msgid "Directly print on default printer"
-msgstr ""
+msgstr "Direct afdrukken op de standaardprinter"
 
 #: ../python/frescobaldi_app/blankpaper.py:340
-#, fuzzy
 msgid "Copy LilyPond code to editor"
-msgstr "Muziek-editor voor LilyPond"
+msgstr "LilyPond-code naar editor kopiëren"
 
 #: ../python/frescobaldi_app/blankpaper.py:414
 msgid "Staves per page:"
-msgstr ""
+msgstr "Aantal balken per pagina:"
 
 #: ../python/frescobaldi_app/blankpaper.py:419
 msgid "Clef:"
-msgstr ""
+msgstr "Sleutel:"
 
 #: ../python/frescobaldi_app/blankpaper.py:425
-#, fuzzy
 msgid "Single Staff"
-msgstr "Enkel aanhalingsteken"
+msgstr "Enkele balk"
 
 #: ../python/frescobaldi_app/blankpaper.py:445
 #: ../python/frescobaldi_app/blankpaper.py:501
 msgid "Systems per page:"
-msgstr ""
+msgstr "Aantal systemen per pagina:"
 
 #: ../python/frescobaldi_app/blankpaper.py:449
-#, fuzzy
 msgid "Clefs"
-msgstr "Celesta"
+msgstr "Sleutels"
 
 #: ../python/frescobaldi_app/blankpaper.py:453
-#, fuzzy
 msgid "Piano Staff"
-msgstr "Nieuwe pianobalk (PianoStaff)"
+msgstr "Pianobalk"
 
 #: ../python/frescobaldi_app/blankpaper.py:473
-#, fuzzy
 msgid "Organ Staff"
-msgstr "Orgel"
+msgstr "Orgelbalk"
 
 #: ../python/frescobaldi_app/blankpaper.py:497
-#, fuzzy
 msgid "Staves per system:"
-msgstr "Volgende systemen:"
+msgstr "Aantal notenbalken per systeem:"
 
 #: ../python/frescobaldi_app/blankpaper.py:507
-#, fuzzy
 msgid "Clefs:"
-msgstr "Celesta"
+msgstr "Sleutels:"
 
 #: ../python/frescobaldi_app/blankpaper.py:514
 msgid ""
 "Enter as much letters (S, A, T or B) as there are staves.\n"
 "See \"What's This\" for more information."
 msgstr ""
+"Voer zoveel letters (S, A, T of B) in als er balken zijn.\n"
+"Zie \"Wat is dit\" voor meer informatie."
 
 #: ../python/frescobaldi_app/blankpaper.py:517
 msgid ""
@@ -738,11 +724,20 @@ msgid ""
 "first set the number of staves per system to 4. Then enter \"SATB\" (without "
 "the quotes) here."
 msgstr ""
+"Om sleutels in te stellen, stel eerst het aantal balken per systeem in. "
+"Voer dan zoveel letters (S, A, T of B) in als er balken zijn.\n"
+"\n"
+"S of A: vioolsleutel,\n"
+"T: vioolsleutel met een \"8\" eronder,\n"
+"B: bassleutel\n"
+"\n"
+"Dus als u muziekpapier wilt maken voor vierstemmig gemend koor, "
+"zet dan eerst het aantal balken per systeem op 4. Voer dan hier \"SATB\" "
+"(zonder de aanhalingstekens) in."
 
 #: ../python/frescobaldi_app/blankpaper.py:531
-#, fuzzy
 msgid "Choir Staff"
-msgstr "Nieuwe koorbalk (ChoirStaff)"
+msgstr "Koorbalk"
 
 #: ../python/frescobaldi_app/blankpaper.py:538
 #: ../python/frescobaldi_app/scorewiz/__init__.py:395
@@ -1871,9 +1866,8 @@ msgid "The tempo in beats per minute."
 msgstr "Het tempo in tellen per minuut."
 
 #: ../python/frescobaldi_app/widgets.py:289
-#, fuzzy
 msgid "Treble"
-msgstr "Triool"
+msgstr "Vioolsleutel"
 
 #: ../python/frescobaldi_app/widgets.py:290
 #: ../python/frescobaldi_app/scorewiz/parts.py:747
@@ -1887,7 +1881,7 @@ msgstr "Tenor"
 
 #: ../python/frescobaldi_app/widgets.py:292
 msgid "Treble 8"
-msgstr ""
+msgstr "Vioolsleutel met 8"
 
 #: ../python/frescobaldi_app/widgets.py:293
 #: ../python/frescobaldi_app/scorewiz/parts.py:524
@@ -1902,11 +1896,11 @@ msgstr "Percussie"
 
 #: ../python/frescobaldi_app/widgets.py:297
 msgid "Tab clef"
-msgstr ""
+msgstr "Tabulatuur"
 
 #: ../python/frescobaldi_app/widgets.py:299
 msgid "No Clef"
-msgstr ""
+msgstr "Geen sleutel"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:68
 msgid "Score Setup Wizard"
