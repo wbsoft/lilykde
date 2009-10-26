@@ -138,6 +138,7 @@ class Dialog(KDialog):
             PianoStaff(self),
             OrganStaff(self),
             ChoirStaff(self),
+            CustomStaff(self),
             ]
         for widget in self.typeWidgets:
             self.stack.addWidget(widget)
@@ -161,6 +162,7 @@ class Dialog(KDialog):
         QObject.connect(self, SIGNAL("resetClicked()"), self.default)
         QObject.connect(self, SIGNAL("tryClicked()"), self.showPreview)
         self.default()
+        self.setInitialSize(QSize(400, 240))
     
     def done(self, r):
         KDialog.done(self, r)
@@ -447,7 +449,7 @@ class PianoStaff(StaffBase):
         self.layout().addWidget(l, 0, 1, Qt.AlignRight)
         self.layout().addWidget(self.systems, 0, 2)
         self.clefs = QCheckBox(i18n("Clefs"))
-        self.layout().addWidget(self.clefs, 1, 1, 2, 1)
+        self.layout().addWidget(self.clefs, 1, 2)
         
     def name(self):
         return i18n("Piano Staff")
@@ -574,4 +576,56 @@ class ChoirStaff(StaffBase):
         music.append('>>')
         return music
 
+from PyQt4.QtCore import QTimer
+from PyQt4.QtGui import QToolButton, QTreeWidget, QTreeWidgetItem
+from PyKDE4.kdeui import KMenu, KPushButton, KStandardGuiItem
+from frescobaldi_app.mainapp import SymbolManager
 
+class CustomStaff(SymbolManager, QWidget):
+    def __init__(self, dialog):
+        QWidget.__init__(self, dialog)
+        SymbolManager.__init__(self)
+        self.setDefaultSymbolSize(48)
+        self.dialog = dialog
+        self.setLayout(QGridLayout())
+        self.tree = QTreeWidget()
+        self.stack = QStackedWidget()
+        self.systems = QSpinBox()
+        self.layout().addWidget(self.tree, 0, 0)
+        self.layout().addWidget(self.stack, 0, 1, 1, 2)
+        self.layout().addWidget(self.systems, 1, 2)
+        self.systems.setRange(1, 64)
+        l = QLabel(i18n("Systems per page:"))
+        l.setBuddy(self.systems)
+        self.layout().addWidget(l, 1, 1, Qt.AlignRight)
+        self.tree.headerItem().setHidden(True)
+        layout = QHBoxLayout()
+        self.layout().addLayout(layout, 1, 0)
+        self.addButton = KPushButton(KStandardGuiItem.add())
+        layout.addWidget(self.addButton)
+        self.removeButton = QToolButton()
+        self.removeButton.setIcon(KIcon('list-remove'))
+        layout.addWidget(self.removeButton)
+        self.upButton = QToolButton()
+        self.upButton.setIcon(KIcon('go-up'))
+        layout.addWidget(self.upButton)
+        self.downButton = QToolButton()
+        self.downButton.setIcon(KIcon('go-down'))
+        layout.addWidget(self.downButton)
+        menu = KMenu(self)
+        self.addButton.setMenu(menu)
+        a = menu.addAction(i18n("Bracket Group"))
+        self.addSymbol(a, 'system_bracket')
+        a = menu.addAction(i18n("Brace Group"))
+        self.addSymbol(a, 'system_brace')
+
+    def systemCount(self):
+        return self.systems.value()
+    
+    def name(self):
+        return i18n("Custom Staff")
+        
+    def default(self):
+        self.tree.clear()
+        
+        
