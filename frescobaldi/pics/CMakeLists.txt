@@ -84,8 +84,8 @@ foreach(_ly ${lilypond_files})
   lilypond_png_icon(${_ly} 22)
 endforeach(_ly ${lilypond_files})
 
-# Clefs at 64px
-file(GLOB lilypond_files clef_*.ly)
+# Clefs, etc at 48px
+file(GLOB lilypond_files clef_*.ly system_*.ly)
 foreach(_ly ${lilypond_files})
   lilypond_png_icon(${_ly} 48)
 endforeach(_ly ${lilypond_files})
