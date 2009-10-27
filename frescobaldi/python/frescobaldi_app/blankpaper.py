@@ -25,14 +25,17 @@ import sip
 from PyQt4.QtCore import QObject, QSize, Qt, SIGNAL
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QIcon, QLabel,
-    QPixmap, QSpinBox, QStackedWidget, QVBoxLayout, QWidget)
+    QPixmap, QPushButton, QSpinBox, QStackedWidget, QToolButton, QTreeWidget,
+    QTreeWidgetItem, QVBoxLayout, QWidget)
 
 from PyKDE4.kdecore import KUrl, i18n
-from PyKDE4.kdeui import KDialog, KIcon, KMessageBox
+from PyKDE4.kdeui import (
+    KDialog, KIcon, KMessageBox, KPushButton, KStandardGuiItem)
 from PyKDE4.kio import KFileDialog, KIO
 
 import ly, ly.indent
 from kateshell.app import lazymethod
+from frescobaldi_app.mainapp import SymbolManager
 from frescobaldi_app.version import defaultVersion
 from frescobaldi_app.widgets import StackFader, ClefSelector
 from frescobaldi_app.runlily import BackgroundJob, LilyPreviewDialog
@@ -255,7 +258,6 @@ class Dialog(KDialog):
     def slotDestroyed(self):
         for job in self.jobs[:]: # copy
             job.cleanup()
-            
 
 
 class PreviewDialog(LilyPreviewDialog):
@@ -400,18 +402,22 @@ class LayoutContexts(object):
             self.add(c, '\\remove "Span_bar_engraver"')
     
     def setAlwaysShowSystemStartBar(self, show=True):
-        self._alwaysShowSystemStartBar = show
-        
+        line = "\override SystemStartBar #'collapse-height = #1"
+        inscore = 'Score' in self._contexts and line in self._contexts['Score']
+        if show and not inscore:
+            self.add('Score', line)
+        elif not show and inscore:
+            self._contexts['Score'].remove(line)
+    
     def ly(self):
         """ Return a list of LilyPond lines. """
         result = []
         for name, lines in self._contexts.iteritems():
-            result.append('\\context {')
-            result.append('\\%s' % name)
-            if name == 'Score' and self._alwaysShowSystemStartBar:
-                result.append("\override SystemStartBar #'collapse-height = #1")
-            result.extend(lines)
-            result.append('}')
+            if lines:
+                result.append('\\context {')
+                result.append('\\%s' % name)
+                result.extend(lines)
+                result.append('}')
         return result
 
 
@@ -599,10 +605,6 @@ class ChoirStaff(StaffBase):
         music.append('>>')
         return music
 
-from PyQt4.QtCore import QTimer
-from PyQt4.QtGui import QPushButton, QToolBar, QToolButton, QTreeWidget, QTreeWidgetItem
-from PyKDE4.kdeui import KMenu, KPushButton, KStandardGuiItem
-from frescobaldi_app.mainapp import SymbolManager
 
 class CustomStaff(SymbolManager, QWidget):
     def __init__(self, dialog):
@@ -714,7 +716,8 @@ class CustomStaff(SymbolManager, QWidget):
         return i18n("Custom Staff")
         
     def default(self):
-        self.tree.clear()
+        while self.tree.topLevelItemCount():
+            self.tree.topLevelItem(0).remove()
         self.systems.setValue(4)
         
     def music(self, layout):
@@ -801,7 +804,6 @@ class StaffItem(Item):
         l = QLabel(i18n("Space below:"))
         l.setBuddy(self.spaceBelow)
         w.layout().addWidget(l, 2, 0, Qt.AlignRight)
-        
         return w
         
     def clefChanged(self, index):

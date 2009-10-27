@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-10-18 18:03+0200\n"
+"POT-Creation-Date: 2009-10-27 15:39+0100\n"
 "PO-Revision-Date: 2009-06-12 21:37+0200\n"
 "Last-Translator: BOURIAUD <david.bouriaud@ac-rouen.fr>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
@@ -444,7 +444,7 @@ msgid "Line selection mode"
 msgstr "Mode sélection de ligne"
 
 #: ../python/kateshell/mainwindow.py:375
-#: ../python/frescobaldi_app/blankpaper.py:306
+#: ../python/frescobaldi_app/blankpaper.py:312
 msgid "All Files"
 msgstr "Tous les fichiers"
 
@@ -571,53 +571,53 @@ msgstr ""
 msgid "The print command contains errors. Please check your settings."
 msgstr "La commande d'impression contient des erreurs. Vérifier vos réglages."
 
-#: ../python/frescobaldi_app/blankpaper.py:51
+#: ../python/frescobaldi_app/blankpaper.py:55
 #: ../python/frescobaldi_app/mainapp.py:654
 msgid "Create blank staff paper"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:65
+#: ../python/frescobaldi_app/blankpaper.py:69
 msgid "Type:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:68
+#: ../python/frescobaldi_app/blankpaper.py:72
 #, fuzzy
 msgid "Action:"
 msgstr "Direction:"
 
-#: ../python/frescobaldi_app/blankpaper.py:74
+#: ../python/frescobaldi_app/blankpaper.py:78
 msgid "Choose what kind of empty staves you want to create."
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:76
+#: ../python/frescobaldi_app/blankpaper.py:80
 msgid "Choose which action happens when clicking \"Ok\"."
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:78
+#: ../python/frescobaldi_app/blankpaper.py:82
 msgid "Preview the empty staff paper."
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:80
+#: ../python/frescobaldi_app/blankpaper.py:84
 #, fuzzy
 msgid "Click to see more settings."
 msgstr "Réglages de la partition"
 
-#: ../python/frescobaldi_app/blankpaper.py:83
+#: ../python/frescobaldi_app/blankpaper.py:87
 #, fuzzy
 msgid "Paper"
 msgstr "Taille du papier:"
 
-#: ../python/frescobaldi_app/blankpaper.py:85
+#: ../python/frescobaldi_app/blankpaper.py:89
 #, fuzzy
 msgid "Settings"
 msgstr "Cordes"
 
-#: ../python/frescobaldi_app/blankpaper.py:91
+#: ../python/frescobaldi_app/blankpaper.py:95
 #: ../python/frescobaldi_app/scorewiz/__init__.py:509
 msgid "Paper size:"
 msgstr "Taille du papier:"
 
-#: ../python/frescobaldi_app/blankpaper.py:95
+#: ../python/frescobaldi_app/blankpaper.py:99
 #: ../python/frescobaldi_app/scorewiz/__init__.py:448
 #: ../python/frescobaldi_app/scorewiz/__init__.py:513
 #: ../python/frescobaldi_app/scorewiz/__init__.py:547
@@ -626,113 +626,115 @@ msgstr "Taille du papier:"
 msgid "Default"
 msgstr "Par défaut"
 
-#: ../python/frescobaldi_app/blankpaper.py:99
+#: ../python/frescobaldi_app/blankpaper.py:103
 #, fuzzy
 msgid "Staff Size:"
 msgstr "Type de portée:"
 
-#: ../python/frescobaldi_app/blankpaper.py:106
+#: ../python/frescobaldi_app/blankpaper.py:110
 msgid "Page count:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:114
+#: ../python/frescobaldi_app/blankpaper.py:118
 #, fuzzy
 msgid "Print Bar Lines"
 msgstr "Pas de barres de mesures"
 
-#: ../python/frescobaldi_app/blankpaper.py:116
+#: ../python/frescobaldi_app/blankpaper.py:120
 #, fuzzy
 msgid "Bars per line:"
 msgstr "Taille du papier:"
 
-#: ../python/frescobaldi_app/blankpaper.py:123
+#: ../python/frescobaldi_app/blankpaper.py:127
 msgid "Show Page Numbers"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:125
+#: ../python/frescobaldi_app/blankpaper.py:129
 msgid "Start with:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:260
+#: ../python/frescobaldi_app/blankpaper.py:266
 msgid "Blank staff paper preview"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:279
+#: ../python/frescobaldi_app/blankpaper.py:285
 msgid "No PDF was created."
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:290
+#: ../python/frescobaldi_app/blankpaper.py:296
 #, fuzzy
 msgid "Open in PDF viewer"
 msgstr "Ouvrir %1 dans le visualiseur externe"
 
-#: ../python/frescobaldi_app/blankpaper.py:299
+#: ../python/frescobaldi_app/blankpaper.py:305
 msgid "Save PDF As..."
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:306
+#: ../python/frescobaldi_app/blankpaper.py:312
 #, fuzzy
 msgid "PDF Files"
 msgstr "Tous les fichiers"
 
-#: ../python/frescobaldi_app/blankpaper.py:331
+#: ../python/frescobaldi_app/blankpaper.py:337
 msgid "Directly print on default printer"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:340
+#: ../python/frescobaldi_app/blankpaper.py:346
 #, fuzzy
 msgid "Copy LilyPond code to editor"
 msgstr "Fichiers LilyPond à convertir"
 
-#: ../python/frescobaldi_app/blankpaper.py:414
+#: ../python/frescobaldi_app/blankpaper.py:445
 msgid "Staves per page:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:419
+#: ../python/frescobaldi_app/blankpaper.py:450
+#: ../python/frescobaldi_app/blankpaper.py:788
 msgid "Clef:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:425
+#: ../python/frescobaldi_app/blankpaper.py:456
 msgid "Single Staff"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:445
-#: ../python/frescobaldi_app/blankpaper.py:501
+#: ../python/frescobaldi_app/blankpaper.py:476
+#: ../python/frescobaldi_app/blankpaper.py:532
+#: ../python/frescobaldi_app/blankpaper.py:627
 msgid "Systems per page:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:449
+#: ../python/frescobaldi_app/blankpaper.py:480
 #, fuzzy
 msgid "Clefs"
 msgstr "Célesta"
 
-#: ../python/frescobaldi_app/blankpaper.py:453
+#: ../python/frescobaldi_app/blankpaper.py:484
 #, fuzzy
 msgid "Piano Staff"
 msgstr "Piano"
 
-#: ../python/frescobaldi_app/blankpaper.py:473
+#: ../python/frescobaldi_app/blankpaper.py:504
 #, fuzzy
 msgid "Organ Staff"
 msgstr "Orgue"
 
-#: ../python/frescobaldi_app/blankpaper.py:497
+#: ../python/frescobaldi_app/blankpaper.py:528
 #, fuzzy
 msgid "Staves per system:"
 msgstr "Autres systèmes:"
 
-#: ../python/frescobaldi_app/blankpaper.py:507
+#: ../python/frescobaldi_app/blankpaper.py:538
 #, fuzzy
 msgid "Clefs:"
 msgstr "Célesta"
 
-#: ../python/frescobaldi_app/blankpaper.py:514
+#: ../python/frescobaldi_app/blankpaper.py:545
 msgid ""
 "Enter as much letters (S, A, T or B) as there are staves.\n"
 "See \"What's This\" for more information."
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:517
+#: ../python/frescobaldi_app/blankpaper.py:548
 msgid ""
 "To configure clefs, first set the number of staves per system. Then enter as "
 "much letters (S, A, T or B) as there are staves.\n"
@@ -746,16 +748,52 @@ msgid ""
 "the quotes) here."
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:531
+#: ../python/frescobaldi_app/blankpaper.py:562
 #, fuzzy
 msgid "Choir Staff"
 msgstr "Chœur"
 
-#: ../python/frescobaldi_app/blankpaper.py:538
+#: ../python/frescobaldi_app/blankpaper.py:569
 #: ../python/frescobaldi_app/scorewiz/__init__.py:395
 #: ../python/frescobaldi_app/scorewiz/__init__.py:538
 msgid "None"
 msgstr "Aucun"
+
+#: ../python/frescobaldi_app/blankpaper.py:716
+#, fuzzy
+msgid "Custom Staff"
+msgstr "Chœur"
+
+#: ../python/frescobaldi_app/blankpaper.py:778
+#, fuzzy
+msgid "Staff"
+msgstr "Type de portée:"
+
+#: ../python/frescobaldi_app/blankpaper.py:801
+msgid "Space above:"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:804
+msgid "Space below:"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:839
+#, fuzzy
+msgid "Brace"
+msgstr "Cuivres"
+
+#: ../python/frescobaldi_app/blankpaper.py:864
+msgid "Bracket"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:873
+msgid "Square Bracket"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:875
+#, fuzzy
+msgid "Connect Barlines"
+msgstr "Pas de barres de mesures"
 
 #: ../python/frescobaldi_app/document.py:110
 #, fuzzy
