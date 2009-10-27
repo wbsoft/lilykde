@@ -311,6 +311,7 @@ class SavePDF(BlankPaperJob):
         dlg = KFileDialog(KUrl(), '*.pdf|%s\n*|%s' % (
             i18n("PDF Files"), i18n("All Files")), dialog)
         dlg.setOperationMode(KFileDialog.Saving)
+        dlg.setCaption(i18n("Save PDF"))
         dlg.setConfirmOverwrite(True)
         dlg.setSelection('staffpaper.pdf')
         if dlg.exec_():
@@ -661,7 +662,6 @@ class CustomStaff(SymbolManager, QWidget):
                 lambda t=staffType: self.createItem(t))
             self.addSymbol(b, staffType.symbol())
             newStaves.addWidget(b)
-            
         
     def createItem(self, staffType):
         empty = self.tree.topLevelItemCount() == 0

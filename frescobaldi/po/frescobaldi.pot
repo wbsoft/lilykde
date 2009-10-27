@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.16\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-10-27 15:39+0100\n"
+"POT-Creation-Date: 2009-10-27 19:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -643,60 +643,64 @@ msgstr ""
 msgid "PDF Files"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:337
+#: ../python/frescobaldi_app/blankpaper.py:314
+msgid "Save PDF"
+msgstr ""
+
+#: ../python/frescobaldi_app/blankpaper.py:338
 msgid "Directly print on default printer"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:346
+#: ../python/frescobaldi_app/blankpaper.py:347
 msgid "Copy LilyPond code to editor"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:445
+#: ../python/frescobaldi_app/blankpaper.py:446
 msgid "Staves per page:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:450
+#: ../python/frescobaldi_app/blankpaper.py:451
 #: ../python/frescobaldi_app/blankpaper.py:788
 msgid "Clef:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:456
+#: ../python/frescobaldi_app/blankpaper.py:457
 msgid "Single Staff"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:476
-#: ../python/frescobaldi_app/blankpaper.py:532
-#: ../python/frescobaldi_app/blankpaper.py:627
+#: ../python/frescobaldi_app/blankpaper.py:477
+#: ../python/frescobaldi_app/blankpaper.py:533
+#: ../python/frescobaldi_app/blankpaper.py:628
 msgid "Systems per page:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:480
+#: ../python/frescobaldi_app/blankpaper.py:481
 msgid "Clefs"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:484
+#: ../python/frescobaldi_app/blankpaper.py:485
 msgid "Piano Staff"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:504
+#: ../python/frescobaldi_app/blankpaper.py:505
 msgid "Organ Staff"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:528
+#: ../python/frescobaldi_app/blankpaper.py:529
 msgid "Staves per system:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:538
+#: ../python/frescobaldi_app/blankpaper.py:539
 msgid "Clefs:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:545
+#: ../python/frescobaldi_app/blankpaper.py:546
 msgid ""
 "Enter as much letters (S, A, T or B) as there are staves.\n"
 "See \"What's This\" for more information."
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:548
+#: ../python/frescobaldi_app/blankpaper.py:549
 msgid ""
 "To configure clefs, first set the number of staves per system. Then enter as "
 "much letters (S, A, T or B) as there are staves.\n"
@@ -710,11 +714,11 @@ msgid ""
 "the quotes) here."
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:562
+#: ../python/frescobaldi_app/blankpaper.py:563
 msgid "Choir Staff"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:569
+#: ../python/frescobaldi_app/blankpaper.py:570
 #: ../python/frescobaldi_app/scorewiz/__init__.py:395
 #: ../python/frescobaldi_app/scorewiz/__init__.py:538
 msgid "None"
