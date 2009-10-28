@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.9\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-10-27 19:01+0100\n"
+"POT-Creation-Date: 2009-10-28 07:28+0100\n"
 "PO-Revision-Date: 2009-05-15 16:55+0200\n"
 "Last-Translator: Georg Hennig <georg.hennig@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -641,8 +641,9 @@ msgid "Bars per line:"
 msgstr "Papier-Format:"
 
 #: ../python/frescobaldi_app/blankpaper.py:127
-msgid "Show Page Numbers"
-msgstr ""
+#, fuzzy
+msgid "Print Page Numbers"
+msgstr "Keine Taktstriche"
 
 #: ../python/frescobaldi_app/blankpaper.py:129
 msgid "Start with:"

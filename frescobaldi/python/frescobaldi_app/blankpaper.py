@@ -124,7 +124,7 @@ class Dialog(KDialog):
         settings.layout().addWidget(self.barsPerLine, 1, 1)
         self.barsPerLine.setRange(1, 20)
         
-        self.pageNumbers = QCheckBox(i18n("Show Page Numbers"))
+        self.pageNumbers = QCheckBox(i18n("Print Page Numbers"))
         self.pageNumStart = QSpinBox()
         l = QLabel(i18n("Start with:"))
         l.setBuddy(self.pageNumStart)
