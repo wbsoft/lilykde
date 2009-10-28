@@ -20,15 +20,15 @@
 """
 Indent LilyPond input.
 
-Recoqnizes common LilyPond mode and Scheme mode.
+Recognizes common LilyPond mode and Scheme mode.
 
 This module is not dependent on any other module,
 besides the Python standard re module.
-
 """
 
 import re
 
+# tokens to look for in LilyPond mode
 lily_re = (
     r"(?P<indent>\{|<<)"
     r"|(?P<dedent>>>|\})"
@@ -41,9 +41,7 @@ lily_re = (
     r"|(?P<comment>%[^\n]*)"
     )
 
-class lily:
-    rx = re.compile(lily_re, re.DOTALL)
-
+# tokens to look for in Scheme mode
 scheme_re = (
     r"(?P<indent>\()"
     r"|(?P<dedent>\))"
@@ -56,14 +54,24 @@ scheme_re = (
     r"|(?P<comment>;[^\n]*)"
     )
 
-class scheme:
-    rx = re.compile(scheme_re, re.DOTALL)
-    depth = 0
-
+# tokens to look for in LilyPond-inside-Scheme mode
 schemelily_re = r"(?P<backtoscheme>#\})|" + lily_re
 
-class schemelily(lily):
-    rx = re.compile(schemelily_re, re.DOTALL)
+
+# Parse LilyPond text
+lily = re.compile(lily_re, re.DOTALL)
+
+# Parse LilyPond-in-Scheme text
+schemelily = re.compile(schemelily_re, re.DOTALL)
+
+# Parse Scheme text, instantiate to keep state (depth)
+class scheme:
+    search = re.compile(scheme_re, re.DOTALL).search
+    depth = 0
+
+
+# searches for indent inside a string
+indent_rx = re.compile(r'\n([^\S\n]*)')
 
     
 def indent(text,
@@ -96,12 +104,10 @@ def indent(text,
     if usetabs is None:
         usetabs = '\t' in space or '\n\t' in text
     
-    mode = [lily()]     # the mode to parse in
+    mode = [lily]       # the mode to parse in
     indent = [start]    # stack with indent history
     pos = len(space)    # start position in text
     output = []         # list of output lines
-    line = []           # list to build the output, per line
-    curindent = -1      # current indent in count of spaces, -1 : not yet set
     
     if startscheme:
         mode.append(scheme())
@@ -110,93 +116,96 @@ def indent(text,
     else:
         makeindent = lambda i: ' ' * i
     
+    line = []           # list to build the output, per line
+    curindent = -1      # current indent in count of spaces, -1 : not yet set
+    
     # Search the text from the previous position
     # (very fast: does not alter the string in text)
-    m = mode[-1].rx.search(text, pos)
+    m = mode[-1].search(text, pos)
     while m:
         # also append text before the found token
         more = pos < m.start()
         if more:
             line.append(text[pos:m.start()])
         
+        # type, text, and new position for next search
+        item, token, pos = m.lastgroup, m.group(), m.end()
+
         # If indent not yet determined, set it to 0 if we found a long comment
         # (with three or more %%% or ;;; characters). Was any other text found,
-        # set the indent to the same level as the previous line.
+        # keep the current indent level for the current line.
+        # (Our current indent can change if our line starts with dedent tokens.)
         if curindent == -1:
-            if m.lastgroup == 'longcomment':
+            if item == 'longcomment':
                 curindent = 0
-            elif (more or m.lastgroup not in ('dedent', 'space', 'backtoscheme')):
+            elif (more or item not in ('dedent', 'space', 'backtoscheme')):
                 curindent = indent[-1]
         
-        token = m.group()
-        
-        # Check if we found a multiline blockcomment.
-        if m.lastgroup == 'blockcomment' and '\n' in token:
-            # Keep the indent inside multiline block comments.
-            # Find the shortest indent inside the block comment.
+        # Check if we found a multiline block comment.
+        # Thoses are handled specially. Indents inside the block comment are
+        # preserved but positioned as close as possible to the current indent.
+        # So the algorithm cuts the shortest indent off from all lines and then
+        # adds the current indent.
+        if item == 'blockcomment' and '\n' in token:
+            # Find the shortest indent inside the block comment
             shortest = min(len(n.group(1).expandtabs(tabwidth))
-                for n in re.finditer(r'\n([^\S\n]*)', token))
-            # Remove the shortest indent from all lines
-            # (make it equal to the current indent).
-            fixindent = lambda match: '\n' + makeindent(
-                curindent - shortest + len(match.group(1).expandtabs(tabwidth)))
-            token = re.sub(r'\n([^\S\n]*)', fixindent, token)
+                for n in indent_rx.finditer(token))
+            # Remove that indent from all lines
+            fixindent = lambda n: '\n' + makeindent(
+                curindent - shortest + len(n.group(1).expandtabs(tabwidth)))
+            token = indent_rx.sub(fixindent, token)
         
-        elif isinstance(mode[-1], lily):
+        elif mode[-1] in (lily, schemelily):
             # we are parsing in LilyPond mode.
-            if m.lastgroup == 'indent':
+            if item == 'indent':
                 indent.append(indent[-1] + indentwidth)
-            elif m.lastgroup == 'dedent' and len(indent) > 1:
+            elif item == 'dedent' and len(indent) > 1:
                 indent.pop()
-            elif m.lastgroup == 'scheme':
-                mode.append(scheme())
-            elif m.lastgroup == 'backtoscheme':
+            elif item == 'scheme':
+                mode.append(scheme())       # enter scheme mode
+            elif item == 'backtoscheme':
                 indent.pop()
-                mode.pop()
+                mode.pop()                  # leave lilypond mode, back to scheme
         else:
             # we are parsing in Scheme mode.
-            if m.lastgroup == 'indent':
-                mode[-1].depth += 1 # count parentheses
-                # look max 10 characters forward to vertically align parentheses
-                # we shouldn't do this if previous searches in this line failed,
-                # but even now the output is acceptable.
-                w = indentwidth
-                for col, char in enumerate(text[m.end():m.end() + 10]):
-                    if char == '(':
-                        w = col + 1
-                        break
-                    elif char in '")\n':
-                        break
-                indent.append(indent[-1] + w)
-            elif m.lastgroup == 'dedent':
+            if item == 'indent':
+                mode[-1].depth += 1         # count parentheses
+                # look max 10 characters ahead to vertically align opening
+                # parentheses, but stop at closing parenthesis, quote or newline.
+                n = re.search(r'[()"\n]', text[pos:pos+10])
+                if n and n.group() == '(':
+                    indent.append(indent[-1] + n.start() + 1)
+                else:
+                    indent.append(indent[-1] + indentwidth)
+                
+            elif item == 'dedent':
                 if mode[-1].depth:
                     indent.pop()
                 if mode[-1].depth <= 1:
-                    mode.pop()
+                    mode.pop()              # leave scheme mode
                 else:
-                    mode[-1].depth -= 1
-            elif m.lastgroup == 'lilypond':
-                mode.append(schemelily())
+                    mode[-1].depth -= 1     # count parentheses backwards
+            elif item == 'lilypond':
+                mode.append(schemelily)     # enter lilypond-in-scheme mode
                 indent.append(indent[-1] + indentwidth)
             elif mode[-1].depth == 0:
                 # jump out if we got one atom or are at a space or end of line
                 # and still no opening parenthesis. But stay if we only just
                 # had a hash(#).
-                if (m.lastgroup in ('string', 'comment', 'longcomment')
-                    or (more and m.lastgroup in ('newline', 'space'))):
+                if (item in ('string', 'comment', 'longcomment')
+                    or (more and item in ('newline', 'space'))):
                     mode.pop()
         
-        if m.lastgroup == 'newline':
-            # Write out the line with its indent as a numerical value
-            output.append( (curindent, ''.join(line)) )
+        if item == 'newline':
+            # Write out the line
+            output.append(makeindent(curindent) + ''.join(line))
             line = []
             curindent = -1
         else:
             line.append(token)
         
         # On to the next token
-        pos = m.end()
-        m = mode[-1].rx.search(text, pos)
+        m = mode[-1].search(text, pos)
     
     # Still some text left?
     if pos < len(text):
@@ -204,11 +213,11 @@ def indent(text,
     if line:
         if curindent == -1:
             curindent = indent[-1]
-        output.append( (curindent, ''.join(line)) )
+        output.append(makeindent(curindent) + ''.join(line))
     else:
-        output.append( (start, '') )
+        output.append(makeindent(start))
     # Return formatted output
-    return '\n'.join(makeindent(indent) + line for indent, line in output)
+    return '\n'.join(output)
 
     
 if __name__ == '__main__':
