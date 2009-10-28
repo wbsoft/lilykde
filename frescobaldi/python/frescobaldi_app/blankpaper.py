@@ -275,8 +275,8 @@ class BlankPaperJob(BackgroundJob):
     
     def finished(self):
         """
-        Returns the filename of the created PDF or None.
-        Displays the error dialog if none was created.
+        Calls handlePDF() with the filename of the created PDF.
+        Displays the error dialog if no PDF was created.
         """
         pdfs = self.job.updatedFiles()("pdf")
         if pdfs:
