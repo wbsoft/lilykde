@@ -376,7 +376,7 @@ class HtmlParser(HTMLParser.HTMLParser):
 
 class HeaderParser(HtmlParser):
     """
-    Parses just the header or a piece of HTML. Subclass this.
+    Parses just the header of a piece of HTML. Subclass this.
     """
     def __init__(self, html):
         HtmlParser.__init__(self)
