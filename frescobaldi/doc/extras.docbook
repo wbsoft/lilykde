@@ -1,0 +1,107 @@
+<chapter id="extras">
+<title>Extra Tools</title>
+
+<para>
+Some extra tools that &frescobaldi; provides (besides &lilypond; editing)
+are documented here. These tools are accessible via
+<menuchoice>
+  <guimenu>&lilypond;</guimenu>
+  <guimenuitem>Extra Tools</guimenuitem>
+</menuchoice>.
+</para>
+
+<sect1 id="blankpaper">
+<title>Create blank staff paper</title>
+
+<para>
+With this tool you can create blank music staff paper and print it or save
+it to a file.
+Of course, &lilypond; is used to create the staff paper.
+Above in the window you can choose which type of music paper you want to create.
+Choices are single staff paper or paper with piano staffs, etc.
+At the bottom of the window, you can choose what you want to do with
+your newly created staff paper.
+Write it to a file, open it in a PDF viewer, directly print it or copy the &lilypond;
+source to the editor to customize it further.
+</para>
+
+<para>
+Five types of staff paper can be created:
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Single Staff</guilabel></term>
+<listitem>
+  <para>
+  Creates staff paper with (by default) 12 single staves per page.
+  You can select the clef you want to use. If you select the TAB clef, tablature
+  staves are printed (with 6 lines).
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Piano Staff</guilabel></term>
+<listitem>
+  <para>
+  Creates piano staff paper with (by default) 6 systems per page.
+  You can check whether you want the default clefs to be printed or not.
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Organ Staff</guilabel></term>
+<listitem>
+  <para>
+  Creates organ staff paper with (by default) 4 systems per page, consisting
+  of a braced piano staff and a pedal staff.
+  You can check whether you want the default clefs to be printed or not.
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Choir Staff</guilabel></term>
+<listitem>
+  <para>
+  Creates a bracketed staff group with 2 or more staves.
+  First select the number of staves you want in the system.
+  Then select the number of systems you want in a page.
+  Finally, choose which clefs you want to add.
+  See "Whats This" (<keycombo><keycap>Shift+F1</keycap></keycombo>)
+  on the clef entry for more information.
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Custom Staff</guilabel></term>
+<listitem>
+  <para>
+  This is the most advanced way to create blank staff paper.
+  You can click one of the three buttons on the left to add a brace, a bracket,
+  or a staff. You can arrange the staves or the staff groups by dragging them
+  with the mouse. Multiple groups may be nested.
+  For each staff you can select a clef and adjust the space you want to leave
+  above and below it.
+  The bracket staff group can be configured to print just a square bracket instead
+  of the usual with curved tips, and you can control whether you want barlines (if you
+  want them, see below) to be connected between staves in the group or not.
+  </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+If you click <guibutton>Try</guibutton> a preview will be shown.
+If you click <guibutton>Details</guibutton>, additional settings become visible
+to select the staffsize, the number of pages, page numbers and barlines you want to print.
+</para>
+
+</sect1>
+
+</chapter>
