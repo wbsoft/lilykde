@@ -66,11 +66,10 @@ class DocumentManipulator(object):
             end = docRange.end()
         text = unicode(self.doc.doc.text(KTextEditor.Range(start, end)))
         
-        state = ly.tokenize.State()
         lastCommand = None
         writer = ly.pitch.pitchWriter[lang]
         reader = ly.pitch.pitchReader["nederlands"]
-        tokenizer = tokenizeRange(text, state=state)
+        tokenizer = tokenizeRange(text)
         
         # Walk through not-selected text, to track the state and the 
         # current pitch language.
