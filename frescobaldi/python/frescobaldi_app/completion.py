@@ -198,32 +198,32 @@ def findMatches(model, view, word, invocationType):
     # parse to get current context
     fragment = unicode(doc.text(KTextEditor.Range(
         KTextEditor.Cursor(0, 0), word.start())))
-    state = ly.tokenize.State()
+    tokenizer = ly.tokenize.Tokenizer()
     token = None # in case the next loop does not run at all
-    for token in ly.tokenize.tokenize(fragment, state=state):
+    for token in tokenizer.tokens(fragment):
         pass
     # don't bother if we are inside a string or comment
-    if isinstance(token, (ly.tokenize.Incomplete, ly.tokenize.Comment)):
+    if isinstance(token, (tokenizer.Incomplete, tokenizer.Comment)):
         return
     
     if text.endswith("\\"):
-        if isinstance(state.parser(), ly.tokenize.MarkupParser):
-            if state.parser().token == "\\markuplines":
+        if isinstance(tokenizer.parser(), tokenizer.MarkupParser):
+            if tokenizer.parser().token == "\\markuplines":
                 return ly.words.markupcommands + ly.words.markuplistcommands
             else:
                 return ly.words.markupcommands
-        elif state.parser().token == "\\context":
+        elif tokenizer.parser().token == "\\context":
             return ly.words.contexts + ly.words.keywords + ly.words.musiccommands + lilypondVersion()
         else:
             return ly.words.keywords + ly.words.musiccommands + lilypondVersion()
 
-    if isinstance(state.parser(), ly.tokenize.SchemeParser):
+    if isinstance(tokenizer.parser(), tokenizer.SchemeParser):
         # is the last token the scheme-introducing '#' ?
-        if token is state.parser().token:
+        if token is tokenizer.parser().token:
             return ('UP', 'DOWN', 'CENTER', 'LEFT', 'RIGHT')
         else:
             if text.endswith("#("):
-                if state.parser(-2).token == "\\paper":
+                if tokenizer.parser(-2).token == "\\paper":
                     return ('set-paper-size',)
             elif text.endswith("#:"):
                 return ly.words.markupcommands
@@ -234,13 +234,13 @@ def findMatches(model, view, word, invocationType):
     if col == 0 or text[-1] in " \t":
         # all kinds of variables only at start of line or after whitespace
         # the VarCompletions model can add ' = ' after them
-        if state.parser().token == "\\header":
+        if tokenizer.parser().token == "\\header":
             return VarCompletions(model, ly.words.headervars)
-        if state.parser().token == "\\paper":    
+        if tokenizer.parser().token == "\\paper":    
             return VarCompletions(model, ly.words.papervars)
-        if state.parser().token == "\\layout":
+        if tokenizer.parser().token == "\\layout":
             return VarCompletions(model, ly.words.layoutvars)
-        if state.parser().token in ("\\context", "\\with"):
+        if tokenizer.parser().token in ("\\context", "\\with"):
             return VarCompletions(model, ly.words.contextproperties)
     
 

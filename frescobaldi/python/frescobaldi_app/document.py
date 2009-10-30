@@ -69,15 +69,16 @@ class DocumentManipulator(object):
         lastCommand = None
         writer = ly.pitch.pitchWriter[lang]
         reader = ly.pitch.pitchReader["nederlands"]
-        tokenizer = tokenizeRange(text)
+        tokenizer = RangeTokenizer()
+        tokens = tokenizer.tokens(text)
         
         # Walk through not-selected text, to track the state and the 
         # current pitch language.
         if selection:
-            for token in tokenizer:
-                if isinstance(token, ly.tokenize.Command):
+            for token in tokens:
+                if isinstance(token, tokenizer.Command):
                     lastCommand = token
-                elif (isinstance(token, ly.tokenize.String)
+                elif (isinstance(token, tokenizer.String)
                     and lastCommand == "\\include"):
                     langName = token[1:-4]
                     if langName in ly.pitch.pitchInfo.keys():
@@ -88,17 +89,17 @@ class DocumentManipulator(object):
         # Now walk through the part that needs to be translated.
         changes = ChangeList()
         includeCommandChanged = False
-        for token in tokenizer:
-            if isinstance(token, ly.tokenize.Command):
+        for token in tokens:
+            if isinstance(token, tokenizer.Command):
                 lastCommand = token
-            elif (isinstance(token, ly.tokenize.String)
+            elif (isinstance(token, tokenizer.String)
                 and lastCommand == "\\include"):
                 langName = token[1:-4]
                 if langName in ly.pitch.pitchInfo.keys():
                     reader = ly.pitch.pitchReader[langName]
                     changes.append(token, '"%s.ly"' % lang)
                     includeCommandChanged = True
-            elif isinstance(token, ly.tokenize.PitchWord):
+            elif isinstance(token, tokenizer.PitchWord):
                 result = reader(token)
                 if result:
                     note, alter = result
@@ -150,10 +151,10 @@ class DocumentManipulator(object):
         lineNum. Returns the line number to insert text at.
         """
         insert = 0
-        state = ly.tokenize.State()
-        for token in ly.tokenize.tokenizeLineColumn(self.doc.text(), state=state):
-            if (isinstance(token, ly.tokenize.Space)
-                and state.depth() == (1, 0)
+        tokenizer = ly.tokenize.LineColumnTokenizer()
+        for token in tokenizer.tokens(self.doc.text()):
+            if (isinstance(token, tokenizer.Space)
+                and tokenizer.depth() == (1, 0)
                 and token.count('\n') > 1):
                 if token.line >= lineNum:
                     break
@@ -175,18 +176,18 @@ class DocumentManipulator(object):
         
         # find out in what input mode we are
         mode = ""
-        state = ly.tokenize.State()
         selRange = self.doc.view.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
         text = self.doc.textToCursor(selRange.start())
-        for token in ly.tokenize.tokenize(text, state=state):
+        tokenizer = ly.tokenize.Tokenizer()
+        for token in tokenizer.tokens(text):
             pass
-        for s in reversed(state.state):
-            if isinstance(s, ly.tokenize.InputModeParser):
-                if isinstance(s, ly.tokenize.LyricModeParser):
+        for s in reversed(tokenizer.state):
+            if isinstance(s, tokenizer.InputModeParser):
+                if isinstance(s, tokenizer.LyricModeParser):
                     mode = " \\lyricmode"
-                elif isinstance(s, ly.tokenize.ChordModeParser):
+                elif isinstance(s, tokenizer.ChordModeParser):
                     mode = " \\chordmode"
-                elif isinstance(s, ly.tokenize.FigureModeParser):
+                elif isinstance(s, tokenizer.FigureModeParser):
                     mode = " \\figuremode"
                 break
         
@@ -622,24 +623,26 @@ class Cursor(ly.tokenize.Cursor):
         return KTextEditor.Cursor(self.line, self.column)
     
 
-def tokenizeRange(text, pos = 0, state = None, cursor = None):
-    """
-    Iterate over the tokens returned by tokenize(), adding a
-    KTextEditor.Range to every token, describing its place.
-    See the ly.tokenize module.
-    """
-    if cursor is None:
-        cursor = Cursor()
-    if pos:
-        cursor.walk(text[:pos])
-    start = cursor.kteCursor()
-    for token in ly.tokenize.tokenize(text, pos, state):
-        cursor.walk(token)
-        end = cursor.kteCursor()
-        token.range = KTextEditor.Range(start, end)
-        start = end
-        yield token
+class RangeTokenizer(ly.tokenize.Tokenizer):
+    def tokens(self, text, pos = 0, cursor = None):
+        """
+        Iterate over the tokens returned by tokenize(), adding a
+        KTextEditor.Range to every token, describing its place.
+        See the ly.tokenize module.
+        """
+        if cursor is None:
+            cursor = Cursor()
+        if pos:
+            cursor.walk(text[:pos])
+        start = cursor.kteCursor()
+        for token in ly.tokenize.Tokenizer.tokens(self, text, pos):
+            cursor.walk(token)
+            end = cursor.kteCursor()
+            token.range = KTextEditor.Range(start, end)
+            start = end
+            yield token
  
+
 def isblank(text):
     """ Returns True if text is None, empty or only contains spaces. """
     return not text or text.isspace()

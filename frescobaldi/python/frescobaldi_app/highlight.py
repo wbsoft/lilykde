@@ -57,16 +57,16 @@ class LilyPondHighlighter(QSyntaxHighlighter):
         
     def highlightBlock(self, text):
         text = unicode(text)
-        for token in ly.tokenize.tokenize(text):
+        tokenizer = ly.tokenize.Tokenizer()
+        for token in tokenizer.tokens(text):
             setFormat = (lambda format:
                 self.setFormat(token.pos, len(token), self.formats[format]))
-            if isinstance(token, ly.tokenize.Command):
+            if isinstance(token, tokenizer.Command):
                 setFormat('command')
-            elif isinstance(token, ly.tokenize.String):
+            elif isinstance(token, tokenizer.String):
                 setFormat('string')
             elif token in ('{', '}', '<<', '>>', '#{', '#}', '<', '>'):
                 setFormat('delimiter')
-            elif isinstance(token, ly.tokenize.Comment):
+            elif isinstance(token, tokenizer.Comment):
                 setFormat('comment')
 
-        

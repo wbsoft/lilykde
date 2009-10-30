@@ -48,7 +48,7 @@ def insertVersion(mainwin):
     if it does not already have a version command.
     """
     doc = mainwin.currentDocument()
-    for token in ly.tokenize.tokenizeLineColumn(doc.text()):
+    for token in ly.tokenize.LineColumnTokenizer().tokens(doc.text()):
         if token == "\\version":
             doc.view.setCursorPosition(KTextEditor.Cursor(token.line, token.column))
             KMessageBox.sorry(mainwin,
