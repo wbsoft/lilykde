@@ -108,9 +108,8 @@ class MainApp(kateshell.app.MainApp):
         # now check for our LocalFileManagers ...
         for d in self.documents:
             manager = d.localFileManager()
-            if manager:
-                if manager.path() == url:
-                    return d
+            if manager and manager.path() == url:
+                return d
         return False
     
     def keepMetaInfo(self):
@@ -477,6 +476,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                 if not isblank(d.line(num)) and isblank(d.line(num + 1)):
                     d.view.setCursorPosition(
                         KTextEditor.Cursor(num + 1, len(d.line(num + 1))))
+                    d.view.removeSelection()
                     return
         
         @self.onAction(i18n("Previous blank line"), "go-up-search", key="Alt+Up",
@@ -486,8 +486,57 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             for num in range(d.view.cursorPosition().line() - 1, -1, -1):
                 if isblank(d.line(num)) and (num == 0 or not isblank(d.line(num - 1))):
                     d.view.setCursorPosition(KTextEditor.Cursor(num, len(d.line(num))))
+                    d.view.removeSelection()
                     return
         
+        @self.onAction(i18n("Select to next blank line"), key="Shift+Alt+Down",
+            tooltip=i18n(
+            "Select from the current position up and including the next blank line."))
+        def edit_select_next_blank_line():
+            d = self.currentDocument()
+            cursor = d.view.cursorPosition()
+            for num in range(cursor.line() + 1, d.doc.lines() - 1):
+                if num == d.doc.lines() - 2 or isblank(d.line(num)) and not isblank(d.line(num + 1)):
+                    newcur = KTextEditor.Cursor(num + 1, 0)
+                    if d.view.selection():
+                        r = d.view.selectionRange()
+                        if cursor.position() == r.start().position():
+                            cursor = r.end()
+                        elif cursor.position() == r.end().position():
+                            cursor = r.start()
+                    else:
+                        line = cursor.line()
+                        while line < d.doc.lines() and isblank(d.line(line)):
+                            line += 1
+                        cursor.setLine(line)
+                    d.view.setSelection(KTextEditor.Range(cursor, newcur))
+                    d.view.setCursorPosition(newcur)
+                    return
+        
+        @self.onAction(i18n("Select to previous blank line"), key="Shift+Alt+Up",
+            tooltip=i18n(
+            "Select from the current position up to right after the previous blank line."))
+        def edit_select_previous_blank_line():
+            d = self.currentDocument()
+            cursor = d.view.cursorPosition()
+            for num in range(cursor.line() - 2, -2, -1):
+                if num == -1 or isblank(d.line(num)) and not isblank(d.line(num + 1)):
+                    newcur = KTextEditor.Cursor(num + 1, 0)
+                    if d.view.selection():
+                        r = d.view.selectionRange()
+                        if cursor.position() == r.start().position():
+                            cursor = r.end()
+                        elif cursor.position() == r.end().position():
+                            cursor = r.start()
+                    else:
+                        line = cursor.line()
+                        if line < d.doc.lines() and isblank(d.line(line)):
+                            line += 1
+                        cursor.setLine(line)
+                    d.view.setSelection(KTextEditor.Range(cursor, newcur))
+                    d.view.setCursorPosition(newcur)
+                    return
+                    
         # actions and functionality for editing pitches
         a = KActionMenu(KIcon("applications-education-language"),
                 i18n("Pitch Name Language"), self)

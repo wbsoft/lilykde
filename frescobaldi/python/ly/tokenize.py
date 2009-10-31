@@ -471,5 +471,3 @@ class Cursor(object):
         else:
             self.column += len(text)
         
-
-        
