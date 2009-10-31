@@ -34,6 +34,104 @@ def make_re(classes):
 
 
 class Tokenizer(object):
+    """
+    This class defines an environment to parse LilyPond text input.
+    
+    There are two types of nested classes (accessible as class attributes, but
+    also via a Tokenizer instance):
+    
+    - Subclasses of Parsed (or Unparsed): tokens of LilyPond input.
+    - Subclasses of Parser: container with regex to parse LilyPond input.
+    """
+    def __init__(self, parserClass = None):
+        self.reset(parserClass)
+        
+    def reset(self, parserClass = None):
+        """
+        Reset the tokenizer instance (forget state), so that it can be used
+        again.
+        """
+        if parserClass is None:
+            parserClass = self.ToplevelParser
+        self.state = [parserClass()]
+
+    def parser(self, depth = -1):
+        """ Return the current (or given) parser instance. """
+        return self.state[depth]
+        
+    def enter(self, parserClass, token, argcount = None):
+        """ (Internal) Enter a new parser. """
+        self.state.append(parserClass())
+        self.state[-1].token = token
+        if argcount is not None:
+            self.state[-1].argcount = argcount
+
+    def leave(self):
+        """ (Internal) Leave the current parser and pop back to the previous. """
+        if len(self.state) > 1:
+            self.state.pop()
+        
+    def endArgument(self):
+        """
+        (Internal) End an argument. Decrease argcount and leave the parser
+        if it would reach 0.
+        """
+        while len(self.state) > 1 and self.state[-1].level == 0:
+            if self.state[-1].argcount > 1:
+                self.state[-1].argcount -= 1
+                return
+            elif self.state[-1].argcount == 0:
+                return
+            self.state.pop()
+            
+    def inc(self):
+        """
+        (Internal) Up the level of the current parser. Indicates nesting
+        while staying in the same parser.
+        """
+        self.state[-1].level += 1
+        
+    def dec(self):
+        """
+        (Internal) Down the level of the current parser. If it has reached zero,
+        leave the current parser. Otherwise decrease argcount and leave if that
+        would reach zero.
+        """
+        while self.state[-1].level == 0 and len(self.state) > 1:
+            self.state.pop()
+        if self.state[-1].level > 0:
+            self.state[-1].level -= 1
+            self.endArgument()
+            
+    def depth(self):
+        """
+        Return a two-tuple representing the depth of the current state.
+        This is useful to quickly check when a part of LilyPond input ends.
+        """
+        return len(self.state), self.state[-1].level
+
+    def tokens(self, text, pos = 0):
+        """
+        Iterate over the LilyPond tokens in the string.
+        All returned tokens are a subclass of unicode.
+        When they are reassembled, the original string is restored (i.e. no
+        data is lost).
+        The tokenizer does its best to parse LilyPond input and return
+        meaningful strings. It recognizes being in a Scheme context, and also
+        "LilyPond in Scheme" (the #{ and #} constructs).
+        """
+        while True:
+            m = self.state[-1].rx.search(text, pos)
+            if not m:
+                if pos < len(text):
+                    yield self.Unparsed(text[pos:], pos)
+                return
+            else:
+                if pos < m.start():
+                    yield self.Unparsed(text[pos:m.start()], pos)
+                yield getattr(self, m.lastgroup)(m, self)
+                pos = m.end()
+    
     
     # Classes that represent pieces of lilypond text:
     # base classes:
@@ -119,7 +217,15 @@ class Tokenizer(object):
         rx = r"\\markuplines\b"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.MarkupParser, self)
-
+    
+    class Include(Command):
+        rx = r"\\include\b"
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.enter(tokenizer.IncludeParser, self)
+    
+    class IncludeFile(String):
+        pass
+        
     class OpenDelimiter(Increaser):
         rx = r"<<|\{"
         
@@ -166,7 +272,6 @@ class Tokenizer(object):
         rx = "#\{"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.ToplevelParser, self)
-
 
     class OpenBracket(Increaser):
         rx = r"\{"
@@ -248,6 +353,7 @@ class Tokenizer(object):
         LyricMode, ChordMode, FigureMode, NoteMode,
         Markup,
         MarkupLines,
+        Include,
         Command,
         Space,
         )
@@ -328,78 +434,12 @@ class Tokenizer(object):
         ) + _lilybase)
         
 
+    class IncludeParser(Parser):
+        argcount = 1
+    IncludeParser.rx = make_re((
+            IncludeFile,
+        ) + _lilybase)
 
-    def __init__(self, parserClass = None):
-        self.reset(parserClass)
-        
-    def reset(self, parserClass = None):
-        if parserClass is None:
-            parserClass = self.ToplevelParser
-        self.state = [parserClass()]
-
-    def parser(self, depth = -1):
-        return self.state[depth]
-        
-    def parse(self, text, pos):
-        return self.state[-1].rx.search(text, pos)
-        
-    def enter(self, parserClass, token, argcount = None):
-        self.state.append(parserClass())
-        self.state[-1].token = token
-        if argcount is not None:
-            self.state[-1].argcount = argcount
-
-    def leave(self):
-        if len(self.state) > 1:
-            self.state.pop()
-        
-    def endArgument(self):
-        while len(self.state) > 1 and self.state[-1].level == 0:
-            if self.state[-1].argcount > 1:
-                self.state[-1].argcount -= 1
-                return
-            elif self.state[-1].argcount == 0:
-                return
-            self.state.pop()
-            
-    def inc(self):
-        self.state[-1].level += 1
-        
-    def dec(self):
-        while self.state[-1].level == 0 and len(self.state) > 1:
-            self.state.pop()
-        if self.state[-1].level > 0:
-            self.state[-1].level -= 1
-            self.endArgument()
-            
-    def depth(self):
-        """
-        Return a two-tuple representing the depth of the current state.
-        This is useful to quickly check when a part of LilyPond input ends.
-        """
-        return len(self.state), self.state[-1].level
-
-    def tokens(self, text, pos = 0):
-        """
-        Iterate over the LilyPond tokens in the string.
-        All returned tokens are a subclass of unicode.
-        When they are reassembled, the original string is restored (i.e. no
-        data is lost).
-        The tokenizer does its best to parse LilyPond input and return
-        meaningful strings. It recognizes being in a Scheme context, and also
-        "LilyPond in Scheme" (the #{ and #} constructs).
-        """
-        while True:
-            m = self.parse(text, pos)
-            if not m:
-                if pos < len(text):
-                    yield self.Unparsed(text[pos:], pos)
-                return
-            else:
-                if pos < m.start():
-                    yield self.Unparsed(text[pos:m.start()], pos)
-                yield getattr(self, m.lastgroup)(m, self)
-                pos = m.end()
 
 
 class LineColumnTokenizer(Tokenizer):

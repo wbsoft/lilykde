@@ -66,7 +66,6 @@ class DocumentManipulator(object):
             end = docRange.end()
         text = unicode(self.doc.doc.text(KTextEditor.Range(start, end)))
         
-        lastCommand = None
         writer = ly.pitch.pitchWriter[lang]
         reader = ly.pitch.pitchReader["nederlands"]
         tokenizer = RangeTokenizer()
@@ -76,10 +75,7 @@ class DocumentManipulator(object):
         # current pitch language.
         if selection:
             for token in tokens:
-                if isinstance(token, tokenizer.Command):
-                    lastCommand = token
-                elif (isinstance(token, tokenizer.String)
-                    and lastCommand == "\\include"):
+                if isinstance(token, tokenizer.IncludeFile):
                     langName = token[1:-4]
                     if langName in ly.pitch.pitchInfo.keys():
                         reader = ly.pitch.pitchReader[langName]
@@ -90,10 +86,7 @@ class DocumentManipulator(object):
         changes = ChangeList()
         includeCommandChanged = False
         for token in tokens:
-            if isinstance(token, tokenizer.Command):
-                lastCommand = token
-            elif (isinstance(token, tokenizer.String)
-                and lastCommand == "\\include"):
+            if isinstance(token, tokenizer.IncludeFile):
                 langName = token[1:-4]
                 if langName in ly.pitch.pitchInfo.keys():
                     reader = ly.pitch.pitchReader[langName]
