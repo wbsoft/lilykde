@@ -495,23 +495,26 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         def edit_select_next_blank_line():
             d = self.currentDocument()
             cursor = d.view.cursorPosition()
-            for num in range(cursor.line() + 1, d.doc.lines() - 1):
-                if num == d.doc.lines() - 2 or isblank(d.line(num)) and not isblank(d.line(num + 1)):
+            for num in range(cursor.line() + 1, d.doc.lines() - 2):
+                if isblank(d.line(num)) and not isblank(d.line(num + 1)):
                     newcur = KTextEditor.Cursor(num + 1, 0)
-                    if d.view.selection():
-                        r = d.view.selectionRange()
-                        if cursor.position() == r.start().position():
-                            cursor = r.end()
-                        elif cursor.position() == r.end().position():
-                            cursor = r.start()
-                    else:
-                        line = cursor.line()
-                        while line < d.doc.lines() and isblank(d.line(line)):
-                            line += 1
-                        cursor.setLine(line)
-                    d.view.setSelection(KTextEditor.Range(cursor, newcur))
-                    d.view.setCursorPosition(newcur)
-                    return
+                    break
+            else:
+                docRange = d.doc.documentRange()
+                newcur = docRange.end()
+            if d.view.selection():
+                r = d.view.selectionRange()
+                if cursor.position() == r.start().position():
+                    cursor = r.end()
+                elif cursor.position() == r.end().position():
+                    cursor = r.start()
+            else:
+                line = cursor.line()
+                while line < d.doc.lines() and isblank(d.line(line)):
+                    line += 1
+                cursor.setLine(line)
+            d.view.setSelection(KTextEditor.Range(cursor, newcur))
+            d.view.setCursorPosition(newcur)
         
         @self.onAction(i18n("Select to previous blank line"), key="Shift+Alt+Up",
             tooltip=i18n(
@@ -519,23 +522,25 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         def edit_select_previous_blank_line():
             d = self.currentDocument()
             cursor = d.view.cursorPosition()
-            for num in range(cursor.line() - 2, -2, -1):
-                if num == -1 or isblank(d.line(num)) and not isblank(d.line(num + 1)):
+            for num in range(cursor.line() - 2, -1, -1):
+                if isblank(d.line(num)) and not isblank(d.line(num + 1)):
                     newcur = KTextEditor.Cursor(num + 1, 0)
-                    if d.view.selection():
-                        r = d.view.selectionRange()
-                        if cursor.position() == r.start().position():
-                            cursor = r.end()
-                        elif cursor.position() == r.end().position():
-                            cursor = r.start()
-                    else:
-                        line = cursor.line()
-                        if line < d.doc.lines() - 1 and isblank(d.line(line)):
-                            line += 1
-                        cursor.setLine(line)
-                    d.view.setSelection(KTextEditor.Range(cursor, newcur))
-                    d.view.setCursorPosition(newcur)
-                    return
+                    break
+            else:
+                newcur = KTextEditor.Cursor(0, 0)
+            if d.view.selection():
+                r = d.view.selectionRange()
+                if cursor.position() == r.start().position():
+                    cursor = r.end()
+                elif cursor.position() == r.end().position():
+                    cursor = r.start()
+            else:
+                line = cursor.line()
+                if line < d.doc.lines() - 1 and isblank(d.line(line)):
+                    line += 1
+                cursor.setLine(line)
+            d.view.setSelection(KTextEditor.Range(cursor, newcur))
+            d.view.setCursorPosition(newcur)
         
         @self.onSelAction(i18n("Move selection to next blank line"), key="Shift+Alt+Ctrl+Down",
             tooltip=i18n("Moves selected block to next blank line."))
