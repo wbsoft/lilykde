@@ -273,6 +273,8 @@ class DocumentManipulator(object):
         selRange = self.doc.view.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
         start = selRange.start()
         end = selRange.end()
+        cursor = self.doc.view.cursorPosition()
+        atStart = cursor.position() == start.position()
         
         if start.column() > 0:
             start.setColumn(0)
@@ -280,7 +282,38 @@ class DocumentManipulator(object):
             end.setLine(end.line() - 1)
         end.setColumn(len(self.doc.line(end.line())))
         self.doc.view.setSelection(KTextEditor.Range(start, end))
-            
+        if atStart:
+            self.doc.view.setCursorPosition(start)
+        else:
+            self.doc.view.setCursorPosition(end)
+    
+    def selectFullLines(self):
+        """
+        Extends (if necessary) the selection to cover whole lines, including newline.
+        """
+        if not self.doc.view.selection():
+            return
+
+        selRange = self.doc.view.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
+        start = selRange.start()
+        end = selRange.end()
+        cursor = self.doc.view.cursorPosition()
+        atStart = cursor.position() == start.position()
+        
+        if start.column() > 0:
+            start.setColumn(0)
+        if end.column() > 0:
+            if end.line() < self.doc.doc.lines():
+                end.setColumn(0)
+                end.setLine(end.line() + 1)
+            else:
+                end.setColumn(len(self.doc.line(end.line())))
+        self.doc.view.setSelection(KTextEditor.Range(start, end))
+        if atStart:
+            self.doc.view.setCursorPosition(start)
+        else:
+            self.doc.view.setCursorPosition(end)
+    
     def fixSelection(self):
         """
         Adjust the selection in the following way:
@@ -565,6 +598,22 @@ class DocumentManipulator(object):
         else:
             result = "%s{ %s }" % (command, sel)
         return ''.join((space1, result, space2))
+        
+    def moveSelectionUp(self):
+        """
+        Moves the selected block to the previous blank line.
+        There MUST be a selection.
+        """
+        self.selectFullLines()
+        # TODO: implement
+    
+    def moveSelectionDown(self):
+        """
+        Moves the selected block to the next blank line.
+        There MUST be a selection.
+        """
+        self.selectFullLines()
+        # TODO: implement
         
 
 class ChangeList(object):

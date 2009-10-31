@@ -491,7 +491,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         
         @self.onAction(i18n("Select to next blank line"), key="Shift+Alt+Down",
             tooltip=i18n(
-            "Select from the current position up and including the next blank line."))
+            "Selects text from the current position up and including the next blank line."))
         def edit_select_next_blank_line():
             d = self.currentDocument()
             cursor = d.view.cursorPosition()
@@ -515,7 +515,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         
         @self.onAction(i18n("Select to previous blank line"), key="Shift+Alt+Up",
             tooltip=i18n(
-            "Select from the current position up to right after the previous blank line."))
+            "Selects text from the current position up to right after the previous blank line."))
         def edit_select_previous_blank_line():
             d = self.currentDocument()
             cursor = d.view.cursorPosition()
@@ -530,13 +530,23 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                             cursor = r.start()
                     else:
                         line = cursor.line()
-                        if line < d.doc.lines() and isblank(d.line(line)):
+                        if line < d.doc.lines() - 1 and isblank(d.line(line)):
                             line += 1
                         cursor.setLine(line)
                     d.view.setSelection(KTextEditor.Range(cursor, newcur))
                     d.view.setCursorPosition(newcur)
                     return
-                    
+        
+        @self.onSelAction(i18n("Move selection to next blank line"), key="Shift+Alt+Ctrl+Down",
+            tooltip=i18n("Moves selected block to next blank line."))
+        def edit_moveto_next_blank_line(text):
+            self.currentDocument().manipulator().moveSelectionDown()
+        
+        @self.onSelAction(i18n("Move selection to previous blank line"), key="Shift+Alt+Ctrl+Up",
+            tooltip=i18n("Moves selected block to previous blank line."))
+        def edit_moveto_previous_blank_line(text):
+            self.currentDocument().manipulator().moveSelectionUp()
+        
         # actions and functionality for editing pitches
         a = KActionMenu(KIcon("applications-education-language"),
                 i18n("Pitch Name Language"), self)
