@@ -336,10 +336,10 @@ class DocumentManipulator(object):
             cursor = selRange.start()
             startline = cursor.line()
             # find out if the selected snippet is scheme code
-            state = ly.tokenize.State()
-            for token in ly.tokenize.tokenize(self.doc.textToCursor(cursor), state=state):
+            tokenizer = ly.tokenize.Tokenizer()
+            for token in tokenizer.tokens(self.doc.textToCursor(cursor)):
                 pass
-            startscheme = isinstance(state.parser(), ly.tokenize.SchemeParser)
+            startscheme = isinstance(tokenizer.parser(), tokenizer.SchemeParser)
             text = self.doc.selectionText()
         else:
             start = 0
