@@ -445,12 +445,12 @@ class DocumentManipulator(object):
             menu.addAction(a)
         
         # run the parser to know more about the current context...
-        state = ly.tokenize.State()
-        for token in ly.tokenize.tokenize(self.doc.textToCursor(cursor), state=state):
+        tokenizer = ly.tokenize.Tokenizer()
+        for token in tokenizer.tokens(self.doc.textToCursor(cursor)):
             pass
         
         # Hyphenate Lyrics
-        if selection and isinstance(state.parser(), ly.tokenize.LyricModeParser):
+        if selection and isinstance(tokenizer.parser(), tokenizer.LyricModeParser):
             menu.addAction(
                 self.doc.app.mainwin.actionCollection().action("lyrics_hyphen"))
         
