@@ -629,12 +629,11 @@ class DocumentManipulator(object):
         for token in tokenizer.tokens(self.doc.textToCursor(selRange.start())):
             pass
         self.doc.doc.removeText(selRange)
+        insert = KTextEditor.Cursor(0, 0)
         for r in reversed(list(self.findBlankLines(tokenizer.depth()))):
             if r.end().position() < selRange.start().position():
-                insert = KTextEditor.Cursor(r.end().line(), 0)
+                insert.setLine(r.end().line())
                 break
-        else:
-            insert = KTextEditor.Cursor(0, 0)
         cursor = Cursor(insert)
         if not text.endswith('\n'):
             text += '\n'
@@ -688,6 +687,7 @@ class DocumentManipulator(object):
         else:
             self.doc.view.setCursorPosition(selRange.end())
         self.doc.doc.endEditing()
+
 
 class ChangeList(object):
     """
