@@ -1,7 +1,9 @@
 Changes in 0.7.16 -- 
 
 * A new tool to create empty staff paper
-* New: Shift+Alt+Up/Down selects text till next blank line
+* New: Alt+Shift+Up/Down selects text till next or previous blank line, and
+  Ctrl+Alt+Shift+Up/Down moves the selected block to the next or previous blank
+  line. This gives a very quick way to reorder fragments of LilyPond input.
 * Translations:
   - Spanish updated by Francisco Vila
 

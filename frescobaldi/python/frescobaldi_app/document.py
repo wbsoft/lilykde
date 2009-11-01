@@ -153,7 +153,19 @@ class DocumentManipulator(object):
                     break
                 insert = token.line + 1 # next line is the line to insert at
         return insert or self.topInsertPoint()
-        
+    
+    def findBlankLines(self, depth=(1, 0)):
+        """
+        Yields the ranges that represent blank lines in the given depth (count
+        of parsers, level).
+        """
+        tokenizer = RangeTokenizer()
+        for token in tokenizer.tokens(self.doc.text()):
+            if (isinstance(token, tokenizer.Space)
+                and tokenizer.depth() <= depth
+                and token.count('\n') > 1):
+                yield token.range
+
     def assignSelectionToVariable(self):
         """
         Cuts out selected text and stores it under a variable name, adding a
@@ -605,7 +617,36 @@ class DocumentManipulator(object):
         There MUST be a selection.
         """
         self.selectFullLines()
-        # TODO: implement
+        cursor = self.doc.view.cursorPosition()
+        selRange = self.doc.view.selectionRange()
+        if selRange.start().position() == (0, 0):
+            return
+        text = self.doc.selectionText()
+        self.doc.doc.startEditing()
+        atStart = cursor.position() == selRange.start().position()
+        # Determine current depth (we could be in a long \book block)
+        tokenizer = ly.tokenize.Tokenizer()
+        for token in tokenizer.tokens(self.doc.textToCursor(selRange.start())):
+            pass
+        self.doc.doc.removeText(selRange)
+        for r in reversed(list(self.findBlankLines(tokenizer.depth()))):
+            if r.end().position() < selRange.start().position():
+                insert = KTextEditor.Cursor(r.end().line(), 0)
+                break
+        else:
+            insert = KTextEditor.Cursor(0, 0)
+        cursor = Cursor(insert)
+        if not text.endswith('\n'):
+            text += '\n'
+        cursor.walk(text)
+        self.doc.doc.insertText(insert, text)
+        selRange = KTextEditor.Range(insert, cursor.kteCursor())
+        self.doc.view.setSelection(selRange)
+        if atStart:
+            self.doc.view.setCursorPosition(selRange.start())
+        else:
+            self.doc.view.setCursorPosition(selRange.end())
+        self.doc.doc.endEditing()
     
     def moveSelectionDown(self):
         """
@@ -613,8 +654,40 @@ class DocumentManipulator(object):
         There MUST be a selection.
         """
         self.selectFullLines()
-        # TODO: implement
-        
+        cursor = self.doc.view.cursorPosition()
+        docRange = self.doc.doc.documentRange()
+        selRange = self.doc.view.selectionRange()
+        if selRange.end().position() == docRange.end().position():
+            return
+        text = self.doc.selectionText()
+        self.doc.doc.startEditing()
+        atStart = cursor.position() == selRange.start().position()
+        # Determine current depth (we could be in a long \book block)
+        tokenizer = ly.tokenize.Tokenizer()
+        for token in tokenizer.tokens(self.doc.textToCursor(selRange.start())):
+            pass
+        self.doc.doc.removeText(selRange)
+        for r in self.findBlankLines(tokenizer.depth()):
+            if r.start().position() > selRange.start().position():
+                insert = KTextEditor.Cursor(r.end().line(), 0)
+                break
+        else:
+            docRange = self.doc.doc.documentRange()
+            self.doc.doc.insertText(docRange.end(), '\n')
+            docRange = self.doc.doc.documentRange()
+            insert = docRange.end()
+        cursor = Cursor(insert)
+        if not text.endswith('\n'):
+            text += '\n'
+        cursor.walk(text)
+        self.doc.doc.insertText(insert, text)
+        selRange = KTextEditor.Range(insert, cursor.kteCursor())
+        self.doc.view.setSelection(selRange)
+        if atStart:
+            self.doc.view.setCursorPosition(selRange.start())
+        else:
+            self.doc.view.setCursorPosition(selRange.end())
+        self.doc.doc.endEditing()
 
 class ChangeList(object):
     """

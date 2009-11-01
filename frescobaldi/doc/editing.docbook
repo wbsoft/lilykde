@@ -124,13 +124,18 @@ shortcuts outlined below, you can also use the many keyboard shortcuts available
 <tbody>
 
 <row>
-<entry><para><keycombo><keycap>Alt+Up</keycap></keycombo></para></entry>
-<entry><para> Move the cursor to the end of the previous blank line </para></entry>
+<entry><para><keycombo><keycap>Alt+Up/Down</keycap></keycombo></para></entry>
+<entry><para> Move the cursor to the end of the next or previous blank line </para></entry>
 </row>
 
 <row>
-<entry><para><keycombo><keycap>Alt+Down</keycap></keycombo></para></entry>
-<entry><para> Move the cursor to the end of the next blank line </para></entry>
+<entry><para><keycombo><keycap>Alt+Shift+Up/Down</keycap></keycombo></para></entry>
+<entry><para> Select text till the next or previous blank line </para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Alt+Ctrl+Shift+Up/Down</keycap></keycombo></para></entry>
+<entry><para> Move the selected block to the next or previous blank line </para></entry>
 </row>
 
 <row>
