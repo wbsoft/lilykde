@@ -142,7 +142,7 @@ class Tokenizer(object):
         The matchObj delivers the string and the position.
         The state can be manipulated on instantiation.
         """
-        def __new__(cls, matchObj, state):
+        def __new__(cls, matchObj, tokenizer):
             obj = unicode.__new__(cls, matchObj.group())
             obj.pos = matchObj.pos
             return obj
