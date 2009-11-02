@@ -22,7 +22,7 @@
 import re
 
 
-def make_re(classes):
+def _make_re(classes):
     """
     Expects a list of classes representing LilyPond input atoms. Returns
     compiled regular expression with named groups, to match input of the listed
@@ -31,6 +31,31 @@ def make_re(classes):
     return re.compile(
         "|".join("(?P<%s>%s)" % (cls.__name__, cls.rx) for cls in classes),
         re.DOTALL)
+
+
+class _tokenizer_meta(type):
+    """
+    This metaclass makes sure that the regex patterns of Parser subclasses
+    inside a subclassed Tokenizer are always correct.
+    
+    It checks the items() method of all Parser subclasses and creates a
+    pattern attribute. If that's different, a new copy (subclass) of the Parser
+    subclass is created with the correct pattern.
+    """
+    def __init__(cls, className, bases, attrd):
+        for name in dir(cls):
+            attr = getattr(cls, name)
+            if (isinstance(attr, type) and issubclass(attr, cls.Parser)
+                    and attr is not cls.Parser):
+                # We have a Parser subclass. If it has already a pattern
+                # that's different from the one created from the items()
+                # method output, copy the class. (The pattern is a compiled
+                # regex pattern.)
+                pattern = _make_re(attr.items(cls))
+                if 'pattern' not in attr.__dict__:
+                    attr.pattern = pattern
+                elif attr.pattern.pattern != pattern.pattern:
+                    setattr(cls, name, type(name, (attr,), {'pattern': pattern}))
 
 
 class Tokenizer(object):
@@ -43,6 +68,8 @@ class Tokenizer(object):
     - Subclasses of Parsed (or Unparsed): tokens of LilyPond input.
     - Subclasses of Parser: container with regex to parse LilyPond input.
     """
+    __metaclass__ = _tokenizer_meta
+    
     def __init__(self, parserClass = None):
         self.reset(parserClass)
         
@@ -59,12 +86,9 @@ class Tokenizer(object):
         """ Return the current (or given) parser instance. """
         return self.state[depth]
         
-    def enter(self, parserClass, token, argcount = None):
+    def enter(self, parserClass, token = None, argcount = None):
         """ (Internal) Enter a new parser. """
-        self.state.append(parserClass())
-        self.state[-1].token = token
-        if argcount is not None:
-            self.state[-1].argcount = argcount
+        self.state.append(parserClass(token, argcount))
 
     def leave(self):
         """ (Internal) Leave the current parser and pop back to the previous. """
@@ -121,7 +145,7 @@ class Tokenizer(object):
         "LilyPond in Scheme" (the #{ and #} constructs).
         """
         while True:
-            m = self.state[-1].rx.search(text, pos)
+            m = self.state[-1].pattern.search(text, pos)
             if not m:
                 if pos < len(text):
                     yield self.Unparsed(text[pos:], pos)
@@ -242,10 +266,10 @@ class Tokenizer(object):
         rx = "[-_^][_.>|+^-]"
         
     class Dynamic(Parsed):
-        rx = r"\[<>!]"
+        rx = r"\\[<>!]"
 
     class VoiceSeparator(Parsed):
-        rx = r"\\"
+        rx = r"\\\\"
 
     class Digit(Parsed):
         rx = r"\d+"
@@ -337,60 +361,71 @@ class Tokenizer(object):
 
     ### Parsers
     class Parser(object):
+        """
+        This is the base class for parsers.  The Tokenizer's meta class 
+        looks for descendants of this class and creates parsing patterns.
+        """
+        pattern = None  # This is filled in by the Tokenizer's meta class.
+        items = staticmethod(lambda cls: ())
         argcount = 0
-        level = 0
-        token = None
+        
+        def __init__(self, token = None, argcount = None):
+            self.level = 0
+            self.token = token
+            if argcount is not None:
+                self.argcount = argcount
 
-
-    # tuple with base stuff to parse in LilyPond input
-    _lilybase = (
-        Comment,
-        String,
-        IncompleteString,
-        EndSchemeLily,
-        Scheme,
-        Section,
-        LyricMode, ChordMode, FigureMode, NoteMode,
-        Markup,
-        MarkupLines,
-        Include,
-        Command,
-        Space,
-        )
-
-
+    
+    # base stuff to parse in LilyPond input
+    lilybaseItems = classmethod(lambda cls: (
+        cls.Comment,
+        cls.String,
+        cls.IncompleteString,
+        cls.EndSchemeLily,
+        cls.Scheme,
+        cls.Section,
+        cls.LyricMode,
+        cls.ChordMode,
+        cls.FigureMode,
+        cls.NoteMode,
+        cls.Markup,
+        cls.MarkupLines,
+        cls.Include,
+        cls.Command,
+        cls.Space,
+    ))
+    
     class ToplevelParser(Parser):
-        pass
-    ToplevelParser.rx = make_re((
-            OpenDelimiter, CloseDelimiter,
-            PitchWord,
-        ) + _lilybase)
-
-
+        items = staticmethod(lambda cls: (
+            cls.OpenDelimiter,
+            cls.CloseDelimiter,
+            cls.PitchWord,
+        ) + cls.lilybaseItems())
+    
     class SchemeParser(Parser):
         argcount = 1
-    SchemeParser.rx = make_re((
-            String,
-            IncompleteString,
-            SchemeChar,
-            SchemeComment,
-            SchemeOpenParenthesis, SchemeCloseParenthesis,
-            SchemeLily,
-            SchemeWord,
-            Space,
+        items = staticmethod(lambda cls: (
+            cls.String,
+            cls.IncompleteString,
+            cls.SchemeChar,
+            cls.SchemeComment,
+            cls.SchemeOpenParenthesis,
+            cls.SchemeCloseParenthesis,
+            cls.SchemeLily,
+            cls.SchemeWord,
+            cls.Space,
         ))
-                
-
+    
     class MarkupParser(Parser):
         argcount = 1
-    MarkupParser.rx = make_re((
-            MarkupScore,
-            MarkupCommand,
-            OpenBracket, CloseBracket,
-            MarkupWord,
-        ) + _lilybase)
+        items = staticmethod(lambda cls: (
+            cls.MarkupScore,
+            cls.MarkupCommand,
+            cls.OpenBracket,
+            cls.CloseBracket,
+            cls.MarkupWord,
+        ) + cls.lilybaseItems())
         
-
     class InputModeParser(Parser):
         """
         Abstract base class for input modes such as \lyricmode, \figuremode,
@@ -398,48 +433,42 @@ class Tokenizer(object):
         """
         argcount = 1
 
-
     class LyricModeParser(InputModeParser):
-        pass
-    LyricModeParser.rx = make_re((
-            OpenBracket, CloseBracket,
-            LyricWord,
-        ) + _lilybase)
-
+        items = staticmethod(lambda cls: (
+            cls.OpenBracket,
+            cls.CloseBracket,
+            cls.LyricWord,
+        ) + cls.lilybaseItems())
 
     class ChordModeParser(ToplevelParser, InputModeParser):
         argcount = 1
-        
 
     class FigureModeParser(ToplevelParser, InputModeParser):
         argcount = 1
-        
 
     class NoteModeParser(ToplevelParser, InputModeParser):
         argcount = 1
-        
 
     class SectionParser(Parser):
         argcount = 1
-    SectionParser.rx = make_re((
-            OpenBracket, CloseBracket,
-            Context,
-        ) + _lilybase)
-
-
+        items = staticmethod(lambda cls: (
+            cls.OpenBracket,
+            cls.CloseBracket,
+            cls.Context,
+        ) + cls.lilybaseItems())
+    
     class ContextParser(Parser):
         argcount = 1
-    ContextParser.rx = make_re((
-            OpenBracket, CloseBracket,
-        ) + _lilybase)
-        
+        items = staticmethod(lambda cls: (
+            cls.OpenBracket,
+            cls.CloseBracket,
+        ) + cls.lilybaseItems())
 
     class IncludeParser(Parser):
         argcount = 1
-    IncludeParser.rx = make_re((
-            IncludeFile,
-        ) + _lilybase)
-
+        items = staticmethod(lambda cls: (
+            cls.IncludeFile,
+        ) + cls.lilybaseItems())
 
 
 class LineColumnTokenizer(Tokenizer):
