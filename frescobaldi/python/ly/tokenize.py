@@ -17,7 +17,64 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-""" Functions to parse and tokenize LilyPond text """
+"""
+This module defines a Tokenizer class to parse and tokenize LilyPond text.
+
+Usage:
+
+>>> from ly.tokenizer import Tokenizer
+>>> tokenizer = Tokenizer()
+>>> lilypond = r"\relative c' { c d-\markup { Hi There } }"
+>>> for token in tokenizer.tokens(lilypond):
+...  print token.__class__.__name__, repr(token)
+...
+Command u'\\relative'
+Space u' '
+PitchWord u'c'
+Unparsed u"'"
+Space u' '
+OpenDelimiter u'{'
+Space u' '
+PitchWord u'c'
+Space u' '
+PitchWord u'd'
+Unparsed u'-'
+Markup u'\\markup'
+Space u' '
+OpenBracket u'{'
+Space u' '
+MarkupWord u'Hi'
+Space u' '
+MarkupWord u'There'
+Space u' '
+CloseBracket u'}'
+Space u' '
+CloseDelimiter u'}'
+>>>
+
+Some LilyPond construct enter a different parsing mode, you can get the current
+Tokenizer.Parser instance with parser().
+
+The tokens returned by the iterator returned by tokens() are all instances
+of subclasses of unicode. They are either instances of a subclass of
+Tokenizer.Token (if they were parsed) or Tokenizer.Unparsed (if the piece of
+text was not understood).
+
+The Unparsed class and all Token subclasses are attributes of the Tokenizer
+class (so they are nested classes). You can subclass Tokenizer to add your own
+token classes. Each token class defines the regular expression pattern it
+matches in its rx class attribute.
+
+There are also Parser subclasses, defined as Tokenizer class attributes.
+Those are instantiated to look for specific tokens in LilyPond input text.
+The items() static method of the Parser subclasses should return a tuple of
+token classes (found as attributes of the Tokenizer (sub)class).
+
+Upon class construction of the/a Tokenizer (sub)class, a regular expression is
+automatically created for each Parser subclass to parse a piece of LilyPond input
+text for the list of tokens returned by its items() method. You can also easily
+subclass the Parser classes.
+"""
 
 import re
 
@@ -65,7 +122,7 @@ class Tokenizer(object):
     There are two types of nested classes (accessible as class attributes, but
     also via a Tokenizer instance):
     
-    - Subclasses of Parsed (or Unparsed): tokens of LilyPond input.
+    - Subclasses of Token (or Unparsed): tokens of LilyPond input.
     - Subclasses of Parser: container with regex to parse LilyPond input.
     """
     __metaclass__ = _tokenizer_meta
@@ -159,7 +216,7 @@ class Tokenizer(object):
     
     # Classes that represent pieces of lilypond text:
     # base classes:
-    class Parsed(unicode):
+    class Token(unicode):
         """
         Represents a parsed piece of LilyPond text, the subclass determines
         the type.
@@ -171,7 +228,7 @@ class Tokenizer(object):
             obj.pos = matchObj.pos
             return obj
 
-    class Item(Parsed):
+    class Item(Token):
         """
         Represents a token that decreases the argument count of its calling
         command.
@@ -185,15 +242,15 @@ class Tokenizer(object):
         """
         pass
 
-    class Increaser(Parsed):
+    class Increaser(Token):
         def __init__(self, matchObj, tokenizer):
             tokenizer.inc()
             
-    class Decreaser(Parsed):
+    class Decreaser(Token):
         def __init__(self, matchObj, tokenizer):
             tokenizer.dec()
 
-    class Leaver(Parsed):
+    class Leaver(Token):
         def __init__(self, matchObj, tokenizer):
             tokenizer.leave()
 
@@ -221,15 +278,15 @@ class Tokenizer(object):
     class PitchWord(Item):
         rx = r'[a-z]+'
         
-    class Scheme(Parsed):
+    class Scheme(Token):
         rx = "#"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.SchemeParser, self)
 
-    class Comment(Parsed):
+    class Comment(Token):
         rx = r'%{.*?%}|%[^\n]*'
 
-    class Space(Parsed):
+    class Space(Token):
         rx = r"\s+"
 
     class Markup(Command):
@@ -256,22 +313,22 @@ class Tokenizer(object):
     class CloseDelimiter(Decreaser):
         rx = r">>|\}"
 
-    class OpenChord(Parsed):
+    class OpenChord(Token):
         rx = "<"
         
-    class CloseChord(Parsed):
+    class CloseChord(Token):
         rx = ">"
 
-    class Articulation(Parsed):
+    class Articulation(Token):
         rx = "[-_^][_.>|+^-]"
         
-    class Dynamic(Parsed):
+    class Dynamic(Token):
         rx = r"\\[<>!]"
 
-    class VoiceSeparator(Parsed):
+    class VoiceSeparator(Token):
         rx = r"\\\\"
 
-    class Digit(Parsed):
+    class Digit(Token):
         rx = r"\d+"
         
     class EndSchemeLily(Leaver):
@@ -289,10 +346,10 @@ class Tokenizer(object):
     class SchemeWord(Item):
         rx = r'[^()"{}\s]+'
 
-    class SchemeComment(Parsed):
+    class SchemeComment(Token):
         rx = r";[^\n]*|#!.*?!#"
         
-    class SchemeLily(Parsed):
+    class SchemeLily(Token):
         rx = "#\{"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.ToplevelParser, self)
@@ -488,6 +545,10 @@ class LineColumnTokenizer(Tokenizer):
 
 
 class Cursor(object):
+    """
+    A Cursor instance can walk() over any piece of plain text,
+    maintaining line and column positions by looking at newlines in the text.
+    """
     def __init__(self):
         self.line = 0
         self.column = 0
