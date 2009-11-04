@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-01 07:17+0100\n"
+"POT-Creation-Date: 2009-11-03 17:30-0500\n"
 "PO-Revision-Date: 2009-09-08 01:40+0200\n"
 "Last-Translator: Gianluca D'Orazio <gianluca.dorazio@gmail.com>\n"
 "Language-Team: Italiano\n"
@@ -731,14 +731,14 @@ msgstr "Celesta"
 
 #: ../python/frescobaldi_app/blankpaper.py:546
 msgid ""
-"Enter as much letters (S, A, T or B) as there are staves.\n"
+"Enter as many letters (S, A, T or B) as there are staves.\n"
 "See \"What's This\" for more information."
 msgstr ""
 
 #: ../python/frescobaldi_app/blankpaper.py:549
 msgid ""
 "To configure clefs, first set the number of staves per system. Then enter as "
-"much letters (S, A, T or B) as there are staves.\n"
+"many letters (S, A, T or B) as there are staves.\n"
 "\n"
 "S or A: treble clef,\n"
 "T: treble clef with an \"8\" below,\n"
@@ -793,7 +793,7 @@ msgstr ""
 
 #: ../python/frescobaldi_app/blankpaper.py:875
 #, fuzzy
-msgid "Connect Barlines"
+msgid "Connect bar lines"
 msgstr "Niente stanghette"
 
 #: ../python/frescobaldi_app/document.py:103
@@ -1144,7 +1144,8 @@ msgstr "Va alla prima linea vuota che segue."
 
 #: ../python/frescobaldi_app/mainapp.py:494
 msgid ""
-"Selects text from the current position up and including the next blank line."
+"Selects text from the current position down to and including the next blank "
+"line."
 msgstr ""
 
 #: ../python/frescobaldi_app/mainapp.py:519

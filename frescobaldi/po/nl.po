@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-01 07:17+0100\n"
+"POT-Creation-Date: 2009-11-03 17:30-0500\n"
 "PO-Revision-Date: 2009-11-01 22:01+0100\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Nederlands <kde-i18n-doc@kde.org>\n"
@@ -710,17 +710,19 @@ msgid "Clefs:"
 msgstr "Sleutels:"
 
 #: ../python/frescobaldi_app/blankpaper.py:546
+#, fuzzy
 msgid ""
-"Enter as much letters (S, A, T or B) as there are staves.\n"
+"Enter as many letters (S, A, T or B) as there are staves.\n"
 "See \"What's This\" for more information."
 msgstr ""
 "Voer zoveel letters (S, A, T of B) in als er balken zijn.\n"
 "Zie \"Wat is dit\" voor meer informatie."
 
 #: ../python/frescobaldi_app/blankpaper.py:549
+#, fuzzy
 msgid ""
 "To configure clefs, first set the number of staves per system. Then enter as "
-"much letters (S, A, T or B) as there are staves.\n"
+"many letters (S, A, T or B) as there are staves.\n"
 "\n"
 "S or A: treble clef,\n"
 "T: treble clef with an \"8\" below,\n"
@@ -780,7 +782,8 @@ msgid "Square Bracket"
 msgstr "Vierkante haak"
 
 #: ../python/frescobaldi_app/blankpaper.py:875
-msgid "Connect Barlines"
+#, fuzzy
+msgid "Connect bar lines"
 msgstr "Maatstrepen verbinden"
 
 #: ../python/frescobaldi_app/document.py:103
@@ -1127,8 +1130,10 @@ msgid "Select to next blank line"
 msgstr "Tot volgende blanco regel selecteren"
 
 #: ../python/frescobaldi_app/mainapp.py:494
+#, fuzzy
 msgid ""
-"Selects text from the current position up and including the next blank line."
+"Selects text from the current position down to and including the next blank "
+"line."
 msgstr ""
 "Selecteert tekst vanaf de huidige cursorpositie tot en met de volgende "
 "blanco regel."

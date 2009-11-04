@@ -543,11 +543,11 @@ class ChoirStaff(StaffBase):
         
         # tool tips
         self.clefs.setToolTip(i18n(
-            "Enter as much letters (S, A, T or B) as there are staves.\n"
+            "Enter as many letters (S, A, T or B) as there are staves.\n"
             "See \"What's This\" for more information."))
         self.clefs.setWhatsThis(i18n(
             "To configure clefs, first set the number of staves per system. "
-            "Then enter as much letters (S, A, T or B) as there are staves.\n\n"
+            "Then enter as many letters (S, A, T or B) as there are staves.\n\n"
             "S or A: treble clef,\n"
             "T: treble clef with an \"8\" below,\n"
             "B: bass clef\n\n"
@@ -872,7 +872,7 @@ class BracketItem(Item):
         w.setLayout(QVBoxLayout())
         self.squareBracket = QCheckBox(i18n("Square Bracket"))
         w.layout().addWidget(self.squareBracket)
-        self.connectBarLines = QCheckBox(i18n("Connect Barlines"))
+        self.connectBarLines = QCheckBox(i18n("Connect bar lines"))
         self.connectBarLines.setChecked(True)
         w.layout().addWidget(self.connectBarLines)
         return w

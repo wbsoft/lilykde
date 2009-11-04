@@ -491,7 +491,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         
         @self.onAction(i18n("Select to next blank line"), key="Shift+Alt+Down",
             tooltip=i18n(
-            "Selects text from the current position up and including the next blank line."))
+            "Selects text from the current position down to and including the next blank line."))
         def edit_select_next_blank_line():
             d = self.currentDocument()
             cursor = d.view.cursorPosition()
