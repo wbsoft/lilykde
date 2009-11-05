@@ -68,8 +68,8 @@ class DocumentManipulator(object):
         
         writer = ly.pitch.pitchWriter[lang]
         reader = ly.pitch.pitchReader["nederlands"]
-        tokenizer = RangeTokenizer()
-        tokens = tokenizer.tokens(text)
+        tokenizer = ly.tokenize.Tokenizer()
+        tokens = rangeTokens(tokenizer, text)
         
         # Walk through not-selected text, to track the state and the 
         # current pitch language.
@@ -144,8 +144,8 @@ class DocumentManipulator(object):
         lineNum. Returns the line number to insert text at.
         """
         insert = 0
-        tokenizer = ly.tokenize.LineColumnTokenizer()
-        for token in tokenizer.tokens(self.doc.text()):
+        tokenizer = ly.tokenize.Tokenizer()
+        for token in ly.tokenize.lineColumnTokens(tokenizer, self.doc.text()):
             if (isinstance(token, tokenizer.Space)
                 and tokenizer.depth() == (1, 0)
                 and token.count('\n') > 1):
@@ -159,8 +159,8 @@ class DocumentManipulator(object):
         Yields the ranges that represent blank lines in the given depth (count
         of parsers, level).
         """
-        tokenizer = RangeTokenizer()
-        for token in tokenizer.tokens(self.doc.text()):
+        tokenizer = ly.tokenize.Tokenizer()
+        for token in rangeTokens(tokenizer, self.doc.text()):
             if (isinstance(token, tokenizer.Space)
                 and tokenizer.depth() <= depth
                 and token.count('\n') > 1):
@@ -706,11 +706,17 @@ class ChangeList(object):
         """
         Adds a token and its replacement.
         The token must have a range attribute with the KTextEditor.Range it
-        represents. See the tokenizeRange function.
+        represents.
         """
         if token != replacement:
-            self._changes.append((token.range, replacement))
-
+            self.appendRange(token.range, replacement)
+    
+    def appendRange(self, range, replacement):
+        """
+        Adds a KTextEditor.Range and the text it should be replaced with.
+        """
+        self._changes.append((range, replacement))
+        
     def applyChanges(self, doc):
         """
         Apply the changes to KTextEditor.Document doc.
@@ -738,25 +744,24 @@ class Cursor(ly.tokenize.Cursor):
         return KTextEditor.Cursor(self.line, self.column)
     
 
-class RangeTokenizer(ly.tokenize.Tokenizer):
-    def tokens(self, text, pos = 0, cursor = None):
-        """
-        Iterate over the tokens returned by tokenize(), adding a
-        KTextEditor.Range to every token, describing its place.
-        See the ly.tokenize module.
-        """
-        if cursor is None:
-            cursor = Cursor()
-        if pos:
-            cursor.walk(text[:pos])
-        start = cursor.kteCursor()
-        for token in ly.tokenize.Tokenizer.tokens(self, text, pos):
-            cursor.walk(token)
-            end = cursor.kteCursor()
-            token.range = KTextEditor.Range(start, end)
-            start = end
-            yield token
- 
+def rangeTokens(tokenizer, text, pos = 0, cursor = None):
+    """
+    Iterate over the tokens returned by tokenizer.tokens(), adding a
+    KTextEditor.Range to every token, describing its place.
+    See the ly.tokenize module.
+    """
+    if cursor is None:
+        cursor = Cursor()
+    if pos:
+        cursor.walk(text[:pos])
+    start = cursor.kteCursor()
+    for token in tokenizer.tokens(text, pos):
+        cursor.walk(token)
+        end = cursor.kteCursor()
+        token.range = KTextEditor.Range(start, end)
+        start = end
+        yield token
+
 
 def isblank(text):
     """ Returns True if text is None, empty or only contains spaces. """

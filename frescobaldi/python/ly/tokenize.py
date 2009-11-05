@@ -77,6 +77,7 @@ subclass the Parser classes.
 """
 
 import re
+import ly.rx
 
 
 def _make_re(classes):
@@ -313,23 +314,14 @@ class Tokenizer(object):
     class CloseDelimiter(Decreaser):
         rx = r">>|\}"
 
-    class OpenChord(Token):
-        rx = "<"
-        
-    class CloseChord(Token):
-        rx = ">"
-
-    class Articulation(Token):
-        rx = "[-_^][_.>|+^-]"
-        
     class Dynamic(Token):
         rx = r"\\[<>!]"
 
     class VoiceSeparator(Token):
         rx = r"\\\\"
 
-    class Digit(Token):
-        rx = r"\d+"
+    class Articulation(Token):
+        rx = "[-_^][_.>|+^-]"
         
     class EndSchemeLily(Leaver):
         rx = "#\}"
@@ -457,6 +449,9 @@ class Tokenizer(object):
             cls.OpenDelimiter,
             cls.CloseDelimiter,
             cls.PitchWord,
+            cls.Dynamic,
+            cls.VoiceSeparator,
+            cls.Articulation,
         ) + cls.lilybaseItems())
     
     class SchemeParser(Parser):
@@ -528,21 +523,37 @@ class Tokenizer(object):
         ) + cls.lilybaseItems())
 
 
-class LineColumnTokenizer(Tokenizer):
-    def tokens(self, text, pos = 0):
-        """
-        Iterate over the tokens returned by Tokenizer.tokens(),
-        adding line and column information to every token.
-        """
-        cursor = Cursor()
-        if pos:
-            cursor.walk(text[:pos])
-        for token in Tokenizer.tokens(self, text, pos):
-            token.line = cursor.line
-            token.column = cursor.column
-            yield token
-            cursor.walk(token)
-
+class MusicTokenizer(Tokenizer):
+    """
+    A Tokenizer more directed to parsing music.
+    It detects full pitches, chords, etc.
+    """
+    class OpenChord(Tokenizer.Token):
+        rx = "<"
+        
+    class CloseChord(Tokenizer.Token):
+        rx = ">"
+        
+    class Pitch(Tokenizer.Item):
+        rx = ly.rx.named_pitch
+        def __init__(self, matchObj, tokenizer):
+            self.step = matchObj.group('step')
+            self.cautionary = matchObj.group('cautionary') or ''
+            self.octave = matchObj.group('octave') or ''
+            self.octcheck = matchObj.group('octcheck') or ''
+        
+    class ToplevelParser(Tokenizer.ToplevelParser):
+        items = staticmethod(lambda cls: (
+            cls.OpenDelimiter,
+            cls.CloseDelimiter,
+            cls.OpenChord,
+            cls.CloseChord,
+            cls.Pitch,
+            cls.Dynamic,
+            cls.VoiceSeparator,
+            cls.Articulation,
+        ) + cls.lilybaseItems())
+    
 
 class Cursor(object):
     """
@@ -561,3 +572,18 @@ class Cursor(object):
         else:
             self.column += len(text)
         
+
+def lineColumnTokens(tokenizer, text, pos = 0):
+    """
+    Iterate over the tokens returned by tokenizer.tokens(),
+    adding line and column information to every token.
+    """
+    cursor = Cursor()
+    if pos:
+        cursor.walk(text[:pos])
+    for token in tokenizer.tokens(text, pos):
+        token.line = cursor.line
+        token.column = cursor.column
+        yield token
+        cursor.walk(token)
+
