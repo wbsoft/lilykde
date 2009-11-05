@@ -573,17 +573,27 @@ class Cursor(object):
             self.column += len(text)
         
 
-def lineColumnTokens(tokenizer, text, pos = 0):
+class LineColumnMixin(object):
     """
-    Iterate over the tokens returned by tokenizer.tokens(),
-    adding line and column information to every token.
+    Mixin to iterate over tokens, adding line and column attributes
+    to every token.
     """
-    cursor = Cursor()
-    if pos:
-        cursor.walk(text[:pos])
-    for token in tokenizer.tokens(text, pos):
-        token.line = cursor.line
-        token.column = cursor.column
-        yield token
-        cursor.walk(token)
+    def tokens(self, text, pos = 0):
+        cursor = Cursor()
+        if pos:
+            cursor.walk(text[:pos])
+        for token in super(LineColumnMixin, self).tokens(text, pos):
+            token.line = cursor.line
+            token.column = cursor.column
+            yield token
+            cursor.walk(token)
+
+
+class LineColumnTokenizer(LineColumnMixin, Tokenizer):
+    """
+    Basic Tokenizer which records line and column, adding those
+    as attributes to every token.
+    """
+    pass
+
 

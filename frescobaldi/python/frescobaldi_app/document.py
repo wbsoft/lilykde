@@ -68,8 +68,8 @@ class DocumentManipulator(object):
         
         writer = ly.pitch.pitchWriter[lang]
         reader = ly.pitch.pitchReader["nederlands"]
-        tokenizer = ly.tokenize.Tokenizer()
-        tokens = rangeTokens(tokenizer, text)
+        tokenizer = RangeTokenizer()
+        tokens = tokenizer.tokens(text)
         
         # Walk through not-selected text, to track the state and the 
         # current pitch language.
@@ -144,8 +144,8 @@ class DocumentManipulator(object):
         lineNum. Returns the line number to insert text at.
         """
         insert = 0
-        tokenizer = ly.tokenize.Tokenizer()
-        for token in ly.tokenize.lineColumnTokens(tokenizer, self.doc.text()):
+        tokenizer = ly.tokenize.LineColumnTokenizer()
+        for token in tokenizer.tokens(self.doc.text()):
             if (isinstance(token, tokenizer.Space)
                 and tokenizer.depth() == (1, 0)
                 and token.count('\n') > 1):
@@ -159,8 +159,8 @@ class DocumentManipulator(object):
         Yields the ranges that represent blank lines in the given depth (count
         of parsers, level).
         """
-        tokenizer = ly.tokenize.Tokenizer()
-        for token in rangeTokens(tokenizer, self.doc.text()):
+        tokenizer = RangeTokenizer()
+        for token in tokenizer.tokens(self.doc.text()):
             if (isinstance(token, tokenizer.Space)
                 and tokenizer.depth() <= depth
                 and token.count('\n') > 1):
@@ -702,39 +702,18 @@ class DocumentManipulator(object):
             docRange = self.doc.doc.documentRange()
             end = docRange.end()
         text = unicode(self.doc.doc.text(KTextEditor.Range(start, end)))
-        tokenizer = ly.tokenize.MusicTokenizer()
-        source = LangReader(tokenizer, rangeTokens(tokenizer, text))
+        
+        tokenizer = Tokenizer()
+        tokens = tokenizer.tokens(text)
         
         # Walk through not-selected text, to track the state and the 
         # current pitch language (the LangReader instance does this).
         if selection:
-            for token in source:
+            for token in tokens:
                 if selection.contains(token.range.end()):
                     break
         
 
-
-
-class LangReader(object):
-    """
-    Reads tokens from a source and remembers the pitch name language
-    (from \include "language.ly" statements).
-    """
-    def __init__(self, tokenizer, source, startLanguage = "nederlands"):
-        self.tokenizer = tokenizer
-        self.source = source
-        self.lang = startLanguage
-    
-    def __iter__(self):
-        return self
-        
-    def next(self):
-        token = self.source.next()
-        if isinstance(token, self.tokenizer.IncludeFile):
-            langName = token[1:-4]
-            if langName in ly.pitch.pitchInfo:
-                self.lang = langName
-        return token
 
 
 class ChangeList(object):
@@ -792,23 +771,57 @@ class Cursor(ly.tokenize.Cursor):
         return KTextEditor.Cursor(self.line, self.column)
     
 
-def rangeTokens(tokenizer, text, pos = 0, cursor = None):
+class RangeMixin(object):
     """
-    Iterate over the tokens returned by tokenizer.tokens(), adding a
-    KTextEditor.Range to every token, describing its place.
-    See the ly.tokenize module.
+    Mixin with a Tokenizer (sub)class to iterate over the tokens returned by
+    tokenizer.tokens(), adding a KTextEditor.Range to every token, describing
+    its place. See the ly.tokenize module.
+    Mixin before classes that drop tokens, otherwise the cursorpositions will
+    not be updated correctly.
     """
-    if cursor is None:
-        cursor = Cursor()
-    if pos:
-        cursor.walk(text[:pos])
-    start = cursor.kteCursor()
-    for token in tokenizer.tokens(text, pos):
-        cursor.walk(token)
-        end = cursor.kteCursor()
-        token.range = KTextEditor.Range(start, end)
-        start = end
-        yield token
+    def tokens(self, text, pos = 0, cursor = None):
+        if cursor is None:
+            cursor = Cursor()
+        if pos:
+            cursor.walk(text[:pos])
+        start = cursor.kteCursor()
+        for token in super(RangeMixin, self).tokens(text, pos):
+            cursor.walk(token)
+            end = cursor.kteCursor()
+            token.range = KTextEditor.Range(start, end)
+            start = end
+            yield token
+
+
+class RangeTokenizer(RangeMixin, ly.tokenize.Tokenizer):
+    """ A Tokenizer that adds ranges to the tokens. """
+    pass
+
+
+class LangReaderMixin(object):
+    """
+    Mixin with a Tokenizer (sub)class to read tokens from a source and
+    remember the pitch name language (from \include "language.ly" statements).
+    """
+    def reset(self, *args):
+        super(LangReaderMixin, self).reset(*args)
+        self.language = "nederlands"
+        
+    def tokens(self, text, pos = 0):
+        for token in super(LangReaderMixin, self).tokens(text, pos):
+            if isinstance(token, self.IncludeFile):
+                langName = token[1:-4]
+                if langName in ly.pitch.pitchInfo:
+                    self.language = langName
+            yield token
+
+
+class Tokenizer(LangReaderMixin, RangeMixin, ly.tokenize.MusicTokenizer):
+    """
+    A Tokenizer that remenmbers its pitch name language and adds ranges
+    to all tokens.
+    """
+    pass
 
 
 def isblank(text):
