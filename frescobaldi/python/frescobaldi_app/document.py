@@ -77,7 +77,7 @@ class DocumentManipulator(object):
             for token in tokens:
                 if isinstance(token, tokenizer.IncludeFile):
                     langName = token[1:-4]
-                    if langName in ly.pitch.pitchInfo.keys():
+                    if langName in ly.pitch.pitchInfo:
                         reader = ly.pitch.pitchReader[langName]
                 if selection.contains(token.range.end()):
                     break
@@ -88,7 +88,7 @@ class DocumentManipulator(object):
         for token in tokens:
             if isinstance(token, tokenizer.IncludeFile):
                 langName = token[1:-4]
-                if langName in ly.pitch.pitchInfo.keys():
+                if langName in ly.pitch.pitchInfo:
                     reader = ly.pitch.pitchReader[langName]
                     changes.append(token, '"%s.ly"' % lang)
                     includeCommandChanged = True
@@ -687,6 +687,54 @@ class DocumentManipulator(object):
         else:
             self.doc.view.setCursorPosition(selRange.end())
         self.doc.doc.endEditing()
+
+    def convertRelativeToAbsolute(self):
+        """
+        Convert \relative { }  music to absolute pitches.
+        """
+        start = KTextEditor.Cursor(0, 0)
+        selection = bool(self.doc.selectionText()) and self.doc.view.selectionRange()
+        
+        if selection:
+            end = selection.end()
+        else:
+            # directly using doc.documentRange().end() causes a crash...
+            docRange = self.doc.doc.documentRange()
+            end = docRange.end()
+        text = unicode(self.doc.doc.text(KTextEditor.Range(start, end)))
+        tokenizer = ly.tokenize.MusicTokenizer()
+        source = LangReader(tokenizer, rangeTokens(tokenizer, text))
+        
+        # Walk through not-selected text, to track the state and the 
+        # current pitch language (the LangReader instance does this).
+        if selection:
+            for token in source:
+                if selection.contains(token.range.end()):
+                    break
+        
+
+
+
+class LangReader(object):
+    """
+    Reads tokens from a source and remembers the pitch name language
+    (from \include "language.ly" statements).
+    """
+    def __init__(self, tokenizer, source, startLanguage = "nederlands"):
+        self.tokenizer = tokenizer
+        self.source = source
+        self.lang = startLanguage
+    
+    def __iter__(self):
+        return self
+        
+    def next(self):
+        token = self.source.next()
+        if isinstance(token, self.tokenizer.IncludeFile):
+            langName = token[1:-4]
+            if langName in ly.pitch.pitchInfo:
+                self.lang = langName
+        return token
 
 
 class ChangeList(object):
