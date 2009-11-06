@@ -73,7 +73,7 @@ class DocumentManipulator(object):
         
         # Walk through not-selected text, to track the state and the 
         # current pitch language.
-        if selection:
+        if selection and selection.start().position() != (0, 0):
             for token in tokens:
                 if isinstance(token, tokenizer.IncludeFile):
                     langName = token[1:-4]
@@ -708,7 +708,7 @@ class DocumentManipulator(object):
         
         # Walk through not-selected text, to track the state and the 
         # current pitch language (the LangReader instance does this).
-        if selection:
+        if selection and selection.start().position() != (0, 0):
             for token in tokens:
                 if selection.contains(token.range.end()):
                     break
@@ -724,16 +724,36 @@ class DocumentManipulator(object):
                 rangeStart = KTextEditor.Range(rangeStart, end)
             changes.appendRange(rangeStart, '')
         
-        def gen():
-            for token in tokens:
-                if isinstance(token, (tokenizer.Space, tokenizer.Comment)):
-                    continue
+        def newPitch(token, pitch):
+            """
+            Writes a new pitch with all parts except the octave taken from the
+            token.
+            """
+            changes.appendRange(token.range, '%s%s%s' % (
+                token.step,
+                token.cautionary,
+                pitch.octave < 0 and ',' * -pitch.octave or "'" * pitch.octave))
+            
+        class gen(object):
+            """
+            Advanced generator of tokens, discarding whitespace and comments,
+            and automatically detecting \relative blocks and places where a new
+            LilyPond parsing context is started, like \score inside \markup.
+            """
+            def __iter__(self):
+                return self
+                
+            def next(self):
+                token = tokens.next()
+                while isinstance(token, (tokenizer.Space, tokenizer.Comment)):
+                    token = tokens.next()
                 if token == "\\relative":
                     relative(token.range.start())
+                    token = tokens.next()
                 elif isinstance(token, tokenizer.MarkupScore):
                     absolute()
-                else:
-                    yield token
+                    token = tokens.next()
+                return token
         
         source = gen()
         
@@ -758,26 +778,117 @@ class DocumentManipulator(object):
             # find the pitch after the relative command
             lastPitch = None
             for token in source:
-                if not lastPitch and isinstance(token, tokenize.Pitch):
-                    lastPitch = token # TODO: really implement
+                if not lastPitch and isinstance(token, tokenizer.Pitch):
+                    lastPitch = Pitch.fromToken(token, tokenizer)
                     continue
                 else:
+                    if not lastPitch:
+                        lastPitch = Pitch.c1()
                     remove(start, token.range.start())
-                    if isinstance(token, (tokenizer.OpenDelimiter, tokenizer.OpenChord)):
-                        pass # TODO: Handle a full expression (chord or music)
+                    if isinstance(token, tokenizer.OpenDelimiter):
+                        # Handle full music expression { ... } or << ... >>
+                        for token in consume():
+                            # skip commands with pitches that do not count
+                            if token in ('\\key', '\\transposition'):
+                                source.next()
+                            elif token == '\\transpose':
+                                source.next()
+                                source.next()
+                            elif token == '<':
+                                # handle chord
+                                chord = [lastPitch]
+                                for token in source:
+                                    if token == '>':
+                                        lastPitch = chord[:2][-1] # same or first
+                                        break
+                                    elif isinstance(token, tokenizer.Pitch):
+                                        p = Pitch.fromToken(token, tokenizer)
+                                        if p:
+                                            p.absolute(chord[-1])
+                                            newPitch(token, p)
+                                            chord.append(p)
+                            elif isinstance(token, tokenizer.Pitch):
+                                p = Pitch.fromToken(token, tokenizer)
+                                if p:
+                                    p.absolute(lastPitch)
+                                    newPitch(token, p)
+                                    lastPitch = p
+                    if token == '<':
+                        # Handle just one chord
+                        for token in source:
+                            if token == '>':
+                                break
+                            elif isinstance(token, tokenizer.Pitch):
+                                p = Pitch.fromToken(token, tokenizer)
+                                if p:
+                                    p.absolute(lastPitch)
+                                    newPitch(token, p)
+                                    lastPitch = p
                     elif isinstance(token, tokenizer.Pitch):
-                        pass # TODO: implement: Handle just one pitch (very unlikely)
+                        # Handle just one pitch
+                        p = Pitch.fromToken(token, tokenizer)
+                        if p:
+                            p.absolute(lastPitch)
+                            newPitch(token, p)
                     return
         
         # Do it!
         for token in source:
             pass
-        
-        
-            
+        changes.applyChanges(self.doc.doc)
                     
+    def convertAbsoluteToRelative(self):
+        KMessageBox.sorry(self.doc.app.mainwin, "Not yet implemented.")
         
+
+class Pitch(object):
+    def __init__(self):
+        self.note = 0           # base note (c, d, e, f, g, a, b)
+        self.alter = 0          # # = 2; b = -2; natural = 0
+        self.octave = 0         # '' = 2; ,, = -2
+        self.cautionary = ''    # '!' or '?' or ''
+    
+    @classmethod
+    def c1(cls):
+        """ Return a pitch c' """
+        p = cls()
+        p.octave = 1
+        return p
+
+    @classmethod
+    def fromToken(cls, token, tokenizer):
+        result = tokenizer.readStep(token)
+        if result:
+            p = cls()
+            p.note, p.alter = result
+            p.octave = token.octave.count("'") - token.octave.count(",")
+            p.cautionary = token.cautionary
+            return p
+
+    def absolute(self, lastPitch):
+        """
+        Set our octave height from lastPitch (which is absolute), as if
+        we are a relative pitch.
+        """
+        octave = lastPitch.octave + self.octave
+        dist = self.note - lastPitch.note
+        if dist > 3:
+            dist -= 7
+        elif dist < -3:
+            dist += 7
+        if lastPitch.note + dist < 0:
+            octave -= 1
+        elif lastPitch.note + dist > 6:
+            octave += 1
+        self.octave = octave
         
+    def output(self, language):
+        return '%s%s%s' % (
+            ly.pitch.pitchWriter[language](self.note, self.alter),
+            self.cautionary,
+            self.octave < 0 and ',' * -self.octave or "'" * self.octave)
+        
+    
 
 class ChangeList(object):
     """
@@ -884,7 +995,9 @@ class Tokenizer(LangReaderMixin, RangeMixin, ly.tokenize.MusicTokenizer):
     A Tokenizer that remenmbers its pitch name language and adds ranges
     to all tokens.
     """
-    pass
+    def readStep(self, pitchToken):
+        return ly.pitch.pitchReader[self.language](pitchToken.step)
+
 
 
 def isblank(text):

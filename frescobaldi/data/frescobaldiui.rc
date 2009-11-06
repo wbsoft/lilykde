@@ -78,6 +78,11 @@
     <Separator />
     <Menu name="lilypond_edit_pitch"><text>&amp;Pitch</text>
       <Action name="pitch_change_language"/>
+      <Separator />
+      <Action name="pitch_relative_to_absolute"/>
+      <Action name="pitch_absolute_to_relative"/>
+      <Separator />
+      <Action name="pitch_transpose"/>
     </Menu>
     <Menu name="lilypond_edit_rhythm"><text>&amp;Rhythm</text>
       <Action name="durations_double"/>

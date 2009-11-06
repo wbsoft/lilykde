@@ -561,6 +561,22 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         QObject.connect(a.menu(), SIGNAL("aboutToShow()"), lambda menu=a.menu():
             self.currentDocument().manipulator().populateLanguageMenu(menu))
         
+        @self.onAction(i18n("Convert Relative to Absolute"), tooltip=i18n(
+            "Converts all relative pitches in the document or selection to absolute."))
+        def pitch_relative_to_absolute():
+            self.currentDocument().manipulator().convertRelativeToAbsolute()
+            
+        @self.onSelAction(i18n("Convert Absolute to Relative"), tooltip=i18n(
+            "Converts the pitches in the selected music expression to relative pitches."))
+        def pitch_absolute_to_relative(text):
+            self.currentDocument().manipulator().convertAbsoluteToRelative()
+
+        @self.onAction(i18n("Transpose..."), tooltip=i18n(
+            "Transposes all pitches in the document or selection."))
+        def pitch_transpose():
+            KMessageBox.sorry(self, "Not yet implemented.")
+            #self.transposeDialog().show()
+        
         # actions and functionality for editing rhythms
         @self.onSelAction(i18n("Double durations"),
             tooltip=i18n("Double all the durations in the selection."))
