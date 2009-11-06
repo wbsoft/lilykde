@@ -713,8 +713,62 @@ class DocumentManipulator(object):
                 if selection.contains(token.range.end()):
                     break
         
-
-
+        changes = ChangeList()
+        
+        def gen():
+            for token in tokens:
+                if isinstance(token, (tokenizer.Space, tokenizer.Comment)):
+                    continue
+                if token == "\\relative":
+                    relative(token)
+                elif isinstance(token, tokenizer.MarkupScore):
+                    absolute()
+                else:
+                    yield token
+        
+        source = gen()
+        
+        def consume():
+            """ Consume tokens till the level drops (we exit a construct). """
+            depth = tokenizer.depth()
+            for token in source:
+                yield token
+                if tokenizer.depth() < depth:
+                    return
+        
+        def absolute():
+            for token in consume():
+                pass
+        
+        def relative(token):
+            start = token.range.start()
+            lastPitch = None
+            for token in source:
+                if isinstance(token, tokenize.Pitch):
+                    if not lastPitch
+                        pass # Pitch found, TODO: implement
+                    else:
+                        end = token.range.start()
+                        changes.appendRange(KTextEditor.Range(start, end), '')
+                        # TODO: implement: Handle just one pitch (very unlikely)
+                        return
+                elif not isinstance(token, (tokenizer.OpenDelimiter, tokenizer.OpenChord)):
+                    return
+            end = token.range.start()
+            changes.appendRange(KTextEditor.Range(start, end), '')
+            for token in consume():
+                if isinstance(token, tokenizer.Pitch):
+                    pass # Handle pitch, TODO: implement
+                    
+        # Do it!
+        for token in source:
+            pass
+        
+        
+            
+                    
+        
+        
 
 class ChangeList(object):
     """
