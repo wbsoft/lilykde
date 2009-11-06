@@ -715,12 +715,21 @@ class DocumentManipulator(object):
         
         changes = ChangeList()
         
+        def remove(rangeStart, end = None):
+            """
+            Schedule a range for removal.
+            If end is None, rangeStart is assumed to be a KTextEditor.Range.
+            """
+            if end is not None:
+                rangeStart = KTextEditor.Range(rangeStart, end)
+            changes.appendRange(rangeStart, '')
+        
         def gen():
             for token in tokens:
                 if isinstance(token, (tokenizer.Space, tokenizer.Comment)):
                     continue
                 if token == "\\relative":
-                    relative(token)
+                    relative(token.range.start())
                 elif isinstance(token, tokenizer.MarkupScore):
                     absolute()
                 else:
@@ -737,29 +746,29 @@ class DocumentManipulator(object):
                     return
         
         def absolute():
+            """ Consume tokens while not doing anything. """
             for token in consume():
                 pass
         
-        def relative(token):
-            start = token.range.start()
+        def relative(start):
+            """
+            Called when a \\relative command is encountered.
+            start is the position of the \\relative token, to remove it later.
+            """
+            # find the pitch after the relative command
             lastPitch = None
             for token in source:
-                if isinstance(token, tokenize.Pitch):
-                    if not lastPitch
-                        pass # Pitch found, TODO: implement
-                    else:
-                        end = token.range.start()
-                        changes.appendRange(KTextEditor.Range(start, end), '')
-                        # TODO: implement: Handle just one pitch (very unlikely)
-                        return
-                elif not isinstance(token, (tokenizer.OpenDelimiter, tokenizer.OpenChord)):
+                if not lastPitch and isinstance(token, tokenize.Pitch):
+                    lastPitch = token # TODO: really implement
+                    continue
+                else:
+                    remove(start, token.range.start())
+                    if isinstance(token, (tokenizer.OpenDelimiter, tokenizer.OpenChord)):
+                        pass # TODO: Handle a full expression (chord or music)
+                    elif isinstance(token, tokenizer.Pitch):
+                        pass # TODO: implement: Handle just one pitch (very unlikely)
                     return
-            end = token.range.start()
-            changes.appendRange(KTextEditor.Range(start, end), '')
-            for token in consume():
-                if isinstance(token, tokenizer.Pitch):
-                    pass # Handle pitch, TODO: implement
-                    
+        
         # Do it!
         for token in source:
             pass
