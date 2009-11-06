@@ -715,21 +715,12 @@ class DocumentManipulator(object):
         
         changes = ChangeList()
         
-        def remove(rangeStart, end = None):
-            """
-            Schedule a range for removal.
-            If end is None, rangeStart is assumed to be a KTextEditor.Range.
-            """
-            if end is not None:
-                rangeStart = KTextEditor.Range(rangeStart, end)
-            changes.appendRange(rangeStart, '')
-        
         def newPitch(token, pitch):
             """
             Writes a new pitch with all parts except the octave taken from the
             token.
             """
-            changes.appendRange(token.range, '%s%s%s' % (
+            changes.append(token, '%s%s%s' % (
                 token.step,
                 token.cautionary,
                 pitch.octave < 0 and ',' * -pitch.octave or "'" * pitch.octave))
@@ -784,7 +775,8 @@ class DocumentManipulator(object):
                 else:
                     if not lastPitch:
                         lastPitch = Pitch.c1()
-                    remove(start, token.range.start())
+                    # remove the \relative <pitch> tokens
+                    changes.appendRange(KTextEditor.Range(start, token.range.start()), '')
                     if isinstance(token, tokenizer.OpenDelimiter):
                         # Handle full music expression { ... } or << ... >>
                         for token in consume():
@@ -794,11 +786,11 @@ class DocumentManipulator(object):
                             elif token == '\\transpose':
                                 source.next()
                                 source.next()
-                            elif token == '<':
+                            elif isinstance(token, tokenizer.OpenChord):
                                 # handle chord
                                 chord = [lastPitch]
                                 for token in source:
-                                    if token == '>':
+                                    if isinstance(token, tokenizer.CloseChord):
                                         lastPitch = chord[:2][-1] # same or first
                                         break
                                     elif isinstance(token, tokenizer.Pitch):
@@ -813,10 +805,10 @@ class DocumentManipulator(object):
                                     p.absolute(lastPitch)
                                     newPitch(token, p)
                                     lastPitch = p
-                    if token == '<':
+                    if isinstance(token, tokenizer.OpenChord):
                         # Handle just one chord
                         for token in source:
-                            if token == '>':
+                            if isinstance(token, tokenizer.CloseChord):
                                 break
                             elif isinstance(token, tokenizer.Pitch):
                                 p = Pitch.fromToken(token, tokenizer)
