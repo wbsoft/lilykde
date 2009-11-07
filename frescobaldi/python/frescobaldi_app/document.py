@@ -715,11 +715,12 @@ class DocumentManipulator(object):
         
         changes = ChangeList()
         
-        def newPitch(token, pitch):
+        def newPitch(token, pitch, lastPitch):
             """
             Writes a new pitch with all parts except the octave taken from the
-            token.
+            token. The octave is set using lastPitch.
             """
+            pitch.absolute(lastPitch)
             changes.append(token, '%s%s%s' % (
                 token.step,
                 token.cautionary,
@@ -786,6 +787,15 @@ class DocumentManipulator(object):
                             elif token == '\\transpose':
                                 source.next()
                                 source.next()
+                            elif token == '\\octaveCheck':
+                                start = KTextEditor.Cursor(token.range.start())
+                                token = source.next()
+                                if isinstance(token, tokenizer.Pitch):
+                                    p = Pitch.fromToken(token, tokenizer)
+                                    if p:
+                                        lastPitch = p
+                                        changes.appendRange(KTextEditor.Range(
+                                            start, token.range.end()), '')
                             elif isinstance(token, tokenizer.OpenChord):
                                 # handle chord
                                 chord = [lastPitch]
@@ -796,14 +806,12 @@ class DocumentManipulator(object):
                                     elif isinstance(token, tokenizer.Pitch):
                                         p = Pitch.fromToken(token, tokenizer)
                                         if p:
-                                            p.absolute(chord[-1])
-                                            newPitch(token, p)
+                                            newPitch(token, p, chord[-1])
                                             chord.append(p)
                             elif isinstance(token, tokenizer.Pitch):
                                 p = Pitch.fromToken(token, tokenizer)
                                 if p:
-                                    p.absolute(lastPitch)
-                                    newPitch(token, p)
+                                    newPitch(token, p, lastPitch)
                                     lastPitch = p
                     if isinstance(token, tokenizer.OpenChord):
                         # Handle just one chord
@@ -813,15 +821,13 @@ class DocumentManipulator(object):
                             elif isinstance(token, tokenizer.Pitch):
                                 p = Pitch.fromToken(token, tokenizer)
                                 if p:
-                                    p.absolute(lastPitch)
-                                    newPitch(token, p)
+                                    newPitch(token, p, lastPitch)
                                     lastPitch = p
                     elif isinstance(token, tokenizer.Pitch):
                         # Handle just one pitch
                         p = Pitch.fromToken(token, tokenizer)
                         if p:
-                            p.absolute(lastPitch)
-                            newPitch(token, p)
+                            newPitch(token, p, lastPitch)
                     return
         
         # Do it!
@@ -852,6 +858,16 @@ class DocumentManipulator(object):
         
         changes = ChangeList()
         
+        def newPitch(token, pitch):
+            """
+            Writes a new pitch with all parts except the octave taken from the
+            token.
+            """
+            changes.append(token, '%s%s%s' % (
+                token.step,
+                token.cautionary,
+                pitch.octave < 0 and ',' * -pitch.octave or "'" * pitch.octave))
+            
         class gen(object):
             """
             Advanced generator of tokens, discarding whitespace and comments,
@@ -890,7 +906,7 @@ class DocumentManipulator(object):
         
         def relative():
             """ Consume the whole \relative expression without doing anything. """
-            # pitch?
+            # skip pitch argument
             token = source.next()
             if isinstance(token, tokenizer.Pitch):
                 token = source.next()
@@ -905,16 +921,21 @@ class DocumentManipulator(object):
         for token in source:
             if isinstance(token, tokenizer.Pitch):
                 KMessageBox.error(self.doc.app.mainwin, i18n(
-                    "Please select a music expression, like << ... >> or { ... }"))
+                    "Please select a music expression, enclosed in << ... >> or { ... }."))
                 return
             elif isinstance(token, tokenizer.OpenDelimiter):
                 # Found the start of an expression.
                 break
         else:
+            KMessageBox.error(self.doc.app.mainwin, i18n(
+                "No music expression found in selection."))
             return
         # Ok, parse current expression.
-        insertRelative = token.range.start()
-        firstPitch = None
+        insertRelative = KTextEditor.Cursor(token.range.start())
+        language = tokenizer.language
+        firstPitch = Pitch.c1()
+        lastPitch = None
+        chord = None
         try:
             for token in consume():
                 # skip commands with pitches that do not count
@@ -924,15 +945,38 @@ class DocumentManipulator(object):
                     source.next()
                     source.next()
                 elif isinstance(token, tokenizer.OpenChord):
-                    pass # Handle chord
+                    # Handle chord
+                    chord = []
+                elif isinstance(token, tokenizer.CloseChord):
+                    if chord:
+                        lastPitch = chord[0]
+                    chord = None
                 elif isinstance(token, tokenizer.Pitch):
-                    pass # Handle pitch
+                    # Handle pitch
+                    p = Pitch.fromToken(token, tokenizer)
+                    if p:
+                        if lastPitch is None:
+                            firstPitch.octave = p.octave
+                            if p.note > 3:
+                                firstPitch.octave += 1
+                            lastPitch = firstPitch
+                        newPitch(token, p.relative(lastPitch))
+                        lastPitch = p
+                        # remember the first pitch of a chord
+                        chord == [] and chord.append(p)
         except StopIteration:
-            pass
+            pass # because of the source.next() statements
         # Now insert the '\relative pitch ' command
-        
-        
-        
+        if lastPitch is None:
+            KMessageBox.error(self.doc.app.mainwin, i18n(
+                "No pitches found in selected music expression."))
+            return
+        self.doc.doc.startEditing()
+        changes.applyChanges(self.doc.doc)
+        self.doc.doc.insertText(insertRelative, "\\relative %s " %
+            firstPitch.output(language))
+        self.doc.doc.endEditing()
+
 
 class Pitch(object):
     def __init__(self):
@@ -940,6 +984,7 @@ class Pitch(object):
         self.alter = 0          # # = 2; b = -2; natural = 0
         self.octave = 0         # '' = 2; ,, = -2
         self.cautionary = ''    # '!' or '?' or ''
+        self.octaveCheck = None
     
     @classmethod
     def c1(cls):
@@ -956,24 +1001,53 @@ class Pitch(object):
             p.note, p.alter = result
             p.octave = token.octave.count("'") - token.octave.count(",")
             p.cautionary = token.cautionary
+            if token.octcheck:
+                p.octaveCheck = token.octcheck.count("'") - token.octcheck.count(",")
             return p
 
+    def copy(self):
+        """ Return a new instance with our attributes. """
+        p = self.__class__()
+        p.note = self.note
+        p.alter = self.alter
+        p.cautionary = self.cautionary
+        p.octave = self.octave
+        return p
+        
     def absolute(self, lastPitch):
         """
         Set our octave height from lastPitch (which is absolute), as if
-        we are a relative pitch.
+        we are a relative pitch. If the octaveCheck attribute is set to an
+        octave number, that is used instead.
         """
-        octave = lastPitch.octave + self.octave
+        if self.octaveCheck is not None:
+            self.octave = self.octaveCheck
+        else:
+            octave = lastPitch.octave + self.octave
+            dist = self.note - lastPitch.note
+            if dist > 3:
+                dist -= 7
+            elif dist < -3:
+                dist += 7
+            if lastPitch.note + dist < 0:
+                octave -= 1
+            elif lastPitch.note + dist > 6:
+                octave += 1
+            self.octave = octave
+        
+    def relative(self, lastPitch):
+        """
+        Returns a new Pitch instance with the current pitch relative to
+        the absolute pitch in lastPitch.
+        """
+        p = self.copy()
+        p.octave = self.octave - lastPitch.octave
         dist = self.note - lastPitch.note
         if dist > 3:
-            dist -= 7
+            p.octave += 1
         elif dist < -3:
-            dist += 7
-        if lastPitch.note + dist < 0:
-            octave -= 1
-        elif lastPitch.note + dist > 6:
-            octave += 1
-        self.octave = octave
+            p.octave -= 1
+        return p
         
     def output(self, language):
         return '%s%s%s' % (
