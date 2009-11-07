@@ -33,24 +33,70 @@ If there are more notes than durations, the durations will be repeated.
 <title>Pitch</title>
 
 <para>
-The only currently available command that manipulates pitches
-(<menuchoice><guimenu>&lilypond;</guimenu><guisubmenu>Pitch</guisubmenu>
-<guimenuitem>Pitch Name Language</guimenuitem></menuchoice>)
-is very powerful: it translates pitch names in your
-document to a different &lilypond; language. This is useful when you want to edit
-a work started by someone else, but are not accustomed to entering notes in e.g.
-dutch or italian names. 
+The <menuchoice><guimenu>&lilypond;</guimenu><guisubmenu>Pitch</guisubmenu></menuchoice>
+menu has several commands to manipulate pitches of already entered music:
 </para>
 
-<para>
-The pitch translation function is quite accurate: it almost 100% correctly
-parses &lilypond; input and finds all pitches, without altering e.g. markup,
-lyrics, strings or comments that might contain words (like "do") that are
-also pitch names. It even warns you when quarter tones are used and the target
-languages does not have definitions for them. But just to be sure: run &lilypond;
-after translating the pitches and carefully examine the document. If anything
-went wrong, press <keycap>Ctrl+Z</keycap> and try again.
-</para>
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Pitch Name Language</guilabel></term>
+<listitem>
+  <para>
+  This command is very powerful: it translates pitch names in your
+  document to a different &lilypond; language. This is useful when you want to edit
+  a work started by someone else, but are not accustomed to entering notes with e.g.
+  Dutch or Italian names. 
+  </para>
+  <para>
+  The pitch translation function is quite accurate: it almost 100% correctly
+  parses &lilypond; input and finds all pitches, without altering e.g. markup,
+  lyrics, strings or comments that might contain words (like "do") that are
+  also pitch names. It even warns you when quarter tones are used and the target
+  languages does not have definitions for them. But just to be sure: run &lilypond;
+  after translating the pitches and carefully examine the document. If anything
+  went wrong, press <keycap>Ctrl+Z</keycap> and try again.
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Convert Relative to Absolute</guilabel></term>
+<listitem>
+  <para>
+  This command converts all notes in the document or selected fragment that
+  are inside a <userinput>\relative { ... }</userinput> section to absolute
+  pitches. It honors octave checks (see the &lilypond; manual) but does not print
+  warnings.
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Convert Absolute to Relative</guilabel></term>
+<listitem>
+  <para>
+  This command converts all notes in the selected music expression(s) to
+  relative pitches, inserting a <userinput>\relative</userinput> command
+  at the beginning of a selected music expression.
+  A music expression is a piece of music enclosed in
+  <userinput>&lt;&lt; ... &gt;&gt;</userinput> or <userinput>{ ... }</userinput>.
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Transpose...</guilabel></term>
+<listitem>
+  <para>
+  FIXME: not implemented yet.
+  </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+
 </sect1>
 
 <sect1 id="lyrics">
