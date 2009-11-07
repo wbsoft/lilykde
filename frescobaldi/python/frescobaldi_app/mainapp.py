@@ -562,17 +562,17 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             self.currentDocument().manipulator().populateLanguageMenu(menu))
         
         @self.onAction(i18n("Convert Relative to Absolute"), tooltip=i18n(
-            "Converts all relative pitches in the document or selection to absolute."))
+            "Converts the notes in the document or selection from relative to absolute pitch."))
         def pitch_relative_to_absolute():
             self.currentDocument().manipulator().convertRelativeToAbsolute()
             
         @self.onSelAction(i18n("Convert Absolute to Relative"), tooltip=i18n(
-            "Converts the pitches in the selected music expression to relative pitches."))
+            "Converts the notes in the selected music expression from relative to absolute pitch."))
         def pitch_absolute_to_relative(text):
             self.currentDocument().manipulator().convertAbsoluteToRelative()
 
         @self.onAction(i18n("Transpose..."), tooltip=i18n(
-            "Transposes all pitches in the document or selection."))
+            "Transposes all notes in the document or selection."))
         def pitch_transpose():
             KMessageBox.sorry(self, "Not yet implemented.")
             #self.transposeDialog().show()
