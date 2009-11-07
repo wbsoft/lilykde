@@ -830,7 +830,108 @@ class DocumentManipulator(object):
         changes.applyChanges(self.doc.doc)
                     
     def convertAbsoluteToRelative(self):
-        KMessageBox.sorry(self.doc.app.mainwin, "Not yet implemented.")
+        """
+        Converts the selected music expression to a \relative one.
+        There MUST be a selection.
+        """
+        selection = bool(self.doc.selectionText()) and self.doc.view.selectionRange()
+        
+        if not selection:
+            return
+        text = self.doc.textToCursor(selection.end())
+        
+        tokenizer = Tokenizer()
+        tokens = tokenizer.tokens(text)
+        
+        # Walk through not-selected text, to track the state and the 
+        # current pitch language (the LangReader instance does this).
+        if selection.start().position() != (0, 0):
+            for token in tokens:
+                if selection.contains(token.range.end()):
+                    break
+        
+        changes = ChangeList()
+        
+        class gen(object):
+            """
+            Advanced generator of tokens, discarding whitespace and comments,
+            and automatically detecting \relative blocks and places where a new
+            LilyPond parsing context is started, like \score inside \markup.
+            """
+            def __iter__(self):
+                return self
+                
+            def next(self):
+                token = tokens.next()
+                while isinstance(token, (tokenizer.Space, tokenizer.Comment)):
+                    token = tokens.next()
+                if token == "\\relative":
+                    relative()
+                    token = tokens.next()
+                elif isinstance(token, tokenizer.MarkupScore):
+                    absolute()
+                    token = tokens.next()
+                return token
+        
+        source = gen()
+        
+        def consume():
+            """ Consume tokens till the level drops (we exit a construct). """
+            depth = tokenizer.depth()
+            for token in source:
+                yield token
+                if tokenizer.depth() < depth:
+                    return
+        
+        def absolute():
+            """ Consume tokens while not doing anything. """
+            for token in consume():
+                pass
+        
+        def relative():
+            """ Consume the whole \relative expression without doing anything. """
+            # pitch?
+            token = source.next()
+            if isinstance(token, tokenizer.Pitch):
+                token = source.next()
+            if isinstance(token, tokenizer.OpenDelimiter):
+                for token in consume():
+                    pass
+            elif isinstance(token, tokenizer.OpenChord):
+                while not isinstance(token, tokenizer.CloseChord):
+                    token = source.next()
+        
+        # Do it!
+        for token in source:
+            if isinstance(token, tokenizer.Pitch):
+                KMessageBox.error(self.doc.app.mainwin, i18n(
+                    "Please select a music expression, like << ... >> or { ... }"))
+                return
+            elif isinstance(token, tokenizer.OpenDelimiter):
+                # Found the start of an expression.
+                break
+        else:
+            return
+        # Ok, parse current expression.
+        insertRelative = token.range.start()
+        firstPitch = None
+        try:
+            for token in consume():
+                # skip commands with pitches that do not count
+                if token in ('\\key', '\\transposition'):
+                    source.next()
+                elif token == '\\transpose':
+                    source.next()
+                    source.next()
+                elif isinstance(token, tokenizer.OpenChord):
+                    pass # Handle chord
+                elif isinstance(token, tokenizer.Pitch):
+                    pass # Handle pitch
+        except StopIteration:
+            pass
+        # Now insert the '\relative pitch ' command
+        
+        
         
 
 class Pitch(object):
