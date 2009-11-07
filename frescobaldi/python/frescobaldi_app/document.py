@@ -918,64 +918,51 @@ class DocumentManipulator(object):
                     token = source.next()
         
         # Do it!
+        startToken = None
         for token in source:
-            if isinstance(token, tokenizer.Pitch):
-                KMessageBox.error(self.doc.app.mainwin, i18n(
-                    "Please select a music expression, enclosed in << ... >> or { ... }."))
-                return
-            elif isinstance(token, tokenizer.OpenDelimiter):
-                # Found the start of an expression.
-                break
-        else:
+            if isinstance(token, tokenizer.OpenDelimiter):
+                # Ok, parse current expression.
+                startToken = token # before which to insert the \relative command
+                lastPitch = None
+                chord = None
+                try:
+                    for token in consume():
+                        # skip commands with pitches that do not count
+                        if token in ('\\key', '\\transposition'):
+                            source.next()
+                        elif token == '\\transpose':
+                            source.next()
+                            source.next()
+                        elif isinstance(token, tokenizer.OpenChord):
+                            # Handle chord
+                            chord = []
+                        elif isinstance(token, tokenizer.CloseChord):
+                            if chord:
+                                lastPitch = chord[0]
+                            chord = None
+                        elif isinstance(token, tokenizer.Pitch):
+                            # Handle pitch
+                            p = Pitch.fromToken(token, tokenizer)
+                            if p:
+                                if lastPitch is None:
+                                    lastPitch = Pitch.c1()
+                                    lastPitch.octave = p.octave
+                                    if p.note > 3:
+                                        lastPitch.octave += 1
+                                    changes.append(startToken, "\\relative %s %s"
+                                        % (lastPitch.output(tokenizer.language),
+                                           startToken))
+                                newPitch(token, p.relative(lastPitch))
+                                lastPitch = p
+                                # remember the first pitch of a chord
+                                chord == [] and chord.append(p)
+                except StopIteration:
+                    pass # because of the source.next() statements
+        if startToken is None:  # no single expression converted?
             KMessageBox.error(self.doc.app.mainwin, i18n(
-                "No music expression found in selection."))
+                "Please select a music expression, enclosed in << ... >> or { ... }."))
             return
-        # Ok, parse current expression.
-        insertRelative = KTextEditor.Cursor(token.range.start())
-        language = tokenizer.language
-        firstPitch = Pitch.c1()
-        lastPitch = None
-        chord = None
-        try:
-            for token in consume():
-                # skip commands with pitches that do not count
-                if token in ('\\key', '\\transposition'):
-                    source.next()
-                elif token == '\\transpose':
-                    source.next()
-                    source.next()
-                elif isinstance(token, tokenizer.OpenChord):
-                    # Handle chord
-                    chord = []
-                elif isinstance(token, tokenizer.CloseChord):
-                    if chord:
-                        lastPitch = chord[0]
-                    chord = None
-                elif isinstance(token, tokenizer.Pitch):
-                    # Handle pitch
-                    p = Pitch.fromToken(token, tokenizer)
-                    if p:
-                        if lastPitch is None:
-                            firstPitch.octave = p.octave
-                            if p.note > 3:
-                                firstPitch.octave += 1
-                            lastPitch = firstPitch
-                        newPitch(token, p.relative(lastPitch))
-                        lastPitch = p
-                        # remember the first pitch of a chord
-                        chord == [] and chord.append(p)
-        except StopIteration:
-            pass # because of the source.next() statements
-        # Now insert the '\relative pitch ' command
-        if lastPitch is None:
-            KMessageBox.error(self.doc.app.mainwin, i18n(
-                "No pitches found in selected music expression."))
-            return
-        self.doc.doc.startEditing()
         changes.applyChanges(self.doc.doc)
-        self.doc.doc.insertText(insertRelative, "\\relative %s " %
-            firstPitch.output(language))
-        self.doc.doc.endEditing()
 
 
 class Pitch(object):
