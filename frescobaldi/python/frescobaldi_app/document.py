@@ -32,6 +32,7 @@ from PyKDE4.ktexteditor import KTextEditor
 import ly.rx, ly.pitch, ly.parse, ly.tokenize
 from frescobaldi_app.widgets import promptText
 
+
 class DocumentManipulator(object):
     """
     Can perform manipulations on a LilyPond document.
@@ -692,16 +693,12 @@ class DocumentManipulator(object):
         """
         Convert \relative { }  music to absolute pitches.
         """
-        start = KTextEditor.Cursor(0, 0)
-        selection = bool(self.doc.selectionText()) and self.doc.view.selectionRange()
-        
-        if selection:
-            end = selection.end()
-        else:
-            # directly using doc.documentRange().end() causes a crash...
-            docRange = self.doc.doc.documentRange()
-            end = docRange.end()
-        text = unicode(self.doc.doc.text(KTextEditor.Range(start, end)))
+        selection = self.doc.view.selection()
+        selRange = self.doc.view.selectionRange()
+        docRange = self.doc.doc.documentRange()
+        selection = selection and selRange.start().position() != selRange.end().position()
+        end = selection and selRange.end() or docRange.end()
+        text = self.doc.textToCursor(end)
         
         tokenizer = Tokenizer()
         tokens = tokenizer.tokens(text)
@@ -778,6 +775,14 @@ class DocumentManipulator(object):
                         lastPitch = Pitch.c1()
                     # remove the \relative <pitch> tokens
                     changes.appendRange(KTextEditor.Range(start, token.range.start()), '')
+                    if token in ('\\new', '\\context'):
+                        source.next() # skip context type
+                        token = source.next()
+                        if token == '=':
+                            source.next() # skip context name
+                            token = source.next()
+                    if isinstance(token, (tokenizer.ChordMode, tokenizer.NoteMode)):
+                        token = source.next()
                     if isinstance(token, tokenizer.OpenDelimiter):
                         # Handle full music expression { ... } or << ... >>
                         for token in consume():
@@ -813,7 +818,7 @@ class DocumentManipulator(object):
                                 if p:
                                     newPitch(token, p, lastPitch)
                                     lastPitch = p
-                    if isinstance(token, tokenizer.OpenChord):
+                    elif isinstance(token, tokenizer.OpenChord):
                         # Handle just one chord
                         for token in source:
                             if isinstance(token, tokenizer.CloseChord):
@@ -837,21 +842,21 @@ class DocumentManipulator(object):
                     
     def convertAbsoluteToRelative(self):
         """
-        Converts the selected music expression to a \relative one.
-        There MUST be a selection.
+        Converts the selected music expression or all toplevel expression to \relative ones.
         """
-        selection = bool(self.doc.selectionText()) and self.doc.view.selectionRange()
-        
-        if not selection:
-            return
-        text = self.doc.textToCursor(selection.end())
+        selection = self.doc.view.selection()
+        selRange = self.doc.view.selectionRange()
+        docRange = self.doc.doc.documentRange()
+        selection = selection and selRange.start().position() != selRange.end().position()
+        end = selection and selRange.end() or docRange.end()
+        text = self.doc.textToCursor(end)
         
         tokenizer = Tokenizer()
         tokens = tokenizer.tokens(text)
         
         # Walk through not-selected text, to track the state and the 
         # current pitch language (the LangReader instance does this).
-        if selection.start().position() != (0, 0):
+        if selection and selRange.start().position() != (0, 0):
             for token in tokens:
                 if selection.contains(token.range.end()):
                     break
@@ -1041,7 +1046,6 @@ class Pitch(object):
             ly.pitch.pitchWriter[language](self.note, self.alter),
             self.cautionary,
             self.octave < 0 and ',' * -self.octave or "'" * self.octave)
-        
     
 
 class ChangeList(object):

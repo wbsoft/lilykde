@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.1\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-07 14:44+0100\n"
+"POT-Creation-Date: 2009-11-08 15:29+0100\n"
 "PO-Revision-Date: 2009-10-12 23:07+0100\n"
 "Last-Translator: Piotr Komorowski <piotr-komorowski@wp.pl>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -794,7 +794,7 @@ msgstr ""
 msgid "Connect bar lines"
 msgstr "Bez kresek taktowych"
 
-#: ../python/frescobaldi_app/document.py:103
+#: ../python/frescobaldi_app/document.py:104
 msgid ""
 "Can't perform the requested translation. The music contains quarter-tone "
 "alterations, but those are not available in the pitch language %1."
@@ -802,7 +802,7 @@ msgstr ""
 "Przetłumaczenie nie powiodło się. Muzyka zawiera ćwierćtonowe znaki "
 "chromatyczne, które nie są dostępne w tym języku %1."
 
-#: ../python/frescobaldi_app/document.py:119
+#: ../python/frescobaldi_app/document.py:120
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
@@ -810,26 +810,26 @@ msgstr ""
 "Język nazw dźwięków w zaznaczonym obszarze został zaktualizowany, musisz "
 "jednak ręcznie dodać do swojego dokumentu następujące polecenie: "
 
-#: ../python/frescobaldi_app/document.py:122
+#: ../python/frescobaldi_app/document.py:123
 #: ../python/frescobaldi_app/mainapp.py:557
 msgid "Pitch Name Language"
 msgstr "Język nazw dźwięków"
 
-#: ../python/frescobaldi_app/document.py:177
+#: ../python/frescobaldi_app/document.py:178
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
 "Proszę wybrać nazwę dla zmniennej przyporządkowanej do wybranego tekstu:"
 
-#: ../python/frescobaldi_app/document.py:178
+#: ../python/frescobaldi_app/document.py:179
 #: ../python/frescobaldi_app/mainapp.py:451
 msgid "Cut and Assign"
 msgstr "Wytnij i przyporządkuj"
 
-#: ../python/frescobaldi_app/document.py:470
+#: ../python/frescobaldi_app/document.py:471
 msgid "Open %1"
 msgstr "Otwórz %1"
 
-#: ../python/frescobaldi_app/document.py:963
+#: ../python/frescobaldi_app/document.py:968
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr ""
 
@@ -1201,10 +1201,11 @@ msgid "Convert Absolute to Relative"
 msgstr ""
 
 #: ../python/frescobaldi_app/mainapp.py:570
+#, fuzzy
 msgid ""
-"Converts the notes in the selected music expression from relative to "
-"absolute pitch."
-msgstr ""
+"Converts the notes in the document or selection from absolute to relative "
+"pitch."
+msgstr "Zmniejsz wartości o połowę w danym fragmencie."
 
 #: ../python/frescobaldi_app/mainapp.py:574
 msgid "Transpose..."

@@ -78,9 +78,10 @@ menu has several commands to manipulate pitches of already entered music:
   <para>
   This command converts all notes in the selected music expression(s) to
   relative pitches, inserting a <userinput>\relative</userinput> command
-  at the beginning of a selected music expression.
+  at the beginning of each selected music expression.
   A music expression is a piece of music enclosed in
   <userinput>&lt;&lt; ... &gt;&gt;</userinput> or <userinput>{ ... }</userinput>.
+  If no music is selected, all toplevel expressions that contain notes are made relative.
   </para>
 </listitem>
 </varlistentry>

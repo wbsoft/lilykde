@@ -566,9 +566,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         def pitch_relative_to_absolute():
             self.currentDocument().manipulator().convertRelativeToAbsolute()
             
-        @self.onSelAction(i18n("Convert Absolute to Relative"), tooltip=i18n(
-            "Converts the notes in the selected music expression from relative to absolute pitch."))
-        def pitch_absolute_to_relative(text):
+        @self.onAction(i18n("Convert Absolute to Relative"), tooltip=i18n(
+            "Converts the notes in the document or selection from absolute to relative pitch."))
+        def pitch_absolute_to_relative():
             self.currentDocument().manipulator().convertAbsoluteToRelative()
 
         @self.onAction(i18n("Transpose..."), tooltip=i18n(

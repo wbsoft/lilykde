@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-07 14:44+0100\n"
-"PO-Revision-Date: 2009-11-07 14:44+0100\n"
+"POT-Creation-Date: 2009-11-08 15:29+0100\n"
+"PO-Revision-Date: 2009-11-08 15:32+0100\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
-"Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
+"Language-Team: Nederlands <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "#-#-#-#-#  nl.po (nl)  #-#-#-#-#\n"
-"X-Generator: Lokalize 0.3\n"
+"X-Generator: Lokalize 1.0\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: ../frescobaldi.py:32 dummy.py:16
@@ -783,7 +783,7 @@ msgstr "Vierkante haak"
 msgid "Connect bar lines"
 msgstr "Maatstrepen verbinden"
 
-#: ../python/frescobaldi_app/document.py:103
+#: ../python/frescobaldi_app/document.py:104
 msgid ""
 "Can't perform the requested translation. The music contains quarter-tone "
 "alterations, but those are not available in the pitch language %1."
@@ -791,7 +791,7 @@ msgstr ""
 "De gevraagde vertaling kon niet worden gemaakt. De muziek bevat kwarttonen, "
 "maar deze zijn niet beschikbaar in de taal %1."
 
-#: ../python/frescobaldi_app/document.py:119
+#: ../python/frescobaldi_app/document.py:120
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
@@ -799,26 +799,26 @@ msgstr ""
 "De taal van de nootnamen in de geselecteerde tekst is aangepast, maar u "
 "dient handmatig het volgende commando aan uw document toe te voegen:"
 
-#: ../python/frescobaldi_app/document.py:122
+#: ../python/frescobaldi_app/document.py:123
 #: ../python/frescobaldi_app/mainapp.py:557
 msgid "Pitch Name Language"
 msgstr "Taal voor nootnamen"
 
-#: ../python/frescobaldi_app/document.py:177
+#: ../python/frescobaldi_app/document.py:178
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
 "Geef de naam van de variable om de geselecteerde tekst aan toe te wijzen:"
 
-#: ../python/frescobaldi_app/document.py:178
+#: ../python/frescobaldi_app/document.py:179
 #: ../python/frescobaldi_app/mainapp.py:451
 msgid "Cut and Assign"
 msgstr "Knippen en toewijzen"
 
-#: ../python/frescobaldi_app/document.py:470
+#: ../python/frescobaldi_app/document.py:471
 msgid "Open %1"
 msgstr "%1 openen"
 
-#: ../python/frescobaldi_app/document.py:963
+#: ../python/frescobaldi_app/document.py:968
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr "Selecteer een muziekexpressie, ingesloten in << ... >> of { ... }."
 
@@ -1183,7 +1183,8 @@ msgid ""
 "Converts the notes in the document or selection from relative to absolute "
 "pitch."
 msgstr ""
-"Zet alle noten in de selectie of het document om naar absolute toonhoogte."
+"Zet de noten in het document of de selectie om van relatieve naar absolute "
+"toonhoogte."
 
 #: ../python/frescobaldi_app/mainapp.py:569
 msgid "Convert Absolute to Relative"
@@ -1191,10 +1192,10 @@ msgstr "Absoluut naar relatief omzetten"
 
 #: ../python/frescobaldi_app/mainapp.py:570
 msgid ""
-"Converts the notes in the selected music expression from relative to "
-"absolute pitch."
+"Converts the notes in the document or selection from absolute to relative "
+"pitch."
 msgstr ""
-"Zet de noten in de geselecteerde muziekexpressie om naar relatieve "
+"Zet de noten in het document of de selectie om van absolute naar relatieve "
 "toonhoogte."
 
 #: ../python/frescobaldi_app/mainapp.py:574
@@ -2925,6 +2926,13 @@ msgstr "Toetsinstrumenten"
 #: ../python/frescobaldi_app/scorewiz/parts.py:1272
 msgid "Special"
 msgstr "Speciaal"
+
+#~ msgid ""
+#~ "Converts the notes in the selected music expression from relative to "
+#~ "absolute pitch."
+#~ msgstr ""
+#~ "Zet de noten in de geselecteerde muziekexpressie om naar relatieve "
+#~ "toonhoogte."
 
 #~ msgid "Dock"
 #~ msgstr "Vastmaken"

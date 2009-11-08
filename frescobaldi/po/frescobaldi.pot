@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.16\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-07 14:44+0100\n"
+"POT-Creation-Date: 2009-11-08 15:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -756,37 +756,37 @@ msgstr ""
 msgid "Connect bar lines"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:103
+#: ../python/frescobaldi_app/document.py:104
 msgid ""
 "Can't perform the requested translation. The music contains quarter-tone "
 "alterations, but those are not available in the pitch language %1."
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:119
+#: ../python/frescobaldi_app/document.py:120
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:122
+#: ../python/frescobaldi_app/document.py:123
 #: ../python/frescobaldi_app/mainapp.py:557
 msgid "Pitch Name Language"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:177
+#: ../python/frescobaldi_app/document.py:178
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:178
+#: ../python/frescobaldi_app/document.py:179
 #: ../python/frescobaldi_app/mainapp.py:451
 msgid "Cut and Assign"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:470
+#: ../python/frescobaldi_app/document.py:471
 msgid "Open %1"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:963
+#: ../python/frescobaldi_app/document.py:968
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr ""
 
@@ -1130,8 +1130,8 @@ msgstr ""
 
 #: ../python/frescobaldi_app/mainapp.py:570
 msgid ""
-"Converts the notes in the selected music expression from relative to "
-"absolute pitch."
+"Converts the notes in the document or selection from absolute to relative "
+"pitch."
 msgstr ""
 
 #: ../python/frescobaldi_app/mainapp.py:574
