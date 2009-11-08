@@ -91,7 +91,7 @@ class DocumentManipulator(object):
                 langName = token[1:-4]
                 if langName in ly.pitch.pitchInfo:
                     reader = ly.pitch.pitchReader[langName]
-                    changes.append(token, '"%s.ly"' % lang)
+                    changes.replace(token, '"%s.ly"' % lang)
                     includeCommandChanged = True
             elif isinstance(token, tokenizer.PitchWord):
                 result = reader(token)
@@ -106,11 +106,11 @@ class DocumentManipulator(object):
                             "those are not available in the pitch language %1.",
                             lang))
                         return
-                    changes.append(token, replacement)
+                    changes.replace(token, replacement)
         
         # Apply the changes.
         self.doc.doc.startEditing()
-        changes.applyChanges(self.doc.doc)
+        changes.apply(self.doc.doc)
         if not selection and not includeCommandChanged:
             self.addLineToTop('\\include "%s.ly"' % lang)
         self.doc.doc.endEditing()
@@ -718,7 +718,7 @@ class DocumentManipulator(object):
             token. The octave is set using lastPitch.
             """
             pitch.absolute(lastPitch)
-            changes.append(token, '%s%s%s' % (
+            changes.replace(token, '%s%s%s' % (
                 token.step,
                 token.cautionary,
                 pitch.octave < 0 and ',' * -pitch.octave or "'" * pitch.octave))
@@ -774,15 +774,19 @@ class DocumentManipulator(object):
                     if not lastPitch:
                         lastPitch = Pitch.c1()
                     # remove the \relative <pitch> tokens
-                    changes.appendRange(KTextEditor.Range(start, token.range.start()), '')
-                    if token in ('\\new', '\\context'):
-                        source.next() # skip context type
-                        token = source.next()
-                        if token == '=':
-                            source.next() # skip context name
+                    changes.remove(KTextEditor.Range(start, token.range.start()))
+                    # eat stuff like \new Staff == "bla" \new Voice \notes etc.
+                    while True:
+                        if token in ('\\new', '\\context'):
+                            source.next() # skip context type
                             token = source.next()
-                    if isinstance(token, (tokenizer.ChordMode, tokenizer.NoteMode)):
-                        token = source.next()
+                            if token == '=':
+                                source.next() # skip context name
+                                token = source.next()
+                        elif isinstance(token, (tokenizer.ChordMode, tokenizer.NoteMode)):
+                            token = source.next()
+                        else:
+                            break
                     if isinstance(token, tokenizer.OpenDelimiter):
                         # Handle full music expression { ... } or << ... >>
                         for token in consume():
@@ -799,8 +803,8 @@ class DocumentManipulator(object):
                                     p = Pitch.fromToken(token, tokenizer)
                                     if p:
                                         lastPitch = p
-                                        changes.appendRange(KTextEditor.Range(
-                                            start, token.range.end()), '')
+                                        changes.remove(KTextEditor.Range(
+                                            start, token.range.end()))
                             elif isinstance(token, tokenizer.OpenChord):
                                 # handle chord
                                 chord = [lastPitch]
@@ -838,7 +842,7 @@ class DocumentManipulator(object):
         # Do it!
         for token in source:
             pass
-        changes.applyChanges(self.doc.doc)
+        changes.apply(self.doc.doc)
                     
     def convertAbsoluteToRelative(self):
         """
@@ -868,7 +872,7 @@ class DocumentManipulator(object):
             Writes a new pitch with all parts except the octave taken from the
             token.
             """
-            changes.append(token, '%s%s%s' % (
+            changes.replace(token, '%s%s%s' % (
                 token.step,
                 token.cautionary,
                 pitch.octave < 0 and ',' * -pitch.octave or "'" * pitch.octave))
@@ -954,9 +958,9 @@ class DocumentManipulator(object):
                                     lastPitch.octave = p.octave
                                     if p.note > 3:
                                         lastPitch.octave += 1
-                                    changes.append(startToken, "\\relative %s %s"
-                                        % (lastPitch.output(tokenizer.language),
-                                           startToken))
+                                    changes.insert(startToken.range.start(),
+                                        "\\relative %s " %
+                                        lastPitch.output(tokenizer.language))
                                 newPitch(token, p.relative(lastPitch))
                                 lastPitch = p
                                 # remember the first pitch of a chord
@@ -967,7 +971,7 @@ class DocumentManipulator(object):
             KMessageBox.error(self.doc.app.mainwin, i18n(
                 "Please select a music expression, enclosed in << ... >> or { ... }."))
             return
-        changes.applyChanges(self.doc.doc)
+        changes.apply(self.doc.doc)
 
 
 class Pitch(object):
@@ -1051,7 +1055,7 @@ class Pitch(object):
 class ChangeList(object):
     """
     Represents a list of changes to a KTextEditor.Document.
-    A change consists of a token (from which the range is saved) and a 
+    A change consists of a token (from which the range is saved) and possibly a 
     replacement string.
     
     Changes must be appended in sequential order.  Call applyChanges() with
@@ -1061,30 +1065,46 @@ class ChangeList(object):
     def __init__(self):
         self._changes = []
         
-    def append(self, token, replacement):
+    def replace(self, tokenOrRange, replacement):
         """
         Adds a token and its replacement.
-        The token must have a range attribute with the KTextEditor.Range it
-        represents.
+        If the token is not a KTextEditor.Range, it must have a range attribute
+        with the KTextEditor.Range it represents.
         """
-        if token != replacement:
-            self.appendRange(token.range, replacement)
+        if isinstance(tokenOrRange, KTextEditor.Range):
+            self._changes.append((tokenOrRange, replacement))
+        elif tokenOrRange != replacement:
+            self._changes.append((tokenOrRange.range, replacement))
     
-    def appendRange(self, range, replacement):
+    def insert(self, cursor, text):
         """
-        Adds a KTextEditor.Range and the text it should be replaced with.
+        Add a text insertion at the given cursor position.
         """
-        self._changes.append((range, replacement))
+        self._changes.append((cursor, text))
+    
+    def remove(self, tokenOrRange):
+        """
+        Add a token or range to be removed.
+        """
+        if isinstance(tokenOrRange, KTextEditor.Range):
+            self._changes.append((tokenOrRange, None))
+        else:
+            self._changes.append((tokenOrRange.range, None))
         
-    def applyChanges(self, doc):
+    def apply(self, doc):
         """
         Apply the changes to KTextEditor.Document doc.
         This is done in a way that does not disturb smart point and click.
         """
         doc.startEditing()
-        for r, text in reversed(self._changes):
-            doc.insertText(r.end(), text)
-            doc.removeText(r)
+        for rangeCur, text in reversed(self._changes):
+            if isinstance(rangeCur, KTextEditor.Cursor):
+                doc.insertText(rangeCur, text)
+            else:
+                if text:
+                    # dont disturb point and click
+                    doc.insertText(rangeCur.end(), text)
+                doc.removeText(rangeCur)
         doc.endEditing()
 
 
