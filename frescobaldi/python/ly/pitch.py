@@ -125,3 +125,46 @@ pitchWriter = dict(
 pitchReader = dict(
     (lang, pitchreader(*data)) for lang, data in pitchInfo.iteritems())
     
+
+class Pitch(object):
+    """
+    A pitch with note, alter and octave.
+    """
+    def __init__(self):
+        self.octave = 0
+        self.note = 0
+        self.alter = 0
+        
+
+class Transposer(object):
+    """
+    Transpose pitches.
+    
+    Instantiate with a from- and to-Pitch, and optionally a scale.
+    The scale is a list with the pitch height of the unaltered step (0 .. 6).
+    The default scale is the normal scale: C, D, E, F, G, A, B.
+    """
+    scale = (0, 1, 2, Rational(5, 2), Rational(7, 2), Rational(9, 2), Rational(11, 2))
+        
+    def __init__(self, fromPitch, toPitch, scale = None):
+        if scale is not None:
+            self.scale = scale
+        
+        # the number of octaves we need to transpose
+        self.octave = toPitch.octave - fromPitch.octave
+        
+        # the number of base note steps (c->d == 1, e->f == 1, etc.)
+        self.steps = toPitch.note - fromPitch.note
+        
+        # the number (fraction) of real whole steps
+        self.alter = (self.scale[toPitch.note] + toPitch.alter -
+                      self.scale[fromPitch.note] - fromPitch.alter)
+                  
+    def transpose(self, pitch):
+        doct, note = divmod(pitch.note + self.steps, 7)
+        pitch.alter += self.alter - doct * 6 - self.scale[note] + self.scale[pitch.note]
+        pitch.octave += self.octave + doct
+        pitch.note = note
+
+
+    

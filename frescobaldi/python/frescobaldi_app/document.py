@@ -22,14 +22,16 @@ Advanced manipulations on LilyPond documents.
 """
 
 import os, re, weakref
+from rational import Rational
 
 from PyQt4 import QtCore, QtGui
 
 from PyKDE4.kdecore import i18n
-from PyKDE4.kdeui import KIcon, KMessageBox
+from PyKDE4.kdeui import KDialog, KIcon, KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
 import ly.rx, ly.pitch, ly.parse, ly.tokenize
+from kateshell.app import lazymethod
 from frescobaldi_app.widgets import promptText
 
 
@@ -705,9 +707,9 @@ class DocumentManipulator(object):
         
         # Walk through not-selected text, to track the state and the 
         # current pitch language (the LangReader instance does this).
-        if selection and selection.start().position() != (0, 0):
+        if selection and selRange.start().position() != (0, 0):
             for token in tokens:
-                if selection.contains(token.range.end()):
+                if selRange.contains(token.range.end()):
                     break
         
         changes = ChangeList()
@@ -846,7 +848,7 @@ class DocumentManipulator(object):
                     
     def convertAbsoluteToRelative(self):
         """
-        Converts the selected music expression or all toplevel expression to \relative ones.
+        Converts the selected music expression or all toplevel expressions to \relative ones.
         """
         selection = self.doc.view.selection()
         selRange = self.doc.view.selectionRange()
@@ -862,7 +864,7 @@ class DocumentManipulator(object):
         # current pitch language (the LangReader instance does this).
         if selection and selRange.start().position() != (0, 0):
             for token in tokens:
-                if selection.contains(token.range.end()):
+                if selRange.contains(token.range.end()):
                     break
         
         changes = ChangeList()
@@ -973,6 +975,56 @@ class DocumentManipulator(object):
             return
         changes.apply(self.doc.doc)
 
+    def transpose(self):
+        """
+        Tranpose all or selected pitches.
+        """
+        selection = self.doc.view.selection()
+        selRange = self.doc.view.selectionRange()
+        docRange = self.doc.doc.documentRange()
+        selection = selection and selRange.start().position() != selRange.end().position()
+        end = selection and selRange.end() or docRange.end()
+        text = self.doc.textToCursor(end)
+        
+        # run the parser once to determine the language and key signature
+        tokenizer = Tokenizer()
+        tokens = iter(tokenizer.tokens(text))
+        keyPitch = Pitch.c1()
+        
+        for token in tokens:
+            if token == "\\key":
+                token = tokens.next()
+                if isinstance(token, tokenizer.Pitch):
+                    p = Pitch.fromToken(token, tokenizer)
+                    if p:
+                        keyPitch = p
+                        keyPitch.octave = 1
+        
+        # present a dialog
+        dlg = self.transposeDialog()
+        
+        if not dlg.exec_():
+            return
+        
+        
+    @lazymethod
+    def transposeDialog(self):
+        return TransposeDialog(self.doc.view)
+
+
+
+class TransposeDialog(KDialog):
+    def __init__(self, parent):
+        KDialog.__init__(self, parent)
+        self.setCaption(i18n("Transpose"))
+        
+        for octave in range(3):
+            for note in range(7):
+                for alter in Rational(-1, 2), 0, Rational(1, 2):
+                    print ly.pitch.pitchWriter[tokenizer.language](note, alter) + "'"*octave
+        # etc.
+        
+
 
 class Pitch(object):
     def __init__(self):
@@ -1019,17 +1071,12 @@ class Pitch(object):
         if self.octaveCheck is not None:
             self.octave = self.octaveCheck
         else:
-            octave = lastPitch.octave + self.octave
             dist = self.note - lastPitch.note
             if dist > 3:
                 dist -= 7
             elif dist < -3:
                 dist += 7
-            if lastPitch.note + dist < 0:
-                octave -= 1
-            elif lastPitch.note + dist > 6:
-                octave += 1
-            self.octave = octave
+            self.octave += lastPitch.octave  + (lastPitch.note + dist) // 7
         
     def relative(self, lastPitch):
         """
@@ -1037,12 +1084,8 @@ class Pitch(object):
         the absolute pitch in lastPitch.
         """
         p = self.copy()
-        p.octave = self.octave - lastPitch.octave
         dist = self.note - lastPitch.note
-        if dist > 3:
-            p.octave += 1
-        elif dist < -3:
-            p.octave -= 1
+        p.octave = self.octave - lastPitch.octave + (dist + 3) // 7
         return p
         
     def output(self, language):

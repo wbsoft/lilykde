@@ -574,8 +574,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         @self.onAction(i18n("Transpose..."), tooltip=i18n(
             "Transposes all notes in the document or selection."))
         def pitch_transpose():
-            KMessageBox.sorry(self, "Not yet implemented.")
-            #self.transposeDialog().show()
+            self.currentDocument().manipulator().transpose()
         
         # actions and functionality for editing rhythms
         @self.onSelAction(i18n("Double durations"),
