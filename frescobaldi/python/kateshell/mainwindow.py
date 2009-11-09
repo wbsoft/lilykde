@@ -721,7 +721,7 @@ class Tool(object):
         if self._dialog:
             sip.delete(self._dialog)
         sip.delete(self.action())
-        del self._dock, self.widget, self._dialog, self.action
+        del self._dock, self.widget, self._dialog
         del self.mainwin.tools[self.name]
 
     def show(self):
