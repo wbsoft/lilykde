@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-08 15:29+0100\n"
-"PO-Revision-Date: 2009-11-03 17:41-0500\n"
+"POT-Creation-Date: 2009-11-09 09:18+0100\n"
+"PO-Revision-Date: 2009-11-07 13:22-0500\n"
 "Last-Translator: Ryan Kavanagh <ryanakca@kubuntu.org>\n"
 "Language-Team: Français <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -819,9 +819,11 @@ msgstr "Couper et assigner"
 msgid "Open %1"
 msgstr "Ouvrir %1"
 
-#: ../python/frescobaldi_app/document.py:968
+#: ../python/frescobaldi_app/document.py:972
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr ""
+"S.V.P. sélectionner une expression musicale, entourée de << ... >> ou "
+"{ ... }."
 
 #: ../python/frescobaldi_app/expand.py:154
 msgid "Expansion Manager"
@@ -1176,28 +1178,31 @@ msgstr ""
 
 #: ../python/frescobaldi_app/mainapp.py:564
 msgid "Convert Relative to Absolute"
-msgstr ""
+msgstr "Convertir relative à absolue"
 
 #: ../python/frescobaldi_app/mainapp.py:565
 msgid ""
 "Converts the notes in the document or selection from relative to absolute "
 "pitch."
 msgstr ""
+"Convertit les notes dans le document ou la sélection d'une hauteur relative "
+"à une hauteur absolue."
 
 #: ../python/frescobaldi_app/mainapp.py:569
 msgid "Convert Absolute to Relative"
-msgstr ""
+msgstr "Convertir absolue à relative"
 
 #: ../python/frescobaldi_app/mainapp.py:570
-#, fuzzy
 msgid ""
 "Converts the notes in the document or selection from absolute to relative "
 "pitch."
-msgstr "Diviser par deux les durées dans la sélection."
+msgstr ""
+"Convertit les notes dans le document ou la sélection d'une hauteur absolue à "
+"une hauteur relative."
 
 #: ../python/frescobaldi_app/mainapp.py:574
 msgid "Transpose..."
-msgstr ""
+msgstr "Transposer..."
 
 #: ../python/frescobaldi_app/mainapp.py:575
 #, fuzzy
@@ -1328,7 +1333,7 @@ msgstr "Répéter la fin"
 
 #: ../python/frescobaldi_app/mainapp.py:659
 msgid "Tick bar line"
-msgstr ""
+msgstr "Barre de mesure style \"tick\""
 
 #: ../python/frescobaldi_app/mainapp.py:660
 msgid "Single bar line"
