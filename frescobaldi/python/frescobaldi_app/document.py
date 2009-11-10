@@ -1113,7 +1113,7 @@ class DocumentManipulator(object):
                         transposer.transpose(copy)
                         p.transposed = copy # store transposed copy in new lastPitch
                         new = copy.relative(last)
-                        if p.octaveCheck:
+                        if p.octaveCheck is not None:
                             new.octaveCheck = copy.octave
                         if relPitchToken:
                             # we are allowed to change the pitch after the
