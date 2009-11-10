@@ -895,6 +895,8 @@ class DocumentManipulator(object):
                 if token == "\\relative":
                     relative()
                     token = tokens.next()
+                elif isinstance(token, tokenizer.ChordMode):
+                    absolute() # do not change chords
                 elif isinstance(token, tokenizer.MarkupScore):
                     absolute()
                     token = tokens.next()
@@ -1011,7 +1013,9 @@ class DocumentManipulator(object):
         transposer = dlg.transposer()
         if not transposer:
             KMessageBox.sorry(self.doc.app.mainwin, i18n(
-                "Could not understand the entered pitches."))
+                "Could not understand the entered pitches.\n\n"
+                "Please make sure you use pitch names in the language \"%1\".",
+                tokenizer.language))
             return
             
         # Go!
@@ -1046,6 +1050,8 @@ class DocumentManipulator(object):
                         relative()
                     elif isinstance(token, tokenizer.MarkupScore):
                         absolute(consume())
+                    elif isinstance(token, tokenizer.ChordMode):
+                        chordmode()
                     elif token == "\\transposition":
                         source.next() # skip pitch
                     elif token == "\\transpose":
@@ -1140,7 +1146,7 @@ class DocumentManipulator(object):
                             if token == '=':
                                 source.next() # skip context name
                                 token = source.next()
-                        elif isinstance(token, (tokenizer.ChordMode, tokenizer.NoteMode)):
+                        elif isinstance(token, tokenizer.NoteMode):
                             token = source.next()
                         else:
                             break
@@ -1179,6 +1185,12 @@ class DocumentManipulator(object):
                         transposeRelative(token, tokenizer, lastPitch)
                     return
             
+        def chordmode():
+            """ Called inside \\chordmode or \\chords. """
+            for token in consume():
+                if source.inSelection and isinstance(token, tokenizer.Pitch):
+                    transpose(token, 0)
+                
         def absolute(tokens):
             """ Called when outside a possible \\relative environment. """
             for token in tokens:
@@ -1206,11 +1218,11 @@ class TransposeDialog(KDialog):
         w.layout().addWidget(l, 0, 0, 1, 4)
         self.fromPitch = QtGui.QComboBox()
         self.toPitch = QtGui.QComboBox()
-        l = QtGui.QLabel("Transpose from:")
+        l = QtGui.QLabel(i18n("Transpose from:"))
         l.setBuddy(self.fromPitch)
         w.layout().addWidget(l, 1, 0, QtCore.Qt.AlignRight)
         w.layout().addWidget(self.fromPitch, 1, 1)
-        l = QtGui.QLabel("to:")
+        l = QtGui.QLabel(i18n("to:"))
         l.setBuddy(self.toPitch)
         w.layout().addWidget(l, 1, 2, QtCore.Qt.AlignRight)
         w.layout().addWidget(self.toPitch, 1, 3)
@@ -1221,14 +1233,16 @@ class TransposeDialog(KDialog):
         
     def setLanguage(self, language):
         if language != self.language:
+            fromIndex = self.fromPitch.currentIndex()
+            toIndex = self.toPitch.currentIndex()
             self.fromPitch.clear()
             for octave in (",", "", "'"):
                 for note in range(7):
                     for alter in Rational(-1, 2), 0, Rational(1, 2):
                         self.fromPitch.insertItem(0,
                             ly.pitch.pitchWriter[language](note, alter) + octave)
-            self.fromPitch.clearEditText()
-            self.toPitch.clearEditText()
+            fromIndex != -1 and self.fromPitch.setCurrentIndex(fromIndex)
+            toIndex != -1 and self.toPitch.setCurrentIndex(toIndex)
             self.language = language
     
     def setInitialPitch(self, pitch):

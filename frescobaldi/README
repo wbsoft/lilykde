@@ -8,15 +8,15 @@ Frescobaldi is a LilyPond music score editor for KDE4, with following
 features:
 
 * Enter LilyPond scores, build and preview them with a mouseclick
-* Point-and-click support: click on notes or error messages to jump to the
-  correct position
+* Advanced point-and-click support: click on notes or error messages to jump to
+  the correct position, even if the document is changed
 * A powerful Score Wizard to quickly setup a musical score
 * Editing tools to:
-  - manipulate the rhythm
+  - manipulate pitch (transpose, translate, relative/absolute conversion)
+  - manipulate the rhythm (scale, copy/paste durations over other music, etc.)
   - hyphenate lyrics
   - quickly enter or add articulations and other symbols to existing music
   - run the document through convert-ly to update it to a newer LilyPond version
-  - translate pitch names
 * Context sensitive autocomplete, helping you to quickly enter LilyPond commands
 * Expansion manager to enter larger snippets of LilyPond input using short
   mnemonics
@@ -27,5 +27,6 @@ features:
 * Translated into Dutch, English, French, German, Italian, Czech, Russian,
   Spanish, Turkish and Polish.
 
-Frescobaldi is the KDE4 successor of LilyKDE, which is a Kate plugin for KDE3.
-Frescobaldi is developed at http://lilykde.googlecode.com/.
+Frescobaldi is Free Software, freely available under the GNU General Public
+License (GPL). You are welcome to help find bugs and add features or
+translations. Frescobaldi is developed at http://lilykde.googlecode.com/.

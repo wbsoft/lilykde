@@ -554,6 +554,9 @@ class MusicTokenizer(Tokenizer):
             cls.Articulation,
         ) + cls.lilybaseItems())
     
+    class ChordModeParser(ToplevelParser, Tokenizer.ChordModeParser): pass
+    class NoteModeParser(ToplevelParser, Tokenizer.NoteModeParser): pass
+
 
 class Cursor(object):
     """

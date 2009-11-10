@@ -82,6 +82,8 @@ menu has several commands to manipulate pitches of already entered music:
   A music expression is a piece of music enclosed in
   <userinput>&lt;&lt; ... &gt;&gt;</userinput> or <userinput>{ ... }</userinput>.
   If no music is selected, all toplevel expressions that contain notes are made relative.
+  Chordmode sections (music inside <userinput>\chordmode</userinput> or <userinput>\chords</userinput>)
+  are not made relative.
   </para>
 </listitem>
 </varlistentry>
@@ -90,7 +92,12 @@ menu has several commands to manipulate pitches of already entered music:
 <term><guilabel>Transpose...</guilabel></term>
 <listitem>
   <para>
-  FIXME: not implemented yet.
+  This command transposes all music in the document or selected fragment.
+  A dialog is displayed where you can enter two pitches,
+  the &quot;from&quot; and the &quot;to&quot; pitch.
+  &frescobaldi; then computes the distance between the two pitches and transposes the music
+  over the same distance. Both absolute and relative music can be transposed.
+  Chordmode sections are transposed without changing the octave.
   </para>
 </listitem>
 </varlistentry>
