@@ -977,7 +977,7 @@ class DocumentManipulator(object):
 
     def transpose(self):
         """
-        Tranpose all or selected pitches.
+        Transpose all or selected pitches.
         """
         selection = self.doc.view.selection()
         selRange = self.doc.view.selectionRange()
@@ -993,7 +993,9 @@ class DocumentManipulator(object):
         
         for token in tokens:
             if token == "\\key":
-                token = tokens.next()
+                for token in tokens:
+                    if not isinstance(token, (tokenizer.Space, tokenizer.Comment)):
+                        break
                 if isinstance(token, tokenizer.Pitch):
                     p = Pitch.fromToken(token, tokenizer)
                     if p:
@@ -1002,30 +1004,145 @@ class DocumentManipulator(object):
         
         # present a dialog
         dlg = self.transposeDialog()
-        
+        dlg.setLanguage(tokenizer.language)
+        dlg.setInitialPitch(keyPitch)
         if not dlg.exec_():
             return
+        transposer = dlg.transposer()
+        if not transposer:
+            KMessageBox.sorry(self.doc.app.mainwin, i18n(
+                "Could not understand the entered pitches."))
+            return
+            
+        # Do it!
+        tokenizer = Tokenizer()
+        tokens = tokenizer.tokens(text)
+        changes = ChangeList()
         
+        class gen(object):
+            """
+            Advanced generator of tokens, discarding whitespace and comments,
+            and automatically detecting \relative blocks and places where a new
+            LilyPond parsing context is started, like \score inside \markup.
+            """
+            def __init__(self):
+                self.inSelection = not selection
+                
+            def __iter__(self):
+                return self
+                
+            def next(self):
+                token = tokens.next()
+                while isinstance(token, (tokenizer.Space, tokenizer.Comment)):
+                    token = tokens.next()
+                if not self.inSelection and selRange.contains(token.range):
+                    self.inSelection = True
+                if token == "\\relative":
+                    relative()
+                    token = tokens.next()
+                elif isinstance(token, tokenizer.MarkupScore):
+                    absolute()
+                    token = tokens.next()
+                return token
         
+        source = gen()
+        
+        def consume():
+            """ Consume tokens till the level drops (we exit a construct). """
+            depth = tokenizer.depth()
+            for token in source:
+                yield token
+                if tokenizer.depth() < depth:
+                    return
+        
+        def relative():
+            """ Called when \\relative is encountered. """
+            
+        def absolute():
+            """ Called when outside a possible \\relative environment. """
+            
+        def transpose(pitch):
+            """ Transpose pitch if in selection """
+            if source.inSelection:
+                transposer.transpose(pitch)
+
+
+
+
     @lazymethod
     def transposeDialog(self):
         return TransposeDialog(self.doc.view)
-
 
 
 class TransposeDialog(KDialog):
     def __init__(self, parent):
         KDialog.__init__(self, parent)
         self.setCaption(i18n("Transpose"))
+        self.language = ""
+        self.initialPitchSet = False
+        w = self.mainWidget()
+        w.setLayout(QtGui.QGridLayout())
+        l = QtGui.QLabel(i18n("Please enter a start pitch and a destination pitch:"))
+        w.layout().addWidget(l, 0, 0, 1, 4)
+        self.fromPitch = QtGui.QComboBox()
+        self.toPitch = QtGui.QComboBox()
+        l = QtGui.QLabel("Transpose from:")
+        l.setBuddy(self.fromPitch)
+        w.layout().addWidget(l, 1, 0, QtCore.Qt.AlignRight)
+        w.layout().addWidget(self.fromPitch, 1, 1)
+        l = QtGui.QLabel("to:")
+        l.setBuddy(self.toPitch)
+        w.layout().addWidget(l, 1, 2, QtCore.Qt.AlignRight)
+        w.layout().addWidget(self.toPitch, 1, 3)
         
-        for octave in range(3):
-            for note in range(7):
-                for alter in Rational(-1, 2), 0, Rational(1, 2):
-                    print ly.pitch.pitchWriter[tokenizer.language](note, alter) + "'"*octave
-        # etc.
+        self.fromPitch.setEditable(True)
+        self.toPitch.setEditable(True)
+        self.fromPitch.setModel(self.toPitch.model())
         
-
-
+    def setLanguage(self, language):
+        if language != self.language:
+            self.fromPitch.clear()
+            for octave in (",", "", "'"):
+                for note in range(7):
+                    for alter in Rational(-1, 2), 0, Rational(1, 2):
+                        self.fromPitch.addItem(
+                            ly.pitch.pitchWriter[language](note, alter) + octave)
+            self.fromPitch.clearEditText()
+            self.toPitch.clearEditText()
+            self.language = language
+    
+    def setInitialPitch(self, pitch):
+        if not self.language:
+            self.setLanguage("nederlands")
+        if not self.initialPitchSet:
+            index = self.fromPitch.findText(pitch.output(self.language))
+            if index != -1:
+                self.fromPitch.setCurrentIndex(index)
+                self.toPitch.setCurrentIndex(index)
+                self.initialPitchSet = True
+        
+    def exec_(self):
+        if not self.initialPitchSet:
+            self.setInitialPitch(Pitch.c1())
+        return KDialog.exec_(self)
+    
+    def pitchFrom(self, combobox):
+        t = unicode(combobox.currentText())
+        p = Pitch()
+        p.octave = t.count("'") - t.count(",")
+        result = ly.pitch.pitchReader[self.language](
+            t.replace(",", "").replace("'", ""))
+        if result:
+            p.note, p.alter = result
+            return p
+            
+    def transposer(self):
+        fromPitch = self.pitchFrom(self.fromPitch)
+        toPitch = self.pitchFrom(self.toPitch)
+        if fromPitch and toPitch:
+            return ly.pitch.Transposer(fromPitch, toPitch)
+        
+        
 class Pitch(object):
     def __init__(self):
         self.note = 0           # base note (c, d, e, f, g, a, b)
