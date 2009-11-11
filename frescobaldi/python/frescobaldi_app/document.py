@@ -1098,6 +1098,7 @@ class DocumentManipulator(object):
                 p = Pitch.fromToken(token, tokenizer)
                 if p:
                     # absolute pitch determined from untransposed pitch of lastPitch
+                    octaveCheck = p.octaveCheck is not None
                     p.absolute(lastPitch)
                     if source.inSelection:
                         # we may change this pitch. Make it relative against the
@@ -1113,7 +1114,7 @@ class DocumentManipulator(object):
                         transposer.transpose(copy)
                         p.transposed = copy # store transposed copy in new lastPitch
                         new = copy.relative(last)
-                        if p.octaveCheck is not None:
+                        if octaveCheck:
                             new.octaveCheck = copy.octave
                         if relPitchToken:
                             # we are allowed to change the pitch after the
@@ -1277,14 +1278,10 @@ class TransposeDialog(KDialog):
             return ly.pitch.Transposer(fromPitch, toPitch)
         
         
-class Pitch(object):
-    def __init__(self):
-        self.note = 0           # base note (c, d, e, f, g, a, b)
-        self.alter = 0          # # = 2; b = -2; natural = 0
-        self.octave = 0         # '' = 2; ,, = -2
-        self.cautionary = ''    # '!' or '?' or ''
-        self.octaveCheck = None
-    
+class Pitch(ly.pitch.Pitch):
+    """
+    A Pitch with some class methods for easy creation.
+    """
     @classmethod
     def c1(cls):
         """ Return a pitch c' """
@@ -1303,47 +1300,6 @@ class Pitch(object):
             if token.octcheck:
                 p.octaveCheck = token.octcheck.count("'") - token.octcheck.count(",")
             return p
-
-    def copy(self):
-        """ Return a new instance with our attributes. """
-        p = self.__class__()
-        p.note = self.note
-        p.alter = self.alter
-        p.cautionary = self.cautionary
-        p.octave = self.octave
-        return p
-        
-    def absolute(self, lastPitch):
-        """
-        Set our octave height from lastPitch (which is absolute), as if
-        we are a relative pitch. If the octaveCheck attribute is set to an
-        octave number, that is used instead.
-        """
-        if self.octaveCheck is not None:
-            self.octave = self.octaveCheck
-        else:
-            dist = self.note - lastPitch.note
-            if dist > 3:
-                dist -= 7
-            elif dist < -3:
-                dist += 7
-            self.octave += lastPitch.octave  + (lastPitch.note + dist) // 7
-        
-    def relative(self, lastPitch):
-        """
-        Returns a new Pitch instance with the current pitch relative to
-        the absolute pitch in lastPitch.
-        """
-        p = self.copy()
-        dist = self.note - lastPitch.note
-        p.octave = self.octave - lastPitch.octave + (dist + 3) // 7
-        return p
-        
-    def output(self, language):
-        return '%s%s%s' % (
-            ly.pitch.pitchWriter[language](self.note, self.alter),
-            self.cautionary,
-            self.octave < 0 and ',' * -self.octave or "'" * self.octave)
     
 
 class ChangeList(object):

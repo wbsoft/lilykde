@@ -128,12 +128,59 @@ pitchReader = dict(
 
 class Pitch(object):
     """
-    A pitch with note, alter and octave.
+    A pitch with note, alter, octave and cautionary and octaveCheck
+    (for relative pitches)
     """
     def __init__(self):
-        self.octave = 0
-        self.note = 0
-        self.alter = 0
+        self.note = 0           # base note (c, d, e, f, g, a, b)
+        self.alter = 0          # # = 2; b = -2; natural = 0
+        self.octave = 0         # '' = 2; ,, = -2
+        self.cautionary = ''    # '!' or '?' or ''
+        self.octaveCheck = None
+    
+    def copy(self):
+        """ Return a new instance with our attributes. """
+        p = self.__class__()
+        p.note = self.note
+        p.alter = self.alter
+        p.cautionary = self.cautionary
+        p.octave = self.octave
+        return p
+        
+    def absolute(self, lastPitch):
+        """
+        Set our octave height from lastPitch (which is absolute), as if
+        we are a relative pitch. If the octaveCheck attribute is set to an
+        octave number, that is used instead.
+        """
+        if self.octaveCheck is not None:
+            self.octave = self.octaveCheck
+            self.octaveCheck = None
+        else:
+            dist = self.note - lastPitch.note
+            if dist > 3:
+                dist -= 7
+            elif dist < -3:
+                dist += 7
+            self.octave += lastPitch.octave  + (lastPitch.note + dist) // 7
+        
+    def relative(self, lastPitch):
+        """
+        Returns a new Pitch instance with the current pitch relative to
+        the absolute pitch in lastPitch.
+        """
+        p = self.copy()
+        dist = self.note - lastPitch.note
+        p.octave = self.octave - lastPitch.octave + (dist + 3) // 7
+        return p
+        
+    def output(self, language):
+        return ''.join((
+            pitchWriter[language](self.note, self.alter),
+            self.cautionary,
+            octaveToString(self.octave),
+            self.octaveCheck is not None
+                and '=' + octaveToString(self.octaveCheck) or ''))
         
 
 class Transposer(object):
@@ -167,4 +214,10 @@ class Transposer(object):
         pitch.note = note
 
 
-    
+def octaveToString(octave):
+    """
+    Convert numeric octave to a string with apostrophes or commas.
+    0 -> "" ; 1 -> "'" ; -1 -> "," ; etc.
+    """
+    return octave < 0 and ',' * -octave or "'" * octave
+
