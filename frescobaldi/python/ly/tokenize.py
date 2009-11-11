@@ -78,6 +78,7 @@ subclass the Parser classes.
 
 import re
 import ly.rx
+import ly.pitch
 
 
 def _make_re(classes):
@@ -228,6 +229,10 @@ class Tokenizer(object):
             obj = unicode.__new__(cls, matchObj.group())
             obj.pos = matchObj.pos
             return obj
+        
+        @property
+        def end(self):
+            return self.pos + len(self)
 
     class Item(Token):
         """
@@ -257,7 +262,7 @@ class Tokenizer(object):
 
 
     # real types of lilypond input
-    class Unparsed(unicode):
+    class Unparsed(Token):
         """
         Represents an unparsed piece of LilyPond text.
         Needs to be given a value and a position (where the string was found)
@@ -557,24 +562,9 @@ class MusicTokenizer(Tokenizer):
     class ChordModeParser(ToplevelParser, Tokenizer.ChordModeParser): pass
     class NoteModeParser(ToplevelParser, Tokenizer.NoteModeParser): pass
 
+    def readStep(self, pitchToken):
+        return ly.pitch.pitchReader[self.language](pitchToken.step)
 
-class Cursor(object):
-    """
-    A Cursor instance can walk() over any piece of plain text,
-    maintaining line and column positions by looking at newlines in the text.
-    """
-    def __init__(self):
-        self.line = 0
-        self.column = 0
-    
-    def walk(self, text):
-        lines = text.count('\n')
-        if lines:
-            self.line += lines
-            self.column = len(text) - text.rfind('\n') - 1
-        else:
-            self.column += len(text)
-        
 
 class LineColumnMixin(object):
     """
@@ -592,11 +582,193 @@ class LineColumnMixin(object):
             cursor.walk(token)
 
 
+class LangReaderMixin(object):
+    """
+    Mixin with a Tokenizer (sub)class to read tokens from a source and
+    remember the pitch name language (from \include "language.ly" statements).
+    """
+    def reset(self, *args):
+        super(LangReaderMixin, self).reset(*args)
+        self.language = "nederlands"
+        
+    def tokens(self, text, pos = 0):
+        for token in super(LangReaderMixin, self).tokens(text, pos):
+            if isinstance(token, self.IncludeFile):
+                langName = token[1:-4]
+                if langName in ly.pitch.pitchInfo:
+                    self.language = langName
+            yield token
+
+
 class LineColumnTokenizer(LineColumnMixin, Tokenizer):
     """
     Basic Tokenizer which records line and column, adding those
     as attributes to every token.
     """
     pass
+
+
+class Cursor(object):
+    """
+    A Cursor instance can walk() over any piece of plain text,
+    maintaining line and column positions by looking at newlines in the text.
+
+    Subclass this to let a ChangeList perform changes on the instance.
+    The actions are called in sorted order, but the cursor positions
+    reflect the updated state of the document.
+    """
+    def __init__(self, other = None, column = 0):
+        if isinstance(other, Cursor):
+            self.line = other.line
+            self.column = other.column
+            self.anchorLine = other.anchorLine
+            self.anchorColumn = other.anchorColumn
+        else:
+            self.line = other or 0
+            self.column = column
+        self.anchorLine = 0
+        self.anchorColumn = 0
+    
+    def walk(self, text):
+        lines = text.count('\n')
+        if lines:
+            self.line += lines
+            self.column = len(text) - text.rfind('\n') - 1
+        else:
+            self.column += len(text)
+    
+    def anchor(self, text):
+        """
+        Sets the anchor to the end of text.
+        """
+        lines = text.count('\n')
+        if lines:
+            self.anchorLine = self.line + lines
+            self.anchorColumn = len(text) - text.rfind('\n') - 1
+        else:
+            self.anchorLine = self.line
+            self.anchorColumn = self.column + len(text)
+
+    def startEditing(self):
+        """ Called before edits are made. """
+        pass
+    
+    def endEditing(self):
+        """ Called after edits have been done. """
+        pass
+    
+    def insertText(self, text):
+        """ Insert text at current cursor position. """
+        pass
+    
+    def removeText(self):
+        """ Delete text from current position to anchor. """
+        pass
+    
+    def replaceText(self, text):
+        """ Replace text from current position to anchor with text. """
+        pass
+        
+
+class ChangeList(object):
+    """
+    Manages a list of changes to a string.
+    Each entry is a tuple(pos, end, text).
+    
+    pos and end define the slice of the original string to remove, text
+    is the text to insert at that position.
+    """
+    
+    # whether our items must be sorted.
+    # If False, the user must add the changes in the correct order!
+    sortItems = True
+    
+    def __init__(self, text):
+        self._changes = []
+        self._text = text
+        
+    def replace(self, pos, end, text):
+        if text != self._text[pos:end]:
+            self._changes.append((pos, end, text))
+        
+    def replaceToken(self, token, text):
+        if token != text:
+            self._changes.append((token.pos, token.end, text))
+            
+    def remove(self, pos, end):
+        self._changes.append((pos, end, None))
+    
+    def removeToken(self, token):
+        self._changes.append((token.pos, token.end, None))
+        
+    def insert(self, pos, text):
+        self._changes.append((pos, pos, text))
+        
+    def changes(self):
+        """
+        Return an iterator over the changes.
+        """
+        if self.sortItems:
+            return sorted(self._changes)
+        else:
+            return self._changes
+        
+    def apply(self):
+        """
+        Return a new string constructed from the original string
+        with all the changes applied.
+        """
+        def parts():
+            index = 0
+            for pos, end, text in self.changes():
+                if pos > index:
+                    yield self._text[index:pos]
+                if text:
+                    yield text
+                index = end
+                print index, len(self._text)
+            if index < len(self._text):
+                yield self._text[index:]
+        
+        return ''.join(parts())
+
+    def applyToCursor(self, cursor):
+        index = 0
+        cursor.startEditing()
+        for pos, end, text in self.changes():
+            if pos > index:
+                cursor.walk(self._text[index:pos])
+            if end > pos:
+                cursor.anchor(self._text[pos:end])
+                if text:
+                    cursor.replaceText(text)
+                    cursor.walk(text)
+                else:
+                    cursor.removeText()
+            else:
+                cursor.insertText(text)
+                cursor.walk(text)
+            index = end
+        cursor.endEditing()
+
+
+def cursorToPosition(line, column, text):
+    """
+    Returns the character position in text of a cursor with line and column.
+    Line and column both start with 0.
+    Returns -1 if the position falls outside the text.
+    """
+    pos = 0
+    for i in range(line):
+        pos = text.find('\n', pos) + 1
+        if not pos:
+            return -1
+    new = text.find('\n', pos)
+    if new == -1:
+        new = len(text)
+    pos += column
+    if pos > new:
+        return -1
+    return pos
 
 

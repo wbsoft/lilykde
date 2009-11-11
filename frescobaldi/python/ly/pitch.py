@@ -20,111 +20,7 @@
 import re
 from rational import Rational
 
-# pitches
-class pitchwriter(object):
-    def __init__(self, names, accs, replacements=()):
-        self.names = names
-        self.accs = accs
-        self.replacements = replacements
-
-    def __call__(self, note, alter = 0, warn = False):
-        """
-        Returns a string representing the pitch in our language.
-        If warn == True and the requested pitch has an alteration not present
-        in the current language, False is returned.
-        """
-        pitch = self.names[note]
-        if alter:
-            acc = self.accs[int(alter * 4 + 4)]
-            # warn if a quarter tone is requested but not present in the
-            # current language.
-            if warn and acc == '':
-                return False
-            pitch += acc
-        for s, r in self.replacements:
-            if pitch.startswith(s):
-                pitch = r + pitch[len(s):]
-                break
-        return pitch
-
-
-class pitchreader(object):
-    def __init__(self, names, accs, replacements=()):
-        self.names = list(names)
-        self.accs = list(accs)
-        self.replacements = replacements
-        
-        rx = "(%s)" % "|".join(names)
-        rx += "(%s)?$" % "|".join(acc for acc in accs if acc)
-        self.rx = re.compile(rx)
-
-    def __call__(self, text):
-        for s, r in self.replacements:
-            if text.startswith(r):
-                text = s + text[len(r):]
-        for dummy in 1, 2:
-            m = self.rx.match(text)
-            if m:
-                note = self.names.index(m.group(1))
-                if m.group(2):
-                    alter = Rational(self.accs.index(m.group(2)) - 4, 4)
-                else:
-                    alter = 0
-                return note, alter
-            # HACK: were we using (rarely used) long english syntax?
-            text = text.replace('flat', 'f').replace('sharp', 's')
-        return False
-            
-            
-pitchInfo = {
-    'nederlands': (
-        ('c','d','e','f','g','a','b'),
-        ('eses', 'eseh', 'es', 'eh', '', 'ih','is','isih','isis'),
-        (('ees', 'es'), ('aes', 'as'))
-    ),
-    'english': (
-        ('c','d','e','f','g','a','b'),
-        ('ff', 'tqf', 'f', 'qf', '', 'qs', 's', 'tqs', 'ss'),
-    ),
-    'deutsch': (
-        ('c','d','e','f','g','a','h'),
-        ('eses', 'eseh', 'es', 'eh', '', 'ih','is','isih','isis'),
-        (('ees', 'es'), ('aes', 'as'), ('hes', 'b'))
-    ),
-    'svenska': (
-        ('c','d','e','f','g','a','h'),
-        ('essess', '', 'ess', '', '', '','iss','','ississ'),
-        (('ees', 'es'), ('aes', 'as'), ('hess', 'b'))
-    ),
-    'italiano': (
-        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
-        ('bb', 'bsb', 'b', 'sb', '', 'sd', 'd', 'dsd', 'dd')
-    ),
-    'espanol': (
-        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
-        ('bb', '', 'b', '', '', '', 's', '', 'ss')
-    ),
-    'portugues': (
-        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
-        ('bb', 'btqt', 'b', 'bqt', '', 'sqt', 's', 'stqt', 'ss')
-    ),
-    'vlaams': (
-        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
-        ('bb', '', 'b', '', '', '', 'k', '', 'kk')
-    ),
-}
-
-pitchInfo['norsk'] = pitchInfo['deutsch']
-pitchInfo['suomi'] = pitchInfo['deutsch']
-pitchInfo['catalan'] = pitchInfo['italiano']
-
-
-pitchWriter = dict(
-    (lang, pitchwriter(*data)) for lang, data in pitchInfo.iteritems())
-
-pitchReader = dict(
-    (lang, pitchreader(*data)) for lang, data in pitchInfo.iteritems())
-    
+import ly
 
 class Pitch(object):
     """
@@ -138,6 +34,13 @@ class Pitch(object):
         self.cautionary = ''    # '!' or '?' or ''
         self.octaveCheck = None
     
+    @classmethod
+    def c1(cls):
+        """ Return a pitch c' """
+        p = cls()
+        p.octave = 1
+        return p
+
     def copy(self):
         """ Return a new instance with our attributes. """
         p = self.__class__()
@@ -214,6 +117,61 @@ class Transposer(object):
         pitch.note = note
 
 
+class PitchWriter(object):
+    def __init__(self, names, accs, replacements=()):
+        self.names = names
+        self.accs = accs
+        self.replacements = replacements
+
+    def __call__(self, note, alter = 0, warn = False):
+        """
+        Returns a string representing the pitch in our language.
+        If warn == True and the requested pitch has an alteration not present
+        in the current language, False is returned.
+        """
+        pitch = self.names[note]
+        if alter:
+            acc = self.accs[int(alter * 4 + 4)]
+            # warn if a quarter tone is requested but not present in the
+            # current language.
+            if warn and acc == '':
+                return False
+            pitch += acc
+        for s, r in self.replacements:
+            if pitch.startswith(s):
+                pitch = r + pitch[len(s):]
+                break
+        return pitch
+
+
+class PitchReader(object):
+    def __init__(self, names, accs, replacements=()):
+        self.names = list(names)
+        self.accs = list(accs)
+        self.replacements = replacements
+        
+        rx = "(%s)" % "|".join(names)
+        rx += "(%s)?$" % "|".join(acc for acc in accs if acc)
+        self.rx = re.compile(rx)
+
+    def __call__(self, text):
+        for s, r in self.replacements:
+            if text.startswith(r):
+                text = s + text[len(r):]
+        for dummy in 1, 2:
+            m = self.rx.match(text)
+            if m:
+                note = self.names.index(m.group(1))
+                if m.group(2):
+                    alter = Rational(self.accs.index(m.group(2)) - 4, 4)
+                else:
+                    alter = 0
+                return note, alter
+            # HACK: were we using (rarely used) long english syntax?
+            text = text.replace('flat', 'f').replace('sharp', 's')
+        return False
+            
+            
 def octaveToString(octave):
     """
     Convert numeric octave to a string with apostrophes or commas.
@@ -221,3 +179,62 @@ def octaveToString(octave):
     """
     return octave < 0 and ',' * -octave or "'" * octave
 
+def octaveToNum(octave):
+    """
+    Convert string octave to an integer:
+    "" -> 0 ; "," -> -1 ; "'''" -> 3 ; etc.
+    """
+    return octave.count("'") - octave.count(",")
+
+
+pitchInfo = {
+    'nederlands': (
+        ('c','d','e','f','g','a','b'),
+        ('eses', 'eseh', 'es', 'eh', '', 'ih','is','isih','isis'),
+        (('ees', 'es'), ('aes', 'as'))
+    ),
+    'english': (
+        ('c','d','e','f','g','a','b'),
+        ('ff', 'tqf', 'f', 'qf', '', 'qs', 's', 'tqs', 'ss'),
+    ),
+    'deutsch': (
+        ('c','d','e','f','g','a','h'),
+        ('eses', 'eseh', 'es', 'eh', '', 'ih','is','isih','isis'),
+        (('ees', 'es'), ('aes', 'as'), ('hes', 'b'))
+    ),
+    'svenska': (
+        ('c','d','e','f','g','a','h'),
+        ('essess', '', 'ess', '', '', '','iss','','ississ'),
+        (('ees', 'es'), ('aes', 'as'), ('hess', 'b'))
+    ),
+    'italiano': (
+        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
+        ('bb', 'bsb', 'b', 'sb', '', 'sd', 'd', 'dsd', 'dd')
+    ),
+    'espanol': (
+        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
+        ('bb', '', 'b', '', '', '', 's', '', 'ss')
+    ),
+    'portugues': (
+        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
+        ('bb', 'btqt', 'b', 'bqt', '', 'sqt', 's', 'stqt', 'ss')
+    ),
+    'vlaams': (
+        ('do', 're', 'mi', 'fa', 'sol', 'la', 'si'),
+        ('bb', '', 'b', '', '', '', 'k', '', 'kk')
+    ),
+}
+
+pitchInfo['norsk'] = pitchInfo['deutsch']
+pitchInfo['suomi'] = pitchInfo['deutsch']
+pitchInfo['catalan'] = pitchInfo['italiano']
+
+
+pitchWriter = dict(
+    (lang, PitchWriter(*data)) for lang, data in pitchInfo.iteritems())
+
+pitchReader = dict(
+    (lang, PitchReader(*data)) for lang, data in pitchInfo.iteritems())
+    
+
+   

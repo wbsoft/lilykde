@@ -44,7 +44,7 @@ _tens = (
 def nums(num):
     """
     Returns a textual representation of a number (e.g. 1 -> "One"), for use
-    in LilyPond identifiers (that do not support numbers).
+    in LilyPond identifiers (that do not support digits).
     Supports numbers 0 to 109.
     """
     if num < 20:
