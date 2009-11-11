@@ -227,12 +227,8 @@ class Tokenizer(object):
         """
         def __new__(cls, matchObj, tokenizer):
             obj = unicode.__new__(cls, matchObj.group())
-            obj.pos = matchObj.start()
+            obj.pos, obj.end = matchObj.span()
             return obj
-        
-        @property
-        def end(self):
-            return self.pos + len(self)
 
     class Item(Token):
         """
@@ -270,6 +266,7 @@ class Tokenizer(object):
         def __new__(cls, value, pos):
             obj = unicode.__new__(cls, value)
             obj.pos = pos
+            obj.end = pos + len(obj)
             return obj
 
     class Command(Item):

@@ -336,7 +336,6 @@ def languageAndKey(text):
                 if p:
                     keyPitch = p
                     keyPitch.octave = 1
-
     return tokenizer.language, keyPitch
 
 def transpose(text, transposer, start = 0, changes = None):

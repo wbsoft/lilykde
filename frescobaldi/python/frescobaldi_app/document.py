@@ -909,7 +909,7 @@ class RangeMixin(object):
     Mixin with a Tokenizer (sub)class to iterate over the tokens returned by
     tokenizer.tokens(), adding a KTextEditor.Range to every token, describing
     its place. See the ly.tokenize module.
-    Mixin before classes that drop tokens, otherwise the cursorpositions will
+    Mixin before classes that drop tokens, otherwise the cursor positions will
     not be updated correctly.
     """
     def tokens(self, text, pos = 0, cursor = None):
