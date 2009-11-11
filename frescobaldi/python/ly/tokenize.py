@@ -227,7 +227,7 @@ class Tokenizer(object):
         """
         def __new__(cls, matchObj, tokenizer):
             obj = unicode.__new__(cls, matchObj.group())
-            obj.pos = matchObj.pos
+            obj.pos = matchObj.start()
             return obj
         
         @property
@@ -726,7 +726,6 @@ class ChangeList(object):
                 if text:
                     yield text
                 index = end
-                print index, len(self._text)
             if index < len(self._text):
                 yield self._text[index:]
         

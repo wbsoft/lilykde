@@ -931,24 +931,6 @@ class RangeTokenizer(RangeMixin, ly.tokenize.Tokenizer):
     pass
 
 
-class LangReaderMixin(object):
-    """
-    Mixin with a Tokenizer (sub)class to read tokens from a source and
-    remember the pitch name language (from \include "language.ly" statements).
-    """
-    def reset(self, *args):
-        super(LangReaderMixin, self).reset(*args)
-        self.language = "nederlands"
-        
-    def tokens(self, text, pos = 0):
-        for token in super(LangReaderMixin, self).tokens(text, pos):
-            if isinstance(token, self.IncludeFile):
-                langName = token[1:-4]
-                if langName in ly.pitch.pitchInfo:
-                    self.language = langName
-            yield token
-
-
 class EditCursor(ly.tokenize.Cursor):
     def __init__(self, doc):
         super(EditCursor, self).__init__()
