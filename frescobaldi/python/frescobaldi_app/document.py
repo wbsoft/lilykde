@@ -1160,8 +1160,10 @@ class DocumentManipulator(object):
                                     p = Pitch.fromToken(token, tokenizer)
                                     if p:
                                         if source.inSelection:
-                                            transposer.transpose(p)
-                                            changes.replace(token, p.output(tokenizer.language))    
+                                            copy = p.copy()
+                                            transposer.transpose(copy)
+                                            p.transposed = copy
+                                            changes.replace(token, copy.output(tokenizer.language))    
                                         lastPitch = p
                                         del relPitchToken[:]
                             elif isinstance(token, tokenizer.OpenChord):
