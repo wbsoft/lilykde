@@ -664,7 +664,7 @@ class DocumentManipulator(object):
         text, start = self.doc.selectionOrDocument()
         try:
             ly.tools.absoluteToRelative(text, start).applyToCursor(EditCursor(self.doc.doc))
-        except ly.NoExpressionFound:
+        except ly.NoMusicExpressionFound:
             KMessageBox.error(self.doc.app.mainwin, i18n(
                 "Please select a music expression, enclosed in << ... >> or { ... }."))
 

@@ -311,7 +311,7 @@ def absoluteToRelative(text, start = 0, changes = None):
             except StopIteration:
                 pass # because of the source.next() statements
     if startToken is None:  # no single expression converted?
-        raise ly.NoExpressionFound
+        raise ly.NoMusicExpressionFound
     return changes
 
 def languageAndKey(text):
