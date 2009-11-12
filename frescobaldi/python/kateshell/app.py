@@ -721,7 +721,24 @@ class Document(DBusItem):
         """
         if self.view and self.view.selection():
             return unicode(self.view.selectionText())
-            
+    
+    def selectionOrDocument(self):
+        """
+        Returns a tuple(text, start).
+        
+        If there is a selection, start is the position in the text the selection
+        starts, and text is the document text from the (0, 0) to the end of the
+        selection. If there is no selection, the whole document text is returned
+        and start = 0.
+        """
+        docRange = self.doc.documentRange()
+        selRange = self.view.selectionRange()
+        if self.view.selection() and selRange.start().position() != selRange.end().position():
+            text = self.textToCursor(selRange.end())
+            line, column = selRange.start().position()
+            return text, cursorToPosition(line, column, text)
+        return self.text(), 0
+        
     def replaceSelectionWith(self, text, keepSelection=True):
         """
         Convenience method. Replaces the selection (if any) with text.
@@ -949,3 +966,22 @@ def resolvetabs_indices(column, indices):
             return charcol
         charcol += 1
         
+def cursorToPosition(line, column, text):
+    """
+    Returns the character position in text of a cursor with line and column.
+    Line and column both start with 0.
+    Returns -1 if the position falls outside the text.
+    """
+    pos = 0
+    for i in range(line):
+        pos = text.find('\n', pos) + 1
+        if not pos:
+            return -1
+    new = text.find('\n', pos)
+    if new == -1:
+        new = len(text)
+    pos += column
+    if pos > new:
+        return -1
+    return pos
+

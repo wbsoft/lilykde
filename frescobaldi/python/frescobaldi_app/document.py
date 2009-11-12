@@ -58,65 +58,24 @@ class DocumentManipulator(object):
         """
         Change the LilyPond pitch name language in our document to lang.
         """
-        start = KTextEditor.Cursor(0, 0)
-        selection = bool(self.doc.selectionText()) and self.doc.view.selectionRange()
-        
-        if selection:
-            end = selection.end()
-        else:
-            # directly using doc.documentRange().end() causes a crash...
-            docRange = self.doc.doc.documentRange()
-            end = docRange.end()
-        text = unicode(self.doc.doc.text(KTextEditor.Range(start, end)))
-        
-        writer = ly.pitch.pitchWriter[lang]
-        reader = ly.pitch.pitchReader["nederlands"]
-        tokenizer = RangeTokenizer()
-        tokens = tokenizer.tokens(text)
-        
-        # Walk through not-selected text, to track the state and the 
-        # current pitch language.
-        if selection and selection.start().position() != (0, 0):
-            for token in tokens:
-                if isinstance(token, tokenizer.IncludeFile):
-                    langName = token[1:-4]
-                    if langName in ly.pitch.pitchInfo:
-                        reader = ly.pitch.pitchReader[langName]
-                if selection.contains(token.range.end()):
-                    break
-        
-        # Now walk through the part that needs to be translated.
-        changes = ChangeList()
-        includeCommandChanged = False
-        for token in tokens:
-            if isinstance(token, tokenizer.IncludeFile):
-                langName = token[1:-4]
-                if langName in ly.pitch.pitchInfo:
-                    reader = ly.pitch.pitchReader[langName]
-                    changes.replace(token, '"%s.ly"' % lang)
-                    includeCommandChanged = True
-            elif isinstance(token, tokenizer.PitchWord):
-                result = reader(token)
-                if result:
-                    note, alter = result
-                    # Write out the translated pitch.
-                    replacement = writer(note, alter, warn=True)
-                    if not replacement:
-                        KMessageBox.sorry(self.doc.app.mainwin, i18n(
-                            "Can't perform the requested translation. "
-                            "The music contains quarter-tone alterations, but "
-                            "those are not available in the pitch language %1.",
-                            lang))
-                        return
-                    changes.replace(token, replacement)
+        text, start = self.doc.selectionOrDocument()
+        try:
+            changes, includeCommandChanged = ly.tools.translate(text, lang, start)
+        except ly.tools.QuarterToneAlterationNotAvailable:
+            KMessageBox.sorry(self.doc.app.mainwin, i18n(
+                "Can't perform the requested translation. "
+                "The music contains quarter-tone alterations, but "
+                "those are not available in the pitch language %1.",
+                lang))
+            return
         
         # Apply the changes.
         self.doc.doc.startEditing()
-        changes.apply(self.doc.doc)
-        if not selection and not includeCommandChanged:
+        changes.applyToCursor(EditCursor(self.doc.doc))
+        if not start and not includeCommandChanged:
             self.addLineToTop('\\include "%s.ly"' % lang)
         self.doc.doc.endEditing()
-        if selection and not includeCommandChanged:
+        if start and not includeCommandChanged:
             KMessageBox.information(self.doc.app.mainwin,
                 '<p>%s</p><p><tt>\\include "%s.ly"</tt></p>' %
                 (i18n("The pitch language of the selected text has been "
@@ -695,30 +654,14 @@ class DocumentManipulator(object):
         """
         Convert \relative { }  music to absolute pitches.
         """
-        docRange = self.doc.doc.documentRange()
-        selRange = self.doc.view.selectionRange()
-        selection = self.doc.view.selection() and selRange.start().position() != selRange.end().position()
-        end = selection and selRange.end() or docRange.end()
-        text = self.doc.textToCursor(end)
-        start = 0
-        if selection:
-            line, column = selRange.start().position()
-            start = ly.tokenize.cursorToPosition(line, column, text)
+        text, start = self.doc.selectionOrDocument()
         ly.tools.relativeToAbsolute(text, start).applyToCursor(EditCursor(self.doc.doc))
     
     def convertAbsoluteToRelative(self):
         """
         Converts the selected music expression or all toplevel expressions to \relative ones.
         """
-        docRange = self.doc.doc.documentRange()
-        selRange = self.doc.view.selectionRange()
-        selection = self.doc.view.selection() and selRange.start().position() != selRange.end().position()
-        end = selection and selRange.end() or docRange.end()
-        text = self.doc.textToCursor(end)
-        start = 0
-        if selection:
-            line, column = selRange.start().position()
-            start = ly.tokenize.cursorToPosition(line, column, text)
+        text, start = self.doc.selectionOrDocument()
         try:
             ly.tools.absoluteToRelative(text, start).applyToCursor(EditCursor(self.doc.doc))
         except ly.tools.NoExpressionFound:
@@ -729,15 +672,7 @@ class DocumentManipulator(object):
         """
         Transpose all or selected pitches.
         """
-        docRange = self.doc.doc.documentRange()
-        selRange = self.doc.view.selectionRange()
-        selection = self.doc.view.selection() and selRange.start().position() != selRange.end().position()
-        end = selection and selRange.end() or docRange.end()
-        text = self.doc.textToCursor(end)
-        start = 0
-        if selection:
-            line, column = selRange.start().position()
-            start = ly.tokenize.cursorToPosition(line, column, text)
+        text, start = self.doc.selectionOrDocument()
     
         # determine the language and key signature
         language, keyPitch = ly.tools.languageAndKey(text)
@@ -831,62 +766,6 @@ class TransposeDialog(KDialog):
         toPitch = self.pitchFrom(self.toPitch)
         if fromPitch and toPitch:
             return ly.pitch.Transposer(fromPitch, toPitch)
-        
-
-class ChangeList(object):
-    """
-    Represents a list of changes to a KTextEditor.Document.
-    A change consists of a token (from which the range is saved) and possibly a 
-    replacement string.
-    
-    Changes must be appended in sequential order.  Call applyChanges() with
-    the document from which the text originated to have the changes applied.
-    (This is done in reverse order, so the ranges remain valid.)
-    """
-    def __init__(self):
-        self._changes = []
-        
-    def replace(self, tokenOrRange, replacement):
-        """
-        Adds a token and its replacement.
-        If the token is not a KTextEditor.Range, it must have a range attribute
-        with the KTextEditor.Range it represents.
-        """
-        if isinstance(tokenOrRange, KTextEditor.Range):
-            self._changes.append((tokenOrRange, replacement))
-        elif tokenOrRange != replacement:
-            self._changes.append((tokenOrRange.range, replacement))
-    
-    def insert(self, cursor, text):
-        """
-        Add a text insertion at the given cursor position.
-        """
-        self._changes.append((cursor, text))
-    
-    def remove(self, tokenOrRange):
-        """
-        Add a token or range to be removed.
-        """
-        if isinstance(tokenOrRange, KTextEditor.Range):
-            self._changes.append((tokenOrRange, None))
-        else:
-            self._changes.append((tokenOrRange.range, None))
-        
-    def apply(self, doc):
-        """
-        Apply the changes to KTextEditor.Document doc.
-        This is done in a way that does not disturb smart point and click.
-        """
-        doc.startEditing()
-        for rangeCur, text in reversed(self._changes):
-            if isinstance(rangeCur, KTextEditor.Cursor):
-                doc.insertText(rangeCur, text)
-            else:
-                if text:
-                    # dont disturb point and click
-                    doc.insertText(rangeCur.end(), text)
-                doc.removeText(rangeCur)
-        doc.endEditing()
 
 
 class Cursor(ly.tokenize.Cursor):
@@ -932,6 +811,10 @@ class RangeTokenizer(RangeMixin, ly.tokenize.Tokenizer):
 
 
 class EditCursor(ly.tokenize.Cursor):
+    """
+    Translates changes to a Python string in a ly.tokenize.ChangeList
+    to changes to a KTextEditor.Document and applies them.
+    """
     def __init__(self, doc):
         super(EditCursor, self).__init__()
         self.doc = doc

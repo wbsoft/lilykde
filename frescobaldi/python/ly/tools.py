@@ -43,6 +43,17 @@ class Pitch(ly.pitch.Pitch):
     
 
 class NoExpressionFound(Exception):
+    """
+    Raised if no music expression could be found in abs->rel.
+    """
+    pass
+
+
+class QuarterToneAlterationNotAvailable(Exception):
+    """
+    Raised when there is no pitch name in the target languate
+    when translating pitch names.
+    """
     pass
 
 
@@ -529,5 +540,49 @@ def transpose(text, transposer, start = 0, changes = None):
     # Do it!
     absolute(source)
     return changes
+
+def translate(text, lang, start = 0, changes = None):
+    """
+    Change the LilyPond pitch name language in our document to lang.
+    """
+    
+    writer = ly.pitch.pitchWriter[lang]
+    reader = ly.pitch.pitchReader["nederlands"]
+    tokenizer = ly.tokenize.Tokenizer()
+    tokens = tokenizer.tokens(text)
+    
+    # Walk through not-selected text, to track the state and the 
+    # current pitch language.
+    if start:
+        for token in tokens:
+            if isinstance(token, tokenizer.IncludeFile):
+                langName = token[1:-4]
+                if langName in ly.pitch.pitchInfo:
+                    reader = ly.pitch.pitchReader[langName]
+            if token.end >= start:
+                break
+    
+    if changes is None:
+        changes = ly.tokenize.ChangeList(text)
+
+    # Now walk through the part that needs to be translated.
+    includeCommandChanged = False
+    for token in tokens:
+        if isinstance(token, tokenizer.IncludeFile):
+            langName = token[1:-4]
+            if langName in ly.pitch.pitchInfo:
+                reader = ly.pitch.pitchReader[langName]
+                changes.replaceToken(token, '"%s.ly"' % lang)
+                includeCommandChanged = True
+        elif isinstance(token, tokenizer.PitchWord):
+            result = reader(token)
+            if result:
+                note, alter = result
+                # Write out the translated pitch.
+                replacement = writer(note, alter, warn=True)
+                if not replacement:
+                    raise QuarterToneAlterationNotAvailable
+                changes.replaceToken(token, replacement)
+    return changes, includeCommandChanged
 
 

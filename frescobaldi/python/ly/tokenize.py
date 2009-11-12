@@ -605,6 +605,13 @@ class LineColumnTokenizer(LineColumnMixin, Tokenizer):
     pass
 
 
+class LangTokenizer(LangReaderMixin, Tokenizer):
+    """
+    Basic Tokenizer which keeps the current pitch language.
+    """
+    pass
+
+
 class Cursor(object):
     """
     A Cursor instance can walk() over any piece of plain text,
@@ -746,25 +753,5 @@ class ChangeList(object):
                 cursor.walk(text)
             index = end
         cursor.endEditing()
-
-
-def cursorToPosition(line, column, text):
-    """
-    Returns the character position in text of a cursor with line and column.
-    Line and column both start with 0.
-    Returns -1 if the position falls outside the text.
-    """
-    pos = 0
-    for i in range(line):
-        pos = text.find('\n', pos) + 1
-        if not pos:
-            return -1
-    new = text.find('\n', pos)
-    if new == -1:
-        new = len(text)
-    pos += column
-    if pos > new:
-        return -1
-    return pos
 
 
