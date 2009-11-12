@@ -630,8 +630,8 @@ class Cursor(object):
         else:
             self.line = other or 0
             self.column = column
-        self.anchorLine = 0
-        self.anchorColumn = 0
+            self.anchorLine = 0
+            self.anchorColumn = 0
     
     def walk(self, text):
         lines = text.count('\n')
