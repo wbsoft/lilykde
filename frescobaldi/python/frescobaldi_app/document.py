@@ -61,11 +61,11 @@ class DocumentManipulator(object):
         text, start = self.doc.selectionOrDocument()
         try:
             changes, includeCommandChanged = ly.tools.translate(text, lang, start)
-        except ly.tools.QuarterToneAlterationNotAvailable:
+        except ly.QuarterToneAlterationNotAvailable:
             KMessageBox.sorry(self.doc.app.mainwin, i18n(
-                "Can't perform the requested translation. "
+                "Can't perform the requested translation.\n\n"
                 "The music contains quarter-tone alterations, but "
-                "those are not available in the pitch language %1.",
+                "those are not available in the pitch language \"%1\".",
                 lang))
             return
         
@@ -690,7 +690,14 @@ class DocumentManipulator(object):
                 "Please make sure you use pitch names in the language \"%1\".",
                 language))
             return
-        ly.tools.transpose(text, transposer, start).applyToCursor(EditCursor(self.doc.doc))
+        try:
+            ly.tools.transpose(text, transposer, start).applyToCursor(EditCursor(self.doc.doc))
+        except ly.QuarterToneAlterationNotAvailable:
+            KMessageBox.sorry(self.doc.app.mainwin, i18n(
+                "Can't perform the requested transposition.\n\n"
+                "The transposed music would contain quarter-tone alterations "
+                "that are not available in the pitch language \"%1\".",
+                language))
         
     @lazymethod
     def transposeDialog(self):

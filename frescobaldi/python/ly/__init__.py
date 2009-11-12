@@ -19,6 +19,25 @@
 
 """ Basic LilyPond information and utility functions """
 
+
+# Exceptions used by modules in this package
+class NoMusicExpressionFound(Exception):
+    """
+    Raised if no music expression could be found in abs->rel.
+    """
+    pass
+
+
+class QuarterToneAlterationNotAvailable(Exception):
+    """
+    Raised when there is no pitch name in the target languate
+    when translating pitch names.
+    """
+    pass
+
+
+
+
 def lazy(func):
     """
     A decorator that only performs the function call the first time,

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-12 07:27+0100\n"
+"POT-Creation-Date: 2009-11-12 09:03+0100\n"
 "PO-Revision-Date: 2009-09-08 01:40+0200\n"
 "Last-Translator: Gianluca D'Orazio <gianluca.dorazio@gmail.com>\n"
 "Language-Team: Italiano\n"
@@ -105,91 +105,91 @@ msgstr "&Documento sorgente"
 msgid "&Extra Tools"
 msgstr ""
 
-#: ../python/ly/__init__.py:75
+#: ../python/ly/__init__.py:94
 msgid "Dedication"
 msgstr "Dedica"
 
-#: ../python/ly/__init__.py:76
+#: ../python/ly/__init__.py:95
 msgid "Title"
 msgstr "Titolo"
 
-#: ../python/ly/__init__.py:77
+#: ../python/ly/__init__.py:96
 msgid "Subtitle"
 msgstr "Sottotitolo"
 
-#: ../python/ly/__init__.py:78
+#: ../python/ly/__init__.py:97
 msgid "Subsubtitle"
 msgstr "Sotto-sottotitolo"
 
-#: ../python/ly/__init__.py:79
+#: ../python/ly/__init__.py:98
 msgid "Instrument"
 msgstr "Strumento"
 
-#: ../python/ly/__init__.py:80
+#: ../python/ly/__init__.py:99
 msgid "Composer"
 msgstr "Compositore"
 
-#: ../python/ly/__init__.py:81
+#: ../python/ly/__init__.py:100
 msgid "Arranger"
 msgstr "Arrangiatore"
 
-#: ../python/ly/__init__.py:82
+#: ../python/ly/__init__.py:101
 msgid "Poet"
 msgstr "Paroliere"
 
-#: ../python/ly/__init__.py:83
+#: ../python/ly/__init__.py:102
 msgid "Meter"
 msgstr "Metro"
 
-#: ../python/ly/__init__.py:84
+#: ../python/ly/__init__.py:103
 msgid "Piece"
 msgstr "Brano"
 
-#: ../python/ly/__init__.py:85
+#: ../python/ly/__init__.py:104
 msgid "Opus"
 msgstr "Opera"
 
-#: ../python/ly/__init__.py:86
+#: ../python/ly/__init__.py:105
 msgid "Copyright"
 msgstr "Copyright"
 
-#: ../python/ly/__init__.py:87
+#: ../python/ly/__init__.py:106
 msgid "Tagline"
 msgstr "Tagline"
 
-#: ../python/ly/__init__.py:95
+#: ../python/ly/__init__.py:114
 msgid "Major"
 msgstr "Maggiore"
 
-#: ../python/ly/__init__.py:96
+#: ../python/ly/__init__.py:115
 msgid "Minor"
 msgstr "Minore"
 
-#: ../python/ly/__init__.py:97
+#: ../python/ly/__init__.py:116
 msgid "Ionian"
 msgstr "Ionico"
 
-#: ../python/ly/__init__.py:98
+#: ../python/ly/__init__.py:117
 msgid "Dorian"
 msgstr "Dorico"
 
-#: ../python/ly/__init__.py:99
+#: ../python/ly/__init__.py:118
 msgid "Phrygian"
 msgstr "Frigio"
 
-#: ../python/ly/__init__.py:100
+#: ../python/ly/__init__.py:119
 msgid "Lydian"
 msgstr "Lidio"
 
-#: ../python/ly/__init__.py:101
+#: ../python/ly/__init__.py:120
 msgid "Mixolydian"
 msgstr "Misolidio"
 
-#: ../python/ly/__init__.py:102
+#: ../python/ly/__init__.py:121
 msgid "Aeolian"
 msgstr "Eolio"
 
-#: ../python/ly/__init__.py:103
+#: ../python/ly/__init__.py:122
 msgid "Locrian"
 msgstr "Ipofrigio"
 
@@ -798,11 +798,15 @@ msgstr "Niente stanghette"
 
 #: ../python/frescobaldi_app/document.py:66
 msgid ""
-"Can't perform the requested translation. The music contains quarter-tone "
-"alterations, but those are not available in the pitch language %1."
+"Can't perform the requested translation.\n"
+"\n"
+"The music contains quarter-tone alterations, but those are not available in "
+"the pitch language \"%1\"."
 msgstr ""
-"Impossibile eseguire la traduzione richiesta. La musica contiene alterazioni "
-"da un quarto di tono che non sono disponibili nella lingua selezionata."
+"Impossibile eseguire la traduzione richiesta.\n"
+"\n"
+"La musica contiene alterazioni "
+"da un quarto di tono che non sono disponibili nella lingua selezionata: \"%1\"."
 
 #: ../python/frescobaldi_app/document.py:81
 msgid ""
@@ -841,19 +845,30 @@ msgid ""
 "Please make sure you use pitch names in the language \"%1\"."
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:703
+#: ../python/frescobaldi_app/document.py:697
+#, fuzzy
+msgid ""
+"Can't perform the requested transposition.\n"
+"\n"
+"The transposed music would contain quarter-tone alterations that are not "
+"available in the pitch language \"%1\"."
+msgstr ""
+"Impossibile eseguire la traduzione richiesta. La musica contiene alterazioni "
+"da un quarto di tono che non sono disponibili nella lingua selezionata."
+
+#: ../python/frescobaldi_app/document.py:710
 msgid "Transpose"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:708
+#: ../python/frescobaldi_app/document.py:715
 msgid "Please enter a start pitch and a destination pitch:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:712
+#: ../python/frescobaldi_app/document.py:719
 msgid "Transpose from:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:716
+#: ../python/frescobaldi_app/document.py:723
 #, fuzzy
 msgid "to:"
 msgstr "Posizione:"

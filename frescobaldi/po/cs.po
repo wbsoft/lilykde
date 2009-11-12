@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.5\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-12 07:27+0100\n"
+"POT-Creation-Date: 2009-11-12 09:03+0100\n"
 "PO-Revision-Date: 2009-08-24 08:42+0200\n"
 "Last-Translator: Pavel Fric\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -107,91 +107,91 @@ msgstr "&Zdrojový dokument"
 msgid "&Extra Tools"
 msgstr ""
 
-#: ../python/ly/__init__.py:75
+#: ../python/ly/__init__.py:94
 msgid "Dedication"
 msgstr "Věnování"
 
-#: ../python/ly/__init__.py:76
+#: ../python/ly/__init__.py:95
 msgid "Title"
 msgstr "Název"
 
-#: ../python/ly/__init__.py:77
+#: ../python/ly/__init__.py:96
 msgid "Subtitle"
 msgstr "Podtitul"
 
-#: ../python/ly/__init__.py:78
+#: ../python/ly/__init__.py:97
 msgid "Subsubtitle"
 msgstr "Podpodtitul"
 
-#: ../python/ly/__init__.py:79
+#: ../python/ly/__init__.py:98
 msgid "Instrument"
 msgstr "Nástroj"
 
-#: ../python/ly/__init__.py:80
+#: ../python/ly/__init__.py:99
 msgid "Composer"
 msgstr "Skladatel"
 
-#: ../python/ly/__init__.py:81
+#: ../python/ly/__init__.py:100
 msgid "Arranger"
 msgstr "Hudební aranžér"
 
-#: ../python/ly/__init__.py:82
+#: ../python/ly/__init__.py:101
 msgid "Poet"
 msgstr "Básník"
 
-#: ../python/ly/__init__.py:83
+#: ../python/ly/__init__.py:102
 msgid "Meter"
 msgstr "Metrum"
 
-#: ../python/ly/__init__.py:84
+#: ../python/ly/__init__.py:103
 msgid "Piece"
 msgstr "Skladba"
 
-#: ../python/ly/__init__.py:85
+#: ../python/ly/__init__.py:104
 msgid "Opus"
 msgstr "Dílo"
 
-#: ../python/ly/__init__.py:86
+#: ../python/ly/__init__.py:105
 msgid "Copyright"
 msgstr "Autorské právo (Copyright)"
 
-#: ../python/ly/__init__.py:87
+#: ../python/ly/__init__.py:106
 msgid "Tagline"
 msgstr "Motto"
 
-#: ../python/ly/__init__.py:95
+#: ../python/ly/__init__.py:114
 msgid "Major"
 msgstr "Durová (Major)"
 
-#: ../python/ly/__init__.py:96
+#: ../python/ly/__init__.py:115
 msgid "Minor"
 msgstr "Mollová (Minor)"
 
-#: ../python/ly/__init__.py:97
+#: ../python/ly/__init__.py:116
 msgid "Ionian"
 msgstr "Jónský"
 
-#: ../python/ly/__init__.py:98
+#: ../python/ly/__init__.py:117
 msgid "Dorian"
 msgstr "Dórský"
 
-#: ../python/ly/__init__.py:99
+#: ../python/ly/__init__.py:118
 msgid "Phrygian"
 msgstr "Frýgický"
 
-#: ../python/ly/__init__.py:100
+#: ../python/ly/__init__.py:119
 msgid "Lydian"
 msgstr "Lýdický"
 
-#: ../python/ly/__init__.py:101
+#: ../python/ly/__init__.py:120
 msgid "Mixolydian"
 msgstr "Mixolýdický"
 
-#: ../python/ly/__init__.py:102
+#: ../python/ly/__init__.py:121
 msgid "Aeolian"
 msgstr "Éolský"
 
-#: ../python/ly/__init__.py:103
+#: ../python/ly/__init__.py:122
 msgid "Locrian"
 msgstr "Lokrijský"
 
@@ -807,11 +807,15 @@ msgstr "Žádné taktové čáry"
 
 #: ../python/frescobaldi_app/document.py:66
 msgid ""
-"Can't perform the requested translation. The music contains quarter-tone "
-"alterations, but those are not available in the pitch language %1."
+"Can't perform the requested translation.\n"
+"\n"
+"The music contains quarter-tone alterations, but those are not available in "
+"the pitch language \"%1\"."
 msgstr ""
-"Nelze provést požadovaný překlad. Noty obsahují čtvrttónové úpravy, ale tyto "
-"úpravy nejsou dostupné v jazyku polohy tónu %1."
+"Nelze provést požadovaný překlad.\n"
+"\n"
+"Noty obsahují čtvrttónové úpravy, ale tyto "
+"úpravy nejsou dostupné v jazyku polohy tónu \"%1.\""
 
 #: ../python/frescobaldi_app/document.py:81
 msgid ""
@@ -850,19 +854,30 @@ msgid ""
 "Please make sure you use pitch names in the language \"%1\"."
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:703
+#: ../python/frescobaldi_app/document.py:697
+#, fuzzy
+msgid ""
+"Can't perform the requested transposition.\n"
+"\n"
+"The transposed music would contain quarter-tone alterations that are not "
+"available in the pitch language \"%1\"."
+msgstr ""
+"Nelze provést požadovaný překlad. Noty obsahují čtvrttónové úpravy, ale tyto "
+"úpravy nejsou dostupné v jazyku polohy tónu %1."
+
+#: ../python/frescobaldi_app/document.py:710
 msgid "Transpose"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:708
+#: ../python/frescobaldi_app/document.py:715
 msgid "Please enter a start pitch and a destination pitch:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:712
+#: ../python/frescobaldi_app/document.py:719
 msgid "Transpose from:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:716
+#: ../python/frescobaldi_app/document.py:723
 #, fuzzy
 msgid "to:"
 msgstr "Směr:"

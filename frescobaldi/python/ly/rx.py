@@ -23,10 +23,17 @@ import re
 
 step = (
     r"\b("
-    r"[a-h]((iss){1,2}|(ess){1,2}|(is){1,2}|(es){1,2}|"
-        r"(sharp){1,2}|(flat){1,2}|ss?|ff?)?"
-    r"|(do|re|mi|fa|sol|la|si)(dd?|bb?|ss?|kk?)?"
-    r"|as|asess?|es|esess?"
+    r"[a-h]("
+        r"(iss){1,2}|(ess){1,2}|(is){1,2}|(es){1,2}"
+        r"|(sharp){1,2}|(flat){1,2}|ss?|x|ff?"
+        r"|(is)?ih|(es)eh|t?q[sf]"      # quarter tones
+    r")?"
+    r"|(do|re|mi|fa|sol|la|si)("
+        r"dd?|bb?|ss?|kk?"
+        r"b?sb|d?sd|[bs]t?qt"           # quarter tones
+    r")?"
+    r"|as|asess?|asas|es|esess?"        # special cases
+    r"|eseh|as[ae]h"                    # special quarter tone cases
     r")(?![A-Za-z])"
 )
 named_step = "(?P<step>" + step + ")"

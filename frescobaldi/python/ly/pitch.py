@@ -77,9 +77,9 @@ class Pitch(object):
         p.octave = self.octave - lastPitch.octave + (dist + 3) // 7
         return p
         
-    def output(self, language):
+    def output(self, language, ignore_errors = False):
         return ''.join((
-            pitchWriter[language](self.note, self.alter),
+            pitchWriter[language](self.note, self.alter, ignore_errors),
             self.cautionary,
             octaveToString(self.octave),
             self.octaveCheck is not None
@@ -123,7 +123,7 @@ class PitchWriter(object):
         self.accs = accs
         self.replacements = replacements
 
-    def __call__(self, note, alter = 0, warn = False):
+    def __call__(self, note, alter = 0, ignore_errors = False):
         """
         Returns a string representing the pitch in our language.
         If warn == True and the requested pitch has an alteration not present
@@ -134,8 +134,8 @@ class PitchWriter(object):
             acc = self.accs[int(alter * 4 + 4)]
             # warn if a quarter tone is requested but not present in the
             # current language.
-            if warn and acc == '':
-                return False
+            if acc == '' and not ignore_errors:
+                raise ly.QuarterToneAlterationNotAvailable
             pitch += acc
         for s, r in self.replacements:
             if pitch.startswith(s):
@@ -235,6 +235,5 @@ pitchWriter = dict(
 
 pitchReader = dict(
     (lang, PitchReader(*data)) for lang, data in pitchInfo.iteritems())
-    
 
-   
+

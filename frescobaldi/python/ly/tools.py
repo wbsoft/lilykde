@@ -42,21 +42,6 @@ class Pitch(ly.pitch.Pitch):
             return p
     
 
-class NoExpressionFound(Exception):
-    """
-    Raised if no music expression could be found in abs->rel.
-    """
-    pass
-
-
-class QuarterToneAlterationNotAvailable(Exception):
-    """
-    Raised when there is no pitch name in the target languate
-    when translating pitch names.
-    """
-    pass
-
-
 def relativeToAbsolute(text, start = 0, changes = None):
     """
     Convert \relative { }  music to absolute pitches.
@@ -326,7 +311,7 @@ def absoluteToRelative(text, start = 0, changes = None):
             except StopIteration:
                 pass # because of the source.next() statements
     if startToken is None:  # no single expression converted?
-        raise NoExpressionFound
+        raise ly.NoExpressionFound
     return changes
 
 def languageAndKey(text):
@@ -352,6 +337,8 @@ def languageAndKey(text):
 def transpose(text, transposer, start = 0, changes = None):
     """
     Transpose all or selected pitches.
+    Raises ly.QuarterToneAlterationNotAvailable if quarter tones are
+    requested but not available in the current language.
     """
     tokenizer = Tokenizer()
     tokens = tokenizer.tokens(text)
@@ -534,6 +521,7 @@ def transpose(text, transposer, start = 0, changes = None):
     def absolute(tokens):
         """ Called when outside a possible \\relative environment. """
         for token in tokens:
+            print token, token.__class__.__name__
             if source.inSelection and isinstance(token, tokenizer.Pitch):
                 transpose(token)
     
@@ -544,8 +532,9 @@ def transpose(text, transposer, start = 0, changes = None):
 def translate(text, lang, start = 0, changes = None):
     """
     Change the LilyPond pitch name language in our document to lang.
+    Raises ly.QuarterToneAlterationNotAvailable if quarter tones are
+    requested but not available in the target language.
     """
-    
     writer = ly.pitch.pitchWriter[lang]
     reader = ly.pitch.pitchReader["nederlands"]
     tokenizer = ly.tokenize.Tokenizer()
@@ -579,10 +568,7 @@ def translate(text, lang, start = 0, changes = None):
             if result:
                 note, alter = result
                 # Write out the translated pitch.
-                replacement = writer(note, alter, warn=True)
-                if not replacement:
-                    raise QuarterToneAlterationNotAvailable
-                changes.replaceToken(token, replacement)
+                changes.replaceToken(token, writer(note, alter))
     return changes, includeCommandChanged
 
 
