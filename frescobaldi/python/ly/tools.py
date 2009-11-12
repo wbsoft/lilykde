@@ -521,7 +521,6 @@ def transpose(text, transposer, start = 0, changes = None):
     def absolute(tokens):
         """ Called when outside a possible \\relative environment. """
         for token in tokens:
-            print token, token.__class__.__name__
             if source.inSelection and isinstance(token, tokenizer.Pitch):
                 transpose(token)
     
