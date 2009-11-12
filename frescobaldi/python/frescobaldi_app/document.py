@@ -755,7 +755,7 @@ class TransposeDialog(KDialog):
         
     def exec_(self):
         if not self.initialPitchSet:
-            self.setInitialPitch(Pitch.c1())
+            self.setInitialPitch(ly.pitch.Pitch.c1())
         return KDialog.exec_(self)
     
     def pitchFrom(self, combobox):
