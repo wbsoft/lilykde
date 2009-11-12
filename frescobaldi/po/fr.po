@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-10 15:13+0100\n"
+"POT-Creation-Date: 2009-11-12 07:27+0100\n"
 "PO-Revision-Date: 2009-11-07 13:22-0500\n"
 "Last-Translator: Ryan Kavanagh <ryanakca@kubuntu.org>\n"
 "Language-Team: Français <kde-i18n-doc@kde.org>\n"
@@ -783,7 +783,7 @@ msgstr "Accolade carrée"
 msgid "Connect bar lines"
 msgstr "Joindre les barres de mesures"
 
-#: ../python/frescobaldi_app/document.py:106
+#: ../python/frescobaldi_app/document.py:66
 msgid ""
 "Can't perform the requested translation. The music contains quarter-tone "
 "alterations, but those are not available in the pitch language %1."
@@ -792,7 +792,7 @@ msgstr ""
 "altérations au quart de ton, mais celles-ci ne sont pas disponibles à la "
 "hauteur %1."
 
-#: ../python/frescobaldi_app/document.py:122
+#: ../python/frescobaldi_app/document.py:81
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
@@ -800,53 +800,53 @@ msgstr ""
 "La hauteur du texte sélectionné a été mise à jour, mais vous devez ajouter "
 "manuellement la commande suivante à votre document :"
 
-#: ../python/frescobaldi_app/document.py:125
+#: ../python/frescobaldi_app/document.py:84
 #: ../python/frescobaldi_app/mainapp.py:557
 msgid "Pitch Name Language"
 msgstr "Langue pour le nom des hauteurs"
 
-#: ../python/frescobaldi_app/document.py:180
+#: ../python/frescobaldi_app/document.py:139
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
 "Entrez le nom de la variable à laquelle vous souhaitez assigner le texte :"
 
-#: ../python/frescobaldi_app/document.py:181
+#: ../python/frescobaldi_app/document.py:140
 #: ../python/frescobaldi_app/mainapp.py:451
 msgid "Cut and Assign"
 msgstr "Couper et assigner"
 
-#: ../python/frescobaldi_app/document.py:473
+#: ../python/frescobaldi_app/document.py:432
 msgid "Open %1"
 msgstr "Ouvrir %1"
 
-#: ../python/frescobaldi_app/document.py:976
+#: ../python/frescobaldi_app/document.py:669
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr ""
 "S.V.P. sélectionner une expression musicale, entourée de << ... >> ou "
 "{ ... }."
 
-#: ../python/frescobaldi_app/document.py:1016
+#: ../python/frescobaldi_app/document.py:689
 msgid ""
 "Could not understand the entered pitches.\n"
 "\n"
 "Please make sure you use pitch names in the language \"%1\"."
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:1212
+#: ../python/frescobaldi_app/document.py:703
 #, fuzzy
 msgid "Transpose"
 msgstr "Transposer..."
 
-#: ../python/frescobaldi_app/document.py:1217
+#: ../python/frescobaldi_app/document.py:708
 msgid "Please enter a start pitch and a destination pitch:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:1221
+#: ../python/frescobaldi_app/document.py:712
 #, fuzzy
 msgid "Transpose from:"
 msgstr "Transposer..."
 
-#: ../python/frescobaldi_app/document.py:1225
+#: ../python/frescobaldi_app/document.py:716
 #, fuzzy
 msgid "to:"
 msgstr "Action:"
