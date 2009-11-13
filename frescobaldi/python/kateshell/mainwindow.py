@@ -895,7 +895,7 @@ class KPartTool(Tool):
             part = factory.create(self.mainwin)
             if part:
                 self.part = part
-                QObject.connect(part, SIGNAL("destroyed()"), self.slotDestroyed)
+                QObject.connect(part, SIGNAL("destroyed()"), self.slotDestroyed, Qt.DirectConnection)
                 QTimer.singleShot(0, self.partLoaded)
                 return part.widget()
         self.failed = True
