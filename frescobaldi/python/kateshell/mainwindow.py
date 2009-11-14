@@ -686,7 +686,7 @@ class Tool(object):
         self.name = name
         mainwin.tools[name] = self
         action = KAction(mainwin) # action to toggle our view
-        QObject.connect(action, SIGNAL("triggered()"), self.toggle)
+        QObject.connect(action, SIGNAL("triggered()"), self.slotAction)
         mainwin.actionCollection().addAction("tool_%s" % name, action)
         if key:
             action.setShortcut(KShortcut(key))
@@ -699,6 +699,15 @@ class Tool(object):
     
     def action(self):
         return self.mainwin.actionCollection().action("tool_%s" % self.name)
+    
+    def slotAction(self):
+        """
+        Called when our action is triggered.
+        Default behaviour is to toggle the visibility of our tool.
+        Override this to implement other behaviour when our action is called
+        (e.g. focus instead of hide).
+        """
+        self.toggle()
         
     def materialize(self):
         if self.widget is None:

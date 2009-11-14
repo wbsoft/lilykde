@@ -831,15 +831,17 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
                 self.mainwin.app.defaultDirectory() or os.getcwd())
         self.openUrl(url)
 
+    def slotAction(self):
+        if self.part and self.isActive() and not self.widget.hasFocus():
+            self.widget.setFocus()
+        else:
+            self.toggle()
+    
     def show(self):
         super(KonsoleTool, self).show()
         if self.part:
-            self.part.widget().setFocus()
+            self.widget.setFocus()
         
-    def hide(self):
-        super(KonsoleTool, self).hide()
-        self.mainwin.view().setFocus()
-
     def sync(self, doc):
         if (self.part and self._sync
             and doc and doc.doc and not doc.url().isEmpty()):
