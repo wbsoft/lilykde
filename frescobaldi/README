@@ -11,19 +11,24 @@ features:
 * Advanced point-and-click support: click on notes or error messages to jump to
   the correct position, even if the document is changed
 * A powerful Score Wizard to quickly setup a musical score
-* Editing tools to:
+* Editing tools:
+  - advanced syntax coloring that also signals some often made errors
+  - auto-indent nested structures, those can be folded for quick overview
+  - context sensitive autocompletion, to quickly enter commands and parameters
   - manipulate pitch (transpose, translate, relative/absolute conversion)
-  - manipulate the rhythm (scale, copy/paste durations over other music, etc.)
+  - manipulate rhythm (scale, copy/paste durations over other music, etc.)
   - hyphenate lyrics
   - quickly enter or add articulations and other symbols to existing music
   - run the document through convert-ly to update it to a newer LilyPond version
-* Context sensitive autocomplete, helping you to quickly enter LilyPond commands
-* Expansion manager to enter larger snippets of LilyPond input using short
-  mnemonics
-* A powerful Rumor plugin, using the Rumor program to quickly enter music by
-  playing it on a MIDI keyboard or even your computer keyboard
-* Quick buttons to open, send, play or print LilyPond-generated files.
-* Built-in comprehensive User Guide
+  - expansion dialog to enter larger snippets of LilyPond input using short
+    mnemonics
+* A powerful Rumor panel, using the Rumor program to enter music by playing it
+  on a MIDI keyboard or even your computer keyboard
+* Quick buttons to open, send, play or print LilyPond-generated files
+* Built-in LilyPond documentation browser with editor context menu support
+  (right-click a command in the editor to lookup its documentation)
+* Comprehensive User Guide with help buttons on all dialogs
+* Other tools like built-in terminal, blank staff paper generator, etc.
 * Translated into Dutch, English, French, German, Italian, Czech, Russian,
   Spanish, Turkish and Polish.
 

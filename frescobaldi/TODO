@@ -1,5 +1,5 @@
-TODO for Frescobaldi
-====================
+TODO for Frescobaldi (ideas)
+============================
 
 Music length related (needs infrastructure to compute duration of music
 expressions):
@@ -13,11 +13,12 @@ expressions):
 - auto-insert comments with the bar number (every 5 measures or so)
 
 
-Pitch related:
+Filtering music expressions:
 
-- transpose music
+- split out e.g. articulations or dynamics and put them in a separate expression
+  attached to skips, so they can be overlaid to other voices dynamically.
 
-- relative -> absolute and vice versa
+- (re)combine music expressions
 
 
 General:
@@ -25,9 +26,45 @@ General:
 - Session save and restore (possibly combined with named sessions like Kate)
 
 
+Editing:
+
+- Document properties dialog that parses the current paper, layout, score and
+  (possibly) header sections and makes all kinds of quick adjustments possible,
+  such as paper size, raggedness, margins, bar and pagenumbering, headers,
+  distances, staff size, default fonts, etc.
+
+- Full normalize the source document layout (indent properly, line breaks at
+  sensible places, add { } to ambiguous markup constructs, etc.
+
+- Convert plain input text to markup commands:
+  - easy entry of lyric text strophes
+  - (justified) paragraphs, lists or tables
+  - some wiki-like syntax possible
+
+- Rich-text editor to enter/edit markup:
+  - font selection
+  - bold, ital, underline
+  - alignment
+  - urls
+  - musical symbols from LilyPond font
+
+- Document structure browser
+
+
+Output:
+
+- quick PNG of current document (e.g. copied to clipboard or some snippet board)
+
+
+Documentation browser:
+
+- full text search in all manuals
+
+
 MIDI:
 
 - replace Rumor plugin with native MIDI in- and output support
+
 - embed MIDI player for playback of files (with stop/start, memory for positions)
 
 
@@ -42,7 +79,14 @@ DONE:
 Editing:
 
 - Cut and assign: check mode of cut-out fragment and reuse (e.g. \lyricmode)
+
 - Context sensitive context menu to do all sorts of things on the current
   cursor position or text selection
 
+
+Pitch related:
+
+- transpose music
+
+- relative -> absolute and vice versa
 

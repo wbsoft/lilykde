@@ -708,6 +708,8 @@ class TransposeDialog(KDialog):
     def __init__(self, parent):
         KDialog.__init__(self, parent)
         self.setCaption(i18n("Transpose"))
+        self.setHelp("transpose")
+        self.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel | KDialog.Help ))
         self.language = ""
         self.initialPitchSet = False
         w = self.mainWidget()
@@ -725,8 +727,10 @@ class TransposeDialog(KDialog):
         w.layout().addWidget(l, 1, 2, QtCore.Qt.AlignRight)
         w.layout().addWidget(self.toPitch, 1, 3)
         
-        self.fromPitch.setEditable(True)
-        self.toPitch.setEditable(True)
+        for c in self.fromPitch, self.toPitch:
+            c.setEditable(True)
+            c.setInsertPolicy(QtGui.QComboBox.NoInsert)
+            c.setCompleter(None)
         self.fromPitch.setModel(self.toPitch.model())
         
     def setLanguage(self, language):
@@ -755,7 +759,8 @@ class TransposeDialog(KDialog):
         
     def exec_(self):
         if not self.initialPitchSet:
-            self.setInitialPitch(ly.pitch.Pitch.c1())
+            self.setInitialPitch(ly.pitch.Pitch.c0())
+        self.toPitch.setFocus()
         return KDialog.exec_(self)
     
     def pitchFrom(self, combobox):

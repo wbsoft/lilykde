@@ -115,8 +115,7 @@ def hyphenate(text, mainwindow):
     index = lang in langs and langs.index(lang) or 0
     
     d = KDialog(mainwindow)
-    d.setButtons(KDialog.ButtonCode(
-        KDialog.Ok | KDialog.Cancel | KDialog.Help))
+    d.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel | KDialog.Help))
     d.setCaption(i18n("Hyphenate Lyrics Text"))
     d.setHelp("lyrics")
     v = KVBox(d)

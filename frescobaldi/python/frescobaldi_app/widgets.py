@@ -24,7 +24,8 @@ Some special widgets
 import os
 from time import time
 
-from PyQt4.QtCore import QObject, QProcess, QRegExp, QString, QTimeLine, Qt, SIGNAL
+from PyQt4.QtCore import (
+    QObject, QProcess, QRegExp, QString, QTimeLine, Qt, SIGNAL)
 from PyQt4.QtGui import (
     QComboBox, QLabel, QLineEdit, QPainter, QPixmap, QPushButton, QSlider,
     QSpinBox, QToolButton, QRegExpValidator, QWidget)
@@ -308,7 +309,6 @@ class ClefSelector(SymbolManager, QComboBox):
         """
         return self.clefs[self.currentIndex()][0]
     
-
 
 # some handy "static" functions
 def promptText(parent, message, title = None, text="", rx=None, help=None):

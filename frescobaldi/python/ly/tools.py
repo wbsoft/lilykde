@@ -320,7 +320,7 @@ def languageAndKey(text):
     """
     tokenizer = Tokenizer()
     tokens = iter(tokenizer.tokens(text))
-    keyPitch = Pitch.c1()
+    keyPitch = Pitch.c0()
 
     for token in tokens:
         if token == "\\key":

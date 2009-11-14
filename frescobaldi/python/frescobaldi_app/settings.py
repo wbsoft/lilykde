@@ -21,7 +21,7 @@
 Config dialog
 """
 
-from PyQt4.QtCore import QObject, QSize, QString, QVariant, SIGNAL
+from PyQt4.QtCore import QObject, QSize, QString, Qt, QVariant, SIGNAL
 from PyQt4.QtGui import (
     QCheckBox, QGridLayout, QGroupBox, QLabel, QLineEdit, QRadioButton,
     QTextEdit, QTreeView, QWidget)
@@ -36,9 +36,11 @@ from frescobaldi_app.widgets import ExecLineEdit, ExecArgsLineEdit
 # these modules provide their own default settings or update functions
 import frescobaldi_app.hyphen, frescobaldi_app.mainapp, frescobaldi_app.rumor
 
+
 class SettingsDialog(KPageDialog):
     def __init__(self, mainwin):
         KPageDialog.__init__(self, mainwin)
+        self.setAttribute(Qt.WA_DeleteOnClose)
         self.mainwin = mainwin
         self.setFaceType(KPageDialog.Tree)
         self.setButtons(KPageDialog.ButtonCode(

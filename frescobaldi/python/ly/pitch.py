@@ -41,6 +41,11 @@ class Pitch(object):
         p.octave = 1
         return p
 
+    @classmethod
+    def c0(cls):
+        """ Return a pitch c """
+        return cls()
+
     def copy(self):
         """ Return a new instance with our attributes. """
         p = self.__class__()
