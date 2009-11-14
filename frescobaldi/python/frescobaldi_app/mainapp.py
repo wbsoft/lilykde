@@ -561,12 +561,12 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         QObject.connect(a.menu(), SIGNAL("aboutToShow()"), lambda menu=a.menu():
             self.currentDocument().manipulator().populateLanguageMenu(menu))
         
-        @self.onAction(i18n("Convert Relative to Absolute"), tooltip=i18n(
+        @self.onAction(i18n("Convert Relative to &Absolute"), tooltip=i18n(
             "Converts the notes in the document or selection from relative to absolute pitch."))
         def pitch_relative_to_absolute():
             self.currentDocument().manipulator().convertRelativeToAbsolute()
             
-        @self.onAction(i18n("Convert Absolute to Relative"), tooltip=i18n(
+        @self.onAction(i18n("Convert Absolute to &Relative"), tooltip=i18n(
             "Converts the notes in the document or selection from absolute to relative pitch."))
         def pitch_absolute_to_relative():
             self.currentDocument().manipulator().convertAbsoluteToRelative()
