@@ -322,7 +322,7 @@ class Parts(QSplitter):
         for name, parts in categories():
             group = QTreeWidgetItem(allParts, [name])
             group.setFlags(Qt.ItemIsEnabled)
-            #group.setExpanded(True)
+            group.setIcon(0, KIcon("inode-directory"))
             for part in parts:
                 p = QTreeWidgetItem(group, [part.name()])
                 p.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)

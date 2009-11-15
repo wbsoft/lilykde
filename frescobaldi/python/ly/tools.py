@@ -331,7 +331,7 @@ def languageAndKey(text):
                 p = Pitch.fromToken(token, tokenizer)
                 if p:
                     keyPitch = p
-                    keyPitch.octave = 1
+                    keyPitch.octave = 0
     return tokenizer.language, keyPitch
 
 def transpose(text, transposer, start = 0, changes = None):
