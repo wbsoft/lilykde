@@ -1,7 +1,7 @@
 # mostly taken from KDE4Macros.cmake
 
-find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH)
-find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4)
+find_program(KDE4_MEINPROC_EXECUTABLE NAMES meinproc4 PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH)
+find_program(KDE4_MEINPROC_EXECUTABLE NAMES meinproc4)
 
 macro(create_handbook _docbook)
   get_filename_component(_input ${_docbook} ABSOLUTE)
