@@ -1093,10 +1093,9 @@ class Organ(KeyboardPart):
         layout.addWidget(h)
         l = QLabel(i18n("Pedal:"), h)
         self.pedalVoices = QSpinBox(h)
-        self.pedalVoices.setMinimum(0)
-        self.pedalVoices.setMaximum(4)
-        l.setBuddy(self.pedalVoices)
+        self.pedalVoices.setRange(0, 4)
         self.pedalVoices.setValue(1)
+        l.setBuddy(self.pedalVoices)
         self.pedalVoices.setToolTip(i18n(
             "Set to 0 to disable the pedal altogether."))
 

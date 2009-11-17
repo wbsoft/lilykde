@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
 "POT-Creation-Date: 2009-11-17 14:57+0100\n"
-"PO-Revision-Date: 2009-10-16 14:06+0200\n"
+"PO-Revision-Date: 2009-11-17 17:42+0100\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -101,7 +101,7 @@ msgstr "&Documento fuente"
 
 #: dummy.py:13
 msgid "&Extra Tools"
-msgstr ""
+msgstr "Herramientas adicional&es"
 
 #: ../python/ly/__init__.py:94
 msgid "Dedication"
@@ -566,43 +566,39 @@ msgstr "La instrucción de imprimir tiene errores. Compruebe la configuración."
 #: ../python/frescobaldi_app/blankpaper.py:55
 #: ../python/frescobaldi_app/mainapp.py:733
 msgid "Create blank staff paper"
-msgstr ""
+msgstr "Crear papel de música en blanco"
 
 #: ../python/frescobaldi_app/blankpaper.py:69
 msgid "Type:"
-msgstr ""
+msgstr "Tipo:"
 
 #: ../python/frescobaldi_app/blankpaper.py:72
-#, fuzzy
 msgid "Action:"
-msgstr "Dirección:"
+msgstr "Acción:"
 
 #: ../python/frescobaldi_app/blankpaper.py:78
 msgid "Choose what kind of empty staves you want to create."
-msgstr ""
+msgstr "Seleccione el número de pautas vacías que quiere crear."
 
 #: ../python/frescobaldi_app/blankpaper.py:80
 msgid "Choose which action happens when clicking \"Ok\"."
-msgstr ""
+msgstr "Seleccione qué acción ocurre al pulsar \"Aceptar\"."
 
 #: ../python/frescobaldi_app/blankpaper.py:82
 msgid "Preview the empty staff paper."
-msgstr ""
+msgstr "Vista previa del papel de música vacío."
 
 #: ../python/frescobaldi_app/blankpaper.py:84
-#, fuzzy
 msgid "Click to see more settings."
-msgstr "Configuración de la partitura"
+msgstr "Pulse para ver más opciones."
 
 #: ../python/frescobaldi_app/blankpaper.py:87
-#, fuzzy
 msgid "Paper"
-msgstr "Tamaño del papel:"
+msgstr "Papel"
 
 #: ../python/frescobaldi_app/blankpaper.py:89
-#, fuzzy
 msgid "Settings"
-msgstr "Instrumentos de cuerda"
+msgstr "Opciones"
 
 #: ../python/frescobaldi_app/blankpaper.py:95
 #: ../python/frescobaldi_app/scorewiz/__init__.py:509
@@ -619,119 +615,107 @@ msgid "Default"
 msgstr "Predeterminado"
 
 #: ../python/frescobaldi_app/blankpaper.py:103
-#, fuzzy
 msgid "Staff Size:"
-msgstr "Tipo de pentagrama:"
+msgstr "Tamaño del pentagrama:"
 
 #: ../python/frescobaldi_app/blankpaper.py:110
 msgid "Page count:"
-msgstr ""
+msgstr "Número de páginas:"
 
 #: ../python/frescobaldi_app/blankpaper.py:118
-#, fuzzy
 msgid "Print Bar Lines"
-msgstr "&Barras de compás"
+msgstr "Imprimir líneas divisorias"
 
 #: ../python/frescobaldi_app/blankpaper.py:120
-#, fuzzy
 msgid "Bars per line:"
-msgstr "Tamaño del papel:"
+msgstr "Compases por línea:"
 
 #: ../python/frescobaldi_app/blankpaper.py:127
-#, fuzzy
 msgid "Print Page Numbers"
-msgstr "&Barras de compás"
+msgstr "Imprimir números de página"
 
 #: ../python/frescobaldi_app/blankpaper.py:129
 msgid "Start with:"
-msgstr ""
+msgstr "Empezar en:"
 
 #: ../python/frescobaldi_app/blankpaper.py:266
 msgid "Blank staff paper preview"
-msgstr ""
+msgstr "Vista previa del papel pautado"
 
 #: ../python/frescobaldi_app/blankpaper.py:285
 msgid "No PDF was created."
-msgstr ""
+msgstr "No se ha creado ningún PDF."
 
 #: ../python/frescobaldi_app/blankpaper.py:296
-#, fuzzy
 msgid "Open in PDF viewer"
-msgstr "Abrir %1 en un visor externo"
+msgstr "Abrir en el visor de PDF"
 
 #: ../python/frescobaldi_app/blankpaper.py:305
 msgid "Save PDF As..."
-msgstr ""
+msgstr "Guardar PDF como..."
 
 #: ../python/frescobaldi_app/blankpaper.py:312
-#, fuzzy
 msgid "PDF Files"
-msgstr "Todos los archivos"
+msgstr "Archivos PDF"
 
 #: ../python/frescobaldi_app/blankpaper.py:314
-#, fuzzy
 msgid "Save PDF"
-msgstr "Grabar"
+msgstr "Guardar PDF"
 
 #: ../python/frescobaldi_app/blankpaper.py:338
 msgid "Directly print on default printer"
-msgstr ""
+msgstr "Imprimir directamente en la impresora predeterminada"
 
 #: ../python/frescobaldi_app/blankpaper.py:347
-#, fuzzy
 msgid "Copy LilyPond code to editor"
-msgstr "Editor de música para LilyPond"
+msgstr "Copiar código de LilyPond al editor"
 
 #: ../python/frescobaldi_app/blankpaper.py:446
 msgid "Staves per page:"
-msgstr ""
+msgstr "Pentagramas por página:"
 
 #: ../python/frescobaldi_app/blankpaper.py:451
 #: ../python/frescobaldi_app/blankpaper.py:788
 msgid "Clef:"
-msgstr ""
+msgstr "Clave:"
 
 #: ../python/frescobaldi_app/blankpaper.py:457
-#, fuzzy
 msgid "Single Staff"
-msgstr "Comilla simple"
+msgstr "Pentagrama sencillo"
 
 #: ../python/frescobaldi_app/blankpaper.py:477
 #: ../python/frescobaldi_app/blankpaper.py:533
 #: ../python/frescobaldi_app/blankpaper.py:628
 msgid "Systems per page:"
-msgstr ""
+msgstr "Sistemas por página:"
 
 #: ../python/frescobaldi_app/blankpaper.py:481
-#, fuzzy
 msgid "Clefs"
-msgstr "Celesta"
+msgstr "Claves"
 
 #: ../python/frescobaldi_app/blankpaper.py:485
-#, fuzzy
 msgid "Piano Staff"
-msgstr "Piano"
+msgstr "Sistema de piano"
 
 #: ../python/frescobaldi_app/blankpaper.py:505
-#, fuzzy
 msgid "Organ Staff"
-msgstr "Órgano"
+msgstr "Sistema de órgano"
 
 #: ../python/frescobaldi_app/blankpaper.py:529
-#, fuzzy
 msgid "Staves per system:"
-msgstr "Otros sistemas:"
+msgstr "Pentagramas por sistema:"
 
 #: ../python/frescobaldi_app/blankpaper.py:539
-#, fuzzy
 msgid "Clefs:"
-msgstr "Celesta"
+msgstr "Claves:"
 
 #: ../python/frescobaldi_app/blankpaper.py:546
 msgid ""
 "Enter as many letters (S, A, T or B) as there are staves.\n"
 "See \"What's This\" for more information."
 msgstr ""
+"Introduzca tantas letras (S, A, T ó B) como pentagramas.\n"
+"Véase \"Qué es esto\" para mayor información."
 
 #: ../python/frescobaldi_app/blankpaper.py:549
 msgid ""
@@ -746,11 +730,21 @@ msgid ""
 "first set the number of staves per system to 4. Then enter \"SATB\" (without "
 "the quotes) here."
 msgstr ""
+"Para configurar las claves, en primer lugar establezca el número "
+"de pentagramas por sistema.  Luego escriba tantas letras "
+"(S, A, T ó B) como pentagramas.\n"
+"\n"
+"S ó A: clave de Sol,\n"
+"T: clave de Sol octava baja,\n"
+"B: clave de Fa\n"
+"\n"
+"Así, cuando quiera crear papel pautado para un coro mixto "
+"a cuatro voces, establezca primero el número de pentagramas "
+"por sistema a 4, y luego escriba aquí \"SATB\" (sin las comillas)."
 
 #: ../python/frescobaldi_app/blankpaper.py:563
-#, fuzzy
 msgid "Choir Staff"
-msgstr "Coro"
+msgstr "Sistema de coro"
 
 #: ../python/frescobaldi_app/blankpaper.py:570
 #: ../python/frescobaldi_app/scorewiz/__init__.py:395
@@ -759,40 +753,36 @@ msgid "None"
 msgstr "Ninguno"
 
 #: ../python/frescobaldi_app/blankpaper.py:716
-#, fuzzy
 msgid "Custom Staff"
-msgstr "Coro"
+msgstr "Pentagrama personalizado"
 
 #: ../python/frescobaldi_app/blankpaper.py:778
-#, fuzzy
 msgid "Staff"
-msgstr "Tipo de pentagrama:"
+msgstr "Pentagrama"
 
 #: ../python/frescobaldi_app/blankpaper.py:801
 msgid "Space above:"
-msgstr ""
+msgstr "Especio por encima:"
 
 #: ../python/frescobaldi_app/blankpaper.py:804
 msgid "Space below:"
-msgstr ""
+msgstr "Espacio por debajo:"
 
 #: ../python/frescobaldi_app/blankpaper.py:839
-#, fuzzy
 msgid "Brace"
-msgstr "Viento metal"
+msgstr "Llave curva"
 
 #: ../python/frescobaldi_app/blankpaper.py:864
 msgid "Bracket"
-msgstr ""
+msgstr "Corchete"
 
 #: ../python/frescobaldi_app/blankpaper.py:873
 msgid "Square Bracket"
-msgstr ""
+msgstr "Llave recta"
 
 #: ../python/frescobaldi_app/blankpaper.py:875
-#, fuzzy
 msgid "Connect bar lines"
-msgstr "Sin divisorias"
+msgstr "Conectar las divisorias"
 
 #: ../python/frescobaldi_app/document.py:66
 msgid ""
@@ -821,8 +811,7 @@ msgstr "Idioma de las notas"
 
 #: ../python/frescobaldi_app/document.py:139
 msgid "Please enter the name for the variable to assign the selected text to:"
-msgstr ""
-"Introduzca el nombre de la variable para asignarle el texto seleccionado:"
+msgstr "Introduzca el nombre de la variable para asignarle el texto seleccionado:"
 
 #: ../python/frescobaldi_app/document.py:140
 #: ../python/frescobaldi_app/mainapp.py:451
@@ -835,7 +824,7 @@ msgstr "Abrir %1"
 
 #: ../python/frescobaldi_app/document.py:669
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
-msgstr ""
+msgstr "Seleccione una expresión musical, encerrada en << ... >> ó { ... }."
 
 #: ../python/frescobaldi_app/document.py:689
 msgid ""
@@ -843,35 +832,37 @@ msgid ""
 "\n"
 "Please make sure you use pitch names in the language \"%1\"."
 msgstr ""
+"No se entienden las alturas introducidas.\n"
+"\n"
+"Asegúrese de que usa nombres de notas en el idioma \"%1\"."
 
 #: ../python/frescobaldi_app/document.py:697
-#, fuzzy
 msgid ""
 "Can't perform the requested transposition.\n"
 "\n"
 "The transposed music would contain quarter-tone alterations that are not "
 "available in the pitch language \"%1\"."
 msgstr ""
-"No se pudo realizar la traducción solicitada.  La música contiene "
-"alteraciones de cuartos de tono, pero no están disponibles en el idioma de "
-"notas %1."
+"No se pudo realizar la transposición solicitada.\n"
+"\n"
+"La música contiene alteraciones de cuartos de tono que no están disponibles "
+"en el idioma de notas \"%1\"."
 
 #: ../python/frescobaldi_app/document.py:710
 msgid "Transpose"
-msgstr ""
+msgstr "Transportar"
 
 #: ../python/frescobaldi_app/document.py:717
 msgid "Please enter a start pitch and a destination pitch:"
-msgstr ""
+msgstr "Introduzca una nota de origen y una nota de destino:"
 
 #: ../python/frescobaldi_app/document.py:721
 msgid "Transpose from:"
-msgstr ""
+msgstr "Transportar desde:"
 
 #: ../python/frescobaldi_app/document.py:725
-#, fuzzy
 msgid "to:"
-msgstr "Dirección:"
+msgstr "a:"
 
 #: ../python/frescobaldi_app/expand.py:154
 msgid "Expansion Manager"
@@ -1177,46 +1168,40 @@ msgid "Go to the previous blank line."
 msgstr "Ir a la anterior línea en blanco."
 
 #: ../python/frescobaldi_app/mainapp.py:492
-#, fuzzy
 msgid "Select to next blank line"
-msgstr "Ir a la siguiente línea en blanco."
+msgstr "Seleccionar hasta la siguiente línea en blanco"
 
 #: ../python/frescobaldi_app/mainapp.py:494
 msgid ""
 "Selects text from the current position down to and including the next blank "
 "line."
-msgstr ""
+msgstr "Selecciona texto desde la posición actual hasta la siguiente línea en blanco, incluida."
 
 #: ../python/frescobaldi_app/mainapp.py:519
-#, fuzzy
 msgid "Select to previous blank line"
-msgstr "Ir a la anterior línea en blanco."
+msgstr "Seleccionar hasta lalínea en blanco anterior"
 
 #: ../python/frescobaldi_app/mainapp.py:521
 msgid ""
 "Selects text from the current position up to right after the previous blank "
 "line."
-msgstr ""
+msgstr "Selecciona texto desde la posición actual hasta justo antes de la línea en blanco anterior."
 
 #: ../python/frescobaldi_app/mainapp.py:545
-#, fuzzy
 msgid "Move selection to next blank line"
-msgstr "Ir a la siguiente línea en blanco."
+msgstr "Mover la selección a la siguiente línea en blanco"
 
 #: ../python/frescobaldi_app/mainapp.py:546
-#, fuzzy
 msgid "Moves selected block to next blank line."
-msgstr "Ir a la siguiente línea en blanco."
+msgstr "Mover el bloque seleccionado a la siguiente línea en blanco."
 
 #: ../python/frescobaldi_app/mainapp.py:550
-#, fuzzy
 msgid "Move selection to previous blank line"
-msgstr "Ir a la anterior línea en blanco."
+msgstr "Mover la selección a la línea en blanco anterior"
 
 #: ../python/frescobaldi_app/mainapp.py:551
-#, fuzzy
 msgid "Moves selected block to previous blank line."
-msgstr "Ir a la anterior línea en blanco."
+msgstr "Mover el bloque seleccionado a la línea en blanco anterior."
 
 #: ../python/frescobaldi_app/mainapp.py:558
 msgid ""
@@ -1228,33 +1213,35 @@ msgstr ""
 
 #: ../python/frescobaldi_app/mainapp.py:564
 msgid "Convert Relative to &Absolute"
-msgstr ""
+msgstr "Convertir relativo en &absoluto"
 
 #: ../python/frescobaldi_app/mainapp.py:565
 msgid ""
 "Converts the notes in the document or selection from relative to absolute "
 "pitch."
 msgstr ""
+"Convierte las notas del documento o la selección de alturas relativas "
+"a absolutas."
 
 #: ../python/frescobaldi_app/mainapp.py:569
 msgid "Convert Absolute to &Relative"
-msgstr ""
+msgstr "Convertir absoluto a &relativo"
 
 #: ../python/frescobaldi_app/mainapp.py:570
-#, fuzzy
 msgid ""
 "Converts the notes in the document or selection from absolute to relative "
 "pitch."
-msgstr "Reducir a la mitad todas las duraciones de la selección."
+msgstr ""
+"Convierte las notas del documento o selección de alturas absolutas "
+"a relativas."
 
 #: ../python/frescobaldi_app/mainapp.py:574
 msgid "Transpose..."
-msgstr ""
+msgstr "Transportar..."
 
 #: ../python/frescobaldi_app/mainapp.py:575
-#, fuzzy
 msgid "Transposes all notes in the document or selection."
-msgstr "Reducir a la mitad todas las duraciones de la selección."
+msgstr "Trnasporta todas las notas del documento o selección."
 
 #: ../python/frescobaldi_app/mainapp.py:580
 msgid "Double durations"
@@ -1312,8 +1299,7 @@ msgstr "Hacer implícitas"
 
 #: ../python/frescobaldi_app/mainapp.py:617
 msgid "Make durations implicit (remove repeated durations)."
-msgstr ""
-"Hacer que las duraciones sean implícitas (quitar las duraciones repetidas)."
+msgstr "Hacer que las duraciones sean implícitas (quitar las duraciones repetidas)."
 
 #: ../python/frescobaldi_app/mainapp.py:622
 msgid "Make explicit"
@@ -1966,8 +1952,7 @@ msgstr ""
 "y reproducción de MIDI utilizando Rumor)."
 
 #: ../python/frescobaldi_app/settings.py:382
-msgid ""
-"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Instrucción completa para iniciar Timidity (o cualquier otro programa) como "
 "cliente de MIDI ALSA."
@@ -2037,7 +2022,7 @@ msgstr "El tempo en pulsos por minuto."
 
 #: ../python/frescobaldi_app/widgets.py:290
 msgid "Treble"
-msgstr ""
+msgstr "Tiple"
 
 #: ../python/frescobaldi_app/widgets.py:291
 #: ../python/frescobaldi_app/scorewiz/parts.py:763
@@ -2051,7 +2036,7 @@ msgstr "Tenor"
 
 #: ../python/frescobaldi_app/widgets.py:293
 msgid "Treble 8"
-msgstr ""
+msgstr "Tiple 8"
 
 #: ../python/frescobaldi_app/widgets.py:294
 #: ../python/frescobaldi_app/scorewiz/parts.py:524
@@ -2066,11 +2051,11 @@ msgstr "Percusión"
 
 #: ../python/frescobaldi_app/widgets.py:298
 msgid "Tab clef"
-msgstr ""
+msgstr "Clave de tablatura"
 
 #: ../python/frescobaldi_app/widgets.py:300
 msgid "No Clef"
-msgstr ""
+msgstr "Sin clave"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:68
 msgid "Score Setup Wizard"
@@ -2167,8 +2152,7 @@ msgstr "Utilizar comillas tipográficas"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:484
 msgid "Replace normal quotes in titles with nice typographical quotes."
-msgstr ""
-"Sustituir las comillas normales con las vistosas comillas tipográficas."
+msgstr "Sustituir las comillas normales con las vistosas comillas tipográficas."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:486
 msgid "Remove default tagline"
@@ -2183,8 +2167,7 @@ msgid "Remove bar numbers"
 msgstr "Quitar números de compás"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:492
-msgid ""
-"Suppress the display of measure numbers at the beginning of every system."
+msgid "Suppress the display of measure numbers at the beginning of every system."
 msgstr ""
 "Eliminar la numeración de compases que aparece a la izquierda de los "
 "sistemas."
@@ -2308,8 +2291,7 @@ msgstr "Configurar el número de voces distintas deseado en cada pentagrama."
 #: ../python/frescobaldi_app/scorewiz/parts.py:323
 #: ../python/frescobaldi_app/scorewiz/parts.py:558
 msgid "This is primarily useful when you write polyphonic music like a fuge."
-msgstr ""
-"Esto es de utilidad sobre todo al escribir música polifónica como una fuga."
+msgstr "Esto es de utilidad sobre todo al escribir música polifónica como una fuga."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:329
 msgid "Right hand:"
@@ -2507,12 +2489,11 @@ msgstr "Arpa|Ar."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:564
 msgid "Upper staff:"
-msgstr ""
+msgstr "Pentagrama superior:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:570
-#, fuzzy
 msgid "Lower staff:"
-msgstr "Normal"
+msgstr "Pentagrama inferior:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:577
 msgid "Flute"
@@ -2803,8 +2784,7 @@ msgid "Every voice same lyrics"
 msgstr "Misma letra todas las voces"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:892
-msgid ""
-"Every voice gets its own lyrics, using the same text as the other voices."
+msgid "Every voice gets its own lyrics, using the same text as the other voices."
 msgstr "Cada letra tiene su voz, usando el mismo texto que las otras voces."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:895
@@ -2999,6 +2979,3 @@ msgstr "Teclados"
 msgid "Special"
 msgstr "Especial"
 
-#, fuzzy
-#~ msgid "Could not understand the entered pitches."
-#~ msgstr "No se ha podido leer a partir del proceso LilyPond."
