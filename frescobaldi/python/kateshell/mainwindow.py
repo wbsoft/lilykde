@@ -394,7 +394,7 @@ class MainWindow(KParts.MainWindow):
 
     def queryClose(self):
         """ Quit the application, also called by closing the window """
-        for d in self.app.documents[:]: # iterate over a copy
+        for d in self.app.history[::-1]: # iterate over a copy, current first
             if d.isModified():
                 d.setActive()
             if not d.close(True):
