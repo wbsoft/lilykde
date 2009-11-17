@@ -543,18 +543,34 @@ class Harp(KeyboardPart):
     midiInstrument = 'harp'
 
     def build(self, builder):
-        """ setup structure for 2 staves. """
+        """ setup structure for a 2-staff PianoStaff. """
         p = PianoStaff()
         builder.setInstrumentNames(p, self.instrumentNames, self.num)
         s = Sim(p)
-        # add two staves, with one voice each.
-        self.buildStaff(builder, 'upper', 1, 1, s)
-        self.buildStaff(builder, 'lower', 0, 1, s, "bass")
+        # add two staves, with a respective number of voices.
+        self.buildStaff(builder, 'upper', 1, self.upperVoices.value(), s)
+        self.buildStaff(builder, 'lower', 0, self.lowerVoices.value(), s, "bass")
         self.nodes.append(p)
 
     def widgets(self, layout):
-        """ don't display the voice widgets of the KeyboardPart """
-        super(KeyboardPart, self).widgets(layout)
+        l = QLabel('%s <i>(%s)</i>' % (
+            i18n("Adjust how many separate voices you want on each staff."),
+            i18n("This is primarily useful when you write polyphonic music "
+            "like a fuge.")))
+        l.setWordWrap(True)
+        layout.addWidget(l)
+        h = KHBox()
+        layout.addWidget(h)
+        l = QLabel(i18n("Upper staff:"), h)
+        self.upperVoices = QSpinBox(h)
+        self.upperVoices.setRange(1, 4)
+        l.setBuddy(self.upperVoices)
+        h = KHBox()
+        layout.addWidget(h)
+        l = QLabel(i18n("Lower staff:"), h)
+        self.lowerVoices = QSpinBox(h)
+        self.lowerVoices.setRange(1, 4)
+        l.setBuddy(self.lowerVoices)
 
 
 class Flute(WoodWindPart):

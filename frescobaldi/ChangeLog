@@ -1,3 +1,12 @@
+Changes in  -- 
+
+* Score Wizard:
+  - Harp: allow for multiple voices per staff
+* General:
+  - When quitting, the last seen documents, starting with the current, are
+    closed first. This way, if the user cancels the quit, the current document
+    remains the same.
+
 Changes in 0.7.16 -- November 15th, 2009
 
 * New command to transpose music
