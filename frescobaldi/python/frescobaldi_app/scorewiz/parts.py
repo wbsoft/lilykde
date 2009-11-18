@@ -35,9 +35,28 @@ import frescobaldi_app.scorewiz
 
 I18N_NOOP = lambda s: s
 
+
+# Widgets used by different part types
+
+def voicesWidget(self, layout, title=None,
+        rangeStart=1, rangeEnd=4, default=1, tooltip=None):
+    """
+    Creates a widget for setting the number of voices.
+    Adds a HBox to the layout and returns the created QSpinBox.
+    """
+    h = KHBox()
+    l = QLabel(title or i18n("Voices:"), h)
+    sb = QSpinBox(h)
+    sb.setRange(rangeStart, rangeEnd)
+    sb.setValue(default)
+    l.setBuddy(sb)
+    sb.setToolTip(tooltip or i18n("How many voices to put in this staff."))
+    layout.addWidget(h)
+    return sb
+
+
 # Base classes for the part types in this file.
 # (For the real part type classes see below.)
-
 
 class Part(frescobaldi_app.scorewiz.PartBase):
     """
@@ -311,8 +330,8 @@ class KeyboardPart(Part):
         builder.setInstrumentNames(p, self.instrumentNames, self.num)
         s = Sim(p)
         # add two staves, with a respective number of voices.
-        self.buildStaff(builder, 'right', 1, self.rightVoices.value(), s)
-        self.buildStaff(builder, 'left', 0, self.leftVoices.value(), s, "bass")
+        self.buildStaff(builder, 'right', 1, self.upperVoices.value(), s)
+        self.buildStaff(builder, 'left', 0, self.lowerVoices.value(), s, "bass")
         self.nodes.append(p)
 
     def widgets(self, layout):
@@ -322,18 +341,8 @@ class KeyboardPart(Part):
             "like a fuge.")))
         l.setWordWrap(True)
         layout.addWidget(l)
-        h = KHBox()
-        layout.addWidget(h)
-        l = QLabel(i18n("Right hand:"), h)
-        self.rightVoices = QSpinBox(h)
-        self.rightVoices.setRange(1, 4)
-        l.setBuddy(self.rightVoices)
-        h = KHBox()
-        layout.addWidget(h)
-        l = QLabel(i18n("Left hand:"), h)
-        self.leftVoices = QSpinBox(h)
-        self.leftVoices.setRange(1, 4)
-        l.setBuddy(self.leftVoices)
+        self.upperVoices = voicesWidget(layout, i18n("Right hand:"))
+        self.lowerVoices = voicesWidget(layout, i18n("Left hand:"))
 
 
 class PitchedPercussionPart(SingleVoicePart):
@@ -554,24 +563,9 @@ class Harp(KeyboardPart):
         self.nodes.append(p)
 
     def widgets(self, layout):
-        l = QLabel('%s <i>(%s)</i>' % (
-            i18n("Adjust how many separate voices you want on each staff."),
-            i18n("This is primarily useful when you write polyphonic music "
-            "like a fuge.")))
-        l.setWordWrap(True)
-        layout.addWidget(l)
-        h = KHBox()
-        layout.addWidget(h)
-        l = QLabel(i18n("Upper staff:"), h)
-        self.upperVoices = QSpinBox(h)
-        self.upperVoices.setRange(1, 4)
-        l.setBuddy(self.upperVoices)
-        h = KHBox()
-        layout.addWidget(h)
-        l = QLabel(i18n("Lower staff:"), h)
-        self.lowerVoices = QSpinBox(h)
-        self.lowerVoices.setRange(1, 4)
-        l.setBuddy(self.lowerVoices)
+        super(Harp, self).widgets(layout)
+        self.upperVoices.setText(i18n("Upper staff:"))
+        self.lowerVoices.setText(i18n("Lower staff:"))
 
 
 class Flute(WoodWindPart):
@@ -1102,15 +1096,8 @@ class Organ(KeyboardPart):
 
     def widgets(self, layout):
         super(Organ, self).widgets(layout)
-        h = KHBox()
-        layout.addWidget(h)
-        l = QLabel(i18n("Pedal:"), h)
-        self.pedalVoices = QSpinBox(h)
-        self.pedalVoices.setRange(0, 4)
-        self.pedalVoices.setValue(1)
-        l.setBuddy(self.pedalVoices)
-        self.pedalVoices.setToolTip(i18n(
-            "Set to 0 to disable the pedal altogether."))
+        self.pedalVoices = voicesWidget(layout, i18n("Pedal:"), 0,
+            tooltip=i18n("Set to 0 to disable the pedal altogether."))
 
     def build(self, builder):
         super(Organ, self).build(builder)
@@ -1205,14 +1192,7 @@ class Drums(Part):
         self.nodes.append(p)
 
     def widgets(self, layout):
-        h = KHBox()
-        layout.addWidget(h)
-        l = QLabel(i18n("Voices:"), h)
-        self.drumVoices = QSpinBox(h)
-        self.drumVoices.setMinimum(1)
-        self.drumVoices.setMaximum(4)
-        l.setBuddy(self.drumVoices)
-        h.setToolTip(i18n("How many drum voices to put in this staff."))
+        self.drumVoices = voicesWidget(layout)
         h = KHBox()
         layout.addWidget(h)
         l = QLabel(i18n("Style:"), h)
