@@ -1,11 +1,11 @@
 Changes in  -- 
 
 * Score Wizard:
-  - Harp: allow for multiple voices per staff
+  - Harp, Guitar and Jazz Guitar now allow multiple voices per staff
 * General:
   - When quitting, the last seen documents, starting with the current, are
     closed first. This way, if the user cancels the quit, the current document
-    remains the same.
+    (if modified) remains the same.
 * Translations:
   - Dutch updated by me
   - Spanish updated by Francisco Vila
