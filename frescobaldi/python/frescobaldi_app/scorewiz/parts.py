@@ -38,8 +38,8 @@ I18N_NOOP = lambda s: s
 
 # Widgets used by different part types
 
-def voicesWidget(self, layout, title=None,
-        rangeStart=1, rangeEnd=4, default=1, tooltip=None):
+def voicesWidget(
+    layout, title=None, minValue=1, maxValue=4, default=1, tooltip=None):
     """
     Creates a widget for setting the number of voices.
     Adds a HBox to the layout and returns the created QSpinBox.
@@ -47,7 +47,7 @@ def voicesWidget(self, layout, title=None,
     h = KHBox()
     l = QLabel(title or i18n("Voices:"), h)
     sb = QSpinBox(h)
-    sb.setRange(rangeStart, rangeEnd)
+    sb.setRange(minValue, maxValue)
     sb.setValue(default)
     l.setBuddy(sb)
     sb.setToolTip(tooltip or i18n("How many voices to put in this staff."))
