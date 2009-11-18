@@ -613,8 +613,8 @@ class Harp(KeyboardPart):
 
     def widgets(self, layout):
         super(Harp, self).widgets(layout)
-        self.upperVoices.setText(i18n("Upper staff:"))
-        self.lowerVoices.setText(i18n("Lower staff:"))
+        self.upperVoices.parent().findChild(QLabel).setText(i18n("Upper staff:"))
+        self.lowerVoices.parent().findChild(QLabel).setText(i18n("Lower staff:"))
 
 
 class Flute(WoodWindPart):
