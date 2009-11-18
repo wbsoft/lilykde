@@ -44,53 +44,41 @@ class Part(frescobaldi_app.scorewiz.PartBase):
     The base class for our part types.
     Adds some convenience methods for often used tasks.
     """
-    def assign(self, node, stub, nameref=None):
+    def assign(self, name=None):
         """
-        Creates an assignment for the stub under the given name.
-        Adds an identifier to the given node.
-        nameref can be a string name or a Reference object.
-
-        If the nameref is empty or None, the identifier() will be used,
-        with the first letter lowered.
+        Creates an assignment. name is a string name, if not given
+        the class name is used with the first letter lowered.
+        returns the assignment and the reference for the name.
         """
-        if not nameref:
-            nameref = Reference(self.identifier())
-        elif not isinstance(nameref, Reference):
-            nameref = Reference(nameref)
-        # handle multiple references to the same assignment
-        for a in self.assignments:
-            if a.name.name == nameref.name:
-                nameref = a.name
-                break
-        else:
-            a = Assignment(nameref)
-            a.append(stub)
-            self.assignments.append(a)
-        Identifier(nameref, node)
-
-    def assignMusic(self, node, octave, transpose=None, name=None):
+        ref = Reference(name or self.identifier())
+        a = Assignment(ref)
+        self.assignments.append(a)
+        return a, ref
+    
+    def assignMusic(self, name=None, octave=0, transposition=None):
         """
         Creates a \\relative stub and an assignment for it.
-        Returns the contents of the stub for other possible manipulations.
+        Returns the contents of the stub for other possible manipulations,
+        and the Reference object.
         """
-        stub = Relative()
+        a, ref = self.assign(name)
+        stub = Relative(a)
         Pitch(octave, 0, 0, stub)
         s = Seq(stub)
         Identifier('global', s).after = 1
-        if transpose is not None:
-            toct, tnote, talter = transpose
+        if transposition is not None:
+            toct, tnote, talter = transposition
             Pitch(toct, tnote, Rational(talter, 2), Transposition(s))
         LineComment(i18n("Music follows here."), s)
         BlankLine(s)
-        self.assign(node, stub, name)
-        return s
+        return s, ref
 
 
 class SingleVoicePart(Part):
     """
     The abstract base class for single voice part types.
     The build function just creates one staff with one voice,
-    and uses the .clef, .transpose, .midiInstrument and .instrumentNames
+    and uses the .clef, .transposition, .midiInstrument and .instrumentNames
     class (or instance) attributes.
     """
 
@@ -101,7 +89,7 @@ class SingleVoicePart(Part):
     octave = 1
 
     # A subclass could set a transposition here.
-    transpose = None
+    transposition = None
 
     # The MIDI instrument to use: see
     # http://lilypond.org/doc/latest/Documentation/user/lilypond/MIDI-instrument-names
@@ -117,13 +105,14 @@ class SingleVoicePart(Part):
         possible transposition.  Returns the staff and the stub for other
         possible manipulations.
         """
+        stub, ref = self.assignMusic(None, self.octave, self.transposition)
         staff = Staff()
         builder.setInstrumentNames(staff, self.instrumentNames, self.num)
         builder.setMidiInstrument(staff, self.midiInstrument)
-        s1 = braces and Seq(staff) or Seqr(staff)
+        s = braces and Seq(staff) or Seqr(staff)
         if self.clef:
-            Clef(self.clef, s1)
-        stub = self.assignMusic(s1, self.octave, self.transpose)
+            Clef(self.clef, s)
+        Identifier(ref, s)
         self.nodes.append(staff)
         return staff, stub
 
@@ -190,7 +179,7 @@ class TablaturePart(SingleVoicePart):
         self.setTunings(tab)
         s = Seqr(tab)
         ref = Reference(self.identifier())
-        self.assignMusic(s, self.octave, self.transpose, name=ref)
+        self.assignMusic(s, self.octave, self.transposition, name=ref)
         if t == 1:  # only a TabStaff
             builder.setMidiInstrument(tab, self.midiInstrument)
             p = tab
@@ -231,16 +220,22 @@ class VocalPart(Part):
     Base class for vocal stuff.
     """
     midiInstrument = 'choir aahs'
-
-    def assignLyrics(self, node, name, verse = 0):
+    
+    def assignLyrics(self, name, verse=0):
+        """
+        Creates an empty assignment for lyrics.
+        Returns the reference for the name.
+        """
         l = LyricMode()
         if verse:
             name = name + ly.nums(verse)
             Line('\\set stanza = "%d."' % verse, l)
+        a, ref = self.assign(name)
+        a.append(l)
         LineComment(i18n("Lyrics follow here."), l)
         BlankLine(l)
-        self.assign(node, l, name)
-
+        return ref
+        
     def widgets(self, layout):
         self.stanzaWidget(layout)
         self.ambitusWidget(layout)
@@ -262,14 +257,14 @@ class VocalPart(Part):
 
     def addStanzas(self, node):
         """
-        Add stanzas in self.stanzas.value() to the (Voice) node
+        Add stanzas in self.stanzas.value() to the given (Voice) node
         using \\addlyrics.
         """
         if self.stanzas.value() == 1:
-            self.assignLyrics(AddLyrics(node), 'verse')
+            Identifier(self.assignLyrics('verse'), AddLyrics(node))
         else:
             for i in range(self.stanzas.value()):
-                self.assignLyrics(AddLyrics(node), 'verse', i + 1)
+                Identifier(self.assignLyrics('verse', i + 1), AddLyrics(node))
 
 
 class VocalSoloPart(VocalPart, SingleVoicePart):
@@ -298,13 +293,16 @@ class KeyboardPart(Part):
         if clef:
             Clef(clef, c)
         if numVoices == 1:
-            self.assignMusic(c, octave, name=name)
+            stub, ref = self.assignMusic(name, octave)
+            Identifier(ref, c)
         else:
             c = Sim(c)
             for i in range(1, numVoices):
-                self.assignMusic(c, octave, name=name + ly.nums(i))
+                stub, ref = self.assignMusic(name + ly.nums(i), octave)
+                Identifier(ref, c)
                 VoiceSeparator(c)
-            self.assignMusic(c, octave, name=name + ly.nums(numVoices))
+            stub, ref = self.assignMusic(name + ly.nums(numVoices), octave)
+            Identifier(ref, c)
         return staff
 
     def build(self, builder):
@@ -358,8 +356,9 @@ class Chords(Part):
 
     def build(self, builder):
         p = ChordNames()
-        s = ChordMode()
-        name = Reference('chordNames')
+        a, ref = self.assign('chordNames')
+        Identifier(ref, p)
+        s = ChordMode(a)
         Identifier('global', s).after = 1
         i = self.chordStyle.currentIndex()
         if i > 0:
@@ -367,11 +366,10 @@ class Chords(Part):
                 ('german', 'semiGerman', 'italian', 'french')[i-1], s)
         LineComment(i18n("Chords follow here."), s)
         BlankLine(s)
-        self.assign(p, s, name)
         self.nodes.append(p)
         if self.guitarFrets.isChecked():
             f = FretBoards()
-            Identifier(name, f)
+            Identifier(ref, f)
             self.nodes.append(f)
             builder.include("predefined-guitar-fretboards.ly")
 
@@ -398,12 +396,13 @@ class BassFigures(Part):
     _name = ki18n("Figured Bass")
 
     def build(self, builder):
+        a, ref = self.assign('figBass')
+        s = FigureMode(a)
         p = FiguredBass()
-        s = FigureMode()
+        Identifier(ref, p)
         Identifier('global', s)
         LineComment(i18n("Figures follow here."), s)
         BlankLine(s)
-        self.assign(p, s, 'figBass')
         if self.useExtenderLines.isChecked():
             p.getWith()['useBassFigureExtenders'] = Scheme('#t')
         self.nodes.append(p)
@@ -453,14 +452,16 @@ class BassoContinuo(Cello):
         builder.setMidiInstrument(p, self.midiInstrument)
         s = Sim(p)
         Clef("bass", s)
-        self.assignMusic(s, self.octave, self.transpose, 'bcMusic')
-        b = FigureMode()
+        stub, ref = self.assignMusic('bcMusic', self.octave, self.transposition)
+        Identifier(ref, s)
+        a, ref = self.assign('bcFigures')
+        b = FigureMode(a)
+        Identifier(ref, s)
         Identifier('global', b)
         Line("\\override Staff.BassFigureAlignmentPositioning "
              "#'direction = #DOWN", b)
         LineComment(i18n("Figures follow here."), b)
         BlankLine(b)
-        self.assign(s, b, 'bcFigures')
         self.nodes.append(p)
 
 
@@ -583,14 +584,14 @@ class Piccolo(WoodWindPart):
     _name = ki18n("Piccolo")
     instrumentNames = I18N_NOOP("Piccolo|Pic.")
     midiInstrument = 'piccolo'
-    transpose = (1, 0, 0)
+    transposition = (1, 0, 0)
 
 
 class BassFlute(WoodWindPart):
     _name = ki18n("Bass flute")
     instrumentNames = I18N_NOOP("Bass flute|Bfl.")
     midiInstrument = 'flute'
-    transpose = (-1, 4, 0)
+    transposition = (-1, 4, 0)
 
 
 class Oboe(WoodWindPart):
@@ -603,14 +604,14 @@ class OboeDAmore(WoodWindPart):
     _name = ki18n("Oboe d'Amore")
     instrumentNames = I18N_NOOP("Oboe d'amore|Ob.d'am.")
     midiInstrument = 'oboe'
-    transpose = (-1, 5, 0)
+    transposition = (-1, 5, 0)
 
 
 class EnglishHorn(WoodWindPart):
     _name = ki18n("English Horn")
     instrumentNames = I18N_NOOP("English horn|Eng.h.")
     midiInstrument = 'english horn'
-    transpose = (-1, 3, 0)
+    transposition = (-1, 3, 0)
 
 
 class Bassoon(WoodWindPart):
@@ -625,7 +626,7 @@ class ContraBassoon(WoodWindPart):
     _name = ki18n("Contrabassoon")
     instrumentNames = I18N_NOOP("Contrabassoon|C.Bn.")
     midiInstrument = 'bassoon'
-    transpose = (-1, 0, 0)
+    transposition = (-1, 0, 0)
     clef = 'bass'
     octave = -1
 
@@ -634,56 +635,56 @@ class Clarinet(WoodWindPart):
     _name = ki18n("Clarinet")
     instrumentNames = I18N_NOOP("Clarinet|Cl.")
     midiInstrument = 'clarinet'
-    transpose = (-1, 6, -1)
+    transposition = (-1, 6, -1)
 
 
 class SopraninoSax(WoodWindPart):
     _name = ki18n("Sopranino Sax")
     instrumentNames = I18N_NOOP("Sopranino Sax|SiSx.")
     midiInstrument = 'soprano sax'
-    transpose = (0, 2, -1)    # es'
+    transposition = (0, 2, -1)    # es'
 
 
 class SopranoSax(WoodWindPart):
     _name = ki18n("Soprano Sax")
     instrumentNames = I18N_NOOP("Soprano Sax|SoSx.")
     midiInstrument = 'soprano sax'
-    transpose = (-1, 6, -1)   # bes
+    transposition = (-1, 6, -1)   # bes
 
 
 class AltoSax(WoodWindPart):
     _name = ki18n("Alto Sax")
     instrumentNames = I18N_NOOP("Alto Sax|ASx.")
     midiInstrument = 'alto sax'
-    transpose = (-1, 2, -1)   # es
+    transposition = (-1, 2, -1)   # es
 
 
 class TenorSax(WoodWindPart):
     _name = ki18n("Tenor Sax")
     instrumentNames = I18N_NOOP("Tenor Sax|TSx.")
     midiInstrument = 'tenor sax'
-    transpose = (-2, 6, -1)   # bes,
+    transposition = (-2, 6, -1)   # bes,
 
 
 class BaritoneSax(WoodWindPart):
     _name = ki18n("Baritone Sax")
     instrumentNames = I18N_NOOP("Baritone Sax|BSx.")
     midiInstrument = 'baritone sax'
-    transpose = (-2, 2, -1)   # es,
+    transposition = (-2, 2, -1)   # es,
 
 
 class BassSax(WoodWindPart):
     _name = ki18n("Bass Sax")
     instrumentNames = I18N_NOOP("Bass Sax|BsSx.")
     midiInstrument = 'baritone sax'
-    transpose = (-3, 6, -1)   # bes,,
+    transposition = (-3, 6, -1)   # bes,,
 
 
 class SopranoRecorder(WoodWindPart):
     _name = ki18n("Soprano recorder")
     instrumentNames = I18N_NOOP("Soprano recorder|S.rec.")
     midiInstrument = 'recorder'
-    transpose = (1, 0, 0)
+    transposition = (1, 0, 0)
 
 
 class AltoRecorder(WoodWindPart):
@@ -710,7 +711,7 @@ class HornF(BrassPart):
     _name = ki18n("Horn in F")
     instrumentNames = I18N_NOOP("Horn in F|Hn.F.")
     midiInstrument = 'french horn'
-    transpose = (-1, 3, 0)
+    transposition = (-1, 3, 0)
 
 
 class TrumpetC(BrassPart):
@@ -722,7 +723,7 @@ class TrumpetC(BrassPart):
 class TrumpetBb(TrumpetC):
     _name = ki18n("Trumpet in Bb")
     instrumentNames = I18N_NOOP("Trumpet in Bb|Tr.Bb")
-    transpose = (-1, 6, -1)
+    transposition = (-1, 6, -1)
 
 
 class Trombone(BrassPart):
@@ -737,14 +738,14 @@ class Tuba(BrassPart):
     _name = ki18n("Tuba")
     instrumentNames = I18N_NOOP("Tuba|Tb.")
     midiInstrument = 'tuba'
-    transpose = (-2, 6, -1)
+    transposition = (-2, 6, -1)
 
 
 class BassTuba(BrassPart):
     _name = ki18n("Bass Tuba")
     instrumentNames = I18N_NOOP("Bass Tuba|B.Tb.")
     midiInstrument = 'tuba'
-    transpose = (-2, 0, 0)
+    transposition = (-2, 0, 0)
     clef = 'bass'
     octave = -1
 
@@ -798,13 +799,16 @@ class LeadSheet(VocalPart, Chords):
             v1 = Voice(parent=mel)
             s1 = Seq(v1)
             Line('\\voiceOne', s1)
-            self.assignMusic(s1, 1, name='melody')
+            stub, ref = self.assignMusic('melody', 1)
+            Identifier(ref, s1)
             s2 = Seq(Voice(parent=mel))
             Line('\\voiceTwo', s2)
-            self.assignMusic(s2, 0, name='accRight')
+            stub, ref = self.assignMusic('accRight', 0)
+            Identifier(ref, s2)
             acc = Seq(Staff(parent=s))
             Clef('bass', acc)
-            self.assignMusic(acc, -1, name='accLeft')
+            stub, ref = self.assignMusic('accLeft', -1)
+            Identifier(ref, acc)
             if self.ambitus.isChecked():
                 # We can't use \addlyrics when the voice has a \with {}
                 # section, because it creates a nested Voice context.
@@ -818,17 +822,20 @@ class LeadSheet(VocalPart, Chords):
                 if count == 1:
                     l = Lyrics()
                     s.insert(acc.parent(), l)
-                    self.assignLyrics(LyricsTo(v1.cid, l), 'verse')
+                    ref = self.assignLyrics('verse')
+                    Identifier(ref, LyricsTo(v1.cid, l))
                 else:
                     for i in range(count):
                         l = Lyrics()
                         s.insert(acc.parent(), l)
-                        self.assignLyrics(LyricsTo(v1.cid, l), 'verse', i + 1)
+                        ref = self.assignLyrics('verse', i + 1)
+                        Identifier(ref, LyricsTo(v1.cid, l))
             else:
                 self.addStanzas(v1)
         else:
+            stub, ref = self.assignMusic('melody', 1)
             p = Staff()
-            self.assignMusic(Seq(p), 1, name='melody')
+            Identifier(ref, Seq(p))
             self.addStanzas(p)
             if self.ambitus.isChecked():
                 Line('\\consists "Ambitus_engraver"', p.getWith())
@@ -983,7 +990,8 @@ class Choir(VocalPart):
                     lyrName = 'verse'
                 if maxLen == 1:
                     # if all staves have only one voice, use \addlyrics...
-                    self.assignMusic(mus, octave, name=mname)
+                    stub, ref = self.assignMusic(mname, octave)
+                    Identifier(ref, mus)
                     if not (self.lyrAllSame.isChecked() and not toGo):
                         for verse in stanzas:
                             lyr.append((AddLyrics(s), lyrName, verse))
@@ -991,7 +999,8 @@ class Choir(VocalPart):
                     # otherwise create explicit Voice and Lyrics contexts.
                     vname = name + str(num or '')
                     v = Seqr(Voice(vname, parent=mus))
-                    self.assignMusic(v, octave, name=mname)
+                    stub, ref = self.assignMusic(mname, octave)
+                    Identifier(ref, v)
                     if not (self.lyrAllSame.isChecked() and not toGo):
                         for verse in stanzas:
                             lyr.append((LyricsTo(vname, Lyrics(parent=choir)),
@@ -1035,7 +1044,8 @@ class Choir(VocalPart):
                                  ((vnum - 1) * 2.0), v.getWith())
                     v = Seq(v)
                     Text('\\voice' + ly.nums(vnum), v)
-                    self.assignMusic(v, octave, name=mname)
+                    stub, ref = self.assignMusic(mname, octave)
+                    Identifier(ref, v)
                     if self.lyrAllSame.isChecked() and toGo and vnum == 1:
                         lyrName = 'verse'
                         above = False
@@ -1060,7 +1070,7 @@ class Choir(VocalPart):
 
         # Assign the lyrics, so their definitions come after the note defs.
         for node, name, verse in lyr:
-            self.assignLyrics(node, name, verse)
+            Identifier(self.assignLyrics(name, verse), node)
         self.nodes.append(p)
 
 
@@ -1154,12 +1164,17 @@ class Drums(Part):
     _name = ki18n("Drums")
     instrumentNames = I18N_NOOP("Drums|Dr.")
 
-    def assignDrums(self, node, name):
-        s = DrumMode()
+    def assignDrums(self, name = None):
+        """
+        Creates an empty name = \drummode assignment and returns
+        the reference for the name.
+        """
+        a, ref = self.assign(name)
+        s = DrumMode(a)
         Identifier('global', s)
         LineComment(i18n("Drums follow here."), s)
         BlankLine(s)
-        self.assign(node, s, name)
+        return ref
 
     def build(self, builder):
         p = DrumStaff()
@@ -1168,9 +1183,11 @@ class Drums(Part):
             for i in range(1, self.drumVoices.value()+1):
                 q = Seq(DrumVoice(parent=s))
                 Text('\\voice%s' % ly.nums(i), q)
-                self.assignDrums(q, 'drum%s' % ly.nums(i))
+                ref = self.assignDrums('drum%s' % ly.nums(i))
+                Identifier(ref, q)
         else:
-            self.assignDrums(s, 'drum')
+            ref = self.assignDrums('drum')
+            Identifier(ref, s)
         builder.setInstrumentNames(p, self.instrumentNames, self.num)
         i = self.drumStyle.currentIndex()
         if i > 0:
