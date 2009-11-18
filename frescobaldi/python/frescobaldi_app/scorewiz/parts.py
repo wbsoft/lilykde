@@ -197,8 +197,8 @@ class TablaturePart(SingleVoicePart):
             tab.getWith()['tablatureFormat'] = Scheme(self.tabFormat)
         self.setTunings(tab)
         s = Seqr(tab)
-        ref = Reference(self.identifier())
-        self.assignMusic(s, self.octave, self.transposition, name=ref)
+        stub, ref = self.assignMusic(None, self.octave, self.transposition)
+        Identifier(ref, s)
         if t == 1:  # only a TabStaff
             builder.setMidiInstrument(tab, self.midiInstrument)
             p = tab
