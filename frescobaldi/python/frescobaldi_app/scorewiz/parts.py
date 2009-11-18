@@ -146,6 +146,7 @@ class StringPart(SingleVoicePart):
 class TablaturePart(SingleVoicePart):
     """
     A class for instruments that support TabStaffs.
+    Can easily support multi-voice staves.
     """
     octave = 0
     tunings = ()    # may contain a list of tunings.
@@ -184,33 +185,74 @@ class TablaturePart(SingleVoicePart):
         Non-zero if the user wants a TabStaff.
         """
         self.tuningSel.setEnabled(bool(enable))
-
+    
+    def voiceCount(self):
+        """
+        Returns the number of voices. Can be made user-settable in subclasses.
+        """
+        return 1
+        
     def build(self, builder):
-        t = self.staffType.currentIndex()
-        if t == 0:
-            # normal staff only
-            return super(TablaturePart, self).build(builder)
-
-        # make a tabstaff
-        tab = TabStaff()
-        if self.tabFormat:
-            tab.getWith()['tablatureFormat'] = Scheme(self.tabFormat)
-        self.setTunings(tab)
-        s = Seqr(tab)
-        stub, ref = self.assignMusic(None, self.octave, self.transposition)
-        Identifier(ref, s)
-        if t == 1:  # only a TabStaff
-            builder.setMidiInstrument(tab, self.midiInstrument)
-            p = tab
-        else:       # both TabStaff and normal staff
+        # First make assignments for the voices we want to create
+        numVoices = self.voiceCount()
+        if numVoices == 1:
+            voices = (self.identifier(),)
+        elif numVoices == 2:
+            order = 1, 2
+            voices = 'upper', 'lower'
+        elif numVoices == 3:
+            order = 1, 3, 2
+            voices = 'upper', 'middle', 'lower'
+        else:
+            order = 1, 2, 3, 4
+            voices = [self.identifier() + ly.nums(i) for i in order]
+        
+        refs = [self.assignMusic(name, self.octave, self.transposition)[1]
+                    for name in voices]
+        
+        staffType = self.staffType.currentIndex()
+        if staffType in (0, 2):
+            # create a normal staff
+            staff = Staff()
+            seq = Seqr(staff)
+            if self.clef:
+                Clef(self.clef, seq)
+            mus = Simr(seq)
+            for ref in refs[:-1]:
+                Identifier(ref, mus)
+                VoiceSeparator(mus)
+            Identifier(refs[-1], mus)
+            builder.setMidiInstrument(staff, self.midiInstrument)
+        
+        if staffType in (1, 2):
+            # create a tab staff
+            tabstaff = TabStaff()
+            if self.tabFormat:
+                tabstaff.getWith()['tablatureFormat'] = Scheme(self.tabFormat)
+            self.setTunings(tabstaff)
+            sim = Simr(tabstaff)
+            if numVoices == 1:
+                Identifier(refs[0], sim)
+            else:
+                for num, ref in zip(order, refs):
+                    s = Seq(TabVoice(parent=sim))
+                    Text('\\voice%s' % ly.nums(num), s)
+                    Identifier(ref, s)
+        
+        if staffType == 0:
+            # only a normal staff
+            p = staff
+        elif staffType == 1:
+            # only a TabStaff
+            builder.setMidiInstrument(tabstaff, self.midiInstrument)
+            p = tabstaff
+        else:
+            # both TabStaff and normal staff
             p = StaffGroup()
             s = Sim(p)
-            m = Seqr(Staff(parent=s))
-            s.append(tab)
-            builder.setMidiInstrument(m.parent(), self.midiInstrument)
-            if self.clef:
-                Clef(self.clef, m)
-            Identifier(ref, m)
+            s.append(staff)
+            s.append(tabstaff)
+        
         builder.setInstrumentNames(p, self.instrumentNames, self.num)
         self.nodes.append(p)
 
@@ -522,6 +564,13 @@ class ClassicalGuitar(TablaturePart):
         (ki18n("Guitar tuning"), 'guitar-tuning'),
         (ki18n("Open G-tuning"), 'guitar-open-g-tuning'),
     )
+
+    def widgets(self, layout):
+        super(ClassicalGuitar, self).widgets(layout)
+        self.numVoices = voicesWidget(layout)
+        
+    def voiceCount(self):
+        return self.numVoices.value()
 
 
 class JazzGuitar(ClassicalGuitar):
