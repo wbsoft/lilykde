@@ -1069,8 +1069,11 @@ class Choir(VocalPart):
                         lyr.append((LyricsTo(vname, l), lyrName, verse))
 
         # Assign the lyrics, so their definitions come after the note defs.
+        refs = {}
         for node, name, verse in lyr:
-            Identifier(self.assignLyrics(name, verse), node)
+            if (name, verse) not in refs:
+                refs[(name, verse)] = self.assignLyrics(name, verse)
+            Identifier(refs[(name, verse)], node)
         self.nodes.append(p)
 
 
