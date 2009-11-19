@@ -549,28 +549,27 @@ class DocumentManipulator(object):
         else:
             self.doc.view.insertText(art)
         
-    def wrapBrace(self, text, command='', alwaysMultiLine=False):
+    def wrapSelection(self, text, before='{', after='}', alwaysMultiLine=False):
         """
-        Wrap a piece of text inside a brace construct. Returns the replacement.
-        The piece of text is also expected to be the selection of the document,
-        because this routine needs to know the indent of the resulting text.
-        E.g.:
-        wrapBrace("c d e f", "\\relative c'") returns
+        Wrap a piece of text inside some kind of brace construct. Returns the
+        replacement. The piece of text is also expected to be the selection of
+        the document, because this routine needs to know the indent of the
+        resulting text. E.g.:
+        wrapSelection("c d e f", "\\relative c' {", "}") returns
         "\\relative c' { c d e f }"
         """
-        if command != '':
-            command += ' '
         # preserve space at start and end of selection
         space1, sel, space2 = re.compile(
             r'^(\s*)(.*?)(\s*)$', re.DOTALL).match(text).groups()
         if alwaysMultiLine or '\n' in text:
-            result = "%s{\n%s\n}" % (command, sel)
+            result = "%s\n%s\n%s" % (before, sel, after)
             # indent the result corresponding with the first selection line.
             selRange = self.doc.view.selectionRange()
             indentDepth = self.doc.currentIndent(selRange.start(), False)
             result = self.doc.indent(result, indentDepth).lstrip()
         else:
-            result = "%s{ %s }" % (command, sel)
+            result = "%s %s %s" % (before, sel, after)
+        # re-add the space at start and end of selection
         return ''.join((space1, result, space2))
         
     def moveSelectionUp(self):

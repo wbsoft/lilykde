@@ -717,14 +717,14 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         @self.onSelAction(i18n("Repeat selected music"), key="Ctrl+Shift+R",
             keepSelection=False)
         def edit_repeat(text):
-            return self.currentDocument().manipulator().wrapBrace(text, 
-                "\\repeat volta 2")
+            return self.currentDocument().manipulator().wrapSelection(text, 
+                "\\repeat volta 2 {")
         
         @self.onAction(i18n("Insert pair of braces"), "code-context", key="Ctrl+{")
         def edit_insert_braces():
             d = self.currentDocument()
             if d.selectionText():
-                d.replaceSelectionWith(d.manipulator().wrapBrace(
+                d.replaceSelectionWith(d.manipulator().wrapSelection(
                     d.selectionText()), keepSelection=False)
             else:
                 self.currentDocument().manipulator().insertTemplate("{\n(|)\n}")
