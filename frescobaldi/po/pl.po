@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.1\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-18 20:53+0100\n"
-"PO-Revision-Date: 2009-10-12 23:07+0100\n"
+"POT-Creation-Date: 2009-11-19 14:31+0100\n"
+"PO-Revision-Date: 2009-11-19 11:00+0100\n"
 "Last-Translator: Piotr Komorowski <piotr-komorowski@wp.pl>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -101,7 +101,7 @@ msgstr "&Źródłowy dokument"
 
 #: dummy.py:13
 msgid "&Extra Tools"
-msgstr ""
+msgstr "&Ekstra narzędzia"
 
 #: ../python/ly/__init__.py:94
 msgid "Dedication"
@@ -566,43 +566,39 @@ msgstr "Zadanie wydruku zawiera błędy. Proszę sprawdzić ustawienia."
 #: ../python/frescobaldi_app/blankpaper.py:55
 #: ../python/frescobaldi_app/mainapp.py:733
 msgid "Create blank staff paper"
-msgstr ""
+msgstr "Utwórz pusty papier nutowy"
 
 #: ../python/frescobaldi_app/blankpaper.py:69
 msgid "Type:"
-msgstr ""
+msgstr "Typ:"
 
 #: ../python/frescobaldi_app/blankpaper.py:72
-#, fuzzy
 msgid "Action:"
-msgstr "Kierunek:"
+msgstr "Akcja:"
 
 #: ../python/frescobaldi_app/blankpaper.py:78
 msgid "Choose what kind of empty staves you want to create."
-msgstr ""
+msgstr "Wybierz rodzaj pustej pięciolinii do utworzenia."
 
 #: ../python/frescobaldi_app/blankpaper.py:80
 msgid "Choose which action happens when clicking \"Ok\"."
-msgstr ""
+msgstr "Wybierz rodzaj akcji dla przycisku \"Ok\"."
 
 #: ../python/frescobaldi_app/blankpaper.py:82
 msgid "Preview the empty staff paper."
-msgstr ""
+msgstr "Podgląd pustego papieru nutowego."
 
 #: ../python/frescobaldi_app/blankpaper.py:84
-#, fuzzy
 msgid "Click to see more settings."
-msgstr "Ustawienia partytury"
+msgstr "Kliknij, aby zobaczyć więcej ustawień."
 
 #: ../python/frescobaldi_app/blankpaper.py:87
-#, fuzzy
 msgid "Paper"
-msgstr "Rozmiar papieru:"
+msgstr "Papier"
 
 #: ../python/frescobaldi_app/blankpaper.py:89
-#, fuzzy
 msgid "Settings"
-msgstr "Smyczki"
+msgstr "Ustawienia"
 
 #: ../python/frescobaldi_app/blankpaper.py:95
 #: ../python/frescobaldi_app/scorewiz/__init__.py:509
@@ -619,119 +615,107 @@ msgid "Default"
 msgstr "Domyślny"
 
 #: ../python/frescobaldi_app/blankpaper.py:103
-#, fuzzy
 msgid "Staff Size:"
-msgstr "System-rodzaj:"
+msgstr "Rozmiar pięciolinii:"
 
 #: ../python/frescobaldi_app/blankpaper.py:110
 msgid "Page count:"
-msgstr ""
+msgstr "Numery stron:"
 
 #: ../python/frescobaldi_app/blankpaper.py:118
-#, fuzzy
 msgid "Print Bar Lines"
-msgstr "&Kreski taktowe"
+msgstr "Drukuj kreski taktowe"
 
 #: ../python/frescobaldi_app/blankpaper.py:120
-#, fuzzy
 msgid "Bars per line:"
-msgstr "Rozmiar papieru:"
+msgstr "Ilość taktów na linię:"
 
 #: ../python/frescobaldi_app/blankpaper.py:127
-#, fuzzy
 msgid "Print Page Numbers"
-msgstr "&Kreski taktowe"
+msgstr "Drukuj numery stron"
 
 #: ../python/frescobaldi_app/blankpaper.py:129
 msgid "Start with:"
-msgstr ""
+msgstr "Zacznij od:"
 
 #: ../python/frescobaldi_app/blankpaper.py:266
 msgid "Blank staff paper preview"
-msgstr ""
+msgstr "Podgląd pustego papieru nutowego"
 
 #: ../python/frescobaldi_app/blankpaper.py:285
 msgid "No PDF was created."
-msgstr ""
+msgstr "Nie utworzono pliku PDF."
 
 #: ../python/frescobaldi_app/blankpaper.py:296
-#, fuzzy
 msgid "Open in PDF viewer"
-msgstr "Otwórz %1 w przeglądarce zewnętrznej"
+msgstr "Otwórz w przeglądarce PDF"
 
 #: ../python/frescobaldi_app/blankpaper.py:305
 msgid "Save PDF As..."
-msgstr ""
+msgstr "Zapisz PDF jako..."
 
 #: ../python/frescobaldi_app/blankpaper.py:312
-#, fuzzy
 msgid "PDF Files"
-msgstr "Wszystkie pliki"
+msgstr "Pliki PDF"
 
 #: ../python/frescobaldi_app/blankpaper.py:314
-#, fuzzy
 msgid "Save PDF"
-msgstr "Zapisz"
+msgstr "Zapisz PDF"
 
 #: ../python/frescobaldi_app/blankpaper.py:338
 msgid "Directly print on default printer"
-msgstr ""
+msgstr "Wydrukuj bezpośrednio na drukarce domyślnej."
 
 #: ../python/frescobaldi_app/blankpaper.py:347
-#, fuzzy
 msgid "Copy LilyPond code to editor"
-msgstr "Edytor nutowy LilyPond"
+msgstr "Kopiuj kod LilyPonda do edytora"
 
 #: ../python/frescobaldi_app/blankpaper.py:446
 msgid "Staves per page:"
-msgstr ""
+msgstr "Ilość pięciolinii na stronie:"
 
 #: ../python/frescobaldi_app/blankpaper.py:451
 #: ../python/frescobaldi_app/blankpaper.py:788
 msgid "Clef:"
-msgstr ""
+msgstr "Klucz:"
 
 #: ../python/frescobaldi_app/blankpaper.py:457
-#, fuzzy
 msgid "Single Staff"
-msgstr "Cudzysłów pojedynczy"
+msgstr "Pojedyncza pięciolinia"
 
 #: ../python/frescobaldi_app/blankpaper.py:477
 #: ../python/frescobaldi_app/blankpaper.py:533
 #: ../python/frescobaldi_app/blankpaper.py:628
 msgid "Systems per page:"
-msgstr ""
+msgstr "Ilość systemów na stronie:"
 
 #: ../python/frescobaldi_app/blankpaper.py:481
-#, fuzzy
 msgid "Clefs"
-msgstr "Czelesta"
+msgstr "Klucze"
 
 #: ../python/frescobaldi_app/blankpaper.py:485
-#, fuzzy
 msgid "Piano Staff"
-msgstr "Fortepian"
+msgstr "System fortepianowy"
 
 #: ../python/frescobaldi_app/blankpaper.py:505
-#, fuzzy
 msgid "Organ Staff"
-msgstr "Organy"
+msgstr "System organowy"
 
 #: ../python/frescobaldi_app/blankpaper.py:529
-#, fuzzy
 msgid "Staves per system:"
-msgstr "Inne systemy:"
+msgstr "Ilość pięciolinii na system:"
 
 #: ../python/frescobaldi_app/blankpaper.py:539
-#, fuzzy
 msgid "Clefs:"
-msgstr "Czelesta"
+msgstr "Klucze:"
 
 #: ../python/frescobaldi_app/blankpaper.py:546
 msgid ""
 "Enter as many letters (S, A, T or B) as there are staves.\n"
 "See \"What's This\" for more information."
 msgstr ""
+"Wstaw tyle liter (S, A, T lub B), ile jest pięciolinii.\n"
+"Zobacz \"Co to jest\", by uzyskać więcej informacji."
 
 #: ../python/frescobaldi_app/blankpaper.py:549
 msgid ""
@@ -746,11 +730,20 @@ msgid ""
 "first set the number of staves per system to 4. Then enter \"SATB\" (without "
 "the quotes) here."
 msgstr ""
+"Aby ustalić klucze, najpierw ustaw liczbę pięciolinii dla danego systemu. "
+"Następnie wprowadź tyle liter (S, A, T lub B), ile jest pięciolinii.\n"
+"\n"
+"S lub A: klucz wiolinowy,\n"
+"T: klucz wiolinowy 8va bassa,\n"
+"B: klucz basowy.\n"
+" \n"
+"Jeśli chcesz utworzyć papier nutowy dla 4-ro głosowego chóru mieszanego, "
+"najpierw ustal liczbę pięciolinii na 4. Następnie wprowadź \"SATB\"(bez "
+"czudzysłowu)."
 
 #: ../python/frescobaldi_app/blankpaper.py:563
-#, fuzzy
 msgid "Choir Staff"
-msgstr "Chór"
+msgstr "System chóralny"
 
 #: ../python/frescobaldi_app/blankpaper.py:570
 #: ../python/frescobaldi_app/scorewiz/__init__.py:395
@@ -759,40 +752,36 @@ msgid "None"
 msgstr "Brak"
 
 #: ../python/frescobaldi_app/blankpaper.py:716
-#, fuzzy
 msgid "Custom Staff"
-msgstr "Chór"
+msgstr "System użytkownika"
 
 #: ../python/frescobaldi_app/blankpaper.py:778
-#, fuzzy
 msgid "Staff"
-msgstr "System-rodzaj:"
+msgstr "Pięciolinia:"
 
 #: ../python/frescobaldi_app/blankpaper.py:801
 msgid "Space above:"
-msgstr ""
+msgstr "Przestrzeń powyżej:"
 
 #: ../python/frescobaldi_app/blankpaper.py:804
 msgid "Space below:"
-msgstr ""
+msgstr "Przestrzeń poniżej:"
 
 #: ../python/frescobaldi_app/blankpaper.py:839
-#, fuzzy
 msgid "Brace"
-msgstr "Dęte blaszane"
+msgstr "Klamra"
 
 #: ../python/frescobaldi_app/blankpaper.py:864
 msgid "Bracket"
-msgstr ""
+msgstr "Klamra"
 
 #: ../python/frescobaldi_app/blankpaper.py:873
 msgid "Square Bracket"
-msgstr ""
+msgstr "Klamra kwadratowa"
 
 #: ../python/frescobaldi_app/blankpaper.py:875
-#, fuzzy
 msgid "Connect bar lines"
-msgstr "Bez kresek taktowych"
+msgstr "Łącz kreski taktowe"
 
 #: ../python/frescobaldi_app/document.py:66
 msgid ""
@@ -833,44 +822,47 @@ msgstr "Wytnij i przyporządkuj"
 msgid "Open %1"
 msgstr "Otwórz %1"
 
-#: ../python/frescobaldi_app/document.py:669
+#: ../python/frescobaldi_app/document.py:668
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
-msgstr ""
+msgstr "Proszę zaznaczyć oznaczenie wykonawcze w klamrach <<...>>lub {...}."
 
-#: ../python/frescobaldi_app/document.py:689
+#: ../python/frescobaldi_app/document.py:688
 msgid ""
 "Could not understand the entered pitches.\n"
 "\n"
 "Please make sure you use pitch names in the language \"%1\"."
 msgstr ""
+"Wpisane wysokości dźwięków są niezrozumiałe.\n"
+"\n"
+"Proszę upewnij się, że używasz nazw dźwięków w języku \"%1\". "
 
-#: ../python/frescobaldi_app/document.py:697
-#, fuzzy
+#: ../python/frescobaldi_app/document.py:696
 msgid ""
 "Can't perform the requested transposition.\n"
 "\n"
 "The transposed music would contain quarter-tone alterations that are not "
 "available in the pitch language \"%1\"."
 msgstr ""
-"Przetłumaczenie nie powiodło się. Muzyka zawiera ćwierćtonowe znaki "
-"chromatyczne, które nie są dostępne w tym języku %1."
+"Nie można wykonać żądanej transpozycji.\n"
+"\n"
+"Muzyka może zawierać ćwierćtonowe znaki chromatyczne, które nie są dostępne "
+"języku \"%1\"."
 
-#: ../python/frescobaldi_app/document.py:710
+#: ../python/frescobaldi_app/document.py:709
 msgid "Transpose"
-msgstr ""
+msgstr "Transponuj"
 
-#: ../python/frescobaldi_app/document.py:717
+#: ../python/frescobaldi_app/document.py:716
 msgid "Please enter a start pitch and a destination pitch:"
-msgstr ""
+msgstr "Proszę wprowadzić wysokość wyjściową i docelową:"
 
-#: ../python/frescobaldi_app/document.py:721
+#: ../python/frescobaldi_app/document.py:720
 msgid "Transpose from:"
-msgstr ""
+msgstr "Transponuj z:"
 
-#: ../python/frescobaldi_app/document.py:725
-#, fuzzy
+#: ../python/frescobaldi_app/document.py:724
 msgid "to:"
-msgstr "Kierunek:"
+msgstr "do:"
 
 #: ../python/frescobaldi_app/expand.py:154
 msgid "Expansion Manager"
@@ -1176,46 +1168,43 @@ msgid "Go to the previous blank line."
 msgstr "Przejdź do poprzedniej pustej lini."
 
 #: ../python/frescobaldi_app/mainapp.py:492
-#, fuzzy
 msgid "Select to next blank line"
-msgstr "Przejdź do następnej pustej lini."
+msgstr "Zaznacz do następnej pustej linii."
 
 #: ../python/frescobaldi_app/mainapp.py:494
 msgid ""
 "Selects text from the current position down to and including the next blank "
 "line."
 msgstr ""
+"Zaznacza tekst od obecnej pozycji aż do (i razem z) następnej pustej linii."
 
 #: ../python/frescobaldi_app/mainapp.py:519
-#, fuzzy
 msgid "Select to previous blank line"
-msgstr "Przejdź do poprzedniej pustej lini."
+msgstr "Zaznacz do poprzedniej pustej linii."
 
 #: ../python/frescobaldi_app/mainapp.py:521
 msgid ""
 "Selects text from the current position up to right after the previous blank "
 "line."
 msgstr ""
+"Zaznacza tekst od obecnej pozycji, aż do miejsca zaraz za poprzednią pustą "
+"linią."
 
 #: ../python/frescobaldi_app/mainapp.py:545
-#, fuzzy
 msgid "Move selection to next blank line"
-msgstr "Przejdź do następnej pustej lini."
+msgstr "Przenieś zaznaczenie do następnej pustej linii."
 
 #: ../python/frescobaldi_app/mainapp.py:546
-#, fuzzy
 msgid "Moves selected block to next blank line."
-msgstr "Przejdź do następnej pustej lini."
+msgstr "Przenieś zaznaczony blok do następnej pustej linii."
 
 #: ../python/frescobaldi_app/mainapp.py:550
-#, fuzzy
 msgid "Move selection to previous blank line"
-msgstr "Przejdź do poprzedniej pustej lini."
+msgstr "Przenieś zaznaczenie do poprzedniej pustej linii."
 
 #: ../python/frescobaldi_app/mainapp.py:551
-#, fuzzy
 msgid "Moves selected block to previous blank line."
-msgstr "Przejdź do poprzedniej pustej lini."
+msgstr "Przenieś zaznaczony blok do poprzedniej pustej linii."
 
 #: ../python/frescobaldi_app/mainapp.py:558
 msgid ""
@@ -1227,33 +1216,35 @@ msgstr ""
 
 #: ../python/frescobaldi_app/mainapp.py:564
 msgid "Convert Relative to &Absolute"
-msgstr ""
+msgstr "Konwertuj Relatywne do &Absolutnych"
 
 #: ../python/frescobaldi_app/mainapp.py:565
 msgid ""
 "Converts the notes in the document or selection from relative to absolute "
 "pitch."
 msgstr ""
+"Konwertuje nuty w danym dokumencie lub fragmencie z wysokości relatywnych do "
+"absolutnych."
 
 #: ../python/frescobaldi_app/mainapp.py:569
 msgid "Convert Absolute to &Relative"
-msgstr ""
+msgstr "Konwertuj Absolutne do &Relatywnych"
 
 #: ../python/frescobaldi_app/mainapp.py:570
-#, fuzzy
 msgid ""
 "Converts the notes in the document or selection from absolute to relative "
 "pitch."
-msgstr "Zmniejsz wartości o połowę w danym fragmencie."
+msgstr ""
+"Zmienia nuty w danym dokumencie, lub fragmencie z zapisu absolutnego na "
+"relatywny."
 
 #: ../python/frescobaldi_app/mainapp.py:574
 msgid "Transpose..."
-msgstr ""
+msgstr "Transponuj"
 
 #: ../python/frescobaldi_app/mainapp.py:575
-#, fuzzy
 msgid "Transposes all notes in the document or selection."
-msgstr "Zmniejsz wartości o połowę w danym fragmencie."
+msgstr "Transponuje wszystkie nuty w danym dokumencie, lub jego fragmencie."
 
 #: ../python/frescobaldi_app/mainapp.py:580
 msgid "Double durations"
@@ -2028,7 +2019,7 @@ msgstr "Tempo wg metronomu."
 
 #: ../python/frescobaldi_app/widgets.py:290
 msgid "Treble"
-msgstr ""
+msgstr "Wiolinowy"
 
 #: ../python/frescobaldi_app/widgets.py:291
 #: ../python/frescobaldi_app/scorewiz/parts.py:807
@@ -2042,13 +2033,13 @@ msgstr "Tenor"
 
 #: ../python/frescobaldi_app/widgets.py:293
 msgid "Treble 8"
-msgstr ""
+msgstr "Wiolinowy 8"
 
 #: ../python/frescobaldi_app/widgets.py:294
 #: ../python/frescobaldi_app/scorewiz/parts.py:583
 #: ../python/frescobaldi_app/scorewiz/parts.py:820
 msgid "Bass"
-msgstr "Gitara basowa"
+msgstr "Bas"
 
 #: ../python/frescobaldi_app/widgets.py:295
 #: ../python/frescobaldi_app/scorewiz/parts.py:1327
@@ -2057,11 +2048,11 @@ msgstr "Perkusja"
 
 #: ../python/frescobaldi_app/widgets.py:298
 msgid "Tab clef"
-msgstr ""
+msgstr "Klucz tabulaturowy"
 
 #: ../python/frescobaldi_app/widgets.py:300
 msgid "No Clef"
-msgstr ""
+msgstr "Bez klucza"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:68
 msgid "Score Setup Wizard"
@@ -2245,9 +2236,8 @@ msgid "Voices:"
 msgstr "Głosy:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:53
-#, fuzzy
 msgid "How many voices to put in this staff."
-msgstr "Ilość głosów perkusyjnych dla tego systemu."
+msgstr "Ilość głosów dla tej pięciolinii."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:91
 msgid "Music follows here."
@@ -2255,7 +2245,7 @@ msgstr "Poniżej wpisz nuty."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:158
 msgid "Staff type:"
-msgstr "System-rodzaj:"
+msgstr "Rodzaj pięciolinii:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:162
 msgid "Normal staff"
@@ -2291,11 +2281,11 @@ msgstr "Ambitus"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:317
 msgid "Show the pitch range of the voice at the beginning of the staff."
-msgstr "Pokaż skalę głosu na początku systemu."
+msgstr "Pokaż skalę głosu na początku pięciolinii."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:381
 msgid "Adjust how many separate voices you want on each staff."
-msgstr "Ustal ilość oddzielnych głosów dla każdego systemu. "
+msgstr "Ustal ilość oddzielnych głosów dla każdej pięciolinii. "
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:382
 msgid "This is primarily useful when you write polyphonic music like a fuge."
@@ -2347,8 +2337,8 @@ msgid ""
 "Show predefined guitar fret diagrams below the chord names (LilyPond 2.12 "
 "and above)."
 msgstr ""
-"Pokaż predefiniowany wykres progów gitary pod nazwami akordów (LilyPond 2.12 "
-"i wyższy)."
+"Pokaż tabulaturowy wykres progów gitary pod nazwami akordów (LilyPond 2.12 i "
+"wyższy)."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:447
 msgid "Figured Bass"
@@ -2473,7 +2463,7 @@ msgstr "Gitara jazzowa|Git.jazz."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:584
 msgid "Bass|Bs."
-msgstr "Gitara basowa|Git.b."
+msgstr "Bas|B."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:589
 msgid "Bass tuning"
@@ -2497,12 +2487,11 @@ msgstr "Harfa|Hf."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:616
 msgid "Upper staff:"
-msgstr ""
+msgstr "Górna pięciolinia:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:617
-#, fuzzy
 msgid "Lower staff:"
-msgstr "Normalna pięciolinia"
+msgstr "Dolna pięciolinia:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:621
 msgid "Flute"
