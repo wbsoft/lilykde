@@ -70,10 +70,23 @@ Type e.g. <userinput>rel</userinput> and then press <keycap>Ctrl+.</keycap> (per
 <para>
 and place the cursor right after the pitch so you could change it. If you then
 move the cursor a line down, you can start typing music notes or other
-shortcuts. E.g. typing <userinput>F</userinput> and then <keycap>Ctrl+.</keycap> yields <computeroutput>\key f \major</computeroutput>. There are many
-many more default shortcuts. Press <keycap>Ctrl+.</keycap> (without having entered an existing
-shortcut) to have a dialog open with all defined shortcuts. In this dialog you
-can also add, alter or remove shortcuts. See the "What's This" info (<keycap>Shift+F1</keycap>)
+shortcut names. E.g. typing <userinput>F</userinput> and then <keycap>Ctrl+.</keycap> yields <computeroutput>\key f \major</computeroutput>.
+There are many more default shortcuts.
+</para>
+
+<para>
+Press <keycap>Ctrl+.</keycap> (without having entered an existing
+shortcut name) to open a dialog with all defined text snippets. In this dialog you
+can also add, alter or remove snippets.
+It is also possible to assign a keyboard shortcut to a snippet so that it can be entered
+with a simple keystroke, without typing the short name.
+</para>
+
+<para>
+All changes you make in the dialog are immediately saved.
+So clicking <guibutton>Cancel</guibutton> will still keep the changes.
+Clicking OK will enter the currently selected snippet in the text editor.
+See the "What's This" info (<keycap>Shift+F1</keycap>) in the dialog
 for more information.
 </para>
 </sect1>
