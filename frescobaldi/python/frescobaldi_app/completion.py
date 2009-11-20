@@ -28,7 +28,7 @@ from PyQt4.QtGui import QBrush, QColor, QTextFormat
 from PyKDE4.kdecore import KGlobal
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly, ly.font, ly.tokenize, ly.version, ly.words, ly.colors
+import ly, ly.font, ly.tokenize, ly.version, ly.words, ly.colors, ly.pitch
 import frescobaldi_app.version
 
 
@@ -138,7 +138,7 @@ class ColorCompletions(CompletionHelper):
 
 class ExpansionCompletions(CompletionHelper):
     """
-    Looks in the expansions
+    Looks in the expansions, but skips expansions.
     """
     def __init__(self, model):
         self.mgr = model.doc.app.mainwin.expandManager()
@@ -259,7 +259,8 @@ def findMatches(model, view, word, invocationType):
         if tokenizer.parser().token in ("\\context", "\\with"):
             return VarCompletions(model, ly.words.contextproperties)
     
-    return ExpansionCompletions(model)
+    if not text.strip():
+        return ExpansionCompletions(model) # only if on empty line
 
 
 # lazy-load and cache some data
