@@ -333,6 +333,7 @@ class ExpansionDialog(KDialog):
                 manager.mainwin.expansionShortcuts.setShortcut(
                     item.text(0), KShortcut(seq))
                 item.setText(2, seq.toString())
+                key.applyStealShortcut()
         
     def createItem(self, name, description):
         item = QTreeWidgetItem(self.treeWidget)
