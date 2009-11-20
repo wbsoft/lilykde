@@ -346,12 +346,16 @@ class MainWindow(KParts.MainWindow):
         """ Opens a window to edit the keyboard shortcuts """
         dlg = KShortcutsDialog(KShortcutsEditor.AllActions,
             KShortcutsEditor.LetterShortcutsDisallowed, self)
+        self.addActionCollectionsToShortcutsDialog(dlg)
+        dlg.configure()
+    
+    def addActionCollectionsToShortcutsDialog(self, dlg):
+        """ Add KActionCollections to the KShortcutsDialog. """
         dlg.addCollection(self.actionCollection(),
             KGlobal.mainComponent().aboutData().programName())
         if self.view():
             dlg.addCollection(self.view().actionCollection())
-        dlg.configure()
-    
+        
     def editToolbars(self):
         """ Opens a window to edit the toolbar(s) """
         conf = config("MainWindow")

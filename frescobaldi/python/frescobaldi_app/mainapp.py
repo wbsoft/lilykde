@@ -776,6 +776,11 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         act("lilypond_runner").setIcon(KIcon(icon))
         act("lilypond_runner").setToolTip(tip)
 
+    def addActionCollectionsToShortcutsDialog(self, dlg):
+        super(MainWindow, self).addActionCollectionsToShortcutsDialog(dlg)
+        dlg.addCollection(self.expansionShortcuts.actionCollection(),
+            i18n("Expansion Manager"))
+    
     def saveSettings(self):
         self.app.stateManager().cleanup()
         super(MainWindow, self).saveSettings()
@@ -1165,6 +1170,14 @@ class UserShortcuts(object):
     def actionTriggered(self, name):
         self.target().actionTriggered(name)
 
+    def shortcuts(self):
+        """
+        Returns the list of names we have non-empty shortcuts for.
+        """
+        return [action.objectName()
+            for action in self._collection.actions()
+            if not action.shortcut().isEmpty()]
+                
     def shortcut(self, name):
         """
         Returns the shortcut for action, if existing.
@@ -1209,14 +1222,19 @@ class UserShortcuts(object):
                 self.target().populateAction(action)
         return self._collection
 
-    def deleteOthers(self, names):
+    def shakeHands(self, names):
         """
-        Delete all actions with a name not in the given list of names.
+        Deletes all actions not in names, and returns a list of the names
+        we have valid actions for.
         """
+        result = []
         for action in self._collection.actions()[:]:
             if action.objectName() not in names:
                 self.removeShortcut(action.objectName()) 
-
+            elif not action.shortcut().isEmpty():
+                result.append(action.objectName())
+        return result
+        
 
 class ExpansionShortcuts(UserShortcuts):
     """

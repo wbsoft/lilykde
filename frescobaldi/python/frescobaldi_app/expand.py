@@ -63,7 +63,7 @@ class ExpandManager(object):
         self.shortcuts = mainwin.expansionShortcuts
         self.expansions = KConfig("expansions", KConfig.NoGlobals, "appdata")
         # delete shortcut actions that do not exist here anymore
-        self.shortcuts.deleteOthers(self.expansionsList())
+        self.shortcuts.shakeHands(self.expansionsList())
         
     def actionTriggered(self, name):
         return self.doExpand(name)
@@ -335,10 +335,11 @@ class ExpansionDialog(KDialog):
         def keySequenceChanged(seq):
             item = self.currentItem()
             if item:
+                key.applyStealShortcut()
                 manager.shortcuts.setShortcut(
                     item.text(0), KShortcut(seq))
                 item.setText(2, seq.toString())
-                key.applyStealShortcut()
+                self.updateShortcuts()
         
     def createItem(self, name, description):
         item = QTreeWidgetItem(self.treeWidget)
@@ -410,15 +411,8 @@ class ExpansionDialog(KDialog):
             self.edit.item = items[0]
             self.edit.dirty = False
             # key shortcut widget
-            key = self.manager.shortcuts.shortcut(name)
-            self.key.setCheckActionCollections([
-                    self.manager.mainwin.actionCollection(),
-                    self.manager.mainwin.view().actionCollection(),
-                    ])
             self.key.setEnabled(True)
-            self.key.blockSignals(True)
-            self.key.setKeySequence(key and key.toList()[0] or QKeySequence())
-            self.key.blockSignals(False)
+            self.loadShortcut(name)
         else:
             self.edit.item = None
             self.edit.clear()
@@ -431,8 +425,38 @@ class ExpansionDialog(KDialog):
             self.manager.expansions.group(self.edit.item.text(0)).writeEntry(
                 "Text", self.edit.toPlainText())
             self.edit.dirty = False
-            
+    
+    def loadShortcut(self, name):
+        """ Sets the shortcut button to the shortcut for the given name. """
+        key = self.manager.shortcuts.shortcut(name)
+        block = self.key.blockSignals(True)
+        self.key.setKeySequence(key and key.toList()[0] or QKeySequence())
+        self.key.blockSignals(block)
+        
+    def updateShortcuts(self):
+        """
+        Checks if shortcuts have disappeared by stealing them from other
+        keyboard shortcut dialogs.  And initialize the shortcut button to
+        check for collisions.
+        """
+        names = self.manager.shortcuts.shortcuts()
+        for item in self.items():
+            if item.text(2) and item.text(0) not in names:
+                item.setText(2, '')
+            elif item.text(0) in names:
+                key = self.manager.shortcuts.shortcut(item.text(0))
+                item.setText(2, key and key.toList()[0].toString() or '')
+        item = self.currentItem()
+        if item:
+            self.loadShortcut(item.text(0))
+        self.key.setCheckActionCollections([
+            self.manager.mainwin.actionCollection(),
+            self.manager.mainwin.view().actionCollection(),
+            self.manager.shortcuts.actionCollection(),
+            ])
+    
     def show(self):
+        self.updateShortcuts()
         KDialog.show(self)
         self.searchLine.setFocus()
         
