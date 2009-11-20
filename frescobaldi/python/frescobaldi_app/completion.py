@@ -136,6 +136,22 @@ class ColorCompletions(CompletionHelper):
         return super(ColorCompletions, self).data(index, role)
 
 
+class ExpansionCompletions(CompletionHelper):
+    """
+    Looks in the expansions
+    """
+    def __init__(self, model):
+        self.mgr = model.doc.app.mainwin.expandManager()
+        self.expansions = self.mgr.expansionsList()
+        descriptions = [self.mgr.description(name) for name in self.expansions]
+        result = ['%s (%s)' % r for r in zip(self.expansions, descriptions)]
+        super(ExpansionCompletions, self).__init__(model, result)
+
+    def executeCompletionItem(self, doc, word, row):
+        self.mgr.doExpand(self.expansions[row], word)
+        return True
+
+
 def getCompletions(model, view, word, invocationType):
     """
     Returns an object that describes the matches that
@@ -243,6 +259,8 @@ def findMatches(model, view, word, invocationType):
         if tokenizer.parser().token in ("\\context", "\\with"):
             return VarCompletions(model, ly.words.contextproperties)
     
+    return ExpansionCompletions(model)
+
 
 # lazy-load and cache some data
 @ly.lazy

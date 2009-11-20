@@ -2,6 +2,9 @@ Changes in  --
 
 * Expansion Dialog:
   - It is now possible to assign keyboard shortcuts to snippets in the dialog
+* Autocompletion:
+  - If the autocompleter does not find any suitable completions, matching
+    expansions from the Expansion dialog are shown
 * Score Wizard:
   - Harp, Guitar and Jazz Guitar now allow multiple voices per staff
 * General:
