@@ -259,8 +259,9 @@ def findMatches(model, view, word, invocationType):
         if tokenizer.parser().token in ("\\context", "\\with"):
             return VarCompletions(model, ly.words.contextproperties)
     
-    if not text.strip():
-        return ExpansionCompletions(model) # only if on empty line
+    if tokenizer.depth() <= (1, 0) or not text.strip():
+         # only on toplevel or on empty line
+         return ExpansionCompletions(model)
 
 
 # lazy-load and cache some data
