@@ -24,11 +24,13 @@ import re
 
 from PyQt4.QtCore import QObject, QString, QTimer, Qt, QVariant, SIGNAL
 from PyQt4.QtGui import (
-    QFont, QSplitter, QTextEdit, QTreeWidget, QTreeWidgetItem, QVBoxLayout)
+    QFont, QKeySequence, QSplitter, QTextEdit, QTreeWidget, QTreeWidgetItem,
+    QVBoxLayout)
 
 from PyKDE4.kdecore import KConfig, KGlobal, i18n
 from PyKDE4.kdeui import (
-    KDialog, KMessageBox, KStandardGuiItem, KTreeWidgetSearchLine)
+    KDialog, KKeySequenceWidget, KMessageBox, KShortcut, KStandardGuiItem,
+    KTreeWidgetSearchLine, KVBox)
 from PyKDE4.ktexteditor import KTextEditor
 
 import ly.parse, ly.pitch
@@ -59,6 +61,12 @@ class ExpandManager(object):
     def __init__(self, mainwin):
         self.mainwin = mainwin
         self.expansions = KConfig("expansions", KConfig.NoGlobals, "appdata")
+    
+    def actionTriggered(self, name):
+        return self.doExpand(name)
+        
+    def populateAction(self, action):
+        action.setText(self.description(action.objectName()))
         
     def expand(self):
         """
@@ -173,19 +181,26 @@ class ExpansionDialog(KDialog):
         layout.addWidget(splitter)
 
         tree = QTreeWidget()
-        tree.setColumnCount(2)
-        tree.setHeaderLabels((i18n("Shortcut"), i18n("Description")))
+        tree.setColumnCount(3)
+        tree.setHeaderLabels((i18n("Name"), i18n("Description"), i18n("Shortcut")))
         tree.setRootIsDecorated(False)
         tree.setAllColumnsShowFocus(True)
         search.setTreeWidget(tree)
         splitter.addWidget(tree)
         
-        edit = QTextEdit()
+        box = KVBox()
+        splitter.addWidget(box)
+        
+        key = KKeySequenceWidget(box)
+        key.layout().setContentsMargins(0, 0, 0, 0)
+        key.layout().insertStretch(0, 1)
+        key.setEnabled(False)
+        
+        edit = QTextEdit(box)
         edit.setAcceptRichText(False)
         edit.setStyleSheet("QTextEdit { font-family: monospace; }")
         edit.item = None
         edit.dirty = False
-        splitter.addWidget(edit)
         ExpandHighlighter(edit.document())
         
         # whats this etc.
@@ -218,6 +233,7 @@ class ExpansionDialog(KDialog):
         
         self.searchLine = search
         self.treeWidget = tree
+        self.key = key
         self.edit = edit
         
         self.restoreDialogSize(config())
@@ -233,6 +249,7 @@ class ExpansionDialog(KDialog):
 
         tree.sortByColumn(1, Qt.AscendingOrder)
         tree.setSortingEnabled(True)
+        tree.resizeColumnToContents(1)
         
         @onSignal(self, "user1Clicked()")
         def removeButton():
@@ -275,7 +292,7 @@ class ExpansionDialog(KDialog):
                         "Please don't leave the description empty."))
                     item.setText(1, group.readEntry("Name", QVariant("")).toString())
                     tree.editItem(item, 1)
-            elif item.groupName != item.text(0):
+            elif column == 0 and item.groupName != item.text(0):
                 items = [i for i in self.items() if i.text(0) == item.text(0)]
                 if len(items) > 1:
                     KMessageBox.error(self.manager.mainwin, i18n(
@@ -290,20 +307,40 @@ class ExpansionDialog(KDialog):
                     item.setText(0, item.groupName)
                     tree.editItem(item, 0)
                 else:
-                    group = expansions.group(item.text(0))
+                    # the mnemonic has changed
+                    old, new = item.groupName, item.text(0)
+                    group = expansions.group(new)
                     group.writeEntry("Name", item.text(1))
                     group.writeEntry("Text",
-                        expansions.group(item.groupName).readEntry("Text", QVariant("")).toString())
-                    expansions.deleteGroup(item.groupName)
+                        expansions.group(old).readEntry("Text", QVariant("")).toString())
+                    expansions.deleteGroup(old)
+                    # shortcut
+                    s = self.manager.mainwin.expansionShortcuts
+                    s.setShortcut(new, s.shortcut(old))
+                    s.removeShortcut(old)
                     item.groupName = item.text(0)
                     tree.scrollToItem(item)
-                
+            elif column == 2:
+                key = self.manager.mainwin.expansionShortcuts.shortcut(item.text(0))
+                item.setText(2, key and key.toList()[0].toString() or '')
+        
+        @onSignal(key, "keySequenceChanged (QKeySequence)")
+        def keySequenceChanged(seq):
+            item = self.currentItem()
+            if item:
+                manager.mainwin.expansionShortcuts.setShortcut(
+                    item.text(0), KShortcut(seq))
+                item.setText(2, seq.toString())
+        
     def createItem(self, name, description):
         item = QTreeWidgetItem(self.treeWidget)
         item.groupName = name
         item.setFont(0, QFont("monospace"))
         item.setText(0, name)
         item.setText(1, description)
+        key = self.manager.mainwin.expansionShortcuts.shortcut(name)
+        if key:
+            item.setText(2, key.toList()[0].toString())
         item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
         return item
     
@@ -359,10 +396,23 @@ class ExpansionDialog(KDialog):
         items = self.treeWidget.selectedItems()
         if items:
             self.saveEditIfNecessary()
-            self.edit.setPlainText(self.manager.expansions.group(
-                items[0].text(0)).readEntry("Text", QVariant("")).toString())
+            name = items[0].text(0)
+            group = self.manager.expansions.group(name)
+            self.edit.setPlainText(group.readEntry("Text", QVariant("")).toString())
             self.edit.item = items[0]
             self.edit.dirty = False
+            # key shortcut widget
+            key = self.manager.mainwin.expansionShortcuts.shortcut(name)
+            self.key.setCheckActionCollections([
+                    self.manager.mainwin.actionCollection(),
+                    self.manager.mainwin.view().actionCollection(),
+                    ])
+            self.key.setEnabled(True)
+            self.key.blockSignals(True)
+            self.key.setKeySequence(key and key.toList()[0] or QKeySequence())
+            self.key.blockSignals(False)
+        else:
+            self.key.setEnabled(False)
     
     def saveEditIfNecessary(self):
         """ (Internal use) save the edit if it has changed. """

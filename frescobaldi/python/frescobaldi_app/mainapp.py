@@ -27,8 +27,8 @@ from PyQt4.QtGui import (
     QStackedWidget, QWidget)
 from PyKDE4.kdecore import KConfig, KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
-    KActionMenu, KApplication, KDialog, KIcon, KIconLoader, KLineEdit, KMenu,
-    KMessageBox, KStandardAction, KVBox)
+    KActionCollection, KActionMenu, KApplication, KDialog, KIcon, KIconLoader,
+    KLineEdit, KMenu, KMessageBox, KStandardAction, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -335,6 +335,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         self.statusBar().addPermanentWidget(self.progressBar)
         self.progressBar.hide()
         self.currentDocumentChanged.connect(self.updateJobActions)
+        self.expansionShortcuts = ExpansionShortcuts(self)
     
     @lazymethod
     def actionManager(self):
@@ -1105,6 +1106,125 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
     
     def rowCount(self, parent):
         return self.result.rowCount(parent)
+
+
+class UserShortcuts(object):
+    """
+    Manages user-defined keyboard shortcuts.
+    Keyboard shortcuts can be loaded without loading the module they belong to.
+    If a shortcut is triggered, the module is loaded on demand and the action
+    triggered.
+    """
+
+    # which config group to store our shortcuts
+    configGroup = "user_shortcuts"
+    
+    # the shortcut type to use
+    shortcutContext = Qt.WidgetWithChildrenShortcut
+    
+    def __init__(self, mainwin):
+        self.mainwin = mainwin
+        self._collection = KActionCollection(self.widget())
+        self._collection.setConfigGroup(self.configGroup)
+        self._collection.addAssociatedWidget(self.widget())
+        # load the shortcuts
+        group = config(self.configGroup)
+        for key in group.keyList():
+            if group.readEntry(key, QVariant("")).toString():
+                self.addAction(key)
+        self._collection.readSettings()
+    
+    def widget(self):
+        """
+        Should return the widget where the actions should be added to.
+        """
+        pass
+        
+    def target(self):
+        """
+        Should return the object that can further process our actions.
+        It should have the following methods:
+        - actionTriggered(name)
+        - populateAction(action)
+        """
+        pass
+        
+    def addAction(self, name):
+        """
+        (Internal) Create a new action with name name.
+        If existing, return the existing action.
+        """
+        action = self._collection.action(name)
+        if not action:
+            action = self._collection.addAction(name)
+            action.setShortcutContext(self.shortcutContext)
+            QObject.connect(action, SIGNAL("triggered()"),
+                lambda: self.actionTriggered(name))
+        return action
+    
+    def actionTriggered(self, name):
+        self.target().actionTriggered(name)
+
+    def shortcut(self, name):
+        """
+        Returns the shortcut for action, if existing.
+        """
+        action = self._collection.action(name)
+        if action:
+            if not action.shortcut().isEmpty():
+                return action.shortcut()
+            sip.delete(action)
+    
+    def setShortcut(self, name, shortcut):
+        """
+        Sets the shortcut for the named action.
+        Creates an action if not existing.
+        Deletes the action if set to an empty key sequence.
+        """
+        if not shortcut.isEmpty():
+            action = self.addAction(name)
+            action.setShortcut(shortcut)
+            self._collection.writeSettings(None, True, action)
+        else:
+            self.removeShortcut(name)
+    
+    def removeShortcut(self, name):
+        """
+        Deletes the given action if existing.
+        """
+        action = self._collection.action(name)
+        if action:
+            sip.delete(action)
+            config(self.configGroup).deleteEntry(name)
+            
+    def actionCollection(self):
+        """
+        Returns the action collection, fully populated with texts and
+        icons.
+        """
+        for action in self._collection.actions()[:]:
+            if action.shortcut().isEmpty():
+                sip.delete(action)
+            else:
+                self.target().populateAction(action)
+        return self._collection
+
+
+class ExpansionShortcuts(UserShortcuts):
+    """
+    Manages shortcuts for the expand dialog.
+    This is setup initially so that keyboard shortcuts for expansions
+    work without the expandManager being loaded. Pressing a keyboard
+    shortcut actually loads the expansion manager to perform the action.
+    """
+    # which config group to store our shortcuts
+    configGroup = "expand shortcuts"
+    
+    def widget(self):
+        return self.mainwin.viewStack # where the text editor views are.
+        
+    def target(self):
+        return self.mainwin.expandManager()
 
 
 # Easily get our global config
