@@ -258,6 +258,7 @@ class ExpansionDialog(KDialog):
                 index = tree.indexOfTopLevelItem(item)
                 setIndex = index + 1 < tree.topLevelItemCount()
                 expansions.deleteGroup(item.groupName)
+                self.manager.mainwin.expansionShortcuts.removeShortcut(item.groupName)
                 tree.takeTopLevelItem(index)
                 if setIndex:
                     self.setCurrentItem(tree.topLevelItem(index))
@@ -282,17 +283,7 @@ class ExpansionDialog(KDialog):
         
         @onSignal(tree, "itemChanged(QTreeWidgetItem*, int)", shot=True)
         def itemChanged(item, column):
-            if column == 1:
-                group = expansions.group(item.text(0))
-                if item.text(1):
-                    group.writeEntry("Name", item.text(1))
-                    tree.scrollToItem(item)
-                else:
-                    KMessageBox.error(self.manager.mainwin, i18n(
-                        "Please don't leave the description empty."))
-                    item.setText(1, group.readEntry("Name", QVariant("")).toString())
-                    tree.editItem(item, 1)
-            elif column == 0 and item.groupName != item.text(0):
+            if column == 0 and item.groupName != item.text(0):
                 items = [i for i in self.items() if i.text(0) == item.text(0)]
                 if len(items) > 1:
                     KMessageBox.error(self.manager.mainwin, i18n(
@@ -320,7 +311,18 @@ class ExpansionDialog(KDialog):
                     s.removeShortcut(old)
                     item.groupName = item.text(0)
                     tree.scrollToItem(item)
+            elif column == 1:
+                group = expansions.group(item.text(0))
+                if item.text(1):
+                    group.writeEntry("Name", item.text(1))
+                    tree.scrollToItem(item)
+                else:
+                    KMessageBox.error(self.manager.mainwin, i18n(
+                        "Please don't leave the description empty."))
+                    item.setText(1, group.readEntry("Name", QVariant("")).toString())
+                    tree.editItem(item, 1)
             elif column == 2:
+                # User should not edit textual representation of shortcut
                 key = self.manager.mainwin.expansionShortcuts.shortcut(item.text(0))
                 item.setText(2, key and key.toList()[0].toString() or '')
         
