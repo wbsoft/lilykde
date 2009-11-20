@@ -1117,7 +1117,7 @@ class UserShortcuts(object):
     """
 
     # which config group to store our shortcuts
-    configGroup = "user_shortcuts"
+    configGroup = "user shortcuts"
     
     # the shortcut type to use
     shortcutContext = Qt.WidgetWithChildrenShortcut
@@ -1173,7 +1173,7 @@ class UserShortcuts(object):
         if action:
             if not action.shortcut().isEmpty():
                 return action.shortcut()
-            sip.delete(action)
+            self.removeShortcut(name)
     
     def setShortcut(self, name, shortcut):
         """
@@ -1204,10 +1204,18 @@ class UserShortcuts(object):
         """
         for action in self._collection.actions()[:]:
             if action.shortcut().isEmpty():
-                sip.delete(action)
+                self.removeShortcut(action.objectName())
             else:
                 self.target().populateAction(action)
         return self._collection
+
+    def deleteOthers(self, names):
+        """
+        Delete all actions with a name not in the given list of names.
+        """
+        for action in self._collection.actions()[:]:
+            if action.objectName() not in names:
+                self.removeShortcut(action.objectName()) 
 
 
 class ExpansionShortcuts(UserShortcuts):

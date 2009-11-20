@@ -60,8 +60,11 @@ def onSignal(obj, signalName, shot=False):
 class ExpandManager(object):
     def __init__(self, mainwin):
         self.mainwin = mainwin
+        self.shortcuts = mainwin.expansionShortcuts
         self.expansions = KConfig("expansions", KConfig.NoGlobals, "appdata")
-    
+        # delete shortcut actions that do not exist here anymore
+        self.shortcuts.deleteOthers(self.expansionsList())
+        
     def actionTriggered(self, name):
         return self.doExpand(name)
         
@@ -258,7 +261,7 @@ class ExpansionDialog(KDialog):
                 index = tree.indexOfTopLevelItem(item)
                 setIndex = index + 1 < tree.topLevelItemCount()
                 expansions.deleteGroup(item.groupName)
-                self.manager.mainwin.expansionShortcuts.removeShortcut(item.groupName)
+                self.manager.shortcuts.removeShortcut(item.groupName)
                 tree.takeTopLevelItem(index)
                 if setIndex:
                     self.setCurrentItem(tree.topLevelItem(index))
@@ -305,9 +308,10 @@ class ExpansionDialog(KDialog):
                     group.writeEntry("Text",
                         expansions.group(old).readEntry("Text", QVariant("")).toString())
                     expansions.deleteGroup(old)
-                    # shortcut
-                    s = self.manager.mainwin.expansionShortcuts
-                    s.setShortcut(new, s.shortcut(old))
+                    # move the shortcut
+                    s = self.manager.shortcuts
+                    if s.shortcut(old):
+                        s.setShortcut(new, s.shortcut(old))
                     s.removeShortcut(old)
                     item.groupName = item.text(0)
                     tree.scrollToItem(item)
@@ -316,6 +320,7 @@ class ExpansionDialog(KDialog):
                 if item.text(1):
                     group.writeEntry("Name", item.text(1))
                     tree.scrollToItem(item)
+                    tree.resizeColumnToContents(1)
                 else:
                     KMessageBox.error(self.manager.mainwin, i18n(
                         "Please don't leave the description empty."))
@@ -323,14 +328,14 @@ class ExpansionDialog(KDialog):
                     tree.editItem(item, 1)
             elif column == 2:
                 # User should not edit textual representation of shortcut
-                key = self.manager.mainwin.expansionShortcuts.shortcut(item.text(0))
+                key = self.manager.shortcuts.shortcut(item.text(0))
                 item.setText(2, key and key.toList()[0].toString() or '')
         
         @onSignal(key, "keySequenceChanged (QKeySequence)")
         def keySequenceChanged(seq):
             item = self.currentItem()
             if item:
-                manager.mainwin.expansionShortcuts.setShortcut(
+                manager.shortcuts.setShortcut(
                     item.text(0), KShortcut(seq))
                 item.setText(2, seq.toString())
                 key.applyStealShortcut()
@@ -341,7 +346,7 @@ class ExpansionDialog(KDialog):
         item.setFont(0, QFont("monospace"))
         item.setText(0, name)
         item.setText(1, description)
-        key = self.manager.mainwin.expansionShortcuts.shortcut(name)
+        key = self.manager.shortcuts.shortcut(name)
         if key:
             item.setText(2, key.toList()[0].toString())
         item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
@@ -397,15 +402,15 @@ class ExpansionDialog(KDialog):
     def updateSelection(self):
         """ (Internal use) update the edit widget when selection changes. """
         items = self.treeWidget.selectedItems()
+        self.saveEditIfNecessary()
         if items:
-            self.saveEditIfNecessary()
             name = items[0].text(0)
             group = self.manager.expansions.group(name)
             self.edit.setPlainText(group.readEntry("Text", QVariant("")).toString())
             self.edit.item = items[0]
             self.edit.dirty = False
             # key shortcut widget
-            key = self.manager.mainwin.expansionShortcuts.shortcut(name)
+            key = self.manager.shortcuts.shortcut(name)
             self.key.setCheckActionCollections([
                     self.manager.mainwin.actionCollection(),
                     self.manager.mainwin.view().actionCollection(),
@@ -415,6 +420,9 @@ class ExpansionDialog(KDialog):
             self.key.setKeySequence(key and key.toList()[0] or QKeySequence())
             self.key.blockSignals(False)
         else:
+            self.edit.item = None
+            self.edit.clear()
+            self.key.clearKeySequence()
             self.key.setEnabled(False)
     
     def saveEditIfNecessary(self):
