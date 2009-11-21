@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.1\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-20 14:10+0100\n"
+"POT-Creation-Date: 2009-11-21 06:26+0100\n"
 "PO-Revision-Date: 2009-11-19 11:00+0100\n"
 "Last-Translator: Piotr Komorowski <piotr-komorowski@wp.pl>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -435,32 +435,32 @@ msgstr "Linia"
 msgid "Line selection mode"
 msgstr "Tryb wyboru liniowego"
 
-#: ../python/kateshell/mainwindow.py:375
+#: ../python/kateshell/mainwindow.py:379
 #: ../python/frescobaldi_app/blankpaper.py:312
 msgid "All Files"
 msgstr "Wszystkie pliki"
 
-#: ../python/kateshell/mainwindow.py:376
+#: ../python/kateshell/mainwindow.py:380
 msgid "Open File"
 msgstr "Otwórz plik"
 
-#: ../python/kateshell/mainwindow.py:537
+#: ../python/kateshell/mainwindow.py:541
 msgid "Right-click for tab options"
 msgstr "Prawy klik dla opcji zakładek"
 
-#: ../python/kateshell/mainwindow.py:836
+#: ../python/kateshell/mainwindow.py:840
 msgid "Move To"
 msgstr "Skocz do"
 
-#: ../python/kateshell/mainwindow.py:843
+#: ../python/kateshell/mainwindow.py:847
 msgid "Undock"
 msgstr "Wyładuj"
 
-#: ../python/kateshell/mainwindow.py:912
+#: ../python/kateshell/mainwindow.py:916
 msgid "Could not load %1"
 msgstr "Nie można wczytać %1"
 
-#: ../python/kateshell/mainwindow.py:913
+#: ../python/kateshell/mainwindow.py:917
 msgid "Please install %1"
 msgstr "Proszę zainstalować %1"
 
@@ -864,30 +864,31 @@ msgstr "Transponuj z:"
 msgid "to:"
 msgstr "do:"
 
-#: ../python/frescobaldi_app/expand.py:162
+#: ../python/frescobaldi_app/expand.py:165
+#: ../python/frescobaldi_app/mainapp.py:782
 msgid "Expansion Manager"
 msgstr "Menadżer rozszerzeń"
 
-#: ../python/frescobaldi_app/expand.py:176
+#: ../python/frescobaldi_app/expand.py:179
 #: ../python/frescobaldi_app/lilydoc.py:125
 msgid "Search..."
 msgstr "Szukaj..."
 
-#: ../python/frescobaldi_app/expand.py:185
+#: ../python/frescobaldi_app/expand.py:188
 #: ../python/frescobaldi_app/rumor.py:507
 msgid "Name"
 msgstr "Nazwa"
 
-#: ../python/frescobaldi_app/expand.py:185
+#: ../python/frescobaldi_app/expand.py:188
 #: ../python/frescobaldi_app/rumor.py:507
 msgid "Description"
 msgstr "Opis"
 
-#: ../python/frescobaldi_app/expand.py:185
+#: ../python/frescobaldi_app/expand.py:188
 msgid "Shortcut"
 msgstr "Skrót"
 
-#: ../python/frescobaldi_app/expand.py:208
+#: ../python/frescobaldi_app/expand.py:211
 msgid ""
 "This is the list of defined expansions.\n"
 "\n"
@@ -915,7 +916,7 @@ msgstr ""
 "funkcję (skrót: Ctrl+.) i wybierając rozszerzenie z listy (zatwierdzając "
 "Enter lub OK)."
 
-#: ../python/frescobaldi_app/expand.py:228
+#: ../python/frescobaldi_app/expand.py:231
 msgid ""
 "This is the text associated with the selected shortcut. Some characters have "
 "special meaning:"
@@ -923,15 +924,15 @@ msgstr ""
 "To jest tekst skojarzony z wybranym skrótem. Niektóry znaki posiadają "
 "specjalne znaczenie:"
 
-#: ../python/frescobaldi_app/expand.py:230
+#: ../python/frescobaldi_app/expand.py:233
 msgid "Place the cursor on this spot."
 msgstr "Umieść kursor w tym miejscu."
 
-#: ../python/frescobaldi_app/expand.py:231
+#: ../python/frescobaldi_app/expand.py:234
 msgid "Translate the following pitch."
 msgstr "Przetłumacz daną nazwę dźwięku."
 
-#: ../python/frescobaldi_app/expand.py:290
+#: ../python/frescobaldi_app/expand.py:293
 msgid ""
 "Another expansion already uses this name.\n"
 "\n"
@@ -941,7 +942,7 @@ msgstr ""
 "\n"
 "Proszę użyć innej nazwy."
 
-#: ../python/frescobaldi_app/expand.py:296
+#: ../python/frescobaldi_app/expand.py:299
 msgid ""
 "Please only use letters, numbers and the underscore character in the "
 "expansion name."
@@ -949,11 +950,11 @@ msgstr ""
 "Proszę używać wyłącznie liter, liczb i znaków podkreślenia w nazwie "
 "rozszerzeń."
 
-#: ../python/frescobaldi_app/expand.py:321
+#: ../python/frescobaldi_app/expand.py:326
 msgid "Please don't leave the description empty."
 msgstr "Proszę nie zostawiać pustego pola opisu."
 
-#: ../python/frescobaldi_app/expand.py:360
+#: ../python/frescobaldi_app/expand.py:367
 msgid "New Item"
 msgstr "Nowy objekt."
 
@@ -1447,69 +1448,69 @@ msgstr "Przerwij działanie LilyPonda"
 msgid "Run LilyPond in preview mode"
 msgstr "Uruchom LilyPonda w trybie podglądu"
 
-#: ../python/frescobaldi_app/mainapp.py:787
+#: ../python/frescobaldi_app/mainapp.py:792
 msgid "Apply Rhythm"
 msgstr "Dodaj rytm"
 
-#: ../python/frescobaldi_app/mainapp.py:795
+#: ../python/frescobaldi_app/mainapp.py:800
 msgid "Enter a rhythm:"
 msgstr "Wprowadź rytm:"
 
-#: ../python/frescobaldi_app/mainapp.py:798
+#: ../python/frescobaldi_app/mainapp.py:803
 msgid "Enter a rhythm using space separated duration values (e.g. 8. 16 8 4 8)"
 msgstr "Wprowadź rytm używając wartości oddzielonych spacją (np. 8. 16 8 4 8)"
 
-#: ../python/frescobaldi_app/mainapp.py:822
+#: ../python/frescobaldi_app/mainapp.py:827
 msgid "Terminal"
 msgstr "Terminal"
 
-#: ../python/frescobaldi_app/mainapp.py:853
+#: ../python/frescobaldi_app/mainapp.py:858
 msgid "S&ynchronize Terminal with Current Document"
 msgstr "S&ynchronizuj Terminal z obecnym dokumentem"
 
-#: ../python/frescobaldi_app/mainapp.py:874
+#: ../python/frescobaldi_app/mainapp.py:879
 #: ../python/frescobaldi_app/runlily.py:605
 msgid "PDF Preview"
 msgstr "Podgląd PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:902
+#: ../python/frescobaldi_app/mainapp.py:907
 msgid "Show PDF Navigation Panel"
 msgstr "Pokaż panel nawigacyjny PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:903
+#: ../python/frescobaldi_app/mainapp.py:908
 msgid "Show PDF minipager"
 msgstr "Pokaż minipodgląd PDF"
 
-#: ../python/frescobaldi_app/mainapp.py:904
+#: ../python/frescobaldi_app/mainapp.py:909
 msgid "Configure Okular..."
 msgstr "Ustawienia Okular..."
 
-#: ../python/frescobaldi_app/mainapp.py:907
+#: ../python/frescobaldi_app/mainapp.py:912
 msgid "S&ynchronize Preview with Current Document"
 msgstr "S&ynchronizuj podgląd z obecnym dokumentem"
 
-#: ../python/frescobaldi_app/mainapp.py:969
+#: ../python/frescobaldi_app/mainapp.py:974
 msgid "Quick Insert"
 msgstr "Szybkie wstawianie"
 
-#: ../python/frescobaldi_app/mainapp.py:981
+#: ../python/frescobaldi_app/mainapp.py:986
 #: ../python/frescobaldi_app/runlily.py:334
 msgid "LilyPond Log"
 msgstr "LilyPond Log"
 
-#: ../python/frescobaldi_app/mainapp.py:985
+#: ../python/frescobaldi_app/mainapp.py:990
 msgid "no log"
 msgstr "no log"
 
-#: ../python/frescobaldi_app/mainapp.py:1024
+#: ../python/frescobaldi_app/mainapp.py:1029
 msgid "Only show on errors"
 msgstr "Pokazuj tylko przy błędzie"
 
-#: ../python/frescobaldi_app/mainapp.py:1048
+#: ../python/frescobaldi_app/mainapp.py:1053
 msgid "Rumor"
 msgstr "Rumor"
 
-#: ../python/frescobaldi_app/mainapp.py:1060
+#: ../python/frescobaldi_app/mainapp.py:1065
 msgid "LilyPond Documentation"
 msgstr "Dokumentacja LilyPonda"
 
