@@ -27,14 +27,16 @@ from subprocess import Popen, PIPE
 
 class LilyPondVersion(object):
     def __init__(self, command = 'lilypond'):
+        self.versionTuple = ()
+        self.versionString = ""
         try:
             output = Popen((command, '-v'), stdout=PIPE).communicate()[0].splitlines()[0]
             match = re.search(r"(\d+)\.(\d+)(?:\.(\d+))?", output)
-            self.versionTuple = tuple(int(s or "0") for s in match.groups())
-            self.versionString = "%d.%d.%d" % self.versionTuple
+            if match:
+                self.versionTuple = tuple(int(s or "0") for s in match.groups())
+                self.versionString = "%d.%d.%d" % self.versionTuple
         except OSError:
-            self.versionTuple = ()
-            self.versionString = ""
+            pass
 
 
 class ConvertLyLastRuleVersion(object):
