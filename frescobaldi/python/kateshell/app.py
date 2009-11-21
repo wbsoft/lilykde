@@ -355,6 +355,11 @@ class Document(DBusItem):
         for s in ("selectionChanged(KTextEditor::View*)",):
             QObject.connect(self.view, SIGNAL(s), self.slotSelectionChanged)
         
+        # Still a crash if drop on first view (that gets closed if the document
+        # is empty and has no name). Works well if first open doc is not empty.
+        #QObject.connect(self.view, SIGNAL("dropEventPass(QDropEvent *)"),
+            #self.app.mainwin.dropEvent)
+        
         # delete some actions from the view before plugging in GUI
         # trick found in kateviewmanager.cpp
         for name in "file_save", "file_save_as":

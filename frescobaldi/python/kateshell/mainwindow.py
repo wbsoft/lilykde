@@ -437,15 +437,12 @@ class MainWindow(KParts.MainWindow):
         return ViewTabBar(self)
 
     def dragEnterEvent(self, event):
-        data = event.mimeData()
-        if data.hasUrls():
-            event.accept()
+        event.setAccepted(KUrl.List.canDecode(event.mimeData()))
         
     def dropEvent(self, event):
-        data = event.mimeData()
-        if data.hasUrls():
-            event.accept()
-            docs = map(self.app.openUrl, data.urls())
+        if KUrl.List.canDecode(event.mimeData()):
+            urls = KUrl.List.fromMimeData(event.mimeData())
+            docs = map(self.app.openUrl, urls)
             if docs:
                 docs[-1].setActive()
 
