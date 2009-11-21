@@ -38,24 +38,6 @@ import ly.parse, ly.pitch
 from kateshell.app import lazymethod
 from frescobaldi_app.highlight import LilyPondHighlighter
 
-def config():
-    return KGlobal.config().group("expand manager")
-
-def onSignal(obj, signalName, shot=False):
-    """
-    Decorator to attach a function to a Qt signal.
-    If shot == True, the function is called after the event queue
-    has been processed, using QTimer.singleShot.
-    """
-    def decorator(func):
-        if shot:
-            QObject.connect(obj, SIGNAL(signalName), lambda *args:
-                QTimer.singleShot(0, lambda: func(*args)))
-        else:        
-            QObject.connect(obj, SIGNAL(signalName), func)
-        return func
-    return decorator
-    
 
 class ExpandManager(object):
     def __init__(self, mainwin):
@@ -241,113 +223,32 @@ class ExpansionDialog(KDialog):
         
         self.restoreDialogSize(config())
         
-        expansions = self.manager.expansions
-        
         # load the expansions
-        for groupName in sorted(expansions.groupList()):
-            group = expansions.group(groupName)
-            description = group.readEntry("Name", QVariant("")).toString()
-            if description:
-                self.createItem(groupName, description)
+        for name in sorted(self.manager.expansionsList()):
+            self.createItem(name, self.manager.description(name),
+            self.manager.shortcuts.shortcut(name))
 
         tree.sortByColumn(1, Qt.AscendingOrder)
         tree.setSortingEnabled(True)
         tree.resizeColumnToContents(1)
         
-        @onSignal(self, "user1Clicked()")
-        def removeButton():
-            item = self.currentItem()
-            if item:
-                index = tree.indexOfTopLevelItem(item)
-                setIndex = index + 1 < tree.topLevelItemCount()
-                expansions.deleteGroup(item.groupName)
-                self.manager.shortcuts.removeShortcut(item.groupName)
-                tree.takeTopLevelItem(index)
-                if setIndex:
-                    self.setCurrentItem(tree.topLevelItem(index))
-                
-        @onSignal(self, "user2Clicked()")
-        def addButton():
-            self.addItem()
-        
-        @onSignal(edit, "textChanged()")
-        def textChanged():
-            edit.dirty = True
-
-        @onSignal(search, "textChanged(QString)")
-        def checkMatch(text):
-            items = tree.findItems(text, Qt.MatchExactly, 0)
-            if len(items) == 1:
-                self.setCurrentItem(items[0])
-                
-        @onSignal(tree, "itemSelectionChanged()")
-        def updateSelection():
-            self.updateSelection()
-        
-        @onSignal(tree, "itemChanged(QTreeWidgetItem*, int)", shot=True)
-        def itemChanged(item, column):
-            if column == 0 and item.groupName != item.text(0):
-                items = [i for i in self.items() if i.text(0) == item.text(0)]
-                if len(items) > 1:
-                    KMessageBox.error(self.manager.mainwin, i18n(
-                        "Another expansion already uses this name.\n\n"
-                        "Please use a different name."))
-                    item.setText(0, item.groupName)
-                    tree.editItem(item, 0)
-                elif not re.match(r"\w+$", unicode(item.text(0))):
-                    KMessageBox.error(self.manager.mainwin, i18n(
-                        "Please only use letters, numbers and the underscore "
-                        "character in the expansion name."))
-                    item.setText(0, item.groupName)
-                    tree.editItem(item, 0)
-                else:
-                    # the mnemonic has changed
-                    old, new = item.groupName, item.text(0)
-                    group = expansions.group(new)
-                    group.writeEntry("Name", item.text(1))
-                    group.writeEntry("Text",
-                        expansions.group(old).readEntry("Text", QVariant("")).toString())
-                    expansions.deleteGroup(old)
-                    # move the shortcut
-                    s = self.manager.shortcuts
-                    if s.shortcut(old):
-                        s.setShortcut(new, s.shortcut(old))
-                    s.removeShortcut(old)
-                    item.groupName = item.text(0)
-                    tree.scrollToItem(item)
-            elif column == 1:
-                group = expansions.group(item.text(0))
-                if item.text(1):
-                    group.writeEntry("Name", item.text(1))
-                    tree.scrollToItem(item)
-                    tree.resizeColumnToContents(1)
-                else:
-                    KMessageBox.error(self.manager.mainwin, i18n(
-                        "Please don't leave the description empty."))
-                    item.setText(1, group.readEntry("Name", QVariant("")).toString())
-                    tree.editItem(item, 1)
-            elif column == 2:
-                # User should not edit textual representation of shortcut
-                key = self.manager.shortcuts.shortcut(item.text(0))
-                item.setText(2, key and key.toList()[0].toString() or '')
-        
-        @onSignal(key, "keySequenceChanged (QKeySequence)")
-        def keySequenceChanged(seq):
-            item = self.currentItem()
-            if item:
-                key.applyStealShortcut()
-                manager.shortcuts.setShortcut(
-                    item.text(0), KShortcut(seq))
-                item.setText(2, seq.toString())
-                self.updateShortcuts()
-        
-    def createItem(self, name, description):
+        QObject.connect(self, SIGNAL("user1Clicked()"), self.removeItem)
+        QObject.connect(self, SIGNAL("user2Clicked()"), self.addItem)
+        QObject.connect(edit, SIGNAL("textChanged()"), self.editChanged)
+        QObject.connect(search, SIGNAL("textChanged(QString)"), self.checkMatch)
+        QObject.connect(tree, SIGNAL("itemSelectionChanged()"), self.updateSelection)
+        QObject.connect(tree, SIGNAL("itemChanged(QTreeWidgetItem*, int)"),
+            self.itemChanged, Qt.QueuedConnection)
+        QObject.connect(key, SIGNAL("keySequenceChanged (QKeySequence)"),
+            self.keySequenceChanged)
+    
+    def createItem(self, name, description, key=None):
+        """ Create a new item, if key is given it should be a KShortcut. """
         item = QTreeWidgetItem(self.treeWidget)
         item.groupName = name
         item.setFont(0, QFont("monospace"))
         item.setText(0, name)
         item.setText(1, description)
-        key = self.manager.shortcuts.shortcut(name)
         if key:
             item.setText(2, key.toList()[0].toString())
         item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
@@ -382,6 +283,18 @@ class ExpansionDialog(KDialog):
         if text is not None:
             self.edit.setText(text)
     
+    def removeItem(self):
+        """ Remove the current item. """
+        item = self.currentItem()
+        if item:
+            index = self.treeWidget.indexOfTopLevelItem(item)
+            setIndex = index + 1 < self.treeWidget.topLevelItemCount()
+            self.manager.expansions.deleteGroup(item.groupName)
+            self.manager.shortcuts.removeShortcut(item.groupName)
+            self.treeWidget.takeTopLevelItem(index)
+            if setIndex:
+                self.setCurrentItem(self.treeWidget.topLevelItem(index))
+    
     def items(self):
         """ Return an iterator over all the items in our dialog. """
         return (self.treeWidget.topLevelItem(i)
@@ -400,6 +313,12 @@ class ExpansionDialog(KDialog):
         self.treeWidget.setCurrentItem(item)
         self.treeWidget.scrollToItem(item)
 
+    def checkMatch(self, text):
+        """ Called when the user types in the search line. """
+        items = self.treeWidget.findItems(text, Qt.MatchExactly, 0)
+        if len(items) == 1:
+            self.setCurrentItem(items[0])
+                
     def updateSelection(self):
         """ (Internal use) update the edit widget when selection changes. """
         items = self.treeWidget.selectedItems()
@@ -419,6 +338,58 @@ class ExpansionDialog(KDialog):
             self.key.clearKeySequence()
             self.key.setEnabled(False)
     
+    def itemChanged(self, item, column):
+        """ Called when the user has edited an item. """
+        if column == 0 and item.groupName != item.text(0):
+            # The user has changed the mnemonic
+            items = [i for i in self.items() if i.text(0) == item.text(0)]
+            if len(items) > 1:
+                KMessageBox.error(self.manager.mainwin, i18n(
+                    "Another expansion already uses this name.\n\n"
+                    "Please use a different name."))
+                item.setText(0, item.groupName)
+                self.treeWidget.editItem(item, 0)
+            elif not re.match(r"\w+$", unicode(item.text(0))):
+                KMessageBox.error(self.manager.mainwin, i18n(
+                    "Please only use letters, numbers and the underscore "
+                    "character in the expansion name."))
+                item.setText(0, item.groupName)
+                self.treeWidget.editItem(item, 0)
+            else:
+                # apply the changed mnemonic
+                old, new = item.groupName, item.text(0)
+                group = self.manager.expansions.group(new)
+                group.writeEntry("Name", item.text(1))
+                group.writeEntry("Text", self.manager.expansions.group(
+                    old).readEntry("Text", QVariant("")).toString())
+                self.manager.expansions.deleteGroup(old)
+                # move the shortcut
+                s = self.manager.shortcuts
+                if s.shortcut(old):
+                    s.setShortcut(new, s.shortcut(old))
+                s.removeShortcut(old)
+                item.groupName = item.text(0)
+                self.treeWidget.scrollToItem(item)
+        elif column == 1:
+            group = self.manager.expansions.group(item.text(0))
+            if item.text(1):
+                group.writeEntry("Name", item.text(1))
+                self.treeWidget.scrollToItem(item)
+                self.treeWidget.resizeColumnToContents(1)
+            else:
+                KMessageBox.error(self.manager.mainwin, i18n(
+                    "Please don't leave the description empty."))
+                item.setText(1, group.readEntry("Name", QVariant("")).toString())
+                self.treeWidget.editItem(item, 1)
+        elif column == 2:
+            # User should not edit textual representation of shortcut
+            key = self.manager.shortcuts.shortcut(item.text(0))
+            item.setText(2, key and key.toList()[0].toString() or '')
+    
+    def editChanged(self):
+        """ Marks our edit view as changed. """
+        self.edit.dirty = True
+
     def saveEditIfNecessary(self):
         """ (Internal use) save the edit if it has changed. """
         if self.edit.dirty and self.edit.item:
@@ -426,6 +397,16 @@ class ExpansionDialog(KDialog):
                 "Text", self.edit.toPlainText())
             self.edit.dirty = False
     
+    def keySequenceChanged(self, seq):
+        """ Called when the user has changed the keyboard shortcut. """
+        item = self.currentItem()
+        if item:
+            self.key.applyStealShortcut()
+            self.manager.shortcuts.setShortcut(
+                item.text(0), KShortcut(seq))
+            item.setText(2, seq.toString())
+            self.updateShortcuts()
+        
     def loadShortcut(self, name):
         """ Sets the shortcut button to the shortcut for the given name. """
         key = self.manager.shortcuts.shortcut(name)
@@ -487,3 +468,7 @@ class ExpandHighlighter(LilyPondHighlighter):
         super(ExpandHighlighter, self).highlightBlock(text)
         for start, count in matches:
             self.setFormat(start, count, self.formats['special'])
+
+
+def config():
+    return KGlobal.config().group("expand manager")

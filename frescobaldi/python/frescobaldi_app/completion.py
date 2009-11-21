@@ -28,7 +28,7 @@ from PyQt4.QtGui import QBrush, QColor, QTextFormat
 from PyKDE4.kdecore import KGlobal
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly, ly.font, ly.tokenize, ly.version, ly.words, ly.colors, ly.pitch
+import ly, ly.font, ly.tokenize, ly.version, ly.words, ly.colors
 import frescobaldi_app.version
 
 
