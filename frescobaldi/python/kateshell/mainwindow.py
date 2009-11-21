@@ -143,6 +143,7 @@ class MainWindow(KParts.MainWindow):
         self.setupGeneratedMenus()
         self.setAutoSaveSettings()
         self.loadSettings()
+        self.setAcceptDrops(True)
         self.show()
         app.documentCreated.connect(self.addToRecentFiles)
         app.documentMaterialized.connect(self.addDocument)
@@ -434,6 +435,19 @@ class MainWindow(KParts.MainWindow):
 
     def createViewTabBar(self):
         return ViewTabBar(self)
+
+    def dragEnterEvent(self, event):
+        data = event.mimeData()
+        if data.hasUrls():
+            event.accept()
+        
+    def dropEvent(self, event):
+        data = event.mimeData()
+        if data.hasUrls():
+            event.accept()
+            docs = map(self.app.openUrl, data.urls())
+            if docs:
+                docs[-1].setActive()
 
 
 class ViewTabBar(QTabBar):

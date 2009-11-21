@@ -22,7 +22,7 @@ LilyPond version information
 """
 
 import os, re
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, STDOUT
 
 
 class LilyPondVersion(object):
@@ -30,7 +30,7 @@ class LilyPondVersion(object):
         self.versionTuple = ()
         self.versionString = ""
         try:
-            output = Popen((command, '-v'), stdout=PIPE).communicate()[0].splitlines()[0]
+            output = Popen((command, '-v'), stdout=PIPE, stderr=STDOUT).communicate()[0].splitlines()[0]
             match = re.search(r"(\d+)\.(\d+)(?:\.(\d+))?", output)
             if match:
                 self.versionTuple = tuple(int(s or "0") for s in match.groups())
