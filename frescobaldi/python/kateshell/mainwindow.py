@@ -383,7 +383,8 @@ class MainWindow(KParts.MainWindow):
             self.currentDocument().url().url() or self.app.defaultDirectory(),
             '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
             self, i18n("Open File"))
-        docs = [self.app.openUrl(url, res.encoding) for url in res.URLs
+        encoding = str(res.encoding) # copy it, avoid crash on materialize
+        docs = [self.app.openUrl(url, encoding) for url in res.URLs
                     if not url.isEmpty()]
         if docs:
             docs[-1].setActive()

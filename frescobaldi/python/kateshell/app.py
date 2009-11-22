@@ -322,7 +322,6 @@ class Document(DBusItem):
         self.doc = self.app.editor.createDocument(self.app.mainwin)
         self.doc.setEncoding(self._encoding)
         self.view = self.doc.createView(self.app.mainwin)
-
         if not self._url.isEmpty():
             self.doc.openUrl(self._url)
         elif self.app.defaultMode:
