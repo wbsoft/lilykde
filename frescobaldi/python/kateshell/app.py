@@ -228,7 +228,6 @@ class MainApp(DBusItem):
                 self.history[-2].setActive()
             self.documents.remove(doc)
             self.history.remove(doc)
-            self.documentClosed(doc)
             # Create empty document if last closed
             self.documents or self.createDocument().setActive()
 
