@@ -1,4 +1,4 @@
-Changes in  -- 
+Changes in 0.7.17 -- 
 
 * Expansion Dialog:
   - It is now possible to assign keyboard shortcuts to snippets in the dialog
@@ -7,11 +7,13 @@ Changes in  --
     expansions from the Expansion dialog are shown
 * Score Wizard:
   - Harp, Guitar and Jazz Guitar now allow multiple voices per staff
-* General:
+* General bugfixes and improvements:
   - When quitting, the last seen documents, starting with the current, are
     closed first. This way, if the user cancels the quit, the current document
     (if modified) remains the same.
   - Files can be opened by dropping them on the Frescobaldi window
+  - Fix crash when swichting to a document opened using the Open File dialog
+    when multiple files were opened at the same time
 * Translations:
   - Dutch updated by me
   - Spanish updated by Francisco Vila

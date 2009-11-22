@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-21 06:26+0100\n"
+"POT-Creation-Date: 2009-11-22 14:42+0100\n"
 "PO-Revision-Date: 2009-11-20 14:11+0100\n"
 "Last-Translator: Wilbert Berendsen <info@wilbertberendsen.nl>\n"
 "Language-Team: Dutch <kde-i18n-doc@kde.org>\n"
@@ -396,72 +396,72 @@ msgstr "Bovenste zijbalk"
 msgid "Bottom Sidebar"
 msgstr "Onderste zijbalk"
 
-#: ../python/kateshell/mainwindow.py:164
+#: ../python/kateshell/mainwindow.py:165
 msgid "Show Path"
 msgstr "Pad tonen"
 
-#: ../python/kateshell/mainwindow.py:167
+#: ../python/kateshell/mainwindow.py:168
 msgid "Show Document Tabs"
 msgstr "Document-tabs tonen"
 
-#: ../python/kateshell/mainwindow.py:185
+#: ../python/kateshell/mainwindow.py:186
 msgid "&Tool Views"
 msgstr "&Gereedschapsweergaven"
 
-#: ../python/kateshell/mainwindow.py:274
+#: ../python/kateshell/mainwindow.py:275
 msgid "Please select some text first."
 msgstr "Selecteer eerst de tekst waarop u de functie wilt toepassen."
 
-#: ../python/kateshell/mainwindow.py:320
+#: ../python/kateshell/mainwindow.py:325
 msgid "modified"
 msgstr "gewijzigd"
 
-#: ../python/kateshell/mainwindow.py:330
+#: ../python/kateshell/mainwindow.py:335
 msgid "Line: %1 Col: %2"
 msgstr "Regel: %1 Kol: %2"
 
-#: ../python/kateshell/mainwindow.py:339
+#: ../python/kateshell/mainwindow.py:344
 msgid "BLOCK"
 msgstr "BLOK"
 
-#: ../python/kateshell/mainwindow.py:339
+#: ../python/kateshell/mainwindow.py:344
 msgid "Block selection mode"
 msgstr "Blokselectiemodus"
 
-#: ../python/kateshell/mainwindow.py:341
+#: ../python/kateshell/mainwindow.py:346
 msgid "LINE"
 msgstr "REGEL"
 
-#: ../python/kateshell/mainwindow.py:341
+#: ../python/kateshell/mainwindow.py:346
 msgid "Line selection mode"
 msgstr "Regelselectiemodus"
 
-#: ../python/kateshell/mainwindow.py:379
+#: ../python/kateshell/mainwindow.py:384
 #: ../python/frescobaldi_app/blankpaper.py:312
 msgid "All Files"
 msgstr "Alle bestanden"
 
-#: ../python/kateshell/mainwindow.py:380
+#: ../python/kateshell/mainwindow.py:385
 msgid "Open File"
 msgstr "Bestand openen"
 
-#: ../python/kateshell/mainwindow.py:541
+#: ../python/kateshell/mainwindow.py:562
 msgid "Right-click for tab options"
 msgstr "Klik rechts voor tab-opties"
 
-#: ../python/kateshell/mainwindow.py:840
+#: ../python/kateshell/mainwindow.py:861
 msgid "Move To"
 msgstr "Verplaatsen naar"
 
-#: ../python/kateshell/mainwindow.py:847
+#: ../python/kateshell/mainwindow.py:868
 msgid "Undock"
 msgstr "Losmaken"
 
-#: ../python/kateshell/mainwindow.py:916
+#: ../python/kateshell/mainwindow.py:937
 msgid "Could not load %1"
 msgstr "Kan %1 niet laden"
 
-#: ../python/kateshell/mainwindow.py:917
+#: ../python/kateshell/mainwindow.py:938
 msgid "Please install %1"
 msgstr "Installeer %1"
 
@@ -864,31 +864,31 @@ msgstr "Transponeren van:"
 msgid "to:"
 msgstr "naar:"
 
-#: ../python/frescobaldi_app/expand.py:165
+#: ../python/frescobaldi_app/expand.py:147
 #: ../python/frescobaldi_app/mainapp.py:782
 msgid "Expansion Manager"
 msgstr "Snelteksten beheren"
 
-#: ../python/frescobaldi_app/expand.py:179
+#: ../python/frescobaldi_app/expand.py:161
 #: ../python/frescobaldi_app/lilydoc.py:125
 msgid "Search..."
 msgstr "Zoeken..."
 
-#: ../python/frescobaldi_app/expand.py:188
+#: ../python/frescobaldi_app/expand.py:170
 #: ../python/frescobaldi_app/rumor.py:507
 msgid "Name"
 msgstr "Naam"
 
-#: ../python/frescobaldi_app/expand.py:188
+#: ../python/frescobaldi_app/expand.py:170
 #: ../python/frescobaldi_app/rumor.py:507
 msgid "Description"
 msgstr "Omschrijving"
 
-#: ../python/frescobaldi_app/expand.py:188
+#: ../python/frescobaldi_app/expand.py:170
 msgid "Shortcut"
 msgstr "Sneltoets"
 
-#: ../python/frescobaldi_app/expand.py:211
+#: ../python/frescobaldi_app/expand.py:193
 msgid ""
 "This is the list of defined expansions.\n"
 "\n"
@@ -917,7 +917,7 @@ msgstr ""
 "sneltekst-functie meteen aan (standaardtoets: Ctrl+.), kies de sneltekst uit "
 "de lijst en druk op Enter of klik Ok."
 
-#: ../python/frescobaldi_app/expand.py:231
+#: ../python/frescobaldi_app/expand.py:213
 msgid ""
 "This is the text associated with the selected shortcut. Some characters have "
 "special meaning:"
@@ -925,15 +925,19 @@ msgstr ""
 "Dit is de tekst die hoort bij de geselecteerde sneltekst. Sommige tekens "
 "hebben een speciale betekenis:"
 
-#: ../python/frescobaldi_app/expand.py:233
+#: ../python/frescobaldi_app/expand.py:215
 msgid "Place the cursor on this spot."
 msgstr "Zet de cursor op deze plaats."
 
-#: ../python/frescobaldi_app/expand.py:234
+#: ../python/frescobaldi_app/expand.py:216
 msgid "Translate the following pitch."
 msgstr "Vertaal de volgende toonhoogte."
 
-#: ../python/frescobaldi_app/expand.py:293
+#: ../python/frescobaldi_app/expand.py:268
+msgid "New Item"
+msgstr "Nieuw item"
+
+#: ../python/frescobaldi_app/expand.py:348
 msgid ""
 "Another expansion already uses this name.\n"
 "\n"
@@ -943,20 +947,16 @@ msgstr ""
 "\n"
 "Gebruik a.u.b. een andere naam."
 
-#: ../python/frescobaldi_app/expand.py:299
+#: ../python/frescobaldi_app/expand.py:354
 msgid ""
 "Please only use letters, numbers and the underscore character in the "
 "expansion name."
 msgstr ""
 "Gebruik alleen letters, cijfers en het onderstreepteken voor de sneltekst."
 
-#: ../python/frescobaldi_app/expand.py:326
+#: ../python/frescobaldi_app/expand.py:381
 msgid "Please don't leave the description empty."
 msgstr "U dient een omschrijving op te geven."
-
-#: ../python/frescobaldi_app/expand.py:367
-msgid "New Item"
-msgstr "Nieuw item"
 
 #: ../python/frescobaldi_app/hyphen.py:119
 #: ../python/frescobaldi_app/mainapp.py:672

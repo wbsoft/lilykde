@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-21 06:26+0100\n"
+"POT-Creation-Date: 2009-11-22 14:42+0100\n"
 "PO-Revision-Date: 2009-11-17 17:42+0100\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
 "Language-Team: Spanish\n"
@@ -395,72 +395,72 @@ msgstr "Barra superior"
 msgid "Bottom Sidebar"
 msgstr "Barra inferior"
 
-#: ../python/kateshell/mainwindow.py:164
+#: ../python/kateshell/mainwindow.py:165
 msgid "Show Path"
 msgstr "Mostrar ruta"
 
-#: ../python/kateshell/mainwindow.py:167
+#: ../python/kateshell/mainwindow.py:168
 msgid "Show Document Tabs"
 msgstr "Mostrar solapas del documento"
 
-#: ../python/kateshell/mainwindow.py:185
+#: ../python/kateshell/mainwindow.py:186
 msgid "&Tool Views"
 msgstr "Vistas de herramien&tas"
 
-#: ../python/kateshell/mainwindow.py:274
+#: ../python/kateshell/mainwindow.py:275
 msgid "Please select some text first."
 msgstr "Seleccione primero algo de texto."
 
-#: ../python/kateshell/mainwindow.py:320
+#: ../python/kateshell/mainwindow.py:325
 msgid "modified"
 msgstr "modificado"
 
-#: ../python/kateshell/mainwindow.py:330
+#: ../python/kateshell/mainwindow.py:335
 msgid "Line: %1 Col: %2"
 msgstr "Línea: %1 Columna: %2"
 
-#: ../python/kateshell/mainwindow.py:339
+#: ../python/kateshell/mainwindow.py:344
 msgid "BLOCK"
 msgstr "BLOQUE"
 
-#: ../python/kateshell/mainwindow.py:339
+#: ../python/kateshell/mainwindow.py:344
 msgid "Block selection mode"
 msgstr "Modo de selección de bloques"
 
-#: ../python/kateshell/mainwindow.py:341
+#: ../python/kateshell/mainwindow.py:346
 msgid "LINE"
 msgstr "LÍNEA"
 
-#: ../python/kateshell/mainwindow.py:341
+#: ../python/kateshell/mainwindow.py:346
 msgid "Line selection mode"
 msgstr "Modo de selección de líneas"
 
-#: ../python/kateshell/mainwindow.py:379
+#: ../python/kateshell/mainwindow.py:384
 #: ../python/frescobaldi_app/blankpaper.py:312
 msgid "All Files"
 msgstr "Todos los archivos"
 
-#: ../python/kateshell/mainwindow.py:380
+#: ../python/kateshell/mainwindow.py:385
 msgid "Open File"
 msgstr "Abrir archivo"
 
-#: ../python/kateshell/mainwindow.py:541
+#: ../python/kateshell/mainwindow.py:562
 msgid "Right-click for tab options"
 msgstr "Clic derecho para opciones de solapas"
 
-#: ../python/kateshell/mainwindow.py:840
+#: ../python/kateshell/mainwindow.py:861
 msgid "Move To"
 msgstr "Mover a"
 
-#: ../python/kateshell/mainwindow.py:847
+#: ../python/kateshell/mainwindow.py:868
 msgid "Undock"
 msgstr "Desempotrar"
 
-#: ../python/kateshell/mainwindow.py:916
+#: ../python/kateshell/mainwindow.py:937
 msgid "Could not load %1"
 msgstr "No se ha podido cargar %1"
 
-#: ../python/kateshell/mainwindow.py:917
+#: ../python/kateshell/mainwindow.py:938
 msgid "Please install %1"
 msgstr "Instale %1"
 
@@ -865,31 +865,31 @@ msgstr "Transportar desde:"
 msgid "to:"
 msgstr "a:"
 
-#: ../python/frescobaldi_app/expand.py:165
+#: ../python/frescobaldi_app/expand.py:147
 #: ../python/frescobaldi_app/mainapp.py:782
 msgid "Expansion Manager"
 msgstr "Gestor de expansiones"
 
-#: ../python/frescobaldi_app/expand.py:179
+#: ../python/frescobaldi_app/expand.py:161
 #: ../python/frescobaldi_app/lilydoc.py:125
 msgid "Search..."
 msgstr "Buscar..."
 
-#: ../python/frescobaldi_app/expand.py:188
+#: ../python/frescobaldi_app/expand.py:170
 #: ../python/frescobaldi_app/rumor.py:507
 msgid "Name"
 msgstr "Nombre"
 
-#: ../python/frescobaldi_app/expand.py:188
+#: ../python/frescobaldi_app/expand.py:170
 #: ../python/frescobaldi_app/rumor.py:507
 msgid "Description"
 msgstr "Descripción"
 
-#: ../python/frescobaldi_app/expand.py:188
+#: ../python/frescobaldi_app/expand.py:170
 msgid "Shortcut"
 msgstr "Abreviatura"
 
-#: ../python/frescobaldi_app/expand.py:211
+#: ../python/frescobaldi_app/expand.py:193
 msgid ""
 "This is the list of defined expansions.\n"
 "\n"
@@ -917,7 +917,7 @@ msgstr ""
 "atajo de teclado predeterminado es Ctrl+.), seleccione la expansión de la "
 "lista y pulse Enter o elija el botón Aceptar."
 
-#: ../python/frescobaldi_app/expand.py:231
+#: ../python/frescobaldi_app/expand.py:213
 msgid ""
 "This is the text associated with the selected shortcut. Some characters have "
 "special meaning:"
@@ -925,15 +925,19 @@ msgstr ""
 "Este es el texto asociado a la abreviatura seleccionada. Ciertos caracteres "
 "tienen un significado especial:"
 
-#: ../python/frescobaldi_app/expand.py:233
+#: ../python/frescobaldi_app/expand.py:215
 msgid "Place the cursor on this spot."
 msgstr "Situar el cursor sobre este punto."
 
-#: ../python/frescobaldi_app/expand.py:234
+#: ../python/frescobaldi_app/expand.py:216
 msgid "Translate the following pitch."
 msgstr "Traducir la siguiente nota."
 
-#: ../python/frescobaldi_app/expand.py:293
+#: ../python/frescobaldi_app/expand.py:268
+msgid "New Item"
+msgstr "Elemento nuevo"
+
+#: ../python/frescobaldi_app/expand.py:348
 msgid ""
 "Another expansion already uses this name.\n"
 "\n"
@@ -943,7 +947,7 @@ msgstr ""
 "\n"
 "Utilice un nombre distinto."
 
-#: ../python/frescobaldi_app/expand.py:299
+#: ../python/frescobaldi_app/expand.py:354
 msgid ""
 "Please only use letters, numbers and the underscore character in the "
 "expansion name."
@@ -951,13 +955,9 @@ msgstr ""
 "Utilice exclusivamente letras, número y el guión bajo en el nombre de la "
 "expansión."
 
-#: ../python/frescobaldi_app/expand.py:326
+#: ../python/frescobaldi_app/expand.py:381
 msgid "Please don't leave the description empty."
 msgstr "No deje la descripción en blanco."
-
-#: ../python/frescobaldi_app/expand.py:367
-msgid "New Item"
-msgstr "Elemento nuevo"
 
 #: ../python/frescobaldi_app/hyphen.py:119
 #: ../python/frescobaldi_app/mainapp.py:672
