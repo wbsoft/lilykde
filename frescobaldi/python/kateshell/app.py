@@ -141,21 +141,21 @@ class MainApp(DBusItem):
         # If no encoding given, set default or check if we can remember it
         if not encoding:
             encoding = self.defaultEncoding
-            if not url.isEmpty():
-                if self.keepMetaInfo():
-                    group = self.stateManager().groupForUrl(url)
-                    if group:
-                        encoding = group.readEntry("encoding", QVariant('')).toString()
+            if self.keepMetaInfo() and not url.isEmpty():
+                group = self.stateManager().groupForUrl(url)
+                if group:
+                    encoding = group.readEntry("encoding", QVariant('')).toString()
         # If there is only one document open and it is empty, nameless and
-        # unmodified, close it.
-        close0 = (not url.isEmpty() and len(self.documents) == 1
+        # unmodified, use it.
+        if (not url.isEmpty()
+            and len(self.documents) == 1
             and not self.documents[0].isModified()
-            and self.documents[0].url().isEmpty()
-            and self.documents[0].isEmpty())
-        d = (not url.isEmpty() and self.findDocument(url)
-            or self.createDocument(url, encoding))
-        if close0:
-            self.documents[0].close()
+            and self.documents[0].url().isEmpty()):
+            d = self.documents[0]
+            d.openUrl(url, encoding)
+        else:
+            d = (not url.isEmpty() and self.findDocument(url)
+                 or self.createDocument(url, encoding))
         return d
 
     @method(iface, in_signature='', out_signature='o')
@@ -355,10 +355,9 @@ class Document(DBusItem):
         for s in ("selectionChanged(KTextEditor::View*)",):
             QObject.connect(self.view, SIGNAL(s), self.slotSelectionChanged)
         
-        # Still a crash if drop on first view (that gets closed if the document
-        # is empty and has no name). Works well if first open doc is not empty.
-        #QObject.connect(self.view, SIGNAL("dropEventPass(QDropEvent *)"),
-            #self.app.mainwin.dropEvent)
+        # Allow for dropping urls on the view
+        QObject.connect(self.view, SIGNAL("dropEventPass(QDropEvent *)"),
+            self.app.mainwin.dropEvent)
         
         # delete some actions from the view before plugging in GUI
         # trick found in kateviewmanager.cpp
@@ -411,6 +410,18 @@ class Document(DBusItem):
         """
         pass 
     
+    def openUrl(self, url, encoding):
+        """
+        Opens a different url and re-init some stuff.
+        (Only call this on a Document that has already materialized.)
+        """
+        self.materialize()
+        self.setEncoding(encoding)
+        self.doc.openUrl(url)
+        if self.app.keepMetaInfo():
+            self.app.stateManager().loadState(self)
+        self.resetCursorTranslations()
+        
     @method(iface, in_signature='', out_signature='b')
     def save(self):
         if self.doc:
@@ -438,13 +449,6 @@ class Document(DBusItem):
             return self.doc.saveAs(dlg.selectedUrl())
         return True
             
-    def openUrl(self, url):
-        if not isinstance(url, KUrl):
-            url = KUrl(url)
-        self._url = url
-        if self.doc:
-            self.doc.openUrl(url)
-    
     @method(iface, in_signature='s', out_signature='')
     def setEncoding(self, encoding):
         if self.doc:

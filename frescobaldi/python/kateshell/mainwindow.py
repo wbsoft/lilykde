@@ -51,8 +51,8 @@ class MainWindow(KParts.MainWindow):
     An editor main window.
     
     Emits the following (Python) signals:
-    currentDocumentChanged(Document)
-    aboutToClose() when the window will be closed.
+    - currentDocumentChanged(Document) if the active document changes or its url.
+    - aboutToClose() when the window will be closed.
     """
     def __init__(self, app):
         KParts.MainWindow.__init__(self)
@@ -279,7 +279,7 @@ class MainWindow(KParts.MainWindow):
         
     def setCurrentDocument(self, doc):
         if self._currentDoc:
-            self._currentDoc.urlChanged.disconnect(self.addToRecentFiles)
+            self._currentDoc.urlChanged.disconnect(self.slotUrlChanged)
             self._currentDoc.captionChanged.disconnect(self.updateCaption)
             self._currentDoc.statusChanged.disconnect(self.updateStatusBar)
             self._currentDoc.selectionChanged.disconnect(self.updateSelection)
@@ -287,7 +287,7 @@ class MainWindow(KParts.MainWindow):
         self._currentDoc = doc
         self.guiFactory().addClient(doc.view)
         self.viewStack.setCurrentWidget(doc.view)
-        doc.urlChanged.connect(self.addToRecentFiles)
+        doc.urlChanged.connect(self.slotUrlChanged)
         doc.captionChanged.connect(self.updateCaption)
         doc.statusChanged.connect(self.updateStatusBar)
         doc.selectionChanged.connect(self.updateSelection)
@@ -311,7 +311,11 @@ class MainWindow(KParts.MainWindow):
     
     def currentDocument(self):
         return self._currentDoc
-            
+    
+    def slotUrlChanged(self, doc=None):
+        self.addToRecentFiles(doc)
+        self.currentDocumentChanged(doc or self._currentDoc)
+
     def updateCaption(self):
         doc = self.currentDocument()
         name = self.showPath.isChecked() and doc.prettyUrl() or doc.documentName()
