@@ -403,11 +403,16 @@ class MainWindow(KParts.MainWindow):
 
     def queryClose(self):
         """ Quit the application, also called by closing the window """
+        # First, close the modified documents, if any. (This way, if the user
+        # cancels the first close dialog, all documents are still there.)
         for d in self.app.history[::-1]: # iterate over a copy, current first
             if d.isModified():
                 d.setActive()
-            if not d.close(True):
-                return False
+                if not d.close(True):
+                    return False
+        # Then close the unmodified documents
+        for d in self.app.documents[:]:
+            d.close(False)
         # save some settings
         self.saveSettings()
         self.aboutToClose()
