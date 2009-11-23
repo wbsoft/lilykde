@@ -978,7 +978,7 @@ class Choir(VocalPart):
         toGo = len(splitStaves)
         maxLen = max(map(len, splitStaves))
         lyr, staffNames = [], []
-        pianoReduction = dict((key, list()) for key in 'SATB')
+        pianoReduction = dict((key, []) for key in 'SATB')
         for staff in splitStaves:
             toGo -= 1
             # sort the letters in order SATB
@@ -1181,8 +1181,9 @@ class Choir(VocalPart):
             Line("fontSize = #-1", piano.getWith())
             Line("\\override StaffSymbol #'staff-space = #(magstep -1)", piano.getWith())
             
-            # Nice to add Mark_engraver
+            # Nice to add Mark engravers
             Line('\\consists "Mark_engraver"', right.getWith())
+            Line('\\consists "Metronome_mark_engraver"', right.getWith())
             
             # Keep piano reduction out of the MIDI output
             if builder.midi:
