@@ -1156,6 +1156,10 @@ class Choir(VocalPart):
                 leftStaff.insert(0, Clef("treble"))
             else:
                 leftStaff.insert(0, Clef("bass"))
+
+            # Otherwise accidentals can be confusing
+            Line("#(set-accidental-style 'piano)", rightStaff)
+            Line("#(set-accidental-style 'piano)", leftStaff)
             
             # Move voices if unevenly spread:
             if abs(len(upper) - len(lower)) >= 2:
@@ -1184,10 +1188,6 @@ class Choir(VocalPart):
             if builder.midi:
                 Line('\\remove "Staff_performer"', right.getWith())
                 Line('\\remove "Staff_performer"', left.getWith())
-
-            # Otherwise accidentals can be confusing
-            Line("#(set-accidental-style 'piano)", rightStaff)
-            Line("#(set-accidental-style 'piano)", leftStaff)
 
 
 class Piano(KeyboardPart):
