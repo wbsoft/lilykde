@@ -909,7 +909,7 @@ class Choir(VocalPart):
     _name = ki18n("Choir")
 
     def widgets(self, layout):
-        l = QLabel('<p>%s</p><p><i>(%s)</i></p>' % (
+        l = QLabel('<p>%s <i>(%s)</i></p>' % (
             i18n("Please select the voices for the choir. "
             "Use the letters S, A, T, or B. A hyphen denotes a new staff."),
             i18n("Hint: For a double choir you can use two choir parts.")))
@@ -921,6 +921,7 @@ class Choir(VocalPart):
         self.voicing = QComboBox(h)
         l.setBuddy(self.voicing)
         self.voicing.setEditable(True)
+        self.voicing.setCompleter(None)
         self.voicing.addItems((
             'SA-TB', 'S-A-T-B',
             'SA', 'S-A', 'SS-A', 'S-S-A',
@@ -1132,10 +1133,10 @@ class Choir(VocalPart):
             piano = PianoStaff(parent=a)
             
             sim = Sim(piano)
-            right = Staff(parent=sim)
-            left = Staff(parent=sim)
-            rightStaff = Seq(right)
-            leftStaff = Seq(left)
+            rightStaff = Staff(parent=sim)
+            leftStaff = Staff(parent=sim)
+            right = Seq(rightStaff)
+            left = Seq(leftStaff)
             
             # Determine the ordering of voices in the staves
             upper = pianoReduction['S'] + pianoReduction['A']
@@ -1146,35 +1147,32 @@ class Choir(VocalPart):
                 # Male choir
                 upper = pianoReduction['T']
                 lower = pianoReduction['B']
-                rightStaff.insert(0, Clef("treble_8"))
-                leftStaff.insert(0, Clef("bass"))
+                Clef("treble_8", right)
+                Clef("bass", left)
                 preferUpper = 0
             elif not lower:
                 # Female choir
                 upper = pianoReduction['S']
                 lower = pianoReduction['A']
-                leftStaff.insert(0, Clef("treble"))
             else:
-                leftStaff.insert(0, Clef("bass"))
+                Clef("bass", left)
 
             # Otherwise accidentals can be confusing
-            Line("#(set-accidental-style 'piano)", rightStaff)
-            Line("#(set-accidental-style 'piano)", leftStaff)
+            Line("#(set-accidental-style 'piano)", right)
+            Line("#(set-accidental-style 'piano)", left)
             
-            # Move voices if unevenly spread:
-            if abs(len(upper) - len(lower)) >= 2:
+            # Move voices if unevenly spread
+            if abs(len(upper) - len(lower)) > 1:
                 voices = upper + lower
-                half = len(voices) + preferUpper
+                half = (len(voices) + preferUpper) / 2
                 upper = voices[:half]
                 lower = voices[half:]
             
-            for staff, voices in (
-                    (Simr(rightStaff), upper),
-                    (Simr(leftStaff), lower)):
+            for staff, voices in (Simr(right), upper), (Simr(left), lower):
                 if voices:
                     for v in voices[:-1]:
                         Identifier(v, staff)
-                        VoiceSeparator(staff)
+                        VoiceSeparator(staff).after = 1
                     Identifier(voices[-1], staff)
 
             # Make the piano part somewhat smaller
@@ -1182,13 +1180,13 @@ class Choir(VocalPart):
             Line("\\override StaffSymbol #'staff-space = #(magstep -1)", piano.getWith())
             
             # Nice to add Mark engravers
-            Line('\\consists "Mark_engraver"', right.getWith())
-            Line('\\consists "Metronome_mark_engraver"', right.getWith())
+            Line('\\consists "Mark_engraver"', rightStaff.getWith())
+            Line('\\consists "Metronome_mark_engraver"', rightStaff.getWith())
             
             # Keep piano reduction out of the MIDI output
             if builder.midi:
-                Line('\\remove "Staff_performer"', right.getWith())
-                Line('\\remove "Staff_performer"', left.getWith())
+                Line('\\remove "Staff_performer"', rightStaff.getWith())
+                Line('\\remove "Staff_performer"', leftStaff.getWith())
 
 
 class Piano(KeyboardPart):

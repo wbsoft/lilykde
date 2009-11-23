@@ -536,6 +536,7 @@ class ChoirStaff(StaffBase):
         self.layout().addWidget(self.systems, 1, 2)
         self.clefs = QComboBox()
         self.clefs.setEditable(True)
+        self.clefs.setCompleter(None)
         l = QLabel(i18n("Clefs:"))
         l.setBuddy(self.clefs)
         self.layout().addWidget(l, 2, 1, Qt.AlignRight)
@@ -720,18 +721,17 @@ class CustomStaff(SymbolManager, QWidget):
             self.tree.topLevelItem(0).remove()
         self.systems.setValue(4)
         
-    def music(self, layout):
-        music = ['<<']
+    def items(self):
         for i in range(self.tree.topLevelItemCount()):
-            music.extend(self.tree.topLevelItem(i).music(layout))
+            yield self.tree.topLevelItem(i)
+    
+    def music(self, layout):
+        music = sum((i.music(layout) for i in self.items()), ['<<'])
         music.append('>>')
         return music
         
     def staffCount(self):
-        count = 0
-        for i in range(self.tree.topLevelItemCount()):
-            count += self.tree.topLevelItem(i).staffCount()
-        return count
+        return sum(i.staffCount() for i in self.items())
         
 
 class Item(QTreeWidgetItem):
@@ -752,20 +752,18 @@ class Item(QTreeWidgetItem):
             self.child(0).remove()
         sip.delete(self.widget)
         sip.delete(self)
-
+    
+    def items(self):
+        for i in range(self.childCount()):
+            yield self.child(i)
+        
     def childMusic(self, layout):
         """ Returns a list with music from all children """
-        music = []
-        for i in range(self.childCount()):
-            music.extend(self.child(i).music(layout))
-        return music
+        return sum((i.music(layout) for i in self.items()), [])
 
     def staffCount(self):
         """ Returns the number of real staves """
-        count = 0
-        for i in range(self.childCount()):
-            count += self.child(i).staffCount()
-        return count
+        return sum(i.staffCount() for i in self.items())
 
 
 class StaffItem(Item):
