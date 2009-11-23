@@ -948,6 +948,10 @@ class Choir(VocalPart):
         group.addWidget(self.lyrEachDiff)
         self.stanzaWidget(group)
         self.ambitusWidget(layout)
+        self.pianoReduction = QCheckBox(i18n("Piano reduction"))
+        self.pianoReduction.setToolTip(i18n(
+            "Adds an automatically generated piano reduction."))
+        layout.addWidget(self.pianoReduction)
 
     partInfo = {
         'S': ('soprano', 1, SopranoVoice.instrumentNames),
@@ -974,6 +978,7 @@ class Choir(VocalPart):
         toGo = len(splitStaves)
         maxLen = max(map(len, splitStaves))
         lyr, staffNames = [], []
+        pianoReduction = dict((key, list()) for key in 'SATB')
         for staff in splitStaves:
             toGo -= 1
             # sort the letters in order SATB
@@ -988,7 +993,7 @@ class Choir(VocalPart):
                     count[part] += 1
                 name, octave, instrName = self.partInfo[part]
                 instrNames.append((instrName, count[part]))
-                voices.append((name, count[part], octave))
+                voices.append((part, name, count[part], octave))
             if len(staff) == 1:
                 # There is only one voice in the staff. Just set the instrument
                 # name directly in the staff.
@@ -1025,7 +1030,7 @@ class Choir(VocalPart):
 
             # Add the voices
             if len(staff) == 1:
-                name, num, octave = voices[0]
+                part, name, num, octave = voices[0]
                 mname = name + (num and ly.nums(num) or '')
                 if self.lyrEachDiff.isChecked():
                     lyrName = mname + 'Verse'
@@ -1048,7 +1053,7 @@ class Choir(VocalPart):
                         for verse in stanzas:
                             lyr.append((LyricsTo(vname, Lyrics(parent=choir)),
                                 lyrName, verse))
-
+                pianoReduction[part].append(ref)
                 if self.ambitus.isChecked():
                     Line('\\consists "Ambitus_engraver"', s.getWith())
             else:
@@ -1075,7 +1080,7 @@ class Choir(VocalPart):
                 # We want the staff name (actually context-id) in lower case.
                 staffName = staffName.lower()
                 # Create the voices and their lyrics.
-                for (name, num, octave), vnum in zip(voices, order):
+                for (part, name, num, octave), vnum in zip(voices, order):
                     mname = name + (num and ly.nums(num) or '')
                     vname = name + str(num or '')
                     v = Voice(vname, parent=mus)
@@ -1089,6 +1094,7 @@ class Choir(VocalPart):
                     Text('\\voice' + ly.nums(vnum), v)
                     stub, ref = self.assignMusic(mname, octave)
                     Identifier(ref, v)
+                    pianoReduction[part].append(ref)
                     if self.lyrAllSame.isChecked() and toGo and vnum == 1:
                         lyrName = 'verse'
                         above = False
@@ -1118,6 +1124,70 @@ class Choir(VocalPart):
                 refs[(name, verse)] = self.assignLyrics(name, verse)
             Identifier(refs[(name, verse)], node)
         self.nodes.append(p)
+
+        # Create the piano reduction if desired
+        if self.pianoReduction.isChecked():
+            a, ref = self.assign('pianoReduction')
+            self.nodes.append(Identifier(ref))
+            piano = PianoStaff(parent=a)
+            
+            sim = Sim(piano)
+            right = Staff(parent=sim)
+            left = Staff(parent=sim)
+            rightStaff = Seq(right)
+            leftStaff = Seq(left)
+            
+            # Determine the ordering of voices in the staves
+            upper = pianoReduction['S'] + pianoReduction['A']
+            lower = pianoReduction['T'] + pianoReduction['B']
+            
+            preferUpper = 1
+            if not upper:
+                # Male choir
+                upper = pianoReduction['T']
+                lower = pianoReduction['B']
+                rightStaff.insert(0, Clef("treble_8"))
+                leftStaff.insert(0, Clef("bass"))
+                preferUpper = 0
+            elif not lower:
+                # Female choir
+                upper = pianoReduction['S']
+                lower = pianoReduction['A']
+                leftStaff.insert(0, Clef("treble"))
+            else:
+                leftStaff.insert(0, Clef("bass"))
+            
+            # Move voices if unevenly spread:
+            if abs(len(upper) - len(lower)) >= 2:
+                voices = upper + lower
+                half = len(voices) + preferUpper
+                upper = voices[:half]
+                lower = voices[half:]
+            
+            for staff, voices in (
+                    (Simr(rightStaff), upper),
+                    (Simr(leftStaff), lower)):
+                if voices:
+                    for v in voices[:-1]:
+                        Identifier(v, staff)
+                        VoiceSeparator(staff)
+                    Identifier(voices[-1], staff)
+
+            # Make the piano part somewhat smaller
+            Line("fontSize = #-1", piano.getWith())
+            Line("\\override StaffSymbol #'staff-space = #(magstep -1)", piano.getWith())
+            
+            # Nice to add Mark_engraver
+            Line('\\consists "Mark_engraver"', right.getWith())
+            
+            # Keep piano reduction out of the MIDI output
+            if builder.midi:
+                Line('\\remove "Staff_performer"', right.getWith())
+                Line('\\remove "Staff_performer"', left.getWith())
+
+            # Otherwise accidentals can be confusing
+            Line("#(set-accidental-style 'piano)", rightStaff)
+            Line("#(set-accidental-style 'piano)", leftStaff)
 
 
 class Piano(KeyboardPart):

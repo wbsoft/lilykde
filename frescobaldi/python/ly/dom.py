@@ -505,6 +505,14 @@ class Container(LyNode):
             return "".join(res)
 
 
+class Block(Container):
+    """ 
+    A vertical container type that puts everything on a new line.
+    """
+    defaultSpace = "\n"
+    before, after = 1, 1
+
+
 class Document(Container):
     """ 
     A container type that puts everything on a new line.

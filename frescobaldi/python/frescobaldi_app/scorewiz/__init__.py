@@ -21,7 +21,7 @@
 Score Wizard
 """
 
-import os, re, sip, string, sys
+import os, re, sip, string, sys, types
 import ly, ly.dom
 from rational import Rational
 
@@ -653,6 +653,8 @@ class Builder(object):
     Parts may interact with:
     
     include             to request filenames to be included
+    
+    addCodeBlock        to add arbitrary strings to the output (e.g. functions)
 
     lilypondVersion     a tuple like (2, 11, 64) describing the LilyPond the
                         document is built for.
@@ -660,7 +662,9 @@ class Builder(object):
     getInstrumentNames  to translate instrument names
 
     setInstrumentNames  to translate and set instrument names for a node
-
+    
+    midi                property is True if MIDI output is requested
+    
     setMidiInstrument   to set the Midi instrument for a node
     """
     def __init__(self, wizard):
@@ -704,6 +708,9 @@ class Builder(object):
         # keep track of include files:
         self.includeFiles = []
         
+        # keep track of arbitrary code blocks:
+        self.codeBlocks = []
+        
         # version:
         version = unicode(s.lyversion.currentText())
         ly.dom.Version(version, doc)
@@ -730,6 +737,9 @@ class Builder(object):
                 ly.dom.Paper(doc)).after = 1
             ly.dom.BlankLine(doc)
 
+        # insert code blocks here later
+        codeBlockOffset = len(doc)
+
         # get the part list
         parts = self.wizard.parts.partList()
         if parts:
@@ -740,6 +750,12 @@ class Builder(object):
         if language:
             self.include("%s.ly" % language)
 
+        # add code blocks, if any:
+        for code in self.codeBlocks[::-1]:
+            node = isinstance(code, basestring) and ly.dom.Line(code) or code()
+            node.after = 2
+            doc.insert(codeBlockOffset, node)
+        
         # add the files that want to be included at the beginning
         if self.includeFiles:
             doc.insert(2, ly.dom.BlankLine())
@@ -897,6 +913,26 @@ class Builder(object):
         # We don't use a set, because we want to maintain the order.
         if fileName not in self.includeFiles:
             self.includeFiles.append(fileName)
+    
+    def addCodeBlock(self, code):
+        """
+        Adds an arbitary Node to the output file, containing e.g. Scheme
+        functions.
+        
+        The argument is either a string, a function or an iterable (containing
+        other strings, functions and/or iterables).
+        
+        Strings and functions are recursively added to a list (if not already
+        present).  Strings are written directly to the output document, e.g. for
+        added music functions or pieces of Ccheme code.  Functions are called on
+        output time and should return one ly.dom.Node object that is inserted in
+        the output document.
+        """
+        if not isinstance(code, (basestring, types.FunctionType)):
+            for c in code:
+                self.addCodeBlock(c)
+        elif code not in self.codeBlocks:
+            self.codeBlocks.append(code)
 
     def getInstrumentNames(self, names, num=0):
         """

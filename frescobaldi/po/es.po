@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-22 14:42+0100\n"
+"POT-Creation-Date: 2009-11-23 10:48+0100\n"
 "PO-Revision-Date: 2009-11-17 17:42+0100\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
 "Language-Team: Spanish\n"
@@ -2054,7 +2054,7 @@ msgid "Bass"
 msgstr "Bajo"
 
 #: ../python/frescobaldi_app/widgets.py:295
-#: ../python/frescobaldi_app/scorewiz/parts.py:1327
+#: ../python/frescobaldi_app/scorewiz/parts.py:1397
 msgid "Percussion"
 msgstr "Percusión"
 
@@ -2242,11 +2242,11 @@ msgstr ""
 msgid "Which language to use for the instrument names."
 msgstr "El idioma que quiere usar para los nombres de instrumento."
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:719
+#: ../python/frescobaldi_app/scorewiz/__init__.py:726
 msgid "Remove default LilyPond tagline"
 msgstr "Eliminar el pie de página predeterminado de LilyPond"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:998
+#: ../python/frescobaldi_app/scorewiz/__init__.py:1034
 msgid "No settings available."
 msgstr "No hay ajustes disponibles."
 
@@ -2814,179 +2814,188 @@ msgstr "Cada voz tiene diferente letra"
 msgid "Every voice gets a different set of lyrics."
 msgstr "Cada una de las voces recibe un bloque de letras distinto."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:972
+#: ../python/frescobaldi_app/scorewiz/parts.py:951
+#, fuzzy
+msgid "Piano reduction"
+msgstr "Dirección:"
+
+#: ../python/frescobaldi_app/scorewiz/parts.py:953
+msgid "Adds an automatically generated piano reduction."
+msgstr ""
+
+#: ../python/frescobaldi_app/scorewiz/parts.py:976
 msgid "Choir|Ch."
 msgstr "Coro|Co."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1124
+#: ../python/frescobaldi_app/scorewiz/parts.py:1194
 msgid "Piano"
 msgstr "Piano"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1125
+#: ../python/frescobaldi_app/scorewiz/parts.py:1195
 msgid "Piano|Pno."
 msgstr "Piano|P."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1130
+#: ../python/frescobaldi_app/scorewiz/parts.py:1200
 msgid "Harpsichord"
 msgstr "Clave"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1131
+#: ../python/frescobaldi_app/scorewiz/parts.py:1201
 msgid "Harpsichord|Hs."
 msgstr "Clave|Clav."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1136
+#: ../python/frescobaldi_app/scorewiz/parts.py:1206
 msgid "Clavichord"
 msgstr "Clavicordio"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1137
+#: ../python/frescobaldi_app/scorewiz/parts.py:1207
 msgid "Clavichord|Clv."
 msgstr "Clavicordio|Clvc."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1142
+#: ../python/frescobaldi_app/scorewiz/parts.py:1212
 msgid "Organ"
 msgstr "Órgano"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1143
+#: ../python/frescobaldi_app/scorewiz/parts.py:1213
 msgid "Organ|Org."
 msgstr "Órgano|Org."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1148
+#: ../python/frescobaldi_app/scorewiz/parts.py:1218
 msgid "Pedal:"
 msgstr "Pedal:"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1149
+#: ../python/frescobaldi_app/scorewiz/parts.py:1219
 msgid "Set to 0 to disable the pedal altogether."
 msgstr "Establezca a 0 para desactivar el pedal."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1159
+#: ../python/frescobaldi_app/scorewiz/parts.py:1229
 msgid "Celesta"
 msgstr "Celesta"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1160
+#: ../python/frescobaldi_app/scorewiz/parts.py:1230
 msgid "Celesta|Cel."
 msgstr "Celesta|Cel."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1165
+#: ../python/frescobaldi_app/scorewiz/parts.py:1235
 msgid "Timpani"
 msgstr "Timbales"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1166
+#: ../python/frescobaldi_app/scorewiz/parts.py:1236
 msgid "Timpani|Tmp."
 msgstr "Timbales|Tmb."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1173
+#: ../python/frescobaldi_app/scorewiz/parts.py:1243
 msgid "Xylophone"
 msgstr "Xilófono"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1174
+#: ../python/frescobaldi_app/scorewiz/parts.py:1244
 msgid "Xylophone|Xyl."
 msgstr "Xilófono|Xil."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1179
+#: ../python/frescobaldi_app/scorewiz/parts.py:1249
 msgid "Marimba"
 msgstr "Marimba"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1180
+#: ../python/frescobaldi_app/scorewiz/parts.py:1250
 msgid "Marimba|Mar."
 msgstr "Marimba|Mar."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1185
+#: ../python/frescobaldi_app/scorewiz/parts.py:1255
 msgid "Vibraphone"
 msgstr "Vibráfono"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1186
+#: ../python/frescobaldi_app/scorewiz/parts.py:1256
 msgid "Vibraphone|Vib."
 msgstr "Vibráfono|Vib."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1191
+#: ../python/frescobaldi_app/scorewiz/parts.py:1261
 msgid "Tubular bells"
 msgstr "Campanas tubulares"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1192
+#: ../python/frescobaldi_app/scorewiz/parts.py:1262
 msgid "Tubular bells|Tub."
 msgstr "Campanas tubulares|Ca.T."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1197
+#: ../python/frescobaldi_app/scorewiz/parts.py:1267
 msgid "Glockenspiel"
 msgstr "Carrillón"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1198
+#: ../python/frescobaldi_app/scorewiz/parts.py:1268
 msgid "Glockenspiel|Gls."
 msgstr "Carrillón|Carr."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1203
+#: ../python/frescobaldi_app/scorewiz/parts.py:1273
 msgid "Drums"
 msgstr "Percusión"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1204
+#: ../python/frescobaldi_app/scorewiz/parts.py:1274
 msgid "Drums|Dr."
 msgstr "Percusión|Perc."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1214
+#: ../python/frescobaldi_app/scorewiz/parts.py:1284
 msgid "Drums follow here."
 msgstr "La percusión continúa aquí."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1240
+#: ../python/frescobaldi_app/scorewiz/parts.py:1310
 msgid "keep some distance."
 msgstr "guardar una distancia."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1247
+#: ../python/frescobaldi_app/scorewiz/parts.py:1317
 msgid "Style:"
 msgstr "Estilo:"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1251
+#: ../python/frescobaldi_app/scorewiz/parts.py:1321
 msgid "Drums (5 lines, default)"
 msgstr "Tambores (5 líneas, predeterminado)"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1252
+#: ../python/frescobaldi_app/scorewiz/parts.py:1322
 msgid "Timbales-style (2 lines)"
 msgstr "Estilo de timbales (2 líneas)"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1253
+#: ../python/frescobaldi_app/scorewiz/parts.py:1323
 msgid "Congas-style (2 lines)"
 msgstr "Estilo de congas (2 líneas)"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1254
+#: ../python/frescobaldi_app/scorewiz/parts.py:1324
 msgid "Bongos-style (2 lines)"
 msgstr "Estilo de bongos (2 líneas)"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1255
+#: ../python/frescobaldi_app/scorewiz/parts.py:1325
 msgid "Percussion-style (1 line)"
 msgstr "Estilo de percusión (1 línea)"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1256
+#: ../python/frescobaldi_app/scorewiz/parts.py:1326
 msgid "Remove stems"
 msgstr "Eliminar plicas"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1257
+#: ../python/frescobaldi_app/scorewiz/parts.py:1327
 msgid "Remove the stems from the drum notes."
 msgstr "Quitar las plicas de las notas de percusión."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1266
+#: ../python/frescobaldi_app/scorewiz/parts.py:1336
 msgid "Strings"
 msgstr "Instrumentos de cuerda"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1273
+#: ../python/frescobaldi_app/scorewiz/parts.py:1343
 msgid "Plucked strings"
 msgstr "Cuerda pulsada"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1282
+#: ../python/frescobaldi_app/scorewiz/parts.py:1352
 msgid "Woodwinds"
 msgstr "Instrumentos de viento"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1303
+#: ../python/frescobaldi_app/scorewiz/parts.py:1373
 msgid "Brass"
 msgstr "Viento metal"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1311
+#: ../python/frescobaldi_app/scorewiz/parts.py:1381
 msgid "Vocal"
 msgstr "Vocal"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1320
+#: ../python/frescobaldi_app/scorewiz/parts.py:1390
 msgid "Keyboard instruments"
 msgstr "Teclados"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1336
+#: ../python/frescobaldi_app/scorewiz/parts.py:1406
 msgid "Special"
 msgstr "Especial"
 

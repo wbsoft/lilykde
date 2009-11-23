@@ -6,7 +6,8 @@ Changes in 0.7.17 --
   - If the autocompleter does not find any suitable completions, matching
     expansions from the Expansion dialog are shown
 * Score Wizard:
-  - Harp, Guitar and Jazz Guitar now allow multiple voices per staff
+  - Harp, Guitar and Jazz Guitar: allow multiple voices per staff
+  - Choir: checkbox for automatic piano reduction
 * General bugfixes and improvements:
   - When quitting, the last seen documents, starting with the current, are
     closed first. This way, if the user cancels the quit, the current document
