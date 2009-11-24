@@ -27,12 +27,15 @@ Dependencies:
 =============
 
 Frescobaldi depends on:
-- lilypond-kde4 (http://lilykde.googlecode.com/) (not needed in KDE 4.2+)
 - KDE 4.1.2 or higher, esp. kdelibs, kdebase and Okular from kdegraphics
-- Qt 4.4
+- Qt 4.4 or higher
 - Python 2.4, 2.5 or 2.6
+- python-dbus (http://www.freedesktop.org/wiki/Software/DBusBindings#python)
 - PyQt4
 - PyKDE4.
+
+KDE 4.2 or higher is recommended. If you use KDE 4.1, you also need:
+- lilypond-kde4 (http://lilykde.googlecode.com/)
 
 You also might need to install some of the the corresponding -dev packages from
 the above to install Frescobaldi from this source package.
