@@ -1,67 +1,60 @@
-# mostly taken from KDE4Macros.cmake
+# CMake file for installing docbook files for the KDE Helpcenter
 
 find_program(KDE4_MEINPROC_EXECUTABLE NAMES meinproc4 PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH)
 find_program(KDE4_MEINPROC_EXECUTABLE NAMES meinproc4)
 
-macro(create_handbook _docbook)
-  get_filename_component(_input ${_docbook} ABSOLUTE)
-  set(_doc ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2)
+find_file(KDE4_XSL_STYLESHEET NAMES kde-chunk.xsl PATHS ${KDE4_DATA_INSTALL_DIR}/ksgmltools2/customization NO_DEFAULT_PATH)
+
+# This macro can install docbook files and images from the current directory to the
+# correct location for KDE Helpcenter files.  If meinproc and the stylesheets are available,
+# a index.cache.bz2 is generated so the Helpcenter doesn't have to generate one per user.
+macro(create_handbook _docbook _language)
   
-  # style sheet
-  set(_ssheet ${KDE4_DATA_INSTALL_DIR}/ksgmltools2/customization/kde-chunk.xsl)
+  # determine install dir
+  if(NOT _language)
+    set(_lang "en")
+  else(NOT _language)
+    set(_lang ${_language})
+  endif(NOT _language)
+  set(_installdir "${HTML_INSTALL_DIR}/${_lang}/${PROJECT_NAME}")
+  
+  # docbook source files
+  file(GLOB _docbooks *.docbook)
 
-  # all docbook files
-  file(GLOB _docs *.docbook)
-  add_custom_command(
-    OUTPUT ${_doc}
-    COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check --cache ${_doc} ${_input}
-    DEPENDS ${_docs} ${_ssheet}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-  )
+  # images
+  file(GLOB _images *.png)
 
-  get_filename_component(_targ ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-  set(_targ "${_targ}-handbook")
-  add_custom_target(${_targ} ALL DEPENDS ${_doc})
-
-#   set(_htmlDoc ${CMAKE_CURRENT_SOURCE_DIR}/index.html)
-#   add_custom_command(OUTPUT ${_htmlDoc}
-#     COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check -o ${_htmlDoc} ${_input}
-#     DEPENDS ${_input} ${_ssheet}
-#     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-#   )
-#   add_custom_target(htmlhandbook ALL DEPENDS ${_htmlDoc})
-
-  set(_args ${ARGN})
-
-  set(_installDest)
-  if(_args)
-    list(GET _args 0 _tmp)
-    if("${_tmp}" STREQUAL "INSTALL_DESTINATION")
-      list(GET _args 1 _installDest )
-      list(REMOVE_AT _args 0 1)
-    endif("${_tmp}" STREQUAL "INSTALL_DESTINATION")
-  endif(_args)
-
-  get_filename_component(dirname ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
-  if(_args)
-    list(GET _args 0 _tmp)
-    if("${_tmp}" STREQUAL "SUBDIR")
-      list(GET _args 1 dirname )
-      list(REMOVE_AT _args 0 1)
-    endif("${_tmp}" STREQUAL "SUBDIR")
-  endif(_args)
-
-  if(_installDest)
-    file(GLOB _images *.png)
-    install(FILES ${_doc} ${_docs} ${_images} DESTINATION ${_installDest}/${dirname})
-    # TODO symlinks on non-unix platforms
-    if (UNIX)
-      # execute some cmake code on make install which creates the symlink
-      install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${_installDest}/common\"  \"\$ENV{DESTDIR}${_installDest}/${dirname}/common\" )" )
-    endif (UNIX)
-  endif(_installDest)
-
+  # install those directly
+  install(FILES ${_docbooks} ${_images} DESTINATION ${_installdir})
+  
+  # make the ../common symlink
+  install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ../common \"\$ENV{DESTDIR}${_installdir}/common\" )")
+  
+  # if meinproc and the default style sheets are found, install a cached help file
+  if(KDE4_MEINPROC_EXECUTABLE AND KDE4_XSL_STYLESHEET)
+    get_filename_component(_input ${_docbook} ABSOLUTE)
+    set(_cache ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2)
+    add_custom_command(
+      OUTPUT ${_cache}
+      COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check --cache ${_cache} ${_input}
+      DEPENDS ${_docs}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+    get_filename_component(_targ ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+    set(_targ "${_targ}-cache")
+    add_custom_target(${_targ} ALL DEPENDS ${_cache})
+    install(FILES ${_cache} DESTINATION  ${_installdir})
+  else(KDE4_MEINPROC_EXECUTABLE AND KDE4_XSL_STYLESHEET)
+    message(STATUS "The help cache index.cache.bz2 will not be generated:")
+    if(NOT KDE4_MEINPROC_EXECUTABLE)
+      message(STATUS "*** meinproc4 could not be found.")
+    endif(NOT KDE4_MEINPROC_EXECUTABLE)
+    if(NOT KDE4_XSL_STYLESHEET)
+      message(STATUS "*** The KDE XSL StyleSheets could not be found.")
+    endif(NOT KDE4_XSL_STYLESHEET)
+  endif(KDE4_MEINPROC_EXECUTABLE AND KDE4_XSL_STYLESHEET)
 endmacro(create_handbook)
 
 
-create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en SUBDIR ${PROJECT_NAME})
+create_handbook(index.docbook en)
+
