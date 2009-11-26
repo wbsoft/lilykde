@@ -215,6 +215,41 @@ class Tokenizer(object):
                 yield getattr(self, m.lastgroup)(m, self)
                 pos = m.end()
     
+    def freeze(self):
+        """
+        Returns a python list with the frozen state of this tokenizer.
+        """
+        return [(
+                parser.__class__,
+                parser.token,
+                parser.level,
+                parser.argcount,
+            ) for parser in self.state]
+            
+    def thaw(self, frozenState):
+        """
+        Accepts a python list such as returned by freeze(), and restores
+        the state of this tokenizer from it.
+        You should keep track of incomplete String or Comment tokens yourself.
+        """
+        self.state = []
+        for cls, token, level, argcount in frozenState:
+            parser = cls(token, argcount)
+            parser.level = level
+            self.state.append(parser)
+    
+    def endOfIncompleteToken(self, token, text):
+        """
+        Returns the position directly after the text where the incomplete
+        tokens ends in text. Returns -1 if the token still does not end.
+        """
+        try:
+            m = token.end_rx.match(text)
+            if m:
+                return m.end()
+            return -1
+        except AttributeError: # token is not an Incomplete instance
+            return 0
     
     # Classes that represent pieces of lilypond text:
     # base classes:
@@ -238,10 +273,13 @@ class Tokenizer(object):
         def __init__(self, matchObj, tokenizer):
             tokenizer.endArgument()
 
-    class Incomplete(Item):
+    class Incomplete(Token):
         """
         Represents an unfinished item, e.g. string or block comment.
+        the end_rx attribute is a regex that can be used to find its end in
+        a following piece of text.
         """
+        end_rx = None
         pass
 
     class Increaser(Token):
@@ -275,8 +313,9 @@ class Tokenizer(object):
     class String(Item):
         rx = r'"(\\[\\"]|[^"])*"'
 
-    class IncompleteString(Incomplete):
-        rx = r'"(\\[\\"]|[^"])*$'
+    class IncompleteString(Incomplete, String):
+        rx = r'".*$'
+        end_rx = re.compile(r'(\\[\\"]|[^"])*"', re.DOTALL)
         
     class PitchWord(Item):
         rx = r'[a-z]+'
@@ -287,8 +326,21 @@ class Tokenizer(object):
             tokenizer.enter(tokenizer.SchemeParser, self)
 
     class Comment(Token):
-        rx = r'%{.*?%}|%[^\n]*'
-
+        """
+        Base class for LineComment and BlockComment (also Scheme)
+        """
+        pass
+    
+    class LineComment(Comment):
+        rx = r'%[^\n]*'
+        
+    class BlockComment(Comment):
+        rx = r'%\{.*?%\}'
+        
+    class IncompleteBlockComment(Incomplete, Comment):
+        rx = r'%\{.*$'
+        end_rx = re.compile(r'.*?%\}', re.DOTALL)
+        
     class Space(Token):
         rx = r"\s+"
 
@@ -326,7 +378,7 @@ class Tokenizer(object):
         rx = "[-_^][_.>|+^-]"
         
     class EndSchemeLily(Leaver):
-        rx = "#\}"
+        rx = r"#\}"
 
     class SchemeOpenParenthesis(Increaser):
         rx = r"\("
@@ -340,8 +392,15 @@ class Tokenizer(object):
     class SchemeWord(Item):
         rx = r'[^()"{}\s]+'
 
-    class SchemeComment(Token):
-        rx = r";[^\n]*|#!.*?!#"
+    class SchemeLineComment(Comment):
+        rx = r";[^\n]*"
+    
+    class SchemeBlockComment(Comment):
+        rx = r"#!.*?!#"
+        
+    class IncompleteSchemeBlockComment(Incomplete, Comment):
+        rx = r"#!.*$"
+        end_rx = re.compile(r'.*?!#', re.DOTALL)
         
     class SchemeLily(Token):
         rx = "#\{"
@@ -429,7 +488,9 @@ class Tokenizer(object):
     
     # base stuff to parse in LilyPond input
     lilybaseItems = classmethod(lambda cls: (
-        cls.Comment,
+        cls.BlockComment,
+        cls.IncompleteBlockComment,
+        cls.LineComment,
         cls.String,
         cls.IncompleteString,
         cls.EndSchemeLily,
@@ -462,7 +523,9 @@ class Tokenizer(object):
             cls.String,
             cls.IncompleteString,
             cls.SchemeChar,
-            cls.SchemeComment,
+            cls.SchemeLineComment,
+            cls.SchemeBlockComment,
+            cls.IncompleteSchemeBlockComment,
             cls.SchemeOpenParenthesis,
             cls.SchemeCloseParenthesis,
             cls.SchemeLily,

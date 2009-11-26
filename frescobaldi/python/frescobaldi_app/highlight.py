@@ -19,12 +19,12 @@
 
 """
 Very basic LilyPond syntax highlighter for QTextEdit.
-It is currently line-based and maintains no state.
-
 """
 
+import sip
+
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QBrush, QFont, QTextCharFormat, QSyntaxHighlighter
+from PyQt4.QtGui import QBrush, QFont, QTextBlockUserData, QTextCharFormat, QSyntaxHighlighter
 
 import ly.tokenize
 
@@ -54,19 +54,74 @@ class LilyPondHighlighter(QSyntaxHighlighter):
     def __init__(self, document):
         QSyntaxHighlighter.__init__(self, document)
         self.formats = formats()
-        
+    
+    def state(self, block):
+        """ Returns a State instance for block, if any. """
+        if block.isValid():
+            state = block.userData()
+            if isinstance(state, State):
+                return state
+    
     def highlightBlock(self, text):
         text = unicode(text)
         tokenizer = ly.tokenize.Tokenizer()
-        for token in tokenizer.tokens(text):
-            setFormat = (lambda format:
-                self.setFormat(token.pos, len(token), self.formats[format]))
-            if isinstance(token, tokenizer.Command):
-                setFormat('command')
-            elif isinstance(token, tokenizer.String):
-                setFormat('string')
-            elif token in ('{', '}', '<<', '>>', '#{', '#}', '<', '>'):
-                setFormat('delimiter')
-            elif isinstance(token, tokenizer.Comment):
-                setFormat('comment')
+        pos = 0
+        
+        prev = self.state(self.currentBlock().previous())
+        cur = self.state(self.currentBlock())
+        if prev:
+            tokenizer.thaw(prev.frozenState)
+            if isinstance(prev.lastToken, tokenizer.Incomplete):
+                pos = tokenizer.endOfIncompleteToken(prev.lastToken, text)
+                if isinstance(prev.lastToken, tokenizer.Comment):
+                    format = 'comment'
+                else:
+                    format = 'string' # there are no other incomplete types
+                if pos == -1:
+                    # whole text
+                    self.setFormat(0, len(text), self.formats[format])
+                else:
+                    self.setFormat(0, pos, self.formats[format])
+        if pos != -1:
+            token = None # in case this loop does not run at all
+            for token in tokenizer.tokens(text, pos):
+                setFormat = (lambda format:
+                    self.setFormat(token.pos, len(token), self.formats[format]))
+                if isinstance(token, tokenizer.Command):
+                    setFormat('command')
+                elif isinstance(token, tokenizer.String):
+                    setFormat('string')
+                elif token in ('{', '}', '<<', '>>', '#{', '#}', '<', '>'):
+                    setFormat('delimiter')
+                elif isinstance(token, tokenizer.Comment):
+                    setFormat('comment')
+            state = State(tokenizer.freeze(), token)
+        else:
+            state = State(prev.frozenState, prev.lastToken) # copy
+        if not state.matches(cur):
+            self.setCurrentBlockUserData(state)
+            # avoid delete by python
+            sip.transferto(state, self.currentBlock())
+            # trigger redraw
+            self.setCurrentBlockState(1 - abs(self.currentBlockState()))
+
+
+class State(QTextBlockUserData):
+    def __init__(self, frozenState, lastToken = None):
+        QTextBlockUserData.__init__(self)
+        self.frozenState = frozenState
+        self.lastToken = lastToken
+
+    def matches(self, other):
+        if not isinstance(other, State):
+            return False
+        if self.frozenState != other.frozenState:
+            return False
+        selfi = isinstance(self.lastToken, ly.tokenize.Tokenizer.Incomplete)
+        otheri = isinstance(other.lastToken, ly.tokenize.Tokenizer.Incomplete)
+        if (selfi and otheri):
+            return self.lastToken.__class__ is other.lastToken.__class__
+        else:
+            return not selfi and not otheri
+
 
