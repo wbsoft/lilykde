@@ -71,9 +71,9 @@ class LilyPondHighlighter(QSyntaxHighlighter):
         cur = self.state(self.currentBlock())
         if prev:
             tokenizer.thaw(prev.frozenState)
-            if isinstance(prev.lastToken, tokenizer.Incomplete):
-                pos = tokenizer.endOfIncompleteToken(prev.lastToken, text)
-                if isinstance(prev.lastToken, tokenizer.Comment):
+            if prev.incomplete:
+                pos = tokenizer.endOfIncompleteToken(prev.incomplete, text)
+                if issubclass(prev.incomplete, tokenizer.Comment):
                     format = 'comment'
                 else:
                     format = 'string' # there are no other incomplete types
@@ -97,11 +97,11 @@ class LilyPondHighlighter(QSyntaxHighlighter):
                     setFormat('comment')
             state = State(tokenizer.freeze(), token)
         else:
-            state = State(prev.frozenState, prev.lastToken) # copy
+            state = prev.copy()
         if not state.matches(cur):
             self.setCurrentBlockUserData(state)
             # avoid delete by python
-            sip.transferto(state, self.currentBlock())
+            #sip.transferto(state, None)
             # trigger redraw
             self.setCurrentBlockState(1 - abs(self.currentBlockState()))
 
@@ -110,18 +110,21 @@ class State(QTextBlockUserData):
     def __init__(self, frozenState, lastToken = None):
         QTextBlockUserData.__init__(self)
         self.frozenState = frozenState
-        self.lastToken = lastToken
+        if isinstance(lastToken, ly.tokenize.Tokenizer.Incomplete):
+            self.incomplete = lastToken.__class__
+        else:
+            self.incomplete = None
 
+    def copy(self):
+        copy = State(self.frozenState)
+        copy.incomplete = self.incomplete
+        return copy
+        
     def matches(self, other):
         if not isinstance(other, State):
             return False
         if self.frozenState != other.frozenState:
             return False
-        selfi = isinstance(self.lastToken, ly.tokenize.Tokenizer.Incomplete)
-        otheri = isinstance(other.lastToken, ly.tokenize.Tokenizer.Incomplete)
-        if (selfi and otheri):
-            return self.lastToken.__class__ is other.lastToken.__class__
-        else:
-            return not selfi and not otheri
+        return self.incomplete is other.incomplete
 
 

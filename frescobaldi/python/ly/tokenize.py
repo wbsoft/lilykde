@@ -241,7 +241,8 @@ class Tokenizer(object):
     def endOfIncompleteToken(self, token, text):
         """
         Returns the position directly after the text where the incomplete
-        tokens ends in text. Returns -1 if the token still does not end.
+        token (or its class) ends in text.
+        Returns -1 if the token still does not end.
         """
         try:
             m = token.end_rx.match(text)
