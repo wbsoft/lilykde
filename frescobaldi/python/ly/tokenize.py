@@ -675,32 +675,27 @@ class LangTokenizer(LangReaderMixin, Tokenizer):
     pass
 
 
-class State(object):
+class State(tuple):
     """
-    Can store the frozen state of a Tokenizer instance.
+    Can store the frozen state of a Tokenizer instance in an immutable object.
     """
-    def __init__(self, tokenizer):
-        self.state = [(
+    def __new__(cls, tokenizer):
+        return tuple.__new__(cls,
+            (tuple((
                 parser.__class__,
                 parser.token,
                 parser.level,
                 parser.argcount,
-            ) for parser in tokenizer.state]
-        self.incomplete = tokenizer.incomplete
-        
+            ) for parser in tokenizer.state),
+            tokenizer.incomplete))
+            
     def restore(self, tokenizer):
         tokenizer.state = []
-        for cls, token, level, argcount in self.state:
+        state, tokenizer.incomplete = self
+        for cls, token, level, argcount in state:
             parser = cls(token, argcount)
             parser.level = level
             tokenizer.state.append(parser)
-        tokenizer.incomplete = self.incomplete
-
-    def matches(self, other):
-        """
-        Returns true if both States are the same.
-        """
-        return self.state is other.state and self.incomplete is other.incomplete
 
 
 class Cursor(object):

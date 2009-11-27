@@ -18,13 +18,11 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 """
-Very basic LilyPond syntax highlighter for QTextEdit.
+Basic LilyPond syntax highlighter for QTextEdit.
 """
 
-import sip
-
-from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QBrush, QFont, QTextBlockUserData, QTextCharFormat, QSyntaxHighlighter
+from PyQt4.QtCore import QObject, Qt, SIGNAL
+from PyQt4.QtGui import QBrush, QFont, QTextCharFormat, QSyntaxHighlighter
 
 import ly.tokenize
 
@@ -54,22 +52,24 @@ class LilyPondHighlighter(QSyntaxHighlighter):
     def __init__(self, document):
         QSyntaxHighlighter.__init__(self, document)
         self.formats = formats()
+        self.state = {}
+        self.counter = 0
+        QObject.connect(document, SIGNAL("blockCountChanged(int)"),
+            self.slotBlockCountChanged)
     
-    def state(self, block):
-        """ Returns a State instance for block, if any. """
-        if block.isValid():
-            state = block.userData()
-            if isinstance(state, State):
-                return state
-    
+    def slotBlockCountChanged(self, count):
+        """ Delete state for removed lines. """
+        states = set(self.document().findBlockByNumber(b).userState()
+            for b in range(count))
+        for key in set(self.state.keys()) - states:
+            del self.state[key]
+        
     def highlightBlock(self, text):
         text = unicode(text)
         tokenizer = ly.tokenize.Tokenizer()
-        
-        prev = self.state(self.currentBlock().previous())
-        cur = self.state(self.currentBlock())
-        if prev:
-            tokenizer.thaw(prev.state)
+        previous = self.state.get(self.previousBlockState())
+        if previous:
+            tokenizer.thaw(previous)
         for token in tokenizer.tokens(text):
             setFormat = (lambda format:
                 self.setFormat(token.pos, len(token), self.formats[format]))
@@ -81,25 +81,13 @@ class LilyPondHighlighter(QSyntaxHighlighter):
                 setFormat('delimiter')
             elif isinstance(token, tokenizer.Comment):
                 setFormat('comment')
-        state = State(tokenizer.freeze())
-        if not state.matches(cur):
-            self.setCurrentBlockUserData(state)
-            # avoid delete by python
-            try:
-                sip.transferto(state, self.currentBlock())
-            except TypeError:
-                pass # if this fail (sip 4.9+) it wasn't necessary
-            # trigger redraw
-            self.setCurrentBlockState(1 - abs(self.currentBlockState()))
+        state = tokenizer.freeze()
+        current = self.state.get(self.currentBlockState())
+        if state is not current:
+            if current:
+                del self.state[self.currentBlockState()]
+            self.state[self.counter] = state
+            self.setCurrentBlockState(self.counter)
+            self.counter += 1
 
 
-class State(QTextBlockUserData):
-    def __init__(self, state):
-        QTextBlockUserData.__init__(self)
-        self.state = state
-
-    def matches(self, other):
-        if not isinstance(other, State):
-            return False
-        return self.state.matches(other.state)
-        
