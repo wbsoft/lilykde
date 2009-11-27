@@ -81,6 +81,11 @@ Name=Header: No Tagline
 Name[nl]=Kopregels: geen tagline
 Text=tagline = ##f
 
+[tagline]
+Name=Tagline with date and LilyPond version
+Name[nl]=Tagline met datum en LilyPond-versie
+Text=tagline = \\markup {\n  Engraved at\n  \\simple #(strftime "%d-%m-%Y" (localtime (current-time)))\n  with \\with-url #"http://lilypond.org/web/"\n  { LilyPond \\simple #(lilypond-version) (http://lilypond.org/) }\n}
+
 [lyr]
 Name=Lyric Stanza
 Name[nl]=Couplet liedtekst
@@ -257,7 +262,7 @@ Text=<< { (|) } \\\\ {  } >>
 [2l]
 Name=Two voices (long)
 Name[nl]=Twee stemmen (lang)
-Text=<< \n  {\n    (|)\n  }\n  {\n    \n  }\n>>
+Text=<< \n  {\n    (|)\n  } \\\\\n  {\n    \n  }\n>>
 
 [l]
 Name=New Lyrics
@@ -268,4 +273,29 @@ Text=\\new Lyrics \\lyricsto = "(|)" { }\n
 Name=Triplet
 Name[nl]=Triool
 Text=\\times 2/3 { (|) }
+
+[v1]
+Name=Voice One
+Name[nl]=Stem 1 (\\voiceOne)
+Text=\\voiceOne
+
+[v2]
+Name=Voice Two
+Name[nl]=Stem 2 (\\voiceTwo)
+Text=\\voiceTwo
+
+[v3]
+Name=Voice Three
+Name[nl]=Stem 3 (\\voiceThree)
+Text=\\voiceThree
+
+[v4]
+Name=Voice Four
+Name[nl]=Stem 4 (\\voiceFour)
+Text=\\voiceFour
+
+[1v]
+Name=One Voice
+Name[nl]=Eenstemmig (\\oneVoice)
+Text=\\oneVoice
 

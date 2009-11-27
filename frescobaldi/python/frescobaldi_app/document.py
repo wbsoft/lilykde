@@ -277,7 +277,7 @@ class DocumentManipulator(object):
         if start.column() > 0:
             start.setColumn(0)
         if end.column() > 0:
-            if end.line() < self.doc.doc.lines():
+            if end.line() < self.doc.doc.lines() - 1:
                 end.setColumn(0)
                 end.setLine(end.line() + 1)
             else:

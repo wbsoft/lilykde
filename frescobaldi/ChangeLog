@@ -16,10 +16,14 @@ Changes in 0.7.17 --
   - Files can be opened by dropping them on the Frescobaldi window
   - Fix crash when swichting to a document opened using the Open File dialog
     when multiple files were opened at the same time
+  - All pitch manipulation functions better detect the end of unbracketed markup
+    expressions like: g g g-\markup \sharp g g g.  Frescobaldo now knows the
+    number of arguments each markup command has and will not mistake the g after
+    \sharp for a markup argument.
 * Installation:
   - building and installing the User Guide has been improved. If meinproc4 or
     the XSL stylesheets can't be found, only a warning is printed and the cache
-    file (index.cache.bz2) is not pregenerated, but the install will continue.
+    file (index.cache.bz2) is not pre-generated, but the install will continue.
     (If there is no cache file, KHelpcenter will generate one on a per-user
     basis as soon as the User Guide is displayed for the first time.)
 * Translations:

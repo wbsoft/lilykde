@@ -211,6 +211,7 @@ class Tokenizer(object):
                 # we found the end
                 yield self.incomplete(m, self)
                 pos = m.end()
+                self.incomplete = None
             else:
                 # the incomplete token is still continuing...
                 if pos < len(text):
@@ -220,22 +221,18 @@ class Tokenizer(object):
                 return
                     
         tokenClass = None
-        while True:
-            m = self.state[-1].pattern.search(text, pos)
-            if m:
-                if pos < m.start():
-                    yield self.Unparsed(text[pos:m.start()], pos)
-                tokenClass = getattr(self, m.lastgroup)
-                yield tokenClass(m, self)
-                pos = m.end()
-            else:
-                if pos < len(text):
-                    yield self.Unparsed(text[pos:], pos)
-                if tokenClass and issubclass(tokenClass, self.Incomplete):
-                    self.incomplete = tokenClass
-                else:
-                    self.incomplete = None
-                return
+        m = self.parser().parse(text, pos)
+        while m:
+            if pos < m.start():
+                yield self.Unparsed(text[pos:m.start()], pos)
+            tokenClass = getattr(self, m.lastgroup)
+            yield tokenClass(m, self)
+            pos = m.end()
+            m = self.parser().parse(text, pos)
+        if pos < len(text):
+            yield self.Unparsed(text[pos:], pos)
+        if tokenClass and issubclass(tokenClass, self.Incomplete):
+            self.incomplete = tokenClass
     
     def freeze(self):
         """
@@ -261,6 +258,7 @@ class Tokenizer(object):
             parser = cls(token, argcount)
             parser.level = level
             self.state.append(parser)
+    
     
     # Classes that represent pieces of lilypond text:
     # base classes:
@@ -437,11 +435,16 @@ class Tokenizer(object):
             
     class MarkupCommand(Command):
         def __init__(self, matchObj, tokenizer):
-            if matchObj.group() == "\\combine":
-                argcount = 2
+            command = self[1:]
+            if command in ly.words.markupcommands_nargs[0]:
+                tokenizer.endArgument()
             else:
-                argcount = 1
-            tokenizer.enter(tokenizer.MarkupParser, self, argcount)
+                for argcount in 2, 3, 4:
+                    if command in ly.words.markupcommands_nargs[argcount]:
+                        break
+                else:
+                    argcount = 1
+                tokenizer.enter(tokenizer.MarkupParser, self, argcount)
 
     class MarkupWord(Item):
         rx = r'[^{}"\\\s#]+'
@@ -502,7 +505,10 @@ class Tokenizer(object):
             if argcount is not None:
                 self.argcount = argcount
 
-    
+        def parse(self, text, pos):
+            return self.pattern.search(text, pos)
+
+
     # base stuff to parse in LilyPond input
     lilybaseItems = classmethod(lambda cls: (
         cls.BlockComment,
