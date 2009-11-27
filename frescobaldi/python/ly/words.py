@@ -583,6 +583,7 @@ markupcommands_nargs = (
     'override',
     'pad-around',
     'pad-markup',
+    'pad-x',
     'raise',
     'rotate',
     'translate',
