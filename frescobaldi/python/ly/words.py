@@ -42,9 +42,18 @@ keywords = (
     #'type',
     'version',
     'score',
-    'score {}',
     'book',
     'bookpart',
+    'header',
+    'paper',
+    'midi',
+    'layout',
+    'with',
+    'context',
+)
+
+keywords_completion = (
+    'score {}',
     'header {}',
     'paper {}',
     'midi {}',
@@ -53,20 +62,18 @@ keywords = (
     'context {}',
 )
 
-
 musiccommands = (
     'accent',
     'accentus',
     'acciaccatura',
     'addInstrumentDefinition',
     'addlyrics',
-    'addlyrics {}',
     'addQuote',
     'afterGrace',
     'afterGraceFraction',
     'aikenHeads',
     'allowPageTurn',
-    'alternative {}',
+    'alternative',
     'AncientRemoveEmptyStaffContext',
     'applyContext',
     'applyMusic',
@@ -108,7 +115,7 @@ musiccommands = (
     'caesura',
     'cavum',
     'change',
-    'chordmode {}',
+    'chordmode',
     'chordNameSeparator',
     'chordPrefixSpacer',
     'chordRootNamer',
@@ -153,7 +160,7 @@ musiccommands = (
     'downbow',
     'downmordent',
     'downprall',
-    'drummode {}',
+    'drummode',
     'drumPitchTable',
     'drums',
     'dynamicDown',
@@ -183,7 +190,7 @@ musiccommands = (
     'ff',
     'fff',
     'ffff',
-    'figuremode {}',
+    'figuremode',
     'figures',
     'finalis',
     'fingeringOrientations',
@@ -218,7 +225,7 @@ musiccommands = (
     'instrumentTransposition',
     'interscoreline',
     'italianChords',
-    'keepWithTag #\'',
+    'keepWithTag',
     'key',
     'killCues',
     'label',
@@ -232,7 +239,6 @@ musiccommands = (
     'longfermata',
     'ltoe',
     'lyricmode',
-    'lyricmode {}',
     'lyrics',
     'lyricsto',
     'maininput',
@@ -262,7 +268,7 @@ musiccommands = (
     'noPageBreak',
     'noPageTurn',
     'normalsize',
-    'notemode {}',
+    'notemode',
     'numericTimeSignature',
     'octaveCheck',
     'oldaddlyrics',
@@ -311,10 +317,9 @@ musiccommands = (
     'quilisma',
     'quoteDuring',
     'relative',
-    'relative c\' {}',
     'RemoveEmptyRhythmicStaffContext',
     'RemoveEmptyStaffContext',
-    'removeWithTag #\'',
+    'removeWithTag',
     'repeat',
     'repeatTie',
     'resetRelativeOctave',
@@ -414,7 +419,7 @@ musiccommands = (
     'tupletNeutral',
     'tupletUp',
     'turn',
-    'tweak #\'',
+    'tweak',
     'unaCorda',
     'unfoldRepeats',
     'unHideNotes',
@@ -439,7 +444,22 @@ musiccommands = (
     'voiceTwoStyle',
     'whiteTriangleMarkup',
     'withMusicProperty',
-    )
+)
+
+
+musiccommands_completion = (
+    'addlyrics {}',
+    'alternative {}',
+    'chordmode {}',
+    'drummode {}',
+    'figuremode',
+    'keepWithTag #\'',
+    'lyricmode {}',
+    'notemode {}',
+    'relative c\' {}',
+    'removeWithTag #\'',
+    'tweak #\'',
+)
 
 
 modes = (
@@ -575,7 +595,7 @@ markupcommands = (
     'with-dimensions',
     'with-url',
     'wordwrap',
-    )
+)
 
 
 markuplistcommands = (
@@ -585,7 +605,7 @@ markuplistcommands = (
     'wordwrap-internal',
     'wordwrap-lines',
     'wordwrap-string-internal',
-    )
+)
 
 
 contexts = (
@@ -615,7 +635,7 @@ contexts = (
     'VaticanaStaff',
     'VaticanaVoice',
     'Voice',
-    )
+)
 
 
 engravers = (
@@ -749,7 +769,7 @@ engravers = (
     'Vertical_align_engraver',
     'Vertically_spaced_contexts_engraver',
     'Volta_engraver',
-    )
+)
 
 
 midi_instruments = (
@@ -922,7 +942,7 @@ midi_instruments = (
     'mt-32 drums',
     'cm-64 kit',
     'cm-64 drums',
-    )
+)
 
 
 grobs = (
@@ -1054,7 +1074,7 @@ grobs = (
     'VoiceFollower',
     'VoltaBracket',
     'VoltaBracketSpanner',
-    )
+)
 
 
 def schemeprops(grob = None):
@@ -1286,7 +1306,7 @@ all_user_grob_properties = (
     'Y-offset',
     'zigzag-length',
     'zigzag-width',
-    )
+)
 
 
 schemefuncs = (
@@ -1318,7 +1338,7 @@ schemefuncs = (
     'color?',
     'rgb-color',
     'x11-color \'',
-    )
+)
 
 
 headervars = (
@@ -1352,7 +1372,7 @@ headervars = (
     'lastupdated',
     'texidoc',
     'footer',
-    )
+)
     
 
 papervars = (
@@ -1405,14 +1425,14 @@ papervars = (
     'scoreTitleMarkup',
     'tocItemMarkup',
     'tocTitleMarkup',
-    )
+)
 
 
 layoutvars = (
     'indent',
     'short-indent',
     'system-count',
-    )
+)
 
 
 contextproperties = (
@@ -1567,7 +1587,7 @@ contextproperties = (
     'voltaOnThisStaff', 
     'voltaSpannerDuration', 
     'whichBar', 
-    )
+)
 
 
 repeat_types = (
@@ -1575,7 +1595,7 @@ repeat_types = (
     'percent',
     'volta',
     'tremolo',
-    )
+)
 
 
 accidentalstyles = (
@@ -1593,7 +1613,7 @@ accidentalstyles = (
     'teaching',
     'no-reset',
     'forget',
-    )
+)
 
 
 clefs_plain = (
@@ -1613,13 +1633,13 @@ clefs_plain = (
     'baritone',
     'percussion',
     'tab',
-    )
+)
     
 
 clefs = clefs_plain + (
     'treble_8',
     'bass_8',
-    )
+)
 
 
 break_visibility = (
@@ -1630,7 +1650,8 @@ break_visibility = (
     'begin-of-line-invisible',
     'end-of-line-invisible',
     'center-invisible',
-    )
+)
+
 
 set_context_re = re.compile(r'\\(un)?set\s+(' + '|'.join(contexts) + r')\s*.\s*$')
 context_re = re.compile(r'\b(' + '|'.join(contexts) + r')\s*\.\s*$')

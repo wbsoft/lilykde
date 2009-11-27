@@ -24,11 +24,18 @@ Basic LilyPond syntax highlighter for QTextEdit.
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QBrush, QFont, QTextCharFormat, QSyntaxHighlighter
 
-import ly.tokenize
+import ly.tokenize, ly.words
+
+_keywords = (
+    ly.words.keywords + ly.words.musiccommands + ly.words.markupcommands +
+    ly.words.markuplistcommands + ly.words.modes)
 
 def formats():
     command = QTextCharFormat()
     command.setForeground(QBrush(Qt.darkBlue))
+    
+    keyword = QTextCharFormat(command)
+    keyword.setFontWeight(QFont.Bold)
 
     string = QTextCharFormat()
     string.setForeground(QBrush(Qt.darkRed))
@@ -43,6 +50,9 @@ def formats():
     special = QTextCharFormat()
     special.setFontWeight(QFont.Bold)
     special.setForeground(QBrush(Qt.red))
+    
+    scheme = QTextCharFormat()
+    scheme.setForeground(QBrush(Qt.darkGreen))
     
     return locals()
     
@@ -61,16 +71,19 @@ class LilyPondHighlighter(QSyntaxHighlighter):
         if 0 <= previous < len(self.state):
             tokenizer.thaw(self.state[previous])
         for token in tokenizer.tokens(text):
-            setFormat = (lambda format:
-                self.setFormat(token.pos, len(token), self.formats[format]))
             if isinstance(token, tokenizer.Command):
-                setFormat('command')
+                format = token[1:] in _keywords and 'keyword' or 'command'
             elif isinstance(token, tokenizer.String):
-                setFormat('string')
+                format = 'string'
             elif token in ('{', '}', '<<', '>>', '#{', '#}', '<', '>'):
-                setFormat('delimiter')
+                format = 'delimiter'
             elif isinstance(token, tokenizer.Comment):
-                setFormat('comment')
+                format = 'comment'
+            elif isinstance(token, tokenizer.SchemeToken):
+                format = 'scheme'
+            else:
+                continue
+            self.setFormat(token.pos, len(token), self.formats[format])
         state = tokenizer.freeze()
         try:
             self.setCurrentBlockState(self.state.index(state))

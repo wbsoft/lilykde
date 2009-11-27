@@ -228,10 +228,13 @@ def findMatches(model, view, word, invocationType):
                 return ly.words.markupcommands + ly.words.markuplistcommands
             else:
                 return ly.words.markupcommands
-        elif tokenizer.parser().token == "\\context":
-            return ly.words.contexts + ly.words.keywords + ly.words.musiccommands + lilypondVersion()
+        commands = (ly.words.keywords + ly.words.keywords_completion
+            + ly.words.musiccommands + ly.words.musiccommands_completion
+            + lilypondVersion())
+        if tokenizer.parser().token == "\\context":
+            return commands + ly.words.contexts
         else:
-            return ly.words.keywords + ly.words.musiccommands + lilypondVersion()
+            return commands
 
     if isinstance(tokenizer.parser(), tokenizer.SchemeParser):
         # is the last token the scheme-introducing '#' ?

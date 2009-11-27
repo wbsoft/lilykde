@@ -329,17 +329,20 @@ class Tokenizer(object):
         end_rx = re.compile(r'(\\[\\"]|[^"])*"', re.DOTALL)
         
     class PitchWord(Item):
-        rx = r'[a-z]+'
+        """ A word with just alphanumeric letters """
+        rx = r'[A-Za-z]+'
         
-    class Scheme(Token):
+    class SchemeToken(Token):
+        """ Base class for Scheme tokens. """
+        pass
+    
+    class Scheme(SchemeToken):
         rx = "#"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.SchemeParser, self)
 
     class Comment(Token):
-        """
-        Base class for LineComment and BlockComment (also Scheme)
-        """
+        """ Base class for LineComment and BlockComment (also Scheme) """
         pass
     
     class LineComment(Comment):
@@ -391,25 +394,28 @@ class Tokenizer(object):
     class EndSchemeLily(Leaver):
         rx = r"#\}"
 
-    class SchemeOpenParenthesis(Increaser):
+    class SchemeOpenParenthesis(Increaser, SchemeToken):
         rx = r"\("
 
-    class SchemeCloseParenthesis(Decreaser):
+    class SchemeCloseParenthesis(Decreaser, SchemeToken):
         rx = r"\)"
 
-    class SchemeChar(Item):
+    class SchemeQuote(SchemeToken):
+        rx = r"[',`]"
+    
+    class SchemeChar(Item, SchemeToken):
         rx = r'#\\([a-z]+|.)'
 
-    class SchemeWord(Item):
+    class SchemeWord(Item, SchemeToken):
         rx = r'[^()"{}\s]+'
 
-    class SchemeLineComment(Comment):
+    class SchemeLineComment(Comment, SchemeToken):
         rx = r";[^\n]*"
     
-    class SchemeBlockComment(Comment):
+    class SchemeBlockComment(Comment, SchemeToken):
         rx = r"#!.*?!#"
         
-    class IncompleteSchemeBlockComment(Incomplete, Comment):
+    class IncompleteSchemeBlockComment(Incomplete, Comment, SchemeToken):
         rx = r"#!.*$"
         end_rx = re.compile(r'.*?!#', re.DOTALL)
         
@@ -438,7 +444,7 @@ class Tokenizer(object):
             tokenizer.enter(tokenizer.MarkupParser, self, argcount)
 
     class MarkupWord(Item):
-        rx = r'[^{}"\\\s]+'
+        rx = r'[^{}"\\\s#]+'
 
     class LyricMode(Command):
         rx = r'\\(lyricmode|((old)?add)?lyrics|lyricsto)\b'
@@ -534,6 +540,7 @@ class Tokenizer(object):
             cls.String,
             cls.IncompleteString,
             cls.SchemeChar,
+            cls.SchemeQuote,
             cls.SchemeLineComment,
             cls.SchemeBlockComment,
             cls.IncompleteSchemeBlockComment,
