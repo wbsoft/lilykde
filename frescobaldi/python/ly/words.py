@@ -452,12 +452,13 @@ musiccommands_completion = (
     'alternative {}',
     'chordmode {}',
     'drummode {}',
-    'figuremode',
+    'figuremode {}',
     'keepWithTag #\'',
     'lyricmode {}',
     'notemode {}',
     'relative c\' {}',
     'removeWithTag #\'',
+    'tag #\'',
     'tweak #\'',
 )
 
