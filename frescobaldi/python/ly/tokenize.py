@@ -239,17 +239,28 @@ class Tokenizer(object):
     
     def freeze(self):
         """
-        Returns the frozen state of this tokenizer.
+        Returns the frozen state of this tokenizer as an immutable tuple
         """
-        return State(self)
+        return (
+            tuple((
+                    parser.__class__,
+                    parser.token,
+                    parser.level,
+                    parser.argcount,
+                ) for parser in self.state),
+            self.incomplete)
             
-    def thaw(self, state):
+    def thaw(self, frozenState):
         """
-        Accepts a State object such as returned by freeze(), and restores
+        Accepts a tuple such as returned by freeze(), and restores
         the state of this tokenizer from it.
         """
-        state.restore(self)
-        
+        state, self.incomplete = frozenState
+        self.state = []
+        for cls, token, level, argcount in state:
+            parser = cls(token, argcount)
+            parser.level = level
+            self.state.append(parser)
     
     # Classes that represent pieces of lilypond text:
     # base classes:
@@ -673,29 +684,6 @@ class LangTokenizer(LangReaderMixin, Tokenizer):
     Basic Tokenizer which keeps the current pitch language.
     """
     pass
-
-
-class State(tuple):
-    """
-    Can store the frozen state of a Tokenizer instance in an immutable object.
-    """
-    def __new__(cls, tokenizer):
-        return tuple.__new__(cls,
-            (tuple((
-                parser.__class__,
-                parser.token,
-                parser.level,
-                parser.argcount,
-            ) for parser in tokenizer.state),
-            tokenizer.incomplete))
-            
-    def restore(self, tokenizer):
-        tokenizer.state = []
-        state, tokenizer.incomplete = self
-        for cls, token, level, argcount in state:
-            parser = cls(token, argcount)
-            parser.level = level
-            tokenizer.state.append(parser)
 
 
 class Cursor(object):

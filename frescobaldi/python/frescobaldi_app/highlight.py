@@ -21,7 +21,7 @@
 Basic LilyPond syntax highlighter for QTextEdit.
 """
 
-from PyQt4.QtCore import QObject, Qt, SIGNAL
+from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QBrush, QFont, QTextCharFormat, QSyntaxHighlighter
 
 import ly.tokenize
@@ -52,24 +52,14 @@ class LilyPondHighlighter(QSyntaxHighlighter):
     def __init__(self, document):
         QSyntaxHighlighter.__init__(self, document)
         self.formats = formats()
-        self.state = {}
-        self.counter = 0
-        QObject.connect(document, SIGNAL("blockCountChanged(int)"),
-            self.slotBlockCountChanged)
-    
-    def slotBlockCountChanged(self, count):
-        """ Delete state for removed lines. """
-        states = set(self.document().findBlockByNumber(b).userState()
-            for b in range(count))
-        for key in set(self.state.keys()) - states:
-            del self.state[key]
-        
+        self.state = []
+
     def highlightBlock(self, text):
         text = unicode(text)
         tokenizer = ly.tokenize.Tokenizer()
-        previous = self.state.get(self.previousBlockState())
-        if previous:
-            tokenizer.thaw(previous)
+        previous = self.previousBlockState()
+        if 0 <= previous < len(self.state):
+            tokenizer.thaw(self.state[previous])
         for token in tokenizer.tokens(text):
             setFormat = (lambda format:
                 self.setFormat(token.pos, len(token), self.formats[format]))
@@ -82,12 +72,9 @@ class LilyPondHighlighter(QSyntaxHighlighter):
             elif isinstance(token, tokenizer.Comment):
                 setFormat('comment')
         state = tokenizer.freeze()
-        current = self.state.get(self.currentBlockState())
-        if state is not current:
-            if current:
-                del self.state[self.currentBlockState()]
-            self.state[self.counter] = state
-            self.setCurrentBlockState(self.counter)
-            self.counter += 1
-
+        try:
+            self.setCurrentBlockState(self.state.index(state))
+        except ValueError:
+            self.setCurrentBlockState(len(self.state))
+            self.state.append(state)
 
