@@ -208,16 +208,18 @@ class Tokenizer(object):
             # last token parsed was incomplete, continue now
             m = self.incomplete.end_rx.match(text, pos)
             if m:
+                # we found the end
                 yield self.incomplete(m, self)
                 pos = m.end()
             else:
+                # the incomplete token is still continuing...
                 if pos < len(text):
                     token = unicode.__new__(self.incomplete, text[pos:])
                     token.pos, token.end = pos, len(text)
                     yield token
                 return
                     
-        tokenClass = type(None)
+        tokenClass = None
         while True:
             m = self.state[-1].pattern.search(text, pos)
             if m:
@@ -229,8 +231,10 @@ class Tokenizer(object):
             else:
                 if pos < len(text):
                     yield self.Unparsed(text[pos:], pos)
-                self.incomplete = (issubclass(tokenClass, self.Incomplete)
-                    and tokenClass or None)
+                if tokenClass and issubclass(tokenClass, self.Incomplete):
+                    self.incomplete = tokenClass
+                else:
+                    self.incomplete = None
                 return
     
     def freeze(self):
