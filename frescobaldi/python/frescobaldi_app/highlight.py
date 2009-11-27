@@ -65,66 +65,41 @@ class LilyPondHighlighter(QSyntaxHighlighter):
     def highlightBlock(self, text):
         text = unicode(text)
         tokenizer = ly.tokenize.Tokenizer()
-        pos = 0
         
         prev = self.state(self.currentBlock().previous())
         cur = self.state(self.currentBlock())
         if prev:
-            tokenizer.thaw(prev.frozenState)
-            if prev.incomplete:
-                pos = tokenizer.endOfIncompleteToken(prev.incomplete, text)
-                if issubclass(prev.incomplete, tokenizer.Comment):
-                    format = 'comment'
-                else:
-                    format = 'string' # there are no other incomplete types
-                if pos == -1:
-                    # whole text
-                    self.setFormat(0, len(text), self.formats[format])
-                else:
-                    self.setFormat(0, pos, self.formats[format])
-        if pos != -1:
-            token = None # in case this loop does not run at all
-            for token in tokenizer.tokens(text, pos):
-                setFormat = (lambda format:
-                    self.setFormat(token.pos, len(token), self.formats[format]))
-                if isinstance(token, tokenizer.Command):
-                    setFormat('command')
-                elif isinstance(token, tokenizer.String):
-                    setFormat('string')
-                elif token in ('{', '}', '<<', '>>', '#{', '#}', '<', '>'):
-                    setFormat('delimiter')
-                elif isinstance(token, tokenizer.Comment):
-                    setFormat('comment')
-            state = State(tokenizer.freeze(), token)
-        else:
-            state = prev.copy()
+            tokenizer.thaw(prev.state)
+        for token in tokenizer.tokens(text):
+            setFormat = (lambda format:
+                self.setFormat(token.pos, len(token), self.formats[format]))
+            if isinstance(token, tokenizer.Command):
+                setFormat('command')
+            elif isinstance(token, tokenizer.String):
+                setFormat('string')
+            elif token in ('{', '}', '<<', '>>', '#{', '#}', '<', '>'):
+                setFormat('delimiter')
+            elif isinstance(token, tokenizer.Comment):
+                setFormat('comment')
+        state = State(tokenizer.freeze())
         if not state.matches(cur):
             self.setCurrentBlockUserData(state)
             # avoid delete by python
-            #sip.transferto(state, None)
+            try:
+                sip.transferto(state, self.currentBlock())
+            except TypeError:
+                pass # if this fail (sip 4.9+) it wasn't necessary
             # trigger redraw
             self.setCurrentBlockState(1 - abs(self.currentBlockState()))
 
 
 class State(QTextBlockUserData):
-    def __init__(self, frozenState, lastToken = None):
+    def __init__(self, state):
         QTextBlockUserData.__init__(self)
-        self.frozenState = frozenState
-        if isinstance(lastToken, ly.tokenize.Tokenizer.Incomplete):
-            self.incomplete = lastToken.__class__
-        else:
-            self.incomplete = None
+        self.state = state
 
-    def copy(self):
-        copy = State(self.frozenState)
-        copy.incomplete = self.incomplete
-        return copy
-        
     def matches(self, other):
         if not isinstance(other, State):
             return False
-        if self.frozenState != other.frozenState:
-            return False
-        return self.incomplete is other.incomplete
-
-
+        return self.state.matches(other.state)
+        

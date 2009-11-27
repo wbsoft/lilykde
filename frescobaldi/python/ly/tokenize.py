@@ -140,6 +140,7 @@ class Tokenizer(object):
         if parserClass is None:
             parserClass = self.ToplevelParser
         self.state = [parserClass()]
+        self.incomplete = None
 
     def parser(self, depth = -1):
         """ Return the current (or given) parser instance. """
@@ -203,54 +204,48 @@ class Tokenizer(object):
         meaningful strings. It recognizes being in a Scheme context, and also
         "LilyPond in Scheme" (the #{ and #} constructs).
         """
+        if self.incomplete:
+            # last token parsed was incomplete, continue now
+            m = self.incomplete.end_rx.match(text, pos)
+            if m:
+                yield self.incomplete(m, self)
+                pos = m.end()
+            else:
+                if pos < len(text):
+                    token = unicode.__new__(self.incomplete, text[pos:])
+                    token.pos, token.end = pos, len(text)
+                    yield token
+                return
+                    
+        tokenClass = type(None)
         while True:
             m = self.state[-1].pattern.search(text, pos)
-            if not m:
-                if pos < len(text):
-                    yield self.Unparsed(text[pos:], pos)
-                return
-            else:
+            if m:
                 if pos < m.start():
                     yield self.Unparsed(text[pos:m.start()], pos)
-                yield getattr(self, m.lastgroup)(m, self)
+                tokenClass = getattr(self, m.lastgroup)
+                yield tokenClass(m, self)
                 pos = m.end()
+            else:
+                if pos < len(text):
+                    yield self.Unparsed(text[pos:], pos)
+                self.incomplete = (issubclass(tokenClass, self.Incomplete)
+                    and tokenClass or None)
+                return
     
     def freeze(self):
         """
-        Returns a python list with the frozen state of this tokenizer.
+        Returns the frozen state of this tokenizer.
         """
-        return [(
-                parser.__class__,
-                parser.token,
-                parser.level,
-                parser.argcount,
-            ) for parser in self.state]
+        return State(self)
             
-    def thaw(self, frozenState):
+    def thaw(self, state):
         """
-        Accepts a python list such as returned by freeze(), and restores
+        Accepts a State object such as returned by freeze(), and restores
         the state of this tokenizer from it.
-        You should keep track of incomplete String or Comment tokens yourself.
         """
-        self.state = []
-        for cls, token, level, argcount in frozenState:
-            parser = cls(token, argcount)
-            parser.level = level
-            self.state.append(parser)
-    
-    def endOfIncompleteToken(self, token, text):
-        """
-        Returns the position directly after the text where the incomplete
-        token (or its class) ends in text.
-        Returns -1 if the token still does not end.
-        """
-        try:
-            m = token.end_rx.match(text)
-            if m:
-                return m.end()
-            return -1
-        except AttributeError: # token is not an Incomplete instance
-            return 0
+        state.restore(self)
+        
     
     # Classes that represent pieces of lilypond text:
     # base classes:
@@ -674,6 +669,34 @@ class LangTokenizer(LangReaderMixin, Tokenizer):
     Basic Tokenizer which keeps the current pitch language.
     """
     pass
+
+
+class State(object):
+    """
+    Can store the frozen state of a Tokenizer instance.
+    """
+    def __init__(self, tokenizer):
+        self.state = [(
+                parser.__class__,
+                parser.token,
+                parser.level,
+                parser.argcount,
+            ) for parser in tokenizer.state]
+        self.incomplete = tokenizer.incomplete
+        
+    def restore(self, tokenizer):
+        tokenizer.state = []
+        for cls, token, level, argcount in self.state:
+            parser = cls(token, argcount)
+            parser.level = level
+            tokenizer.state.append(parser)
+        tokenizer.incomplete = self.incomplete
+
+    def matches(self, other):
+        """
+        Returns true if both States are the same.
+        """
+        return self.state is other.state and self.incomplete is other.incomplete
 
 
 class Cursor(object):
