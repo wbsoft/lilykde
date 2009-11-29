@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2009-11-23 10:48+0100\n"
+"POT-Creation-Date: 2009-11-29 07:20+0100\n"
 "PO-Revision-Date: 2009-10-08 21:17+0300\n"
 "Last-Translator: Artem Zolochevskiy <artem.zolochevskiy@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -695,7 +695,7 @@ msgid "Staves per page:"
 msgstr ""
 
 #: ../python/frescobaldi_app/blankpaper.py:451
-#: ../python/frescobaldi_app/blankpaper.py:788
+#: ../python/frescobaldi_app/blankpaper.py:786
 msgid "Clef:"
 msgstr ""
 
@@ -706,7 +706,7 @@ msgstr "Одинарная кавычка"
 
 #: ../python/frescobaldi_app/blankpaper.py:477
 #: ../python/frescobaldi_app/blankpaper.py:533
-#: ../python/frescobaldi_app/blankpaper.py:628
+#: ../python/frescobaldi_app/blankpaper.py:629
 msgid "Systems per page:"
 msgstr ""
 
@@ -730,18 +730,18 @@ msgstr "Орган"
 msgid "Staves per system:"
 msgstr "Остальные системы:"
 
-#: ../python/frescobaldi_app/blankpaper.py:539
+#: ../python/frescobaldi_app/blankpaper.py:540
 #, fuzzy
 msgid "Clefs:"
 msgstr "Челеста"
 
-#: ../python/frescobaldi_app/blankpaper.py:546
+#: ../python/frescobaldi_app/blankpaper.py:547
 msgid ""
 "Enter as many letters (S, A, T or B) as there are staves.\n"
 "See \"What's This\" for more information."
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:549
+#: ../python/frescobaldi_app/blankpaper.py:550
 msgid ""
 "To configure clefs, first set the number of staves per system. Then enter as "
 "many letters (S, A, T or B) as there are staves.\n"
@@ -755,49 +755,49 @@ msgid ""
 "the quotes) here."
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:563
+#: ../python/frescobaldi_app/blankpaper.py:564
 #, fuzzy
 msgid "Choir Staff"
 msgstr "Хор"
 
-#: ../python/frescobaldi_app/blankpaper.py:570
+#: ../python/frescobaldi_app/blankpaper.py:571
 #: ../python/frescobaldi_app/scorewiz/__init__.py:395
 #: ../python/frescobaldi_app/scorewiz/__init__.py:538
 msgid "None"
 msgstr "Нет"
 
-#: ../python/frescobaldi_app/blankpaper.py:716
+#: ../python/frescobaldi_app/blankpaper.py:717
 #, fuzzy
 msgid "Custom Staff"
 msgstr "Хор"
 
-#: ../python/frescobaldi_app/blankpaper.py:778
+#: ../python/frescobaldi_app/blankpaper.py:776
 #, fuzzy
 msgid "Staff"
 msgstr "Тип нотоносца:"
 
-#: ../python/frescobaldi_app/blankpaper.py:801
+#: ../python/frescobaldi_app/blankpaper.py:799
 msgid "Space above:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:804
+#: ../python/frescobaldi_app/blankpaper.py:802
 msgid "Space below:"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:839
+#: ../python/frescobaldi_app/blankpaper.py:837
 #, fuzzy
 msgid "Brace"
 msgstr "Медные духовые"
 
-#: ../python/frescobaldi_app/blankpaper.py:864
+#: ../python/frescobaldi_app/blankpaper.py:862
 msgid "Bracket"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:873
+#: ../python/frescobaldi_app/blankpaper.py:871
 msgid "Square Bracket"
 msgstr ""
 
-#: ../python/frescobaldi_app/blankpaper.py:875
+#: ../python/frescobaldi_app/blankpaper.py:873
 #, fuzzy
 msgid "Connect bar lines"
 msgstr "Без тактовых черт"
@@ -2068,7 +2068,7 @@ msgid "Bass"
 msgstr "Бас"
 
 #: ../python/frescobaldi_app/widgets.py:295
-#: ../python/frescobaldi_app/scorewiz/parts.py:1397
+#: ../python/frescobaldi_app/scorewiz/parts.py:1396
 msgid "Percussion"
 msgstr "Ударные"
 
@@ -2796,217 +2796,217 @@ msgstr "Совет: для двойного хора можно использо
 msgid "Voicing:"
 msgstr "Голоса:"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:931
+#: ../python/frescobaldi_app/scorewiz/parts.py:932
 msgid "Lyrics"
 msgstr "Тексты"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:935
+#: ../python/frescobaldi_app/scorewiz/parts.py:936
 msgid "All voices same lyrics"
 msgstr "Одинаковый текст во всех голосах"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:938
+#: ../python/frescobaldi_app/scorewiz/parts.py:939
 msgid "One set of the same lyrics is placed between all staves."
 msgstr "Один и тот же текст располагается между всеми нотоносцами."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:940
+#: ../python/frescobaldi_app/scorewiz/parts.py:941
 msgid "Every voice same lyrics"
 msgstr "Одинаковый текст во всех голосах"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:942
+#: ../python/frescobaldi_app/scorewiz/parts.py:943
 msgid ""
 "Every voice gets its own lyrics, using the same text as the other voices."
 msgstr ""
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:945
+#: ../python/frescobaldi_app/scorewiz/parts.py:946
 msgid "Every voice different lyrics"
 msgstr "Разный текст у каждого голоса"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:947
+#: ../python/frescobaldi_app/scorewiz/parts.py:948
 msgid "Every voice gets a different set of lyrics."
 msgstr "Каждый голос имеет свой текст."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:951
+#: ../python/frescobaldi_app/scorewiz/parts.py:952
 #, fuzzy
 msgid "Piano reduction"
 msgstr "Направление:"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:953
+#: ../python/frescobaldi_app/scorewiz/parts.py:954
 msgid "Adds an automatically generated piano reduction."
 msgstr ""
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:976
+#: ../python/frescobaldi_app/scorewiz/parts.py:977
 msgid "Choir|Ch."
 msgstr "Choir|Ch."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1194
+#: ../python/frescobaldi_app/scorewiz/parts.py:1193
 msgid "Piano"
 msgstr "Фортепиано"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1195
+#: ../python/frescobaldi_app/scorewiz/parts.py:1194
 msgid "Piano|Pno."
 msgstr "Piano|Pno."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1200
+#: ../python/frescobaldi_app/scorewiz/parts.py:1199
 msgid "Harpsichord"
 msgstr "Клавесин"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1201
+#: ../python/frescobaldi_app/scorewiz/parts.py:1200
 msgid "Harpsichord|Hs."
 msgstr "Harpsichord|Hs."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1206
+#: ../python/frescobaldi_app/scorewiz/parts.py:1205
 msgid "Clavichord"
 msgstr "Клавикорд"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1207
+#: ../python/frescobaldi_app/scorewiz/parts.py:1206
 msgid "Clavichord|Clv."
 msgstr "Clavichord|Clv."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1212
+#: ../python/frescobaldi_app/scorewiz/parts.py:1211
 msgid "Organ"
 msgstr "Орган"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1213
+#: ../python/frescobaldi_app/scorewiz/parts.py:1212
 msgid "Organ|Org."
 msgstr "Organ|Org."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1218
+#: ../python/frescobaldi_app/scorewiz/parts.py:1217
 msgid "Pedal:"
 msgstr "Педаль:"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1219
+#: ../python/frescobaldi_app/scorewiz/parts.py:1218
 msgid "Set to 0 to disable the pedal altogether."
 msgstr "Установите 0, чтобы убрать педаль."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1229
+#: ../python/frescobaldi_app/scorewiz/parts.py:1228
 msgid "Celesta"
 msgstr "Челеста"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1230
+#: ../python/frescobaldi_app/scorewiz/parts.py:1229
 msgid "Celesta|Cel."
 msgstr "Celesta|Cel."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1235
+#: ../python/frescobaldi_app/scorewiz/parts.py:1234
 msgid "Timpani"
 msgstr "Литавры"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1236
+#: ../python/frescobaldi_app/scorewiz/parts.py:1235
 msgid "Timpani|Tmp."
 msgstr "Timpani|Tmp."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1243
+#: ../python/frescobaldi_app/scorewiz/parts.py:1242
 msgid "Xylophone"
 msgstr "Ксилофон"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1244
+#: ../python/frescobaldi_app/scorewiz/parts.py:1243
 msgid "Xylophone|Xyl."
 msgstr "Xylophone|Xyl."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1249
+#: ../python/frescobaldi_app/scorewiz/parts.py:1248
 msgid "Marimba"
 msgstr "Маримба"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1250
+#: ../python/frescobaldi_app/scorewiz/parts.py:1249
 msgid "Marimba|Mar."
 msgstr "Marimba|Mar."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1255
+#: ../python/frescobaldi_app/scorewiz/parts.py:1254
 msgid "Vibraphone"
 msgstr "Вибрафон"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1256
+#: ../python/frescobaldi_app/scorewiz/parts.py:1255
 msgid "Vibraphone|Vib."
 msgstr "Vibraphone|Vib."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1261
+#: ../python/frescobaldi_app/scorewiz/parts.py:1260
 msgid "Tubular bells"
 msgstr "Колокола"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1262
+#: ../python/frescobaldi_app/scorewiz/parts.py:1261
 msgid "Tubular bells|Tub."
 msgstr "Tubular bells|Tub."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1267
+#: ../python/frescobaldi_app/scorewiz/parts.py:1266
 msgid "Glockenspiel"
 msgstr "Колокольчик"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1268
+#: ../python/frescobaldi_app/scorewiz/parts.py:1267
 msgid "Glockenspiel|Gls."
 msgstr "Glockenspiel|Gls."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1273
+#: ../python/frescobaldi_app/scorewiz/parts.py:1272
 msgid "Drums"
 msgstr "Ударные"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1274
+#: ../python/frescobaldi_app/scorewiz/parts.py:1273
 msgid "Drums|Dr."
 msgstr "Drums|Dr."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1284
+#: ../python/frescobaldi_app/scorewiz/parts.py:1283
 msgid "Drums follow here."
 msgstr "Партия ударных"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1310
+#: ../python/frescobaldi_app/scorewiz/parts.py:1309
 msgid "keep some distance."
 msgstr "сохранять дистанцию"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1317
+#: ../python/frescobaldi_app/scorewiz/parts.py:1316
 msgid "Style:"
 msgstr "Стиль:"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1321
+#: ../python/frescobaldi_app/scorewiz/parts.py:1320
 msgid "Drums (5 lines, default)"
 msgstr "Ударные (5 линеек, по умолчанию)"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1322
+#: ../python/frescobaldi_app/scorewiz/parts.py:1321
 msgid "Timbales-style (2 lines)"
 msgstr "Timbales-style (2 линейки)"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1323
+#: ../python/frescobaldi_app/scorewiz/parts.py:1322
 msgid "Congas-style (2 lines)"
 msgstr "Congas-style (2 линейки)"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1324
+#: ../python/frescobaldi_app/scorewiz/parts.py:1323
 msgid "Bongos-style (2 lines)"
 msgstr "Bongos-style (2 линейки)"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1325
+#: ../python/frescobaldi_app/scorewiz/parts.py:1324
 msgid "Percussion-style (1 line)"
 msgstr "Percussion-style (1 линейка)"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1326
+#: ../python/frescobaldi_app/scorewiz/parts.py:1325
 msgid "Remove stems"
 msgstr "Удалить нотные штили"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1327
+#: ../python/frescobaldi_app/scorewiz/parts.py:1326
 msgid "Remove the stems from the drum notes."
 msgstr "Удалить штили у ударных нот."
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1336
+#: ../python/frescobaldi_app/scorewiz/parts.py:1335
 msgid "Strings"
 msgstr "Струнные"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1343
+#: ../python/frescobaldi_app/scorewiz/parts.py:1342
 msgid "Plucked strings"
 msgstr "Струнные щипковые"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1352
+#: ../python/frescobaldi_app/scorewiz/parts.py:1351
 msgid "Woodwinds"
 msgstr "Деревянные духовые"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1373
+#: ../python/frescobaldi_app/scorewiz/parts.py:1372
 msgid "Brass"
 msgstr "Медные духовые"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1381
+#: ../python/frescobaldi_app/scorewiz/parts.py:1380
 msgid "Vocal"
 msgstr "Голос"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1390
+#: ../python/frescobaldi_app/scorewiz/parts.py:1389
 msgid "Keyboard instruments"
 msgstr "Клавишные"
 
-#: ../python/frescobaldi_app/scorewiz/parts.py:1406
+#: ../python/frescobaldi_app/scorewiz/parts.py:1405
 msgid "Special"
 msgstr "Другие"
 
