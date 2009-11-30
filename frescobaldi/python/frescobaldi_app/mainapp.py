@@ -946,7 +946,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         self.part.actionCollection().action("show_leftpanel").setChecked(
             self._config["leftpanel"])
         # change shortcut context for actions that conflict with Kate's
-        for action in "view_scroll_up", "view_scroll_down":
+        for action in "view_scroll_up", "view_scroll_down", "close_find_bar":
             self.part.actionCollection().action(action).setShortcutContext(
                 Qt.WidgetShortcut)
         # default to single page layout

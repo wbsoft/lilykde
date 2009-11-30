@@ -574,6 +574,10 @@ class LilyPreviewWidget(BackgroundJob, QStackedWidget):
                 a = part.actionCollection().action("view_render_mode_single")
                 if a and not a.isChecked():
                     a.trigger()
+                # change shortcut context for this one (bound to Esc)
+                a = part.actionCollection().action("close_find_bar")
+                if a:
+                    a.setShortcutContext(Qt.WidgetShortcut)
             
     def preview(self, text):
         """
