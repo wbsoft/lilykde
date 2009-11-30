@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.4)
-project(frescobaldi)
+project(frescobaldi NONE)
 set(VERSION "0.7.17")
 
 option(HANDBOOK "Install Frescobaldi User Guide" ON)
