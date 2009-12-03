@@ -521,6 +521,7 @@ class Document(DBusItem):
             self.materialize()
             self.app.activeDocumentChanged(self)
         self.view.setFocus()
+        self.view.activateWindow()
 
     @method(iface, in_signature='iib', out_signature='')
     def setCursorPosition(self, line, column, translate=True):
