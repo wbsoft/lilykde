@@ -43,6 +43,7 @@ if(KDELIBS_DEPENDENCIES)
 else(KDELIBS_DEPENDENCIES)
   # Otherwise set at least the default resource definitions using kde4-config
   setconfigpath(KDE4_INSTALL_DIR --prefix)
+  setconfigpath(KDE4_LIB_INSTALL_DIR --install lib)
   setconfigpath(KDE4_DATA_INSTALL_DIR --install data)
   setconfigpath(KDE4_HTML_INSTALL_DIR --install html)
   setconfigpath(KDE4_CONFIG_INSTALL_DIR  --install config)
@@ -61,13 +62,23 @@ endif(KDELIBS_DEPENDENCIES)
 
 ########## the following are directories where stuff will be installed to  ###########
 # Taken from FindKDE4Internal.cmake.
-# This has to be after find_xxx() block above, since there KDELibsDependencies.cmake is included
-# which contains the install dirs from kdelibs, which are reused below
+
+# install compiled Python modules to PREFIX/lib{suffix}
+set(_Init_LIB_SUFFIX "")
+if ("${KDE4_LIB_INSTALL_DIR}" MATCHES lib64)
+   set(_Init_LIB_SUFFIX 64)
+endif ("${KDE4_LIB_INSTALL_DIR}" MATCHES lib64)
+if ("${KDE4_LIB_INSTALL_DIR}" MATCHES lib32)
+   set(_Init_LIB_SUFFIX 32)
+endif ("${KDE4_LIB_INSTALL_DIR}" MATCHES lib32)
+
+set(LIB_SUFFIX "${_Init_LIB_SUFFIX}" CACHE STRING "Define suffix of directory name (32/64)" )
+
 
 if (WIN32)
 # use relative install prefix to avoid hardcoded install paths in cmake_install.cmake files
 
-  #set(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}" )            # The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+  set(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}" )            # The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})
 
   set(EXEC_INSTALL_PREFIX  "" )        # Base directory for executables and libraries
   set(SHARE_INSTALL_PREFIX "share" )   # Base directory for files which go to share/
@@ -144,7 +155,7 @@ else (WIN32)
   _set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share"           "Base directory for files which go to share/")
   _set_fancy(BIN_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/bin"              "The install dir for executables (default ${EXEC_INSTALL_PREFIX}/bin)")
   _set_fancy(SBIN_INSTALL_DIR     "${EXEC_INSTALL_PREFIX}/sbin"             "The install dir for system executables (default ${EXEC_INSTALL_PREFIX}/sbin)")
-  #_set_fancy(LIB_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}" "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})")
+  _set_fancy(LIB_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}" "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})")
   _set_fancy(LIBEXEC_INSTALL_DIR  "${LIB_INSTALL_DIR}/kde4/libexec"         "The subdirectory relative to the install prefix where libraries will be installed (default is ${LIB_INSTALL_DIR}/kde4/libexec)")
   _set_fancy(INCLUDE_INSTALL_DIR  "${CMAKE_INSTALL_PREFIX}/include"         "The subdirectory to the header prefix")
 
