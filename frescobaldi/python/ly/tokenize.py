@@ -79,6 +79,7 @@ subclass the Parser classes.
 import re
 import ly.rx
 import ly.pitch
+import ly.words
 
 
 def _make_re(classes):
