@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
 "POT-Creation-Date: 2009-11-29 07:20+0100\n"
-"PO-Revision-Date: 2009-11-17 17:42+0100\n"
+"PO-Revision-Date: 2009-12-04 16:31+0100\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../frescobaldi.py:32 dummy.py:16
 msgid "Frescobaldi"
-msgstr ""
+msgstr "Frescobaldi"
 
 #: ../frescobaldi.py:34 dummy.py:17
 msgid "LilyPond Music Editor"
@@ -27,7 +27,7 @@ msgstr "Editor de música para LilyPond"
 
 #: ../frescobaldi.py:36
 msgid "Copyright (c) 2008-2009, Wilbert Berendsen"
-msgstr ""
+msgstr "Copyright (c) 2008-2009, Wilbert Berendsen"
 
 #: ../frescobaldi.py:45
 msgctxt "NAME OF TRANSLATORS"
@@ -69,7 +69,7 @@ msgstr "Archivos de LilyPond que abrir, también pueden ser URLs de textedit"
 
 #: dummy.py:5
 msgid "&Insert"
-msgstr "&Inserción rápida"
+msgstr "&Insertar"
 
 #: dummy.py:6
 msgid "&Document"
@@ -811,8 +811,7 @@ msgstr "Idioma de las notas"
 
 #: ../python/frescobaldi_app/document.py:139
 msgid "Please enter the name for the variable to assign the selected text to:"
-msgstr ""
-"Introduzca el nombre de la variable para asignarle el texto seleccionado:"
+msgstr "Introduzca el nombre de la variable para asignarle el texto seleccionado:"
 
 #: ../python/frescobaldi_app/document.py:140
 #: ../python/frescobaldi_app/mainapp.py:452
@@ -1148,7 +1147,7 @@ msgstr "Repetir la última expresión musical (nota o acorde)."
 
 #: ../python/frescobaldi_app/mainapp.py:462
 msgid "Insert or Manage Expansions..."
-msgstr ""
+msgstr "Insertar o gestionar las expansiones..."
 
 #: ../python/frescobaldi_app/mainapp.py:463
 msgid "Expand last word or open the expansions dialog."
@@ -1310,8 +1309,7 @@ msgstr "Hacer implícitas"
 
 #: ../python/frescobaldi_app/mainapp.py:618
 msgid "Make durations implicit (remove repeated durations)."
-msgstr ""
-"Hacer que las duraciones sean implícitas (quitar las duraciones repetidas)."
+msgstr "Hacer que las duraciones sean implícitas (quitar las duraciones repetidas)."
 
 #: ../python/frescobaldi_app/mainapp.py:623
 msgid "Make explicit"
@@ -1960,8 +1958,7 @@ msgstr ""
 "y reproducción de MIDI utilizando Rumor)."
 
 #: ../python/frescobaldi_app/settings.py:382
-msgid ""
-"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Instrucción completa para iniciar Timidity (o cualquier otro programa) como "
 "cliente de MIDI ALSA."
@@ -2161,8 +2158,7 @@ msgstr "Utilizar comillas tipográficas"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:484
 msgid "Replace normal quotes in titles with nice typographical quotes."
-msgstr ""
-"Sustituir las comillas normales con las vistosas comillas tipográficas."
+msgstr "Sustituir las comillas normales con las vistosas comillas tipográficas."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:486
 msgid "Remove default tagline"
@@ -2177,8 +2173,7 @@ msgid "Remove bar numbers"
 msgstr "Quitar números de compás"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:492
-msgid ""
-"Suppress the display of measure numbers at the beginning of every system."
+msgid "Suppress the display of measure numbers at the beginning of every system."
 msgstr ""
 "Eliminar la numeración de compases que aparece a la izquierda de los "
 "sistemas."
@@ -2308,8 +2303,7 @@ msgstr "Configurar el número de voces distintas deseado en cada pentagrama."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:382
 msgid "This is primarily useful when you write polyphonic music like a fuge."
-msgstr ""
-"Esto es de utilidad sobre todo al escribir música polifónica como una fuga."
+msgstr "Esto es de utilidad sobre todo al escribir música polifónica como una fuga."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:386
 msgid "Right hand:"
@@ -2802,8 +2796,7 @@ msgid "Every voice same lyrics"
 msgstr "Misma letra todas las voces"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:943
-msgid ""
-"Every voice gets its own lyrics, using the same text as the other voices."
+msgid "Every voice gets its own lyrics, using the same text as the other voices."
 msgstr "Cada letra tiene su voz, usando el mismo texto que las otras voces."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:946
@@ -2815,13 +2808,12 @@ msgid "Every voice gets a different set of lyrics."
 msgstr "Cada una de las voces recibe un bloque de letras distinto."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:952
-#, fuzzy
 msgid "Piano reduction"
-msgstr "Dirección:"
+msgstr "Reducción de piano"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:954
 msgid "Adds an automatically generated piano reduction."
-msgstr ""
+msgstr "Añade una reducción de piano generada automáticamente."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:977
 msgid "Choir|Ch."
@@ -2999,5 +2991,3 @@ msgstr "Teclados"
 msgid "Special"
 msgstr "Especial"
 
-#~ msgid "Expand"
-#~ msgstr "Expandir"
