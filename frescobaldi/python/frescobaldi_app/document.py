@@ -26,11 +26,11 @@ from rational import Rational
 
 from PyQt4 import QtCore, QtGui
 
-from PyKDE4.kdecore import i18n
+from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KIcon, KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly.rx, ly.pitch, ly.parse, ly.tokenize, ly.tools
+import ly.rx, ly.pitch, ly.parse, ly.tokenize, ly.tools, ly.version
 from kateshell.app import lazymethod
 from frescobaldi_app.widgets import promptText
 
@@ -423,16 +423,13 @@ class DocumentManipulator(object):
         text = self.doc.line(line)
         # special actions
         # \include file
-        path = self.doc.localPath()
-        if path:
-            for m in re.finditer(r'\\include\s*"?([^"]+)', text):
-                if m.start() <= col <= m.end():
-                    fileName = m.group(1)
-                    url = os.path.join(os.path.dirname(path), fileName)
-                    a = menu.addAction(KIcon("document-open"), i18n("Open %1", fileName))
-                    QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"),
-                        lambda url=url: self.doc.app.openUrl(url).setActive())
-                    return
+        for m in re.finditer(r'\\include\s*"?([^"]+)', text):
+            if m.start() <= col <= m.end():
+                fileName = m.group(1)
+                a = menu.addAction(KIcon("document-open"), i18n("Open %1", fileName))
+                QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"),
+                    lambda: self.openIncludeFile(fileName))
+                return
         
         # Rhythm submenu
         if selection and ly.rx.chord_rest.search(selection):
@@ -460,6 +457,24 @@ class DocumentManipulator(object):
         if selection and isinstance(tokenizer.parser(), tokenizer.LyricModeParser):
             menu.addAction(
                 self.doc.app.mainwin.actionCollection().action("lyrics_hyphen"))
+    
+    def openIncludeFile(self, fileName):
+        """
+        Opens a fileName that was found after an \\include command.
+        First, it tries to open the local file, if that fails, look in the
+        LilyPond data directory.
+        """
+        path = self.doc.localPath()
+        if path:
+            localdir = os.path.dirname(path)
+        else:
+            localdir = self.doc.app.defaultDirectory() or os.getcwd()
+        url = os.path.normpath(os.path.join(localdir, fileName))
+        if not os.path.exists(url):
+            datadir = ly.version.datadir(lilypondCommand())
+            if datadir and os.path.exists(os.path.join(datadir, 'ly', fileName)):
+                url = os.path.join(datadir, 'ly', fileName)
+        self.doc.app.openUrl(url).setActive()
         
     def insertTypographicalQuote(self, double = False):
         """
@@ -852,3 +867,8 @@ class EditCursor(ly.tokenize.Cursor):
 def isblank(text):
     """ Returns True if text is None, empty or only contains spaces. """
     return not text or text.isspace()
+
+def lilypondCommand():
+    """ Returns the user's preferred lilypond command. """
+    return unicode(KGlobal.config().group("commands").readEntry("lilypond",
+        QtCore.QVariant("lilypond")).toString())

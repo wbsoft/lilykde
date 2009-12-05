@@ -95,7 +95,7 @@ class MainApp(kateshell.app.MainApp):
         return Document(self, url, encoding)
 
     def defaultDirectory(self):
-        return config().readPathEntry("default directory", "")
+        return unicode(config().readPathEntry("default directory", ""))
     
     def findDocument(self, url):
         """
