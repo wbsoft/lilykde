@@ -142,6 +142,7 @@ class Tokenizer(object):
             parserClass = self.ToplevelParser
         self.state = [parserClass()]
         self.incomplete = None
+        self.language = "nederlands"
 
     def parser(self, depth = -1):
         """ Return the current (or given) parser instance. """
@@ -239,21 +240,20 @@ class Tokenizer(object):
         """
         Returns the frozen state of this tokenizer as an immutable tuple
         """
-        return (
-            tuple((
+        state = tuple((
                     parser.__class__,
                     parser.token,
                     parser.level,
                     parser.argcount,
-                ) for parser in self.state),
-            self.incomplete)
+                ) for parser in self.state)
+        return state, self.incomplete, self.language
             
     def thaw(self, frozenState):
         """
         Accepts a tuple such as returned by freeze(), and restores
         the state of this tokenizer from it.
         """
-        state, self.incomplete = frozenState
+        state, self.incomplete, self.language = frozenState
         self.state = []
         for cls, token, level, argcount in state:
             parser = cls(token, argcount)
@@ -290,7 +290,6 @@ class Tokenizer(object):
         a following piece of text.
         """
         end_rx = None
-        pass
 
     class Increaser(Token):
         def __init__(self, matchObj, tokenizer):
@@ -374,7 +373,13 @@ class Tokenizer(object):
     
     class IncludeFile(String):
         pass
-        
+    
+    class IncludeLanguageFile(IncludeFile):
+        rx = r'"(%s)\.ly"' % '|'.join(ly.pitch.pitchInfo.keys())
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.language = self[1:-4]
+            tokenizer.endArgument()
+    
     class OpenDelimiter(Increaser):
         rx = r"<<|\{"
         
@@ -453,7 +458,7 @@ class Tokenizer(object):
     class LyricMode(Command):
         rx = r'\\(lyricmode|((old)?add)?lyrics|lyricsto)\b'
         def __init__(self, matchObj, tokenizer):
-            if matchObj.group() == "\\lyricsto":
+            if self == "\\lyricsto":
                 argcount = 2
             else:
                 argcount = 1
@@ -609,6 +614,7 @@ class Tokenizer(object):
     class IncludeParser(Parser):
         argcount = 1
         items = staticmethod(lambda cls: (
+            cls.IncludeLanguageFile,
             cls.IncludeFile,
         ) + cls.lilybaseItems())
 
@@ -667,35 +673,10 @@ class LineColumnMixin(object):
             cursor.walk(token)
 
 
-class LangReaderMixin(object):
-    """
-    Mixin with a Tokenizer (sub)class to read tokens from a source and
-    remember the pitch name language (from \include "language.ly" statements).
-    """
-    def reset(self, *args):
-        super(LangReaderMixin, self).reset(*args)
-        self.language = "nederlands"
-        
-    def tokens(self, text, pos = 0):
-        for token in super(LangReaderMixin, self).tokens(text, pos):
-            if isinstance(token, self.IncludeFile):
-                langName = token[1:-4]
-                if langName in ly.pitch.pitchInfo:
-                    self.language = langName
-            yield token
-
-
 class LineColumnTokenizer(LineColumnMixin, Tokenizer):
     """
     Basic Tokenizer which records line and column, adding those
     as attributes to every token.
-    """
-    pass
-
-
-class LangTokenizer(LangReaderMixin, Tokenizer):
-    """
-    Basic Tokenizer which keeps the current pitch language.
     """
     pass
 

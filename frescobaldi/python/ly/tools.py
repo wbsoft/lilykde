@@ -24,9 +24,6 @@ All kinds of tools needed to manipulate strings with LilyPond input.
 import ly.pitch
 import ly.tokenize        
 
-class Tokenizer(ly.tokenize.LangReaderMixin, ly.tokenize.MusicTokenizer):
-    pass
-
 
 class Pitch(ly.pitch.Pitch):
     @classmethod
@@ -47,11 +44,11 @@ def relativeToAbsolute(text, start = 0, changes = None):
     Convert \relative { }  music to absolute pitches.
     Returns a ChangeList instance that contains the changes.
     """
-    tokenizer = Tokenizer()
+    tokenizer = ly.tokenize.MusicTokenizer()
     tokens = tokenizer.tokens(text)
     
     # Walk through not-selected text, to track the state and the 
-    # current pitch language (the LangReader instance does this).
+    # current pitch language.
     if start:
         for token in tokens:
             if token.end >= start:
@@ -112,79 +109,81 @@ def relativeToAbsolute(text, start = 0, changes = None):
         Called when a \\relative command is encountered.
         start is the position of the \\relative token, to remove it later.
         """
-        # find the pitch after the relative command
+        # find the pitch after the \relative command
         lastPitch = None
-        for token in source:
-            if not lastPitch and isinstance(token, tokenizer.Pitch):
-                lastPitch = Pitch.fromToken(token, tokenizer)
-                continue
+        token = source.next()
+        if isinstance(token, tokenizer.Pitch):
+            lastPitch = Pitch.fromToken(token, tokenizer)
+            token = source.next()
+        if not lastPitch:
+            lastPitch = Pitch.c1()
+        
+        # remove the \relative <pitch> tokens
+        changes.remove(start, token.pos)
+        
+        # eat stuff like \new Staff == "bla" \new Voice \notes etc.
+        while True:
+            if token in ('\\new', '\\context'):
+                source.next() # skip context type
+                token = source.next()
+                if token == '=':
+                    source.next() # skip context name
+                    token = source.next()
+            elif isinstance(token, (tokenizer.ChordMode, tokenizer.NoteMode)):
+                token = source.next()
             else:
-                if not lastPitch:
-                    lastPitch = Pitch.c1()
-                # remove the \relative <pitch> tokens
-                changes.remove(start, token.pos)
-                # eat stuff like \new Staff == "bla" \new Voice \notes etc.
-                while True:
-                    if token in ('\\new', '\\context'):
-                        source.next() # skip context type
-                        token = source.next()
-                        if token == '=':
-                            source.next() # skip context name
-                            token = source.next()
-                    elif isinstance(token, (tokenizer.ChordMode, tokenizer.NoteMode)):
-                        token = source.next()
-                    else:
-                        break
-                if isinstance(token, tokenizer.OpenDelimiter):
-                    # Handle full music expression { ... } or << ... >>
-                    for token in consume():
-                        # skip commands with pitches that do not count
-                        if token in ('\\key', '\\transposition'):
-                            source.next()
-                        elif token == '\\transpose':
-                            source.next()
-                            source.next()
-                        elif token == '\\octaveCheck':
-                            start = token.pos
-                            token = source.next()
-                            if isinstance(token, tokenizer.Pitch):
-                                p = Pitch.fromToken(token, tokenizer)
-                                if p:
-                                    lastPitch = p
-                                    changes.remove(start, token.end)
-                        elif isinstance(token, tokenizer.OpenChord):
-                            # handle chord
-                            chord = [lastPitch]
-                            for token in source:
-                                if isinstance(token, tokenizer.CloseChord):
-                                    lastPitch = chord[:2][-1] # same or first
-                                    break
-                                elif isinstance(token, tokenizer.Pitch):
-                                    p = Pitch.fromToken(token, tokenizer)
-                                    if p:
-                                        newPitch(token, p, chord[-1])
-                                        chord.append(p)
-                        elif isinstance(token, tokenizer.Pitch):
-                            p = Pitch.fromToken(token, tokenizer)
-                            if p:
-                                newPitch(token, p, lastPitch)
-                                lastPitch = p
+                break
+        
+        # now convert the relative expression to absolute
+        if isinstance(token, tokenizer.OpenDelimiter):
+            # Handle full music expression { ... } or << ... >>
+            for token in consume():
+                # skip commands with pitches that do not count
+                if token in ('\\key', '\\transposition'):
+                    source.next()
+                elif token == '\\transpose':
+                    source.next()
+                    source.next()
+                elif token == '\\octaveCheck':
+                    start = token.pos
+                    token = source.next()
+                    if isinstance(token, tokenizer.Pitch):
+                        p = Pitch.fromToken(token, tokenizer)
+                        if p:
+                            lastPitch = p
+                            changes.remove(start, token.end)
                 elif isinstance(token, tokenizer.OpenChord):
-                    # Handle just one chord
+                    # handle chord
+                    chord = [lastPitch]
                     for token in source:
                         if isinstance(token, tokenizer.CloseChord):
+                            lastPitch = chord[:2][-1] # same or first
                             break
                         elif isinstance(token, tokenizer.Pitch):
                             p = Pitch.fromToken(token, tokenizer)
                             if p:
-                                newPitch(token, p, lastPitch)
-                                lastPitch = p
+                                newPitch(token, p, chord[-1])
+                                chord.append(p)
                 elif isinstance(token, tokenizer.Pitch):
-                    # Handle just one pitch
                     p = Pitch.fromToken(token, tokenizer)
                     if p:
                         newPitch(token, p, lastPitch)
-                return
+                        lastPitch = p
+        elif isinstance(token, tokenizer.OpenChord):
+            # Handle just one chord
+            for token in source:
+                if isinstance(token, tokenizer.CloseChord):
+                    break
+                elif isinstance(token, tokenizer.Pitch):
+                    p = Pitch.fromToken(token, tokenizer)
+                    if p:
+                        newPitch(token, p, lastPitch)
+                        lastPitch = p
+        elif isinstance(token, tokenizer.Pitch):
+            # Handle just one pitch
+            p = Pitch.fromToken(token, tokenizer)
+            if p:
+                newPitch(token, p, lastPitch)
     
     # Do it!
     for token in source:
@@ -195,11 +194,11 @@ def absoluteToRelative(text, start = 0, changes = None):
     """
     Converts the selected music expression or all toplevel expressions to \relative ones.
     """
-    tokenizer = Tokenizer()
+    tokenizer = ly.tokenize.MusicTokenizer()
     tokens = tokenizer.tokens(text)
     
     # Walk through not-selected text, to track the state and the 
-    # current pitch language (the LangReader instance does this).
+    # current pitch language.
     if start:
         for token in tokens:
             if token.end >= start:
@@ -318,7 +317,7 @@ def languageAndKey(text):
     """
     Return language and key signature pitch (as Pitch) of text.
     """
-    tokenizer = Tokenizer()
+    tokenizer = ly.tokenize.MusicTokenizer()
     tokens = iter(tokenizer.tokens(text))
     keyPitch = Pitch.c0()
 
@@ -340,7 +339,7 @@ def transpose(text, transposer, start = 0, changes = None):
     Raises ly.QuarterToneAlterationNotAvailable if quarter tones are
     requested but not available in the current language.
     """
-    tokenizer = Tokenizer()
+    tokenizer = ly.tokenize.MusicTokenizer()
     tokens = tokenizer.tokens(text)
     
     if changes is None:
@@ -412,105 +411,105 @@ def transpose(text, transposer, start = 0, changes = None):
     
     def relative():
         """ Called when \\relative is encountered. """
-        
-        def transposeRelative(token, tokenizer, lastPitch):
+        def transposeRelative(token, lastPitch):
             """
             Make a new relative pitch from token, if possible.
-            Return the last pitch used (untransposed).
+            Return the last pitch used (absolute, untransposed).
             """
             p = Pitch.fromToken(token, tokenizer)
-            if p:
-                # absolute pitch determined from untransposed pitch of lastPitch
-                octaveCheck = p.octaveCheck is not None
-                p.absolute(lastPitch)
-                if source.inSelection:
-                    # we may change this pitch. Make it relative against the
-                    # transposed lastPitch.
-                    try:
-                        last = lastPitch.transposed
-                    except AttributeError:
-                        last = lastPitch
-                    # transpose a copy and store that in the transposed
-                    # attribute of lastPitch. Next time that is used for
-                    # making the next pitch relative correctly.
-                    copy = p.copy()
-                    transposer.transpose(copy)
-                    p.transposed = copy # store transposed copy in new lastPitch
-                    new = copy.relative(last)
-                    if octaveCheck:
-                        new.octaveCheck = copy.octave
-                    if relPitchToken:
-                        # we are allowed to change the pitch after the
-                        # \relative command. lastPitch contains this pitch.
-                        lastPitch.octave += new.octave
-                        new.octave = 0
-                        changes.replaceToken(relPitchToken[0], lastPitch.output(tokenizer.language))
-                        del relPitchToken[:]
-                    changes.replaceToken(token, new.output(tokenizer.language))
-                return p
-            return lastPitch
-        
+            if not p:
+                return lastPitch
+            # absolute pitch determined from untransposed pitch of lastPitch
+            octaveCheck = p.octaveCheck is not None
+            p.absolute(lastPitch)
+            if source.inSelection:
+                # we may change this pitch. Make it relative against the
+                # transposed lastPitch.
+                try:
+                    last = lastPitch.transposed
+                except AttributeError:
+                    last = lastPitch
+                # transpose a copy and store that in the transposed
+                # attribute of lastPitch. Next time that is used for
+                # making the next pitch relative correctly.
+                copy = p.copy()
+                transposer.transpose(copy)
+                p.transposed = copy # store transposed copy in new lastPitch
+                new = copy.relative(last)
+                if octaveCheck:
+                    new.octaveCheck = copy.octave
+                if relPitchToken:
+                    # we are allowed to change the pitch after the
+                    # \relative command. lastPitch contains this pitch.
+                    lastPitch.octave += new.octave
+                    new.octave = 0
+                    changes.replaceToken(relPitchToken[0], lastPitch.output(tokenizer.language))
+                    del relPitchToken[:]
+                changes.replaceToken(token, new.output(tokenizer.language))
+            return p
+
         lastPitch = None
         relPitchToken = [] # we use a list so it can be changed from inside functions
-
-        for token in source:
-            if not lastPitch and isinstance(token, tokenizer.Pitch):
-                lastPitch = Pitch.fromToken(token, tokenizer)
-                if lastPitch and source.inSelection:
-                    relPitchToken.append(token)
-                continue
+        
+        # find the pitch after the \relative command
+        token = source.next()
+        if isinstance(token, tokenizer.Pitch):
+            lastPitch = Pitch.fromToken(token, tokenizer)
+            if lastPitch and source.inSelection:
+                relPitchToken.append(token)
+            token = source.next()
+        if not lastPitch:
+            lastPitch = Pitch.c1()
+        
+        # eat stuff like \new Staff == "bla" \new Voice \notes etc.
+        while True:
+            if token in ('\\new', '\\context'):
+                source.next() # skip context type
+                token = source.next()
+                if token == '=':
+                    source.next() # skip context name
+                    token = source.next()
+            elif isinstance(token, tokenizer.NoteMode):
+                token = source.next()
             else:
-                if not lastPitch:
-                    lastPitch = Pitch.c1()
-                # eat stuff like \new Staff == "bla" \new Voice \notes etc.
-                while True:
-                    if token in ('\\new', '\\context'):
-                        source.next() # skip context type
-                        token = source.next()
-                        if token == '=':
-                            source.next() # skip context name
-                            token = source.next()
-                    elif isinstance(token, tokenizer.NoteMode):
-                        token = source.next()
-                    else:
-                        break
-                if isinstance(token, tokenizer.OpenDelimiter):
-                    # Handle full music expression { ... } or << ... >>
-                    for token in consume():
-                        if token == '\\octaveCheck':
-                            token = source.next()
-                            if isinstance(token, tokenizer.Pitch):
-                                p = Pitch.fromToken(token, tokenizer)
-                                if p:
-                                    if source.inSelection:
-                                        copy = p.copy()
-                                        transposer.transpose(copy)
-                                        p.transposed = copy
-                                        changes.replaceToken(token,
-                                            copy.output(tokenizer.language))    
-                                    lastPitch = p
-                                    del relPitchToken[:]
-                        elif isinstance(token, tokenizer.OpenChord):
-                            chord = [lastPitch]
-                            for token in source:
-                                if isinstance(token, tokenizer.CloseChord):
-                                    lastPitch = chord[:2][-1] # same or first
-                                    break
-                                elif isinstance(token, tokenizer.Pitch):
-                                    chord.append(transposeRelative(token, tokenizer, chord[-1]))
-                        elif isinstance(token, tokenizer.Pitch):
-                            lastPitch = transposeRelative(token, tokenizer, lastPitch)
+                break
+        
+        # now transpose the relative expression
+        if isinstance(token, tokenizer.OpenDelimiter):
+            # Handle full music expression { ... } or << ... >>
+            for token in consume():
+                if token == '\\octaveCheck':
+                    token = source.next()
+                    if isinstance(token, tokenizer.Pitch):
+                        p = Pitch.fromToken(token, tokenizer)
+                        if p:
+                            if source.inSelection:
+                                copy = p.copy()
+                                transposer.transpose(copy)
+                                p.transposed = copy
+                                changes.replaceToken(token, copy.output(tokenizer.language))    
+                            lastPitch = p
+                            del relPitchToken[:]
                 elif isinstance(token, tokenizer.OpenChord):
-                    # Handle just one chord
+                    chord = [lastPitch]
                     for token in source:
                         if isinstance(token, tokenizer.CloseChord):
+                            lastPitch = chord[:2][-1] # same or first
                             break
                         elif isinstance(token, tokenizer.Pitch):
-                            lastPitch = transposeRelative(token, tokenizer, lastPitch)
+                            chord.append(transposeRelative(token, chord[-1]))
                 elif isinstance(token, tokenizer.Pitch):
-                    # Handle just one pitch
-                    transposeRelative(token, tokenizer, lastPitch)
-                return
+                    lastPitch = transposeRelative(token, lastPitch)
+        elif isinstance(token, tokenizer.OpenChord):
+            # Handle just one chord
+            for token in source:
+                if isinstance(token, tokenizer.CloseChord):
+                    break
+                elif isinstance(token, tokenizer.Pitch):
+                    lastPitch = transposeRelative(token, lastPitch)
+        elif isinstance(token, tokenizer.Pitch):
+            # Handle just one pitch
+            transposeRelative(token, lastPitch)
         
     def chordmode():
         """ Called inside \\chordmode or \\chords. """
@@ -534,8 +533,6 @@ def translate(text, lang, start = 0, changes = None):
     Raises ly.QuarterToneAlterationNotAvailable if quarter tones are
     requested but not available in the target language.
     """
-    writer = ly.pitch.pitchWriter[lang]
-    reader = ly.pitch.pitchReader["nederlands"]
     tokenizer = ly.tokenize.Tokenizer()
     tokens = tokenizer.tokens(text)
     
@@ -543,25 +540,22 @@ def translate(text, lang, start = 0, changes = None):
     # current pitch language.
     if start:
         for token in tokens:
-            if isinstance(token, tokenizer.IncludeFile):
-                langName = token[1:-4]
-                if langName in ly.pitch.pitchInfo:
-                    reader = ly.pitch.pitchReader[langName]
             if token.end >= start:
                 break
     
     if changes is None:
         changes = ly.tokenize.ChangeList(text)
 
+    writer = ly.pitch.pitchWriter[lang]
+    reader = ly.pitch.pitchReader[tokenizer.language]
+    
     # Now walk through the part that needs to be translated.
     includeCommandChanged = False
     for token in tokens:
-        if isinstance(token, tokenizer.IncludeFile):
-            langName = token[1:-4]
-            if langName in ly.pitch.pitchInfo:
-                reader = ly.pitch.pitchReader[langName]
-                changes.replaceToken(token, '"%s.ly"' % lang)
-                includeCommandChanged = True
+        if isinstance(token, tokenizer.IncludeLanguageFile):
+            reader = ly.pitch.pitchReader[tokenizer.language]
+            changes.replaceToken(token, '"%s.ly"' % lang)
+            includeCommandChanged = True
         elif isinstance(token, tokenizer.PitchWord):
             result = reader(token)
             if result:

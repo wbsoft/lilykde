@@ -82,14 +82,19 @@ class Pitch(object):
         p.octave = self.octave - lastPitch.octave + (dist + 3) // 7
         return p
         
-    def output(self, language, ignore_errors = False):
-        return ''.join((
-            pitchWriter[language](self.note, self.alter, ignore_errors),
-            self.cautionary,
-            octaveToString(self.octave),
-            self.octaveCheck is not None
-                and '=' + octaveToString(self.octaveCheck) or ''))
-        
+    def output(self, language):
+        """
+        Return the pitch as a string in the given pitch name language.
+        Raises ly.QuarterToneAlterationNotAvailable is an alteration is
+        requested that is not available in that language.
+        """
+        output = [pitchWriter[language](self.note, self.alter),
+                  self.cautionary,
+                  octaveToString(self.octave)]
+        if self.octaveCheck is not None:
+            output.append('=' + octaveToString(self.octaveCheck))
+        return ''.join(output)
+
 
 class Transposer(object):
     """
@@ -128,18 +133,16 @@ class PitchWriter(object):
         self.accs = accs
         self.replacements = replacements
 
-    def __call__(self, note, alter = 0, ignore_errors = False):
+    def __call__(self, note, alter = 0):
         """
         Returns a string representing the pitch in our language.
-        If warn == True and the requested pitch has an alteration not present
-        in the current language, False is returned.
+        Raises ly.QuarterToneAlterationNotAvailable if the requested pitch
+        has an alteration that is not available in the current language.
         """
         pitch = self.names[note]
         if alter:
             acc = self.accs[int(alter * 4 + 4)]
-            # warn if a quarter tone is requested but not present in the
-            # current language.
-            if acc == '' and not ignore_errors:
+            if not acc:
                 raise ly.QuarterToneAlterationNotAvailable
             pitch += acc
         for s, r in self.replacements:
