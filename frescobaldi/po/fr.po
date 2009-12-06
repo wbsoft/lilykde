@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
 "POT-Creation-Date: 2009-11-29 07:20+0100\n"
-"PO-Revision-Date: 2009-11-19 11:14-0500\n"
+"PO-Revision-Date: 2009-12-06 09:56-0500\n"
 "Last-Translator: Ryan Kavanagh <ryanakca@kubuntu.org>\n"
 "Language-Team: Français <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -839,35 +839,33 @@ msgstr ""
 "S.V.P. utiliser les noms des hauteurs dans la langue \"%1\"."
 
 #: ../python/frescobaldi_app/document.py:696
-#, fuzzy
 msgid ""
 "Can't perform the requested transposition.\n"
 "\n"
 "The transposed music would contain quarter-tone alterations that are not "
 "available in the pitch language \"%1\"."
 msgstr ""
-"Impossible d'effectuer la traduction demandée. La partition contient des "
-"altérations au quart de ton, mais celles-ci ne sont pas disponibles à la "
-"hauteur %1."
+"Impossible d'effectuer la transposition demandée.\n"
+"\n"
+"La musique transposée contient des altérations au quart de ton, mais "
+"celles-ci "
+"ne sont pas disponibles dans la langue de hauteur \"%1\"."
 
 #: ../python/frescobaldi_app/document.py:709
-#, fuzzy
 msgid "Transpose"
-msgstr "Transposer..."
+msgstr "Transposer"
 
 #: ../python/frescobaldi_app/document.py:716
 msgid "Please enter a start pitch and a destination pitch:"
 msgstr "S.V.P. entrer la hauteur initiale et la hauteur visée:"
 
 #: ../python/frescobaldi_app/document.py:720
-#, fuzzy
 msgid "Transpose from:"
-msgstr "Transposer..."
+msgstr "Transposer à partir de:"
 
 #: ../python/frescobaldi_app/document.py:724
-#, fuzzy
 msgid "to:"
-msgstr "Action:"
+msgstr "vers:"
 
 #: ../python/frescobaldi_app/expand.py:147
 #: ../python/frescobaldi_app/mainapp.py:782
@@ -1152,7 +1150,7 @@ msgstr "Répéter la dernière expression musicale (notes ou accords)"
 
 #: ../python/frescobaldi_app/mainapp.py:462
 msgid "Insert or Manage Expansions..."
-msgstr ""
+msgstr "Insérer ou gérer les expansions..."
 
 #: ../python/frescobaldi_app/mainapp.py:463
 msgid "Expand last word or open the expansions dialog."
@@ -2500,9 +2498,8 @@ msgid "Upper staff:"
 msgstr "Portée supérieur:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:617
-#, fuzzy
 msgid "Lower staff:"
-msgstr "Portée standard"
+msgstr "Portée inférieure:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:621
 msgid "Flute"
@@ -2807,13 +2804,12 @@ msgid "Every voice gets a different set of lyrics."
 msgstr "Chaque voix a son propre texte."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:952
-#, fuzzy
 msgid "Piano reduction"
-msgstr "Direction:"
+msgstr "Réduction pour piano"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:954
 msgid "Adds an automatically generated piano reduction."
-msgstr ""
+msgstr "Ajoute une réduction pour piano générée de façon automatique."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:977
 msgid "Choir|Ch."
