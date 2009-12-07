@@ -1,6 +1,6 @@
 #!/bin/sh
 
-package=$(sed -n 's/^project\s*(\s*\(.*\)\s*).*/\1/p' ../CMakeLists.txt)
+package=$(sed -n 's/^project\s*(\s*\(\w*\).*/\1/p' CMakeLists.txt)
 version=$(sed -n 's/.*VERSION "\(.*\)".*/\1/p' ../CMakeLists.txt)
 email=$(sed -n 's/^bugs\s*=\s*"\(.*\)".*/\1/p' ../frescobaldi.py)
 
