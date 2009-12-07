@@ -199,7 +199,7 @@ class DocumentManipulator(object):
         text = unicode(self.doc.doc.text(
             KTextEditor.Range(KTextEditor.Cursor(lineNum, 0), curPos)))
         matchObj = None
-        for m in ly.rx.chord_rest.finditer(text):
+        for m in ly.rx.chord.finditer(text):
             if m.group('chord'):
                 matchObj = m
         if not matchObj:
@@ -217,7 +217,7 @@ class DocumentManipulator(object):
         if not isblank(stuff):
             stuff = stuff.splitlines()[0]
             # Filter the things we want to repeat.  E.g. slur events don't
-            # make much sense, but artications do.  We delete comments and
+            # make much sense, but artications do.  We skip comments and
             # strings to avoid matching stuff inside those.
             result += ''.join(
                 m.group(1)
@@ -225,7 +225,8 @@ class DocumentManipulator(object):
                     r'('                            # keep:
                         r'[-_^][_.+|>^-]'           # - articulation shorthands
                         r'|[_^]?~'                  # - ties
-                    r')'                            # delete:
+                        r'|\\rest(?![A-Za-z])'      # - pitched rests
+                    r')'                            # skip:
                         r'|"(?:\\\\|\\\"|[^\"])*"'  # - quoted strings
                         r'|%.*?$'                   # - comments
                     ).finditer(stuff)

@@ -4,6 +4,10 @@ Changes in  --
   - Right-click menu action on \include command now opens the named file from
     the LilyPond data directory if that exists and there is no local file with
     that name.
+* Repeat last expression (Ctrl+;):
+  - Does not repeat normal rests and skips (because often one is interested in
+    the chord preceding the rest)
+  - Keeps the \rest when repeating a pitched rest (e.g. c\rest)
 * General:
   - ESC key now closes PDF-preview dialogs properly
   - ESC key does not take focus away from editor window if PDF visible
