@@ -22,13 +22,13 @@ A wizard to create empty staff paper with LilyPond
 """
 import sip
 
-from PyQt4.QtCore import QObject, QSize, Qt, SIGNAL
+from PyQt4.QtCore import QObject, QSize, Qt, QVariant, SIGNAL
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QIcon, QLabel,
     QPixmap, QPushButton, QSpinBox, QStackedWidget, QToolButton, QTreeWidget,
     QTreeWidgetItem, QVBoxLayout, QWidget)
 
-from PyKDE4.kdecore import KUrl, i18n
+from PyKDE4.kdecore import KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
     KDialog, KIcon, KMessageBox, KPushButton, KStandardGuiItem)
 from PyKDE4.kio import KFileDialog, KIO
@@ -113,6 +113,9 @@ class Dialog(KDialog):
         paper.layout().addWidget(self.pageCount, 2, 1)
         self.pageCount.setRange(1, 1000)
         
+        self.removeTagline = QCheckBox(i18n("Remove default tagline"))
+        paper.layout().addWidget(self.removeTagline, 3, 0, 1, 2)
+        
         settings.setLayout(QGridLayout())
         
         self.barLines = QCheckBox(i18n("Print Bar Lines"))
@@ -165,10 +168,12 @@ class Dialog(KDialog):
         # buttons
         QObject.connect(self, SIGNAL("resetClicked()"), self.default)
         QObject.connect(self, SIGNAL("tryClicked()"), self.showPreview)
-        self.default()
         self.setInitialSize(QSize(400, 240))
+        self.default()
+        self.loadSettings()
     
     def done(self, r):
+        self.saveSettings()
         KDialog.done(self, r)
         if r:
             self.actors[self.actionChooser.currentIndex()](self)
@@ -178,6 +183,7 @@ class Dialog(KDialog):
         self.paperSize.setCurrentIndex(0)
         self.staffSize.setValue(22)
         self.pageCount.setValue(1)
+        self.removeTagline.setChecked(False)
         self.barLines.setChecked(False)
         self.barsPerLine.setValue(4)
         self.barsPerLine.setEnabled(False)
@@ -189,6 +195,16 @@ class Dialog(KDialog):
         for widget in self.typeWidgets:
             widget.default()
 
+    def loadSettings(self):
+        # only remember option to remove default FRESCOBALDI.ORG tagline
+        self.removeTagline.setChecked(config().readEntry(
+            "remove tagline", QVariant(False)).toBool())
+    
+    def saveSettings(self):
+        # only remember option to remove default FRESCOBALDI.ORG tagline
+        config().writeEntry(
+            "remove tagline", QVariant(self.removeTagline.isChecked()))
+    
     def showPreview(self):
         self.previewDialog().showPreview(self.ly())
 
@@ -213,16 +229,23 @@ class Dialog(KDialog):
         if self.pageNumbers.isChecked():
             output.append('first-page-number = #%d' % self.pageNumStart.value())
             output.append('oddHeaderMarkup = \\markup \\fill-line {')
-            output.append('\\null')
+            output.append('\\strut')
             output.append("\\fromproperty #'page:page-number-string")
             output.append('}')
         else:
             output.append('oddHeaderMarkup = \\markup \\strut')
         output.append('evenHeaderMarkup = ##f')
-        output.append('oddFooterMarkup = \\markup \\fill-line {')
-        output.append('\\sans \\abs-fontsize #6 { %s }' % "FRESCOBALDI.ORG")
-        output.append('\\null')
-        output.append('}')
+        if self.removeTagline.isChecked():
+            output.append('oddFooterMarkup = \\markup \\strut')
+        else:
+            output.append('oddFooterMarkup = \\markup \\fill-line {')
+            tagline = config().readEntry("tagline", QVariant(
+                '\\with-url #"http://www.frescobaldi.org/" FRESCOBALDI.ORG'
+                )).toString()
+            output.append('\\sans \\abs-fontsize #6 { %s }' % tagline)
+            output.append('\\strut')
+            output.append('}')
+        output.append('evenFooterMarkup = ##f')
         output.append('head-separation = 3\\mm')
         output.append('foot-separation = 5\\mm')
         output.append('top-margin = 10\\mm')
@@ -892,4 +915,7 @@ class BracketItem(Item):
         music.append('>>')
         return music
 
+
+def config(group="blankpaper"):
+    return KGlobal.config().group(group)
 
