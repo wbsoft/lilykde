@@ -228,7 +228,6 @@ class Dialog(KDialog):
             output.append('#(set-paper-size "%s")' % ly.paperSizes[self.paperSize.currentIndex()-1])
         if self.pageNumbers.isChecked():
             output.append('top-margin = 10\\mm')
-            output.append('head-separation = 3\\mm')
             output.append('first-page-number = #%d' % self.pageNumStart.value())
             output.append('oddHeaderMarkup = \\markup \\fill-line {')
             output.append('\\strut')
@@ -243,7 +242,6 @@ class Dialog(KDialog):
             output.append('oddFooterMarkup = ##f')
         else:
             output.append('bottom-margin = 10\\mm')
-            output.append('foot-separation = 5\\mm')
             output.append('oddFooterMarkup = \\markup \\abs-fontsize #6 \\fill-line {')
             tagline = config().readEntry("tagline", QVariant(
                 '\\with-url #"http://www.frescobaldi.org/" FRESCOBALDI.ORG'
