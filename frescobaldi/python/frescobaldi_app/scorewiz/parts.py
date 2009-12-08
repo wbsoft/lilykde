@@ -976,7 +976,7 @@ class Choir(VocalPart):
         if len(splitStaves) > 1 and self.num:
             builder.setInstrumentNames(p, I18N_NOOP("Choir|Ch."), self.num)
         count = dict.fromkeys('SATB', 0)  # dict with count of parts.
-        toGo = len(splitStaves)
+        toGo = max(2, len(splitStaves))
         maxLen = max(map(len, splitStaves))
         lyr, staffNames = [], []
         pianoReduction = dict((key, []) for key in 'SATB')
