@@ -22,10 +22,10 @@ Part types for the Score Wizard (scorewiz/__init__.py).
 In separate file to ease maintenance.
 """
 
-from PyQt4.QtCore import QObject, SIGNAL
+from PyQt4.QtCore import QObject, QRegExp, Qt, SIGNAL
 from PyQt4.QtGui import (
-    QCheckBox, QComboBox, QGroupBox, QLabel, QRadioButton, QSpinBox,
-    QVBoxLayout)
+    QCheckBox, QComboBox, QGroupBox, QLabel, QRadioButton, QRegExpValidator,
+    QSpinBox, QVBoxLayout)
 from PyKDE4.kdecore import i18n, ki18n
 from PyKDE4.kdeui import KHBox, KVBox
 
@@ -922,6 +922,8 @@ class Choir(VocalPart):
         l.setBuddy(self.voicing)
         self.voicing.setEditable(True)
         self.voicing.setCompleter(None)
+        self.voicing.setValidator(QRegExpValidator(
+            QRegExp("[SATB]+(-[SATB]+)*", Qt.CaseInsensitive), self.voicing))
         self.voicing.addItems((
             'SA-TB', 'S-A-T-B',
             'SA', 'S-A', 'SS-A', 'S-S-A',
@@ -968,6 +970,8 @@ class Choir(VocalPart):
         staves = re.sub(r'[^SATB-]+', '', staves)
         # remove double hyphens, and from begin and end
         staves = re.sub('-+', '-', staves).strip('-')
+        if not staves:
+            return
         splitStaves = staves.split('-')
         p = ChoirStaff()
         choir = Sim(p)
@@ -976,8 +980,8 @@ class Choir(VocalPart):
         if len(splitStaves) > 1 and self.num:
             builder.setInstrumentNames(p, I18N_NOOP("Choir|Ch."), self.num)
         count = dict.fromkeys('SATB', 0)  # dict with count of parts.
-        toGo = max(2, len(splitStaves))
         maxLen = max(map(len, splitStaves))
+        toGo = max(2, len(splitStaves)) # nr staves with same lyrics below + 1
         lyr, staffNames = [], []
         pianoReduction = dict((key, []) for key in 'SATB')
         for staff in splitStaves:
