@@ -227,29 +227,31 @@ class Dialog(KDialog):
         if self.paperSize.currentIndex() > 0:
             output.append('#(set-paper-size "%s")' % ly.paperSizes[self.paperSize.currentIndex()-1])
         if self.pageNumbers.isChecked():
+            output.append('top-margin = 10\\mm')
+            output.append('head-separation = 3\\mm')
             output.append('first-page-number = #%d' % self.pageNumStart.value())
             output.append('oddHeaderMarkup = \\markup \\fill-line {')
             output.append('\\strut')
             output.append("\\fromproperty #'page:page-number-string")
             output.append('}')
         else:
-            output.append('oddHeaderMarkup = \\markup \\strut')
+            output.append('top-margin = 16\\mm')
+            output.append('oddHeaderMarkup = ##f')
         output.append('evenHeaderMarkup = ##f')
         if self.removeTagline.isChecked():
-            output.append('oddFooterMarkup = \\markup \\strut')
+            output.append('bottom-margin = 16\\mm')
+            output.append('oddFooterMarkup = ##f')
         else:
-            output.append('oddFooterMarkup = \\markup \\fill-line {')
+            output.append('bottom-margin = 10\\mm')
+            output.append('foot-separation = 5\\mm')
+            output.append('oddFooterMarkup = \\markup \\abs-fontsize #6 \\fill-line {')
             tagline = config().readEntry("tagline", QVariant(
                 '\\with-url #"http://www.frescobaldi.org/" FRESCOBALDI.ORG'
                 )).toString()
-            output.append('\\sans \\abs-fontsize #6 { %s }' % tagline)
+            output.append('\\sans { %s }' % tagline)
             output.append('\\strut')
             output.append('}')
         output.append('evenFooterMarkup = ##f')
-        output.append('head-separation = 3\\mm')
-        output.append('foot-separation = 5\\mm')
-        output.append('top-margin = 10\\mm')
-        output.append('bottom-margin = 10\\mm')
         output.append('ragged-last-bottom = ##f')
         output.append('ragged-right = ##f')
         output.append('}\n')
