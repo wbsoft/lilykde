@@ -37,7 +37,7 @@ macro(create_handbook _docbook _language)
     add_custom_command(
       OUTPUT ${_cache}
       COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check --cache ${_cache} ${_input}
-      DEPENDS ${_docs}
+      DEPENDS ${_docbooks}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
     get_filename_component(_targ ${CMAKE_CURRENT_SOURCE_DIR} NAME)
