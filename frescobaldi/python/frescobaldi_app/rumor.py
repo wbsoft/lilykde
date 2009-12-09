@@ -156,11 +156,11 @@ class RumorPanel(QWidget):
     def saveSettings(self):
         conf = config("rumor")
         conf.writeEntry("tempo", QVariant(self.tempo.tempo()))
-        conf.writeEntry("quantize", QVariant(self.quantize.currentText()))
+        conf.writeEntry("quantize", QVariant(unicode(self.quantize.currentText())))
         conf.writeEntry("step", QVariant(self.step.isChecked()))
         conf.writeEntry("mono", QVariant(self.mono.isChecked()))
-        conf.writeEntry("meter", QVariant(autofy(self.meter.currentText())))
-        conf.writeEntry("keysig", QVariant(autofy(self.keysig.currentText())))
+        conf.writeEntry("meter", QVariant(unicode(autofy(self.meter.currentText()))))
+        conf.writeEntry("keysig", QVariant(unicode(autofy(self.keysig.currentText()))))
         conf.writeEntry("timidity", QVariant(self.timidity.isChecked()))
         self.showMessage(i18n("Settings have been saved."), 1000)
 
@@ -567,7 +567,7 @@ class RumorSettings(KDialog):
         conf = config("rumor")
         conf.writeEntry("midi in", QVariant(self.ilist[self.ibut.currentIndex()]))
         conf.writeEntry("midi out", QVariant(self.olist[self.obut.currentIndex()]))
-        conf.writeEntry("language", QVariant(autofy(self.lang.currentText())))
+        conf.writeEntry("language", QVariant(unicode(autofy(self.lang.currentText()))))
         conf.writeEntry("absolute pitches", QVariant(self.absPitches.isChecked()))
         conf.writeEntry("explicit durations", QVariant(self.explDur.isChecked()))
         conf.writeEntry("no barlines", QVariant(self.noBar.isChecked()))
@@ -579,7 +579,7 @@ class RumorSettings(KDialog):
         for row in range(self.scripts.topLevelItemCount()):
             item = self.scripts.topLevelItem(row)
             if item.checkState(0) == Qt.Checked:
-                names.append(item.text(0))
+                names.append(unicode(item.text(0)))
         conf.writeEntry("scripts", QVariant(names))
 
 

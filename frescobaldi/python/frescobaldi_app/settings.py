@@ -216,10 +216,10 @@ class GeneralPreferences(KVBox):
             tool = frescobaldi_app.mainapp.PDFTool(self.mainwin)
             tool.sync(self.mainwin.currentDocument())
         # lily version:
-        conf.writeEntry("custom version", QVariant(self.customVersion.text()))
+        conf.writeEntry("custom version", QVariant(unicode(self.customVersion.text())))
         for name, widget in self.versionOptions.items():
             if widget.isChecked():
-                conf.writeEntry("default version", QVariant(name))
+                conf.writeEntry("default version", QVariant(unicode(name)))
                 break
 
 
@@ -339,7 +339,7 @@ class Commands(QWidget):
         conf = config("commands")
         for widget, name, default in self.commands:
             if widget.text() or not default:
-                conf.writeEntry(name, QVariant(widget.text()))
+                conf.writeEntry(name, QVariant(unicode(widget.text())))
         paths = [p for p in unicode(self.hyphenPaths.toPlainText()).splitlines()
             if p]
         config("hyphenation").writeEntry("paths", QVariant(paths))
@@ -348,7 +348,7 @@ class Commands(QWidget):
         config("preferences").writePathEntry("default directory",
             self.folder.url().path())
         config("preferences").writeEntry("lilypond documentation",
-            QVariant(self.lilydoc.url().url()))
+            QVariant(unicode(self.lilydoc.url().url())))
         lilydoc = self.mainwin.tools.get('lilydoc')
         if lilydoc:
             lilydoc.newDocFinder()
@@ -408,7 +408,7 @@ class RumorSettings(KVBox):
         conf = config("commands")
         for widget, name, default in self.commands:
             if widget.text():
-                conf.writeEntry(name, QVariant(widget.text()))
+                conf.writeEntry(name, QVariant(unicode(widget.text())))
     
 
 

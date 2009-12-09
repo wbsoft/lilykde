@@ -268,7 +268,7 @@ class ExpansionDialog(KDialog):
         description = i18n("New Item")
         if num:
             description += " %d" % num
-        self.manager.expansions.group(name).writeEntry("Name", QVariant(description))
+        self.manager.expansions.group(name).writeEntry("Name", QVariant(unicode(description)))
         self.searchLine.clear() # otherwise strange things happen...
         item = self.createItem(name, description)
         if self.edit.item is None:
@@ -359,9 +359,9 @@ class ExpansionDialog(KDialog):
                 # apply the changed mnemonic
                 old, new = item.groupName, item.text(0)
                 group = self.manager.expansions.group(new)
-                group.writeEntry("Name", QVariant(item.text(1)))
-                group.writeEntry("Text", QVariant(self.manager.expansions.group(
-                    old).readEntry("Text", QVariant("")).toString()))
+                group.writeEntry("Name", QVariant(unicode(item.text(1))))
+                group.writeEntry("Text", QVariant(unicode(self.manager.expansions.group(
+                    old).readEntry("Text", QVariant("")).toString())))
                 self.manager.expansions.deleteGroup(old)
                 # move the shortcut
                 s = self.manager.shortcuts
@@ -373,7 +373,7 @@ class ExpansionDialog(KDialog):
         elif column == 1:
             group = self.manager.expansions.group(item.text(0))
             if item.text(1):
-                group.writeEntry("Name", QVariant(item.text(1)))
+                group.writeEntry("Name", QVariant(unicode(item.text(1))))
                 self.treeWidget.scrollToItem(item)
                 self.treeWidget.resizeColumnToContents(1)
             else:
@@ -394,7 +394,7 @@ class ExpansionDialog(KDialog):
         """ (Internal use) save the edit if it has changed. """
         if self.edit.dirty and self.edit.item:
             self.manager.expansions.group(self.edit.item.text(0)).writeEntry(
-                "Text", QVariant(self.edit.toPlainText()))
+                "Text", QVariant(unicode(self.edit.toPlainText())))
             self.edit.dirty = False
     
     def keySequenceChanged(self, seq):
