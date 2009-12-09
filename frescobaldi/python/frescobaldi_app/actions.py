@@ -225,7 +225,7 @@ class EmailDialog(KDialog):
         if result:
             # Save selected extensions to preselect next time.
             exts = set(item.ext for item in self.fileList.selectedItems())
-            config("general").writeEntry("email_extensions", list(exts))
+            config("general").writeEntry("email_extensions", QVariant(list(exts)))
             self.sendEmail()
         KDialog.done(self, result)
         

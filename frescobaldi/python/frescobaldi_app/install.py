@@ -45,28 +45,28 @@ def install(app):
     # ... other stuff can be added here ...
     
     # save the version of the current Frescobaldi
-    conf.writeEntry("version", app.version())
+    conf.writeEntry("version", QVariant(app.version()))
     conf.sync()
 
 def installKateModeRC():
     """ Preset a few variables in the LilyPond Kate mode """
     katemoderc = KConfig("katemoderc", KConfig.NoGlobals)
     rc = katemoderc.group("LilyPond")
-    rc.writeEntry("Variables", "kate: "
+    rc.writeEntry("Variables", QVariant("kate: "
         "indent-mode lilypond; "
         "indent-width 2; "
         "space-indent on; "
         "replace-tabs on; "
         "replace-tabs-save on; "
-        )
+        ))
     rc.sync()
 
 def installOkularPartRC():
     """ Set our custom editor command in okularpartrc """
     okularpartrc = KConfig("okularpartrc", KConfig.NoGlobals)
     group = okularpartrc.group("General")
-    group.writeEntry("ExternalEditor", "Custom")
-    group.writeEntry("ExternalEditorCommand", "frescobaldi --smart --line %l --column %c")
+    group.writeEntry("ExternalEditor", QVariant("Custom"))
+    group.writeEntry("ExternalEditorCommand", QVariant("frescobaldi --smart --line %l --column %c"))
     if not group.readEntry("WatchFile", QVariant(True)).toBool():
         group.writeEntry("WatchFile", QVariant(True))
     group.sync()

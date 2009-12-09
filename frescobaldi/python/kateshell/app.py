@@ -696,7 +696,7 @@ class Document(DBusItem):
                 m = markiface.mark(line)
                 if m:
                     marks.append("%d:%d" % (line, m))
-            group.writeEntry("bookmarks", ','.join(marks))
+            group.writeEntry("bookmarks", QVariant(','.join(marks)))
         # also save the encoding
         group.writeEntry("encoding", QVariant(self.encoding()))
 

@@ -98,7 +98,7 @@ def findDicts():
 
     # if not used before, write the current locale (if existing) as default
     if defaultlang and unicode(conf.readEntry("lastused", QVariant("")).toString()) not in hyphdicts:
-        conf.writeEntry("lastused", defaultlang)
+        conf.writeEntry("lastused", QVariant(defaultlang))
         conf.sync()
 
 findDicts()
@@ -127,7 +127,7 @@ def hyphenate(text, mainwindow):
     listbox.setFocus()
     if d.exec_():
         lang = langs[listbox.currentRow()]
-        conf.writeEntry("lastused", lang)
+        conf.writeEntry("lastused", QVariant(lang))
         conf.sync()
         # get hyphenator
         h = Hyphenator(hyphdicts[lang])
