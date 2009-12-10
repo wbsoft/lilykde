@@ -8,6 +8,8 @@ Changes in  --
   - Does not repeat normal rests and skips (because often one is interested in
     the chord preceding the rest)
   - Keeps the \rest when repeating a pitched rest (e.g. c\rest)
+  - Only removes the octave from the repeated pitch (or from the first pitch
+    of the repeated chord) inside relative music
 * General:
   - ESC key now closes PDF-preview dialogs properly
   - ESC key does not take focus away from editor window if PDF visible

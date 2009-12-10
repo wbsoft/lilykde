@@ -208,9 +208,13 @@ class DocumentManipulator(object):
         # leave out the duration
         result = matchObj.group('chord')
         
-        # remove octave mark from first pitch
-        result = re.sub(ly.rx.named_pitch,
-            lambda m: m.group('step') + m.group('cautionary'), result, 1)
+        # remove octave mark from first pitch if in relative mode
+        tokenizer = RelativeTokenizer()
+        for token in tokenizer.tokens(self.doc.textToCursor()):
+            pass
+        if isinstance(tokenizer.parser(), tokenizer.RelativeParser):
+            result = re.sub(ly.rx.named_pitch,
+                lambda m: m.group('step') + m.group('cautionary'), result, 1)
         
         # add articulations, etc
         stuff = text[matchObj.end():]
@@ -836,6 +840,23 @@ class RangeTokenizer(RangeMixin, ly.tokenize.Tokenizer):
     """ A Tokenizer that adds ranges to the tokens. """
     pass
 
+
+class RelativeTokenizer(ly.tokenize.Tokenizer):
+    """
+    A tokenizer to quickly check if we are in relative mode.
+    """
+    class Relative(ly.tokenize.Tokenizer.Command):
+        rx = r"\\relative\b"
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.enter(tokenizer.RelativeParser, self)
+    
+    class ToplevelParser(ly.tokenize.Tokenizer.ToplevelParser):
+        items = staticmethod(lambda cls: (cls.Relative,) +
+            ly.tokenize.Tokenizer.ToplevelParser.items(cls))
+            
+    class RelativeParser(ToplevelParser):
+        argcount = 2 # TODO: account for (deprecated) \relative without pitch
+        
 
 class EditCursor(ly.tokenize.Cursor):
     """
