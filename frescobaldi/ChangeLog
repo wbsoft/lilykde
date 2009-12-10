@@ -14,8 +14,9 @@ Changes in  --
   - ESC key now closes PDF-preview dialogs properly
   - ESC key does not take focus away from editor window if PDF visible
   - Main window is activated when clicking on notes in detached PDF viewer
+  - Fix interaction with SIP 4.9.3 (some settings were not saved, like paths)
 * Installation:
-  - CMake now does not require a compiler anymore
+  - CMake now does not require a compiler to be present anymore
 * Translations:
   - Dutch updated by Wilbert Berendsen
   - Spanish updated by Francisco Vila
