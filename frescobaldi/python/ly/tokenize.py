@@ -722,11 +722,11 @@ class Cursor(object):
             self.anchorLine = self.line
             self.anchorColumn = self.column + len(text)
 
-    def startEditing(self):
+    def __enter__(self):
         """ Called before edits are made. """
         pass
     
-    def endEditing(self):
+    def __exit__(self, *args):
         """ Called after edits have been done. """
         pass
     
@@ -806,21 +806,20 @@ class ChangeList(object):
 
     def applyToCursor(self, cursor):
         index = 0
-        cursor.startEditing()
-        for pos, end, text in self.changes():
-            if pos > index:
-                cursor.walk(self._text[index:pos])
-            if end > pos:
-                cursor.anchor(self._text[pos:end])
-                if text:
-                    cursor.replaceText(text)
-                    cursor.walk(text)
+        with cursor:
+            for pos, end, text in self.changes():
+                if pos > index:
+                    cursor.walk(self._text[index:pos])
+                if end > pos:
+                    cursor.anchor(self._text[pos:end])
+                    if text:
+                        cursor.replaceText(text)
+                        cursor.walk(text)
+                    else:
+                        cursor.removeText()
                 else:
-                    cursor.removeText()
-            else:
-                cursor.insertText(text)
-                cursor.walk(text)
-            index = end
-        cursor.endEditing()
+                    cursor.insertText(text)
+                    cursor.walk(text)
+                index = end
 
 

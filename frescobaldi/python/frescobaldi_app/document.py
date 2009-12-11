@@ -70,11 +70,10 @@ class DocumentManipulator(object):
             return
         
         # Apply the changes.
-        self.doc.doc.startEditing()
-        changes.applyToCursor(EditCursor(self.doc.doc))
-        if not start and not includeCommandChanged:
-            self.addLineToTop('\\include "%s.ly"' % lang)
-        self.doc.doc.endEditing()
+        with self.doc.editContext():
+            changes.applyToCursor(EditCursor(self.doc.doc))
+            if not start and not includeCommandChanged:
+                self.addLineToTop('\\include "%s.ly"' % lang)
         if start and not includeCommandChanged:
             KMessageBox.information(self.doc.app.mainwin,
                 '<p>%s</p><p><tt>\\include "%s.ly"</tt></p>' %
@@ -181,10 +180,9 @@ class DocumentManipulator(object):
 
         # do it:
         cursor = KTextEditor.Cursor(insertLine, 0)
-        self.doc.doc.startEditing()
-        self.doc.replaceSelectionWith(variable, keepSelection=False)
-        self.doc.doc.insertText(cursor, result)
-        self.doc.doc.endEditing()
+        with self.doc.editContext():
+            self.doc.replaceSelectionWith(variable, keepSelection=False)
+            self.doc.doc.insertText(cursor, result)
         
     def repeatLastExpression(self):
         """
@@ -367,13 +365,12 @@ class DocumentManipulator(object):
         
         # We don't just replace the text, because that would destroy smart
         # point and click. We only replace the indents.
-        self.doc.doc.startEditing()
-        for old, new in zip(oldindents, newindents):
-            if old != new:
-                self.doc.doc.replaceText(
-                    KTextEditor.Range(startline, 0, startline, len(old)), new)
-            startline += 1
-        self.doc.doc.endEditing()
+        with self.doc.editContext():
+            for old, new in zip(oldindents, newindents):
+                if old != new:
+                    self.doc.doc.replaceText(
+                        KTextEditor.Range(startline, 0, startline, len(old)), new)
+                startline += 1
         self.doc.view.removeSelection()
 
     def populateContextMenu(self, menu):
@@ -561,10 +558,9 @@ class DocumentManipulator(object):
                     cur.walk(text[pos:m.end('full')])
                     pos = m.end('full')
                     insertions.append(cur.kteCursor())
-            self.doc.doc.startEditing()
-            for i in reversed(insertions):
-                self.doc.doc.insertText(i, art)
-            self.doc.doc.endEditing()
+            with self.doc.editContext():
+                for i in reversed(insertions):
+                    self.doc.doc.insertText(i, art)
             self.doc.view.removeSelection()
         else:
             self.doc.view.insertText(art)
@@ -603,30 +599,29 @@ class DocumentManipulator(object):
         if selRange.start().position() == (0, 0):
             return
         text = self.doc.selectionText()
-        self.doc.doc.startEditing()
-        atStart = cursor.position() == selRange.start().position()
-        # Determine current depth (we could be in a long \book block)
-        tokenizer = ly.tokenize.Tokenizer()
-        for token in tokenizer.tokens(self.doc.textToCursor(selRange.start())):
-            pass
-        self.doc.doc.removeText(selRange)
-        insert = KTextEditor.Cursor(0, 0)
-        for r in reversed(list(self.findBlankLines(tokenizer.depth()))):
-            if r.end().position() < selRange.start().position():
-                insert.setLine(r.end().line())
-                break
-        cursor = Cursor(insert)
-        if not text.endswith('\n'):
-            text += '\n'
-        cursor.walk(text)
-        self.doc.doc.insertText(insert, text)
+        with self.doc.editContext():
+            atStart = cursor.position() == selRange.start().position()
+            # Determine current depth (we could be in a long \book block)
+            tokenizer = ly.tokenize.Tokenizer()
+            for token in tokenizer.tokens(self.doc.textToCursor(selRange.start())):
+                pass
+            self.doc.doc.removeText(selRange)
+            insert = KTextEditor.Cursor(0, 0)
+            for r in reversed(list(self.findBlankLines(tokenizer.depth()))):
+                if r.end().position() < selRange.start().position():
+                    insert.setLine(r.end().line())
+                    break
+            cursor = Cursor(insert)
+            if not text.endswith('\n'):
+                text += '\n'
+            cursor.walk(text)
+            self.doc.doc.insertText(insert, text)
         selRange = KTextEditor.Range(insert, cursor.kteCursor())
         self.doc.view.setSelection(selRange)
         if atStart:
             self.doc.view.setCursorPosition(selRange.start())
         else:
             self.doc.view.setCursorPosition(selRange.end())
-        self.doc.doc.endEditing()
     
     def moveSelectionDown(self):
         """
@@ -640,34 +635,33 @@ class DocumentManipulator(object):
         if selRange.end().position() == docRange.end().position():
             return
         text = self.doc.selectionText()
-        self.doc.doc.startEditing()
-        atStart = cursor.position() == selRange.start().position()
-        # Determine current depth (we could be in a long \book block)
-        tokenizer = ly.tokenize.Tokenizer()
-        for token in tokenizer.tokens(self.doc.textToCursor(selRange.start())):
-            pass
-        self.doc.doc.removeText(selRange)
-        for r in self.findBlankLines(tokenizer.depth()):
-            if r.start().position() > selRange.start().position():
-                insert = KTextEditor.Cursor(r.end().line(), 0)
-                break
-        else:
-            docRange = self.doc.doc.documentRange()
-            self.doc.doc.insertText(docRange.end(), '\n')
-            docRange = self.doc.doc.documentRange()
-            insert = docRange.end()
-        cursor = Cursor(insert)
-        if not text.endswith('\n'):
-            text += '\n'
-        cursor.walk(text)
-        self.doc.doc.insertText(insert, text)
+        with self.doc.editContext():
+            atStart = cursor.position() == selRange.start().position()
+            # Determine current depth (we could be in a long \book block)
+            tokenizer = ly.tokenize.Tokenizer()
+            for token in tokenizer.tokens(self.doc.textToCursor(selRange.start())):
+                pass
+            self.doc.doc.removeText(selRange)
+            for r in self.findBlankLines(tokenizer.depth()):
+                if r.start().position() > selRange.start().position():
+                    insert = KTextEditor.Cursor(r.end().line(), 0)
+                    break
+            else:
+                docRange = self.doc.doc.documentRange()
+                self.doc.doc.insertText(docRange.end(), '\n')
+                docRange = self.doc.doc.documentRange()
+                insert = docRange.end()
+            cursor = Cursor(insert)
+            if not text.endswith('\n'):
+                text += '\n'
+            cursor.walk(text)
+            self.doc.doc.insertText(insert, text)
         selRange = KTextEditor.Range(insert, cursor.kteCursor())
         self.doc.view.setSelection(selRange)
         if atStart:
             self.doc.view.setCursorPosition(selRange.start())
         else:
             self.doc.view.setCursorPosition(selRange.end())
-        self.doc.doc.endEditing()
 
     def convertRelativeToAbsolute(self):
         """
@@ -862,15 +856,17 @@ class EditCursor(ly.tokenize.Cursor):
     """
     Translates changes to a Python string in a ly.tokenize.ChangeList
     to changes to a KTextEditor.Document and applies them.
+    Can be used as a context manager, in which case it folds all edits
+    in one undo action.
     """
     def __init__(self, doc):
         super(EditCursor, self).__init__()
         self.doc = doc
     
-    def startEditing(self):
+    def __enter__(self):
         self.doc.startEditing()
         
-    def endEditing(self):
+    def __exit__(self, *args):
         self.doc.endEditing()
         
     def insertText(self, text):

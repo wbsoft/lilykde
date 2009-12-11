@@ -17,7 +17,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-import os, re, sip, sys, time, weakref, dbus, dbus.service, dbus.mainloop.qt
+import os, re, sip, sys, time, weakref
+from contextlib import contextmanager
+
+import dbus, dbus.service, dbus.mainloop.qt
 from dbus.service import method, signal
 
 from signals import Signal
@@ -769,7 +772,13 @@ class Document(DBusItem):
             v.setSelection(KTextEditor.Range(line, col, endline, endcol))
         else:
             v.removeSelection()
-
+    
+    @contextmanager
+    def editContext(self):
+        self.doc.startEditing()
+        yield
+        self.doc.endEditing()
+        
     def resetCursorTranslations(self):
         """
         Clears the cursor translations that keep Point and Click
