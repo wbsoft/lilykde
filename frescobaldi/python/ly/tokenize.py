@@ -634,8 +634,8 @@ class MusicTokenizer(Tokenizer):
         rx = ly.rx.named_pitch
         def __init__(self, matchObj, tokenizer):
             self.step = matchObj.group('step')
-            self.cautionary = matchObj.group('cautionary') or ''
             self.octave = matchObj.group('octave') or ''
+            self.cautionary = matchObj.group('cautionary') or ''
             self.octcheck = matchObj.group('octcheck') or ''
         
     class ToplevelParser(Tokenizer.ToplevelParser):

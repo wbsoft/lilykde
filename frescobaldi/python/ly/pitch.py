@@ -51,8 +51,9 @@ class Pitch(object):
         p = self.__class__()
         p.note = self.note
         p.alter = self.alter
-        p.cautionary = self.cautionary
         p.octave = self.octave
+        p.cautionary = self.cautionary
+        p.octaveCheck = self.octaveCheck
         return p
         
     def absolute(self, lastPitch):
@@ -89,8 +90,8 @@ class Pitch(object):
         requested that is not available in that language.
         """
         output = [pitchWriter[language](self.note, self.alter),
-                  self.cautionary,
-                  octaveToString(self.octave)]
+                  octaveToString(self.octave),
+                  self.cautionary]
         if self.octaveCheck is not None:
             output.append('=' + octaveToString(self.octaveCheck))
         return ''.join(output)

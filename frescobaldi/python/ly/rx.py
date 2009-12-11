@@ -38,22 +38,22 @@ step = (
 )
 named_step = "(?P<step>" + step + ")"
 
-cautionary = r"[?!]?"
-named_cautionary = "(?P<cautionary>" + cautionary + ")"
-
 rest = r"(\b[Rrs]|\\skip)(?![A-Za-z])"
 named_rest = "(?P<rest>" + rest + ")"
 
 octave = r"('+|,+|(?![A-Za-z]))"
 named_octave = "(?P<octave>" + octave + ")"
 
+cautionary = r"[?!]?"
+named_cautionary = "(?P<cautionary>" + cautionary + ")"
+
 octcheck = "=[',]*"
 named_octcheck = "(?P<octcheck>" + octcheck + ")"
 
 pitch = (
-    step + cautionary + octave + r"(\s*" + octcheck + r")?")
+    step + octave + cautionary + r"(\s*" + octcheck + r")?")
 named_pitch = (
-    named_step + named_cautionary + named_octave + r"(\s*" +
+    named_step + named_octave + named_cautionary + r"(\s*" +
     named_octcheck + r")?")
 
 duration = (

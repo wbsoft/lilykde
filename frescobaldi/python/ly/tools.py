@@ -65,8 +65,8 @@ def relativeToAbsolute(text, start = 0, changes = None):
         pitch.absolute(lastPitch)
         changes.replaceToken(token, '%s%s%s' % (
             token.step,
-            token.cautionary,
-            ly.pitch.octaveToString(pitch.octave)))
+            ly.pitch.octaveToString(pitch.octave),
+            token.cautionary))
         
     class gen(object):
         """
@@ -214,8 +214,8 @@ def absoluteToRelative(text, start = 0, changes = None):
         """
         changes.replaceToken(token, '%s%s%s' % (
             token.step,
-            token.cautionary,
-            ly.pitch.octaveToString(pitch.octave)))
+            ly.pitch.octaveToString(pitch.octave),
+            token.cautionary))
         
     class gen(object):
         """
