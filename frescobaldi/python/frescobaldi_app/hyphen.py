@@ -70,7 +70,7 @@ def findDicts():
     # now find the hyph_xx_XX.dic files
     dicfiles = (f
         for p in paths() if os.path.isdir(p)
-            for f in glob(os.path.join(p, 'hyph_*.dic')) if os.path.isfile(f))
+            for f in glob(os.path.join(p, 'hyph_*.dic')) if os.access(f, os.R_OK))
 
     # default to the users current locale if not used before
     defaultlang = None

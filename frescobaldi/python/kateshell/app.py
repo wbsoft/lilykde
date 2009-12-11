@@ -460,7 +460,7 @@ class Document(DBusItem):
     @method(iface, in_signature='', out_signature='s')
     def encoding(self):
         if self.doc:
-            return str(self.doc.encoding())
+            return self.doc.encoding()
         else:
             return self._encoding
             
@@ -478,12 +478,12 @@ class Document(DBusItem):
         
     @method(iface, in_signature='', out_signature='s')
     def localPath(self):
-        return self.url().toLocalFile()
+        return self.url().toLocalFile() or ""
 
     @method(iface, in_signature='', out_signature='s')
     def documentName(self):
         if self.doc:
-            return self.doc.documentName()
+            return self.doc.documentName() or ""
         else:
             return self.url().fileName() or i18n("Untitled")
 

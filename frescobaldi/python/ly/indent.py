@@ -240,7 +240,7 @@ if __name__ == '__main__':
     options, args = op.parse_args()
     # TODO: encoding
     # TODO: error handling
-    infile = args and file(args[0]) or sys.stdin
+    infile = args and open(args[0]) or sys.stdin
     text = infile.read()
     text = indent(text,
         start=options.start_indent,

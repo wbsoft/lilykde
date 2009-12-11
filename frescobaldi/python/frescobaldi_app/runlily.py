@@ -361,9 +361,8 @@ class Log(LogWidget):
         text = (self.textBrowser.textCursor().selection().toPlainText()
                 or self.textBrowser.toPlainText())
         try:
-            f = open(fileName, 'w')
-            f.write(text.encode(encoding, 'replace'))
-            f.close()
+            with open(fileName, 'w') as f:
+                f.write(text.encode(encoding, 'replace'))
         except (OSError, IOError), e:
             KMessageBox.error(self.textBrowser,
                 i18n("Could not save LilyPond log:\n\n%1", unicode(e)))
@@ -476,7 +475,8 @@ class LocalFileManager(object):
         lyfile = self.path()
         # Save the file to our local storage
         # TODO: error handling
-        file(lyfile, 'w').write(self.doc.text().encode(self.doc.encoding() or 'utf-8'))
+        with open(lyfile, 'w') as f:
+            f.write(self.doc.text().encode(self.doc.encoding() or 'utf-8'))
         return lyfile
  
 
@@ -498,7 +498,8 @@ class BackgroundJob(object):
         
     def run(self, text, fileName='output.ly'):
         lyfile = os.path.join(self.directory(), fileName)
-        file(lyfile, 'w').write(text.encode('utf-8'))
+        with open(lyfile, 'w') as f:
+            f.write(text.encode('utf-8'))
         # ... and run LilyPond.
         self.job = Ly2PDF(lyfile, self.log)
         self.job.done.connect(self.finished)
