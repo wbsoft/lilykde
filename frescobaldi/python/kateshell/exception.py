@@ -24,7 +24,6 @@ Exception dialog for unhandled Python exceptions
 
 import traceback
 
-from PyQt4.QtCore import QObject, SIGNAL
 from PyQt4.QtGui import QLabel, QTextBrowser, QTextCursor, QVBoxLayout
 from PyKDE4.kdecore import KGlobal, KToolInvocation, i18n
 from PyKDE4.kdeui import KDialog, KIcon
@@ -49,7 +48,7 @@ class ExceptionDialog(KDialog):
             KDialog.User1 | KDialog.Close))
         self.setButtonIcon(KDialog.User1, KIcon("tools-report-bug"))
         self.setButtonText(KDialog.User1, i18n("Email Bug Report..."))
-        QObject.connect(self, SIGNAL("user1Clicked()"), self.reportBug)
+        self.user1Clicked.connect(self.reportBug)
         self.resize(600,300)
         self.exec_()
 

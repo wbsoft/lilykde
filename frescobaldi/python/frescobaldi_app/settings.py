@@ -21,7 +21,7 @@
 Config dialog
 """
 
-from PyQt4.QtCore import QObject, QSize, Qt, SIGNAL
+from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
     QCheckBox, QGridLayout, QGroupBox, QLabel, QLineEdit, QRadioButton,
     QTextEdit, QTreeView, QWidget)
@@ -49,12 +49,10 @@ class SettingsDialog(KPageDialog):
         self.setCaption(i18n("Configure"))
         self.setHelp("settings-dialog")
         self.setDefaultButton(KPageDialog.Ok)
-        QObject.connect(self, SIGNAL("applyClicked()"), self.saveSettings)
-        QObject.connect(self, SIGNAL("defaultClicked()"), self.defaultClicked)
-        QObject.connect(self, SIGNAL("resetClicked()"), self.loadSettings)
-        QObject.connect(self,
-            SIGNAL("currentPageChanged(KPageWidgetItem*, KPageWidgetItem*)"),
-            self.slotCurrentPageChanged)
+        self.applyClicked.connect(self.saveSettings)
+        self.defaultClicked.connect(self.slotDefaultClicked)
+        self.resetClicked.connect(self.loadSettings)
+        self.currentPageChanged.connect(self.slotCurrentPageChanged)
             
         self.pages = [
             GeneralPreferences(self),
@@ -76,7 +74,7 @@ class SettingsDialog(KPageDialog):
             self.saveSettings()
         KPageDialog.done(self, result)
         
-    def defaultClicked(self):
+    def slotDefaultClicked(self):
         for page in self.pages:
             page.defaults()
         self.changed(True)
@@ -109,7 +107,7 @@ class EditorComponent(object):
         # Get the KTextEditor config pages.
         for i in range(editor.configPages()):
             cPage = editor.configPage(i, dialog)
-            QObject.connect(cPage, SIGNAL("changed()"), dialog.changed)
+            cPage.changed.connect(dialog.changed)
             self.editorPages.append(cPage)
             item = dialog.addSubPage(editorItem, cPage, editor.configPageName(i))
             item.setHeader(editor.configPageFullName(i))
@@ -148,14 +146,13 @@ class GeneralPreferences(KVBox):
             (i18n("Disable the built-in PDF preview"),
                 "disable pdf preview", False),
         ):
-            b = QCheckBox(title, self)
-            QObject.connect(b, SIGNAL("clicked()"), dialog.changed)
+            b = QCheckBox(title, self, clicked=lambda: dialog.changed())
             self.checks.append((b, name, default))
             
         self.layout().addSpacing(20)
         
         self.versionOptions = {}
-        self.customVersion = QLineEdit()
+        self.customVersion = QLineEdit(textChanged=lambda: dialog.changed())
             
         def changed(dummy):
             dialog.changed()
@@ -168,15 +165,11 @@ class GeneralPreferences(KVBox):
             (i18n("Use version number of last convert-ly rule"), "convert-ly"),
             (i18n("Use custom version number:"), "custom"),
         ):
-            self.versionOptions[name] = QRadioButton(title)
-            QObject.connect(self.versionOptions[name], SIGNAL("toggled(bool)"), changed)
+            self.versionOptions[name] = QRadioButton(title, toggled=changed)
         
         self.customVersion.setToolTip(i18n(
             "Enter a valid LilyPond version number, e.g. 2.12.0"))
-        QObject.connect(self.customVersion, SIGNAL("textChanged(QString)"),
-            lambda dummy: dialog.changed())
-        QObject.connect(self.versionOptions["custom"], SIGNAL("clicked()"),
-            lambda: self.customVersion.setFocus())
+        self.versionOptions["custom"].clicked.connect(lambda: self.customVersion.setFocus())
         
         grid.addWidget(self.versionOptions["lilypond"], 0, 0, 1, 2)
         grid.addWidget(self.versionOptions["convert-ly"], 1, 0, 1, 2)
@@ -257,8 +250,7 @@ class Commands(QWidget):
         ):
             label = QLabel(title)
             widget = lineedit()
-            QObject.connect(widget, SIGNAL("textEdited(const QString&)"),
-                lambda: dialog.changed())
+            widget.textEdited.connect(lambda: dialog.changed())
             label.setBuddy(widget)
             label.setToolTip(tooltip)
             widget.setToolTip(tooltip)
@@ -280,12 +272,11 @@ class Commands(QWidget):
         self.folder.setMode(KFile.Mode(
             KFile.Directory | KFile.ExistingOnly | KFile.LocalOnly))
         self.folder.button().setIcon(KIcon("document-open-folder"))
-        QObject.connect(self.folder, SIGNAL("textChanged(const QString&)"),
-            lambda dummy: dialog.changed())
+        self.folder.textChanged.connect(lambda dummy: dialog.changed())
         
         # LilyPond documentation URL
         l = QLabel(i18n("LilyPond documentation:"))
-        self.lilydoc = KUrlRequester()
+        self.lilydoc = KUrlRequester(textChanged=lambda: dialog.changed())
         l.setBuddy(self.lilydoc)
         row = layout.rowCount()
         tooltip = i18n(
@@ -296,8 +287,6 @@ class Commands(QWidget):
         layout.addWidget(self.lilydoc, row, 1)
         self.lilydoc.setMode(KFile.Mode(
             KFile.File | KFile.Directory | KFile.ExistingOnly))
-        QObject.connect(self.lilydoc, SIGNAL("textChanged(const QString&)"),
-            lambda dummy: dialog.changed())
         
         # hyphen paths
         l = QLabel(i18n(
@@ -306,12 +295,10 @@ class Commands(QWidget):
             "If you leave out the starting slash, the prefixes from the "
             "KDEDIRS environment variable are prepended."))
         l.setWordWrap(True)
-        self.hyphenPaths = QTextEdit()
+        self.hyphenPaths = QTextEdit(textChanged=lambda: dialog.changed())
         l.setBuddy(self.hyphenPaths)
         layout.addWidget(l, layout.rowCount(), 0, 1, 2)
         layout.addWidget(self.hyphenPaths, layout.rowCount(), 0, 1, 2)
-        QObject.connect(self.hyphenPaths, SIGNAL("textChanged()"),
-            dialog.changed)
 
     def setHyphenPaths(self, paths):
         self.hyphenPaths.setPlainText('\n'.join(paths))
@@ -382,8 +369,7 @@ class RumorSettings(KVBox):
         ):
             label = QLabel(title)
             widget = lineedit()
-            QObject.connect(widget, SIGNAL("textEdited(const QString&)"),
-                lambda: dialog.changed())
+            widget.textEdited.connect(lambda: dialog.changed())
             label.setBuddy(widget)
             label.setToolTip(tooltip)
             widget.setToolTip(tooltip)

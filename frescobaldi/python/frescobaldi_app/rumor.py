@@ -24,8 +24,7 @@ Frescobaldi module to run Rumor
 import os, re, sys
 from subprocess import Popen, PIPE
 
-from PyQt4.QtCore import (
-    QEvent, QObject, QRegExp, QSize, QTimer, Qt, SIGNAL)
+from PyQt4.QtCore import QEvent, QRegExp, QSize, QTimer, Qt
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QHBoxLayout, QLabel, QPushButton,
     QRegExpValidator, QToolButton, QTreeWidget, QTreeWidgetItem, QWidget)
@@ -128,15 +127,13 @@ class RumorPanel(QWidget):
         hb.addWidget(self.timidity)
 
         # Button 'More Settings'
-        sb = QPushButton(i18n("Configure..."))
+        sb = QPushButton(i18n("Configure..."), clicked=self.slotSettingsButtonClicked)
         sb.setToolTip(i18n("Adjust more settings, like MIDI input and output."))
-        QObject.connect(sb, SIGNAL("clicked()"), self.slotSettingsButtonClicked)
         hb.addWidget(sb)
 
         # Save Button
-        sb = QPushButton(i18n("Save"))
+        sb = QPushButton(i18n("Save"), clicked=self.saveSettings)
         sb.setToolTip(i18n("Set these settings as default."))
-        QObject.connect(sb, SIGNAL("clicked()"), self.saveSettings)
         hb.addWidget(sb)
 
         self.loadSettings()

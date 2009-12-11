@@ -46,13 +46,6 @@ def config(group=None):
         c = c.group(group)
     return c
 
-def onSignal(obj, signalName):
-    """ decorator to easily add connect a Qt signal to a Python slot."""
-    def decorator(func):
-        QObject.connect(obj, SIGNAL(signalName), func)
-        return func
-    return decorator
-
 
 class ScoreWizard(KPageDialog):
     def __init__(self, mainwin):
@@ -72,14 +65,16 @@ class ScoreWizard(KPageDialog):
         self.settings = Settings(self)
         self.loadCompletions()
         self.restoreDialogSize(config("dialogsize"))
-        @onSignal(self, "defaultClicked()")
-        def default():
-            self.titles.default()
-            self.parts.default()
-            self.settings.default()
-        @onSignal(self, "tryClicked()")
-        def previewscore():
-            self.previewDialog().showPreview()
+        self.defaultClicked.connect(self.default)
+        self.tryClicked.connect(self.previewScore)
+    
+    def default(self):
+        self.titles.default()
+        self.parts.default()
+        self.settings.default()
+    
+    def previewScore(self):
+        self.previewDialog().showPreview()
         
     @lazymethod
     def previewDialog(self):
@@ -146,9 +141,8 @@ class Titles(QWidget):
         t.setContentsMargins(2, 2, 2, 2)
         t.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         t.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        @onSignal(t.document().documentLayout(), "documentSizeChanged(QSizeF)")
-        def resize(size):
-            t.setMinimumSize(size.toSize() + QSize(4, 4))
+        t.document().documentLayout().documentSizeChanged.connect(
+            lambda size: t.setMinimumSize(size.toSize() + QSize(4, 4)))
 
         headers = ly.headers(i18n)
         msg = i18n("Click to enter a value.")
@@ -160,9 +154,8 @@ class Titles(QWidget):
                 for k, v in headers))
         t.setHtml(html)
         l.addWidget(t)
-        @onSignal(t, "anchorClicked(QUrl)")
-        def focusEntry(qurl):
-            self.findChild(KLineEdit, qurl.toString()).setFocus()
+        t.anchorClicked.connect(lambda qurl:
+            self.findChild(KLineEdit, qurl.toString()).setFocus())
 
         g = QGridLayout()
         g.setVerticalSpacing(1)
@@ -261,22 +254,22 @@ class Parts(QSplitter):
                     parent.enableButton(KPageDialog.Try, False)
                 sip.delete(self.w)
                 sip.delete(self) # TODO: check if necessary
-
-        @onSignal(allParts, "itemDoubleClicked(QTreeWidgetItem*, int)")
+        
+        @allParts.itemDoubleClicked.connect
         def addPart(item, col):
             if hasattr(item, "partClass"):
                 PartItem(item.partClass)
-
-        @onSignal(allParts, "itemClicked(QTreeWidgetItem*, int)")
+        
+        @allParts.itemClicked.connect
         def toggleExpand(item, col):
             item.setExpanded(not item.isExpanded())
 
-        @onSignal(addButton, "clicked()")
+        @addButton.clicked.connect
         def addSelectedParts():
             for item in allParts.selectedItems():
                 PartItem(item.partClass)
 
-        @onSignal(removeButton, "clicked()")
+        @removeButton.clicked.connect
         def removeSelectedParts():
             for item in score.selectedItems():
                 item.remove()
@@ -294,7 +287,7 @@ class Parts(QSplitter):
                     i.setSelected(True)
             return decorator
             
-        @onSignal(upButton, "clicked()")
+        @upButton.clicked.connect
         @keepSel
         def moveUp():
             """ Move selected parts up. """
@@ -303,7 +296,7 @@ class Parts(QSplitter):
                     item = score.takeItem(row)
                     score.insertItem(row - 1, item)
 
-        @onSignal(downButton, "clicked()")
+        @downButton.clicked.connect
         @keepSel
         def moveDown():
             """ Move selected parts down. """
@@ -312,7 +305,7 @@ class Parts(QSplitter):
                     item = score.takeItem(row)
                     score.insertItem(row + 1, item)
 
-        @onSignal(score, "currentItemChanged(QListWidgetItem*, QListWidgetItem*)")
+        @score.currentItemChanged.connect
         def showItem(cur, prev):
             if cur:
                 cur.showSettingsWidget()
@@ -449,7 +442,6 @@ class Settings(SymbolManager, QWidget):
         self.lylang.addItems([l.title() for l in self.languageNames])
         h.setToolTip(i18n(
             "The LilyPond language you want to use for the pitch names."))
-        @onSignal(self.lylang, "currentIndexChanged(const QString&)")
         def slotLanguageChanged(lang):
             """ Change the LilyPond language, affects key names """
             lang = lang.lower()
@@ -462,6 +454,7 @@ class Settings(SymbolManager, QWidget):
             self.key.addItems(ly.keyNames[lang])
             self.key.setCurrentIndex(index)
         slotLanguageChanged('') # init with default
+        QObject.connect(self.lylang, SIGNAL("currentIndexChanged(const QString&)"), slotLanguageChanged)
 
         h = KHBox()
         v.addWidget(h)
@@ -511,9 +504,7 @@ class Settings(SymbolManager, QWidget):
         self.paperLandscape = QCheckBox(i18n("Landscape"), h)
         self.paper.addItem(i18n("Default"))
         self.paper.addItems(ly.paperSizes)
-        @onSignal(self.paper, "activated(int)")
-        def checkLandscape(i):
-            self.paperLandscape.setEnabled(bool(i))
+        self.paper.activated.connect(lambda i: self.paperLandscape.setEnabled(bool(i)))
 
         # Instrument names
         instr.setCheckable(True)

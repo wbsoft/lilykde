@@ -150,7 +150,7 @@ class ExpansionDialog(KDialog):
             KDialog.Ok | KDialog.Close | KDialog.User1 | KDialog.User2 ))
         self.setButtonGuiItem(KDialog.User1, KStandardGuiItem.remove())
         self.setButtonGuiItem(KDialog.User2, KStandardGuiItem.add())
-        QObject.connect(self, SIGNAL("closeClicked()"), self.reject)
+        self.closeClicked.connect(self.reject)
         self.setDefaultButton(KDialog.Ok)
         self.setHelp("expand")
         
@@ -232,15 +232,13 @@ class ExpansionDialog(KDialog):
         tree.setSortingEnabled(True)
         tree.resizeColumnToContents(1)
         
-        QObject.connect(self, SIGNAL("user1Clicked()"), self.removeItem)
-        QObject.connect(self, SIGNAL("user2Clicked()"), self.addItem)
-        QObject.connect(edit, SIGNAL("textChanged()"), self.editChanged)
-        QObject.connect(search, SIGNAL("textChanged(QString)"), self.checkMatch)
-        QObject.connect(tree, SIGNAL("itemSelectionChanged()"), self.updateSelection)
-        QObject.connect(tree, SIGNAL("itemChanged(QTreeWidgetItem*, int)"),
-            self.itemChanged, Qt.QueuedConnection)
-        QObject.connect(key, SIGNAL("keySequenceChanged (QKeySequence)"),
-            self.keySequenceChanged)
+        self.user1Clicked.connect(self.removeItem)
+        self.user2Clicked.connect(self.addItem)
+        edit.textChanged.connect(self.editChanged)
+        search.textChanged.connect(self.checkMatch)
+        tree.itemSelectionChanged.connect(self.updateSelection)
+        tree.itemChanged.connect(self.itemChanged, Qt.QueuedConnection)
+        key.keySequenceChanged.connect(self.keySequenceChanged)
     
     def createItem(self, name, description, key=None):
         """ Create a new item, if key is given it should be a KShortcut. """

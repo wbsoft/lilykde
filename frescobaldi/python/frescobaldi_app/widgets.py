@@ -24,8 +24,7 @@ Some special widgets
 import os
 from time import time
 
-from PyQt4.QtCore import (
-    QObject, QProcess, QRegExp, QTimeLine, Qt, SIGNAL)
+from PyQt4.QtCore import QProcess, QRegExp, QTimeLine, Qt
 from PyQt4.QtGui import (
     QComboBox, QLabel, QLineEdit, QPainter, QPixmap, QPushButton, QSlider,
     QSpinBox, QToolButton, QRegExpValidator, QWidget)
@@ -48,7 +47,7 @@ class TapButton(QPushButton):
         def tap():
             self.tapTime, t = time(), self.tapTime
             callback(int(60.0 / (self.tapTime - t)))
-        QObject.connect(self, SIGNAL("pressed()"), tap)
+        self.pressed.connect(tap)
         self.setToolTip(i18n("Click this button a few times to set the tempo."))
 
 
@@ -62,7 +61,7 @@ class ProcessButtonBase(object):
         super(ProcessButtonBase, self).__init__(*args)
         self.setCheckable(True)
         self._p = KProcess()
-        QObject.connect(self, SIGNAL("clicked()"), self.slotClicked)
+        self.clicked.connect(self.slotClicked)
     
     def slotClicked(self):
         if self.isRunning():
@@ -78,13 +77,13 @@ class ProcessButtonBase(object):
         """ Starts the process, calling the initializeProcess method first."""
         p = KProcess()    # create a new one (FIXME: really needed?)
         self._p = p
-        QObject.connect(self, SIGNAL("destroyed()"), p.terminate)
-        QObject.connect(p, SIGNAL("finished(int, QProcess::ExitStatus)"), self.slotFinished)
-        QObject.connect(p, SIGNAL("error(QProcess::ProcessError)"), self.slotError)
-        QObject.connect(p, SIGNAL("started()"), self.slotStarted)
-        QObject.connect(p, SIGNAL("readyRead()"), self.slotReadyRead)
-        QObject.connect(p, SIGNAL("readyReadStandardError()"), self.slotReadyReadStandardError)
-        QObject.connect(p, SIGNAL("readyReadStandardOutput()"), self.slotReadyReadStandardOutput)
+        self.destroyed.connect(p.terminate)
+        p.finished.connect(self.slotFinished)
+        p.error.connect(self.slotError)
+        p.started.connect(self.slotStarted)
+        p.readyRead.connect(self.slotReadyRead)
+        p.readyReadStandardError.connect(self.slotReadyReadStandardError)
+        p.readyReadStandardOutput.connect(self.slotReadyReadStandardOutput)
         self.initializeProcess(p)
         p.start()
         
@@ -187,10 +186,8 @@ class TempoControl(object):
         self.tapButton = TapButton(None, tap)
         
         # setup signals
-        QObject.connect(self.slider, SIGNAL("valueChanged(int)"),
-            self.spinbox.setValue)
-        QObject.connect(self.spinbox, SIGNAL("valueChanged(int)"),
-            self.slider.setValue)
+        self.slider.valueChanged.connect(self.spinbox.setValue)
+        self.spinbox.valueChanged.connect(self.slider.setValue)
         
         self.slider.setMinimumWidth(200)
         self.setTempo(100) # default
@@ -210,8 +207,7 @@ class ExecLineEdit(QLineEdit):
     """
     def __init__(self, *args):
         QLineEdit.__init__(self, *args)
-        QObject.connect(self, SIGNAL("textChanged(const QString&)"),
-            self._checkexec)
+        self.textChanged.connect(self._checkexec)
 
     def _get(self, filename):
         return filename
@@ -243,9 +239,9 @@ class StackFader(QWidget):
         self.curIndex = None
         self.timeline = QTimeLine()
         self.timeline.setDuration(333)
-        QObject.connect(self.timeline, SIGNAL("finished()"), self.hide)
-        QObject.connect(self.timeline, SIGNAL("valueChanged(qreal)"), self.animate)
-        QObject.connect(stackedWidget, SIGNAL("currentChanged(int)"), self.start)
+        self.timeline.finished.connect(self.hide)
+        self.timeline.valueChanged.connect(self.animate)
+        stackedWidget.currentChanged.connect(self.start)
         self.hide()
     
     def start(self, index):

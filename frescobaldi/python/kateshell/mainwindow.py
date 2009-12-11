@@ -19,8 +19,7 @@
 
 import os, sip, weakref
 
-from PyQt4.QtCore import (
-    QEvent, QObject, QTimer, Qt, SIGNAL, SLOT, pyqtSignature)
+from PyQt4.QtCore import QEvent, QTimer, Qt, SLOT, pyqtSignature
 from PyQt4.QtGui import (
     QAction, QActionGroup, QDialog, QLabel, QPixmap, QSplitter, QStackedWidget,
     QTabBar, QVBoxLayout, QWidget)
@@ -171,8 +170,7 @@ class MainWindow(KParts.MainWindow):
         
         # full screen
         a = self.actionCollection().addAction(KStandardAction.FullScreen, 'fullscreen')
-        QObject.connect(a, SIGNAL("toggled(bool)"), lambda t:
-            KToggleFullScreenAction.setFullScreen(self, t))
+        a.toggled.connect(lambda t: KToggleFullScreenAction.setFullScreen(self, t))
         # recent files.
         self.openRecent = KStandardAction.openRecent(
             self, SLOT("slotOpenRecent(KUrl)"), self)
@@ -192,7 +190,7 @@ class MainWindow(KParts.MainWindow):
                 menu.addSeparator()
                 menu.addAction(tool.action())
                 tool.addMenuActions(menu)
-        QObject.connect(menu, SIGNAL("aboutToShow()"), populate)
+        menu.aboutToShow.connect(populate)
 
     def setupTools(self):
         """
@@ -208,8 +206,8 @@ class MainWindow(KParts.MainWindow):
         docMenu = self.factory().container("documents", self)
         docGroup = QActionGroup(docMenu)
         docGroup.setExclusive(True)
-        QObject.connect(docGroup, SIGNAL("triggered(QAction*)"),
-            lambda a: a.doc().setActive())
+        docGroup.triggered.connect(lambda a: a.doc().setActive())
+            
         def populateDocMenu():
             for a in docGroup.actions():
                 sip.delete(a)
@@ -224,7 +222,7 @@ class MainWindow(KParts.MainWindow):
                     a.setChecked(True)
                 docGroup.addAction(a)
                 docMenu.addAction(a)
-        QObject.connect(docMenu, SIGNAL("aboutToShow()"), populateDocMenu)
+        docMenu.aboutToShow.connect(populateDocMenu)
         
     def act(self, name, texttype, func,
             icon=None, tooltip=None, whatsthis=None, key=None):
@@ -234,7 +232,7 @@ class MainWindow(KParts.MainWindow):
         else:
             a = self.actionCollection().addAction(name)
             a.setText(texttype)
-        QObject.connect(a, SIGNAL("triggered()"), func)
+        a.triggered.connect(func)
         if icon: a.setIcon(KIcon(icon))
         if tooltip: a.setToolTip(tooltip)
         if whatsthis: a.setWhatsThis(whatsthis)
@@ -369,7 +367,7 @@ class MainWindow(KParts.MainWindow):
         def newToolbarConfig():
             self.applyMainWindowSettings(conf)
             self.setupGeneratedMenus()
-        QObject.connect(dlg, SIGNAL("newToolbarConfig()"), newToolbarConfig)
+        dlg.newToolbarConfig.connect(newToolbarConfig)
         dlg.exec_()
 
     def newDocument(self):
@@ -383,9 +381,8 @@ class MainWindow(KParts.MainWindow):
             self.currentDocument().url().url() or self.app.defaultDirectory(),
             '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
             self, i18n("Open File"))
-        encoding = str(res.encoding) # copy it, avoid crash on materialize
-        docs = [self.app.openUrl(url, encoding) for url in res.URLs
-                    if not url.isEmpty()]
+        docs = [self.app.openUrl(url, res.encoding)
+                for url in res.URLs if not url.isEmpty()]
         if docs:
             docs[-1].setActive()
     
@@ -476,8 +473,7 @@ class ViewTabBar(QTabBar):
         mainwin.app.documentCreated.connect(self.addDocument)
         mainwin.app.documentClosed.connect(self.removeDocument)
         mainwin.app.documentMaterialized.connect(self.setDocumentStatus)
-        QObject.connect(self, SIGNAL("currentChanged(int)"),
-            self.slotCurrentChanged)
+        self.currentChanged.connect(self.slotCurrentChanged)
         mainwin.currentDocumentChanged.connect(self.setCurrentDocument)
         
     def addDocument(self, doc):
@@ -531,14 +527,14 @@ class ViewTabBar(QTabBar):
         """
         g = KStandardGuiItem.save()
         a = menu.addAction(g.icon(), g.text())
-        QObject.connect(a, SIGNAL("triggered()"), doc.save)
+        a.triggered.connect(doc.save)
         g = KStandardGuiItem.saveAs()
         a = menu.addAction(g.icon(), g.text())
-        QObject.connect(a, SIGNAL("triggered()"), doc.saveAs)
+        a.triggered.connect(doc.saveAs)
         menu.addSeparator()
         g = KStandardGuiItem.close()
         a = menu.addAction(g.icon(), g.text())
-        QObject.connect(a, SIGNAL("triggered()"), doc.close)
+        a.triggered.connect(doc.close)
         
 
 class TabBar(KMultiTabBar):
@@ -563,8 +559,8 @@ class TabBar(KMultiTabBar):
         tab.setToolTip("<b>%s</b><br/>%s" % (tool.title(),
             i18n("Right-click for tab options")))
         tab.setContextMenuPolicy(Qt.CustomContextMenu)
-        QObject.connect(tab, SIGNAL("clicked()"), tool.toggle)
-        QObject.connect(tab, SIGNAL("customContextMenuRequested(const QPoint&)"),
+        tab.clicked.connect(tool.toggle)
+        tab.customContextMenuRequested.connect(
             lambda pos: tool.contextMenu().exec_(tab.mapToGlobal(pos)))
 
     def removeTool(self, tool):
@@ -712,8 +708,7 @@ class Tool(object):
         self.mainwin = mainwin
         self.name = name
         mainwin.tools[name] = self
-        action = KAction(mainwin) # action to toggle our view
-        QObject.connect(action, SIGNAL("triggered()"), self.slotAction)
+        action = KAction(mainwin, triggered=self.slotAction) # action to toggle our view
         mainwin.actionCollection().addAction("tool_%s" % name, action)
         if key:
             action.setShortcut(KShortcut(key))
@@ -864,16 +859,15 @@ class Tool(object):
             for place in places:
                 dock = self.mainwin.docks[place]
                 a = m.addAction(dock.icon, dock.title)
-                QObject.connect(a, SIGNAL("triggered()"),
-                    lambda place=place: self.setDock(place))
+                a.triggered.connect(lambda place=place: self.setDock(place))
             m.addSeparator()
         a = m.addAction(KIcon("tab-detach"), i18n("Undock"))
-        QObject.connect(a, SIGNAL("triggered()"), self.undock)
+        a.triggered.connect(self.undock)
         self.addMenuActions(m)
         if self.helpAnchor or self.helpAppName:
             m.addSeparator()
             a = m.addAction(KIcon("help-contextual"), KStandardGuiItem.help().text())
-            QObject.connect(a, SIGNAL("triggered()"), self.help)
+            a.triggered.connect(self.help)
         return m
 
     def addMenuActions(self, menu):
@@ -931,7 +925,7 @@ class KPartTool(Tool):
             part = factory.create(self.mainwin)
             if part:
                 self.part = part
-                QObject.connect(part, SIGNAL("destroyed()"), self.slotDestroyed, Qt.DirectConnection)
+                part.destroyed.connect(self.slotDestroyed, Qt.DirectConnection)
                 QTimer.singleShot(0, self.partLoaded)
                 return part.widget()
         self.failed = True
@@ -945,7 +939,7 @@ class KPartTool(Tool):
     
     def delete(self):
         if self.part:
-            QObject.disconnect(self.part, SIGNAL("destroyed()"), self.slotDestroyed)
+            self.part.destroyed.disconnect(self.slotDestroyed)
         super(KPartTool, self).delete()
         
     def slotDestroyed(self):

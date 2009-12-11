@@ -336,29 +336,17 @@ class Document(DBusItem):
         if self._cursor is not None:
             self.setCursorPosition(*self._cursor)
         
-        QObject.connect(self.doc,
-            SIGNAL("documentSavedOrUploaded(KTextEditor::Document*, bool)"),
-            self.slotDocumentSavedOrUploaded)
-        QObject.connect(self.doc,
-            SIGNAL("documentUrlChanged(KTextEditor::Document*)"),
-            self.slotDocumentUrlChanged)
-        QObject.connect(self.doc,
-            SIGNAL("completed()"),
-            self.slotCompleted)
-        QObject.connect(self.doc,
-            SIGNAL("modifiedChanged(KTextEditor::Document*)"),
-            self.slotModifiedChanged)
-        for s in (
-            "cursorPositionChanged(KTextEditor::View*, const KTextEditor::Cursor&)",
-            "viewModeChanged(KTextEditor::View*)",
-            "informationMessage(KTextEditor::View*)"):
-            QObject.connect(self.view, SIGNAL(s), self.slotViewStatusChanged)
-        for s in ("selectionChanged(KTextEditor::View*)",):
-            QObject.connect(self.view, SIGNAL(s), self.slotSelectionChanged)
+        QObject.connect(self.doc, SIGNAL("documentSavedOrUploaded(KTextEditor::Document*, bool)"), self.slotDocumentSavedOrUploaded)
+        QObject.connect(self.doc, SIGNAL("documentUrlChanged(KTextEditor::Document*)"), self.slotDocumentUrlChanged)
+        QObject.connect(self.doc, SIGNAL("completed()"), self.slotCompleted)
+        QObject.connect(self.doc, SIGNAL("modifiedChanged(KTextEditor::Document*)"), self.slotModifiedChanged)
+        QObject.connect(self.view, SIGNAL("cursorPositionChanged(KTextEditor::View*, const KTextEditor::Cursor&)"), self.slotViewStatusChanged)
+        QObject.connect(self.view, SIGNAL("viewModeChanged(KTextEditor::View*)"), self.slotViewStatusChanged)
+        QObject.connect(self.view, SIGNAL("informationMessage(KTextEditor::View*)"), self.slotViewStatusChanged)
+        QObject.connect(self.view, SIGNAL("selectionChanged(KTextEditor::View*)"), self.slotSelectionChanged)
         
         # Allow for dropping urls on the view
-        QObject.connect(self.view, SIGNAL("dropEventPass(QDropEvent *)"),
-            self.app.mainwin.dropEvent)
+        QObject.connect(self.view, SIGNAL("dropEventPass(QDropEvent *)"), self.app.mainwin.dropEvent)
         
         # delete some actions from the view before plugging in GUI
         # trick found in kateviewmanager.cpp
@@ -916,8 +904,7 @@ class UserShortcuts(object):
         if not action:
             action = self._collection.addAction(name)
             action.setShortcutContext(self.shortcutContext)
-            QObject.connect(action, SIGNAL("triggered()"),
-                lambda: self.actionTriggered(name))
+            action.triggered.connect(lambda: self.actionTriggered(name))
         return action
     
     def actionTriggered(self, name):

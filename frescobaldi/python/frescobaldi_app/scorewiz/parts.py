@@ -22,7 +22,7 @@ Part types for the Score Wizard (scorewiz/__init__.py).
 In separate file to ease maintenance.
 """
 
-from PyQt4.QtCore import QObject, QRegExp, Qt, SIGNAL
+from PyQt4.QtCore import QRegExp, Qt
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGroupBox, QLabel, QRadioButton, QRegExpValidator,
     QSpinBox, QVBoxLayout)
@@ -163,8 +163,7 @@ class TablaturePart(SingleVoicePart):
             i18n("Tablature"),
             i18n("Both")))
         if self.tunings:
-            QObject.connect(self.staffType, SIGNAL("activated(int)"),
-                self.slotTabEnable)
+            self.staffType.activated.connect(self.slotTabEnable)
             self.widgetsTuning(layout)
             self.slotTabEnable(0)
 

@@ -24,7 +24,7 @@ the Frescobaldi main window
 
 import weakref, time
 
-from PyQt4.QtCore import QObject, QTimer, SIGNAL
+from PyQt4.QtCore import QTimer
 
 _ticks = 10     # ticks per second
 class ProgressBarManager(object):
@@ -38,10 +38,10 @@ class ProgressBarManager(object):
         self.hideTimer = QTimer()
         
         self.timer.setInterval(1000 / _ticks)
-        QObject.connect(self.timer, SIGNAL("timeout()"), self.timeout)
+        self.timer.timeout.connect(self.timeout)
         self.hideTimer.setInterval(3000)
         self.hideTimer.setSingleShot(True)
-        QObject.connect(self.hideTimer, SIGNAL("timeout()"), self.bar.hide)
+        self.hideTimer.timeout.connect(self.bar.hide)
         self.man.jobStarted.connect(self.start)
         self.man.jobFinished.connect(self.stop)
         
@@ -78,4 +78,4 @@ class ProgressBarManager(object):
     def timeout(self):
         self.bar.setValue(self.bar.value() + 1)
         
-        
+

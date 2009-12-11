@@ -22,7 +22,7 @@ A wizard to create empty staff paper with LilyPond
 """
 import sip
 
-from PyQt4.QtCore import QObject, QSize, Qt, SIGNAL
+from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QIcon, QLabel,
     QPixmap, QPushButton, QSpinBox, QStackedWidget, QToolButton, QTreeWidget,
@@ -134,10 +134,8 @@ class Dialog(KDialog):
         settings.layout().addWidget(self.pageNumbers, 2, 0, 1, 2)
         settings.layout().addWidget(l, 3, 0, Qt.AlignRight)
         settings.layout().addWidget(self.pageNumStart, 3, 1)
-        QObject.connect(self.barLines, SIGNAL("toggled(bool)"),
-            self.barsPerLine.setEnabled)
-        QObject.connect(self.pageNumbers, SIGNAL("toggled(bool)"),
-            self.pageNumStart.setEnabled)
+        self.barLines.toggled.connect(self.barsPerLine.setEnabled)
+        self.pageNumbers.toggled.connect(self.pageNumStart.setEnabled)
         
         # types
         self.typeWidgets = [
@@ -150,8 +148,8 @@ class Dialog(KDialog):
         for widget in self.typeWidgets:
             self.stack.addWidget(widget)
             self.typeChooser.addItem(widget.name())
-        QObject.connect(self.typeChooser, SIGNAL("currentIndexChanged(int)"),
-            lambda index: self.stack.setCurrentWidget(self.typeWidgets[index]))
+        self.typeChooser.currentIndexChanged.connect(lambda index:
+            self.stack.setCurrentWidget(self.typeWidgets[index]))
 
         self.actors = [
             OpenPDF,
@@ -164,10 +162,10 @@ class Dialog(KDialog):
         
         self.setDetailsWidget(paperSettings)
         # cleanup on exit
-        QObject.connect(self, SIGNAL("destroyed()"), self.slotDestroyed)
+        self.destroyed.connect(self.slotDestroyed)
         # buttons
-        QObject.connect(self, SIGNAL("resetClicked()"), self.default)
-        QObject.connect(self, SIGNAL("tryClicked()"), self.showPreview)
+        self.resetClicked.connect(self.default)
+        self.tryClicked.connect(self.showPreview)
         self.setInitialSize(QSize(400, 240))
         self.default()
         self.loadSettings()
@@ -576,8 +574,7 @@ class ChoirStaff(StaffBase):
             "choir score, first set the number of staves per system to 4. "
             "Then enter \"SATB\" (without the quotes) here."))
         
-        QObject.connect(self.staffCount, SIGNAL("valueChanged(int)"),
-            self.slotStaffCountChanged)
+        self.staffCount.valueChanged.connect(self.slotStaffCountChanged)
         self.slotStaffCountChanged(2)    
         
     def name(self):
@@ -653,34 +650,29 @@ class CustomStaff(SymbolManager, QWidget):
         
         operations.setSpacing(0)
         operations.setContentsMargins(0, 0, 0, 0)
-        removeButton = KPushButton(KStandardGuiItem.remove())
+        removeButton = KPushButton(KStandardGuiItem.remove(), clicked=self.removeSelectedItems)
         operations.addWidget(removeButton)
-        upButton = QToolButton()
+        upButton = QToolButton(clicked=self.moveSelectedItemsUp)
         upButton.setIcon(KIcon("go-up"))
         operations.addWidget(upButton)
-        downButton = QToolButton()
+        downButton = QToolButton(clicked=self.moveSelectedItemsDown)
         downButton.setIcon(KIcon("go-down"))
         operations.addWidget(downButton)
-        QObject.connect(removeButton, SIGNAL("clicked()"), self.removeSelectedItems)
-        QObject.connect(upButton, SIGNAL("clicked()"), self.moveSelectedItemsUp)
-        QObject.connect(downButton, SIGNAL("clicked()"), self.moveSelectedItemsDown)
         newStaves.setSpacing(0)
         newStaves.setContentsMargins(0, 0, 0, 0)
         
         self.tree.setIconSize(QSize(32, 32))
         self.tree.setDragDropMode(QTreeWidget.InternalMove)
         self.tree.headerItem().setHidden(True)
-        QObject.connect(self.tree, SIGNAL("itemSelectionChanged()"), self.slotSelectionChanged)
+        self.tree.itemSelectionChanged.connect(self.slotSelectionChanged)
         
         for staffType in (
             BracketItem,
             BraceItem,
             StaffItem,
             ):
-            b = QPushButton(staffType.name())
+            b = QPushButton(staffType.name(), clicked=(lambda t: lambda: self.createItem(t))(staffType))
             b.setIconSize(QSize(40, 40))
-            QObject.connect(b, SIGNAL("clicked()"),
-                lambda t=staffType: self.createItem(t))
             self.addSymbol(b, staffType.symbol())
             newStaves.addWidget(b)
         
@@ -807,7 +799,7 @@ class StaffItem(Item):
         l.setBuddy(self.clef)
         w.layout().addWidget(l, 0, 0, Qt.AlignRight)
         w.layout().addWidget(self.clef, 0, 1)
-        QObject.connect(self.clef, SIGNAL("currentIndexChanged(int)"), self.clefChanged)
+        self.clef.currentIndexChanged.connect(self.clefChanged)
         self.spaceAbove = QSpinBox()
         self.spaceAbove.setRange(0, 25)
         self.spaceAbove.setValue(5)

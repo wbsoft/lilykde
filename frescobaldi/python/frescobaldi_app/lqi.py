@@ -21,7 +21,7 @@
 
 import re
 
-from PyQt4.QtCore import QObject, QSize, SIGNAL
+from PyQt4.QtCore import QSize
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QLabel, QToolBox, QToolButton, QWidget)
 from PyKDE4.kdecore import i18n
@@ -91,14 +91,12 @@ class Articulations(Lqi):
             row += 1
             col = 0
             for sign, title in group:
-                b = QToolButton(self)
+                b = QToolButton(self, clicked=(lambda sign: lambda: self.writeSign(sign))(sign))
                 b.setAutoRaise(True)
                 # load and convert the icon to the default text color
                 toolbox.addSymbol(b, 'articulation_%s' % sign, 22)
                 b.setIconSize(QSize(22, 22))
                 b.setToolTip('%s (\\%s)' % (title, sign))
-                QObject.connect(b, SIGNAL("clicked()"),
-                    lambda sign = sign: self.writeSign(sign))
                 layout.addWidget(b, row, col)
                 col += 1
                 if col >= cols:

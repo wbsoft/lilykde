@@ -116,7 +116,7 @@ class LilyDoc(QWidget):
             ):
             self.linkActions[name] = a = self.toolBar.addAction(KIcon(icon), title)
             a.setEnabled(False)
-            QObject.connect(a, SIGNAL("triggered()"), lambda name=name: self.slotRellink(name))
+            a.triggered.connect((lambda name: lambda: self.slotRellink(name))(name))
         
         # search text entry
         self.search = KLineEdit()
@@ -125,27 +125,25 @@ class LilyDoc(QWidget):
         self.search.setClickMessage(i18n("Search..."))
         
         # signals
-        QObject.connect(self.back, SIGNAL("triggered()"), self.slotBack)
-        QObject.connect(self.forward, SIGNAL("triggered()"), self.slotForward)
-        QObject.connect(self.home, SIGNAL("triggered()"), self.slotHome)
-        QObject.connect(self.textLarger, SIGNAL("triggered()"), self.slotLarger)
-        QObject.connect(self.textSmaller, SIGNAL("triggered()"), self.slotSmaller)
+        self.back.triggered.connect(self.slotBack)
+        self.forward.triggered.connect(self.slotForward)
+        self.home.triggered.connect(self.slotHome)
+        self.textLarger.triggered.connect(self.slotLarger)
+        self.textSmaller.triggered.connect(self.slotSmaller)
         
-        QObject.connect(self.view, SIGNAL("urlChanged(QUrl)"), self.updateActions)
-        QObject.connect(self.view, SIGNAL("loadFinished(bool)"), self.slotLoadFinished)
+        self.view.urlChanged.connect(self.updateActions)
+        self.view.loadFinished.connect(self.slotLoadFinished)
         self.view.page().setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
-        QObject.connect(self.view.page(), SIGNAL("linkClicked(QUrl)"), self.openUrl)
+        self.view.page().linkClicked.connect(self.openUrl)
         self.view.page().setForwardUnsupportedContent(True)
-        QObject.connect(self.view.page(), SIGNAL("unsupportedContent(QNetworkReply*)"),
-            self.slotUnsupported)
+        self.view.page().unsupportedContent.connect(self.slotUnsupported)
         
-        QObject.connect(self.search, SIGNAL("textEdited(QString)"), self.slotSearch)
-        QObject.connect(self.search, SIGNAL("returnPressed()"), self.slotSearch)
+        self.search.textEdited.connect(self.slotSearch)
+        self.search.returnPressed.connect(self.slotSearch)
         
         # context menu:
         self.view.setContextMenuPolicy(Qt.CustomContextMenu)
-        QObject.connect(self.view, SIGNAL("customContextMenuRequested(QPoint)"),
-            self.slotShowContextMenu)
+        self.view.customContextMenuRequested.connect(self.slotShowContextMenu)
         
         # load initial view.
         self.editFontSize = 0
@@ -175,7 +173,7 @@ class LilyDoc(QWidget):
             self.doc.setMode('LilyPond')
             self.doc.setEncoding('UTF-8')
             self.doc.setReadWrite(False)
-            QObject.connect(self.doc, SIGNAL("completed()"), self.slotCompleted)
+            self.doc.completed.connect(self.slotCompleted)
         self.edit = self.doc.createView(self)
         # remember the view font size
         if self.editFontSize != 0:
@@ -188,7 +186,7 @@ class LilyDoc(QWidget):
         # make backspace go out
         a = self.edit.actionCollection().action("backspace")
         if a:
-            QObject.connect(a, SIGNAL("triggered()"), self.slotBack)
+            a.triggered.connect(self.slotBack)
         
     def openUrl(self, url):
         # handle .ly urls and load them read-only in KatePart
@@ -313,8 +311,7 @@ class LilyDoc(QWidget):
             menu.addAction(a)
             menu.addSeparator()
             a = menu.addAction(KIcon("window-new"), i18n("Open Link in &New Window"))
-            QObject.connect(a, SIGNAL("triggered()"),
-                lambda url=hit.linkUrl(): self.slotNewWindow(url))
+            a.triggered.connect((lambda url: lambda: self.slotNewWindow(url))(hit.linkUrl()))
         else:
             if hit.isContentSelected():
                 a = self.view.pageAction(QWebPage.Copy)
@@ -323,8 +320,7 @@ class LilyDoc(QWidget):
                 menu.addAction(a)
                 menu.addSeparator()
             a = menu.addAction(KIcon("window-new"), i18n("Open Document in &New Window"))
-            QObject.connect(a, SIGNAL("triggered()"),
-                lambda url=self.view.url(): self.slotNewWindow(url))
+            a.triggered.connect((lambda url: lambda: self.slotNewWindow(url))(self.view.url()))
         if len(menu.actions()):
             menu.exec_(self.view.mapToGlobal(pos))
     
@@ -554,9 +550,9 @@ class HtmlLoader(object):
         self._url = KUrl(url)
         self._data = ''
         self._job = KIO.get(KUrl(url), KIO.NoReload, KIO.HideProgressInfo)
-        QObject.connect(self._job, SIGNAL("data(KIO::Job*, QByteArray)"), self.slotData)
-        QObject.connect(self._job, SIGNAL("redirection(KIO::Job*, KUrl)"), self.slotRedirection)
-        QObject.connect(self._job, SIGNAL("result(KJob*)"), self.slotResult)
+        self._job.data.connect(self.slotData)
+        self._job.redirection.connect(self.slotRedirection)
+        QObject.connect(self._job, SIGNAL("result(KJob*)"), self.slotResult) # new-style connection not available?
         self._job.start()
     
     def slotData(self, job, data):
@@ -706,10 +702,8 @@ class Index(object):
         
         Only call this if the loading was successful!
         """
-        a = KAction(title, menu)
-        menu.insertAction(self.loadingAction, a) 
-        QObject.connect(a, SIGNAL("triggered()"),
-            lambda: self.tool.openUrl(self.url.resolved(KUrl(url))))
+        menu.insertAction(self.loadingAction, KAction(title, menu,
+            triggered=lambda: self.tool.openUrl(self.url.resolved(KUrl(url)))))
 
 
 class NotationReferenceIndex(Index):

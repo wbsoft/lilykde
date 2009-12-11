@@ -20,8 +20,7 @@
 import os, re, sip, weakref
 from dbus.service import method
 
-from PyQt4.QtCore import (
-    QEvent, QObject, QSize, QTimer, Qt, SIGNAL)
+from PyQt4.QtCore import QEvent, QSize, QTimer, Qt
 from PyQt4.QtGui import (
     QActionGroup, QColor, QIcon, QLabel, QPalette, QPixmap, QProgressBar,
     QStackedWidget, QWidget)
@@ -147,7 +146,7 @@ class Document(kateshell.app.Document):
         
     def contextMenu(self):
         menu = KMenu(self.view)
-        QObject.connect(menu, SIGNAL("aboutToShow()"), self.populateContextMenu)
+        menu.aboutToShow.connect(self.populateContextMenu)
         return menu
         
     def populateContextMenu(self):
@@ -261,7 +260,7 @@ class SymbolManager(object):
         self._defaultSize = 22
         self._timer = QTimer()
         self._timer.setSingleShot(True)
-        QObject.connect(self._timer, SIGNAL("timeout()"), self.redrawSymbols)
+        self._timer.timeout.connect(self.redrawSymbols)
         self.triggerRedraw()
 
     def addSymbol(self, obj, icon_name, size=0):
@@ -559,8 +558,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         a.setToolTip(i18n("Change the LilyPond language used for pitch names "
                           "in this document or in the selection."))
         self.actionCollection().addAction('pitch_change_language', a)
-        QObject.connect(a.menu(), SIGNAL("aboutToShow()"), lambda menu=a.menu():
-            self.currentDocument().manipulator().populateLanguageMenu(menu))
+        a.menu().aboutToShow.connect(
+            (lambda menu: lambda: self.currentDocument().manipulator().populateLanguageMenu(menu))(a.menu()))
         
         @self.onAction(i18n("Convert Relative to &Absolute"), tooltip=i18n(
             "Converts the notes in the document or selection from relative to absolute pitch."))
@@ -664,8 +663,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             ("bar_cswc", ":|.:", i18n("Repeat both (old)"), None),
             ("bar_cswsc", ":|.|:", i18n("Repeat both (classic)"), None),
             ):
-            a = self.act(name, title, key=key, func=lambda text=text:
-                    self.currentDocument().manipulator().insertBarLine(text))
+            a = self.act(name, title, key=key, func=(lambda text:
+                lambda: self.currentDocument().manipulator().insertBarLine(text))(text))
             self.addSymbol(a, name)
             
         # Setup lyrics hyphen and de-hyphen action
@@ -758,7 +757,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                 return
             menu.addSeparator()
             self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
-        QObject.connect(menu, SIGNAL("aboutToShow()"), populateGenFilesMenu)
+        menu.aboutToShow.connect(populateGenFilesMenu)
             
     def updateJobActions(self):
         doc = self.currentDocument()
@@ -802,8 +801,8 @@ class ApplyRhythmDialog(KDialog):
         self.lineedit.setToolTip(i18n(
             "Enter a rhythm using space separated duration values "
             "(e.g. 8. 16 8 4 8)"))
-        QObject.connect(self, SIGNAL("applyClicked()"), self.doApply)
-        QObject.connect(self, SIGNAL("okClicked()"), self.doApply)
+        self.applyClicked.connect(self.doApply)
+        self.okClicked.connect(self.doApply)
 
     def doApply(self):
         import ly.duration
@@ -858,7 +857,7 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
         a = m.addAction(i18n("S&ynchronize Terminal with Current Document"))
         a.setCheckable(True)
         a.setChecked(self._sync)
-        QObject.connect(a, SIGNAL("triggered()"), self.toggleSync)
+        a.triggered.connect(self.toggleSync)
         
     def toggleSync(self):
         self._sync = not self._sync
@@ -885,7 +884,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         self._timer = QTimer()
         self._timer.setSingleShot(True)
         self._timer.setInterval(200)
-        QObject.connect(self._timer, SIGNAL("timeout()"), self.timeoutFunc)
+        self._timer.timeout.connect(self.timeoutFunc)
     
     def timeoutFunc(self):
         if self._currentUrl:
@@ -902,12 +901,11 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             a = m.addAction(title)
             a.setCheckable(True)
             a.setChecked(self._config[name])
-            QObject.connect(a, SIGNAL("triggered()"),
-                lambda: self.toggleAction(name))
+            a.triggered.connect(lambda: self.toggleAction(name))
         act("leftpanel", i18n("Show PDF Navigation Panel"))
         act("minipager", i18n("Show PDF minipager"))
         a = m.addAction(i18n("Configure Okular..."))
-        QObject.connect(a, SIGNAL("triggered()"), self.openOkularSettings)
+        a.triggered.connect(self.openOkularSettings)
         m.addSeparator()
         act("sync", i18n("S&ynchronize Preview with Current Document"))
 
@@ -990,8 +988,7 @@ class LogTool(kateshell.mainwindow.Tool):
         self.widget.addWidget(QLabel("<center>(%s)</center>" % i18n("no log")))
         mainwin.currentDocumentChanged.connect(self.showLog)
         mainwin.app.documentClosed.connect(self.removeLog)
-        QObject.connect(self.widget, SIGNAL("destroyed()"),
-            lambda: self.logs.clear())
+        self.widget.destroyed.connect(lambda: self.logs.clear())
             
     def showLog(self, doc):
         if doc in self.logs:
@@ -1024,8 +1021,7 @@ class LogTool(kateshell.mainwindow.Tool):
             a = m.addAction(title)
             a.setCheckable(True)
             a.setChecked(self._config[name])
-            QObject.connect(a, SIGNAL("triggered()"),
-                lambda: self.toggleAction(name))
+            a.triggered.connect(lambda: self.toggleAction(name))
         act("errors only", i18n("Only show on errors"))
         # context menu options of the Log, if there...
         # (check it without importing runlily module)

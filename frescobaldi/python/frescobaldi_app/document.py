@@ -51,8 +51,7 @@ class DocumentManipulator(object):
             a.setCheckable(True)
             if lang == currentLang:
                 a.setChecked(True)
-            QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"),
-                lambda lang=lang: self.changeLanguage(lang))
+            a.triggered.connect((lambda lang: lambda: self.changeLanguage(lang))(lang))
     
     def changeLanguage(self, lang):
         """
@@ -429,8 +428,7 @@ class DocumentManipulator(object):
             if m.start() <= col <= m.end():
                 fileName = m.group(1)
                 a = menu.addAction(KIcon("document-open"), i18n("Open %1", fileName))
-                QtCore.QObject.connect(a, QtCore.SIGNAL("triggered()"),
-                    lambda: self.openIncludeFile(fileName))
+                a.triggered.connect(lambda: self.openIncludeFile(fileName))
                 return
         
         # Rhythm submenu

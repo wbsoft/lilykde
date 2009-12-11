@@ -21,8 +21,7 @@
 
 import math, os, re, shutil, sys, tempfile, time
 
-from PyQt4.QtCore import (
-    QObject, QProcess, QSize, QTimer, QUrl, Qt, SIGNAL)
+from PyQt4.QtCore import QProcess, QSize, QTimer, QUrl, Qt
 from PyQt4.QtGui import (
     QBrush, QColor, QFont, QFrame, QStackedWidget, QTextBrowser,
     QTextCharFormat, QTextCursor, QToolBar, QVBoxLayout, QWidget)
@@ -77,10 +76,9 @@ class Ly2PDF(object):
         cmd.append(self.lyfile_arg)
         
         self.p.setProgram(cmd)
-        QObject.connect(self.p, SIGNAL("finished(int, QProcess::ExitStatus)"),
-                        self.finished)
-        QObject.connect(self.p, SIGNAL("error(QProcess::ProcessError)"), self.error)
-        QObject.connect(self.p, SIGNAL("readyRead()"), self.readOutput)
+        self.p.finished.connect(self.finished)
+        self.p.error.connect(self.error)
+        self.p.readyRead.connect(self.readOutput)
         
         self.log.clear()
         mode = self.preview and i18n("preview mode") or i18n("publish mode")
@@ -133,11 +131,9 @@ class Ly2PDF(object):
         Immediately kill the job, and disconnect it's output signals, etc.
         Emits the done(False) signal.
         """
-        QObject.disconnect(self.p,
-            SIGNAL("finished(int, QProcess::ExitStatus)"), self.finished)
-        QObject.disconnect(self.p,
-            SIGNAL("error(QProcess::ProcessError)"), self.error)
-        QObject.disconnect(self.p, SIGNAL("readyRead()"), self.readOutput)
+        self.p.finished.disconnect(self.finished)
+        self.p.error.disconnect(self.error)
+        self.p.readyRead.disconnect(self.readOutput)
         self.p.kill()
         self.p.waitForFinished(2000)
         self.done(False, self)
@@ -295,13 +291,10 @@ class Log(LogWidget):
         self.anchors = {}
         self.anchorgen = anchorgen().next
         LogWidget.__init__(self, tool.widget)
-        QObject.connect(self.textBrowser, SIGNAL("anchorClicked(QUrl)"),
-            self.anchorClicked)
+        self.textBrowser.anchorClicked.connect(self.anchorClicked)
         # context menu:
         self.textBrowser.setContextMenuPolicy(Qt.CustomContextMenu)
-        QObject.connect(self.textBrowser,
-            SIGNAL("customContextMenuRequested(QPoint)"),
-            self.showContextMenu)
+        self.textBrowser.customContextMenuRequested.connect(self.showContextMenu)
     
     def clear(self):
         self.anchors.clear()
@@ -335,10 +328,10 @@ class Log(LogWidget):
         
     def addContextMenuActions(self, menu):
         a = menu.addAction(KIcon("edit-copy"), i18n("&Copy"))
-        QObject.connect(a, SIGNAL("triggered()"), self.copyLog)
+        a.triggered.connect(self.copyLog)
         g = KStandardGuiItem.saveAs()
         a = menu.addAction(g.icon(), g.text())
-        QObject.connect(a, SIGNAL("triggered()"), self.saveLogAs)
+        a.triggered.connect(self.saveLogAs)
 
     def copyLog(self):
         text = (self.textBrowser.textCursor().selection().toPlainText()
@@ -610,7 +603,7 @@ class LilyPreviewDialog(KDialog):
         self.setMainWidget(self.preview)
         self.setMinimumSize(QSize(400, 300))
         self.loadSettings()
-        QObject.connect(self, SIGNAL("finished()"), self.slotFinished)
+        self.finished.connect(self.slotFinished)
         
     def loadSettings(self):
         self.restoreDialogSize(config("preview dialog"))
