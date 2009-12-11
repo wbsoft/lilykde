@@ -166,7 +166,7 @@ class RumorPanel(QWidget):
 
     def loadSettings(self):
         conf = config("rumor")
-        self.tempo.setTempo(conf.readEntry("tempo", 100)[0])
+        self.tempo.setTempo(conf.readEntry("tempo", 100))
         setComboBox(self.quantize, conf.readEntry("quantize", "16"))
         self.step.setChecked(conf.readEntry("step", False))
         self.mono.setChecked(conf.readEntry("mono", False))
@@ -354,7 +354,7 @@ class RumorButton(ProcessButtonBase, QToolButton):
                 self.process().kill()
         
     def readOutput(self, text):
-        self.panel.insertRumorOutput(unicode(text)) # TODO: unicode needed?
+        self.panel.insertRumorOutput(unicode(text)) # text is a QByteArray
 
     def finished(self, exitCode, exitStatus):
         self.panel.showMessage(i18n("Rumor stopped."), 1000)
@@ -377,13 +377,13 @@ class RumorButton(ProcessButtonBase, QToolButton):
             if ev.key() in (Qt.Key_Enter, Qt.Key_Return):
                 self.panel.mainwin.view().insertText('\n' + self.panel.indent)
                 return True
-            elif not ev.isAutoRepeat() and not ev.text().isEmpty():
+            elif not ev.isAutoRepeat() and ev.text():
                 key = ev.text()
                 if key == " " or key != self._lastkey:
                     self._lastkey = key
                 else:
-                    key.prepend(" ")
-                self.writeInput(key.toLocal8Bit())
+                    key = " " + key
+                self.writeInput(key)
                 return True
         return False
 
