@@ -22,7 +22,6 @@
 from subprocess import Popen, PIPE
 import ly.tokenize, ly.version
 
-from PyQt4.QtCore import QVariant
 from PyKDE4.kdecore import i18n, KGlobal
 from PyKDE4.kdeui import KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
@@ -34,10 +33,10 @@ def defaultVersion():
     version of the last rule in convert-ly, or a custom version.
     """
     prefs = config("preferences")
-    pver = prefs.readEntry("default version", QVariant("lilypond")).toString()
+    pver = prefs.readEntry("default version", "lilypond")
     version = ''
     if pver == "custom":
-        version = unicode(prefs.readEntry("custom version", QVariant("")).toString())
+        version = prefs.readEntry("custom version", "")
     elif pver == "convert-ly":
         version = ly.version.ConvertLyLastRuleVersion(command("convert-ly")).versionString
     return version or ly.version.LilyPondVersion(command("lilypond")).versionString
@@ -115,4 +114,4 @@ def config(group):
     return KGlobal.config().group(group)
 
 def command(cmd):
-    return unicode(config("commands").readEntry(cmd, QVariant(cmd)).toString())
+    return config("commands").readEntry(cmd, cmd)

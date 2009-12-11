@@ -196,8 +196,8 @@ class DocumentManipulator(object):
         while lineNum > 0 and isblank(self.doc.line(lineNum)):
             lineNum -= 1
             
-        text = unicode(self.doc.doc.text(
-            KTextEditor.Range(KTextEditor.Cursor(lineNum, 0), curPos)))
+        text = self.doc.doc.text(
+            KTextEditor.Range(KTextEditor.Cursor(lineNum, 0), curPos))
         matchObj = None
         for m in ly.rx.chord.finditer(text):
             if m.group('chord'):
@@ -783,7 +783,7 @@ class TransposeDialog(KDialog):
         return KDialog.exec_(self)
     
     def pitchFrom(self, combobox):
-        t = unicode(combobox.currentText())
+        t = combobox.currentText()
         p = ly.pitch.Pitch()
         p.octave = t.count("'") - t.count(",")
         result = ly.pitch.pitchReader[self.language](
@@ -892,5 +892,4 @@ def isblank(text):
 
 def lilypondCommand():
     """ Returns the user's preferred lilypond command. """
-    return unicode(KGlobal.config().group("commands").readEntry("lilypond",
-        QtCore.QVariant("lilypond")).toString())
+    return KGlobal.config().group("commands").readEntry("lilypond", "lilypond")

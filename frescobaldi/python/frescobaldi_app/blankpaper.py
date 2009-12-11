@@ -22,7 +22,7 @@ A wizard to create empty staff paper with LilyPond
 """
 import sip
 
-from PyQt4.QtCore import QObject, QSize, Qt, QVariant, SIGNAL
+from PyQt4.QtCore import QObject, QSize, Qt, SIGNAL
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QIcon, QLabel,
     QPixmap, QPushButton, QSpinBox, QStackedWidget, QToolButton, QTreeWidget,
@@ -197,13 +197,11 @@ class Dialog(KDialog):
 
     def loadSettings(self):
         # only remember option to remove default FRESCOBALDI.ORG tagline
-        self.removeTagline.setChecked(config().readEntry(
-            "remove tagline", QVariant(False)).toBool())
+        self.removeTagline.setChecked(config().readEntry("remove tagline", False))
     
     def saveSettings(self):
         # only remember option to remove default FRESCOBALDI.ORG tagline
-        config().writeEntry(
-            "remove tagline", QVariant(self.removeTagline.isChecked()))
+        config().writeEntry("remove tagline", self.removeTagline.isChecked())
     
     def showPreview(self):
         self.previewDialog().showPreview(self.ly())
@@ -243,9 +241,8 @@ class Dialog(KDialog):
         else:
             output.append('bottom-margin = 10\\mm')
             output.append('oddFooterMarkup = \\markup \\abs-fontsize #6 \\fill-line {')
-            tagline = config().readEntry("tagline", QVariant(
-                '\\with-url #"http://www.frescobaldi.org/" FRESCOBALDI.ORG'
-                )).toString()
+            tagline = config().readEntry("tagline",
+                '\\with-url #"http://www.frescobaldi.org/" FRESCOBALDI.ORG')
             output.append('\\sans { %s }' % tagline)
             output.append('\\strut')
             output.append('}')
@@ -608,7 +605,7 @@ class ChoirStaff(StaffBase):
         self.systems.setValue(systemCount)
 
     def music(self, layout):
-        clefs = unicode(self.clefs.currentText()).upper()
+        clefs = self.clefs.currentText().upper()
         length = self.staffCount.value()
         if clefs and set(clefs) <= set("SATB"):
             # pad to staff count if necessary

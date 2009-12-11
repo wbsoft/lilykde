@@ -24,7 +24,6 @@ to a newer version.
 
 import re
 
-from PyQt4.QtCore import QVariant
 from PyKDE4.kdecore import KConfig, KGlobal
 
 def install(app):
@@ -34,7 +33,7 @@ def install(app):
     """
     conf = KGlobal.config().group("")
     version = tuple(map(int,
-        re.findall(r'\d+', unicode(conf.readEntry("version", QVariant("")).toString()))))
+        re.findall(r'\d+', conf.readEntry("version", ""))))
     
     if not version:
         installKateModeRC()
@@ -45,30 +44,30 @@ def install(app):
     # ... other stuff can be added here ...
     
     # save the version of the current Frescobaldi
-    conf.writeEntry("version", QVariant(app.version()))
+    conf.writeEntry("version", app.version())
     conf.sync()
 
 def installKateModeRC():
     """ Preset a few variables in the LilyPond Kate mode """
     katemoderc = KConfig("katemoderc", KConfig.NoGlobals)
     rc = katemoderc.group("LilyPond")
-    rc.writeEntry("Variables", QVariant("kate: "
+    rc.writeEntry("Variables", "kate: "
         "indent-mode lilypond; "
         "indent-width 2; "
         "space-indent on; "
         "replace-tabs on; "
         "replace-tabs-save on; "
-        ))
+        )
     rc.sync()
 
 def installOkularPartRC():
     """ Set our custom editor command in okularpartrc """
     okularpartrc = KConfig("okularpartrc", KConfig.NoGlobals)
     group = okularpartrc.group("General")
-    group.writeEntry("ExternalEditor", QVariant("Custom"))
-    group.writeEntry("ExternalEditorCommand", QVariant("frescobaldi --smart --line %l --column %c"))
-    if not group.readEntry("WatchFile", QVariant(True)).toBool():
-        group.writeEntry("WatchFile", QVariant(True))
+    group.writeEntry("ExternalEditor", "Custom")
+    group.writeEntry("ExternalEditorCommand", "frescobaldi --smart --line %l --column %c")
+    if not group.readEntry("WatchFile", True):
+        group.writeEntry("WatchFile", True)
     group.sync()
     
 

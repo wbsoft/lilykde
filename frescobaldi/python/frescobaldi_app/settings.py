@@ -21,7 +21,7 @@
 Config dialog
 """
 
-from PyQt4.QtCore import QObject, QSize, QString, Qt, QVariant, SIGNAL
+from PyQt4.QtCore import QObject, QSize, Qt, SIGNAL
 from PyQt4.QtGui import (
     QCheckBox, QGridLayout, QGroupBox, QLabel, QLineEdit, QRadioButton,
     QTextEdit, QTreeView, QWidget)
@@ -195,10 +195,10 @@ class GeneralPreferences(KVBox):
     def loadSettings(self):
         conf = config("preferences")
         for widget, name, default in self.checks:
-            widget.setChecked(conf.readEntry(name, QVariant(default)).toBool())
+            widget.setChecked(conf.readEntry(name, default))
         # lily version:
-        self.customVersion.setText(conf.readEntry("custom version", QVariant("")).toString())
-        name = unicode(conf.readEntry("default version", QVariant("")).toString())
+        self.customVersion.setText(conf.readEntry("custom version", ""))
+        name = conf.readEntry("default version", "")
         if name not in self.versionOptions:
             name = "lilypond"
         self.versionOptions[name].setChecked(True)
@@ -206,9 +206,9 @@ class GeneralPreferences(KVBox):
     def saveSettings(self):
         conf = config("preferences")
         for widget, name, default in self.checks:
-            conf.writeEntry(name, QVariant(widget.isChecked()))
+            conf.writeEntry(name, widget.isChecked())
         # disable or enable the builtin PDF preview
-        disable = conf.readEntry("disable pdf preview", QVariant(False)).toBool()
+        disable = conf.readEntry("disable pdf preview", False)
         running = "pdf" in self.mainwin.tools
         if disable and running:
             self.mainwin.tools["pdf"].delete()
@@ -216,10 +216,10 @@ class GeneralPreferences(KVBox):
             tool = frescobaldi_app.mainapp.PDFTool(self.mainwin)
             tool.sync(self.mainwin.currentDocument())
         # lily version:
-        conf.writeEntry("custom version", QVariant(unicode(self.customVersion.text())))
+        conf.writeEntry("custom version", self.customVersion.text())
         for name, widget in self.versionOptions.items():
             if widget.isChecked():
-                conf.writeEntry("default version", QVariant(unicode(name)))
+                conf.writeEntry("default version", name)
                 break
 
 
@@ -314,7 +314,7 @@ class Commands(QWidget):
             dialog.changed)
 
     def setHyphenPaths(self, paths):
-        self.hyphenPaths.setPlainText('\n'.join(unicode(p) for p in paths))
+        self.hyphenPaths.setPlainText('\n'.join(paths))
         
     def defaults(self):
         for widget, name, default in self.commands:
@@ -326,29 +326,27 @@ class Commands(QWidget):
     def loadSettings(self):
         conf = config("commands")
         for widget, name, default in self.commands:
-            widget.setText(conf.readEntry(name, QVariant(default)).toString())
-        paths = config("hyphenation").readEntry("paths",
-            QVariant(frescobaldi_app.hyphen.defaultPaths)).toStringList()
+            widget.setText(conf.readEntry(name, default))
+        paths = config("hyphenation").readEntry("paths", frescobaldi_app.hyphen.defaultPaths)
         self.setHyphenPaths(paths)
         self.folder.setPath(
             config("preferences").readPathEntry("default directory", ""))
         self.lilydoc.setUrl(KUrl(
-            config("preferences").readEntry("lilypond documentation", QVariant('')).toString()))
+            config("preferences").readEntry("lilypond documentation", "")))
 
     def saveSettings(self):
         conf = config("commands")
         for widget, name, default in self.commands:
             if widget.text() or not default:
-                conf.writeEntry(name, QVariant(unicode(widget.text())))
-        paths = [p for p in unicode(self.hyphenPaths.toPlainText()).splitlines()
-            if p]
-        config("hyphenation").writeEntry("paths", QVariant(paths))
+                conf.writeEntry(name, widget.text())
+        paths = [p for p in self.hyphenPaths.toPlainText().splitlines() if p]
+        config("hyphenation").writeEntry("paths", paths)
         # reload the table of hyphenation dictionaries
         frescobaldi_app.hyphen.findDicts()
         config("preferences").writePathEntry("default directory",
             self.folder.url().path())
         config("preferences").writeEntry("lilypond documentation",
-            QVariant(unicode(self.lilydoc.url().url())))
+            self.lilydoc.url().url())
         lilydoc = self.mainwin.tools.get('lilydoc')
         if lilydoc:
             lilydoc.newDocFinder()
@@ -402,13 +400,13 @@ class RumorSettings(KVBox):
     def loadSettings(self):
         conf = config("commands")
         for widget, name, default in self.commands:
-            widget.setText(conf.readEntry(name, QVariant(default)).toString())
+            widget.setText(conf.readEntry(name, default))
         
     def saveSettings(self):
         conf = config("commands")
         for widget, name, default in self.commands:
             if widget.text():
-                conf.writeEntry(name, QVariant(unicode(widget.text())))
+                conf.writeEntry(name, widget.text())
     
 
 
@@ -416,4 +414,4 @@ def config(group):
     return KGlobal.config().group(group)
 
 def command(cmd):
-    return unicode(config("commands").readEntry(cmd, QVariant(cmd)).toString())
+    return config("commands").readEntry(cmd, cmd)

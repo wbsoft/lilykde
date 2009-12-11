@@ -21,7 +21,7 @@ import os, re, sip, weakref
 from dbus.service import method
 
 from PyQt4.QtCore import (
-    QEvent, QObject, QSize, QString, QTimer, QVariant, Qt, SIGNAL)
+    QEvent, QObject, QSize, QTimer, Qt, SIGNAL)
 from PyQt4.QtGui import (
     QActionGroup, QColor, QIcon, QLabel, QPalette, QPixmap, QProgressBar,
     QStackedWidget, QWidget)
@@ -55,17 +55,17 @@ class MainApp(kateshell.app.MainApp):
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
         os.environ["FRESCOBALDI_PID"] = str(os.getpid())
         # check if stuff needs to be run after an update of Frescobaldi
-        if self.version() != config("").readEntry("version", QVariant("0.0")).toString():
+        if self.version() != config("").readEntry("version", "0.0"):
             from frescobaldi_app.install import install
             install(self)
         
     def openUrl(self, url, encoding=None):
-        # The URL can be python string, dbus string or QString or KUrl
+        # The URL can be python string, dbus string or KUrl
         if not isinstance(url, KUrl):
             url = KUrl(url)
         nav = False
         if url.protocol() == "textedit":
-            m = re.match(r"^(.*):(\d+):(\d+):(\d+)$", unicode(url.path()))
+            m = re.match(r"^(.*):(\d+):(\d+):(\d+)$", url.path())
             if m:
                 # We have a valid textedit:/ uri.
                 url = KUrl.fromPath(m.group(1).encode('latin1').decode("utf-8"))
@@ -95,7 +95,7 @@ class MainApp(kateshell.app.MainApp):
         return Document(self, url, encoding)
 
     def defaultDirectory(self):
-        return unicode(config().readPathEntry("default directory", ""))
+        return config().readPathEntry("default directory", "")
     
     def findDocument(self, url):
         """
@@ -113,7 +113,7 @@ class MainApp(kateshell.app.MainApp):
         return False
     
     def keepMetaInfo(self):
-        return config().readEntry("save metainfo", QVariant(False)).toBool()
+        return config().readEntry("save metainfo", False)
 
 
 class Document(kateshell.app.Document):
@@ -418,7 +418,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                     "There is already a LilyPond job running "
                     "for this document."))
             if (d.url().protocol() == "file" and d.isModified()) and not (
-                    config().readEntry("save on run", QVariant(False)).toBool()
+                    config().readEntry("save on run", False)
                     and d.save()):
                 return sorry(i18n(
                     "Your document has been modified, "
@@ -643,7 +643,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             tooltip=i18n("Paste a rhythm to the selected music."))
         def durations_paste_rhythm(text):
             import ly.duration
-            rhythm = unicode(KApplication.clipboard().text())
+            rhythm = KApplication.clipboard().text()
             return ly.duration.applyRhythm(text, rhythm)
         
         # Bar lines
@@ -741,7 +741,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         LogTool(self)
         QuickInsertTool(self)
         RumorTool(self)
-        if not config().readEntry("disable pdf preview", QVariant(False)).toBool():
+        if not config().readEntry("disable pdf preview", False):
             PDFTool(self)
         LilyDocTool(self)
     
@@ -809,7 +809,7 @@ class ApplyRhythmDialog(KDialog):
         import ly.duration
         self.lineedit.completionObject().addItem(self.lineedit.text())
         self.parent().currentDocument().replaceSelectionWith(ly.duration.applyRhythm(
-            self.text, unicode(self.lineedit.text())))
+            self.text, self.lineedit.text()))
 
     def edit(self, text):
         self.text = text
@@ -864,10 +864,10 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
         self._sync = not self._sync
 
     def readConfig(self, conf):
-        self._sync = conf.readEntry("sync", QVariant(False)).toBool()
+        self._sync = conf.readEntry("sync", False)
 
     def writeConfig(self, conf):
-        conf.writeEntry("sync", QVariant(self._sync))
+        conf.writeEntry("sync", self._sync)
         
 
 class PDFTool(kateshell.mainwindow.KPartTool):
@@ -959,11 +959,11 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             ("minipager", True),
             ("leftpanel", False),
             ("sync", True)):
-            self._config[name] = conf.readEntry(name, QVariant(default)).toBool()
+            self._config[name] = conf.readEntry(name, default)
             
     def writeConfig(self, conf):
         for name in "minipager", "leftpanel", "sync":
-            conf.writeEntry(name, QVariant(self._config[name]))
+            conf.writeEntry(name, self._config[name])
         
         
 class QuickInsertTool(kateshell.mainwindow.Tool):
@@ -1039,11 +1039,11 @@ class LogTool(kateshell.mainwindow.Tool):
         for name, default in (
             ("errors only", False),
             ):
-            self._config[name] = conf.readEntry(name, QVariant(default)).toBool()
+            self._config[name] = conf.readEntry(name, default)
             
     def writeConfig(self, conf):
         for name in ("errors only",):
-            conf.writeEntry(name, QVariant(self._config[name]))
+            conf.writeEntry(name, self._config[name])
         
 
 class RumorTool(kateshell.mainwindow.Tool):

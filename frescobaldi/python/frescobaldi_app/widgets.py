@@ -25,7 +25,7 @@ import os
 from time import time
 
 from PyQt4.QtCore import (
-    QObject, QProcess, QRegExp, QString, QTimeLine, Qt, SIGNAL)
+    QObject, QProcess, QRegExp, QTimeLine, Qt, SIGNAL)
 from PyQt4.QtGui import (
     QComboBox, QLabel, QLineEdit, QPainter, QPixmap, QPushButton, QSlider,
     QSpinBox, QToolButton, QRegExpValidator, QWidget)
@@ -214,7 +214,7 @@ class ExecLineEdit(QLineEdit):
             self._checkexec)
 
     def _get(self, filename):
-        return unicode(filename)
+        return filename
 
     def _checkexec(self, filename):
         if not findexe(self._get(filename)):
@@ -229,7 +229,7 @@ class ExecArgsLineEdit(ExecLineEdit):
     """
     def _get(self, filename):
         if filename:
-            return unicode(filename).split()[0]
+            return filename.split()[0]
         else:
             return ''
 
@@ -336,7 +336,7 @@ def promptText(parent, message, title = None, text="", rx=None, help=None):
     d.show()
     edit.setFocus()
     if d.exec_():
-        return unicode(edit.text())
+        return edit.text()
 
 
 # utility functions used by above classes:

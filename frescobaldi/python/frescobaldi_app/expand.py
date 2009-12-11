@@ -22,7 +22,7 @@ Expand Manager, manages expansions.
 """
 import re
 
-from PyQt4.QtCore import QObject, QString, QTimer, Qt, QVariant, SIGNAL
+from PyQt4.QtCore import QObject, QTimer, Qt, SIGNAL
 from PyQt4.QtGui import (
     QFont, QKeySequence, QSplitter, QTextEdit, QTreeWidget, QTreeWidgetItem,
     QVBoxLayout)
@@ -94,7 +94,7 @@ class ExpandManager(object):
         """
         Return the description for the expansion name.
         """
-        return unicode(self.expansions.group(name).readEntry("Name", QVariant("")).toString())
+        return self.expansions.group(name).readEntry("Name", "")
     
     def doExpand(self, expansion, remove=None):
         """
@@ -104,7 +104,7 @@ class ExpandManager(object):
         doc = self.mainwin.currentDocument()
         
         group = self.expansions.group(expansion)
-        text = unicode(group.readEntry("Text", QVariant("")).toString())
+        text = group.readEntry("Text", "")
         
         # where to insert the text:
         cursor = remove and remove.start() or doc.view.cursorPosition()
@@ -268,7 +268,7 @@ class ExpansionDialog(KDialog):
         description = i18n("New Item")
         if num:
             description += " %d" % num
-        self.manager.expansions.group(name).writeEntry("Name", QVariant(unicode(description)))
+        self.manager.expansions.group(name).writeEntry("Name", description)
         self.searchLine.clear() # otherwise strange things happen...
         item = self.createItem(name, description)
         if self.edit.item is None:
@@ -326,7 +326,7 @@ class ExpansionDialog(KDialog):
         if items:
             name = items[0].text(0)
             group = self.manager.expansions.group(name)
-            self.edit.setPlainText(group.readEntry("Text", QVariant("")).toString())
+            self.edit.setPlainText(group.readEntry("Text", ""))
             self.edit.item = items[0]
             self.edit.dirty = False
             # key shortcut widget
@@ -349,7 +349,7 @@ class ExpansionDialog(KDialog):
                     "Please use a different name."))
                 item.setText(0, item.groupName)
                 self.treeWidget.editItem(item, 0)
-            elif not re.match(r"\w+$", unicode(item.text(0))):
+            elif not re.match(r"\w+$", item.text(0)):
                 KMessageBox.error(self.manager.mainwin, i18n(
                     "Please only use letters, numbers and the underscore "
                     "character in the expansion name."))
@@ -359,9 +359,8 @@ class ExpansionDialog(KDialog):
                 # apply the changed mnemonic
                 old, new = item.groupName, item.text(0)
                 group = self.manager.expansions.group(new)
-                group.writeEntry("Name", QVariant(unicode(item.text(1))))
-                group.writeEntry("Text", QVariant(unicode(self.manager.expansions.group(
-                    old).readEntry("Text", QVariant("")).toString())))
+                group.writeEntry("Name", item.text(1))
+                group.writeEntry("Text", self.manager.expansions.group(old).readEntry("Text", ""))
                 self.manager.expansions.deleteGroup(old)
                 # move the shortcut
                 s = self.manager.shortcuts
@@ -373,13 +372,13 @@ class ExpansionDialog(KDialog):
         elif column == 1:
             group = self.manager.expansions.group(item.text(0))
             if item.text(1):
-                group.writeEntry("Name", QVariant(unicode(item.text(1))))
+                group.writeEntry("Name", item.text(1))
                 self.treeWidget.scrollToItem(item)
                 self.treeWidget.resizeColumnToContents(1)
             else:
                 KMessageBox.error(self.manager.mainwin, i18n(
                     "Please don't leave the description empty."))
-                item.setText(1, group.readEntry("Name", QVariant("")).toString())
+                item.setText(1, group.readEntry("Name", ""))
                 self.treeWidget.editItem(item, 1)
         elif column == 2:
             # User should not edit textual representation of shortcut
@@ -394,7 +393,7 @@ class ExpansionDialog(KDialog):
         """ (Internal use) save the edit if it has changed. """
         if self.edit.dirty and self.edit.item:
             self.manager.expansions.group(self.edit.item.text(0)).writeEntry(
-                "Text", QVariant(unicode(self.edit.toPlainText())))
+                "Text", self.edit.toPlainText())
             self.edit.dirty = False
     
     def keySequenceChanged(self, seq):
@@ -464,7 +463,7 @@ class ExpandHighlighter(LilyPondHighlighter):
         def repl(m):
             matches.append((m.start(), len(m.group())))
             return ' ' * len(m.group())
-        text = re.compile(r"\(\|\)|@").sub(repl, unicode(text))
+        text = re.compile(r"\(\|\)|@").sub(repl, text)
         super(ExpandHighlighter, self).highlightBlock(text)
         for start, count in matches:
             self.setFormat(start, count, self.formats['special'])

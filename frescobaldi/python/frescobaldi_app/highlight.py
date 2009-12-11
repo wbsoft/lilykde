@@ -65,7 +65,6 @@ class LilyPondHighlighter(QSyntaxHighlighter):
         self.state = []
 
     def highlightBlock(self, text):
-        text = unicode(text)
         tokenizer = ly.tokenize.Tokenizer()
         previous = self.previousBlockState()
         if 0 <= previous < len(self.state):

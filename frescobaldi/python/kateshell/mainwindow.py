@@ -20,7 +20,7 @@
 import os, sip, weakref
 
 from PyQt4.QtCore import (
-    QEvent, QObject, QTimer, QVariant, Qt, SIGNAL, SLOT, pyqtSignature)
+    QEvent, QObject, QTimer, Qt, SIGNAL, SLOT, pyqtSignature)
 from PyQt4.QtGui import (
     QAction, QActionGroup, QDialog, QLabel, QPixmap, QSplitter, QStackedWidget,
     QTabBar, QVBoxLayout, QWidget)
@@ -428,19 +428,15 @@ class MainWindow(KParts.MainWindow):
     def loadSettings(self):
         """ Load some settings from our configfile. """
         self.openRecent.loadEntries(config("recent files"))
-        self.showPath.setChecked(config().readEntry("show full path",
-            QVariant(False)).toBool())
-        self.showTabs.setChecked(config().readEntry("show tabs",
-            QVariant(True)).toBool())
+        self.showPath.setChecked(config().readEntry("show full path", False))
+        self.showTabs.setChecked(config().readEntry("show tabs", True))
         self.viewTabs.setVisible(self.showTabs.isChecked())
 
     def saveSettings(self):
         """ Store settings in our configfile. """
         self.openRecent.saveEntries(config("recent files"))
-        config().writeEntry("show full path",
-            QVariant(self.showPath.isChecked()))
-        config().writeEntry("show tabs",
-            QVariant(self.showTabs.isChecked()))
+        config().writeEntry("show full path", self.showPath.isChecked())
+        config().writeEntry("show tabs", self.showTabs.isChecked())
         # also all the tools:
         for tool in self.tools.itervalues():
             tool.saveSettings()

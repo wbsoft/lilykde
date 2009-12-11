@@ -23,7 +23,7 @@ LilyPond auto completion
 
 import re
 
-from PyQt4.QtCore import QModelIndex, Qt, QVariant
+from PyQt4.QtCore import QModelIndex, Qt
 from PyQt4.QtGui import QBrush, QColor, QTextFormat
 from PyKDE4.kdecore import KGlobal
 from PyKDE4.ktexteditor import KTextEditor
@@ -39,18 +39,13 @@ class CompletionHelper(object):
     # roles on the Name column
     roles = {
         KTextEditor.CodeCompletionModel.CompletionRole:
-            QVariant(
-                KTextEditor.CodeCompletionModel.FirstProperty |
-                KTextEditor.CodeCompletionModel.Public |
-                KTextEditor.CodeCompletionModel.LastProperty ),
-        KTextEditor.CodeCompletionModel.ScopeIndex:
-            QVariant(0),
-        KTextEditor.CodeCompletionModel.MatchQuality:
-            QVariant(10),
-        KTextEditor.CodeCompletionModel.HighlightingMethod:
-            QVariant(QVariant.Invalid),
-        KTextEditor.CodeCompletionModel.InheritanceDepth:
-            QVariant(0),
+            KTextEditor.CodeCompletionModel.FirstProperty |
+            KTextEditor.CodeCompletionModel.Public |
+            KTextEditor.CodeCompletionModel.LastProperty,
+        KTextEditor.CodeCompletionModel.ScopeIndex: 0,
+        KTextEditor.CodeCompletionModel.MatchQuality: 10,
+        KTextEditor.CodeCompletionModel.HighlightingMethod: None,
+        KTextEditor.CodeCompletionModel.InheritanceDepth: 0,
     }
     
     def __init__(self, model, resultList=None):
@@ -77,12 +72,11 @@ class CompletionHelper(object):
     def data(self, index, role):
         if index.column() == KTextEditor.CodeCompletionModel.Name:
             if role == Qt.DisplayRole:
-                return QVariant(self.resultList[index.row()])
+                return self.resultList[index.row()]
             try:
                 return self.roles[role]
             except KeyError:
                 pass
-        return QVariant()
     
     def executeCompletionItem(self, doc, word, row):
         pass
@@ -106,7 +100,7 @@ class VarCompletions(CompletionHelper):
     """
     def executeCompletionItem(self, doc, word, row):
         text = self.resultList[row]
-        line = unicode(doc.line(word.end().line()))[word.end().column():]
+        line = doc.line(word.end().line())[word.end().column():]
         if not line.lstrip().startswith('='):
             text += ' = '
         doc.replaceText(word, text)
@@ -120,19 +114,19 @@ class ColorCompletions(CompletionHelper):
     roles = CompletionHelper.roles.copy()
     roles.update({
         KTextEditor.CodeCompletionModel.HighlightingMethod:
-            QVariant(KTextEditor.CodeCompletionModel.CustomHighlighting)
+            KTextEditor.CodeCompletionModel.CustomHighlighting
     })
     
     def data(self, index, role):
         if index.column() == KTextEditor.CodeCompletionModel.Name:
             name, (r, g, b) = self.resultList[index.row()]
             if role == Qt.DisplayRole:
-                return QVariant(name)
+                return name
             elif role == KTextEditor.CodeCompletionModel.CustomHighlight:
                 format = QTextFormat()
                 color = QColor.fromRgbF(r, g, b)
                 format.setBackground(QBrush(color))
-                return QVariant([0, len(name), format])
+                return [0, len(name), format]
         return super(ColorCompletions, self).data(index, role)
 
 
@@ -171,7 +165,7 @@ def findMatches(model, view, word, invocationType):
     """
     doc = view.document()
     line, col = word.start().line(), word.start().column()
-    text = unicode(doc.line(line))[:col]
+    text = doc.line(line)[:col]
     
     # determine what the user tries to type
     # very specific situations:
@@ -212,8 +206,8 @@ def findMatches(model, view, word, invocationType):
     if re.search(r"#'break-visibility\s*=\s*#$", text):
         return ly.words.break_visibility
     # parse to get current context
-    fragment = unicode(doc.text(KTextEditor.Range(
-        KTextEditor.Cursor(0, 0), word.start())))
+    fragment = doc.text(KTextEditor.Range(
+        KTextEditor.Cursor(0, 0), word.start()))
     tokenizer = ly.tokenize.Tokenizer()
     token = None # in case the next loop does not run at all
     for token in tokenizer.tokens(fragment):
@@ -287,4 +281,4 @@ def config(group):
     return KGlobal.config().group(group)
 
 def command(cmd):
-    return unicode(config("commands").readEntry(cmd, QVariant(cmd)).toString())
+    return config("commands").readEntry(cmd, cmd)

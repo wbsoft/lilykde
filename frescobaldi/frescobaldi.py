@@ -20,6 +20,11 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 import sys
+
+import sip
+sip.setapi("QString", 2)
+sip.setapi("QVariant", 2)
+
 from PyKDE4.kdecore import (ki18n, ki18nc,
     KAboutData, KCmdLineArgs, KCmdLineOptions, KComponentData, KLocalizedString)
 

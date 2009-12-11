@@ -25,7 +25,7 @@ import os, re, sys
 from subprocess import Popen, PIPE
 
 from PyQt4.QtCore import (
-    QEvent, QObject, QRegExp, QSize, QTimer, QVariant, Qt, SIGNAL)
+    QEvent, QObject, QRegExp, QSize, QTimer, Qt, SIGNAL)
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QHBoxLayout, QLabel, QPushButton,
     QRegExpValidator, QToolButton, QTreeWidget, QTreeWidgetItem, QWidget)
@@ -142,7 +142,7 @@ class RumorPanel(QWidget):
         self.loadSettings()
         
         # display Rumor version on first start.
-        cmd = unicode(config("commands").readEntry("rumor", QVariant("rumor")).toString())
+        cmd = config("commands").readEntry("rumor", "rumor")
         try:
             v = Popen([cmd, '--version'], stdout=PIPE).communicate()[0].strip()
             self.showMessage(i18n("Found rumor version %1.", v), 1000)
@@ -155,24 +155,24 @@ class RumorPanel(QWidget):
         
     def saveSettings(self):
         conf = config("rumor")
-        conf.writeEntry("tempo", QVariant(self.tempo.tempo()))
-        conf.writeEntry("quantize", QVariant(unicode(self.quantize.currentText())))
-        conf.writeEntry("step", QVariant(self.step.isChecked()))
-        conf.writeEntry("mono", QVariant(self.mono.isChecked()))
-        conf.writeEntry("meter", QVariant(unicode(autofy(self.meter.currentText()))))
-        conf.writeEntry("keysig", QVariant(unicode(autofy(self.keysig.currentText()))))
-        conf.writeEntry("timidity", QVariant(self.timidity.isChecked()))
+        conf.writeEntry("tempo", self.tempo.tempo())
+        conf.writeEntry("quantize", self.quantize.currentText())
+        conf.writeEntry("step", self.step.isChecked())
+        conf.writeEntry("mono", self.mono.isChecked())
+        conf.writeEntry("meter", autofy(self.meter.currentText()))
+        conf.writeEntry("keysig", autofy(self.keysig.currentText()))
+        conf.writeEntry("timidity", self.timidity.isChecked())
         self.showMessage(i18n("Settings have been saved."), 1000)
 
     def loadSettings(self):
         conf = config("rumor")
-        self.tempo.setTempo(conf.readEntry("tempo", QVariant(100)).toInt()[0])
-        setComboBox(self.quantize, conf.readEntry("quantize", QVariant("16")).toString())
-        self.step.setChecked(conf.readEntry("step", QVariant(False)).toBool())
-        self.mono.setChecked(conf.readEntry("mono", QVariant(False)).toBool())
-        setComboBox(self.meter, unautofy(conf.readEntry("meter", QVariant("auto")).toString()))
-        setComboBox(self.keysig, unautofy(conf.readEntry("meter", QVariant("auto")).toString()))
-        if conf.readEntry("timidity", QVariant(False)).toBool():
+        self.tempo.setTempo(conf.readEntry("tempo", 100)[0])
+        setComboBox(self.quantize, conf.readEntry("quantize", "16"))
+        self.step.setChecked(conf.readEntry("step", False))
+        self.mono.setChecked(conf.readEntry("mono", False))
+        setComboBox(self.meter, unautofy(conf.readEntry("meter", "auto")))
+        setComboBox(self.keysig, unautofy(conf.readEntry("meter", "auto")))
+        if conf.readEntry("timidity", False):
             self.timidity.start()
 
     def showMessage(self, msg, timeout=0):
@@ -194,7 +194,7 @@ class RumorPanel(QWidget):
         text = doc.textToCursor(cursor)
         
         # Language
-        lang = unicode(conf.readEntry("language", QVariant("auto")).toString())
+        lang = conf.readEntry("language", "auto")
         if lang not in (
                 'ne', 'en', 'en-short', 'de', 'no', 'sv', 'it', 'ca', 'es'):
             # determine lily language from document
@@ -251,30 +251,30 @@ class RumorPanel(QWidget):
             args.append("--no-chords")
 
         # Absolute pitches?
-        if conf.readEntry("absolute pitches", QVariant(False)).toBool():
+        if conf.readEntry("absolute pitches", False):
             args.append("--absolute-pitches")
 
         # Explicit durations?
-        if conf.readEntry("explicit durations", QVariant(False)).toBool():
+        if conf.readEntry("explicit durations", False):
             args.append("--explicit-durations")
 
         # No barlines?
-        self.noBarlines = conf.readEntry("no barlines", QVariant(False)).toBool()
+        self.noBarlines = conf.readEntry("no barlines", False)
 
         # No dots?
-        if conf.readEntry("no dots", QVariant(False)).toBool():
+        if conf.readEntry("no dots", False):
             args.append("--no-dots")
 
         # Legato?
-        if conf.readEntry("legato", QVariant(False)).toBool():
+        if conf.readEntry("legato", False):
             args.append("--legato")
 
         # Strip rests?
-        if conf.readEntry("strip rests", QVariant(False)).toBool():
+        if conf.readEntry("strip rests", False):
             args.append("--strip")
 
         # Guile scripts?
-        scripts = map(unicode, conf.readEntry("scripts", QVariant(())).toStringList())
+        scripts = conf.readEntry("scripts", [])
         if scripts:
             paths = dict((os.path.basename(path), path) for path in rumorScripts())
             for s in scripts:
@@ -282,8 +282,8 @@ class RumorPanel(QWidget):
                     args.append("--script=%s" % paths[s])
 
         # input/output
-        i = unicode(conf.readEntry("midi in", QVariant("oss:1")).toString())
-        o = unicode(conf.readEntry("midi out", QVariant("oss:1")).toString())
+        i = conf.readEntry("midi in", "oss:1")
+        o = conf.readEntry("midi out", "oss:1")
         if o.startswith('oss:'):
             args.append("--oss=%s" % o.split(":")[1])
         elif re.match(r"\d", o) and re.match(r"\d", i):
@@ -321,7 +321,7 @@ class RumorButton(ProcessButtonBase, QToolButton):
         self.panel.mainwin.aboutToClose.connect(self.quit)
         
     def initializeProcess(self, p):
-        rumor = config("commands").readEntry("rumor", QVariant("rumor")).toString()
+        rumor = config("commands").readEntry("rumor", "rumor")
         cmd = [rumor] + self.panel.getRumorArguments()
         if self.panel.keyboardEmu:
             # Run Rumor in a pty when keyboard input is used.
@@ -354,7 +354,7 @@ class RumorButton(ProcessButtonBase, QToolButton):
                 self.process().kill()
         
     def readOutput(self, text):
-        self.panel.insertRumorOutput(unicode(text))
+        self.panel.insertRumorOutput(unicode(text)) # TODO: unicode needed?
 
     def finished(self, exitCode, exitStatus):
         self.panel.showMessage(i18n("Rumor stopped."), 1000)
@@ -397,8 +397,7 @@ class TimidityButton(ProcessButtonBase, QPushButton):
         panel.mainwin.aboutToClose.connect(self.quit)
 
     def initializeProcess(self, p):
-        cmd, err = KShell.splitArgs(config("commands").readEntry("timidity",
-            QVariant(default_timidity_command)).toString())
+        cmd, err = KShell.splitArgs(config("commands").readEntry("timidity", default_timidity_command))
         if err == KShell.NoError:
             p.setProgram(cmd)
         else:
@@ -531,22 +530,22 @@ class RumorSettings(KDialog):
         else:
             idefault = 'kbd'
             odefault = self.olist[max(1, len(self.olist)-1)]
-        i = conf.readEntry("midi in", QVariant(idefault)).toString()
-        o = conf.readEntry("midi out", QVariant(odefault)).toString()
+        i = conf.readEntry("midi in", idefault)
+        o = conf.readEntry("midi out", odefault)
         if i in self.ilist:
             self.ibut.setCurrentIndex(self.ilist.index(i))
         if o in self.olist:
             self.obut.setCurrentIndex(self.olist.index(o))
-        setComboBox(self.lang, unautofy(conf.readEntry("language", QVariant("auto")).toString()))
-        self.absPitches.setChecked(conf.readEntry("absolute pitches", QVariant(False)).toBool())
-        self.explDur.setChecked(conf.readEntry("explicit durations", QVariant(False)).toBool())
-        self.noBar.setChecked(conf.readEntry("no barlines", QVariant(False)).toBool())
-        self.noDots.setChecked(conf.readEntry("no dots", QVariant(False)).toBool())
-        self.legato.setChecked(conf.readEntry("legato", QVariant(False)).toBool())
-        self.stripRests.setChecked(conf.readEntry("strip rests", QVariant(False)).toBool())
+        setComboBox(self.lang, unautofy(conf.readEntry("language", "auto")))
+        self.absPitches.setChecked(conf.readEntry("absolute pitches", False))
+        self.explDur.setChecked(conf.readEntry("explicit durations", False))
+        self.noBar.setChecked(conf.readEntry("no barlines", False))
+        self.noDots.setChecked(conf.readEntry("no dots", False))
+        self.legato.setChecked(conf.readEntry("legato", False))
+        self.stripRests.setChecked(conf.readEntry("strip rests", False))
         # Guile scripts
         self.scripts.clear()
-        scripts = conf.readEntry("scripts", QVariant(())).toStringList()
+        scripts = conf.readEntry("scripts", [])
         for path in rumorScripts():
             name = os.path.basename(path)
             try:
@@ -565,22 +564,22 @@ class RumorSettings(KDialog):
     def saveSettings(self):
         """ Save the settings """
         conf = config("rumor")
-        conf.writeEntry("midi in", QVariant(self.ilist[self.ibut.currentIndex()]))
-        conf.writeEntry("midi out", QVariant(self.olist[self.obut.currentIndex()]))
-        conf.writeEntry("language", QVariant(unicode(autofy(self.lang.currentText()))))
-        conf.writeEntry("absolute pitches", QVariant(self.absPitches.isChecked()))
-        conf.writeEntry("explicit durations", QVariant(self.explDur.isChecked()))
-        conf.writeEntry("no barlines", QVariant(self.noBar.isChecked()))
-        conf.writeEntry("no dots", QVariant(self.noDots.isChecked()))
-        conf.writeEntry("legato", QVariant(self.legato.isChecked()))
-        conf.writeEntry("strip rests", QVariant(self.stripRests.isChecked()))
+        conf.writeEntry("midi in", self.ilist[self.ibut.currentIndex()])
+        conf.writeEntry("midi out", self.olist[self.obut.currentIndex()])
+        conf.writeEntry("language", autofy(self.lang.currentText()))
+        conf.writeEntry("absolute pitches", self.absPitches.isChecked())
+        conf.writeEntry("explicit durations", self.explDur.isChecked())
+        conf.writeEntry("no barlines", self.noBar.isChecked())
+        conf.writeEntry("no dots", self.noDots.isChecked())
+        conf.writeEntry("legato", self.legato.isChecked())
+        conf.writeEntry("strip rests", self.stripRests.isChecked())
         # Read script treeview
         names = []
         for row in range(self.scripts.topLevelItemCount()):
             item = self.scripts.topLevelItem(row)
             if item.checkState(0) == Qt.Checked:
-                names.append(unicode(item.text(0)))
-        conf.writeEntry("scripts", QVariant(names))
+                names.append(item.text(0))
+        conf.writeEntry("scripts", names)
 
 
 
@@ -591,7 +590,7 @@ def parseAconnect(channel):
     or writing (channel = 'o')
     """
     option = channel == 'i' and '--input' or '--output'
-    cmd = unicode(config("commands").readEntry("aconnect", QVariant("aconnect")).toString())
+    cmd = config("commands").readEntry("aconnect", "aconnect")
     res = []
     # run aconnect in the english (standard language)
     env = dict(os.environ)
@@ -623,7 +622,7 @@ def getOSSnrMIDIs():
         return 0
 
 def rumorScripts():
-    return map(unicode, KGlobal.dirs().findAllResources("appdata", "rumor/*"))
+    return KGlobal.dirs().findAllResources("appdata", "rumor/*")
 
 def config(group="rumor"):
     return KGlobal.config().group(group)
@@ -632,7 +631,7 @@ def bound(x, minValue, maxValue):
     """ Clips x according to the boundaries minValue and maxValue """
     return max(minValue, min(maxValue, x))
 
-AUTO = lambda: unicode(i18n("Auto"))
+AUTO = lambda: i18n("Auto")
 autofy = lambda s: s == AUTO() and "auto" or s
 unautofy = lambda s: s == "auto" and AUTO() or s
 

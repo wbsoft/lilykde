@@ -19,7 +19,6 @@
 
 
 import dbus
-from PyQt4.QtCore import QString
 from PyKDE4.kdecore import KUrl
 
 # interface for our object types (MainApp and Document)
@@ -77,13 +76,11 @@ class Proxy(object):
             meth = getattr(self.iface, attr)
             if callable(meth):
                 def proxy_func(*args):
-                    # convert args from QString or KUrl to unicode
+                    # convert args from KUrl to unicode
                     args = list(args)
                     for i in range(len(args)):
-                        if isinstance(args[i], QString):
-                            args[i] = unicode(args[i])
-                        elif isinstance(args[i], KUrl):
-                            args[i] = unicode(args[i].url())
+                        if isinstance(args[i], KUrl):
+                            args[i] = args[i].url()
                     # call the method
                     res = meth(*args)
                     # Return same proxy if the returned object is a reference

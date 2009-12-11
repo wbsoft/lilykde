@@ -22,7 +22,7 @@
 import math, os, re, shutil, sys, tempfile, time
 
 from PyQt4.QtCore import (
-    QObject, QProcess, QSize, QTimer, QUrl, QVariant, Qt, SIGNAL)
+    QObject, QProcess, QSize, QTimer, QUrl, Qt, SIGNAL)
 from PyQt4.QtGui import (
     QBrush, QColor, QFont, QFrame, QStackedWidget, QTextBrowser,
     QTextCharFormat, QTextCursor, QToolBar, QVBoxLayout, QWidget)
@@ -67,14 +67,12 @@ class Ly2PDF(object):
         self.p = KProcess()
         self.p.setOutputChannelMode(KProcess.MergedChannels)
         self.p.setWorkingDirectory(self.directory)
-        cmd = [config("commands").readEntry("lilypond", QVariant("lilypond")).toString()]
-        if config("preferences").readEntry("verbose lilypond output",
-                                           QVariant(False)).toBool():
+        cmd = [config("commands").readEntry("lilypond", "lilypond")]
+        if config("preferences").readEntry("verbose lilypond output", False):
             cmd.append("--verbose")
         cmd.append("--pdf")
         cmd.append(self.preview and "-dpoint-and-click" or "-dno-point-and-click")
-        if config("preferences").readEntry("delete intermediate files",
-                                           QVariant(True)).toBool():
+        if config("preferences").readEntry("delete intermediate files", True):
             cmd.append("-ddelete-intermediate-files")
         cmd.append(self.lyfile_arg)
         
@@ -85,7 +83,7 @@ class Ly2PDF(object):
         QObject.connect(self.p, SIGNAL("readyRead()"), self.readOutput)
         
         self.log.clear()
-        mode = unicode(self.preview and i18n("preview mode") or i18n("publish mode"))
+        mode = self.preview and i18n("preview mode") or i18n("publish mode")
         self.log.writeLine(i18n("LilyPond [%1] starting (%2)...", self.lyfile_arg, mode))
         self.startTime = time.time()
         self.p.start()
@@ -356,12 +354,11 @@ class Log(LogWidget):
             KEncodingFileDialog.Saving, self.textBrowser)
         dlg.setSelection(fileName)
         dlg.setConfirmOverwrite(True)
-        result = dlg.exec_()
-        if not result:
+        if not dlg.exec_():
             return # Cancelled
-        encoding = str(dlg.selectedEncoding())
-        fileName = unicode(dlg.selectedFile())
-        text = unicode(self.textBrowser.textCursor().selection().toPlainText()
+        encoding = dlg.selectedEncoding()
+        fileName = dlg.selectedFile()
+        text = (self.textBrowser.textCursor().selection().toPlainText()
                 or self.textBrowser.toPlainText())
         try:
             f = open(fileName, 'w')
@@ -458,7 +455,7 @@ class LocalFileManager(object):
     def __init__(self, doc):
         self.doc = doc
         self.directory = tempfile.mkdtemp()
-        path = unicode(self.doc.url().path())
+        path = self.doc.url().path()
         self.filename = path and os.path.basename(path) or "music.ly"
 
     def __del__(self):

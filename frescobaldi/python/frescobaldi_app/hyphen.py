@@ -25,7 +25,6 @@ from glob import glob
 import ly.rx
 from hyphenator import Hyphenator
 
-from PyQt4.QtCore import QVariant
 from PyQt4.QtGui import QLabel, QListWidget
 from PyKDE4.kdecore import KConfig, KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KVBox
@@ -56,18 +55,17 @@ def findDicts():
     def paths():
         """ build a list of paths based on config """
         # in which prefixes to look for relative paths
-        prefixes = unicode(KGlobal.dirs().kfsstnd_prefixes()).split(os.pathsep)
+        prefixes = KGlobal.dirs().kfsstnd_prefixes().split(os.pathsep)
         prefixes = set(prefixes + ['/usr/', '/usr/local/'])
         # if the path is not absolute, add it to all prefixes.
-        for path in conf.readEntry("paths", QVariant(defaultPaths)).toStringList():
-            path = unicode(path)
+        for path in conf.readEntry("paths", defaultPaths):
             if os.path.isabs(path):
                 yield path
             else:
                 for pref in prefixes:
                     yield os.path.join(pref, path)
                 for d in KGlobal.dirs().findDirs("data", path):
-                    yield unicode(d)
+                    yield d
 
     # now find the hyph_xx_XX.dic files
     dicfiles = (f
@@ -97,8 +95,8 @@ def findDicts():
             hyphdicts[lang] = dic
 
     # if not used before, write the current locale (if existing) as default
-    if defaultlang and unicode(conf.readEntry("lastused", QVariant("")).toString()) not in hyphdicts:
-        conf.writeEntry("lastused", QVariant(defaultlang))
+    if defaultlang and conf.readEntry("lastused", "") not in hyphdicts:
+        conf.writeEntry("lastused", defaultlang)
         conf.sync()
 
 findDicts()
@@ -110,7 +108,7 @@ def hyphenate(text, mainwindow):
     Returns None if the user cancels the dialog.
     """
     conf = config("hyphenation")
-    lang = conf.readEntry("lastused", QVariant("")).toString()
+    lang = conf.readEntry("lastused", "")
     langs = list(sorted(hyphdicts.keys()))
     index = lang in langs and langs.index(lang) or 0
     
@@ -127,7 +125,7 @@ def hyphenate(text, mainwindow):
     listbox.setFocus()
     if d.exec_():
         lang = langs[listbox.currentRow()]
-        conf.writeEntry("lastused", QVariant(lang))
+        conf.writeEntry("lastused", lang)
         conf.sync()
         # get hyphenator
         h = Hyphenator(hyphdicts[lang])

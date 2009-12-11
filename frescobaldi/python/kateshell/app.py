@@ -22,7 +22,7 @@ from dbus.service import method, signal
 
 from signals import Signal
 
-from PyQt4.QtCore import QObject, Qt, QVariant, SIGNAL
+from PyQt4.QtCore import QObject, Qt, SIGNAL
 from PyKDE4.kdecore import i18n, KConfig, KGlobal, KUrl
 from PyKDE4.kdeui import (
     KActionCollection, KApplication, KGuiItem, KMessageBox, KStandardGuiItem)
@@ -144,7 +144,7 @@ class MainApp(DBusItem):
             if self.keepMetaInfo() and not url.isEmpty():
                 group = self.stateManager().groupForUrl(url)
                 if group:
-                    encoding = group.readEntry("encoding", QVariant('')).toString()
+                    encoding = group.readEntry("encoding", "")
         # If there is only one document open and it is empty, nameless and
         # unmodified, use it.
         if (not url.isEmpty()
@@ -242,14 +242,14 @@ class MainApp(DBusItem):
         """
         Returns the name of the application
         """
-        return unicode(KGlobal.mainComponent().aboutData().programName())
+        return KGlobal.mainComponent().aboutData().programName()
         
     @method(iface, in_signature='', out_signature='s')
     def version(self):
         """
         Returns the version of our app.
         """
-        return unicode(KGlobal.mainComponent().aboutData().version())
+        return KGlobal.mainComponent().aboutData().version()
 
     def showException(self, exctype, excvalue, exctb):
         """
@@ -471,11 +471,11 @@ class Document(DBusItem):
     @method(iface, in_signature='', out_signature='s')
     def prettyUrl(self):
         """Returns a printable, pretty URL for this document."""
-        return unicode(self.url().pathOrUrl())
+        return self.url().pathOrUrl()
         
     @method(iface, in_signature='', out_signature='s')
     def localPath(self):
-        return unicode(self.url().toLocalFile())
+        return self.url().toLocalFile()
 
     @method(iface, in_signature='', out_signature='s')
     def documentName(self):
@@ -553,7 +553,7 @@ class Document(DBusItem):
         Returns the document text.
         """
         if self.doc:
-            return unicode(self.doc.text())
+            return self.doc.text()
         else:
             return ''
     
@@ -580,7 +580,7 @@ class Document(DBusItem):
         Returns the full document text as a list of lines.
         """
         if self.doc:
-            return map(unicode, self.doc.textLines(self.doc.documentRange()))
+            return self.doc.textLines(self.doc.documentRange())
         else:
             return []
     
@@ -657,18 +657,18 @@ class Document(DBusItem):
         # restore some options from the view menu
         for name, action in self.viewActions():
             if group.hasKey(name):
-                value = group.readEntry(name, QVariant(False)).toBool()
+                value = group.readEntry(name, False)
                 if value != action.isChecked():
                     action.trigger()
         # cursor position
-        line, okline = group.readEntry("line", QVariant(0)).toInt()
-        column, okcolumn = group.readEntry("column", QVariant(0)).toInt()
+        line, okline = group.readEntry("line", 0)
+        column, okcolumn = group.readEntry("column", 0)
         if okline and okcolumn and line < self.doc.lines():
             self.view.setCursorPosition(KTextEditor.Cursor(line, column))
         # bookmarks
         markiface = self.doc.markInterface()
         if markiface:
-            marks = str(group.readEntry("bookmarks", QVariant("")).toString())
+            marks = group.readEntry("bookmarks", "")
             if re.match(r"\d+:\d+(,\d+:\d+)*$", marks):
                 for m in marks.split(','):
                     line, mark = map(int, m.split(':'))
@@ -682,11 +682,11 @@ class Document(DBusItem):
         """
         # save some options in the view menu
         for name, action in self.viewActions():
-            group.writeEntry(name, QVariant(action.isChecked()))
+            group.writeEntry(name, action.isChecked())
         # cursor position
         cursor = self.view.cursorPosition()
-        group.writeEntry("line", QVariant(cursor.line()))
-        group.writeEntry("column", QVariant(cursor.column()))
+        group.writeEntry("line", cursor.line())
+        group.writeEntry("column", cursor.column())
         # bookmarks
         # markInterface().marks() crashes so we use mark() instead...
         markiface = self.doc.markInterface()
@@ -696,9 +696,9 @@ class Document(DBusItem):
                 m = markiface.mark(line)
                 if m:
                     marks.append("%d:%d" % (line, m))
-            group.writeEntry("bookmarks", QVariant(','.join(marks)))
+            group.writeEntry("bookmarks", ','.join(marks))
         # also save the encoding
-        group.writeEntry("encoding", QVariant(self.encoding()))
+        group.writeEntry("encoding", self.encoding())
 
     def line(self, lineNumber = None):
         """
@@ -707,7 +707,7 @@ class Document(DBusItem):
         if self.doc:
             if lineNumber is None:
                 lineNumber = self.view.cursorPosition().line()
-            return unicode(self.doc.line(lineNumber))
+            return self.doc.line(lineNumber)
     
     def textToCursor(self, line=None, column=None):
         """
@@ -722,14 +722,14 @@ class Document(DBusItem):
             if column is None:
                 column = line.column()
                 line = line.line()
-            return unicode(self.doc.text(KTextEditor.Range(0, 0, line, column)))
+            return self.doc.text(KTextEditor.Range(0, 0, line, column))
 
     def selectionText(self):
         """
         Returns the selected text or None.
         """
         if self.view and self.view.selection():
-            return unicode(self.view.selectionText())
+            return self.view.selectionText()
     
     def selectionOrDocument(self):
         """
@@ -790,7 +790,7 @@ class Document(DBusItem):
         mode = self.doc and self.doc.mode() or self.app.defaultMode
         if mode:
             c = KConfig("katemoderc", KConfig.NoGlobals)
-            v = unicode(c.group(mode).readEntry("Variables", QVariant("")).toString())
+            v = c.group(mode).readEntry("Variables", "")
             return dict(re.findall(r"([a-z]+(?:-[a-z]+)*)\s+([^;]*)", v))
     
     #BUG: Reimplemented below as the variableInterface does not seem to work...
@@ -802,7 +802,7 @@ class Document(DBusItem):
         #if self.doc:
             #iface = self.doc.variableInterface()
             #if iface:
-                #v = unicode(iface.variable(varName))
+                #v = iface.variable(varName)
                 #if v:
                     #return v
         #d = self.kateModeVariables()
@@ -833,7 +833,7 @@ class Document(DBusItem):
         if v and v.isdigit():
             return int(v)
         group = KGlobal.config().group("Kate Document Defaults")
-        res, ok = group.readEntry("Tab Width", QVariant(8)).toInt()
+        res, ok = group.readEntry("Tab Width", 8)
         if ok:
             return res
         
@@ -845,7 +845,7 @@ class Document(DBusItem):
         if v and v.isdigit():
             return int(v)
         group = KGlobal.config().group("Kate Document Defaults")
-        res, ok = group.readEntry("Indentation Width", QVariant(2)).toInt()
+        res, ok = group.readEntry("Indentation Width", 2)
         if ok:
             return res
     
@@ -857,7 +857,7 @@ class Document(DBusItem):
         if v:
             return v in ('on', '1', 'yes', 'y', 'true')
         group = KGlobal.config().group("Kate Document Defaults")
-        flags, ok = group.readEntry('Basic Config Flags', QVariant(0)).toInt()
+        flags, ok = group.readEntry('Basic Config Flags', 0)
         return bool(ok and flags & 0x2000000)
 
     
@@ -886,7 +886,7 @@ class UserShortcuts(object):
         # load the shortcuts
         group = KGlobal.config().group(self.configGroup)
         for key in group.keyList():
-            if group.readEntry(key, QVariant("")).toString():
+            if group.readEntry(key, ""):
                 self.addAction(key)
         self._collection.readSettings()
     
@@ -1003,7 +1003,7 @@ class StateManager(object):
     def loadState(self, doc):
         group = self.groupForUrl(doc.url())
         if group:
-            last = group.readEntry("time", QVariant(0.0)).toDouble()[0]
+            last = group.readEntry("time", 0.0)[0]
             # when it is a local file, only load the state when the
             # file was not modified later
             if not doc.localPath() or (
@@ -1014,14 +1014,14 @@ class StateManager(object):
     def saveState(self, doc):
         if doc.view and not doc.url().isEmpty():
             group = self.metainfos.group(doc.url().prettyUrl())
-            group.writeEntry("time", QVariant(time.time()))
+            group.writeEntry("time", time.time())
             doc.writeConfig(group)
             group.sync()
             
     def cleanup(self):
         """ Purge entries that are not used for more than a month. """
         for g in self.metainfos.groupList():
-            last = self.metainfos.group(g).readEntry("time", QVariant(0.0)).toDouble()[0]
+            last = self.metainfos.group(g).readEntry("time", 0.0)[0]
             if (time.time() - last) / 86400 > 31:
                 self.metainfos.deleteGroup(g)
         self.metainfos.sync()

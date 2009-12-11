@@ -24,7 +24,7 @@ A browser tool for the LilyPond documentation.
 import glob, os, re, sip
 import HTMLParser
 
-from PyQt4.QtCore import QEvent, QObject, Qt, QUrl, QVariant, SIGNAL
+from PyQt4.QtCore import QEvent, QObject, Qt, QUrl, SIGNAL
 from PyQt4.QtGui import QGridLayout, QStackedWidget, QToolBar, QWidget
 from PyQt4.QtWebKit import QWebPage, QWebView
 
@@ -54,8 +54,8 @@ def docHomeUrl():
     Returns the configured or found url (as a string) where the LilyPond
     documentation is to be found.
     """
-    url = config().readEntry("lilypond documentation", QVariant('')).toString()
-    return unicode(url or findLocalDocIndex() or "http://lilypond.org/doc")
+    url = config().readEntry("lilypond documentation", "")
+    return url or findLocalDocIndex() or "http://lilypond.org/doc"
 
 def findLocalDocIndex():
     """
@@ -261,7 +261,7 @@ class LilyDoc(QWidget):
         # Called when the HTML doc has loaded.
         # Parse HTML and display link rel='' buttons
         if success:
-            html = unicode(self.view.page().mainFrame().toHtml())
+            html = self.view.page().mainFrame().toHtml()
             self.rellinks = RellinksParser(html, self.view.url()).links()
             self.updateLinkActions()
     

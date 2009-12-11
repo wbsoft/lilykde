@@ -965,7 +965,7 @@ class Choir(VocalPart):
 
     def build(self, builder):
         # normalize voicing
-        staves = unicode(self.voicing.currentText()).upper()
+        staves = self.voicing.currentText().upper()
         # remove unwanted characters
         staves = re.sub(r'[^SATB-]+', '', staves)
         # remove double hyphens, and from begin and end
