@@ -195,7 +195,7 @@ class LilyDoc(QWidget):
         if self.edit:
             sip.delete(self.edit)
             self.edit = None
-        if url.path().endsWith('.ly'):
+        if url.path().endswith('.ly'):
             self.createEditView()
             self.stack.addWidget(self.edit)
             self.doc.openUrl(KUrl(url))

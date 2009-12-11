@@ -552,10 +552,7 @@ class Document(DBusItem):
         """
         Returns the document text.
         """
-        if self.doc:
-            return self.doc.text()
-        else:
-            return ''
+        return self.doc and self.doc.text() or ""
     
     @method(iface, in_signature='s', out_signature='b')
     def setText(self, text):
@@ -580,7 +577,8 @@ class Document(DBusItem):
         Returns the full document text as a list of lines.
         """
         if self.doc:
-            return self.doc.textLines(self.doc.documentRange())
+            return [line or ""
+                for line in self.doc.textLines(self.doc.documentRange())]
         else:
             return []
     
@@ -661,9 +659,9 @@ class Document(DBusItem):
                 if value != action.isChecked():
                     action.trigger()
         # cursor position
-        line, okline = group.readEntry("line", 0)
-        column, okcolumn = group.readEntry("column", 0)
-        if okline and okcolumn and line < self.doc.lines():
+        line = group.readEntry("line", 0)
+        column = group.readEntry("column", 0)
+        if line < self.doc.lines():
             self.view.setCursorPosition(KTextEditor.Cursor(line, column))
         # bookmarks
         markiface = self.doc.markInterface()
@@ -707,7 +705,7 @@ class Document(DBusItem):
         if self.doc:
             if lineNumber is None:
                 lineNumber = self.view.cursorPosition().line()
-            return self.doc.line(lineNumber)
+            return self.doc.line(lineNumber) or ""
     
     def textToCursor(self, line=None, column=None):
         """
@@ -722,14 +720,14 @@ class Document(DBusItem):
             if column is None:
                 column = line.column()
                 line = line.line()
-            return self.doc.text(KTextEditor.Range(0, 0, line, column))
+            return self.doc.text(KTextEditor.Range(0, 0, line, column)) or ""
 
     def selectionText(self):
         """
         Returns the selected text or None.
         """
         if self.view and self.view.selection():
-            return self.view.selectionText()
+            return self.view.selectionText() or ""
     
     def selectionOrDocument(self):
         """
@@ -833,9 +831,7 @@ class Document(DBusItem):
         if v and v.isdigit():
             return int(v)
         group = KGlobal.config().group("Kate Document Defaults")
-        res, ok = group.readEntry("Tab Width", 8)
-        if ok:
-            return res
+        return group.readEntry("Tab Width", 8)
         
     def indentationWidth(self):
         """
@@ -845,9 +841,7 @@ class Document(DBusItem):
         if v and v.isdigit():
             return int(v)
         group = KGlobal.config().group("Kate Document Defaults")
-        res, ok = group.readEntry("Indentation Width", 2)
-        if ok:
-            return res
+        return group.readEntry("Indentation Width", 2)
     
     def indentationSpaces(self):
         """
@@ -857,8 +851,7 @@ class Document(DBusItem):
         if v:
             return v in ('on', '1', 'yes', 'y', 'true')
         group = KGlobal.config().group("Kate Document Defaults")
-        flags, ok = group.readEntry('Basic Config Flags', 0)
-        return bool(ok and flags & 0x2000000)
+        return bool(group.readEntry('Basic Config Flags', 0) & 0x2000000)
 
     
 class UserShortcuts(object):
@@ -1003,7 +996,7 @@ class StateManager(object):
     def loadState(self, doc):
         group = self.groupForUrl(doc.url())
         if group:
-            last = group.readEntry("time", 0.0)[0]
+            last = group.readEntry("time", 0.0)
             # when it is a local file, only load the state when the
             # file was not modified later
             if not doc.localPath() or (
@@ -1021,7 +1014,7 @@ class StateManager(object):
     def cleanup(self):
         """ Purge entries that are not used for more than a month. """
         for g in self.metainfos.groupList():
-            last = self.metainfos.group(g).readEntry("time", 0.0)[0]
+            last = self.metainfos.group(g).readEntry("time", 0.0)
             if (time.time() - last) / 86400 > 31:
                 self.metainfos.deleteGroup(g)
         self.metainfos.sync()

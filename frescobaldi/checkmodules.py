@@ -31,7 +31,7 @@ errors = []
 mkver = lambda major, minor, release: major * 65536 + minor * 256 + release
     
 # versions
-if sys.version_info[:2] != (2, 6)):
+if sys.version_info[:2] != (2, 6):
     errors.append("Python version %s found, but need 2.6.\n"
                   "(Use cmake -DPYTHON_EXECUTABLE=/path/to/python2.6)" %
         sys.version)
@@ -40,8 +40,8 @@ if sip.SIP_VERSION < mkver(4, 9, 1):
     errors.append("(python-)sip version %s found, but need at least 4.9.1." %
         sip.SIP_VERSION_STR)
         
-if PyQt4.QtCore.PYQT_VERSION < mkver(4, 6, 2):
-    errors.append("PyQt4 version %s found, but need at least 4.6.2." %
+if PyQt4.QtCore.PYQT_VERSION < mkver(4, 6, 0):
+    errors.append("PyQt4 version %s found, but need at least 4.6.0." %
         PyQt4.QtCore.PYQT_VERSION_STR)
         
 if PyKDE4.kdecore.pykde_version() < mkver(4, 0, 2):

@@ -25,8 +25,7 @@ import os, re, sip, string, sys, types
 import ly, ly.dom
 from rational import Rational
 
-from PyQt4.QtCore import (
-    QObject, QSize, QSizeF, QString, QStringList, QUrl, QVariant, Qt, SIGNAL)
+from PyQt4.QtCore import QObject, QSize, QSizeF, QUrl, Qt, SIGNAL
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QLabel,
     QListWidget, QListWidgetItem, QSplitter, QStackedWidget, QTextBrowser,
@@ -109,7 +108,7 @@ class ScoreWizard(KPageDialog):
         for name, widget in self.completableWidgets.iteritems():
             c = widget.completionObject()
             c.setOrder(KCompletion.Sorted)
-            c.setItems(conf.readEntry(name, QVariant(QStringList())).toStringList())
+            c.setItems(conf.readEntry(name, []))
 
     def done(self, result):
         self.saveDialogSize(config("dialogsize"))
@@ -189,7 +188,7 @@ class Titles(QWidget):
     def headers(self):
         """ Iterate over the user-entered headers (name, value) """
         for h in ly.headerNames:
-            yield h, unicode(self.findChild(KLineEdit, h).text())
+            yield h, self.findChild(KLineEdit, h).text()
 
 
 class Parts(QSplitter):
@@ -453,7 +452,7 @@ class Settings(SymbolManager, QWidget):
         @onSignal(self.lylang, "currentIndexChanged(const QString&)")
         def slotLanguageChanged(lang):
             """ Change the LilyPond language, affects key names """
-            lang = unicode(lang).lower()    # can be QString
+            lang = lang.lower()
             if lang not in self.languageNames:
                 lang = 'nederlands'
             index = self.key.currentIndex()
@@ -548,7 +547,7 @@ class Settings(SymbolManager, QWidget):
         h.setToolTip(i18n("Which language to use for the instrument names."))
 
         langs = KGlobal.dirs().findAllResources("locale", "*/LC_MESSAGES/frescobaldi.mo")
-        self.instrLanguages = list(sorted(set(unicode(lang).split('/')[-3] for lang in langs)))
+        self.instrLanguages = list(sorted(set(lang.split('/')[-3] for lang in langs)))
         self.instrLang.addItems([KGlobal.locale().languageCodeToName(lang)
                 for lang in self.instrLanguages])
         
@@ -558,38 +557,38 @@ class Settings(SymbolManager, QWidget):
     def saveConfig(self):
         conf = config()
         conf.writeEntry('language', self.getLanguage() or 'default')
-        conf.writeEntry('typographical', QVariant(self.typq.isChecked()))
-        conf.writeEntry('remove tagline', QVariant(self.tagl.isChecked()))
-        conf.writeEntry('remove barnumbers', QVariant(self.barnum.isChecked()))
-        conf.writeEntry('midi', QVariant(self.midi.isChecked()))
-        conf.writeEntry('metronome mark', QVariant(self.metro.isChecked()))
+        conf.writeEntry('typographical', self.typq.isChecked())
+        conf.writeEntry('remove tagline', self.tagl.isChecked())
+        conf.writeEntry('remove barnumbers', self.barnum.isChecked())
+        conf.writeEntry('midi', self.midi.isChecked())
+        conf.writeEntry('metronome mark', self.metro.isChecked())
         if self.paper.currentIndex() > 0:
             conf.writeEntry('paper size', ly.paperSizes[self.paper.currentIndex() - 1])
-        conf.writeEntry('paper landscape', QVariant(self.paperLandscape.isChecked()))
+        conf.writeEntry('paper landscape', self.paperLandscape.isChecked())
         g = config('instrument names')
-        g.writeEntry('show', QVariant(self.instr.isChecked()))
+        g.writeEntry('show', self.instr.isChecked())
         g.writeEntry('first', ['long', 'short'][self.instrFirst.currentIndex()])
         g.writeEntry('other', ['long', 'short', 'none'][self.instrOther.currentIndex()])
         g.writeEntry('lang', (['default', 'english'] + self.instrLanguages)[self.instrLang.currentIndex()])
 
     def loadConfig(self):
         conf = config()
-        self.setLanguage(conf.readEntry('language', QVariant('default')).toString())
-        self.typq.setChecked(conf.readEntry('typographical', QVariant(True)).toBool())
-        self.tagl.setChecked(conf.readEntry('remove tagline', QVariant(False)).toBool())
-        self.barnum.setChecked(conf.readEntry('remove barnumbers', QVariant(False)).toBool())
-        self.midi.setChecked(conf.readEntry('midi', QVariant(True)).toBool())
-        self.metro.setChecked(conf.readEntry('metronome mark', QVariant(False)).toBool())
+        self.setLanguage(conf.readEntry('language', 'default'))
+        self.typq.setChecked(conf.readEntry('typographical', True))
+        self.tagl.setChecked(conf.readEntry('remove tagline', False))
+        self.barnum.setChecked(conf.readEntry('remove barnumbers', False))
+        self.midi.setChecked(conf.readEntry('midi', True))
+        self.metro.setChecked(conf.readEntry('metronome mark', False))
 
-        psize = conf.readEntry('paper size', QVariant('')).toString()
+        psize = conf.readEntry('paper size', "")
         if psize in ly.paperSizes:
             self.paper.setCurrentIndex(ly.paperSizes.index(psize) + 1)
-        self.paperLandscape.setChecked(conf.readEntry('paper landscape', QVariant(False)).toBool())
+        self.paperLandscape.setChecked(conf.readEntry('paper landscape', False))
         self.paperLandscape.setEnabled(psize in ly.paperSizes)
 
         g = config('instrument names')
         def readconf(entry, itemlist, defaultIndex):
-            item = g.readEntry(entry, QVariant(itemlist[defaultIndex])).toString()
+            item = g.readEntry(entry, itemlist[defaultIndex])
             if item in itemlist:
                 return itemlist.index(item)
             else:
@@ -602,7 +601,7 @@ class Settings(SymbolManager, QWidget):
         self.instrFirst.setCurrentIndex(first)
         self.instrOther.setCurrentIndex(other)
         self.instrLang.setCurrentIndex(lang)
-        self.instr.setChecked(g.readEntry('show', QVariant(True)).toBool())
+        self.instr.setChecked(g.readEntry('show', True))
 
     def default(self):
         """ Set various items to their default state """
@@ -695,13 +694,13 @@ class Builder(object):
         self.translate = lambda s: s    # english (untranslated)
         i = s.instrLang.currentIndex()
         if i == 0:                      # default (translated)
-            self.translate = lambda s: unicode(i18n(s))
+            self.translate = i18n
         elif i >= 2:                    # other translation
             try:
                 import gettext
-                self.translate = gettext.GNUTranslations(open(unicode(
+                self.translate = gettext.GNUTranslations(open(
                   KGlobal.dirs().findResource("locale", s.instrLanguages[i-2] +
-                    "/LC_MESSAGES/frescobaldi.mo")))).ugettext
+                    "/LC_MESSAGES/frescobaldi.mo"))).ugettext
             except IOError:
                 pass
         
@@ -712,7 +711,7 @@ class Builder(object):
         self.codeBlocks = []
         
         # version:
-        version = unicode(s.lyversion.currentText())
+        version = s.lyversion.currentText()
         ly.dom.Version(version, doc)
         ly.dom.BlankLine(doc)
         self.lilypondVersion = tuple(map(int, re.findall('\\d+', version)))
@@ -774,7 +773,7 @@ class Builder(object):
         g = ly.dom.Seq(globalAssignment)
 
         # First find out if we need to define a tempoMark section.
-        tempoText = unicode(s.tempoInd.text())
+        tempoText = s.tempoInd.text()
         metro = s.metro.isChecked()
         dur = durations[s.metroDur.currentIndex()]
         val = s.metroVal.currentText()
@@ -816,7 +815,7 @@ class Builder(object):
         mode = ly.modes()[s.mode.currentIndex()][0]
         ly.dom.KeySignature(note, alter, mode, g).after = 1
         # time signature
-        match = re.search('(\\d+).*?(\\d+)', unicode(s.time.currentText()))
+        match = re.search('(\\d+).*?(\\d+)', s.time.currentText())
         if match:
             if s.time.currentText() in ('2/2', '4/4'):
                 if self.lilypondVersion >= (2, 11, 44):
