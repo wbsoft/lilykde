@@ -985,9 +985,11 @@ class StateManager(object):
         self.app = app
         self.metainfos = KConfig("metainfos", KConfig.NoGlobals, "appdata")
         
-    def groupForUrl(self, url):
-        if not url.isEmpty() and self.metainfos.hasGroup(url.prettyUrl()):
-            return self.metainfos.group(url.prettyUrl())
+    def groupForUrl(self, url, create=False):
+        if not url.isEmpty():
+            encodedurl = KUrl.toPercentEncoding(url.prettyUrl())
+            if create or self.metainfos.hasGroup(encodedurl):
+                return self.metainfos.group(encodedurl)
             
     def loadState(self, doc):
         group = self.groupForUrl(doc.url())
@@ -1002,7 +1004,7 @@ class StateManager(object):
             
     def saveState(self, doc):
         if doc.view and not doc.url().isEmpty():
-            group = self.metainfos.group(doc.url().prettyUrl())
+            group = self.groupForUrl(doc.url(), True)
             group.writeEntry("time", time.time())
             doc.writeConfig(group)
             group.sync()
