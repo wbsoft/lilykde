@@ -987,7 +987,7 @@ class StateManager(object):
         
     def groupForUrl(self, url, create=False):
         if not url.isEmpty():
-            encodedurl = KUrl.toPercentEncoding(url.prettyUrl())
+            encodedurl = url.prettyUrl().encode('unicode_escape')
             if create or self.metainfos.hasGroup(encodedurl):
                 return self.metainfos.group(encodedurl)
             
