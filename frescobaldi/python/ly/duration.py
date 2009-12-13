@@ -111,10 +111,10 @@ def applyRhythm(text, rhythm):
             for i in durs:
                 yield i != old and i or ''
                 old = i
-    nextdur = durgen().next
+    durations = durgen()
     def repl(m):
         if m.group('chord'):
-            return m.group('chord') + nextdur()
+            return m.group('chord') + next(durations)
         return m.group()
     return ly.rx.chord_rest.sub(repl, text)
 

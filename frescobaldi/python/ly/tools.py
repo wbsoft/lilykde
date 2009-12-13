@@ -78,15 +78,15 @@ def relativeToAbsolute(text, start = 0, changes = None):
             return self
             
         def next(self):
-            token = tokens.next()
+            token = next(tokens)
             while isinstance(token, (tokenizer.Space, tokenizer.Comment)):
-                token = tokens.next()
+                token = next(tokens)
             if token == "\\relative":
                 relative(token.pos)
-                token = tokens.next()
+                token = next(tokens)
             elif isinstance(token, tokenizer.MarkupScore):
                 absolute()
-                token = tokens.next()
+                token = next(tokens)
             return token
     
     source = gen()
@@ -111,10 +111,10 @@ def relativeToAbsolute(text, start = 0, changes = None):
         """
         # find the pitch after the \relative command
         lastPitch = None
-        token = source.next()
+        token = next(source)
         if isinstance(token, tokenizer.Pitch):
             lastPitch = Pitch.fromToken(token, tokenizer)
-            token = source.next()
+            token = next(source)
         if not lastPitch:
             lastPitch = Pitch.c1()
         
@@ -124,13 +124,13 @@ def relativeToAbsolute(text, start = 0, changes = None):
         # eat stuff like \new Staff == "bla" \new Voice \notes etc.
         while True:
             if token in ('\\new', '\\context'):
-                source.next() # skip context type
-                token = source.next()
+                next(source) # skip context type
+                token = next(source)
                 if token == '=':
-                    source.next() # skip context name
-                    token = source.next()
+                    next(source) # skip context name
+                    token = next(source)
             elif isinstance(token, (tokenizer.ChordMode, tokenizer.NoteMode)):
-                token = source.next()
+                token = next(source)
             else:
                 break
         
@@ -140,13 +140,13 @@ def relativeToAbsolute(text, start = 0, changes = None):
             for token in consume():
                 # skip commands with pitches that do not count
                 if token in ('\\key', '\\transposition'):
-                    source.next()
+                    next(source)
                 elif token == '\\transpose':
-                    source.next()
-                    source.next()
+                    next(source)
+                    next(source)
                 elif token == '\\octaveCheck':
                     start = token.pos
-                    token = source.next()
+                    token = next(source)
                     if isinstance(token, tokenizer.Pitch):
                         p = Pitch.fromToken(token, tokenizer)
                         if p:
@@ -227,17 +227,17 @@ def absoluteToRelative(text, start = 0, changes = None):
             return self
             
         def next(self):
-            token = tokens.next()
+            token = next(tokens)
             while isinstance(token, (tokenizer.Space, tokenizer.Comment)):
-                token = tokens.next()
+                token = next(tokens)
             if token == "\\relative":
                 relative()
-                token = tokens.next()
+                token = next(tokens)
             elif isinstance(token, tokenizer.ChordMode):
                 absolute() # do not change chords
             elif isinstance(token, tokenizer.MarkupScore):
                 absolute()
-                token = tokens.next()
+                token = next(tokens)
             return token
     
     source = gen()
@@ -258,15 +258,15 @@ def absoluteToRelative(text, start = 0, changes = None):
     def relative():
         """ Consume the whole \relative expression without doing anything. """
         # skip pitch argument
-        token = source.next()
+        token = next(source)
         if isinstance(token, tokenizer.Pitch):
-            token = source.next()
+            token = next(source)
         if isinstance(token, tokenizer.OpenDelimiter):
             for token in consume():
                 pass
         elif isinstance(token, tokenizer.OpenChord):
             while not isinstance(token, tokenizer.CloseChord):
-                token = source.next()
+                token = next(source)
     
     # Do it!
     startToken = None
@@ -280,10 +280,10 @@ def absoluteToRelative(text, start = 0, changes = None):
                 for token in consume():
                     # skip commands with pitches that do not count
                     if token in ('\\key', '\\transposition'):
-                        source.next()
+                        next(source)
                     elif token == '\\transpose':
-                        source.next()
-                        source.next()
+                        next(source)
+                        next(source)
                     elif isinstance(token, tokenizer.OpenChord):
                         # Handle chord
                         chord = []
@@ -308,7 +308,7 @@ def absoluteToRelative(text, start = 0, changes = None):
                             # remember the first pitch of a chord
                             chord == [] and chord.append(p)
             except StopIteration:
-                pass # because of the source.next() statements
+                pass # because of the next(source) statements
     if startToken is None:  # no single expression converted?
         raise ly.NoMusicExpressionFound
     return changes
@@ -362,7 +362,7 @@ def transpose(text, transposer, start = 0, changes = None):
             
         def next(self):
             while True:
-                token = tokens.next()
+                token = next(tokens)
                 if isinstance(token, (tokenizer.Space, tokenizer.Comment)):
                     continue
                 elif not self.inSelection and token.pos >= start:
@@ -375,16 +375,16 @@ def transpose(text, transposer, start = 0, changes = None):
                 elif isinstance(token, tokenizer.ChordMode):
                     chordmode()
                 elif token == "\\transposition":
-                    source.next() # skip pitch
+                    next(source) # skip pitch
                 elif token == "\\transpose":
                     if self.inSelection:
-                        for token in source.next(), source.next():
+                        for token in next(source), next(source):
                             if isinstance(token, tokenizer.Pitch):
                                 transpose(token)
                     else:
-                        source.next(), source.next()
+                        next(source), next(source)
                 elif token == "\\key":
-                    token = source.next()
+                    token = next(source)
                     if self.inSelection and isinstance(token, tokenizer.Pitch):
                         transpose(token, 0)
                 else:
@@ -452,25 +452,25 @@ def transpose(text, transposer, start = 0, changes = None):
         relPitchToken = [] # we use a list so it can be changed from inside functions
         
         # find the pitch after the \relative command
-        token = source.next()
+        token = next(source)
         if isinstance(token, tokenizer.Pitch):
             lastPitch = Pitch.fromToken(token, tokenizer)
             if lastPitch and source.inSelection:
                 relPitchToken.append(token)
-            token = source.next()
+            token = next(source)
         if not lastPitch:
             lastPitch = Pitch.c1()
         
         # eat stuff like \new Staff == "bla" \new Voice \notes etc.
         while True:
             if token in ('\\new', '\\context'):
-                source.next() # skip context type
-                token = source.next()
+                next(source) # skip context type
+                token = next(source)
                 if token == '=':
-                    source.next() # skip context name
-                    token = source.next()
+                    next(source) # skip context name
+                    token = next(source)
             elif isinstance(token, tokenizer.NoteMode):
-                token = source.next()
+                token = next(source)
             else:
                 break
         
@@ -479,7 +479,7 @@ def transpose(text, transposer, start = 0, changes = None):
             # Handle full music expression { ... } or << ... >>
             for token in consume():
                 if token == '\\octaveCheck':
-                    token = source.next()
+                    token = next(source)
                     if isinstance(token, tokenizer.Pitch):
                         p = Pitch.fromToken(token, tokenizer)
                         if p:

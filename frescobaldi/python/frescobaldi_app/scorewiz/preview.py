@@ -60,16 +60,16 @@ class PreviewDialog(LilyPreviewDialog):
         
         def addItems(stub, generator):
             for dur, dots in durs:
-                node = generator.next()
+                node = next(generator)
                 node.append(ly.dom.Duration(dur, dots))
                 stub.append(node)
             
-        lyrics = lyricsGen(len(durs)).next
+        lyrics = lyricsGen(len(durs))
         # iter over all the Assignments to add example notes etc.
         for a in doc.findChildren(ly.dom.Assignment, 1):
             stub = a[-1]
             if isinstance(stub, ly.dom.LyricMode):
-                stub.append(lyrics())
+                stub.append(next(lyrics))
             elif isinstance(stub, ly.dom.Relative):
                 addItems(stub[-1], pitchGen(keysig))
             elif isinstance(stub, ly.dom.ChordMode):

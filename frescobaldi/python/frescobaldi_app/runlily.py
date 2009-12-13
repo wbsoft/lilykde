@@ -289,7 +289,7 @@ class Log(LogWidget):
         self.tool = tool
         self.doc = doc
         self.anchors = {}
-        self.anchorgen = anchorgen().next
+        self.anchorgen = anchorgen()
         LogWidget.__init__(self, tool.widget)
         self.textBrowser.anchorClicked.connect(self.anchorClicked)
         # context menu:
@@ -298,7 +298,7 @@ class Log(LogWidget):
     
     def clear(self):
         self.anchors.clear()
-        self.anchorgen = anchorgen().next
+        self.anchorgen = anchorgen()
         super(Log, self).clear()
         
     def show(self):
@@ -307,7 +307,7 @@ class Log(LogWidget):
         self.tool.show()
 
     def writeFileRef(self, text, path, line, column, tooltip=None, format='url'):
-        anchor = self.anchorgen()
+        anchor = next(self.anchorgen)
         self.anchors[anchor] = FileRef(self.doc.app, path, line, column)
         f = self.formats[format]
         f.setAnchorHref(anchor)
