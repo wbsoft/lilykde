@@ -987,9 +987,9 @@ class StateManager(object):
         
     def groupForUrl(self, url, create=False):
         if not url.isEmpty():
-            encodedurl = url.prettyUrl().encode('unicode_escape')
+            encodedurl = url.prettyUrl()
             if create or self.metainfos.hasGroup(encodedurl):
-                return self.metainfos.group(encodedurl)
+                return self.metainfos.group(encodedurl.encode('utf-8'))
             
     def loadState(self, doc):
         group = self.groupForUrl(doc.url())
@@ -1012,7 +1012,7 @@ class StateManager(object):
     def cleanup(self):
         """ Purge entries that are not used for more than a month. """
         for g in self.metainfos.groupList():
-            last = self.metainfos.group(g).readEntry("time", 0.0)
+            last = self.metainfos.group(g.encode('utf-8')).readEntry("time", 0.0)
             if (time.time() - last) / 86400 > 31:
                 self.metainfos.deleteGroup(g)
         self.metainfos.sync()
