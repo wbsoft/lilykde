@@ -22,6 +22,8 @@ Part types for the Score Wizard (scorewiz/__init__.py).
 In separate file to ease maintenance.
 """
 
+from fractions import Fraction
+
 from PyQt4.QtCore import QRegExp, Qt
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGroupBox, QLabel, QRadioButton, QRegExpValidator,
@@ -87,7 +89,7 @@ class Part(frescobaldi_app.scorewiz.PartBase):
         Identifier('global', s).after = 1
         if transposition is not None:
             toct, tnote, talter = transposition
-            Pitch(toct, tnote, Rational(talter, 2), Transposition(s))
+            Pitch(toct, tnote, Fraction(talter, 2), Transposition(s))
         LineComment(i18n("Music follows here."), s)
         BlankLine(s)
         return s, ref

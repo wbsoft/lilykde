@@ -23,7 +23,7 @@ Score Wizard
 
 import os, re, sip, string, sys, types
 import ly, ly.dom
-from rational import Rational
+from fractions import Fraction
 
 from PyQt4.QtCore import QObject, QSize, QSizeF, QUrl, Qt, SIGNAL
 from PyQt4.QtGui import (
@@ -802,7 +802,7 @@ class Builder(object):
 
         # key signature
         note, alter = ly.keys[s.key.currentIndex()]
-        alter = Rational(alter, 2)
+        alter = Fraction(alter, 2)
         mode = ly.modes()[s.mode.currentIndex()][0]
         ly.dom.KeySignature(note, alter, mode, g).after = 1
         # time signature

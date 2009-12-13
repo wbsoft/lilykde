@@ -35,7 +35,7 @@ Note: elements keep a weak reference to their parent.
 """
 
 import re, weakref
-from rational import Rational
+from fractions import Fraction
 
 import ly.pitch, ly.duration
 
@@ -946,14 +946,14 @@ class Pitch(Leaf):
     octave is specified by an integer, zero for the octave containing middle C.
     note is a number from 0 to 6, with 0 corresponding to pitch C and 6
     corresponding to pitch B.
-    alter is the number of whole tones for alteration (can be int or Rational)
+    alter is the number of whole tones for alteration (can be int or Fraction)
     """
 
     def __init__(self, octave=0, note=0, alter=0, parent=None):
         super(Pitch, self).__init__(parent)
         self.octave = octave
         self.note = note
-        self.alter = Rational(alter)
+        self.alter = Fraction(alter)
 
     def ly(self, printer):
         """
@@ -972,13 +972,13 @@ class Duration(Leaf):
     A duration with duration (in logarithmical form): (-2 ... 8),
     where -2 = \\longa, -1 = \\breve, 0 = 1, 1 = 2, 2 = 4, 3 = 8, 4 = 16, etc,
     dots (number of dots),
-    factor (Rational giving the scaling of the duration).
+    factor (Fraction giving the scaling of the duration).
     """
     def __init__(self, dur, dots=0, factor=1, parent=None):
         super(Duration, self).__init__(parent)
         self.dur = dur # log
         self.dots = dots
-        self.factor = Rational(factor)
+        self.factor = Fraction(factor)
 
     def ly(self, printer):
         s = ly.duration.durations[self.dur + 3] + '.' * self.dots
@@ -1033,7 +1033,7 @@ class KeySignature(Leaf):
     def __init__(self, note=0, alter=0, mode="major", parent=None):
         super(KeySignature, self).__init__(parent)
         self.note = note
-        self.alter = Rational(alter)
+        self.alter = Fraction(alter)
         self.mode = mode
 
     def ly(self, printer):

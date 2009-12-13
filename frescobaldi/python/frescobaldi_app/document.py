@@ -22,7 +22,7 @@ Advanced manipulations on LilyPond documents.
 """
 
 import os, re, weakref
-from rational import Rational
+from fractions import Fraction
 
 from PyQt4 import QtCore, QtGui
 
@@ -751,7 +751,7 @@ class TransposeDialog(KDialog):
             self.fromPitch.clear()
             for octave in (",", "", "'"):
                 for note in range(7):
-                    for alter in Rational(-1, 2), 0, Rational(1, 2):
+                    for alter in Fraction(-1, 2), 0, Fraction(1, 2):
                         self.fromPitch.insertItem(0,
                             ly.pitch.pitchWriter[language](note, alter) + octave)
             fromIndex != -1 and self.fromPitch.setCurrentIndex(fromIndex)

@@ -18,7 +18,7 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 import re
-from rational import Rational
+from fractions import Fraction
 
 import ly
 
@@ -105,7 +105,7 @@ class Transposer(object):
     The scale is a list with the pitch height of the unaltered step (0 .. 6).
     The default scale is the normal scale: C, D, E, F, G, A, B.
     """
-    scale = (0, 1, 2, Rational(5, 2), Rational(7, 2), Rational(9, 2), Rational(11, 2))
+    scale = (0, 1, 2, Fraction(5, 2), Fraction(7, 2), Fraction(9, 2), Fraction(11, 2))
         
     def __init__(self, fromPitch, toPitch, scale = None):
         if scale is not None:
@@ -172,7 +172,7 @@ class PitchReader(object):
             if m:
                 note = self.names.index(m.group(1))
                 if m.group(2):
-                    alter = Rational(self.accs.index(m.group(2)) - 4, 4)
+                    alter = Fraction(self.accs.index(m.group(2)) - 4, 4)
                 else:
                     alter = 0
                 return note, alter
