@@ -105,7 +105,7 @@ def convertLy(mainwin):
                  "The document has been processed with convert-ly, but "
                  "remained unchanged. This is the message given by "
                  "convert-ly: %1", msg))
-        except OSError, e:
+        except OSError as e:
             msg = unicode(e)
             KMessageBox.error(mainwin, i18n("Could not start convert-ly: %1", msg))
 

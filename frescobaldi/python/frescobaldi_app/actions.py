@@ -275,7 +275,7 @@ def printPDF(pdfFileName, window):
             else:
                 KMessageBox.information(window,
                     i18n("The document has been sent to the printer."))
-        except OSError, e:
+        except OSError as e:
             KMessageBox.error(window, i18n(
                 "Printing failed: %1\n\nThe print command %2 does "
                 "probably not exist. Please check your settings.",

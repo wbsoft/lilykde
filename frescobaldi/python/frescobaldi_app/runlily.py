@@ -356,7 +356,7 @@ class Log(LogWidget):
         try:
             with open(fileName, 'w') as f:
                 f.write(text.encode(encoding, 'replace'))
-        except (OSError, IOError), e:
+        except (OSError, IOError) as e:
             KMessageBox.error(self.textBrowser,
                 i18n("Could not save LilyPond log:\n\n%1", unicode(e)))
 

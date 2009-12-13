@@ -143,7 +143,7 @@ class RumorPanel(QWidget):
         try:
             v = Popen([cmd, '--version'], stdout=PIPE).communicate()[0].strip()
             self.showMessage(i18n("Found rumor version %1.", v), 1000)
-        except OSError, e:
+        except OSError as e:
             KMessageBox.error(self.mainwin,
                 i18n("Could not find Rumor: %1", unicode(e[1])))
 
