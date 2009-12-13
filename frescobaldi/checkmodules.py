@@ -32,9 +32,9 @@ mkver = lambda major, minor, release: major * 65536 + minor * 256 + release
     
 # versions
 if sys.version_info[:2] != (2, 6):
-    errors.append("Python version %s found, but need 2.6.\n"
+    errors.append("Python version %s.%s.%s found, but need 2.6.\n"
                   "(Use cmake -DPYTHON_EXECUTABLE=/path/to/python2.6)" %
-        sys.version)
+        sys.version_info[:3])
         
 if sip.SIP_VERSION < mkver(4, 9, 1):
     errors.append("(python-)sip version %s found, but need at least 4.9.1." %
