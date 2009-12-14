@@ -25,9 +25,9 @@ from glob import glob
 import ly.rx
 from hyphenator import Hyphenator
 
-from PyQt4.QtGui import QLabel, QListWidget
+from PyQt4.QtGui import QLabel, QListWidget, QVBoxLayout
 from PyKDE4.kdecore import KConfig, KGlobal, i18n
-from PyKDE4.kdeui import KDialog, KVBox
+from PyKDE4.kdeui import KDialog, KMessageBox
 
 try:
     language, encoding = locale.getdefaultlocale()
@@ -105,8 +105,17 @@ findDicts()
 def hyphenate(text, mainwindow):
     """
     Ask the user which language to use.
-    Returns None if the user cancels the dialog.
+    Returns None if the user cancels the dialog or no hyphenation pattern files
+    could be found.
     """
+    if not hyphdicts:
+        KMessageBox.sorry(mainwindow, i18n(
+            "Could not find any hyphenation dictionaries.\n\n"
+            "Please install a package containing some and/or or configure the "
+            "search path to find them in the Frescobaldi settings under "
+            "\"Paths.\""))
+        return
+    
     conf = config("hyphenation")
     lang = conf.readEntry("lastused", "")
     langs = list(sorted(hyphdicts.keys()))
@@ -116,10 +125,11 @@ def hyphenate(text, mainwindow):
     d.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel | KDialog.Help))
     d.setCaption(i18n("Hyphenate Lyrics Text"))
     d.setHelp("lyrics")
-    v = KVBox(d)
-    d.setMainWidget(v)
-    QLabel(i18n("Please select a language:"), v)
-    listbox = QListWidget(v)
+    layout = QVBoxLayout()
+    d.mainWidget().setLayout(layout)
+    layout.addWidget(QLabel(i18n("Please select a language:")))
+    listbox = QListWidget()
+    layout.addWidget(listbox)
     listbox.addItems(langs)
     listbox.setCurrentRow(index)
     listbox.setFocus()
