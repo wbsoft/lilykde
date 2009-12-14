@@ -26,7 +26,15 @@ LilyPond, ImageMagick and GNU Gettext.
 Dependencies:
 =============
 
-Frescobaldi depends on:
+This is the development (1.1) branch of Frescobaldi. It depends on:
+- KDE 4.3.2 or higher, esp. kdelibs and Okular from kdegraphics
+- Qt 4.5 or higher
+- Python 2.6
+- python-dbus (http://www.freedesktop.org/wiki/Software/DBusBindings#python)
+- PyQt4 4.6 or higher
+- PyKDE4 4.0.2 or higher
+
+The stable (1.0) branch of Frescobaldi depends on:
 - KDE 4.1.2 or higher, esp. kdelibs, kdebase and Okular from kdegraphics
 - Qt 4.4 or higher
 - Python 2.4, 2.5 or 2.6
@@ -34,19 +42,19 @@ Frescobaldi depends on:
 - PyQt4
 - PyKDE4.
 
-KDE 4.2 or higher is recommended. If you use KDE 4.1, you also need:
-- lilypond-kde4 (http://lilykde.googlecode.com/)
+For the stable branch, KDE 4.2 or higher is recommended. If you use KDE 4.1,
+you also need lilypond-kde4 (http://lilykde.googlecode.com/)
 
 You also might need to install some of the the corresponding -dev packages from
 the above to install Frescobaldi from this source package.
 
 If you get errors about missing Python modules, but you're sure that they are
 installed, CMake might be finding the wrong Python version. If you e.g. install
-PyKDE4 inside Python 2.5 but CMake is finding Python 2.6 then you get errors
+PyKDE4 inside Python 2.6 but CMake is finding Python 2.5 then you get errors
 about missing modules. You can fix this by explicitly defining the Python
 interpreter to use, e.g.:
 
-cmake . -DPYTHON_EXECUTABLE=/usr/bin/python2.5
+cmake . -DPYTHON_EXECUTABLE=/usr/bin/python2.6
 
 
 Other useful programs:
