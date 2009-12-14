@@ -326,7 +326,7 @@ class SavePDF(BlankPaperJob):
         BlankPaperJob.__init__(self, dialog)
         self.sourcePDF = None
         self.targetPDF = None
-        dlg = KFileDialog(KUrl(), '*.pdf|%s\n*|%s' % (
+        dlg = KFileDialog(KUrl(), '*.pdf|{0}\n*|{1}'.format(
             i18n("PDF Files"), i18n("All Files")), dialog)
         dlg.setOperationMode(KFileDialog.Saving)
         dlg.setCaption(i18n("Save PDF"))

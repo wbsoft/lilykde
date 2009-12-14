@@ -323,7 +323,7 @@ class DocumentManipulator(object):
         # adjust end:
         text = self.doc.line(end.line())
         col = end.column()
-        if re.match("%s|%s" % (ly.rx.step, ly.rx.rest), text[col:]):
+        if re.match("{0}|{1}".format(ly.rx.step, ly.rx.rest), text[col:]):
             for m in ly.rx.chord_rest.finditer(text):
                 if (m.group('chord')
                     and m.start('chord') <= col <= m.end('chord')):
@@ -501,7 +501,7 @@ class DocumentManipulator(object):
         """
         Insert a \\bar ".." command with the given type.
         """
-        self.doc.view.insertText('\\bar "%s"' % bar)
+        self.doc.view.insertText('\\bar "{0}"'.format(bar))
         
     def insertTemplate(self, text, cursor=None, remove=None, doIndent=True):
         """
@@ -576,13 +576,13 @@ class DocumentManipulator(object):
         space1, sel, space2 = re.compile(
             r'^(\s*)(.*?)(\s*)$', re.DOTALL).match(text).groups()
         if alwaysMultiLine or '\n' in text:
-            result = "%s\n%s\n%s" % (before, sel, after)
+            result = "{0}\n{1}\n{2}".format(before, sel, after)
             # indent the result corresponding with the first selection line.
             selRange = self.doc.view.selectionRange()
             indentDepth = self.doc.currentIndent(selRange.start(), False)
             result = self.doc.indent(result, indentDepth).lstrip()
         else:
-            result = "%s %s %s" % (before, sel, after)
+            result = "{0} {1} {2}".format(before, sel, after)
         # re-add the space at start and end of selection
         return ''.join((space1, result, space2))
         

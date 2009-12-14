@@ -203,15 +203,14 @@ class ExpansionDialog(KDialog):
             
         edit.setWhatsThis(
             "<html><head><style type='text/css'>"
-            "td.short { font-family: monospace; font-weight: bold; }"
+            "td.short {{ font-family: monospace; font-weight: bold; }}"
             "</style></head><body>"
-            "<p>%s</p><table border=0 width=300 cellspacing=2><tbody>"
-            "<tr><td class=short align=center>(|)</td><td>%s</td></tr>"
-            "<tr><td class=short align=center>@</td><td>%s</td></tr>"
-            "</tbody></table></body></html>"
-            % (i18n(
-                "This is the text associated with the selected shortcut. "
-                "Some characters have special meaning:"),
+            "<p>{0}</p><table border=0 width=300 cellspacing=2><tbody>"
+            "<tr><td class=short align=center>(|)</td><td>{1}</td></tr>"
+            "<tr><td class=short align=center>@</td><td>{2}</td></tr>"
+            "</tbody></table></body></html>".format(
+            i18n("This is the text associated with the selected shortcut. "
+                 "Some characters have special meaning:"),
             i18n("Place the cursor on this spot."),
             i18n("Translate the following pitch."),
             ))
@@ -262,7 +261,7 @@ class ExpansionDialog(KDialog):
         name = "new"
         while self.manager.expansionExists(name):
             num += 1
-            name = "new%d" % num
+            name = "new{0}".format(num)
         description = i18n("New Item")
         if num:
             description += " %d" % num

@@ -21,11 +21,11 @@
 Score Wizard
 """
 
-import os, re, sip, string, sys, types
+import os, re, sip, sys, types
 import ly, ly.dom
 from fractions import Fraction
 
-from PyQt4.QtCore import QObject, QSize, QSizeF, QUrl, Qt, SIGNAL
+from PyQt4.QtCore import QSize, QSizeF, QUrl, Qt
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QLabel,
     QListWidget, QListWidgetItem, QSplitter, QStackedWidget, QTextBrowser,
@@ -146,13 +146,11 @@ class Titles(QWidget):
 
         headers = ly.headers(i18n)
         msg = i18n("Click to enter a value.")
-        html = string.Template(titles_html % (
-                i18n("bottom of first page"),
-                i18n("bottom of last page"))
-            ).substitute(dict(
-                (k, "<a title='%s' href='%s'>%s</a>" % (msg, k, v))
-                for k, v in headers))
-        t.setHtml(html)
+        t.setHtml(titles_html.format(
+            copyrightmsg = i18n("bottom of first page"),
+            taglinemsg = i18n("bottom of last page"),
+            **dict((k, "<a title='{0}' href='{1}'>{2}</a>".format(msg, k, v))
+                    for k, v in headers)))
         l.addWidget(t)
         t.anchorClicked.connect(lambda qurl:
             self.findChild(KLineEdit, qurl.toString()).setFocus())
@@ -195,7 +193,7 @@ class Parts(QSplitter):
         # The part types overview widget.
         v = KVBox()
         self.addWidget(v)
-        QLabel('<b>%s</b>' % i18n("Available parts:"), v)
+        QLabel('<b>{0}</b>'.format(i18n("Available parts:")), v)
         allParts = QTreeWidget(v)
         addButton = KPushButton(KStandardGuiItem.add(), v)
         addButton.setToolTip(i18n("Add selected part to your score."))
@@ -203,15 +201,15 @@ class Parts(QSplitter):
         # The listbox with selected parts
         v = KVBox()
         self.addWidget(v)
-        QLabel('<b>%s</b>' % i18n("Score:"), v)
+        QLabel('<b>{0}</b>'.format(i18n("Score:")), v)
         score = QListWidget(v)
         self.score = score  # so the partList method can find us
         h = KHBox(v)
         removeButton = KPushButton(KStandardGuiItem.remove(), h)
         upButton = QToolButton(h)
-        upButton.setIcon(KIcon("go-up"))        # TODO: check icon
+        upButton.setIcon(KIcon("go-up"))
         downButton = QToolButton(h)
-        downButton.setIcon(KIcon("go-down"))    # TODO: check icon
+        downButton.setIcon(KIcon("go-down"))
 
         # The StackedWidget with settings
         partSettings = QStackedWidget()
@@ -442,20 +440,9 @@ class Settings(SymbolManager, QWidget):
         self.lylang.addItems([l.title() for l in self.languageNames])
         h.setToolTip(i18n(
             "The LilyPond language you want to use for the pitch names."))
-        def slotLanguageChanged(lang):
-            """ Change the LilyPond language, affects key names """
-            lang = lang.lower()
-            if lang not in self.languageNames:
-                lang = 'nederlands'
-            index = self.key.currentIndex()
-            if index == -1:
-                index = 0
-            self.key.clear()
-            self.key.addItems(ly.keyNames[lang])
-            self.key.setCurrentIndex(index)
-        slotLanguageChanged('') # init with default
-        QObject.connect(self.lylang, SIGNAL("currentIndexChanged(const QString&)"), slotLanguageChanged)
-
+        self.lylang.currentIndexChanged.connect(self.slotLanguageChanged)
+        self.slotLanguageChanged(0) # init with default
+        
         h = KHBox()
         v.addWidget(h)
         l = QLabel(i18n("Version:"), h)
@@ -539,8 +526,7 @@ class Settings(SymbolManager, QWidget):
 
         langs = KGlobal.dirs().findAllResources("locale", "*/LC_MESSAGES/frescobaldi.mo")
         self.instrLanguages = list(sorted(set(lang.split('/')[-3] for lang in langs)))
-        self.instrLang.addItems([KGlobal.locale().languageCodeToName(lang)
-                for lang in self.instrLanguages])
+        self.instrLang.addItems(map(KGlobal.locale().languageCodeToName, self.instrLanguages))
         
         self.default()
         self.loadConfig()
@@ -618,7 +604,7 @@ class Settings(SymbolManager, QWidget):
 
     def getLanguage(self):
         """ Return the configured LilyPond pitch language, '' for default. """
-        if self.lylang.currentIndex():
+        if self.lylang.currentIndex() >= 2:
             return self.languageNames[self.lylang.currentIndex() - 2]
         else:
             return ''
@@ -629,6 +615,16 @@ class Settings(SymbolManager, QWidget):
             self.lylang.setCurrentIndex(0)
         else:
             self.lylang.setCurrentIndex(self.languageNames.index(lang) + 2)
+    
+    def slotLanguageChanged(self, index):
+        """ Change the LilyPond language, affects key names """
+        lang = index < 2 and "nederlands" or self.languageNames[index - 2]
+        key = self.key.currentIndex()
+        if key == -1:
+            key = 0
+        self.key.clear()
+        self.key.addItems(ly.keyNames[lang])
+        self.key.setCurrentIndex(key)
 
 
 class Builder(object):
@@ -721,7 +717,7 @@ class Builder(object):
 
         # paper size:
         if s.paper.currentIndex():
-            ly.dom.Scheme('(set-paper-size "%s"%s)' % (
+            ly.dom.Scheme('(set-paper-size "{0}"{1})'.format(
                     s.paper.currentText(),
                     s.paperLandscape.isChecked() and " 'landscape" or ""),
                 ly.dom.Paper(doc)).after = 1
@@ -787,8 +783,7 @@ class Builder(object):
             if metro:
                 # Constuct a tempo indication with metronome mark
                 ly.dom.QuotedString(tempoText + " ", m)
-                ly.dom.Line(r'\small \general-align #Y #DOWN \note #"%s" #1 = %s' %
-                    (dur, val), m)
+                ly.dom.Line(r'\small \general-align #Y #DOWN \note #"{0}" #1 = {1}'.format(dur, val), m)
             else:
                 # Constuct a tempo indication without metronome mark
                 ly.dom.QuotedString(tempoText, m)
@@ -889,7 +884,7 @@ class Builder(object):
                 base, mul = midiDurations[s.metroDur.currentIndex()]
                 val = int(val) * mul
                 ly.dom.Context('Score', mid)['tempoWholesPerMinute'] = \
-                    ly.dom.Scheme("(ly:make-moment %s %s)" % (val, base))
+                    ly.dom.Scheme("(ly:make-moment {0} {1})".format(val, base))
 
     ##
     # The following methods are to be used by the parts.
@@ -1033,41 +1028,41 @@ class PartBase(object):
         pass
 
 
-titles_html = r"""
-<html><head><style type='text/css'>
-body {
+titles_html = r"""<html><head><style type='text/css'>
+body {{
   background-color: #fefefe;
   color: black;
-}
-a {
+}}
+a {{
   text-decoration: none;
   color: black;
-}
+}}
 </style></head>
 <body><table width='100%%' style='font-family:serif;'>
-<tr><td colspan=3 align=center>$dedication</td></tr>
-<tr><td colspan=3 align=center style='font-size:20pt;'><b>$title</b></td></tr>
-<tr><td colspan=3 align=center style='font-size:12pt;'><b>$subtitle</b></td></tr>
-<tr><td colspan=3 align=center><b>$subsubtitle</b></td></tr>
+<tr><td colspan=3 align=center>{dedication}</td></tr>
+<tr><td colspan=3 align=center style='font-size:20pt;'><b>{title}</b></td></tr>
+<tr><td colspan=3 align=center style='font-size:12pt;'><b>{subtitle}</b></td></tr>
+<tr><td colspan=3 align=center><b>{subsubtitle}</b></td></tr>
 <tr>
-    <td align=left width='25%%'>$poet</td>
-    <td align=center><b>$instrument</b></td>
-    <td align=right width='25%%'>$composer</td>
+    <td align=left width='25%%'>{poet}</td>
+    <td align=center><b>{instrument}</b></td>
+    <td align=right width='25%%'>{composer}</td>
 </tr>
 <tr>
-    <td align=left>$meter</td>
+    <td align=left>{meter}</td>
     <td> </td>
-    <td align=right>$arranger</td>
+    <td align=right>{arranger}</td>
 </tr>
 <tr>
-    <td align=left>$piece</td>
+    <td align=left>{piece}</td>
     <td> </td>
-    <td align=right>$opus</td>
+    <td align=right>{opus}</td>
 </tr>
 <tr><td colspan=3 align=center><img src='scorewiz.png'></td></tr>
-<tr><td colspan=3 align=center>$copyright <i>(%s)</i></td></tr>
-<tr><td colspan=3 align=center>$tagline <i>(%s)</i></td></tr>
-</table></body></html>"""
+<tr><td colspan=3 align=center>{copyright} <i>({copyrightmsg})</i></td></tr>
+<tr><td colspan=3 align=center>{tagline} <i>({taglinemsg})</i></td></tr>
+</table></body></html>
+"""
 
 durations = ['16', '16.', '8', '8.', '4', '4.', '2', '2.', '1', '1.']
 midiDurations = ((16,1),(32,3),(8,1),(16,3),(4,1),(8,3),(2,1),(4,3),(1,1),(2,3))
