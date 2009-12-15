@@ -195,6 +195,29 @@ directories to search for hyphenation pattern files that can be used to break
 <link linkend="lyrics">lyrics</link> into syllables.
 </para>
 
+<para>
+&frescobaldi; currently does not include hyphenation pattern files by itself,
+but it can use the hyphenation patterns that are often installed with programs like
+<productname>OpenOffice.org</productname>, <productname>KOffice</productname>,
+<productname>Scribus</productname> or in specialized packages like <productname>myspell</productname>.
+</para>
+
+<para>
+If &frescobaldi; doesn't find any hyphenation files,
+while you're sure you installed some of the software mentioned above,
+try to find out where those files are in your file system, and list the paths
+in the text entry.
+If your operating system supports the <command>locate</command> command, you can open
+a terminal and use a command like this to get a list of paths that you can simply paste in the
+text entry to have &frescobaldi; find all installed pattern files:
+</para>
+
+<programlisting>locate *hyph_*.dic | sed s,/[^/]*$,, | sort -u</programlisting>
+
+<para>or:</para>
+
+<programlisting>locate *hyph_*.dic | xargs -n1 dirname | sort -u</programlisting>
+
 </sect2>
 
 <sect2 id="settings-editor-component">
