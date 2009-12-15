@@ -108,7 +108,7 @@ def lyricsGen(length):
 def figureGen():
     while True:
         for i in 5, 6, 3, 8, 7:
-            for s in "<%s>" % i, "\\skip", "\\skip":
+            for s in "<{0}>".format(i), "\\skip", "\\skip":
                 yield ly.dom.TextDur(s)
             
 def drumGen():

@@ -95,13 +95,10 @@ class Ly2PDF(object):
                 self.lyfile_arg, exitStatus), "msgerr")
         else:
             # We finished successfully, show elapsed time...
-            seconds = time.time() - self.startTime
-            if seconds < 60:
-                elapsed = '%.1f"' % seconds
-            else:
-                elapsed = "%i'%i\"" % divmod(seconds, 60)
+            minutes, seconds = divmod(time.time() - self.startTime, 60)
+            f = "{0:.0f}'{1:.0f}\"" if minutes else '{1:.1f}"'
             self.log.writeMsg(i18n("LilyPond [%1] finished (%2).",
-                self.lyfile_arg, elapsed), "msgok")
+                self.lyfile_arg, f.format(minutes, seconds)), "msgok")
         self.bye(not (exitCode or exitStatus))
     
     def error(self, errCode):

@@ -138,7 +138,7 @@ class ExpansionCompletions(CompletionHelper):
         self.mgr = model.doc.app.mainwin.expandManager()
         self.expansions = self.mgr.expansionsList()
         descriptions = [self.mgr.description(name) for name in self.expansions]
-        result = ['%s (%s)' % r for r in zip(self.expansions, descriptions)]
+        result = ['{0} ({1})'.format(e, d) for e, d in zip(self.expansions, descriptions)]
         super(ExpansionCompletions, self).__init__(model, result)
 
     def executeCompletionItem(self, doc, word, row):
@@ -274,7 +274,7 @@ def musicglyph_names():
 @ly.lazy
 def lilypondVersion():
     ver = frescobaldi_app.version.defaultVersion()
-    return ver and ('version "%s"' % ver,) or ()
+    return ('version "{0}"'.format(ver),) if ver else ()
 
 # utility functions
 def config(group):

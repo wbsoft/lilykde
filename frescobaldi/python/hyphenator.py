@@ -129,7 +129,7 @@ class Hyph_dict(object):
         word = word.lower()
         points = self.cache.get(word)
         if points is None:
-            prepWord = '.%s.' % word
+            prepWord = '.' + word + '.'
             res = [0] * (len(prepWord) + 1)
             for i in range(len(prepWord) - 1):
                 for j in range(i + 1, min(i + self.maxlen, len(prepWord)) + 1):

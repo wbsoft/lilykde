@@ -67,7 +67,7 @@ class Articulations(Lqi):
         row = 0
         cols = 5
 
-        self.shorthands = QCheckBox(i18n("Allow shorthands"), self)
+        self.shorthands = QCheckBox(i18n("Allow shorthands"))
         self.shorthands.setChecked(True)
         self.shorthands.setToolTip(i18n(
             "Use short notation for some articulations like staccato."))
@@ -86,17 +86,16 @@ class Articulations(Lqi):
         row += 1
 
         for title, group in ly.articulation.groups(i18n):
-            layout.addWidget(
-                QLabel('<u>%s</u>:' % title, self), row, 0, 1, cols)
+            layout.addWidget(QLabel('<u>{0}</u>:'.format(title)), row, 0, 1, cols)
             row += 1
             col = 0
             for sign, title in group:
-                b = QToolButton(self, clicked=(lambda sign: lambda: self.writeSign(sign))(sign))
+                b = QToolButton(clicked=(lambda sign: lambda: self.writeSign(sign))(sign))
                 b.setAutoRaise(True)
                 # load and convert the icon to the default text color
-                toolbox.addSymbol(b, 'articulation_%s' % sign, 22)
+                toolbox.addSymbol(b, 'articulation_' + sign, 22)
                 b.setIconSize(QSize(22, 22))
-                b.setToolTip('%s (\\%s)' % (title, sign))
+                b.setToolTip('{0} (\\{1})'.format(title, sign))
                 layout.addWidget(b, row, col)
                 col += 1
                 if col >= cols:
@@ -106,10 +105,10 @@ class Articulations(Lqi):
                 row += 1
 
         # help text
-        l = QLabel("<p><i>%s</i></p><p><i>%s</i></p>" % (
+        l = QLabel("<p><i>{0}</i></p><p><i>{1}</i></p>".format(
             i18n("Click an articulation sign to add it to your document."),
             i18n("If you select some music first, the articulation will "
-              "be added to all notes in the selection.")), self)
+              "be added to all notes in the selection.")))
         l.setWordWrap(True)
         layout.addWidget(l, row, 0, 4, cols)
 

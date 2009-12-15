@@ -264,7 +264,7 @@ class ExpansionDialog(KDialog):
             name = "new{0}".format(num)
         description = i18n("New Item")
         if num:
-            description += " %d" % num
+            description += " {0}".format(num)
         self.manager.expansions.group(name).writeEntry("Name", description)
         self.searchLine.clear() # otherwise strange things happen...
         item = self.createItem(name, description)

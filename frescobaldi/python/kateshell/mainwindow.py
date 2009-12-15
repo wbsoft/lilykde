@@ -320,7 +320,7 @@ class MainWindow(KParts.MainWindow):
         if len(name) > 72:
             name = '...' + name[-69:]
         if doc.isModified():
-            self.setCaption("%s [%s]" % (name, i18n("modified")))
+            self.setCaption("{0} [{1}]".format(name, i18n("modified")))
             self.sb_modified.setPixmap(KIcon("document-save").pixmap(16))
         else:
             self.setCaption(name)
@@ -342,7 +342,7 @@ class MainWindow(KParts.MainWindow):
             text, tip = i18n("BLOCK"), i18n("Block selection mode")
         else:
             text, tip = i18n("LINE"), i18n("Line selection mode")
-        self.sb_selmode.setText(" %s " % text)
+        self.sb_selmode.setText(" {0} ".format(text))
         self.sb_selmode.setToolTip(tip)
 
     def editKeys(self):
@@ -379,7 +379,7 @@ class MainWindow(KParts.MainWindow):
         res = KEncodingFileDialog.getOpenUrlsAndEncoding(
             self.app.defaultEncoding,
             self.currentDocument().url().url() or self.app.defaultDirectory(),
-            '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
+            '\n'.join(self.app.fileTypes + ["*|" + i18n("All Files")]),
             self, i18n("Open File"))
         docs = [self.app.openUrl(url, res.encoding)
                 for url in res.URLs if not url.isEmpty()]
@@ -556,7 +556,7 @@ class TabBar(KMultiTabBar):
         self.appendTab(tool.icon().pixmap(16), tool._id, tool.title())
         tab = self.tab(tool._id)
         tab.setFocusPolicy(Qt.NoFocus)
-        tab.setToolTip("<b>%s</b><br/>%s" % (tool.title(),
+        tab.setToolTip("<b>{0}</b><br/>{1}".format(tool.title(),
             i18n("Right-click for tab options")))
         tab.setContextMenuPolicy(Qt.CustomContextMenu)
         tab.clicked.connect(tool.toggle)
@@ -709,7 +709,7 @@ class Tool(object):
         self.name = name
         mainwin.tools[name] = self
         action = KAction(mainwin, triggered=self.slotAction) # action to toggle our view
-        mainwin.actionCollection().addAction("tool_%s" % name, action)
+        mainwin.actionCollection().addAction("tool_" + name, action)
         if key:
             action.setShortcut(KShortcut(key))
         self.widget = widget
@@ -720,7 +720,7 @@ class Tool(object):
         self.loadSettings()
     
     def action(self):
-        return self.mainwin.actionCollection().action("tool_%s" % self.name)
+        return self.mainwin.actionCollection().action("tool_" + self.name)
     
     def slotAction(self):
         """
@@ -878,7 +878,7 @@ class Tool(object):
     
     def config(self):
         """ Return a suitable configgroup for our settings. """
-        return config("tool_%s" % self.name)
+        return config("tool_" + self.name)
 
     def loadSettings(self):
         """ Do not override this method, use readConfig instead. """
@@ -929,7 +929,7 @@ class KPartTool(Tool):
                 QTimer.singleShot(0, self.partLoaded)
                 return part.widget()
         self.failed = True
-        return QLabel("<center><p>%s</p><p>%s</p></center>" % (
+        return QLabel("<center><p>{0}</p><p>{1}</p></center>".format(
             i18n("Could not load %1", self._partlibrary),
             i18n("Please install %1", self._partappname or self._partlibrary)))
 

@@ -62,7 +62,7 @@ class DBusItem(dbus.service.Object):
     def __init__(self, serviceName, path=None):
         self.serviceName = serviceName
         if path is None:
-            path = '/%s' % self.__class__.__name__
+            path = '/' + self.__class__.__name__
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(self.serviceName, bus)
         dbus.service.Object.__init__(self, bus_name, path)
@@ -104,7 +104,7 @@ class MainApp(DBusItem):
         self.kapp = KApplication()
         
         # DBus init
-        serviceName = "%s%d" % (servicePrefix, os.getpid())
+        serviceName = "{0}{1}".format(servicePrefix, os.getpid())
         DBusItem.__init__(self, serviceName, '/MainApp')
 
         # We support only one MainWindow.
@@ -291,7 +291,7 @@ class Document(DBusItem):
 
     def __init__(self, app, url="", encoding=None):
         Document.__instance_counter += 1
-        path = "/Document/%d" % Document.__instance_counter
+        path = "/Document/{0}".format(Document.__instance_counter)
         DBusItem.__init__(self, app.serviceName, path)
 
         if not isinstance(url, KUrl):
@@ -426,7 +426,7 @@ class Document(DBusItem):
             dlg = KEncodingFileDialog(
                 self.app.defaultDirectory(),
                 self.doc.encoding(),
-                '\n'.join(self.app.fileTypes + ["*|%s" % i18n("All Files")]),
+                '\n'.join(self.app.fileTypes + ["*|" + i18n("All Files")]),
                 i18n("Save File"),
                 KEncodingFileDialog.Saving,
                 self.app.mainwin)
@@ -684,7 +684,7 @@ class Document(DBusItem):
             for line in range(self.doc.lines()):
                 m = markiface.mark(line)
                 if m:
-                    marks.append("%d:%d" % (line, m))
+                    marks.append("{0}:{1}".format(line, m))
             group.writeEntry("bookmarks", ','.join(marks))
         # also save the encoding
         group.writeEntry("encoding", self.encoding())
@@ -813,7 +813,7 @@ class Document(DBusItem):
         del lines[10:-10] # only look at the first and last ten lines.
         for line in lines:
             if 'kate:' in line:
-                m = re.search(r"[:;]\s*\b%s\s+([^;]+)" % varName, line)
+                m = re.search(r"[:;]\s*\b{0}\s+([^;]+)".format(varName), line)
                 if m:
                     return m.group(1)
         d = self.kateModeVariables()

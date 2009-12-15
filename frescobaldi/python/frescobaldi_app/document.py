@@ -72,13 +72,13 @@ class DocumentManipulator(object):
         with self.doc.editContext():
             changes.applyToCursor(EditCursor(self.doc.doc))
             if not start and not includeCommandChanged:
-                self.addLineToTop('\\include "%s.ly"' % lang)
+                self.addLineToTop('\\include "{0}.ly"'.format(lang))
         if start and not includeCommandChanged:
             KMessageBox.information(self.doc.app.mainwin,
-                '<p>%s</p><p><tt>\\include "%s.ly"</tt></p>' %
-                (i18n("The pitch language of the selected text has been "
-                        "updated, but you need to manually add the following "
-                        "command to your document:"), lang),
+                '<p>{0}</p><p><tt>\\include "{1}.ly"</tt></p>'.format(
+                i18n("The pitch language of the selected text has been "
+                     "updated, but you need to manually add the following "
+                     "command to your document:"), lang),
                 i18n("Pitch Name Language"))
 
     def addLineToTop(self, text):
@@ -161,10 +161,10 @@ class DocumentManipulator(object):
         
         text = self.doc.selectionText().strip()
         if '\n' in text:
-            result = "%s =%s {\n%s\n}\n" % (name, mode, text)
+            result = "{0} ={1} {{\n{2}\n}}\n".format(name, mode, text)
             result = self.doc.indent(result)
         else:
-            result = "%s =%s { %s }\n" % (name, mode, text)
+            result = "{0} ={1} {{ {2} }}\n".format(name, mode, text)
             
         if not isblank(self.doc.line(insertLine)):
             result += '\n'
@@ -172,7 +172,7 @@ class DocumentManipulator(object):
             result = '\n' + result
         
         # add space if necessary
-        variable = "\\%s" % name
+        variable = "\\" + name
         end = selRange.end()
         if not isblank(self.doc.line(end.line())[end.column():end.column()+1]):
             variable += " "
@@ -484,8 +484,8 @@ class DocumentManipulator(object):
         """
         selection = self.doc.selectionText()
         if selection:
-            repl = double and u'\u201C%s\u201D' or u'\u2018%s\u2019'
-            self.doc.replaceSelectionWith(repl % selection, keepSelection=False)
+            repl = double and u'\u201C{0}\u201D' or u'\u2018{0}\u2019'
+            self.doc.replaceSelectionWith(repl.format(selection), keepSelection=False)
         else:
             cursor = self.doc.view.cursorPosition()
             line, col = cursor.line(), cursor.column()

@@ -89,7 +89,7 @@ def _make_re(classes):
     types. Reads the rx class attribute of the given classes.
     """
     return re.compile(
-        "|".join("(?P<%s>%s)" % (cls.__name__, cls.rx) for cls in classes),
+        "|".join("(?P<{0}>{1})".format(cls.__name__, cls.rx) for cls in classes),
         re.DOTALL)
 
 
@@ -375,7 +375,7 @@ class Tokenizer(object):
         pass
     
     class IncludeLanguageFile(IncludeFile):
-        rx = r'"(%s)\.ly"' % '|'.join(ly.pitch.pitchInfo.keys())
+        rx = r'"({0})\.ly"'.format('|'.join(ly.pitch.pitchInfo.keys()))
         def __init__(self, matchObj, tokenizer):
             tokenizer.language = self[1:-4]
             tokenizer.endArgument()

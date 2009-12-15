@@ -237,7 +237,7 @@ class TablaturePart(SingleVoicePart):
             else:
                 for num, ref in zip(order, refs):
                     s = Seq(TabVoice(parent=sim))
-                    Text('\\voice%s' % ly.nums(num), s)
+                    Text('\\voice' + ly.nums(num), s)
                     Identifier(ref, s)
         
         if staffType == 0:
@@ -291,7 +291,7 @@ class VocalPart(Part):
         l = LyricMode()
         if verse:
             name = name + ly.nums(verse)
-            Line('\\set stanza = "%d."' % verse, l)
+            Line('\\set stanza = "{0}."'.format(verse), l)
         a, ref = self.assign(name)
         a.append(l)
         LineComment(i18n("Lyrics follow here."), l)
@@ -378,7 +378,7 @@ class KeyboardPart(Part):
         self.nodes.append(p)
 
     def widgets(self, layout):
-        l = QLabel('%s <i>(%s)</i>' % (
+        l = QLabel('{0} <i>({1})</i>'.format(
             i18n("Adjust how many separate voices you want on each staff."),
             i18n("This is primarily useful when you write polyphonic music "
             "like a fuge.")))
@@ -414,8 +414,8 @@ class Chords(Part):
         Identifier('global', s).after = 1
         i = self.chordStyle.currentIndex()
         if i > 0:
-            Line('\\%sChords' %
-                ('german', 'semiGerman', 'italian', 'french')[i-1], s)
+            Line('\\{0}Chords'.format(
+                ('german', 'semiGerman', 'italian', 'french')[i-1]), s)
         LineComment(i18n("Chords follow here."), s)
         BlankLine(s)
         self.nodes.append(p)
@@ -552,8 +552,8 @@ class Banjo(TablaturePart):
             super(Banjo, self).setTunings(tab)
         else:
             tab.getWith()['stringTunings'] = Scheme(
-                '(four-string-banjo %s)' %
-                    self.tunings[self.tuningSel.currentIndex()][1])
+                '(four-string-banjo {0})'.format(
+                    self.tunings[self.tuningSel.currentIndex()][1]))
 
 
 class ClassicalGuitar(TablaturePart):
@@ -886,9 +886,9 @@ class LeadSheet(VocalPart, Chords):
         self.nodes.append(p)
 
     def widgets(self, layout):
-        l = QLabel('<i>%s</i>' % i18n(
+        l = QLabel('<i>{0}</i>'.format(i18n(
             "The Lead Sheet provides a staff with chord names above "
-            "and lyrics below it. A second staff is optional."))
+            "and lyrics below it. A second staff is optional.")))
         l.setWordWrap(True)
         layout.addWidget(l)
         self.chords = QGroupBox(i18n("Chord names"))
@@ -910,7 +910,7 @@ class Choir(VocalPart):
     _name = ki18n("Choir")
 
     def widgets(self, layout):
-        l = QLabel('<p>%s <i>(%s)</i></p>' % (
+        l = QLabel('<p>{0} <i>({1})</i></p>'.format(
             i18n("Please select the voices for the choir. "
             "Use the letters S, A, T, or B. A hyphen denotes a new staff."),
             i18n("Hint: For a double choir you can use two choir parts.")))
@@ -1094,8 +1094,8 @@ class Choir(VocalPart):
                     if self.ambitus.isChecked():
                         Line('\\consists "Ambitus_engraver"', v.getWith())
                         if vnum > 1:
-                            Line("\\override Ambitus #'X-offset = #%s" %
-                                 ((vnum - 1) * 2.0), v.getWith())
+                            Line("\\override Ambitus #'X-offset = #{0}".format(
+                                 (vnum - 1) * 2.0), v.getWith())
                     v = Seq(v)
                     Text('\\voice' + ly.nums(vnum), v)
                     stub, ref = self.assignMusic(mname, octave)
@@ -1295,8 +1295,8 @@ class Drums(Part):
         if self.drumVoices.value() > 1:
             for i in range(1, self.drumVoices.value()+1):
                 q = Seq(DrumVoice(parent=s))
-                Text('\\voice%s' % ly.nums(i), q)
-                ref = self.assignDrums('drum%s' % ly.nums(i))
+                Text('\\voice' + ly.nums(i), q)
+                ref = self.assignDrums('drum' + ly.nums(i))
                 Identifier(ref, q)
         else:
             ref = self.assignDrums('drum')
@@ -1305,13 +1305,13 @@ class Drums(Part):
         i = self.drumStyle.currentIndex()
         if i > 0:
             v = ('drums', 'timbales', 'congas', 'bongos', 'percussion')[i]
-            p.getWith()['drumStyleTable'] = Scheme('%s-style' % v)
+            p.getWith()['drumStyleTable'] = Scheme(v + '-style')
             v = (5, 2, 2, 2, 1)[i]
-            Line("\\override StaffSymbol #'line-count = #%i" % v, p.getWith())
+            Line("\\override StaffSymbol #'line-count = #{0}".format(v), p.getWith())
         if self.drumStems.isChecked():
             Line("\\override Stem #'stencil = ##f", p.getWith())
-            Line("\\override Stem #'length = #3  %% %s"
-                % i18n("keep some distance."), p.getWith())
+            Line("\\override Stem #'length = #3  % " + i18n("keep some distance."),
+                p.getWith())
         self.nodes.append(p)
 
     def widgets(self, layout):

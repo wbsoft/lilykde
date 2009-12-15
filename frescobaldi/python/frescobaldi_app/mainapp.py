@@ -49,7 +49,7 @@ class MainApp(kateshell.app.MainApp):
     def __init__(self, servicePrefix):
         kateshell.app.MainApp.__init__(self, servicePrefix)
         # just set now because we are translated
-        self.fileTypes = ["*.ly *.ily *.lyi|%s" % i18n("LilyPond files")]
+        self.fileTypes = ["*.ly *.ily *.lyi|" + i18n("LilyPond files")]
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
         os.environ["FRESCOBALDI_PID"] = str(os.getpid())
@@ -985,7 +985,7 @@ class LogTool(kateshell.mainwindow.Tool):
             key="Meta+Alt+L", dock=kateshell.mainwindow.Bottom,
             widget=QStackedWidget())
         self.logs = {}
-        self.widget.addWidget(QLabel("<center>(%s)</center>" % i18n("no log")))
+        self.widget.addWidget(QLabel("<center>({0})</center>".format(i18n("no log"))))
         mainwin.currentDocumentChanged.connect(self.showLog)
         mainwin.app.documentClosed.connect(self.removeLog)
         self.widget.destroyed.connect(lambda: self.logs.clear())
@@ -1147,7 +1147,7 @@ def updatedFiles(lyfile, reftime=None):
         escname = re.escape(os.path.splitext(name)[0]) # remove ext, escape
         def generatorfunc(ext = "*"):
             ext = fnmatch.translate(ext.lstrip('.'))
-            pat = re.compile(r'%s(-[^-]+)*\.%s' % (escname, ext))
+            pat = re.compile(r'{0}(-[^-]+)*\.{1}'.format(escname, ext))
             try:
                 files = [f for f in os.listdir(directory) if pat.match(f)]
             except OSError:

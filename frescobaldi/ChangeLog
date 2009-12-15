@@ -1,4 +1,4 @@
-Changes in  -- 
+Changes in 1.0.0 -- 
 
 * Editor:
   - Right-click menu action on \include command now opens the named file from
@@ -10,11 +10,19 @@ Changes in  --
   - Keeps the \rest when repeating a pitched rest (e.g. c\rest)
   - Only removes the octave from the repeated pitch (or from the first pitch
     of the repeated chord) inside relative music
+* Blank staff paper tool:
+  - option to remove small "FRESCOBALDI.ORG" tagline at bottom
+* Score Wizard:
+  - Fix lyrics not added if there is only one staff (reported by M. Moles)
 * General:
   - ESC key now closes PDF-preview dialogs properly
   - ESC key does not take focus away from editor window if PDF visible
   - Main window is activated when clicking on notes in detached PDF viewer
   - Fix interaction with SIP 4.9.3 (some settings were not saved, like paths)
+  - Fix order of cautionary accidentals and octave marks in pitches (affects
+    transpose and relative/absolute conversion functions)
+  - Fix attribute error on file dialogs in KDE 4.1 (but KDE 4.2 is recommended)
+  - Improved hyphenation dictionaries search, also some explanation in docs
 * Installation:
   - CMake now does not require a compiler to be present anymore
 * Translations:

@@ -50,7 +50,7 @@ class ActionManager(object):
         # PDFs
         pdfs = updatedFiles("pdf")
         for pdf in pdfs:
-            name = '"%s"' % os.path.basename(pdf)
+            name = '"{0}"'.format(os.path.basename(pdf))
             a = menu.addAction(KIcon("application-pdf"),
                 i18n("Open %1 in external viewer", name))
             a.triggered.connect((lambda pdf: lambda: self.openPDF(pdf))(pdf))
@@ -60,7 +60,7 @@ class ActionManager(object):
         # MIDIs
         midis = updatedFiles("mid*")
         for midi in midis:
-            name = '"%s"' % os.path.basename(midi)
+            name = '"{0}"'.format(os.path.basename(midi))
             a = menu.addAction(KIcon("media-playback-start"), i18n("Play %1", name))
             a.triggered.connect((lambda midi: lambda: self.openMIDI(midi))(midi))
 
@@ -95,7 +95,7 @@ class ActionManager(object):
         if len(bar.actions()) > 0:
             a = bar.addAction(KIcon("mail-send"), i18n("Email..."))
             a.setShortcut(QKeySequence("Ctrl+E"))
-            a.setToolTip("%s (%s)" % (a.toolTip(), a.shortcut().toString()))
+            a.setToolTip("{0} ({1})".format(a.toolTip(), a.shortcut().toString()))
             a.triggered.connect(lambda: self.email(updatedFiles, log.preview))
             log.checkScroll(bar.show)
         
@@ -197,7 +197,7 @@ class EmailDialog(KDialog):
             def __init__(self, icon, fileName):
                 directory, name = os.path.split(fileName)
                 if directory != basedir:
-                    name += " (%s)" % os.path.normpath(directory)
+                    name += " ({0})".format(os.path.normpath(directory))
                 QListWidgetItem.__init__(self, KIcon(icon), name, fileList)
                 self.fileName = fileName
                 self.ext = os.path.splitext(fileName)[1]

@@ -384,7 +384,7 @@ class Settings(SymbolManager, QWidget):
         self.pickup = QComboBox(h)
         self.pickup.addItem(i18n("None"))
         self.pickup.insertSeparator(1)
-        durs = [('note_%s' % d.replace('.', 'd'), d) for d in durations]
+        durs = [('note_' + d.replace('.', 'd'), d) for d in durations]
         for icon, text in durs:
             self.addItemSymbol(self.pickup, self.pickup.count(), icon)
             self.pickup.addItem(text)
@@ -734,7 +734,7 @@ class Builder(object):
         # pitch language:
         language = s.getLanguage()
         if language:
-            self.include("%s.ly" % language)
+            self.include("{0}.ly".format(language))
 
         # add code blocks, if any:
         for code in self.codeBlocks[::-1]:
@@ -1016,7 +1016,7 @@ class PartBase(object):
         Reimplement this method to add widgets with settings
         to the given layout.
         """
-        layout.addWidget(QLabel('(%s)' % i18n("No settings available.")))
+        layout.addWidget(QLabel('({0})'.format(i18n("No settings available."))))
 
     def build(self, builder):
         """

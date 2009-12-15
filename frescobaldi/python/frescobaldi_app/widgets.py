@@ -296,7 +296,7 @@ class ClefSelector(SymbolManager, QComboBox):
             self.clefs.insert(0, ('', i18n("No Clef")))
         self.addItems([title for name, title in self.clefs])
         for index, (name, title) in enumerate(self.clefs):
-            self.addItemSymbol(self, index, 'clef_%s' % (name or 'none'))
+            self.addItemSymbol(self, index, 'clef_' + (name or 'none'))
     
     def clef(self):
         """

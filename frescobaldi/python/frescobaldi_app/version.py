@@ -57,7 +57,7 @@ def insertVersion(mainwin):
     else:
         version = defaultVersion()
         if version:
-            doc.doc.insertLine(0, '\\version "%s"' % version)
+            doc.doc.insertLine(0, '\\version "{0}"'.format(version))
         else:
             KMessageBox.sorry(mainwin,
                 i18n("Can't determine the version of LilyPond. "
@@ -89,12 +89,11 @@ def convertLy(mainwin):
         # read from stdin.
         try:
             out, err = Popen(
-                (command("convert-ly"), "-f", "%d.%d.%d" % docVersion, "-"),
+                (command("convert-ly"), "-f", "{0}.{1}.{2}".format(*docVersion), "-"),
                 stdin=PIPE, stdout=PIPE, stderr=PIPE
                 ).communicate(text.encode('utf8'))
             if out:
-                doc.setText(u"%s\n\n%%{\n%s\n%%}\n" %
-                    (out.decode('utf8'), err.decode('utf8')))
+                doc.setText(u"{0}\n\n%{{\n{1}\n%}}\n".format(out.decode('utf8'), err.decode('utf8')))
                 KMessageBox.information(mainwin, i18n(
                  "The document has been processed with convert-ly. You'll find "
                  "the messages of convert-ly in a comment block at the end. "

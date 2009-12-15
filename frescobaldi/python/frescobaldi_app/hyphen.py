@@ -89,7 +89,7 @@ def findDicts():
         for i in lang, lang.split('_')[0]:
             name = KGlobal.locale().languageCodeToName(i)
             if name:
-                name = u'%s (%s)' % (name, lang)
+                name = u'{0} ({1})'.format(name, lang)
                 hyphdicts[name] = dic
                 # set current locale as default
                 if lang == language:

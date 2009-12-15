@@ -34,7 +34,7 @@ class LilyPondVersion(object):
             match = re.search(r"(\d+)\.(\d+)(?:\.(\d+))?", output)
             if match:
                 self.versionTuple = tuple(int(s or "0") for s in match.groups())
-                self.versionString = "%d.%d.%d" % self.versionTuple
+                self.versionString = "{0}.{1}.{2}".format(*self.versionTuple)
         except OSError:
             pass
 

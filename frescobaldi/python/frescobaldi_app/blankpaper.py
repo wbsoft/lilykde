@@ -216,15 +216,15 @@ class Dialog(KDialog):
         output = []
         version = defaultVersion()
         if version:
-            output.append('\\version "%s"\n' % version)
-        output.append('#(set-global-staff-size %d)\n' % self.staffSize.value())
+            output.append('\\version "{0}"\n'.format(version))
+        output.append('#(set-global-staff-size {0})\n'.format(self.staffSize.value()))
         # paper section
         output.append('\\paper {')
         if self.paperSize.currentIndex() > 0:
-            output.append('#(set-paper-size "%s")' % ly.paperSizes[self.paperSize.currentIndex()-1])
+            output.append('#(set-paper-size "{0}")'.format(ly.paperSizes[self.paperSize.currentIndex()-1]))
         if self.pageNumbers.isChecked():
             output.append('top-margin = 10\\mm')
-            output.append('first-page-number = #%d' % self.pageNumStart.value())
+            output.append('first-page-number = #{0}'.format(self.pageNumStart.value()))
             output.append('oddHeaderMarkup = \\markup \\fill-line {')
             output.append('\\strut')
             output.append("\\fromproperty #'page:page-number-string")
@@ -241,7 +241,7 @@ class Dialog(KDialog):
             output.append('oddFooterMarkup = \\markup \\abs-fontsize #6 \\fill-line {')
             tagline = config().readEntry("tagline",
                 '\\with-url #"http://www.frescobaldi.org/" FRESCOBALDI.ORG')
-            output.append('\\sans { %s }' % tagline)
+            output.append('\\sans {{ {0} }}'.format(tagline))
             output.append('\\strut')
             output.append('}')
         output.append('evenFooterMarkup = ##f')
@@ -249,9 +249,9 @@ class Dialog(KDialog):
         output.append('ragged-right = ##f')
         output.append('}\n')
         # music expression
-        output.append('music = \\repeat unfold %d { %% pages' % self.pageCount.value())
-        output.append('\\repeat unfold %d { %% systems' % staff.systemCount())
-        output.append('\\repeat unfold %d { %% bars' % (
+        output.append('music = \\repeat unfold {0} {{ % pages'.format(self.pageCount.value()))
+        output.append('\\repeat unfold {0} {{ % systems'.format(staff.systemCount()))
+        output.append('\\repeat unfold {0} {{ % bars'.format(
             self.barLines.isChecked() and self.barsPerLine.value() or 1))
         output.extend(('s1', '\\noBreak', '}', '\\break', '\\noPageBreak', '}', '\\pageBreak', '}\n'))
 
@@ -434,7 +434,7 @@ class LayoutContexts(object):
         for name, lines in self._contexts.iteritems():
             if lines:
                 result.append('\\context {')
-                result.append('\\%s' % name)
+                result.append('\\' + name)
                 result.extend(lines)
                 result.append('}')
         return result
@@ -483,7 +483,7 @@ class SingleStaff(StaffBase):
             return ['\\new TabStaff { \\music }']
         else:
             if self.clef.clef():
-                return ['\\new Staff { \\clef "%s" \\music }' % self.clef.clef()]
+                return ['\\new Staff {{ \\clef "{0}" \\music }}'.format(self.clef.clef())]
             else:
                 layout.add('Staff', '\\remove "Clef_engraver"')
                 return ['\\new Staff { \\music }']
@@ -614,13 +614,13 @@ class ChoirStaff(StaffBase):
             "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 4)")
         music = ['\\new ChoirStaff <<']
         for clef in clefs:
-            music.append('\\new Staff {%s \\music }' % {
+            music.append('\\new Staff {{{0} \\music }}'.format({
                 'S': ' \\clef treble',
                 'A': ' \\clef treble',
                 'T': ' \\clef "treble_8"',
                 'B': ' \\clef bass',
                 None: '',
-                }[clef])
+                }[clef]))
         music.append('>>')
         return music
 
@@ -817,7 +817,7 @@ class StaffItem(Item):
         return w
         
     def clefChanged(self, index):
-        self.setIcon(0, self.staff.symbolIcon('clef_%s' % (self.clef.clef() or 'none')))
+        self.setIcon(0, self.staff.symbolIcon('clef_' + (self.clef.clef() or 'none')))
 
     def staffCount(self):
         return 1
@@ -829,16 +829,16 @@ class StaffItem(Item):
         else:
             staff = 'Staff'
         layout.addStaffContext(staff)
-        music = ['\\new %s \\with {' % staff]
+        music = ['\\new {0} \\with {{'.format(staff)]
         music.append(
-            "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-%d . %d)" %
-            (self.spaceBelow.value(), self.spaceAbove.value()))
+            "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-{0} . {1})".format(
+                self.spaceBelow.value(), self.spaceAbove.value()))
         if not clef:
             music.append('\\remove "Clef_engraver"')
         if not clef or clef == 'tab':
             music.append('} { \\music }')
         else:
-            music.append('} { \\clef "%s" \\music }' % clef)
+            music.append('}} {{ \\clef "{0}" \\music }}'.format(clef))
         return music
 
 
@@ -897,9 +897,9 @@ class BracketItem(Item):
         if self.squareBracket.isChecked():
             withMusic.append("systemStartDelimiter = #'SystemStartSquare")
         if withMusic:
-            music = ['\\new %s \\with {' % staff] + withMusic + ['} <<']
+            music = ['\\new {0} \\with {{'.format(staff)] + withMusic + ['} <<']
         else:
-            music = ['\\new %s <<' % staff]
+            music = ['\\new {0} <<'.format(staff)]
         music.extend(self.childMusic(layout))
         music.append('>>')
         return music

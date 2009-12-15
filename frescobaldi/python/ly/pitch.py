@@ -158,10 +158,8 @@ class PitchReader(object):
         self.names = list(names)
         self.accs = list(accs)
         self.replacements = replacements
-        
-        rx = "(%s)" % "|".join(names)
-        rx += "(%s)?$" % "|".join(acc for acc in accs if acc)
-        self.rx = re.compile(rx)
+        self.rx = re.compile("({0})({1})?$".format("|".join(names),
+            "|".join(acc for acc in accs if acc)))
 
     def __call__(self, text):
         for s, r in self.replacements:

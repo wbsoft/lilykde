@@ -35,8 +35,8 @@ def runningApp(servicePrefix, pid=None):
     bus = dbus.SessionBus(private=True)
     names = [n for n in bus.list_names() if n.startswith(servicePrefix)]
     if names:
-        if pid and "%s%s" % (servicePrefix, pid) in names:
-            name = "%s%s" % (servicePrefix, pid)
+        if pid and servicePrefix + pid in names:
+            name = servicePrefix + pid
         else:
             name = names[0]
         print "Found running instance:", name

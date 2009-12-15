@@ -100,8 +100,8 @@ class RumorPanel(QWidget):
         # Key signature select (any lilypond pitch, defaulting to document)
         self.keysig = QComboBox()
         self.keysig.addItem(AUTO())
-        self.keysig.addItems(["%d" % i for i in range(-7, 1)])
-        self.keysig.addItems(["%+d" % i for i in range(1, 8)])
+        self.keysig.addItems(map("{0:d}".format, range(-7, 1)))
+        self.keysig.addItems(map("{0:+d}".format, range(1, 8)))
         self.keysig.setToolTip(i18n(
             "The number of accidentals. A negative number designates flats. "
             "Leave 'Auto' to let Frescobaldi determine the key signature from "
@@ -205,15 +205,15 @@ class RumorPanel(QWidget):
                 # "vlaams" is not supported by Rumor
                 # TODO: rewrite the pitches output by Rumor :-)
                 lang == "it"
-        args.append("--lang=%s" % lang)
+        args.append("--lang=" + lang)
 
         # Step recording?
         if self.step.isChecked():
             args.append("--flat")
         else:
             # No, set tempo, quantization and meter
-            args.append("--tempo=%d" % self.tempo.tempo())
-            args.append("--grain=%s" % self.quantize.currentText())
+            args.append("--tempo={0}".format(self.tempo.tempo()))
+            args.append("--grain={0}".format(self.quantize.currentText()))
             meter = autofy(self.meter.currentText())
             if meter == "auto":
                 # determine from document - find the latest \time command:
@@ -223,7 +223,7 @@ class RumorPanel(QWidget):
                     meter = m.group(1)
                 else:
                     meter = '4/4'
-            args.append("--meter=%s" % meter)
+            args.append("--meter=" + meter)
 
         # Key signature
         acc = autofy(self.keysig.currentText())
@@ -241,7 +241,7 @@ class RumorPanel(QWidget):
         else:
             acc = int(acc)
         acc += 2    # use sharps for half tones leading to second, fifth, sixth
-        args.append("--key=%s" % ly.key.num2key[lang][bound(acc, -8, 12)])
+        args.append("--key=" + ly.key.num2key[lang][bound(acc, -8, 12)])
 
         # Monophonic input?
         if self.mono.isChecked():
@@ -276,17 +276,17 @@ class RumorPanel(QWidget):
             paths = dict((os.path.basename(path), path) for path in rumorScripts())
             for s in scripts:
                 if s in paths:
-                    args.append("--script=%s" % paths[s])
+                    args.append("--script=" + paths[s])
 
         # input/output
         i = conf.readEntry("midi in", "oss:1")
         o = conf.readEntry("midi out", "oss:1")
         if o.startswith('oss:'):
-            args.append("--oss=%s" % o.split(":")[1])
+            args.append("--oss=" + o.split(":")[1])
         elif re.match(r"\d", o) and re.match(r"\d", i):
-            args.append("--alsa=%s,%s" % (i, o))
+            args.append("--alsa={0},{1}".format(i, o))
         elif re.match(r"\d", o):
-            args.append("--alsa=%s" % o)
+            args.append("--alsa=" + o)
         self.keyboardEmu = i == "keyboard"
 
         if self.keyboardEmu:
@@ -416,7 +416,7 @@ class RumorSettings(KDialog):
         layout = QGridLayout(self.mainWidget())
         # MIDI input and output.
         # Get the list of available OSS and ALSA devices
-        oslist = [('oss:%d' % i, i18n("OSS device %1", i))
+        oslist = [('oss:{0}'.format(i), i18n("OSS device %1", i))
             for i in range(getOSSnrMIDIs())]
         i = oslist + parseAconnect('i') + [("keyboard", i18n("Keyboard"))]
         o = oslist + parseAconnect('o')
@@ -600,8 +600,8 @@ def parseAconnect(channel):
             if m.group(1):
                 client = m.group(1)
             elif client != "0":
-                port = "%s:%s" % (client, m.group(2))
-                name = "%s (%s)" % (port, m.group(3).strip())
+                port = "{0}:{1}".format(client, m.group(2))
+                name = "{0} ({1})".format(port, m.group(3).strip())
                 res.append((port, name))
     return res
 

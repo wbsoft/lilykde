@@ -63,10 +63,8 @@ def relativeToAbsolute(text, start = 0, changes = None):
         token. The octave is set using lastPitch.
         """
         pitch.absolute(lastPitch)
-        changes.replaceToken(token, '%s%s%s' % (
-            token.step,
-            ly.pitch.octaveToString(pitch.octave),
-            token.cautionary))
+        changes.replaceToken(token,
+            token.step + ly.pitch.octaveToString(pitch.octave) + token.cautionary)
         
     class gen(object):
         """
@@ -212,10 +210,8 @@ def absoluteToRelative(text, start = 0, changes = None):
         Writes a new pitch with all parts except the octave taken from the
         token.
         """
-        changes.replaceToken(token, '%s%s%s' % (
-            token.step,
-            ly.pitch.octaveToString(pitch.octave),
-            token.cautionary))
+        changes.replaceToken(token,
+            token.step + ly.pitch.octaveToString(pitch.octave) + token.cautionary)
         
     class gen(object):
         """
@@ -554,7 +550,7 @@ def translate(text, lang, start = 0, changes = None):
     for token in tokens:
         if isinstance(token, tokenizer.IncludeLanguageFile):
             reader = ly.pitch.pitchReader[tokenizer.language]
-            changes.replaceToken(token, '"%s.ly"' % lang)
+            changes.replaceToken(token, '"{0}.ly"'.format(lang))
             includeCommandChanged = True
         elif isinstance(token, tokenizer.PitchWord):
             result = reader(token)

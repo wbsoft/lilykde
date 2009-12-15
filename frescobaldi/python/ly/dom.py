@@ -310,7 +310,7 @@ class Printer(object):
         # escape regular double quotes
         text = text.replace('"', '\\"')
         # quote the string
-        return '"%s"' % text
+        return '"{0}"'.format(text)
 
     def indentGen(self, node, startIndent = 0):
         """
@@ -355,7 +355,7 @@ class Named(object):
     name = ""
     
     def ly(self, printer):
-        return "\\%s %s" % (unicode(self.name), super(Named, self).ly(printer))
+        return "\\{0} {1}".format(unicode(self.name), super(Named, self).ly(printer))
         
         
 class HandleVars(object):
@@ -572,10 +572,8 @@ class BlockComment(Comment):
         
     def ly(self, printer):
         text = self.text.replace('%}', '')
-        if '\n' in text:
-            return "%{\n%s\n%}" % text
-        else:
-            return "%{ %s %}" % text
+        f = "%{{\n{0}\n%}}" if '\n' in text else "%{{ {0} %}}"
+        return f.format(text)
             
 
 class QuotedString(Text):
@@ -600,19 +598,19 @@ class Scheme(Text):
     isAtom = True
     
     def ly(self, printer):
-        return '#%s' % self.text
+        return '#' + self.text
 
 
 class Version(Line):
     """ a LilyPond version instruction """
     def ly(self, printer):
-        return r'\version "%s"' % self.text
+        return r'\version "{0}"'.format(self.text)
 
 
 class Include(Line):
     """ a LilyPond \\include statement """
     def ly(self, printer):
-        return r'\include "%s"' % self.text
+        return r'\include "{0}"'.format(self.text)
 
 
 class Assignment(Container):
@@ -641,7 +639,7 @@ class Assignment(Container):
             return self[0]
 
     def ly(self, printer):
-        return "%s = %s" % (
+        return "{0} = {1}".format(
             unicode(self.name), super(Assignment, self).ly(printer))
 
 
@@ -660,7 +658,7 @@ class Identifier(Leaf):
         self.name = name
         
     def ly(self, printer):
-        return "\\%s" % unicode(self.name)
+        return "\\" + unicode(self.name)
 
 
 class Statement(Named, Container):
@@ -775,7 +773,7 @@ class ContextName(Text):
     Used to print a context name, like \\Score.
     """
     def ly(self, printer):
-        return "\\%s" % self.text
+        return "\\" + self.text
 
 
 class Context(HandleVars, Section):
@@ -892,10 +890,10 @@ class ContextProperty(Leaf):
             # In \lyrics or \lyricmode: put spaces around dot.
             p = self.findParent(InputMode)
             if p and isinstance(p, LyricMode):
-                f = '%s . %s'
+                f = '{0} . {1}'
             else:
-                f = '%s.%s'
-            return f % (self.context, self.prop)
+                f = '{0}.{1}'
+            return f.format(self.context, self.prop)
         else:
             return self.prop
 
@@ -934,7 +932,7 @@ class LyricsTo(LyricMode):
         self.cid = cid
     
     def ly(self, printer):
-        res = ["\\%s" % self.name]
+        res = ["\\" + self.name]
         res.append(printer.quoteString(unicode(self.cid)))
         res.append(super(Named, self).ly(printer))
         return " ".join(res)
@@ -983,7 +981,7 @@ class Duration(Leaf):
     def ly(self, printer):
         s = ly.duration.durations[self.dur + 3] + '.' * self.dots
         if self.factor != 1:
-            s += '*%s' % str(self.factor)
+            s += '*' + str(self.factor)
         return s
 
 
@@ -997,7 +995,7 @@ class Chord(Container):
         if len(pitches) == 1:
             s = pitches[0].ly(printer)
         else:
-            s = "<%s>" % ' '.join(p.ly(printer) for p in pitches)
+            s = "<{0}>".format(' '.join(p.ly(printer) for p in pitches))
         duration = self.findChild(Duration, 1)
         if duration:
             s += duration.ly(printer)
@@ -1038,7 +1036,7 @@ class KeySignature(Leaf):
 
     def ly(self, printer):
         pitch = ly.pitch.pitchWriter[printer.language](self.note, self.alter)
-        return "\\key %s \\%s" % (pitch, self.mode)
+        return "\\key {0} \\{1}".format(pitch, self.mode)
 
 
 class TimeSignature(Leaf):
@@ -1051,7 +1049,7 @@ class TimeSignature(Leaf):
         self.beat = beat
 
     def ly(self, printer):
-        return "\\time %i/%i" % (self.num, self.beat)
+        return "\\time {0}/{1}".format(self.num, self.beat)
 
 
 class Partial(Named, Duration):
@@ -1073,7 +1071,7 @@ class Tempo(Leaf):
         self.value = value
         
     def ly(self, printer):
-        return "\\tempo %s=%s" % (self.duration, self.value)
+        return "\\tempo {0}={1}".format(self.duration, self.value)
         
         
 class Clef(Leaf):
@@ -1085,8 +1083,8 @@ class Clef(Leaf):
         self.clef = clef
 
     def ly(self, printer):
-        f = self.clef.isalpha() and '%s' or '"%s"'
-        return "\\clef %s" % f % self.clef
+        clef = self.clef if self.clef.isalpha() else '"{0}"'.format(self.clef)
+        return "\\clef " + clef
 
 
 class VoiceSeparator(Leaf):
