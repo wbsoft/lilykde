@@ -655,7 +655,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             ("bar_repeat_start", "|:", i18n("Repeat start"), None),
             ("bar_repeat_double", ":|:", i18n("Repeat both"), None),
             ("bar_repeat_end", ":|", i18n("Repeat end"), None),
-            ("bar_tick", "'", i18n("Tick bar line"), "Alt+'"),
+            ("bar_tick", "'", i18n("Tick bar line"), None),
             ("bar_single", "|", i18n("Single bar line"), None),
             ("bar_sws", "|.|", i18n("Small-Wide-Small bar line"), None),
             ("bar_ws", ".|", i18n("Wide-Small bar line"), None),
