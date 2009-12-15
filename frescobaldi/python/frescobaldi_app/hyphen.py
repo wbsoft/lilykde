@@ -35,8 +35,9 @@ except ValueError:
     language, encoding = None, None
 
 defaultPaths = (
-    '/opt/OpenOffice.org/share/dict/ooo',
+    'share/dict/ooo',
     'lib/openoffice/share/dict/ooo',
+    '/opt/OpenOffice.org/share/dict/ooo',
     'koffice/hyphdicts',
     'share/apps/koffice/hyphdicts',
     'lib/scribus/dicts',
