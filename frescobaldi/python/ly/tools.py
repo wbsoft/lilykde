@@ -297,8 +297,8 @@ def absoluteToRelative(text, start = 0, changes = None):
                                 if p.note > 3:
                                     lastPitch.octave += 1
                                 changes.insert(startToken.pos,
-                                    "\\relative %s " %
-                                    lastPitch.output(tokenizer.language))
+                                    "\\relative {0} ".format(
+                                        lastPitch.output(tokenizer.language)))
                             newPitch(token, p.relative(lastPitch))
                             lastPitch = p
                             # remember the first pitch of a chord
