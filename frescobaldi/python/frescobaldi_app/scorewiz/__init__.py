@@ -1038,15 +1038,15 @@ a {{
   color: black;
 }}
 </style></head>
-<body><table width='100%%' style='font-family:serif;'>
+<body><table width='100%' style='font-family:serif;'>
 <tr><td colspan=3 align=center>{dedication}</td></tr>
 <tr><td colspan=3 align=center style='font-size:20pt;'><b>{title}</b></td></tr>
 <tr><td colspan=3 align=center style='font-size:12pt;'><b>{subtitle}</b></td></tr>
 <tr><td colspan=3 align=center><b>{subsubtitle}</b></td></tr>
 <tr>
-    <td align=left width='25%%'>{poet}</td>
+    <td align=left width='25%'>{poet}</td>
     <td align=center><b>{instrument}</b></td>
-    <td align=right width='25%%'>{composer}</td>
+    <td align=right width='25%'>{composer}</td>
 </tr>
 <tr>
     <td align=left>{meter}</td>
