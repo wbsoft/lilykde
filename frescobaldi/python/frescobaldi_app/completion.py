@@ -264,7 +264,7 @@ def findMatches(model, view, word, invocationType):
 # lazy-load and cache some data
 @ly.lazy
 def musicglyph_names():
-    datadir = ly.version.datadir(command("lilypond"))
+    datadir = ly.version.LilyPondInstance(command("lilypond")).datadir()
     if datadir:
         font = ly.font.emmentaler20(datadir)
         if font:

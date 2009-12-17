@@ -28,18 +28,21 @@ from PyKDE4.ktexteditor import KTextEditor
 
 def defaultVersion():
     """
-    Returns the LilyPond version number string according to the user's
-    preference: the version of the currently installed LilyPond, the
-    version of the last rule in convert-ly, or a custom version.
+    Returns the LilyPond version according to the user's preference:
+    the version of the currently installed LilyPond, the version of the last
+    rule in convert-ly, or a custom version.
     """
+    lilypond = ly.version.LilyPondInstance(command("lilypond"))
+    
     prefs = config("preferences")
     pver = prefs.readEntry("default version", "lilypond")
+    
     version = ''
     if pver == "custom":
-        version = prefs.readEntry("custom version", "")
+        version = ly.version.Version.fromString(prefs.readEntry("custom version", ""))
     elif pver == "convert-ly":
-        version = ly.version.ConvertLyLastRuleVersion(command("convert-ly")).versionString
-    return version or ly.version.LilyPondVersion(command("lilypond")).versionString
+        version = lilypond.lastConvertLyRuleVersion()
+    return version or lilypond.version()
 
 def insertVersion(mainwin):
     """
@@ -69,8 +72,8 @@ def convertLy(mainwin):
     """
     doc = mainwin.currentDocument()
     text = doc.text()
-    docVersion = ly.version.getVersion(text) #or ly.guess.version(text)
-    lilyVersion = ly.version.LilyPondVersion(command("lilypond")).versionTuple
+    docVersion = ly.version.getVersion(text)
+    lilyVersion = ly.version.LilyPondInstance(command("lilypond")).version()
     
     if not docVersion:
         KMessageBox.sorry(mainwin, i18n(
@@ -89,7 +92,7 @@ def convertLy(mainwin):
         # read from stdin.
         try:
             out, err = Popen(
-                (command("convert-ly"), "-f", "{0}.{1}.{2}".format(*docVersion), "-"),
+                (command("convert-ly"), "-f", str(docVersion), "-"),
                 stdin=PIPE, stdout=PIPE, stderr=PIPE
                 ).communicate(text.encode('utf8'))
             if out:

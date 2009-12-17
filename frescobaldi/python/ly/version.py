@@ -22,68 +22,23 @@ LilyPond version information
 """
 
 import os, re
+from functools import wraps
 from subprocess import Popen, PIPE, STDOUT
 
 
-class LilyPondVersion(object):
-    def __init__(self, command = 'lilypond'):
-        self.versionTuple = ()
-        self.versionString = ""
-        try:
-            output = Popen((command, '-v'), stdout=PIPE, stderr=STDOUT).communicate()[0].splitlines()[0]
-            match = re.search(r"(\d+)\.(\d+)(?:\.(\d+))?", output)
-            if match:
-                self.versionTuple = tuple(int(s or "0") for s in match.groups())
-                self.versionString = "{0}.{1}.{2}".format(*self.versionTuple)
-        except OSError:
-            pass
+# global cache of LilyPond instances (prevents loading each time again)
+_cache = {}
 
 
-class ConvertLyLastRuleVersion(object):
-    def __init__(self, command = 'convert-ly'):
-        self.versionTuple = ()
-        self.versionString = ""
-        try:
-            output = Popen((command, '--show-rules'), stdout=PIPE).communicate()[0]
-            for line in reversed(output.splitlines()):
-                match = re.match(r"((\d+)\.(\d+)\.(\d+)):", line)
-                if match:
-                    self.versionString = match.group(1)
-                    self.versionTuple = tuple(int(s) for s in match.group(2, 3, 4))
-                    return
-        except OSError:
-            pass
+def LilyPondInstance(command='lilypond', cache=True):
+    """
+    Returns a LilyPondInstance() for the given lilypond command.
+    By default caches the instances for quick return next time.
+    """
+    if not (cache and command in _cache):
+        _cache[command] = _LilyPondInstance(command)
+    return _cache[command]
 
-
-def datadir(command = 'lilypond'):
-    """ Returns the data directory of the given lilypond binary """
-    
-    # First ask LilyPond itself.
-    try:
-        datadir = Popen((command, '-e',
-            "(display (ly:get-option 'datadir)) (newline) (exit)"),
-            stdout=PIPE).communicate()[0].strip()
-        if os.path.isabs(datadir) and os.path.isdir(datadir):
-            return datadir
-    except OSError:
-        pass
-    # Then find out by manipulating path.
-    if not os.path.isabs(command):
-        command = findexe(command)
-        if not command:
-            return False
-    # LilyPond is found. Go up to prefix and then into share/lilypond        
-    prefix = os.path.dirname(os.path.dirname(command))
-    dirs = ['current']
-    version = LilyPondVersion(command).versionString
-    if version:
-        dirs.append(version)
-    for suffix in dirs:
-        datadir = os.path.join(prefix, 'share', 'lilypond', suffix)
-        if os.path.isdir(datadir):
-            return datadir
-    return False
-    
 
 def getVersion(text):
     """
@@ -95,24 +50,155 @@ def getVersion(text):
         return tuple((map(int, re.findall('\\d+', match.group())) + [0, 0, 0])[:3])
 
 
-
 # Utility functions.....
-def isexe(path):
+def cacheresult(func):
     """
-    Return path if it is an executable file, otherwise False
+    Use as a decorator for methods with no arguments.
+    The method is called the first time. For subsequent calls, the cached result
+    is returned.
     """
-    return os.access(path, os.X_OK) and path
+    cache = {}
+    @wraps(func)
+    def deco(self):
+        if self not in cache:
+            cache[self] = func(self)
+        return cache[self]
+    return deco
 
 
-def findexe(filename):
+class Version(tuple):
     """
-    Look up a filename in the system PATH, and return the full
-    path if it can be found. If the path is absolute, return it
-    unless it is not an executable file.
+    Contains a version as a two or three-tuple (major, minor [, patchlevel]).
+    
+    Can format itself as "major.minor" or "major.minor.patch"
+    Additionally, three attributes are defined:
+    - major     : contains the major version number as an int
+    - minor     : contains the minor version number as an int
+    - patch     : contains the patch level as an int or None
     """
-    if os.path.isabs(os.path.expanduser(filename)):
-        return isexe(os.path.expanduser(filename))
-    for p in os.environ.get("PATH", os.defpath).split(os.pathsep):
-        if isexe(os.path.join(p, filename)):
-            return os.path.join(p, filename)
-    return False
+    def __new__(cls, major, minor, patch=None):
+        if patch is None:
+            obj = tuple.__new__(cls, (major, minor))
+        else:
+            obj = tuple.__new__(cls, (major, minor, patch))
+        obj.major = major
+        obj.minor = minor
+        obj.patch = patch
+        return obj
+        
+    def __format__(self, formatString):
+        return str(self)
+        
+    def __str__(self):
+        return ".".join(map(str, self))
+
+    @classmethod
+    def fromString(cls, text):
+        match = re.search(r"(\d+)\.(\d+)(?:\.(\d+))?", text)
+        if match:
+            return cls(*map(lambda g: int(g) if g else None, match.groups()))
+
+            
+class _LilyPondInstance(object):
+    """
+    Contains information about a LilyPond instance, referred to by a command
+    string defaulting to 'lilypond'.
+    """
+    
+    # name of the convert-ly command
+    convert_ly_name = 'convert-ly'
+    
+    def __init__(self, command='lilypond'):
+        self._command = command
+    
+    @cacheresult
+    def command(self):
+        """
+        Returns the command with full path prepended.
+        """
+        cmd = self._command
+        if os.path.isabs(cmd):
+            return cmd
+        elif os.path.isabs(os.path.expanduser(cmd)):
+            return os.path.expanduser(cmd)
+        elif os.sep in cmd and os.access(cmd, os.X_OK):
+            return os.path.abspath(cmd)
+        else:
+            for p in os.environ.get("PATH", os.defpath).split(os.pathsep):
+                if os.access(os.path.join(p, cmd), os.X_OK):
+                    return os.path.join(p, cmd)
+    
+    @cacheresult
+    def convert_ly(self):
+        """
+        Returns the full path of the convert-ly command that is in the
+        same directory as the corresponding lilypond command.
+        """
+        cmd = self.command()
+        if cmd:
+            return os.path.join(os.path.dirname(cmd), self.convert_ly_name)
+            
+    @cacheresult
+    def prefix(self):
+        """
+        Returns the prefix of a command. E.g. if command is "lilypond"
+        and resolves to "/usr/bin/lilypond", this method returns "/usr".
+        """
+        cmd = self.command()
+        if cmd:
+            return os.path.dirname(os.path.dirname(cmd))
+        
+    @cacheresult
+    def version(self):
+        """
+        Returns the version returned by command -v as an instance of Version.
+        """
+        try:
+            output = Popen((self._command, '-v'), stdout=PIPE, stderr=STDOUT).communicate()[0]
+            return Version.fromString(output)
+        except OSError:
+            pass
+
+    @cacheresult
+    def datadir(self):
+        """
+        Returns the datadir of this LilyPond instance. Most times something
+        like "/usr/share/lilypond/2.13.3/"
+        """
+        # First ask LilyPond itself.
+        try:
+            d = Popen((self._command, '-e',
+                "(display (ly:get-option 'datadir)) (newline) (exit)"),
+                stdout=PIPE).communicate()[0].strip()
+            if os.path.isabs(d) and os.path.isdir(d):
+                return d
+        except OSError:
+            pass
+        # Then find out via the prefix.
+        version, prefix = self.version(), self.prefix()
+        if prefix:
+            dirs = ['current']
+            if version:
+                dirs.append(str(version))
+            for suffix in dirs:
+                d = os.path.join(prefix, 'share', 'lilypond', suffix)
+                if os.path.isdir(d):
+                    return d
+
+    @cacheresult
+    def lastConvertLyRuleVersion(self):
+        """
+        Returns the version of the last convert-ly rule of this lilypond
+        instance.
+        """
+        try:
+            output = Popen((self.convert_ly(), '--show-rules'), stdout=PIPE).communicate()[0]
+            for line in reversed(output.splitlines()):
+                match = re.match(r"(\d+)\.(\d+)\.(\d+):", line)
+                if match:
+                    return Version(*map(int, match.groups()))
+        except OSError:
+            pass
+        
+
+

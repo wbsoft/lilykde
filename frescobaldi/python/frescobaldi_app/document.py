@@ -471,7 +471,7 @@ class DocumentManipulator(object):
             localdir = self.doc.app.defaultDirectory() or os.getcwd()
         url = os.path.normpath(os.path.join(localdir, fileName))
         if not os.path.exists(url):
-            datadir = ly.version.datadir(lilypondCommand())
+            datadir = ly.version.LilyPondInstance(lilypondCommand()).datadir()
             if datadir and os.path.exists(os.path.join(datadir, 'ly', fileName)):
                 url = os.path.join(datadir, 'ly', fileName)
         self.doc.app.openUrl(url).setActive()
