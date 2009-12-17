@@ -381,6 +381,11 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         import frescobaldi_app.blankpaper
         return frescobaldi_app.blankpaper.Dialog(self)
         
+    @lazymethod
+    def charSelectDialog(self):
+        import frescobaldi_app.charselect
+        return frescobaldi_app.charselect.Dialog(self)
+        
     def setupActions(self):
         super(MainWindow, self).setupActions()
         
