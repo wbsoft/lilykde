@@ -25,6 +25,7 @@ import os, re
 from functools import wraps
 from subprocess import Popen, PIPE, STDOUT
 
+import ly.rx
 
 # global cache of LilyPond instances (prevents loading each time again)
 _cache = {}
@@ -43,11 +44,12 @@ def LilyPondInstance(command='lilypond', cache=True):
 def getVersion(text):
     """
     Determine the version of a LilyPond document.
-    Always returns a three-tuple, truncating or padding with zero's
+    Returns a Version instance or None.
     """
-    match = re.search(r'\\version\s*".*?"', text)
+    text = ly.rx.all_comments.sub('', text)
+    match = re.search(r'\\version\s*"(.*?)"', text)
     if match:
-        return tuple((map(int, re.findall('\\d+', match.group())) + [0, 0, 0])[:3])
+        return Version.fromString(match.group(1))
 
 
 # Utility functions.....
@@ -68,7 +70,7 @@ def cacheresult(func):
 
 class Version(tuple):
     """
-    Contains a version as a two or three-tuple (major, minor [, patchlevel]).
+    Contains a version as a two- or three-tuple (major, minor [, patchlevel]).
     
     Can format itself as "major.minor" or "major.minor.patch"
     Additionally, three attributes are defined:
