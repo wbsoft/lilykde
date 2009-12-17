@@ -21,7 +21,7 @@
 LilyPond version information
 """
 
-import os, re
+import os, re, weakref
 from functools import wraps
 from subprocess import Popen, PIPE, STDOUT
 
@@ -59,7 +59,7 @@ def cacheresult(func):
     The method is called the first time. For subsequent calls, the cached result
     is returned.
     """
-    cache = {}
+    cache = weakref.WeakKeyDictionary()
     @wraps(func)
     def deco(self):
         if self not in cache:

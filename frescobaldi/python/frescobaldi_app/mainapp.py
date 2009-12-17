@@ -468,6 +468,11 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         def edit_expand():
             self.expandManager().expand()
         
+        @self.onAction(i18n("Special Characters..."), "accessories-character-map",
+            key="Ctrl+Shift+.", tooltip=i18n("Insert special characters."))
+        def edit_insert_specialchars():
+            self.charSelectDialog().show()
+        
         # (this action is currently only displayed in the contextmenu)
         @self.onSelAction(i18n("Add to Expansions"), "list-add")
         def edit_expand_add(text):

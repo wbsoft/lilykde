@@ -18,10 +18,9 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 
-
-from PyKDE4.kdeui import KDialog
-
-
+from PyQt4.QtGui import QDialogButtonBox, QFont
+from PyKDE4.kdecore import KGlobal, i18n
+from PyKDE4.kdeui import KDialog, KCharSelect, KKeySequenceWidget
 
 
 
@@ -32,6 +31,48 @@ class Dialog(KDialog):
     def __init__(self, mainwin):
         KDialog.__init__(self, mainwin)
         self.mainwin = mainwin
+        self.setButtons(KDialog.ButtonCode(
+            KDialog.Apply | KDialog.Ok | KDialog.Close))
+        self.setCaption(i18n("Special Characters"))
         
-    
-  
+        # trick key button in the DialogButtonBox
+        self.keySelector = key = KKeySequenceWidget()
+        key.layout().setContentsMargins(0, 0, 0, 0)
+        self.findChild(QDialogButtonBox).layout().insertWidget(0, key)
+        
+        self.charSelect = KCharSelect(None)
+        self.setMainWidget(self.charSelect)
+        self.charSelect.charSelected.connect(self.insertText)
+        self.okClicked.connect(self.insertCurrentChar)
+        self.applyClicked.connect(self.insertCurrentChar)
+        self.finished.connect(self.saveSettings)
+        self.loadSettings()
+        
+    def insertText(self, text):
+        d = self.mainwin.currentDocument()
+        d.view.insertText(text)
+        
+    def insertCurrentChar(self):
+        c = self.charSelect.currentChar()
+        if c:
+            self.insertText(c)
+
+    def loadSettings(self):
+        c = config()
+        self.restoreDialogSize(c)
+        self.charSelect.setCurrentFont(
+            c.readEntry("font", QFont("Century Schoolbook L"))) # lily default
+        self.charSelect.setCurrentChar(unichr(
+            c.readEntry("char", 0)))
+        
+    def saveSettings(self):
+        c = config()
+        self.saveDialogSize(c)
+        c.writeEntry("font", self.charSelect.currentFont())
+        c.writeEntry("char", ord(self.charSelect.currentChar()))
+
+
+def config():
+    return KGlobal.config().group("charselect")
+
+
