@@ -78,7 +78,7 @@ class Dialog(KDialog):
         c.writeEntry("char", ord(self.charSelect.currentChar()))
 
     def populateAction(self, action):
-        action.setText(unicodedata.name(int(action.objectName(), 16),
+        action.setText(unicodedata.name(unichr(int(action.objectName(), 16)),
             i18n("unknown")).title())
         
     def actionTriggered(self, name):
