@@ -864,7 +864,7 @@ class Tool(object):
             for place in places:
                 dock = self.mainwin.docks[place]
                 a = m.addAction(dock.icon, dock.title)
-                a.triggered.connect(lambda place=place: self.setDock(place))
+                a.triggered.connect((lambda place: lambda: self.setDock(place))(place))
             m.addSeparator()
         a = m.addAction(KIcon("tab-detach"), i18n("Undock"))
         a.triggered.connect(self.undock)
