@@ -335,7 +335,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         self.progressBar.hide()
         self.currentDocumentChanged.connect(self.updateJobActions)
         self.expansionShortcuts = ExpansionShortcuts(self)
-    
+        self.charSelectShortcuts = CharSelectShortcuts(self)
+        
     @lazymethod
     def actionManager(self):
         """
@@ -789,7 +790,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         super(MainWindow, self).addActionCollectionsToShortcutsDialog(dlg)
         dlg.addCollection(self.expansionShortcuts.actionCollection(),
             i18n("Expansion Manager"))
-    
+        dlg.addCollection(self.charSelectShortcuts.actionCollection(),
+            i18n("Special Characters"))
+            
     def saveSettings(self):
         self.app.stateManager().cleanup()
         super(MainWindow, self).saveSettings()
@@ -1135,6 +1138,19 @@ class ExpansionShortcuts(kateshell.app.UserShortcuts):
     def target(self):
         return self.mainwin.expandManager()
 
+
+class CharSelectShortcuts(kateshell.app.UserShortcuts):
+    """
+    Manages shortcuts for the charselect dialog.
+    """
+    configGroup = "charselect shortcuts"
+    
+    def widget(self):
+        return self.mainwin.viewStack # where the text editor views are.
+        
+    def target(self):
+        return self.mainwin.charSelectDialog()
+    
 
 # Easily get our global config
 def config(group="preferences"):

@@ -18,9 +18,12 @@
 # See http://www.gnu.org/licenses/ for more information.
 
 
-from PyQt4.QtGui import QDialogButtonBox, QFont
+from contextlib import contextmanager
+import unicodedata
+
+from PyQt4.QtGui import QDialogButtonBox, QFont, QKeySequence
 from PyKDE4.kdecore import KGlobal, i18n
-from PyKDE4.kdeui import KDialog, KCharSelect, KKeySequenceWidget
+from PyKDE4.kdeui import KDialog, KCharSelect, KKeySequenceWidget, KShortcut
 
 
 
@@ -31,18 +34,21 @@ class Dialog(KDialog):
     def __init__(self, mainwin):
         KDialog.__init__(self, mainwin)
         self.mainwin = mainwin
+        self.shortcuts = mainwin.charSelectShortcuts
         self.setButtons(KDialog.ButtonCode(
-            KDialog.Apply | KDialog.Ok | KDialog.Close))
+            KDialog.Help | KDialog.Apply | KDialog.Ok | KDialog.Close))
         self.setCaption(i18n("Special Characters"))
         
         # trick key button in the DialogButtonBox
         self.keySelector = key = KKeySequenceWidget()
-        key.layout().setContentsMargins(0, 0, 0, 0)
-        self.findChild(QDialogButtonBox).layout().insertWidget(0, key)
+        key.layout().setContentsMargins(20, 0, 0, 0)
+        self.findChild(QDialogButtonBox).layout().insertWidget(1, key)
         
         self.charSelect = KCharSelect(None)
         self.setMainWidget(self.charSelect)
         self.charSelect.charSelected.connect(self.insertText)
+        self.charSelect.currentCharChanged.connect(self.slotCurrentCharChanged)
+        self.keySelector.keySequenceChanged.connect(self.slotKeySequenceChanged)
         self.okClicked.connect(self.insertCurrentChar)
         self.applyClicked.connect(self.insertCurrentChar)
         self.finished.connect(self.saveSettings)
@@ -71,8 +77,31 @@ class Dialog(KDialog):
         c.writeEntry("font", self.charSelect.currentFont())
         c.writeEntry("char", ord(self.charSelect.currentChar()))
 
-
+    def populateAction(self, action):
+        action.setText(unicodedata.name(int(action.objectName(), 16),
+            i18n("unknown")).title())
+        
+    def actionTriggered(self, name):
+        self.insertText(unichr(int(name, 16)))
+        
+    def slotCurrentCharChanged(self, text):
+        key = self.shortcuts.shortcut(hex(ord(text)))
+        with blockSignals(self.keySelector) as w:
+            w.setKeySequence(key and key.toList()[0] or QKeySequence())
+        
+    def slotKeySequenceChanged(self, seq):
+        self.keySelector.applyStealShortcut()
+        self.shortcuts.setShortcut(hex(ord(self.charSelect.currentChar())),
+            KShortcut(seq))
+        
+        
+        
 def config():
     return KGlobal.config().group("charselect")
 
 
+@contextmanager
+def blockSignals(widget):
+    block = widget.blockSignals(True)
+    yield widget
+    widget.blockSignals(block)
