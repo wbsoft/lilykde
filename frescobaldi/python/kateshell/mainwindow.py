@@ -852,7 +852,7 @@ class Tool(object):
             
     def showContextMenu(self, globalPos):
         """
-        Shows a popup menu to manipulate this tool.
+        Show a popup menu to manipulate this tool.
         """
         m = KMenu(self.mainwin)
         places = [place for place in Left, Right, Top, Bottom
