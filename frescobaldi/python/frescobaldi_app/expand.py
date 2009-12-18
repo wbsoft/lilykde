@@ -426,11 +426,8 @@ class ExpansionDialog(KDialog):
         item = self.currentItem()
         if item:
             self.loadShortcut(item.text(0))
-        self.key.setCheckActionCollections([
-            self.manager.mainwin.actionCollection(),
-            self.manager.mainwin.view().actionCollection(),
-            self.manager.shortcuts.actionCollection(),
-            ])
+        self.key.setCheckActionCollections(
+            [coll for name, coll in self.manager.mainwin.allActionCollections()])
     
     def show(self):
         self.updateShortcuts()

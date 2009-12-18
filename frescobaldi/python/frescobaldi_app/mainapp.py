@@ -470,7 +470,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             self.expandManager().expand()
         
         @self.onAction(i18n("Special Characters..."), "accessories-character-map",
-            key="Ctrl+Shift+.", tooltip=i18n("Insert special characters."))
+            key="Ctrl+Y", tooltip=i18n("Insert special characters."))
         def edit_insert_specialchars():
             self.charSelectDialog().show()
         
@@ -785,13 +785,12 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             tip = i18n("Run LilyPond in preview mode")
         act("lilypond_runner").setIcon(KIcon(icon))
         act("lilypond_runner").setToolTip(tip)
-
-    def addActionCollectionsToShortcutsDialog(self, dlg):
-        super(MainWindow, self).addActionCollectionsToShortcutsDialog(dlg)
-        dlg.addCollection(self.expansionShortcuts.actionCollection(),
-            i18n("Expansion Manager"))
-        dlg.addCollection(self.charSelectShortcuts.actionCollection(),
-            i18n("Special Characters"))
+    
+    def allActionCollections(self):
+        for name, coll in super(MainWindow, self).allActionCollections():
+            yield name, coll
+        yield i18n("Expansion Manager"), self.expansionShortcuts.actionCollection()
+        yield i18n("Special Characters"), self.charSelectShortcuts.actionCollection()
             
     def saveSettings(self):
         self.app.stateManager().cleanup()

@@ -17,14 +17,25 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-
+from functools import wraps
 from contextlib import contextmanager
-import unicodedata
+import unicodedata, weakref
 
 from PyQt4.QtGui import QDialogButtonBox, QFont, QKeySequence
 from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KCharSelect, KKeySequenceWidget, KShortcut
 
+
+# method decorator
+def once(func):
+    """ Performs an argumentless method call only once. """
+    cache = weakref.WeakKeyDictionary()
+    @wraps(func)
+    def decorator(obj):
+        if obj not in cache:
+            cache[obj] = True
+            func(obj)
+    return decorator
 
 
 class Dialog(KDialog):
@@ -38,6 +49,7 @@ class Dialog(KDialog):
         self.setButtons(KDialog.ButtonCode(
             KDialog.Help | KDialog.Apply | KDialog.Ok | KDialog.Close))
         self.setCaption(i18n("Special Characters"))
+        self.setHelp("charselect")
         
         # trick key button in the DialogButtonBox
         self.keySelector = key = KKeySequenceWidget()
@@ -94,8 +106,16 @@ class Dialog(KDialog):
         self.shortcuts.setShortcut(hex(ord(self.charSelect.currentChar())),
             KShortcut(seq))
         
+    def show(self):
+        self.setCheckActionCollections()
+        super(Dialog, self).show()
+
+    @once
+    def setCheckActionCollections(self):
+        self.keySelector.setCheckActionCollections(
+            [coll for name, coll in self.mainwin.allActionCollections()])
         
-        
+
 def config():
     return KGlobal.config().group("charselect")
 
@@ -105,3 +125,5 @@ def blockSignals(widget):
     block = widget.blockSignals(True)
     yield widget
     widget.blockSignals(block)
+
+

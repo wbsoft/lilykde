@@ -190,5 +190,15 @@ indented line in between and places the cursor there.
 If text is selected, it is placed between the braces.
 </para>
 
+<para id="charselect">
+<menuchoice>
+  <shortcut><keycombo><keycap>Ctrl+Y</keycap></keycombo></shortcut>
+  <guimenuitem>Special Characters</guimenuitem>
+</menuchoice> opens a dialog where characters from the Unicode table can be
+browsed and selected. Doubleclick a character (or click <guibutton>Apply</guibutton>)
+to insert the currently selected character into the document. It is also possible
+to assign a keyboard shortcut to the currently selected character.
+</para>
+
 </sect1>
 </chapter>
