@@ -566,7 +566,7 @@ class TabBar(KMultiTabBar):
         tab.setContextMenuPolicy(Qt.CustomContextMenu)
         tab.clicked.connect(tool.toggle)
         tab.customContextMenuRequested.connect(
-            lambda pos: tool.contextMenu().exec_(tab.mapToGlobal(pos)))
+            lambda pos: tool.showContextMenu(tab.mapToGlobal(pos)))
 
     def removeTool(self, tool):
         self._tools.remove(tool)
@@ -850,12 +850,11 @@ class Tool(object):
         else:
             self._dialog.updateState()
             
-    def contextMenu(self):
+    def showContextMenu(self, globalPos):
         """
-        Return a popup menu to manipulate this tool.
-        Do not subclass this method, but use addMenuActions instead.
+        Shows a popup menu to manipulate this tool.
         """
-        m = KMenu()
+        m = KMenu(self.mainwin)
         places = [place for place in Left, Right, Top, Bottom
             if place in self.allowedPlaces
             and self.mainwin.docks.get(place, self._dock) is not self._dock]
@@ -873,7 +872,8 @@ class Tool(object):
             m.addSeparator()
             a = m.addAction(KIcon("help-contextual"), KStandardGuiItem.help().text())
             a.triggered.connect(self.help)
-        return m
+        m.aboutToHide.connect(m.deleteLater)
+        m.popup(globalPos)
 
     def addMenuActions(self, menu):
         """
