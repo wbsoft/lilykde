@@ -25,17 +25,7 @@ from PyQt4.QtGui import QDialogButtonBox, QFont, QKeySequence
 from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KCharSelect, KKeySequenceWidget, KShortcut
 
-
-# method decorator
-def once(func):
-    """ Performs an argumentless method call only once. """
-    cache = weakref.WeakKeyDictionary()
-    @wraps(func)
-    def decorator(obj):
-        if obj not in cache:
-            cache[obj] = True
-            func(obj)
-    return decorator
+from kateshell.app import cacheresult
 
 
 class Dialog(KDialog):
@@ -110,7 +100,7 @@ class Dialog(KDialog):
         self.setCheckActionCollections()
         super(Dialog, self).show()
 
-    @once
+    @cacheresult
     def setCheckActionCollections(self):
         self.keySelector.setCheckActionCollections(
             [coll for name, coll in self.mainwin.allActionCollections()])

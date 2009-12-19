@@ -35,7 +35,7 @@ from PyKDE4.ktexteditor import KTextEditor
 
 import ly.parse, ly.pitch
 
-from kateshell.app import lazymethod
+from kateshell.app import cacheresult
 from frescobaldi_app.highlight import LilyPondHighlighter
 
 
@@ -75,7 +75,7 @@ class ExpandManager(object):
         # open dialog and let the user choose
         self.expansionDialog().show()
         
-    @lazymethod
+    @cacheresult
     def expansionDialog(self):
         return ExpansionDialog(self)
 

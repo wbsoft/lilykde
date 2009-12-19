@@ -31,7 +31,7 @@ from PyKDE4.kdeui import KDialog, KIcon, KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
 import ly.rx, ly.pitch, ly.parse, ly.tokenize, ly.tools, ly.version
-from kateshell.app import lazymethod
+from kateshell.app import cacheresult
 from frescobaldi_app.widgets import promptText
 
 
@@ -710,7 +710,7 @@ class DocumentManipulator(object):
                 "that are not available in the pitch language \"%1\".",
                 language))
         
-    @lazymethod
+    @cacheresult
     def transposeDialog(self):
         return TransposeDialog(self.doc.view)
 

@@ -19,6 +19,7 @@
 
 import os, re, sip, sys, time, weakref
 from contextlib import contextmanager
+from functools import wraps
 
 import dbus, dbus.service, dbus.mainloop.qt
 from dbus.service import method, signal
@@ -40,18 +41,22 @@ from kateshell.mainwindow import MainWindow
 dbus.mainloop.qt.DBusQtMainLoop(set_as_default=True)
 
 
-def lazymethod(func):
+def cacheresult(func):
     """
-    A decorator that only performs the method call the first time,
+    A decorator that performs the decorated method call only the first time,
     caches the return value, and returns that next time.
     The argments tuple should be hashable.
     """
     cache = weakref.WeakKeyDictionary()
-    def loader(obj, *args):
-        if args not in cache.setdefault(obj, {}):
-            cache[obj][args] = func(obj, *args)
-        return cache[obj][args]
-    return loader
+    @wraps(func)
+    def wrapper(obj, *args):
+        h = hash(args)
+        try:
+            return cache[obj][h]
+        except KeyError:
+            result = cache.setdefault(obj, {})[h] = func(obj, *args)
+            return result
+    return wrapper
 
 
 class DBusItem(dbus.service.Object):
@@ -117,7 +122,7 @@ class MainApp(DBusItem):
 
         # restore session etc.
         
-    @lazymethod
+    @cacheresult
     def stateManager(self):
         return StateManager(self)
 

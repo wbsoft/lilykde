@@ -34,7 +34,7 @@ from PyKDE4.kdeui import (
 from PyKDE4.kio import KFileDialog, KIO
 
 import ly, ly.indent
-from kateshell.app import lazymethod
+from kateshell.app import cacheresult
 from frescobaldi_app.mainapp import SymbolManager
 from frescobaldi_app.version import defaultVersion
 from frescobaldi_app.widgets import StackFader, ClefSelector
@@ -204,7 +204,7 @@ class Dialog(KDialog):
     def showPreview(self):
         self.previewDialog().showPreview(self.ly())
 
-    @lazymethod
+    @cacheresult
     def previewDialog(self):
         return PreviewDialog(self)
 

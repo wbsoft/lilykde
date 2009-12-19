@@ -36,21 +36,6 @@ class QuarterToneAlterationNotAvailable(Exception):
     pass
 
 
-
-
-def lazy(func):
-    """
-    A decorator that only performs the function call the first time,
-    caches the return value, and returns that next time.
-    The argments tuple should be hashable.
-    """
-    cache = {}
-    def loader(*args):
-        if args not in cache:
-            cache[args] = func(*args)
-        return cache[args]
-    return loader
-
 _nums = (
     'Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight',
     'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',

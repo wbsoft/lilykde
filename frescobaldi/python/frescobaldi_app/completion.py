@@ -28,7 +28,7 @@ from PyQt4.QtGui import QBrush, QColor, QTextFormat
 from PyKDE4.kdecore import KGlobal
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly, ly.font, ly.tokenize, ly.version, ly.words, ly.colors
+import ly.tokenize, ly.version, ly.words, ly.colors
 import frescobaldi_app.version
 
 
@@ -261,17 +261,13 @@ def findMatches(model, view, word, invocationType):
          return ExpansionCompletions(model)
 
 
-# lazy-load and cache some data
-@ly.lazy
+# load some (cached) data
 def musicglyph_names():
-    datadir = ly.version.LilyPondInstance(command("lilypond")).datadir()
-    if datadir:
-        font = ly.font.emmentaler20(datadir)
-        if font:
-            return tuple(font.glyphs())
+    font = ly.version.LilyPondInstance(command("lilypond")).fontInfo("emmentaler-20")
+    if font:
+        return tuple(font.glyphs())
     return ()
 
-@ly.lazy
 def lilypondVersion():
     ver = frescobaldi_app.version.defaultVersion()
     return ('version "{0}"'.format(ver),) if ver else ()

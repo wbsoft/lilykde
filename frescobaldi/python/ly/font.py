@@ -21,7 +21,7 @@
 
 import os, ly, xml.dom.minidom
 
-class SvgFont(object):
+class SvgFontInfo(object):
     """
     Can load a SVG font and provide information about the glyphs and
     their unicode values.
@@ -41,13 +41,4 @@ class SvgFont(object):
         
     def glyphs(self):
         return self.name2unicode.keys()
-
-@ly.lazy
-def emmentaler20(datadir):
-    """
-    Return the emmentaler-20 font, loaded and cached
-    """
-    font = os.path.join(datadir, "fonts", "svg", "emmentaler-20.svg")
-    if os.path.exists(font):
-        return SvgFont(font)
 

@@ -32,7 +32,7 @@ from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
 import kateshell.app, kateshell.mainwindow
-from kateshell.app import lazymethod
+from kateshell.app import cacheresult
 
 
 # Constants ...
@@ -140,7 +140,7 @@ class Document(kateshell.app.Document):
         if iface:
             iface.registerCompletionModel(self.completionModel())
 
-    @lazymethod
+    @cacheresult
     def completionModel(self):
         return CompletionModel(self)
         
@@ -187,7 +187,7 @@ class Document(kateshell.app.Document):
             path = self.localPath()
         return updatedFiles(path)
 
-    @lazymethod
+    @cacheresult
     def manipulator(self):
         """
         Returns a singleton object for this document that can
@@ -337,7 +337,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         self.expansionShortcuts = ExpansionShortcuts(self)
         self.charSelectShortcuts = CharSelectShortcuts(self)
         
-    @lazymethod
+    @cacheresult
     def actionManager(self):
         """
         Returns the ActionManager, managing actions that can be performed
@@ -346,21 +346,21 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         import frescobaldi_app.actions
         return frescobaldi_app.actions.ActionManager(self)
         
-    @lazymethod
+    @cacheresult
     def scoreWizard(self):
         import frescobaldi_app.scorewiz
         return frescobaldi_app.scorewiz.ScoreWizard(self)
     
-    @lazymethod
+    @cacheresult
     def applyRhythmDialog(self):
         return ApplyRhythmDialog(self)
     
-    @lazymethod
+    @cacheresult
     def expandManager(self):
         import frescobaldi_app.expand
         return frescobaldi_app.expand.ExpandManager(self)
     
-    @lazymethod
+    @cacheresult
     def jobManager(self):
         import frescobaldi_app.runlily
         man = frescobaldi_app.runlily.JobManager(self)
@@ -371,18 +371,18 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         man.jobFinished.connect(self.viewTabs.setDocumentStatus)
         return man
     
-    @lazymethod
+    @cacheresult
     def progressBarManager(self, jobmanager):
         import frescobaldi_app.progress
         return frescobaldi_app.progress.ProgressBarManager(jobmanager,
             self.progressBar)
     
-    @lazymethod
+    @cacheresult
     def blankStaffPaperWizard(self):
         import frescobaldi_app.blankpaper
         return frescobaldi_app.blankpaper.Dialog(self)
         
-    @lazymethod
+    @cacheresult
     def charSelectDialog(self):
         import frescobaldi_app.charselect
         return frescobaldi_app.charselect.Dialog(self)

@@ -35,7 +35,7 @@ from PyKDE4.kdeui import (
     KCompletion, KHBox, KIcon, KLineEdit, KPageDialog, KPushButton,
     KStandardGuiItem, KVBox)
 
-from kateshell.app import lazymethod
+from kateshell.app import cacheresult
 from frescobaldi_app.mainapp import SymbolManager
 from frescobaldi_app.widgets import TapButton
 from frescobaldi_app.version import defaultVersion
@@ -76,7 +76,7 @@ class ScoreWizard(KPageDialog):
     def previewScore(self):
         self.previewDialog().showPreview()
         
-    @lazymethod
+    @cacheresult
     def previewDialog(self):
         from frescobaldi_app.scorewiz import preview
         return preview.PreviewDialog(self)

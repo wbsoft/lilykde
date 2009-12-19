@@ -55,17 +55,20 @@ def getVersion(text):
 # Utility functions.....
 def cacheresult(func):
     """
-    Use as a decorator for methods with no arguments.
-    The method is called the first time. For subsequent calls, the cached result
-    is returned.
+    A decorator that performs the decorated method call only the first time,
+    caches the return value, and returns that next time.
+    The argments tuple should be hashable.
     """
     cache = weakref.WeakKeyDictionary()
     @wraps(func)
-    def deco(self):
-        if self not in cache:
-            cache[self] = func(self)
-        return cache[self]
-    return deco
+    def wrapper(obj, *args):
+        h = hash(args)
+        try:
+            return cache[obj][h]
+        except KeyError:
+            result = cache.setdefault(obj, {})[h] = func(obj, *args)
+            return result
+    return wrapper
 
 
 class Version(tuple):
@@ -202,5 +205,17 @@ class _LilyPondInstance(object):
         except OSError:
             pass
         
-
+    @cacheresult
+    def fontInfo(self, fontname):
+        """
+        Returns a SvgFontInfo object containing information about
+        the named font (e.g. "emmentaler-20").
+        """
+        datadir = self.datadir()
+        if datadir:
+            font = os.path.join(datadir, "fonts", "svg", fontname + ".svg")
+            if os.path.exists(font):
+                import ly.font
+                return ly.font.SvgFontInfo(font)
+            
 
