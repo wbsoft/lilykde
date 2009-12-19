@@ -336,6 +336,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         self.currentDocumentChanged.connect(self.updateJobActions)
         self.expansionShortcuts = ExpansionShortcuts(self)
         self.charSelectShortcuts = CharSelectShortcuts(self)
+        self.quickInsertShortcuts = QuickInsertShortcuts(self)
         
     @cacheresult
     def actionManager(self):
@@ -791,7 +792,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             yield name, coll
         yield i18n("Expansion Manager"), self.expansionShortcuts.actionCollection()
         yield i18n("Special Characters"), self.charSelectShortcuts.actionCollection()
-            
+        yield i18n("Quick Insert"), self.quickInsertShortcuts.actionCollection()
+        
     def saveSettings(self):
         self.app.stateManager().cleanup()
         super(MainWindow, self).saveSettings()
@@ -986,7 +988,7 @@ class QuickInsertTool(kateshell.mainwindow.Tool):
             
     def factory(self):
         import frescobaldi_app.lqi
-        return frescobaldi_app.lqi.ToolBox(self)
+        return frescobaldi_app.lqi.QuickInsertPanel(self)
 
 
 class LogTool(kateshell.mainwindow.Tool):
@@ -1149,7 +1151,22 @@ class CharSelectShortcuts(kateshell.app.UserShortcuts):
         
     def target(self):
         return self.mainwin.charSelectDialog()
+
+
+class QuickInsertShortcuts(kateshell.app.UserShortcuts):
+    """
+    Manages shortcuts for the Quick Insert panel.
+    """
+    configGroup = "quickinsert shortcuts"
     
+    def widget(self):
+        return self.mainwin.viewStack
+        
+    def target(self):
+        tool = self.mainwin.tools["quickinsert"]
+        tool.materialize()
+        return tool.widget
+
 
 # Easily get our global config
 def config(group="preferences"):

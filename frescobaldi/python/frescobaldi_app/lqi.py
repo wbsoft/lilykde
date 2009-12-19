@@ -25,33 +25,83 @@ from PyQt4.QtCore import QSize
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QLabel, QToolBox, QToolButton, QWidget)
 from PyKDE4.kdecore import i18n
-from PyKDE4.kdeui import KHBox
+from PyKDE4.kdeui import KIcon, KHBox
 
 import ly.articulation
 from frescobaldi_app.mainapp import SymbolManager
 
 
-class ToolBox(SymbolManager, QToolBox):
+class QuickInsertPanel(SymbolManager, QToolBox):
+    """
+    The Quick Insert Panel manages its own actionCollection of shortcuts in
+    the QuickInsertShortcuts instance of the mainwindow.
+    
+    If the user presses a keyboard shortcut, the Quick Insert Panel is loaded,
+    and the action is dispatched to the tool it originated from.
+    
+    The actions are named with this format: 'tool:name'. So the correct
+    tool can always be found.
+    """
     def __init__(self, tool):
         QToolBox.__init__(self)
         SymbolManager.__init__(self)
         self.mainwin = tool.mainwin
+        self.shortcuts = tool.mainwin.quickInsertShortcuts
+        self.tools = {}
         Articulations(self)
         self.setMinimumWidth(self.sizeHint().width())
 
+    def populateAction(self, action):
+        """ Dispatch to the correct tool. """
+        if ':' in action.objectName():
+            tool, name = action.objectName().split(':')
+            if tool in self.tools:
+                self.tools[tool].populateAction(name, action)
+                
+    def actionTriggered(self, name):
+        """ Dispatch to the correct tool. """
+        if ':' in name:
+            tool, name = name.split(':')
+            if tool in self.tools:
+                self.tools[tool].actionTriggered(name)
+        
+        
 class Lqi(QWidget):
     """ Abstract base class for LilyPond Quick Insert tools """
 
-    def __init__(self, toolbox, label, icon="", tooltip=""):
+    def __init__(self, toolbox, name, label, icon="", symbol="", tooltip=""):
         QWidget.__init__(self, toolbox)
+        self.name = name
+        self.toolbox = toolbox
+        toolbox.tools[name] = self
         self.mainwin = toolbox.mainwin
         i = toolbox.addItem(self, label)
         if icon:
-            toolbox.addItemSymbol(toolbox, i, icon)
+            toolbox.setItemIcon(i, KIcon(icon))
+        elif symbol:
+            toolbox.addItemSymbol(toolbox, i, symbol)
         if tooltip:
             toolbox.setItemToolTip(i, tooltip)
 
-
+    def setShortcut(self, name, shortcut):
+        self.toolbox.shortcuts.setShortcut(self.name + ":" + name, seq)
+        
+    def shortcut(self, name):
+        return self.toolbox.shortcuts.shortcut(self.name + ":" + name)
+        
+    def populateAction(self, name, action):
+        """
+        Must implement this to populate the action based on the given name.
+        """
+        pass
+    
+    def actionTriggered(self, name):
+        """
+        Must implement this to perform the action that belongs to name.
+        """
+        pass
+    
+    
 class Articulations(Lqi):
     """
     A toolbox item with articulations.
@@ -59,8 +109,9 @@ class Articulations(Lqi):
     If text (music) is selected, the articulation will be added to all notes.
     """
     def __init__(self, toolbox):
-        Lqi.__init__(self, toolbox, i18n("Articulations"), 'articulation_prall',
-            i18n("Different kinds of articulations and other signs."))
+        Lqi.__init__(self, toolbox, 'articulations',
+            i18n("Articulations"), symbol='articulation_prall',
+            tooltip=i18n("Different kinds of articulations and other signs."))
             
         layout = QGridLayout(self)
         layout.setSpacing(0)
@@ -85,11 +136,13 @@ class Articulations(Lqi):
         h.setToolTip(i18n("The direction to use for the articulations."))
         row += 1
 
+        self.titles = {}
         for title, group in ly.articulation.groups(i18n):
             layout.addWidget(QLabel('<u>{0}</u>:'.format(title)), row, 0, 1, cols)
             row += 1
             col = 0
             for sign, title in group:
+                self.titles[sign] = title
                 b = QToolButton(clicked=(lambda sign: lambda: self.writeSign(sign))(sign))
                 b.setAutoRaise(True)
                 # load and convert the icon to the default text color
@@ -127,4 +180,9 @@ class Articulations(Lqi):
         doc.manipulator().addArticulation(art)
         doc.view.setFocus()
         
-
+    def actionTriggered(self, name):
+        self.writeSign(name)
+        
+    def populateAction(self, name, action):
+        if name in self.titles:
+            action.setText(self.titles[name])
