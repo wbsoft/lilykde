@@ -24,7 +24,7 @@ import re
 
 from PyQt4.QtCore import QObject, QTimer, Qt, SIGNAL
 from PyQt4.QtGui import (
-    QFont, QKeySequence, QSplitter, QTextEdit, QTreeWidget, QTreeWidgetItem,
+    QFont, QSplitter, QTextEdit, QTreeWidget, QTreeWidgetItem,
     QVBoxLayout)
 
 from PyKDE4.kdecore import KConfig, KGlobal, i18n
@@ -36,16 +36,18 @@ from PyKDE4.ktexteditor import KTextEditor
 import ly.parse, ly.pitch
 
 from kateshell.app import cacheresult
+from kateshell.shortcut import ShortcutClient
 from frescobaldi_app.highlight import LilyPondHighlighter
 
 
-class ExpandManager(object):
+class ExpandManager(ShortcutClient):
     def __init__(self, mainwin):
         self.mainwin = mainwin
         self.shortcuts = mainwin.expansionShortcuts
+        ShortcutClient.__init__(self, self.shortcuts)
         self.expansions = KConfig("expansions", KConfig.NoGlobals, "appdata")
         # delete shortcut actions that do not exist here anymore
-        self.shortcuts.shakeHands(self.expansionsList())
+        mainwin.expansionShortcuts.shakeHands(self.expansionsList())
         
     def actionTriggered(self, name):
         return self.doExpand(name)
@@ -328,7 +330,7 @@ class ExpansionDialog(KDialog):
             self.edit.dirty = False
             # key shortcut widget
             self.key.setEnabled(True)
-            self.loadShortcut(name)
+            self.manager.keyLoadShortcut(self.key, name)
         else:
             self.edit.item = None
             self.edit.clear()
@@ -379,8 +381,7 @@ class ExpansionDialog(KDialog):
                 self.treeWidget.editItem(item, 1)
         elif column == 2:
             # User should not edit textual representation of shortcut
-            key = self.manager.shortcuts.shortcut(item.text(0))
-            item.setText(2, key and key.toList()[0].toString() or '')
+            item.setText(2, self.shortcutText(item.text(0)))
     
     def editChanged(self):
         """ Marks our edit view as changed. """
@@ -397,18 +398,9 @@ class ExpansionDialog(KDialog):
         """ Called when the user has changed the keyboard shortcut. """
         item = self.currentItem()
         if item:
-            self.key.applyStealShortcut()
-            self.manager.shortcuts.setShortcut(
-                item.text(0), KShortcut(seq))
+            self.manager.keyApplyShortcut(self.key, item.text(0), seq)
             item.setText(2, seq.toString())
             self.updateShortcuts()
-        
-    def loadShortcut(self, name):
-        """ Sets the shortcut button to the shortcut for the given name. """
-        key = self.manager.shortcuts.shortcut(name)
-        block = self.key.blockSignals(True)
-        self.key.setKeySequence(key and key.toList()[0] or QKeySequence())
-        self.key.blockSignals(block)
         
     def updateShortcuts(self):
         """
@@ -421,13 +413,11 @@ class ExpansionDialog(KDialog):
             if item.text(2) and item.text(0) not in names:
                 item.setText(2, '')
             elif item.text(0) in names:
-                key = self.manager.shortcuts.shortcut(item.text(0))
-                item.setText(2, key and key.toList()[0].toString() or '')
+                item.setText(2, self.shortcutText(item.text(0)))
         item = self.currentItem()
         if item:
-            self.loadShortcut(item.text(0))
-        self.key.setCheckActionCollections(
-            [coll for name, coll in self.manager.mainwin.allActionCollections()])
+            self.manager.keyLoadShortcut(self.key, item.text(0))
+        self.manager.keySetCheckActionCollections(self.key)
     
     def show(self):
         self.updateShortcuts()

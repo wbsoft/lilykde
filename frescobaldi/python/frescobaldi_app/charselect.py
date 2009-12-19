@@ -17,8 +17,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
-from functools import wraps
-from contextlib import contextmanager
 import unicodedata, weakref
 
 from PyQt4.QtGui import QDialogButtonBox, QFont, QKeySequence
@@ -26,16 +24,16 @@ from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KCharSelect, KKeySequenceWidget, KShortcut
 
 from kateshell.app import cacheresult
+from kateshell.shortcut import ShortcutClient
 
-
-class Dialog(KDialog):
+class Dialog(ShortcutClient, KDialog):
     """
     A dialog to select special characters.
     """
     def __init__(self, mainwin):
         KDialog.__init__(self, mainwin)
+        ShortcutClient.__init__(self, mainwin.charSelectShortcuts)
         self.mainwin = mainwin
-        self.shortcuts = mainwin.charSelectShortcuts
         self.setButtons(KDialog.ButtonCode(
             KDialog.Help | KDialog.Apply | KDialog.Ok | KDialog.Close))
         self.setCaption(i18n("Special Characters"))
@@ -87,14 +85,11 @@ class Dialog(KDialog):
         self.insertText(unichr(int(name, 16)))
         
     def slotCurrentCharChanged(self, text):
-        key = self.shortcuts.shortcut(hex(ord(text)))
-        with blockSignals(self.keySelector) as w:
-            w.setKeySequence(key and key.toList()[0] or QKeySequence())
+        self.keyLoadShortcut(self.keySelector, hex(ord(text)))
         
     def slotKeySequenceChanged(self, seq):
-        self.keySelector.applyStealShortcut()
-        self.shortcuts.setShortcut(hex(ord(self.charSelect.currentChar())),
-            KShortcut(seq))
+        self.keyApplyShortcut(self.keySelector,
+            hex(ord(self.charSelect.currentChar())), seq)
         
     def show(self):
         self.setCheckActionCollections()
@@ -102,18 +97,10 @@ class Dialog(KDialog):
 
     @cacheresult
     def setCheckActionCollections(self):
-        self.keySelector.setCheckActionCollections(
-            [coll for name, coll in self.mainwin.allActionCollections()])
+        self.keySetCheckActionCollections(self.keySelector)
         
 
 def config():
     return KGlobal.config().group("charselect")
-
-
-@contextmanager
-def blockSignals(widget):
-    block = widget.blockSignals(True)
-    yield widget
-    widget.blockSignals(block)
 
 

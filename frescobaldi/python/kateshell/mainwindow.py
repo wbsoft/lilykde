@@ -21,18 +21,20 @@ import os, sip, weakref
 
 from PyQt4.QtCore import QEvent, QTimer, Qt, SLOT, pyqtSignature
 from PyQt4.QtGui import (
-    QAction, QActionGroup, QDialog, QLabel, QPixmap, QSplitter, QStackedWidget,
-    QTabBar, QVBoxLayout, QWidget)
+    QAction, QActionGroup, QDialog, QKeySequence, QLabel, QPixmap, QSplitter,
+    QStackedWidget, QTabBar, QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, KPluginLoader, KToolInvocation, KUrl, i18n
 from PyKDE4.kdeui import (
-    KAction, KActionCollection, KActionMenu, KDialog, KEditToolBar, KHBox, KIcon, KMenu,
-    KMessageBox, KMultiTabBar, KShortcut, KShortcutsDialog, KShortcutsEditor,
-    KStandardAction, KStandardGuiItem, KToggleFullScreenAction, KVBox)
+    KAction, KActionCollection, KActionMenu, KDialog, KEditToolBar, KHBox,
+    KIcon, KKeySequenceWidget, KMenu, KMessageBox, KMultiTabBar, KShortcut,
+    KShortcutsDialog, KShortcutsEditor, KStandardAction, KStandardGuiItem,
+    KToggleFullScreenAction, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 from PyKDE4.kio import KEncodingFileDialog
 
 from signals import Signal
+
 
 # Easily get our global config
 def config(group="kateshell"):
@@ -1089,68 +1091,3 @@ class UserShortcutManager(object):
         return result
         
 
-class UserShortcutDispatcher(object):
-    """
-    Communicates with a UserShortcuts object to handle shortcuts for
-    different clients.
-    
-    Objects that wants to use this class can either mix it in or instantiate
-    it as an helper object.
-    
-    Clients register with a string name, and all the shortcut names for that
-    client get that name prepended.
-    
-    Clients need to provide almost the same two methods as when communicating
-    with a UserShortcuts object directly:
-    
-    - populateAction(name, action)      # instead of only the action
-    - actionTriggered(name)
-    """
-    def __init__(self, userShortcutManager):
-        self._shortcuts = userShortcutManager
-        self._clients = weakref.WeakValueDictionary()
-        
-    def registerClient(self, client, name):
-        self._clients[name] = client
-        
-    def populateAction(self, action):
-        """ Dispatch to the correct client. """
-        if ':' in action.objectName():
-            client, name = action.objectName().split(':')
-            if client in self._clients:
-                self._clients[client].populateAction(name, action)
-                
-    def actionTriggered(self, name):
-        """ Dispatch to the correct client. """
-        if ':' in name:
-            client, name = name.split(':')
-            if client in self._clients:
-                self._clients[client].actionTriggered(name)
-        
-
-class UserShortcutClient(object):
-    """
-    Base class for clients of a UserShortcutDispatcher.
-    """
-    def __init__(self, dispatcher, name):
-        self._name = name
-        self._shortcuts = dispatcher._shortcuts
-        dispatcher.registerClient(self, name)
-        
-    def setShortcut(self, name, shortcut):
-        self._shortcuts.setShortcut(self._name + ":" + name, seq)
-        
-    def shortcut(self, name):
-        return self._shortcuts.shortcut(self.name + ":" + name)
-        
-    def populateAction(self, name, action):
-        """
-        Must implement this to populate the action based on the given name.
-        """
-        pass
-    
-    def actionTriggered(self, name):
-        """
-        Must implement this to perform the action that belongs to name.
-        """
-        pass

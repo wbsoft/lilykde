@@ -33,7 +33,6 @@ from PyKDE4.kio import KEncodingFileDialog
 from PyKDE4.ktexteditor import KTextEditor
 
 from kateshell import DBUS_IFACE_PREFIX
-from kateshell.mainwindow import MainWindow
 
 
 # Make the Qt mainloop the default one
@@ -56,6 +55,19 @@ def cacheresult(func):
             result = cache.setdefault(obj, {})[h] = func(obj, *args)
             return result
     return wrapper
+
+
+@contextmanager
+def blockSignals(widget):
+    """
+    Creates a context for a widget with blocked signals. Usage:
+    
+    with blockSignals(widget) as w:
+        ...
+    """
+    block = widget.blockSignals(True)
+    yield widget
+    widget.blockSignals(block)
 
 
 class DBusItem(dbus.service.Object):
@@ -129,7 +141,8 @@ class MainApp(DBusItem):
         return ''
 
     def createMainWindow(self):
-        return MainWindow(self)
+        import kateshell.mainwindow
+        return kateshell.mainwindow.MainWindow(self)
 
     def createDocument(self, url="", encoding=None):
         return Document(self, url, encoding)

@@ -28,7 +28,7 @@ from PyKDE4.kdecore import i18n
 from PyKDE4.kdeui import KIcon, KHBox
 
 import ly.articulation
-from kateshell.mainwindow import UserShortcutDispatcher, UserShortcutClient
+from kateshell.shortcut import UserShortcutDispatcher, UserShortcutClient
 from frescobaldi_app.mainapp import SymbolManager
 
 
@@ -55,12 +55,12 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
 class Lqi(UserShortcutClient, QWidget):
     """ Abstract base class for LilyPond Quick Insert tools """
 
-    def __init__(self, toolbox, name, label, icon="", symbol="", tooltip=""):
+    def __init__(self, toolbox, name, title, icon="", symbol="", tooltip=""):
         QWidget.__init__(self, toolbox)
         UserShortcutClient.__init__(self, toolbox, name)
         self.toolbox = toolbox
         self.mainwin = toolbox.mainwin
-        i = toolbox.addItem(self, label)
+        i = toolbox.addItem(self, title)
         if icon:
             toolbox.setItemIcon(i, KIcon(icon))
         elif symbol:
@@ -68,7 +68,7 @@ class Lqi(UserShortcutClient, QWidget):
         if tooltip:
             toolbox.setItemToolTip(i, tooltip)
 
-    
+
 class Articulations(Lqi):
     """
     A toolbox item with articulations.
