@@ -1123,7 +1123,7 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
         return self.result.rowCount(parent)
 
 
-class ExpansionShortcuts(kateshell.app.UserShortcuts):
+class ExpansionShortcuts(kateshell.mainwindow.UserShortcutManager):
     """
     Manages shortcuts for the expand dialog.
     This is setup initially so that keyboard shortcuts for expansions
@@ -1140,7 +1140,7 @@ class ExpansionShortcuts(kateshell.app.UserShortcuts):
         return self.mainwin.expandManager()
 
 
-class CharSelectShortcuts(kateshell.app.UserShortcuts):
+class CharSelectShortcuts(kateshell.mainwindow.UserShortcutManager):
     """
     Manages shortcuts for the charselect dialog.
     """
@@ -1153,7 +1153,7 @@ class CharSelectShortcuts(kateshell.app.UserShortcuts):
         return self.mainwin.charSelectDialog()
 
 
-class QuickInsertShortcuts(kateshell.app.UserShortcuts):
+class QuickInsertShortcuts(kateshell.mainwindow.UserShortcutManager):
     """
     Manages shortcuts for the Quick Insert panel.
     """

@@ -25,7 +25,7 @@ from PyQt4.QtGui import (
     QTabBar, QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, KPluginLoader, KToolInvocation, KUrl, i18n
 from PyKDE4.kdeui import (
-    KAction, KActionMenu, KDialog, KEditToolBar, KHBox, KIcon, KMenu,
+    KAction, KActionCollection, KActionMenu, KDialog, KEditToolBar, KHBox, KIcon, KMenu,
     KMessageBox, KMultiTabBar, KShortcut, KShortcutsDialog, KShortcutsEditor,
     KStandardAction, KStandardGuiItem, KToggleFullScreenAction, KVBox)
 from PyKDE4.kparts import KParts
@@ -962,3 +962,195 @@ class KPartTool(Tool):
         """ Expects KUrl."""
         if self.part:
             self.part.openUrl(url)
+
+
+class UserShortcutManager(object):
+    """
+    Manages user-defined keyboard shortcuts.
+    Keyboard shortcuts can be loaded without loading the module they belong to.
+    If a shortcut is triggered, the module is loaded on demand and the action
+    triggered.
+
+    You should subclass this base class and implement the widget() and target()
+    methods.
+    """
+
+    # which config group to store our shortcuts
+    configGroup = "user shortcuts"
+    
+    # the shortcut type to use
+    shortcutContext = Qt.WidgetWithChildrenShortcut
+    
+    def __init__(self, mainwin):
+        self.mainwin = mainwin
+        self._collection = KActionCollection(self.widget())
+        self._collection.setConfigGroup(self.configGroup)
+        self._collection.addAssociatedWidget(self.widget())
+        # load the shortcuts
+        group = KGlobal.config().group(self.configGroup)
+        for key in group.keyList():
+            if group.readEntry(key, ""):
+                self.addAction(key)
+        self._collection.readSettings()
+    
+    def widget(self):
+        """
+        Should return the widget where the actions should be added to.
+        """
+        pass
+        
+    def target(self):
+        """
+        Should return the object that can further process our actions.
+        It should have the following methods:
+        - actionTriggered(name)
+        - populateAction(action)
+        """
+        pass
+        
+    def addAction(self, name):
+        """
+        (Internal) Create a new action with name name.
+        If existing, return the existing action.
+        """
+        action = self._collection.action(name)
+        if not action:
+            action = self._collection.addAction(name)
+            action.setShortcutContext(self.shortcutContext)
+            action.triggered.connect(lambda: self.actionTriggered(name))
+        return action
+    
+    def actionTriggered(self, name):
+        self.target().actionTriggered(name)
+
+    def shortcuts(self):
+        """
+        Returns the list of names we have non-empty shortcuts for.
+        """
+        return [action.objectName()
+            for action in self._collection.actions()
+            if not action.shortcut().isEmpty()]
+                
+    def shortcut(self, name):
+        """
+        Returns the shortcut for action, if existing.
+        """
+        action = self._collection.action(name)
+        if action:
+            if not action.shortcut().isEmpty():
+                return action.shortcut()
+            self.removeShortcut(name)
+    
+    def setShortcut(self, name, shortcut):
+        """
+        Sets the shortcut for the named action.
+        Creates an action if not existing.
+        Deletes the action if set to an empty key sequence.
+        """
+        if not shortcut.isEmpty():
+            action = self.addAction(name)
+            action.setShortcut(shortcut)
+            self._collection.writeSettings(None, True, action)
+        else:
+            self.removeShortcut(name)
+    
+    def removeShortcut(self, name):
+        """
+        Deletes the given action if existing.
+        """
+        action = self._collection.action(name)
+        if action:
+            sip.delete(action)
+            KGlobal.config().group(self.configGroup).deleteEntry(name)
+            
+    def actionCollection(self):
+        """
+        Returns the action collection, fully populated with texts and
+        icons.
+        """
+        for action in self._collection.actions()[:]:
+            if action.shortcut().isEmpty():
+                self.removeShortcut(action.objectName())
+            else:
+                self.target().populateAction(action)
+        return self._collection
+
+    def shakeHands(self, names):
+        """
+        Deletes all actions not in names, and returns a list of the names
+        we have valid actions for.
+        """
+        result = []
+        for action in self._collection.actions()[:]:
+            if action.objectName() not in names:
+                self.removeShortcut(action.objectName()) 
+            elif not action.shortcut().isEmpty():
+                result.append(action.objectName())
+        return result
+        
+
+class UserShortcutDispatcher(object):
+    """
+    Communicates with a UserShortcuts object to handle shortcuts for
+    different clients.
+    
+    Objects that wants to use this class can either mix it in or instantiate
+    it as an helper object.
+    
+    Clients register with a string name, and all the shortcut names for that
+    client get that name prepended.
+    
+    Clients need to provide almost the same two methods as when communicating
+    with a UserShortcuts object directly:
+    
+    - populateAction(name, action)      # instead of only the action
+    - actionTriggered(name)
+    """
+    def __init__(self, userShortcutManager):
+        self._shortcuts = userShortcutManager
+        self._clients = weakref.WeakValueDictionary()
+        
+    def registerClient(self, client, name):
+        self._clients[name] = client
+        
+    def populateAction(self, action):
+        """ Dispatch to the correct client. """
+        if ':' in action.objectName():
+            client, name = action.objectName().split(':')
+            if client in self._clients:
+                self._clients[client].populateAction(name, action)
+                
+    def actionTriggered(self, name):
+        """ Dispatch to the correct client. """
+        if ':' in name:
+            client, name = name.split(':')
+            if client in self._clients:
+                self._clients[client].actionTriggered(name)
+        
+
+class UserShortcutClient(object):
+    """
+    Base class for clients of a UserShortcutDispatcher.
+    """
+    def __init__(self, dispatcher, name):
+        self._name = name
+        self._shortcuts = dispatcher._shortcuts
+        dispatcher.registerClient(self, name)
+        
+    def setShortcut(self, name, shortcut):
+        self._shortcuts.setShortcut(self._name + ":" + name, seq)
+        
+    def shortcut(self, name):
+        return self._shortcuts.shortcut(self.name + ":" + name)
+        
+    def populateAction(self, name, action):
+        """
+        Must implement this to populate the action based on the given name.
+        """
+        pass
+    
+    def actionTriggered(self, name):
+        """
+        Must implement this to perform the action that belongs to name.
+        """
+        pass

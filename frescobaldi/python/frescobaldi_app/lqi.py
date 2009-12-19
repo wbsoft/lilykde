@@ -28,10 +28,11 @@ from PyKDE4.kdecore import i18n
 from PyKDE4.kdeui import KIcon, KHBox
 
 import ly.articulation
+from kateshell.mainwindow import UserShortcutDispatcher, UserShortcutClient
 from frescobaldi_app.mainapp import SymbolManager
 
 
-class QuickInsertPanel(SymbolManager, QToolBox):
+class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
     """
     The Quick Insert Panel manages its own actionCollection of shortcuts in
     the QuickInsertShortcuts instance of the mainwindow.
@@ -45,35 +46,19 @@ class QuickInsertPanel(SymbolManager, QToolBox):
     def __init__(self, tool):
         QToolBox.__init__(self)
         SymbolManager.__init__(self)
+        UserShortcutDispatcher.__init__(self, tool.mainwin.quickInsertShortcuts)
         self.mainwin = tool.mainwin
-        self.shortcuts = tool.mainwin.quickInsertShortcuts
-        self.tools = {}
         Articulations(self)
         self.setMinimumWidth(self.sizeHint().width())
-
-    def populateAction(self, action):
-        """ Dispatch to the correct tool. """
-        if ':' in action.objectName():
-            tool, name = action.objectName().split(':')
-            if tool in self.tools:
-                self.tools[tool].populateAction(name, action)
-                
-    def actionTriggered(self, name):
-        """ Dispatch to the correct tool. """
-        if ':' in name:
-            tool, name = name.split(':')
-            if tool in self.tools:
-                self.tools[tool].actionTriggered(name)
         
         
-class Lqi(QWidget):
+class Lqi(UserShortcutClient, QWidget):
     """ Abstract base class for LilyPond Quick Insert tools """
 
     def __init__(self, toolbox, name, label, icon="", symbol="", tooltip=""):
         QWidget.__init__(self, toolbox)
-        self.name = name
+        UserShortcutClient.__init__(self, toolbox, name)
         self.toolbox = toolbox
-        toolbox.tools[name] = self
         self.mainwin = toolbox.mainwin
         i = toolbox.addItem(self, label)
         if icon:
@@ -83,24 +68,6 @@ class Lqi(QWidget):
         if tooltip:
             toolbox.setItemToolTip(i, tooltip)
 
-    def setShortcut(self, name, shortcut):
-        self.toolbox.shortcuts.setShortcut(self.name + ":" + name, seq)
-        
-    def shortcut(self, name):
-        return self.toolbox.shortcuts.shortcut(self.name + ":" + name)
-        
-    def populateAction(self, name, action):
-        """
-        Must implement this to populate the action based on the given name.
-        """
-        pass
-    
-    def actionTriggered(self, name):
-        """
-        Must implement this to perform the action that belongs to name.
-        """
-        pass
-    
     
 class Articulations(Lqi):
     """
@@ -109,7 +76,7 @@ class Articulations(Lqi):
     If text (music) is selected, the articulation will be added to all notes.
     """
     def __init__(self, toolbox):
-        Lqi.__init__(self, toolbox, 'articulations',
+        Lqi.__init__(self, toolbox, 'articulation',
             i18n("Articulations"), symbol='articulation_prall',
             tooltip=i18n("Different kinds of articulations and other signs."))
             
@@ -136,13 +103,12 @@ class Articulations(Lqi):
         h.setToolTip(i18n("The direction to use for the articulations."))
         row += 1
 
-        self.titles = {}
+        self.titles = dict(ly.articulation.articulations(i18n))
         for title, group in ly.articulation.groups(i18n):
             layout.addWidget(QLabel('<u>{0}</u>:'.format(title)), row, 0, 1, cols)
             row += 1
             col = 0
             for sign, title in group:
-                self.titles[sign] = title
                 b = QToolButton(clicked=(lambda sign: lambda: self.writeSign(sign))(sign))
                 b.setAutoRaise(True)
                 # load and convert the icon to the default text color

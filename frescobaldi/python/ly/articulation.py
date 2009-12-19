@@ -78,3 +78,13 @@ def groups(i18nFunc=None):
             ('rtoe', i18n("Right toe")),
             )),
     )
+
+def articulations(i18nFunc=None):
+    """
+    Yields two-tuples (name, translated title) for all articulations,
+    usable to e.g. create a dict.
+    """
+    for title, group in groups(i18nFunc):
+        for articulation in group:
+            yield articulation
+
