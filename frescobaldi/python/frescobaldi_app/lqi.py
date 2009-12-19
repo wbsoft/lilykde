@@ -57,7 +57,7 @@ class Lqi(ShortcutDispatcherClient, QWidget):
 
     def __init__(self, toolbox, name, title, icon="", symbol="", tooltip=""):
         QWidget.__init__(self, toolbox)
-        UserShortcutClient.__init__(self, toolbox, name)
+        ShortcutDispatcherClient.__init__(self, toolbox, name)
         self.toolbox = toolbox
         self.mainwin = toolbox.mainwin
         i = toolbox.addItem(self, title)

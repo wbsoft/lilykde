@@ -22,14 +22,13 @@ Expand Manager, manages expansions.
 """
 import re
 
-from PyQt4.QtCore import QObject, QTimer, Qt, SIGNAL
+from PyQt4.QtCore import Qt
 from PyQt4.QtGui import (
-    QFont, QSplitter, QTextEdit, QTreeWidget, QTreeWidgetItem,
-    QVBoxLayout)
+    QFont, QSplitter, QTextEdit, QTreeWidget, QTreeWidgetItem, QVBoxLayout)
 
 from PyKDE4.kdecore import KConfig, KGlobal, i18n
 from PyKDE4.kdeui import (
-    KDialog, KKeySequenceWidget, KMessageBox, KShortcut, KStandardGuiItem,
+    KDialog, KKeySequenceWidget, KMessageBox, KStandardGuiItem,
     KTreeWidgetSearchLine, KVBox)
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -381,7 +380,7 @@ class ExpansionDialog(KDialog):
                 self.treeWidget.editItem(item, 1)
         elif column == 2:
             # User should not edit textual representation of shortcut
-            item.setText(2, self.shortcutText(item.text(0)))
+            item.setText(2, self.manager.shortcutText(item.text(0)))
     
     def editChanged(self):
         """ Marks our edit view as changed. """
@@ -398,7 +397,7 @@ class ExpansionDialog(KDialog):
         """ Called when the user has changed the keyboard shortcut. """
         item = self.currentItem()
         if item:
-            self.manager.keyApplyShortcut(self.key, item.text(0), seq)
+            self.manager.keySaveShortcut(self.key, item.text(0), seq)
             item.setText(2, seq.toString())
             self.updateShortcuts()
         
@@ -413,7 +412,7 @@ class ExpansionDialog(KDialog):
             if item.text(2) and item.text(0) not in names:
                 item.setText(2, '')
             elif item.text(0) in names:
-                item.setText(2, self.shortcutText(item.text(0)))
+                item.setText(2, self.manager.shortcutText(item.text(0)))
         item = self.currentItem()
         if item:
             self.manager.keyLoadShortcut(self.key, item.text(0))

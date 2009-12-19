@@ -37,18 +37,6 @@ class ShortcutClient(object):
     def __init__(self, userShortcutManager):
         self._shortcuts = userShortcutManager
         
-    def populateAction(self, name, action):
-        """
-        Must implement this to populate the action based on the given name.
-        """
-        pass
-    
-    def actionTriggered(self, name):
-        """
-        Must implement this to perform the action that belongs to name.
-        """
-        pass
-    
     def setShortcut(self, name, shortcut):
         self._shortcuts.setShortcut(name, shortcut)
         
@@ -75,7 +63,10 @@ class ShortcutClient(object):
         with blockSignals(keySequenceWidget) as w:
             w.setKeySequence(key and key.toList()[0] or QKeySequence())
 
-    def keyApplyShortcut(self, keySequenceWidget, name, keySequence = None):
+    def keySaveShortcut(self, keySequenceWidget, name, keySequence = None):
+        """
+        Stores the shortcut in the KKeySequenceWidget under 'name'.
+        """
         if keySequence is None:
             keySequence = keySequenceWidget.keySequence()
         keySequenceWidget.applyStealShortcut()
@@ -96,12 +87,23 @@ class ShortcutClient(object):
         key = KKeySequenceWidget()
         l.addWidget(key)
         self.keySetCheckActionCollections(key)
-        shortcut = self.shortcut(name)
+        self.keyLoadShortcut(key, name)
         key.setKeySequence(shortcut and shortcut.toList()[0] or QKeySequence())
         if dlg.exec_():
-            key.applyStealShortcut()
-            self.setShortcut(name, KShortcut(key.keySequence()))
+            self.keySaveShortcut(key, name)
 
+    def populateAction(self, name, action):
+        """
+        Must implement this to populate the action based on the given name.
+        """
+        pass
+    
+    def actionTriggered(self, name):
+        """
+        Must implement this to perform the action that belongs to name.
+        """
+        pass
+    
 
 class UserShortcutDispatcher(ShortcutClient):
     """

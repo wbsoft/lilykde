@@ -88,7 +88,7 @@ class Dialog(ShortcutClient, KDialog):
         self.keyLoadShortcut(self.keySelector, hex(ord(text)))
         
     def slotKeySequenceChanged(self, seq):
-        self.keyApplyShortcut(self.keySelector,
+        self.keySaveShortcut(self.keySelector,
             hex(ord(self.charSelect.currentChar())), seq)
         
     def show(self):
