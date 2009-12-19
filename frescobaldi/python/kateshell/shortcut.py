@@ -142,7 +142,7 @@ class UserShortcutDispatcher(ShortcutClient):
                 self._clients[client].actionTriggered(name)
 
 
-class UserShortcutClient(ShortcutClient):
+class ShortcutDispatcherClient(ShortcutClient):
     """
     Base class for clients of a UserShortcutDispatcher.
     """

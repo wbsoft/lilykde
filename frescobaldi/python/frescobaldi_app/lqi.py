@@ -28,7 +28,7 @@ from PyKDE4.kdecore import i18n
 from PyKDE4.kdeui import KIcon, KHBox
 
 import ly.articulation
-from kateshell.shortcut import UserShortcutDispatcher, UserShortcutClient
+from kateshell.shortcut import UserShortcutDispatcher, ShortcutDispatcherClient
 from frescobaldi_app.mainapp import SymbolManager
 
 
@@ -52,7 +52,7 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
         self.setMinimumWidth(self.sizeHint().width())
         
         
-class Lqi(UserShortcutClient, QWidget):
+class Lqi(ShortcutDispatcherClient, QWidget):
     """ Abstract base class for LilyPond Quick Insert tools """
 
     def __init__(self, toolbox, name, title, icon="", symbol="", tooltip=""):
