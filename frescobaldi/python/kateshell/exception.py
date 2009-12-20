@@ -37,7 +37,7 @@ class ExceptionDialog(KDialog):
         self.tbfull = ''.join(traceback.format_exception(exctype, excvalue, exctb))
         
         l = QVBoxLayout(self.mainWidget())
-        l.addWidget(QLabel("<b>{0}</b>".format(i18n(
+        l.addWidget(QLabel(u"<b>{0}</b>".format(i18n(
             "An internal error has occurred:"))))
         b = QTextBrowser()
         l.addWidget(b)
@@ -56,9 +56,9 @@ class ExceptionDialog(KDialog):
         self.accept()
         
         about = KGlobal.mainComponent().aboutData()
-        subject = "[{0} {1}] {2}".format(
+        subject = u"[{0} {1}] {2}".format(
             about.programName(), about.version(), self.tbshort)
-        body = "{0} {1}\n\n{2}\n{3}\n\n".format(
+        body = u"{0} {1}\n\n{2}\n{3}\n\n".format(
             about.programName(), about.version(), self.tbfull,
             i18n("Optionally describe what you were doing below:"))
         to = about.bugAddress()

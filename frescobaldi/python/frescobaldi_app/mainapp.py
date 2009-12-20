@@ -999,7 +999,7 @@ class LogTool(kateshell.mainwindow.Tool):
             key="Meta+Alt+L", dock=kateshell.mainwindow.Bottom,
             widget=QStackedWidget())
         self.logs = {}
-        self.widget.addWidget(QLabel("<center>({0})</center>".format(i18n("no log"))))
+        self.widget.addWidget(QLabel(u"<center>({0})</center>".format(i18n("no log"))))
         mainwin.currentDocumentChanged.connect(self.showLog)
         mainwin.app.documentClosed.connect(self.removeLog)
         self.widget.destroyed.connect(lambda: self.logs.clear())

@@ -563,7 +563,7 @@ class TabBar(KMultiTabBar):
         self.appendTab(tool.icon().pixmap(16), tool._id, tool.title())
         tab = self.tab(tool._id)
         tab.setFocusPolicy(Qt.NoFocus)
-        tab.setToolTip("<b>{0}</b><br/>{1}".format(tool.title(),
+        tab.setToolTip(u"<b>{0}</b><br/>{1}".format(tool.title(),
             i18n("Right-click for tab options")))
         tab.setContextMenuPolicy(Qt.CustomContextMenu)
         tab.clicked.connect(tool.toggle)
