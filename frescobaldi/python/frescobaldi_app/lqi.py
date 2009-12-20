@@ -21,11 +21,11 @@
 
 import re
 
-from PyQt4.QtCore import QSize
+from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QLabel, QToolBox, QToolButton, QWidget)
 from PyKDE4.kdecore import i18n
-from PyKDE4.kdeui import KIcon, KHBox
+from PyKDE4.kdeui import KIcon, KHBox, KMenu
 
 import ly.articulation
 from kateshell.shortcut import UserShortcutDispatcher, ShortcutDispatcherClient
@@ -110,11 +110,15 @@ class Articulations(Lqi):
             col = 0
             for sign, title in group:
                 b = QToolButton(clicked=(lambda sign: lambda: self.writeSign(sign))(sign))
+                b.setContextMenuPolicy(Qt.CustomContextMenu)
+                b.customContextMenuRequested.connect((lambda button, sign:
+                    lambda pos: self.showContextMenu(sign, button.mapToGlobal(pos)))
+                    (b, sign))
                 b.setAutoRaise(True)
                 # load and convert the icon to the default text color
                 toolbox.addSymbol(b, 'articulation_' + sign, 22)
                 b.setIconSize(QSize(22, 22))
-                b.setToolTip('{0} (\\{1})'.format(title, sign))
+                b.setToolTip('<b>{0}</b> (\\{1})'.format(title, sign))
                 layout.addWidget(b, row, col)
                 col += 1
                 if col >= cols:
@@ -145,6 +149,20 @@ class Articulations(Lqi):
         doc = self.mainwin.currentDocument()
         doc.manipulator().addArticulation(art)
         doc.view.setFocus()
+    
+    def showContextMenu(self, name, pos):
+        menu = KMenu(self.mainwin)
+        menu.aboutToHide.connect(menu.deleteLater)
+        a = menu.addAction(KIcon("accessories-character-map"),
+            i18n("Configure Keyboard Shortcut (%1)", self.shortcutText(name) or i18n("None")))
+        a.triggered.connect(lambda: self.editShortcut(name))
+        menu.popup(pos)
+        
+    def editShortcut(self, name):
+        title = self.titles[name]
+        icon = self.toolbox.symbolIcon('articulation_' + name, 22)
+        super(Articulations, self).editShortcut(name, title, icon)
+        self.mainwin.currentDocument().view.setFocus()
         
     def actionTriggered(self, name):
         self.writeSign(name)

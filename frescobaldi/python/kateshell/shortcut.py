@@ -26,7 +26,7 @@ In separate module so this can be lazy-loaded on demand.
 
 import weakref
 
-from PyQt4.QtGui import QKeySequence, QLabel, QVBoxLayout
+from PyQt4.QtGui import QGridLayout, QKeySequence, QLabel
 from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KKeySequenceWidget, KShortcut
 
@@ -72,8 +72,8 @@ class ShortcutClient(ShortcutClientBase):
         """
         Returns the shortcut for action, if existing.
         """
-        name = self.resolveName(name)
-        action = self._collection.action(name)
+        resolvedName = self.resolveName(name)
+        action = self._collection.action(resolvedName)
         if action:
             if not action.shortcut().isEmpty():
                 return action.shortcut()
@@ -85,9 +85,9 @@ class ShortcutClient(ShortcutClientBase):
         Creates an action if not existing.
         Deletes the action if set to an empty key sequence.
         """
-        name = self.resolveName(name)
+        resolvedName = self.resolveName(name)
         if not shortcut.isEmpty():
-            action = self._manager.addAction(name)
+            action = self._manager.addAction(resolvedName)
             action.setShortcut(shortcut)
             self._collection.writeSettings(None, True, action)
         else:
@@ -97,11 +97,11 @@ class ShortcutClient(ShortcutClientBase):
         """
         Deletes the given action if existing.
         """
-        name = self.resolveName(name)
-        action = self._collection.action(name)
+        resolvedName = self.resolveName(name)
+        action = self._collection.action(resolvedName)
         if action:
             action.deleteLater()
-            KGlobal.config().group(self._manager.configGroup).deleteEntry(name)
+            KGlobal.config().group(self._manager.configGroup).deleteEntry(resolvedName)
     
     def shortcuts(self):
         """
@@ -158,13 +158,18 @@ class ShortcutClient(ShortcutClientBase):
         The title argument should contain a description for this action.
         """
         dlg = KDialog(self._manager.mainwin)
-        dlg.setCaption(i18n("Configure keyboard shortcut"))
+        dlg.setCaption(i18n("Configure Keyboard Shortcut"))
         dlg.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel))
-        l = QVBoxLayout(dlg.mainWidget())
+        l = QGridLayout(dlg.mainWidget())
+        l.setHorizontalSpacing(12)
+        if icon:
+            pic = QLabel()
+            pic.setPixmap(icon.pixmap(22))
+            l.addWidget(pic, 0, 0)
         l.addWidget(QLabel("<p>{0}<br /><b>{1}</b></p>".format(
-            i18n("Press the button to configure the keyboard shortcut for:"), title)))
+            i18n("Press the button to configure the keyboard shortcut for:"), title)), 0, 1)
         key = KKeySequenceWidget()
-        l.addWidget(key)
+        l.addWidget(key, 1, 1)
         self.keySetCheckActionCollections(key)
         self.keyLoadShortcut(key, name)
         if dlg.exec_():

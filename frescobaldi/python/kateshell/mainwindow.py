@@ -1032,7 +1032,7 @@ class UserShortcutManager(object):
         """
         for action in self._collection.actions()[:]:
             if action.shortcut().isEmpty():
-                self.removeShortcut(action.objectName())
+                sip.delete(action)
             else:
                 self.client().populateAction(action.objectName(), action)
         return self._collection
