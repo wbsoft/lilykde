@@ -20,9 +20,11 @@
 """
 Helper classes for communication with UserShortcutManager (in mainwindow.py)
 and general user shortcut stuff.
+
+In separate module so this can be lazy-loaded on demand.
 """
 
-import sip, weakref
+import weakref
 
 from PyQt4.QtGui import QKeySequence, QLabel, QVBoxLayout
 from PyKDE4.kdecore import KGlobal, i18n
@@ -31,7 +33,7 @@ from PyKDE4.kdeui import KDialog, KKeySequenceWidget, KShortcut
 from kateshell.app import blockSignals
 
 
-class ShortcutClient(object):
+class ShortcutClientBase(object):
     """
     Abstract base class for objects that need to manage shortcuts.
     """
@@ -39,6 +41,23 @@ class ShortcutClient(object):
         self._manager = userShortcutManager
         self._collection = userShortcutManager._collection
     
+    def populateAction(self, name, action):
+        """
+        Must implement this to populate the action based on the given name.
+        """
+        pass
+    
+    def actionTriggered(self, name):
+        """
+        Must implement this to perform the action that belongs to name.
+        """
+        pass
+
+
+class ShortcutClient(ShortcutClientBase):
+    """
+    Base class for objects that need to manage shortcuts.
+    """
     def resolveName(self, name):
         return name
         
@@ -81,7 +100,7 @@ class ShortcutClient(object):
         name = self.resolveName(name)
         action = self._collection.action(name)
         if action:
-            sip.delete(action)
+            action.deleteLater()
             KGlobal.config().group(self._manager.configGroup).deleteEntry(name)
     
     def shortcuts(self):
@@ -151,20 +170,8 @@ class ShortcutClient(object):
         if dlg.exec_():
             self.keySaveShortcut(key, name)
 
-    def populateAction(self, name, action):
-        """
-        Must implement this to populate the action based on the given name.
-        """
-        pass
-    
-    def actionTriggered(self, name):
-        """
-        Must implement this to perform the action that belongs to name.
-        """
-        pass
-    
 
-class UserShortcutDispatcher(ShortcutClient):
+class UserShortcutDispatcher(ShortcutClientBase):
     """
     Communicates with a UserShortcuts object to handle shortcuts for
     different clients.
@@ -174,15 +181,9 @@ class UserShortcutDispatcher(ShortcutClient):
     
     Clients register with a string name, and all the shortcut names for that
     client get that name prepended.
-    
-    Clients need to provide almost the same two methods as when communicating
-    with a UserShortcuts object directly:
-    
-    - populateAction(name, action)      # instead of only the action
-    - actionTriggered(name)
     """
     def __init__(self, userShortcutManager):
-        ShortcutClient.__init__(self, userShortcutManager)
+        self._manager = userShortcutManager
         self._clients = weakref.WeakValueDictionary()
         
     def registerClient(self, client, name):
@@ -208,8 +209,9 @@ class ShortcutDispatcherClient(ShortcutClient):
     Base class for clients of a UserShortcutDispatcher.
     """
     def __init__(self, dispatcher, name):
-        self._name = name
+        ShortcutClient.__init__(self, dispatcher._manager)
         dispatcher.registerClient(self, name)
+        self._name = name
         
     def resolveName(self, name):
         return self._name + ":" + name

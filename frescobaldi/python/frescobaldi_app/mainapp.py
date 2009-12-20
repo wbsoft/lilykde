@@ -1136,7 +1136,7 @@ class ExpansionShortcuts(kateshell.mainwindow.UserShortcutManager):
     def widget(self):
         return self.mainwin.viewStack # where the text editor views are.
         
-    def target(self):
+    def client(self):
         return self.mainwin.expandManager()
 
 
@@ -1149,7 +1149,7 @@ class CharSelectShortcuts(kateshell.mainwindow.UserShortcutManager):
     def widget(self):
         return self.mainwin.viewStack # where the text editor views are.
         
-    def target(self):
+    def client(self):
         return self.mainwin.charSelectDialog()
 
 
@@ -1162,7 +1162,7 @@ class QuickInsertShortcuts(kateshell.mainwindow.UserShortcutManager):
     def widget(self):
         return self.mainwin.viewStack
         
-    def target(self):
+    def client(self):
         tool = self.mainwin.tools["quickinsert"]
         tool.materialize()
         return tool.widget

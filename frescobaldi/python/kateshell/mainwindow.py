@@ -973,7 +973,7 @@ class UserShortcutManager(object):
     If a shortcut is triggered, the module is loaded on demand and the action
     triggered.
 
-    You should subclass this base class and implement the widget() and target()
+    You should subclass this base class and implement the widget() and client()
     methods.
     """
 
@@ -1001,11 +1001,11 @@ class UserShortcutManager(object):
         """
         pass
         
-    def target(self):
+    def client(self):
         """
         Should return the object that can further process our actions.
         
-        Most times this will be a kateshell.shortcut.ShortcutClient instance.
+        Most times this will be a kateshell.shortcut.ShortcutClientBase instance.
         
         It should have the following methods:
         - actionTriggered(name)
@@ -1022,7 +1022,7 @@ class UserShortcutManager(object):
         if not action:
             action = self._collection.addAction(name)
             action.setShortcutContext(self.shortcutContext)
-            action.triggered.connect(lambda: self.target().actionTriggered(name))
+            action.triggered.connect(lambda: self.client().actionTriggered(name))
         return action
     
     def actionCollection(self):
@@ -1034,7 +1034,7 @@ class UserShortcutManager(object):
             if action.shortcut().isEmpty():
                 self.removeShortcut(action.objectName())
             else:
-                self.target().populateAction(action.objectName(), action)
+                self.client().populateAction(action.objectName(), action)
         return self._collection
 
 
