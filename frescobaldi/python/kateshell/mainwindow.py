@@ -1004,9 +1004,12 @@ class UserShortcutManager(object):
     def target(self):
         """
         Should return the object that can further process our actions.
+        
+        Most times this will be a kateshell.shortcut.ShortcutClient instance.
+        
         It should have the following methods:
         - actionTriggered(name)
-        - populateAction(action)
+        - populateAction(name, action)
         """
         pass
         
@@ -1019,52 +1022,9 @@ class UserShortcutManager(object):
         if not action:
             action = self._collection.addAction(name)
             action.setShortcutContext(self.shortcutContext)
-            action.triggered.connect(lambda: self.actionTriggered(name))
+            action.triggered.connect(lambda: self.target().actionTriggered(name))
         return action
     
-    def actionTriggered(self, name):
-        self.target().actionTriggered(name)
-
-    def shortcuts(self):
-        """
-        Returns the list of names we have non-empty shortcuts for.
-        """
-        return [action.objectName()
-            for action in self._collection.actions()
-            if not action.shortcut().isEmpty()]
-                
-    def shortcut(self, name):
-        """
-        Returns the shortcut for action, if existing.
-        """
-        action = self._collection.action(name)
-        if action:
-            if not action.shortcut().isEmpty():
-                return action.shortcut()
-            self.removeShortcut(name)
-    
-    def setShortcut(self, name, shortcut):
-        """
-        Sets the shortcut for the named action.
-        Creates an action if not existing.
-        Deletes the action if set to an empty key sequence.
-        """
-        if not shortcut.isEmpty():
-            action = self.addAction(name)
-            action.setShortcut(shortcut)
-            self._collection.writeSettings(None, True, action)
-        else:
-            self.removeShortcut(name)
-    
-    def removeShortcut(self, name):
-        """
-        Deletes the given action if existing.
-        """
-        action = self._collection.action(name)
-        if action:
-            sip.delete(action)
-            KGlobal.config().group(self.configGroup).deleteEntry(name)
-            
     def actionCollection(self):
         """
         Returns the action collection, fully populated with texts and
@@ -1074,20 +1034,7 @@ class UserShortcutManager(object):
             if action.shortcut().isEmpty():
                 self.removeShortcut(action.objectName())
             else:
-                self.target().populateAction(action)
+                self.target().populateAction(action.objectName(), action)
         return self._collection
 
-    def shakeHands(self, names):
-        """
-        Deletes all actions not in names, and returns a list of the names
-        we have valid actions for.
-        """
-        result = []
-        for action in self._collection.actions()[:]:
-            if action.objectName() not in names:
-                self.removeShortcut(action.objectName()) 
-            elif not action.shortcut().isEmpty():
-                result.append(action.objectName())
-        return result
-        
 

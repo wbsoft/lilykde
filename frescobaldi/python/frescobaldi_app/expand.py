@@ -42,17 +42,16 @@ from frescobaldi_app.highlight import LilyPondHighlighter
 class ExpandManager(ShortcutClient):
     def __init__(self, mainwin):
         self.mainwin = mainwin
-        self.shortcuts = mainwin.expansionShortcuts
-        ShortcutClient.__init__(self, self.shortcuts)
+        ShortcutClient.__init__(self, mainwin.expansionShortcuts)
         self.expansions = KConfig("expansions", KConfig.NoGlobals, "appdata")
         # delete shortcut actions that do not exist here anymore
-        mainwin.expansionShortcuts.shakeHands(self.expansionsList())
+        self.shakeHands(self.expansionsList())
         
     def actionTriggered(self, name):
         return self.doExpand(name)
         
-    def populateAction(self, action):
-        action.setText(self.description(action.objectName()))
+    def populateAction(self, name, action):
+        action.setText(self.description(name))
         
     def expand(self):
         """
@@ -225,8 +224,7 @@ class ExpansionDialog(KDialog):
         
         # load the expansions
         for name in sorted(self.manager.expansionsList()):
-            self.createItem(name, self.manager.description(name),
-            self.manager.shortcuts.shortcut(name))
+            self.createItem(name, self.manager.description(name))
 
         tree.sortByColumn(1, Qt.AscendingOrder)
         tree.setSortingEnabled(True)
@@ -240,15 +238,14 @@ class ExpansionDialog(KDialog):
         tree.itemChanged.connect(self.itemChanged, Qt.QueuedConnection)
         key.keySequenceChanged.connect(self.keySequenceChanged)
     
-    def createItem(self, name, description, key=None):
-        """ Create a new item, if key is given it should be a KShortcut. """
+    def createItem(self, name, description):
+        """ Create a new item. """
         item = QTreeWidgetItem(self.treeWidget)
         item.groupName = name
         item.setFont(0, QFont("monospace"))
         item.setText(0, name)
         item.setText(1, description)
-        if key:
-            item.setText(2, key.toList()[0].toString())
+        item.setText(2, self.manager.shortcutText(name))
         item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
         return item
     
@@ -288,7 +285,7 @@ class ExpansionDialog(KDialog):
             index = self.treeWidget.indexOfTopLevelItem(item)
             setIndex = index + 1 < self.treeWidget.topLevelItemCount()
             self.manager.expansions.deleteGroup(item.groupName)
-            self.manager.shortcuts.removeShortcut(item.groupName)
+            self.manager.removeShortcut(item.groupName)
             self.treeWidget.takeTopLevelItem(index)
             if setIndex:
                 self.setCurrentItem(self.treeWidget.topLevelItem(index))
@@ -361,10 +358,9 @@ class ExpansionDialog(KDialog):
                 group.writeEntry("Text", self.manager.expansions.group(old).readEntry("Text", ""))
                 self.manager.expansions.deleteGroup(old)
                 # move the shortcut
-                s = self.manager.shortcuts
-                if s.shortcut(old):
-                    s.setShortcut(new, s.shortcut(old))
-                s.removeShortcut(old)
+                if self.manager.shortcut(old):
+                    self.manager.setShortcut(new, self.manager.shortcut(old))
+                self.manager.removeShortcut(old)
                 item.groupName = item.text(0)
                 self.treeWidget.scrollToItem(item)
         elif column == 1:
@@ -407,7 +403,7 @@ class ExpansionDialog(KDialog):
         keyboard shortcut dialogs.  And initialize the shortcut button to
         check for collisions.
         """
-        names = self.manager.shortcuts.shortcuts()
+        names = self.manager.shortcuts()
         for item in self.items():
             if item.text(2) and item.text(0) not in names:
                 item.setText(2, '')

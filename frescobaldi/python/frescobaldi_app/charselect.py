@@ -77,8 +77,8 @@ class Dialog(ShortcutClient, KDialog):
         c.writeEntry("font", self.charSelect.currentFont())
         c.writeEntry("char", ord(self.charSelect.currentChar()))
 
-    def populateAction(self, action):
-        action.setText(unicodedata.name(unichr(int(action.objectName(), 16)),
+    def populateAction(self, name, action):
+        action.setText(unicodedata.name(unichr(int(name, 16)),
             i18n("unknown")).title())
         
     def actionTriggered(self, name):

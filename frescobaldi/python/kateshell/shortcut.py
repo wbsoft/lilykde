@@ -30,19 +30,81 @@ from PyKDE4.kdeui import KDialog, KKeySequenceWidget, KShortcut
 
 from kateshell.app import blockSignals
 
+
 class ShortcutClient(object):
     """
-    Abstract base class (not obligate) for objects that need to manage shortcuts.
+    Abstract base class for objects that need to manage shortcuts.
     """
     def __init__(self, userShortcutManager):
-        self._shortcuts = userShortcutManager
-        
-    def setShortcut(self, name, shortcut):
-        self._shortcuts.setShortcut(name, shortcut)
-        
-    def shortcut(self, name):
-        return self._shortcuts.shortcut(name)
+        self._mainwin = userShortcutManager.mainwin
+        self._collection = userShortcutManager._collection
     
+    def resolveName(self, name):
+        return name
+        
+    def shortcutActions(self):
+        """
+        Yields two-tuples(name, action) for all our actions.
+        """
+        for action in self._collection.actions()[:]: # copy
+            yield action.objectName(), action
+
+    def shortcut(self, name):
+        """
+        Returns the shortcut for action, if existing.
+        """
+        name = self.resolveName(name)
+        action = self._collection.action(name)
+        if action:
+            if not action.shortcut().isEmpty():
+                return action.shortcut()
+            self.removeShortcut(name)
+    
+    def setShortcut(self, name, shortcut):
+        """
+        Sets the shortcut for the named action.
+        Creates an action if not existing.
+        Deletes the action if set to an empty key sequence.
+        """
+        name = self.resolveName(name)
+        if not shortcut.isEmpty():
+            action = self.addAction(name)
+            action.setShortcut(shortcut)
+            self._collection.writeSettings(None, True, action)
+        else:
+            self.removeShortcut(name)
+    
+    def removeShortcut(self, name):
+        """
+        Deletes the given action if existing.
+        """
+        name = self.resolveName(name)
+        action = self._collection.action(name)
+        if action:
+            sip.delete(action)
+            KGlobal.config().group(self.configGroup).deleteEntry(name)
+    
+    def shortcuts(self):
+        """
+        Returns the list of names we have non-empty shortcuts for.
+        """
+        return [name
+            for name, action in self.shortcutActions()
+            if not action.shortcut().isEmpty()]
+                
+    def shakeHands(self, names):
+        """
+        Deletes all actions not in names, and returns a list of the names
+        we have valid actions for.
+        """
+        result = []
+        for name, action in self.shortcutActions():
+            if name not in names:
+                self.removeShortcut(name) 
+            elif not action.shortcut().isEmpty():
+                result.append(name)
+        return result
+        
     def shortcutText(self, name):
         """
         Returns the shortcut keys as a readable string, e.g. "Ctrl+Alt+D"
@@ -51,9 +113,8 @@ class ShortcutClient(object):
         return key and key.toList()[0].toString() or ''
         
     def keySetCheckActionCollections(self, keySequenceWidget):
-        mainwin = self._shortcuts.mainwin
         keySequenceWidget.setCheckActionCollections(
-            [coll for name, coll in mainwin.allActionCollections()])
+            [coll for name, coll in self._mainwin.allActionCollections()])
     
     def keyLoadShortcut(self, keySequenceWidget, name):
         """
@@ -77,8 +138,7 @@ class ShortcutClient(object):
         Shows a dialog to set a keyboard shortcut for a name (string).
         The title argument should contain a description for this action.
         """
-        mainwin = self._shortcuts.mainwin
-        dlg = KDialog(mainwin)
+        dlg = KDialog(self._mainwin)
         dlg.setCaption(i18n("Configure keyboard shortcut"))
         dlg.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel))
         l = QVBoxLayout(dlg.mainWidget())
@@ -88,7 +148,6 @@ class ShortcutClient(object):
         l.addWidget(key)
         self.keySetCheckActionCollections(key)
         self.keyLoadShortcut(key, name)
-        key.setKeySequence(shortcut and shortcut.toList()[0] or QKeySequence())
         if dlg.exec_():
             self.keySaveShortcut(key, name)
 
@@ -129,10 +188,10 @@ class UserShortcutDispatcher(ShortcutClient):
     def registerClient(self, client, name):
         self._clients[name] = client
         
-    def populateAction(self, action):
+    def populateAction(self, name, action):
         """ Dispatch to the correct client. """
-        if ':' in action.objectName():
-            client, name = action.objectName().split(':')
+        if ':' in name:
+            client, name = name.split(':')
             if client in self._clients:
                 self._clients[client].populateAction(name, action)
                 
@@ -150,15 +209,19 @@ class ShortcutDispatcherClient(ShortcutClient):
     """
     def __init__(self, dispatcher, name):
         self._name = name
-        self._shortcuts = dispatcher._shortcuts
         dispatcher.registerClient(self, name)
         
-    def setShortcut(self, name, shortcut):
-        self._shortcuts.setShortcut(self._name + ":" + name, shortcut)
+    def resolveName(self, name):
+        return self._name + ":" + name
         
-    def shortcut(self, name):
-        return self._shortcuts.shortcut(self._name + ":" + name)
-        
+    def shortcutActions(self):
+        """
+        Yields two-tuples(name, action) for all our actions.
+        """
+        for action in self._collection.actions()[:]: # copy
+            if action.objectName().startswith(self._name + ":"):
+                yield action.objectName().split(":", 1)[1], action
+
     def populateAction(self, name, action):
         """
         Must implement this to populate the action based on the given name.
@@ -170,5 +233,4 @@ class ShortcutDispatcherClient(ShortcutClient):
         Must implement this to perform the action that belongs to name.
         """
         pass
-
 
