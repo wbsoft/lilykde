@@ -22,10 +22,10 @@ Helper classes for communication with UserShortcutManager (in mainwindow.py)
 and general user shortcut stuff.
 """
 
-import weakref
+import sip, weakref
 
 from PyQt4.QtGui import QKeySequence, QLabel, QVBoxLayout
-from PyKDE4.kdecore import i18n
+from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KKeySequenceWidget, KShortcut
 
 from kateshell.app import blockSignals
@@ -36,7 +36,7 @@ class ShortcutClient(object):
     Abstract base class for objects that need to manage shortcuts.
     """
     def __init__(self, userShortcutManager):
-        self._mainwin = userShortcutManager.mainwin
+        self._manager = userShortcutManager
         self._collection = userShortcutManager._collection
     
     def resolveName(self, name):
@@ -68,7 +68,7 @@ class ShortcutClient(object):
         """
         name = self.resolveName(name)
         if not shortcut.isEmpty():
-            action = self.addAction(name)
+            action = self._manager.addAction(name)
             action.setShortcut(shortcut)
             self._collection.writeSettings(None, True, action)
         else:
@@ -82,7 +82,7 @@ class ShortcutClient(object):
         action = self._collection.action(name)
         if action:
             sip.delete(action)
-            KGlobal.config().group(self.configGroup).deleteEntry(name)
+            KGlobal.config().group(self._manager.configGroup).deleteEntry(name)
     
     def shortcuts(self):
         """
@@ -114,7 +114,7 @@ class ShortcutClient(object):
         
     def keySetCheckActionCollections(self, keySequenceWidget):
         keySequenceWidget.setCheckActionCollections(
-            [coll for name, coll in self._mainwin.allActionCollections()])
+            [coll for name, coll in self._manager.mainwin.allActionCollections()])
     
     def keyLoadShortcut(self, keySequenceWidget, name):
         """
@@ -138,7 +138,7 @@ class ShortcutClient(object):
         Shows a dialog to set a keyboard shortcut for a name (string).
         The title argument should contain a description for this action.
         """
-        dlg = KDialog(self._mainwin)
+        dlg = KDialog(self._manager.mainwin)
         dlg.setCaption(i18n("Configure keyboard shortcut"))
         dlg.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel))
         l = QVBoxLayout(dlg.mainWidget())
@@ -191,14 +191,14 @@ class UserShortcutDispatcher(ShortcutClient):
     def populateAction(self, name, action):
         """ Dispatch to the correct client. """
         if ':' in name:
-            client, name = name.split(':')
+            client, name = name.split(':', 1)
             if client in self._clients:
                 self._clients[client].populateAction(name, action)
                 
     def actionTriggered(self, name):
         """ Dispatch to the correct client. """
         if ':' in name:
-            client, name = name.split(':')
+            client, name = name.split(':', 1)
             if client in self._clients:
                 self._clients[client].actionTriggered(name)
 
@@ -222,15 +222,4 @@ class ShortcutDispatcherClient(ShortcutClient):
             if action.objectName().startswith(self._name + ":"):
                 yield action.objectName().split(":", 1)[1], action
 
-    def populateAction(self, name, action):
-        """
-        Must implement this to populate the action based on the given name.
-        """
-        pass
-    
-    def actionTriggered(self, name):
-        """
-        Must implement this to perform the action that belongs to name.
-        """
-        pass
 
