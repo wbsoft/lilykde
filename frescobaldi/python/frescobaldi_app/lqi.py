@@ -170,3 +170,6 @@ class Articulations(Lqi):
     def populateAction(self, name, action):
         if name in self.titles:
             action.setText(self.titles[name])
+            self.toolbox.addSymbol(action, 'articulation_' + name)
+
+

@@ -78,8 +78,9 @@ class Dialog(ShortcutClient, KDialog):
         c.writeEntry("char", ord(self.charSelect.currentChar()))
 
     def populateAction(self, name, action):
-        action.setText(unicodedata.name(unichr(int(name, 16)),
-            i18n("unknown")).title())
+        char = unichr(int(name, 16))
+        action.setText(u"{0} ({1})".format(
+            unicodedata.name(char, i18n("unknown")).title(), char))
         
     def actionTriggered(self, name):
         self.insertText(unichr(int(name, 16)))
