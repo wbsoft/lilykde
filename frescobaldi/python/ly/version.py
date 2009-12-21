@@ -29,20 +29,6 @@ from subprocess import Popen, PIPE, STDOUT
 
 import ly.rx
 
-# global cache of LilyPond instances (prevents loading each time again)
-_cache = {}
-
-
-def LilyPondInstance(command='lilypond', cache=True):
-    """
-    Returns a LilyPondInstance() for the given lilypond command.
-    By default caches the instances for quick return next time.
-    """
-    if not (cache and command in _cache):
-        _cache[command] = _LilyPondInstance(command)
-    return _cache[command]
-
-
 def getVersion(text):
     """
     Determine the version of a LilyPond document.
@@ -106,7 +92,7 @@ class Version(tuple):
             return cls(*map(lambda g: int(g) if g else None, match.groups()))
 
             
-class _LilyPondInstance(object):
+class LilyPondInstance(object):
     """
     Contains information about a LilyPond instance, referred to by a command
     string defaulting to 'lilypond'.
@@ -115,8 +101,17 @@ class _LilyPondInstance(object):
     # name of the convert-ly command
     convert_ly_name = 'convert-ly'
     
-    def __init__(self, command='lilypond'):
-        self._command = command
+    def __new__(cls, command='lilypond', cache=True):
+        """
+        Return a cached instance if available and cache == True.
+        """
+        if '_cache' not in cls.__dict__:
+            cls._cache = {}
+        elif cache and command in cls._cache:
+            return cls._cache[command]
+        obj = cls._cache[command] = object.__new__(cls)
+        obj._command = command
+        return obj
     
     @cacheresult
     def command(self):
