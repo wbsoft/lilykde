@@ -17,6 +17,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
+from __future__ import unicode_literals
+
 r"""
 LilyPond DOM
 
@@ -304,9 +306,9 @@ class Printer(object):
         
     def quoteString(self, text):
         if self.typographicalQuotes:
-            text = re.sub(r'"(.*?)"', u'\u201C\\1\u201D', text)
-            text = re.sub(r"'(.*?)'", u'\u2018\\1\u2019', text)
-            text = text.replace("'", u'\u2018')
+            text = re.sub(r'"(.*?)"', '\u201C\\1\u201D', text)
+            text = re.sub(r"'(.*?)'", '\u2018\\1\u2019', text)
+            text = text.replace("'", '\u2018')
         # escape regular double quotes
         text = text.replace('"', '\\"')
         # quote the string

@@ -17,6 +17,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
+from __future__ import unicode_literals
+
 """
 Preview dialog for the Score Wizard (scorewiz/__init__.py).
 In separate file to ease maintenance.

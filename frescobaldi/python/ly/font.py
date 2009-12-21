@@ -17,6 +17,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
+from __future__ import unicode_literals
+
 """ Routines dealing with LilyPond fonts """
 
 import os, ly, xml.dom.minidom
@@ -37,7 +39,7 @@ class SvgFontInfo(object):
         doc.unlink()
         
     def glyph(self, glyphName):
-        return self.name2unicode.get(glyphName, u'')
+        return self.name2unicode.get(glyphName, '')
         
     def glyphs(self):
         return self.name2unicode.keys()

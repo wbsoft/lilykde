@@ -17,6 +17,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
+from __future__ import unicode_literals
+
 """
 Advanced manipulations on LilyPond documents.
 """
@@ -484,17 +486,17 @@ class DocumentManipulator(object):
         """
         selection = self.doc.selectionText()
         if selection:
-            repl = double and u'\u201C{0}\u201D' or u'\u2018{0}\u2019'
+            repl = double and '\u201C{0}\u201D' or '\u2018{0}\u2019'
             self.doc.replaceSelectionWith(repl.format(selection), keepSelection=False)
         else:
             cursor = self.doc.view.cursorPosition()
             line, col = cursor.line(), cursor.column()
             right = col > 0 and self.doc.line(line)[col-1] not in '" \t'
             self.doc.view.insertText({
-                (False, False): u'\u2018',     # LEFT SINGLE QUOTATION MARK
-                (False, True ): u'\u2019',     # RIGHT SINGLE QUOTATION MARK
-                (True,  False): u'\u201C',     # LEFT DOUBLE QUOTATION MARK
-                (True,  True ): u'\u201D',     # RIGHT DOUBLE QUOTATION MARK
+                (False, False): '\u2018',     # LEFT SINGLE QUOTATION MARK
+                (False, True ): '\u2019',     # RIGHT SINGLE QUOTATION MARK
+                (True,  False): '\u201C',     # LEFT DOUBLE QUOTATION MARK
+                (True,  True ): '\u201D',     # RIGHT DOUBLE QUOTATION MARK
                 }[(double, right)])
 
     def insertBarLine(self, bar):

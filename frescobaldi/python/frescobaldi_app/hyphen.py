@@ -17,6 +17,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
+from __future__ import unicode_literals
+
 """ Hyphenator functionality for Frescobaldi """
 
 import locale, os, re
@@ -89,7 +91,7 @@ def findDicts():
         for i in lang, lang.split('_')[0]:
             name = KGlobal.locale().languageCodeToName(i)
             if name:
-                name = u'{0} ({1})'.format(name, lang)
+                name = '{0} ({1})'.format(name, lang)
                 hyphdicts[name] = dic
                 # set current locale as default
                 if lang == language:

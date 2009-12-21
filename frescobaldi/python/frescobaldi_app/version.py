@@ -17,6 +17,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
+from __future__ import unicode_literals
+
 """ Functions to run convert-ly and insert the LilyPond version """
 
 from subprocess import Popen, PIPE
@@ -96,7 +98,7 @@ def convertLy(mainwin):
                 stdin=PIPE, stdout=PIPE, stderr=PIPE
                 ).communicate(text.encode('utf8'))
             if out:
-                doc.setText(u"{0}\n\n%{{\n{1}\n%}}\n".format(out.decode('utf8'), err.decode('utf8')))
+                doc.setText("{0}\n\n%{{\n{1}\n%}}\n".format(out.decode('utf8'), err.decode('utf8')))
                 KMessageBox.information(mainwin, i18n(
                  "The document has been processed with convert-ly. You'll find "
                  "the messages of convert-ly in a comment block at the end. "

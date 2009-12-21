@@ -17,6 +17,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # See http://www.gnu.org/licenses/ for more information.
 
+from __future__ import unicode_literals
+
 import os, re, sip, sys, time, weakref
 from contextlib import contextmanager
 from functools import wraps
@@ -81,7 +83,7 @@ class DBusItem(dbus.service.Object):
             path = '/' + self.__class__.__name__
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(self.serviceName, bus)
-        dbus.service.Object.__init__(self, bus_name, path)
+        dbus.service.Object.__init__(self, bus_name, bytes(path))
 
 
 class MainApp(DBusItem):

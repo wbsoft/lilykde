@@ -14,9 +14,11 @@ info@wilbertberendsen.nl
 License: LGPL. More info: http://python-hyphenator.googlecode.com/
 
 """
+from __future__ import unicode_literals
 
 import sys
 import re
+
 
 __all__ = ("Hyphenator",)
 
