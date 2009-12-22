@@ -4,12 +4,6 @@ Changes in 1.1.0 --
   ability to assign keyboard shortcuts to often used characters.
 * Quick Insert Panel:
   - It is now possible to assign keyboard shortcuts to the articulation buttons
-  - If cursor is inside a chord, note or rest, the cursor is positioned right
-    after the chord, note or rest before the articulation is inserted (if there
-    is no selection, in which case the articulation is inserted after all
-    chords, notes or rests). So now you can click a note in the PDF and directly
-    click a button to add an articulation or ornament etc. without repositioning
-    the cursor manually.
 
 Changes in 1.0.0 -- 
 
@@ -27,6 +21,13 @@ Changes in 1.0.0 --
   - option to remove small "FRESCOBALDI.ORG" tagline at bottom
 * Score Wizard:
   - Fix lyrics not added if there is only one staff (reported by M. Moles)
+* Quick Insert Panel:
+  - If cursor is inside a chord, note or rest, the cursor is positioned right
+    after the chord, note or rest before the articulation is inserted (if there
+    is no selection, in which case the articulation is inserted after all
+    chords, notes or rests). So now you can click a note in the PDF and directly
+    click a button to add an articulation or ornament etc. without repositioning
+    the cursor manually.
 * General:
   - Fix crash on moving tools around
   - ESC key now closes PDF-preview dialogs properly
