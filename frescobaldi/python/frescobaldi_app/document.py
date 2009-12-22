@@ -292,7 +292,25 @@ class DocumentManipulator(object):
         else:
             self.doc.view.setCursorPosition(end)
     
-    def fixSelection(self):
+    def adjustCursorToChords(self):
+        """
+        Adjust the cursor position in the following way:
+        
+        if the cursor is inside a chord, pitch or rest:
+            position the cursor right after the chord
+        """
+        cursor = self.doc.view.cursorPosition()
+        col = cursor.column()
+        text = self.doc.line(cursor.line())
+        # inside a chord?
+        for m in ly.rx.chord_rest.finditer(text):
+            if (m.group('full')
+                and m.start() <= col <= m.end()):
+                cursor.setColumn(m.end())
+                self.doc.view.setCursorPosition(cursor)
+                return
+        
+    def adjustSelectionToChords(self):
         """
         Adjust the selection in the following way:
         start:
@@ -325,7 +343,7 @@ class DocumentManipulator(object):
         # adjust end:
         text = self.doc.line(end.line())
         col = end.column()
-        if re.match("{0}|{1}".format(ly.rx.step, ly.rx.rest), text[col:]):
+        if re.match(ly.rx.step + "|" + ly.rx.rest, text[col:]):
             for m in ly.rx.chord_rest.finditer(text):
                 if (m.group('chord')
                     and m.start('chord') <= col <= m.end('chord')):
@@ -563,6 +581,7 @@ class DocumentManipulator(object):
                     self.doc.doc.insertText(i, art)
             self.doc.view.removeSelection()
         else:
+            self.adjustCursorToChords()
             self.doc.view.insertText(art)
         
     def wrapSelection(self, text, before='{', after='}', alwaysMultiLine=False):

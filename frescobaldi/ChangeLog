@@ -2,6 +2,14 @@ Changes in 1.1.0 --
 
 * New dialog to insert special characters from the Unicode table, with the
   ability to assign keyboard shortcuts to often used characters.
+* Quick Insert Panel:
+  - It is now possible to assign keyboard shortcuts to the articulation buttons
+  - If cursor is inside a chord, note or rest, the cursor is positioned right
+    after the chord, note or rest before the articulation is inserted (if there
+    is no selection, in which case the articulation is inserted after all
+    chords, notes or rests). So now you can click a note in the PDF and directly
+    click a button to add an articulation or ornament etc. without repositioning
+    the cursor manually.
 
 Changes in 1.0.0 -- 
 
