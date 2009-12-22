@@ -37,7 +37,8 @@ def findIncludeFiles(lyfile):
             files.add(lyfile)
             directory = os.path.dirname(lyfile)
             # read the file and delete the comments.
-            text = ly.rx.all_comments.sub('', open(lyfile).read())
+            with open(lyfile) as f:
+                text = ly.rx.all_comments.sub('', f.read().decode('utf-8', 'ignore'))
             for f in ly.rx.include_file.findall(text):
                 # old include (relative to master file)
                 find(os.path.join(basedir, f))
