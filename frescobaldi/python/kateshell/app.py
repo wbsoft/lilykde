@@ -151,6 +151,8 @@ class MainApp(DBusItem):
         
     def findDocument(self, url):
         """ Return the opened document or False. """
+        if not isinstance(url, KUrl):
+            url = KUrl(url)
         # we use string comparison, because sometimes percent encoding
         # issues make the same QUrls look different, esp when dragged
         # from KMail...
