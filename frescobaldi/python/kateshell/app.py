@@ -151,8 +151,12 @@ class MainApp(DBusItem):
         
     def findDocument(self, url):
         """ Return the opened document or False. """
+        # we use string comparison, because sometimes percent encoding
+        # issues make the same QUrls look different, esp when dragged
+        # from KMail...
+        url = url.toString()
         for d in self.documents:
-            if d.url() == url:
+            if d.url().toString() == url:
                 return d
         return False
     
