@@ -897,18 +897,52 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             "pdf", i18n("PDF Preview"), "application-pdf",
             key="Meta+Alt+P", dock=kateshell.mainwindow.Right)
         mainwin.currentDocumentChanged.connect(self.sync)
+        self._urlToOpen = None
         self._currentUrl = None
         # We open urls with a timer otherwise Okular is called 
         # too quickly when the user switches documents too fast.
         self._timer = QTimer()
         self._timer.setSingleShot(True)
-        self._timer.setInterval(200)
+        self._timer.setInterval(250)
         self._timer.timeout.connect(self.timeoutFunc)
     
     def timeoutFunc(self):
-        if self._currentUrl:
-            super(PDFTool, self).openUrl(self._currentUrl)
+        """
+        (Internal)
+        Called when the timer times out.  If an url was recorded, it is opened
+        now.
+        """
+        if self._urlToOpen:
+            super(PDFTool, self).openUrl(self._urlToOpen)
+            self._urlToOpen = None
+            self._timer.start()
 
+    def _reallyOpenUrl(self, url):
+        """
+        (Internal)
+        Opens the url and starts a timer to prevent it from being called too
+        quickly again. If the timer is already running, the url is recorded and
+        opened on timeout().
+        """
+        if self._timer.isActive():
+            self._urlToOpen = url
+        else:
+            self._urlToOpen = None
+            self._timer.start()
+            QTimer.singleShot(0, lambda: super(PDFTool, self).openUrl(url))
+        
+    def openUrl(self, url):
+        """ Expects KUrl."""
+        if not self.failed:
+            self.show()
+            if url != self._currentUrl:
+                self._currentUrl = url
+                self._reallyOpenUrl(url)
+    
+    def reloadUrl(self):
+        if self._currentUrl:
+            self._reallyOpenUrl(self._currentUrl)
+            
     def sync(self, doc):
         if self._config["sync"]:
             pdfs = doc.updatedFiles()("pdf")
@@ -931,10 +965,6 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         a.triggered.connect(self.reloadUrl)
         a.setEnabled(bool(self._currentUrl))
 
-    def reloadUrl(self):
-        if self._currentUrl:
-            self._timer.start()
-            
     def openOkularSettings(self):
         self.materialize()
         if self.part:
@@ -951,14 +981,6 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             self.part.actionCollection().action("show_leftpanel").setChecked(c)
         elif name == "minipager":
             self._okularMiniBar().setVisible(c)
-
-    def openUrl(self, url):
-        """ Expects KUrl."""
-        if not self.failed:
-            self.show()
-            if url != self._currentUrl:
-                self._currentUrl = url
-                self._timer.start()
 
     def _okularMiniBar(self):
         """ get the okular miniBar """
