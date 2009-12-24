@@ -927,7 +927,14 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         a.triggered.connect(self.openOkularSettings)
         m.addSeparator()
         act("sync", i18n("S&ynchronize Preview with Current Document"))
+        a = m.addAction(i18n("Reload"))
+        a.triggered.connect(self.reloadUrl)
+        a.setEnabled(bool(self._currentUrl))
 
+    def reloadUrl(self):
+        if self._currentUrl:
+            self._timer.start()
+            
     def openOkularSettings(self):
         self.materialize()
         if self.part:
