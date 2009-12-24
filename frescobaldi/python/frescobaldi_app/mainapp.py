@@ -923,11 +923,11 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             a.triggered.connect(lambda: self.toggleAction(name))
         act("leftpanel", i18n("Show PDF Navigation Panel"))
         act("minipager", i18n("Show PDF minipager"))
-        a = m.addAction(i18n("Configure Okular..."))
+        a = m.addAction(KIcon("configure"), i18n("Configure Okular..."))
         a.triggered.connect(self.openOkularSettings)
         m.addSeparator()
         act("sync", i18n("S&ynchronize Preview with Current Document"))
-        a = m.addAction(i18n("Reload"))
+        a = m.addAction(KIcon("view-refresh"), i18n("Reload"))
         a.triggered.connect(self.reloadUrl)
         a.setEnabled(bool(self._currentUrl))
 
