@@ -424,6 +424,7 @@ class MainWindow(KParts.MainWindow):
         # because MainApp always creates a new document if the last one is
         # closed. This way we at least prevent app from creating a new document
         # twice.
+        self.currentDocumentChanged.clear() # disconnect all tools etc.
         for d in unmodified:
             d.close(False)
         # save some settings
