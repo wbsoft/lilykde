@@ -28,8 +28,11 @@ Changes in 1.0.0 --
     chords, notes or rests). So now you can click a note in the PDF and directly
     click a button to add an articulation or ornament etc. without repositioning
     the cursor manually.
+* PDF preview:
+  - Action in contextmenu to reload PDF document
 * General:
   - Fix crash on moving tools around
+  - Fix crash on exit on some systems with multiple updated documents open
   - ESC key now closes PDF-preview dialogs properly
   - ESC key does not take focus away from editor window if PDF visible
   - Main window is activated when clicking on notes in detached PDF viewer
