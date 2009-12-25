@@ -431,7 +431,8 @@ class Document(DBusItem):
         """
         self.materialize()
         self.setEncoding(encoding)
-        self.doc.openUrl(url)
+        if not self.doc.openUrl(url):
+            self.slotDocumentUrlChanged() # otherwise signal is not emitted
         if self.app.keepMetaInfo():
             self.app.stateManager().loadState(self)
         self.resetCursorTranslations()
