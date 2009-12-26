@@ -18,7 +18,7 @@ svn export . $pkg || die "export failed"
 cd "$pkg" || die "could not cd into package"
 
 # ensure pot is up-to-date
-( cd po && ./update-po.sh ) || die "could not update po files"
+( cd po && VERSION_CONTROL=none ./update-po.sh ) || die "could not update po files"
 
 ( mkdir build &&
   cd build &&
