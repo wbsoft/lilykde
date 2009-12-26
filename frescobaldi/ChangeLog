@@ -5,18 +5,17 @@ Changes in 1.1.0 --
 * Quick Insert Panel:
   - It is now possible to assign keyboard shortcuts to the articulation buttons
 
-Changes in 1.0.0 -- 
+Changes in 1.0.0 -- December 26th, 2009
 
 * Editor:
   - Right-click menu action on \include command now opens the named file from
     the LilyPond data directory if that exists and there is no local file with
     that name.
 * Repeat last expression (Ctrl+;):
-  - Does not repeat normal rests and skips (because often one is interested in
-    the chord preceding the rest)
+  - Doesn't repeat normal rests and skips, but rather the chord preceding it
   - Keeps the \rest when repeating a pitched rest (e.g. c\rest)
   - Only removes the octave from the repeated pitch (or from the first pitch
-    of the repeated chord) inside relative music
+    of the repeated chord) inside \relative music expressions
 * Blank staff paper tool:
   - option to remove small "FRESCOBALDI.ORG" tagline at bottom
 * Score Wizard:
@@ -33,6 +32,8 @@ Changes in 1.0.0 --
 * General:
   - Fix crash on moving tools around
   - Fix crash on exit on some systems with multiple updated documents open
+  - Work around crash on logging out from the built-in terminal and then hiding
+    and re-showing it, that occurs due to a bug in SIP 4.9.1
   - ESC key now closes PDF-preview dialogs properly
   - ESC key does not take focus away from editor window if PDF visible
   - Main window is activated when clicking on notes in detached PDF viewer
@@ -40,6 +41,7 @@ Changes in 1.0.0 --
   - Fix order of cautionary accidentals and octave marks in pitches (affects
     transpose and relative/absolute conversion functions)
   - Fix attribute error on file dialogs in KDE 4.1 (but KDE 4.2 is recommended)
+  - Fix document name not shown in tab bar if opening non-existing file
   - Improved hyphenation dictionaries search, also some explanation in docs
 * Installation:
   - CMake now does not require a compiler to be present anymore
