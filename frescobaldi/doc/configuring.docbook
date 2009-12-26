@@ -279,7 +279,7 @@ Enter the following command and click <guibutton>Ok</guibutton>:
 <programlisting>frescobaldi --smart --line %l --column %c</programlisting>
 
 <para>
-(The <option>smart</option> option tells Frescobaldi to translate cursor positions according
+(The <option>smart</option> option tells &frescobaldi; to translate cursor positions according
 to changes in the document. This way, Point &amp; Click URLs remain working, even if you
 change the document without updating the PDF preview.)
 </para>
@@ -302,7 +302,7 @@ This is due to Okular not fully understanding the way &lilypond; encodes URLs.
 <title>Highlighting and indenting</title>
 
 <para>
-Frescobaldi uses the &lilypond; syntax highlighting and indenting algorithm from KDE's 
+&frescobaldi; uses the &lilypond; syntax highlighting and indenting algorithm from KDE's 
 editing component KatePart. By default, indenting is switched on, using spaces,
 and the indent-width is 2 spaces.
 </para>
