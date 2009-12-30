@@ -2,7 +2,7 @@
 
 # This file is part of the Frescobaldi project, http://www.frescobaldi.org/
 #
-# Copyright (c) 2008, 2009  Wilbert Berendsen
+# Copyright (c) 2008, 2009, 2010 by Wilbert Berendsen
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -38,7 +38,7 @@ programName = ki18n("Frescobaldi")
 version = "@VERSION@"
 description = ki18n("LilyPond Music Editor")
 license = KAboutData.License_GPL
-copyright = ki18n("Copyright (c) 2008-2009, Wilbert Berendsen")
+copyright = ki18n("Copyright (c) 2008-2010, Wilbert Berendsen")
 text = KLocalizedString()
 homepage = "http://www.frescobaldi.org/"
 bugs = "info@frescobaldi.org"
