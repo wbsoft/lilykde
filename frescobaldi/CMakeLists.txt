@@ -3,6 +3,7 @@ project(frescobaldi NONE)
 set(VERSION "1.1")
 
 option(HANDBOOK "Install Frescobaldi User Guide" ON)
+option(BYTECOMPILE "Byte-compile Python modules on install" ON)
 
 # Find our own modules
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})

@@ -1,5 +1,5 @@
-TODO for Frescobaldi (ideas)
-============================
+TODO for Frescobaldi (also some random ideas)
+=============================================
 
 Music length related (needs infrastructure to compute duration of music
 expressions):
@@ -24,6 +24,10 @@ Filtering music expressions:
 Score Wizard:
 
 - support nested groups in part list (e.g. StaffGroup or GrandStaff)
+- separate \score { } for the MIDI output
+- idea: wrap stuff in \bookpart (idea of M. Moles)
+- idea: some font settings, e.g. default fonts, title font, etc.
+- idea: load/save score setups
 
 
 General:
@@ -38,8 +42,8 @@ Editing:
   such as paper size, raggedness, margins, bar and pagenumbering, headers,
   distances, staff size, default fonts, etc.
 
-- Full normalize the source document layout (indent properly, line breaks at
-  sensible places, add { } to ambiguous markup constructs, etc.
+- Command to fully normalize the source document layout (indent properly, line
+  breaks at sensible places, add { } to ambiguous markup constructs, etc.
 
 - Convert plain input text to markup commands:
   - easy entry of lyric text strophes
@@ -55,6 +59,19 @@ Editing:
 
 - Document structure browser
 
+
+PDF Preview:
+
+- tighter coupling with editor part, possibly by using a custom PDF (or even
+  SVG) widget instead of embedding Okular:
+  - highlight object text cursor is at
+  - right-click object and show relevant options in context menu (by looking
+    at the linked position in the document the type of object can be determined)
+  - generate \override #'extra-offset command (or other offset types) by
+    simply dragging an object
+  - select rectangular section in PDF also selects relevant portion in input
+    document
+    
 
 Output:
 

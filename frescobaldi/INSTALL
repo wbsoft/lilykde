@@ -1,7 +1,14 @@
 How to install Frescobaldi:
 ===========================
 
-The recommended way to install Frescobaldi (from the frescobaldi directory) is:
+To install Frescobaldi in /usr/local:
+
+cmake .
+make
+make install
+
+To install Frescobaldi in your distributions default KDE4 directory (also 
+recommended for creating installable distribution packages):
 
 cmake . -DCMAKE_INSTALL_PREFIX=$(kde4-config --exec-prefix)
 make
@@ -23,38 +30,53 @@ those icons and translations need to be generated. In that case you also need
 LilyPond, ImageMagick and GNU Gettext.
 
 
+CMake command line options:
+===========================
+
+The installation can be customized in a few ways.
+
+If you don't want to install the User Guide (some Linux distros split
+applications and their documentation), add -DHANDBOOK=NO to the cmake command
+line.
+
+If you don't want to bytecompile the Python modules on install (some Linux
+distros want their own installers to do that), add -DBYTECOMPILE=NO to the cmake
+command line.
+
+If you get errors about missing Python modules, but you're sure that they are
+installed, CMake might be finding the wrong Python version. If you e.g. install
+PyKDE4 inside Python 2.5 but CMake is finding Python 2.6 then you get errors
+about missing modules. You can fix this by explicitly defining the Python
+interpreter to use. Add -DPYTHON_EXECUTABLE=/usr/bin/python2.5 to the cmake
+command line in that case.
+
+ 
 Dependencies:
 =============
 
 This is the development (1.1) branch of Frescobaldi. It depends on:
-- KDE 4.3.2 or higher, esp. kdelibs and Okular from kdegraphics
+- KDE 4.3.2 or higher, esp. kdelibs, Okular and Konsole
 - Qt 4.5 or higher
 - Python 2.6
 - python-dbus (http://www.freedesktop.org/wiki/Software/DBusBindings#python)
+- SIP 4.9.1 or higher (4.9.3 or higher recommended)
 - PyQt4 4.6 or higher
 - PyKDE4 4.0.2 or higher
 
 The stable (1.0) branch of Frescobaldi depends on:
-- KDE 4.1.2 or higher, esp. kdelibs, kdebase and Okular from kdegraphics
+- KDE 4.1.2 or higher, esp. kdelibs, Okular and Konsole
 - Qt 4.4 or higher
 - Python 2.4, 2.5 or 2.6
 - python-dbus (http://www.freedesktop.org/wiki/Software/DBusBindings#python)
-- PyQt4
-- PyKDE4.
+- SIP 4.7.7 til 4.9.3
+- PyQt4 4.4.3 or higher
+- PyKDE4 4.0.2 or higher
 
 For the stable branch, KDE 4.2 or higher is recommended. If you use KDE 4.1,
 you also need lilypond-kde4 (http://lilykde.googlecode.com/)
 
 You also might need to install some of the the corresponding -dev packages from
 the above to install Frescobaldi from this source package.
-
-If you get errors about missing Python modules, but you're sure that they are
-installed, CMake might be finding the wrong Python version. If you e.g. install
-PyKDE4 inside Python 2.6 but CMake is finding Python 2.5 then you get errors
-about missing modules. You can fix this by explicitly defining the Python
-interpreter to use, e.g.:
-
-cmake . -DPYTHON_EXECUTABLE=/usr/bin/python2.6
 
 
 Other useful programs:
