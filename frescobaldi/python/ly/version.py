@@ -130,17 +130,31 @@ class LilyPondInstance(object):
                 if os.access(os.path.join(p, cmd), os.X_OK):
                     return os.path.join(p, cmd)
     
-    @cacheresult
-    def convert_ly(self):
+    def bindir(self):
         """
-        Returns the full path of the convert-ly command that is in the
-        same directory as the corresponding lilypond command.
+        Returns the directory the LilyPond command is in.
         """
         cmd = self.command()
         if cmd:
-            return os.path.join(os.path.dirname(cmd), self.convert_ly_name)
+            return os.path.dirname(cmd)
+    
+    def path_to(self, command):
+        """
+        Returns the full path to the given command, by joining our bindir() with
+        the command.
+        """
+        bindir = self.bindir()
+        if bindir:
+            return os.path.join(bindir, command)
             
-    @cacheresult
+    def convert_ly(self):
+        """
+        DEPRECATED: Use path_to('convert-ly') instead.
+        Returns the full path of the convert-ly command that is in the
+        same directory as the corresponding lilypond command.
+        """
+        return self.path_to(self.convert_ly_name)
+            
     def prefix(self):
         """
         Returns the prefix of a command. E.g. if command is "lilypond"

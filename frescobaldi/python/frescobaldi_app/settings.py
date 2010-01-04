@@ -25,14 +25,17 @@ Config dialog
 
 from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
-    QCheckBox, QGridLayout, QGroupBox, QLabel, QLineEdit, QRadioButton,
-    QTextEdit, QTreeView, QWidget)
+    QCheckBox, QGridLayout, QGroupBox, QLabel, QLineEdit, QListWidget,
+    QListWidgetItem, QRadioButton, QTextEdit, QTreeView, QWidget)
 from PyKDE4.kdecore import KGlobal, KUrl, i18n
-from PyKDE4.kdeui import KIcon, KPageDialog, KVBox
+from PyKDE4.kdeui import (
+    KIcon, KDialog, KPageDialog, KPushButton, KStandardGuiItem, KVBox)
 from PyKDE4.kio import KFile, KUrlRequester
 
-import ly.version
+from signals import Signal
 
+import ly.version
+from kateshell.app import cacheresult
 from frescobaldi_app.widgets import ExecLineEdit, ExecArgsLineEdit
 
 # these modules provide their own default settings or update functions
@@ -232,13 +235,14 @@ class Commands(QWidget):
         
         layout = QGridLayout(self)
         
+        # lilypond versions/instances
+        self.lilypond = LilyPondInfoList(self)
+        self.lilypond.changed.connect(dialog.changed)
+        layout.addWidget(self.lilypond, 0, 0, 1, 2)
+        
         # commands
         self.commands = []
         for name, default, title, lineedit, tooltip in (
-            ('lilypond', 'lilypond', "LilyPond:", ExecLineEdit,
-                i18n("Name or full path of the LilyPond program.")),
-            ('convert-ly', 'convert-ly', "Convert-ly:", ExecLineEdit,
-                i18n("Name or full path of the convert-ly program.")),
             ('pdf viewer', '', i18n("PDF Viewer:"), ExecArgsLineEdit,
                 i18n("PDF Viewer") + " " +
                 i18n("(leave empty for operating system default)")),
@@ -256,8 +260,9 @@ class Commands(QWidget):
             label.setBuddy(widget)
             label.setToolTip(tooltip)
             widget.setToolTip(tooltip)
-            layout.addWidget(label, len(self.commands), 0)
-            layout.addWidget(widget, len(self.commands), 1)
+            row = layout.rowCount()
+            layout.addWidget(label, row, 0)
+            layout.addWidget(widget, row, 1)
             self.commands.append((widget, name, default))
         
         # default directory
@@ -306,6 +311,7 @@ class Commands(QWidget):
         self.hyphenPaths.setPlainText('\n'.join(paths))
         
     def defaults(self):
+        self.lilypond.defaults()
         for widget, name, default in self.commands:
             widget.setText(default)
         self.setHyphenPaths(frescobaldi_app.hyphen.defaultPaths)
@@ -313,6 +319,7 @@ class Commands(QWidget):
         self.lilydoc.setUrl(KUrl())
         
     def loadSettings(self):
+        self.lilypond.loadSettings()
         conf = config("commands")
         for widget, name, default in self.commands:
             widget.setText(conf.readEntry(name, default))
@@ -324,6 +331,7 @@ class Commands(QWidget):
             config("preferences").readEntry("lilypond documentation", "")))
 
     def saveSettings(self):
+        self.lilypond.saveSettings()
         conf = config("commands")
         for widget, name, default in self.commands:
             if widget.text() or not default:
@@ -395,8 +403,239 @@ class RumorSettings(KVBox):
         for widget, name, default in self.commands:
             if widget.text():
                 conf.writeEntry(name, widget.text())
-    
 
+
+class LilyPondInfoList(QGroupBox):
+    """
+    Manages a list of LilyPondInfo instances.
+    """
+    def __init__(self, parent=None):
+        QGroupBox.__init__(self, i18n("LilyPond versions to use:"), parent)
+        
+        layout = QGridLayout(self)
+        self.instances = QListWidget()
+        
+        addButton = KPushButton(KStandardGuiItem.add())
+        editButton = KPushButton(KStandardGuiItem.configure())
+        removeButton = KPushButton(KStandardGuiItem.remove())
+        
+        layout.addWidget(self.instances, 0, 0, 3, 1)
+        layout.addWidget(addButton, 0, 1)
+        layout.addWidget(editButton, 1, 1)
+        layout.addWidget(removeButton, 2, 1)
+        
+        addButton.clicked.connect(self.addClicked)
+        editButton.clicked.connect(self.editClicked)
+        removeButton.clicked.connect(self.removeClicked)
+        self.instances.itemDoubleClicked.connect(self.itemDoubleClicked)
+        
+        self.changed = Signal()
+        
+    @cacheresult
+    def lilyPondInfoDialog(self):
+        return LilyPondInfoDialog(self)
+        
+    def addClicked(self):
+        """ Called when the user clicks Add. """
+        dlg = self.lilyPondInfoDialog()
+        dlg.loadInfo(LilyPondInfo())
+        if dlg.exec_():
+            info = LilyPondInfoItem()
+            dlg.saveInfo(info)
+            self.instances.addItem(info)
+            self.instances.setCurrentItem(info)
+            self.changed()
+
+    def editClicked(self):
+        """ Called when the user clicks Edit. """
+        info = self.instances.currentItem()
+        if info:
+            dlg = self.lilyPondInfoDialog()
+            dlg.loadInfo(info)
+            if dlg.exec_():
+                dlg.saveInfo(info)
+                self.changed()
+            
+    def removeClicked(self, item):
+        """ Called when the user clicks Remove. """
+        self.instances.takeItem(self.instances.currentRow())
+        self.changed()
+    
+    def itemDoubleClicked(self, item):
+        """ Called when the user doubleclicks an item. """
+        if item:
+            self.instances.setCurrentItem(item)
+            self.editClicked()
+            
+    def items(self):
+        """ Iterator over the items in the list. """
+        for c in range(self.instances.count()):
+            yield self.instances.item(c)
+            
+    def defaults(self):
+        """ Reset ourselves to default state. """
+        # remove all items
+        while self.instances.takeItem(0):
+            pass
+        info = LilyPondInfoItem()
+        self.instances.addItem(info)
+        self.instances.setCurrentItem(info)
+        
+    def loadSettings(self):
+        # remove all items
+        while self.instances.takeItem(0):
+            pass
+        conf = config("lilypond")
+        paths = conf.readEntry("paths", ["lilypond"])
+        default = conf.readEntry("default", "lilypond")
+        for path in paths:
+            info = LilyPondInfoItem(path)
+            info.default = path == default
+            self.instances.addItem(info)
+            info.loadSettings(conf.group(path))
+            if info.default:
+                self.instances.setCurrentItem(info)
+    
+    def saveSettings(self):
+        paths = []
+        default = ""
+        conf = config("lilypond")
+        for info in self.items():
+            paths.append(info.lilypond)
+            if info.default:
+                default = info.lilypond
+            info.saveSettings(conf.group(info.lilypond))
+        if not paths:
+            paths = ["lilypond"]
+        if not default:
+            default = paths[0]
+        conf.writeEntry("paths", paths)
+        conf.writeEntry("default", default)
+
+
+class LilyPondInfo(object):
+    """
+    Encapsulates information about a LilyPond instance.
+    
+    Attributes:
+    lilypond    the lilypond command (default "lilypond")
+    commands    a dict with the values of the commands, relative to the directory
+                of the lilypond command; the name is also the default value for
+                the command.
+    default     whether to set this lilypond command as the default
+    """
+    def __init__(self, lilypond="lilypond"):
+        self.lilypond = lilypond
+        self.commands = dict((name, name) for name, descr in self.commandNames())
+        self.default = False
+        
+    @staticmethod
+    def commandNames():
+        """
+        Returns a tuple with two-tuples (name, description) of commands
+        that can be configured as belonging to a LilyPond instance.
+        The name is also the default value for the command.
+        """
+        return (
+            ("convert-ly", i18n("Convert-ly:")),
+            ("lilypond-book", i18n("Lilypond-book:")),
+        )
+
+    def changed(self):
+        """ Implement to be notified of changes. """
+        pass
+
+    def loadSettings(self, group):
+        for cmd, descr in self.commandNames():
+            self.commands[cmd] = group.readEntry(cmd, cmd)
+        self.changed()
+    
+    def saveSettings(self, group):
+        for cmd, descr in self.commandNames():
+            group.writeEntry(cmd, self.commands[cmd])
+            
+
+class LilyPondInfoItem(QListWidgetItem, LilyPondInfo):
+    def __init__(self, lilypond="lilypond"):
+        QListWidgetItem.__init__(self)
+        LilyPondInfo.__init__(self, lilypond)
+    
+    def changed(self):
+        """ Call this when this item needs to redisplay itself. """
+        lp = self.lilypond
+        lilypond = ly.version.LilyPondInstance(lp)
+        if lilypond.version():
+            lp += " ({0})".format(lilypond.version())
+            self.setIcon(KIcon("run-lilypond"))
+            self.setToolTip(
+                '<table border=0><tbody>'
+                '<tr><td><b>{0}: </b></td><td>{1}</td></tr>'
+                '<tr><td><b>{2}: </b></td><td>{3}</td></tr>'
+                '</tbody></table>'.format(
+                    i18n("Path"), lilypond.command() or "",
+                    i18n("Version"), lilypond.version()))
+        else:
+            self.setIcon(KIcon("dialog-error"))
+            self.setToolTip(i18n("Can't determine LilyPond version."))
+        if self.default:
+            lp += " [{0}]".format(i18n("default"))
+            
+            # reset the default state for others
+            for c in range(self.listWidget().count()):
+                item = self.listWidget().item(c)
+                if item is not self and item.default:
+                    item.default = False
+                    item.changed()
+        self.setText(lp)
+        
+
+class LilyPondInfoDialog(KDialog):
+    """
+    A dialog to edit attributes of a LilyPondInfo instance.
+    """
+    def __init__(self, parent):
+        KDialog.__init__(self, parent)
+        self.setButtons(KDialog.ButtonCode(
+            KDialog.Ok | KDialog.Cancel | KDialog.Help))
+        self.setCaption(i18n("LilyPond"))
+        layout = QGridLayout(self.mainWidget())
+        
+        l = QLabel(i18n("LilyPond Command:"))
+        self.lilypond = KUrlRequester()
+        l.setBuddy(self.lilypond)
+        self.lilypond.lineEdit().setToolTip(i18n(
+            "Name or full path of the LilyPond program."))
+        layout.addWidget(l, 0, 0, 1, 2)
+        layout.addWidget(self.lilypond, 1, 0, 1, 2)
+        
+        self.commands = {}
+        row = 2
+        for name, description in LilyPondInfo.commandNames():
+            l = QLabel(description)
+            e = self.commands[name] = QLineEdit()
+            l.setBuddy(e)
+            layout.addWidget(l, row, 0, Qt.AlignRight)
+            layout.addWidget(e, row, 1)
+            row += 1
+        self.default = QCheckBox(i18n("Set as default"))
+        layout.addWidget(self.default, row, 1)
+        
+    def loadInfo(self, info):
+        """ Display the settings in the LilyPondInfo object in our dialog. """
+        self.lilypond.setText(info.lilypond)
+        for name, value in info.commands.items():
+            self.commands[name].setText(value)
+        self.default.setChecked(info.default)
+        
+    def saveInfo(self, info):
+        """ Write the settings in our dialog to the LilyPondInfo object. """
+        info.lilypond = self.lilypond.text()
+        for name, widget in self.commands.items():
+            info.commands[name] = widget.text()
+        info.default = self.default.isChecked()
+        info.changed()
+        
+        
 
 def config(group):
     return KGlobal.config().group(group)
