@@ -1206,6 +1206,30 @@ class QuickInsertShortcuts(kateshell.mainwindow.UserShortcutManager):
 def config(group="preferences"):
     return KGlobal.config().group(group)
     
+def lilypondCommand():
+    """ The default configured LilyPond command. """
+    return config("lilypond").readEntry("default", "lilypond")
+    
+def otherCommand(name, lilypond=None):
+    """
+    Return the full path to the named command (e.g. 'convert-ly') that belongs
+    to the given or default lilypond command.
+    """
+    if not lilypond:
+        lilypond = lilypondCommand()
+    import ly.version
+    bindir = ly.version.LilyPondInstance(lilypond).bindir()
+    cmd = config("lilypond").group(lilypond).readEntry(name, name)
+    if bindir:
+        return os.path.join(bindir, cmd)
+    else:
+        return cmd
+    
+def convertLyCommand(lilypond=None):
+    """
+    The convert-ly command belonging to the given (or default) lilypond command.
+    """
+    return otherCommand('convert-ly', lilypond)
 
 # determine updated files by a LilyPond process.
 def updatedFiles(lyfile, reftime=None):

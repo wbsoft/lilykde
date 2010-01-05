@@ -441,9 +441,9 @@ class LilyPondInfoList(QGroupBox):
         dlg.loadInfo(LilyPondInfo())
         if dlg.exec_():
             info = LilyPondInfoItem()
-            dlg.saveInfo(info)
             self.instances.addItem(info)
             self.instances.setCurrentItem(info)
+            dlg.saveInfo(info)
             self.changed()
 
     def editClicked(self):
@@ -480,6 +480,7 @@ class LilyPondInfoList(QGroupBox):
         info = LilyPondInfoItem()
         self.instances.addItem(info)
         self.instances.setCurrentItem(info)
+        info.changed()
         
     def loadSettings(self):
         # remove all items
@@ -500,6 +501,7 @@ class LilyPondInfoList(QGroupBox):
         paths = []
         default = ""
         conf = config("lilypond")
+        conf.deleteGroup()
         for info in self.items():
             paths.append(info.lilypond)
             if info.default:
@@ -640,5 +642,3 @@ class LilyPondInfoDialog(KDialog):
 def config(group):
     return KGlobal.config().group(group)
 
-def command(cmd):
-    return config("commands").readEntry(cmd, cmd)

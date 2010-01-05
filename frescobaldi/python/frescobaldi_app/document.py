@@ -34,6 +34,7 @@ from PyKDE4.ktexteditor import KTextEditor
 
 import ly.rx, ly.pitch, ly.parse, ly.tokenize, ly.tools, ly.version
 from kateshell.app import cacheresult
+from frescobaldi_app.mainapp import lilypondCommand
 from frescobaldi_app.widgets import promptText
 
 
@@ -904,7 +905,3 @@ class EditCursor(ly.tokenize.Cursor):
 def isblank(text):
     """ Returns True if text is None, empty or only contains spaces. """
     return not text or text.isspace()
-
-def lilypondCommand():
-    """ Returns the user's preferred lilypond command. """
-    return KGlobal.config().group("commands").readEntry("lilypond", "lilypond")

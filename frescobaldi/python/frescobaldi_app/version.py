@@ -28,13 +28,15 @@ from PyKDE4.kdecore import i18n, KGlobal
 from PyKDE4.kdeui import KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
+from frescobaldi_app.mainapp import lilypondCommand, convertLyCommand
+
 def defaultVersion():
     """
     Returns the LilyPond version according to the user's preference:
     the version of the currently installed LilyPond, the version of the last
     rule in convert-ly, or a custom version.
     """
-    lilypond = ly.version.LilyPondInstance(command("lilypond"))
+    lilypond = ly.version.LilyPondInstance(lilypondCommand())
     
     prefs = config("preferences")
     pver = prefs.readEntry("default version", "lilypond")
@@ -75,7 +77,7 @@ def convertLy(mainwin):
     doc = mainwin.currentDocument()
     text = doc.text()
     docVersion = ly.version.getVersion(text)
-    lilyVersion = ly.version.LilyPondInstance(command("lilypond")).version()
+    lilyVersion = ly.version.LilyPondInstance(lilypondCommand()).version()
     
     if not docVersion:
         KMessageBox.sorry(mainwin, i18n(
@@ -94,7 +96,7 @@ def convertLy(mainwin):
         # read from stdin.
         try:
             out, err = Popen(
-                (command("convert-ly"), "-f", str(docVersion), "-"),
+                (convertLyCommand(), "-f", str(docVersion), "-"),
                 stdin=PIPE, stdout=PIPE, stderr=PIPE
                 ).communicate(text.encode('utf8'))
             if out:
@@ -117,5 +119,3 @@ def convertLy(mainwin):
 def config(group):
     return KGlobal.config().group(group)
 
-def command(cmd):
-    return config("commands").readEntry(cmd, cmd)

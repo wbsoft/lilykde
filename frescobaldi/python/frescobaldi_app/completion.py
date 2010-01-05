@@ -32,6 +32,7 @@ from PyKDE4.ktexteditor import KTextEditor
 
 import ly.tokenize, ly.version, ly.words, ly.colors
 import frescobaldi_app.version
+from frescobaldi_app.mainapp import lilypondCommand
 
 
 class CompletionHelper(object):
@@ -265,7 +266,7 @@ def findMatches(model, view, word, invocationType):
 
 # load some (cached) data
 def musicglyph_names():
-    font = ly.version.LilyPondInstance(command("lilypond")).fontInfo("emmentaler-20")
+    font = ly.version.LilyPondInstance(lilypondCommand()).fontInfo("emmentaler-20")
     if font:
         return tuple(font.glyphs())
     return ()
@@ -274,9 +275,3 @@ def lilypondVersion():
     ver = frescobaldi_app.version.defaultVersion()
     return ('version "{0}"'.format(ver),) if ver else ()
 
-# utility functions
-def config(group):
-    return KGlobal.config().group(group)
-
-def command(cmd):
-    return config("commands").readEntry(cmd, cmd)

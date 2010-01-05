@@ -68,7 +68,7 @@ class Ly2PDF(object):
         self.p = KProcess()
         self.p.setOutputChannelMode(KProcess.MergedChannels)
         self.p.setWorkingDirectory(self.directory)
-        cmd = [config("commands").readEntry("lilypond", "lilypond")]
+        cmd = [frescobaldi_app.mainapp.lilypondCommand()]
         if config("preferences").readEntry("verbose lilypond output", False):
             cmd.append("--verbose")
         cmd.append("--pdf")
