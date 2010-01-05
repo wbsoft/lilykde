@@ -1217,13 +1217,9 @@ def otherCommand(name, lilypond=None):
     """
     if not lilypond:
         lilypond = lilypondCommand()
-    import ly.version
-    bindir = ly.version.LilyPondInstance(lilypond).bindir()
     cmd = config("lilypond").group(lilypond).readEntry(name, name)
-    if bindir:
-        return os.path.join(bindir, cmd)
-    else:
-        return cmd
+    import ly.version
+    return ly.version.LilyPondInstance(lilypond).path_to(cmd) or cmd
     
 def convertLyCommand(lilypond=None):
     """
