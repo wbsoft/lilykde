@@ -24,7 +24,7 @@ Functions that can be run if the user updates Frescobaldi
 to a newer version.
 """
 
-import re
+import os, re
 
 from PyKDE4.kdecore import KConfig, KGlobal
 
@@ -42,6 +42,9 @@ def install(app):
         
     if version < (0, 7, 8):
         installOkularPartRC()
+    
+    if version < (1, 1, 0):
+        newLilyPondConfig()
     
     # ... other stuff can be added here ...
     
@@ -72,4 +75,21 @@ def installOkularPartRC():
         group.writeEntry("WatchFile", True)
     group.sync()
     
-
+def newLilyPondConfig():
+    """ Take old lilypond path preference over to new multi-version config (1.1.0) """
+    c = KGlobal.config()
+    cmds = c.group("commands")
+    lily = cmds.readEntry("lilypond", "lilypond")
+    conv = cmds.readEntry("convert-ly", "convert-ly")
+    if (os.path.isabs(lily) and os.path.isabs(conv)
+        and os.path.dirname(lily) == os.path.dirname(conv)):
+        conv = os.path.basename(conv)
+    group = c.group("lilypond")
+    group.writeEntry("default", lily)
+    group.writeEntry("paths", [lily])
+    group = group.group(lily)
+    group.writeEntry("convert-ly", conv)
+    cmds.deleteEntry("lilypond")
+    cmds.deleteEntry("convert-ly")
+    c.sync()
+    
