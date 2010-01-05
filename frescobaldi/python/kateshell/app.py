@@ -313,6 +313,14 @@ class Document(DBusItem):
     """
     __instance_counter = 0
     iface = DBUS_IFACE_PREFIX + "Document"
+    
+    # In this dict names and default values can be set for properties that are
+    # saved by the state manager (if the user wants to keep state info)
+    # This dict must be set in the class. The instance copies the values in
+    # the metainfo dict. This dict can be manipulated, but only the entries with
+    # keys that also appear in this metainfoDefaults dict are saved. The values
+    # must be usable in KConfigGroup.readEntry and .writeEntry calls.
+    metainfoDefaults = {}
 
     def __init__(self, app, url="", encoding=None):
         Document.__instance_counter += 1
@@ -323,7 +331,7 @@ class Document(DBusItem):
             url = KUrl(url)
 
         self.app = app
-
+        self.metainfo = self.metainfoDefaults.copy()
         self.doc = None         # this is going to hold the KTextEditor doc
         self.view = None        # this is going to hold the KTextEditor view
         self._url = url         # as long as no doc is really loaded, this
@@ -669,6 +677,9 @@ class Document(DBusItem):
         the KConfigGroup group, to adjust settings for the loaded document
         and its view.
         """
+        # load custom properties
+        for name, value in self.metainfoDefaults.items():
+            self.metainfo[name] = group.readEntry(name, value)
         # restore some options from the view menu
         for name, action in self.viewActions():
             if group.hasKey(name):
@@ -695,6 +706,12 @@ class Document(DBusItem):
         This can be called by a state manager. You can write stuff to
         the KConfigGroup group, to save settings for the document and its view.
         """
+        # save custom properties
+        for name, value in self.metainfoDefaults.items():
+            if self.metainfo[name] != value:
+                group.writeEntry(name, self.metainfo[name])
+            else:
+                group.deleteEntry(name)
         # save some options in the view menu
         for name, action in self.viewActions():
             group.writeEntry(name, action.isChecked())

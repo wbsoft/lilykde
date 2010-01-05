@@ -119,6 +119,11 @@ class MainApp(kateshell.app.MainApp):
 
 class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """
+    
+    metainfoDefaults = {
+        "lilypond version": "default",
+        }
+    
     def __init__(self, *args, **kwargs):
         super(Document, self).__init__(*args, **kwargs)
         self.resetLocalFileManager()
