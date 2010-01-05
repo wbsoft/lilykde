@@ -678,8 +678,8 @@ class Document(DBusItem):
         and its view.
         """
         # load custom properties
-        for name, value in self.metainfoDefaults.items():
-            self.metainfo[name] = group.readEntry(name, value)
+        for name, default in self.metainfoDefaults.items():
+            self.metainfo[name] = group.readEntry(name, default)
         # restore some options from the view menu
         for name, action in self.viewActions():
             if group.hasKey(name):
@@ -707,8 +707,8 @@ class Document(DBusItem):
         the KConfigGroup group, to save settings for the document and its view.
         """
         # save custom properties
-        for name, value in self.metainfoDefaults.items():
-            if self.metainfo[name] != value:
+        for name, default in self.metainfoDefaults.items():
+            if self.metainfo[name] != default:
                 group.writeEntry(name, self.metainfo[name])
             else:
                 group.deleteEntry(name)
