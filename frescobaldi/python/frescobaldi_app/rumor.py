@@ -528,7 +528,7 @@ class RumorSettings(KDialog):
             idefault = odefault = 'oss:1'
         else:
             idefault = 'kbd'
-            odefault = self.olist[max(1, len(self.olist)-1)]
+            odefault = self.olist and self.olist[-1] or ""
         i = conf.readEntry("midi in", idefault)
         o = conf.readEntry("midi out", odefault)
         if i in self.ilist:
