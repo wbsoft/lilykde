@@ -123,47 +123,15 @@ class BasicLilyPondJob(object):
         p.setOutputChannelMode(KProcess.MergedChannels)
         p.setWorkingDirectory(self._directory)
         p.setProgram(cmd)
-        p.finished.connect(self.finished)
-        p.error.connect(self.error)
-        p.readyRead.connect(self.readOutput)
+        p.finished.connect(self._finished)
+        p.error.connect(self._error)
+        p.readyRead.connect(self._readOutput)
         
         mode = i18n("preview mode") if self._preview else i18n("publish mode")
         self.output.writeLine(i18n("LilyPond [%1] starting (%2)...", self._fileName, mode))
         
         self._startTime = time.time()
         p.start()
-        
-    def finished(self, exitCode, exitStatus):
-        if exitCode:
-            self.output.writeMsg(i18n("LilyPond [%1] exited with return code %2.",
-                self._fileName, exitCode), "msgerr")
-        elif exitStatus:
-            self.output.writeMsg(i18n("LilyPond [%1] exited with exit status %2.",
-                self._fileName, exitStatus), "msgerr")
-        else:
-            # We finished successfully, show elapsed time...
-            minutes, seconds = divmod(time.time() - self._startTime, 60)
-            f = "{0:.0f}'{1:.0f}\"" if minutes else '{1:.1f}"'
-            self.output.writeMsg(i18n("LilyPond [%1] finished (%2).",
-                self._fileName, f.format(minutes, seconds)), "msgok")
-        
-        # otherwise we delete ourselves during our event handler, causing crash
-        QTimer.singleShot(0, lambda: self.done(not (exitCode or exitStatus), self))
-    
-    def error(self, errCode):
-        """ Called when QProcess encounters an error """
-        if errCode == QProcess.FailedToStart:
-            self.output.writeMsg(i18n(
-                "Could not start LilyPond. Please check path and permissions."),
-                "msgerr")
-        elif errCode == QProcess.ReadError:
-            self.output.writeMsg(i18n("Could not read from the LilyPond process."),
-                "msgerr")
-        elif self._p.state() == QProcess.NotRunning:
-            self.output.writeMsg(i18n("An unknown error occured."), "msgerr")
-        if self._p.state() == QProcess.NotRunning:
-            # otherwise we delete ourselves during our event handler, causing crash
-            QTimer.singleShot(0, lambda: self.done(False, self))
         
     def abort(self):
         """ Abort the LilyPond job """
@@ -181,7 +149,39 @@ class BasicLilyPondJob(object):
         self._p.waitForFinished(2000)
         self.done(False, self)
         
-    def readOutput(self):
+    def _finished(self, exitCode, exitStatus):
+        if exitCode:
+            self.output.writeMsg(i18n("LilyPond [%1] exited with return code %2.",
+                self._fileName, exitCode), "msgerr")
+        elif exitStatus:
+            self.output.writeMsg(i18n("LilyPond [%1] exited with exit status %2.",
+                self._fileName, exitStatus), "msgerr")
+        else:
+            # We finished successfully, show elapsed time...
+            minutes, seconds = divmod(time.time() - self._startTime, 60)
+            f = "{0:.0f}'{1:.0f}\"" if minutes else '{1:.1f}"'
+            self.output.writeMsg(i18n("LilyPond [%1] finished (%2).",
+                self._fileName, f.format(minutes, seconds)), "msgok")
+        
+        # otherwise we delete ourselves during our event handler, causing crash
+        QTimer.singleShot(0, lambda: self.done(not (exitCode or exitStatus), self))
+    
+    def _error(self, errCode):
+        """ Called when QProcess encounters an error """
+        if errCode == QProcess.FailedToStart:
+            self.output.writeMsg(i18n(
+                "Could not start LilyPond. Please check path and permissions."),
+                "msgerr")
+        elif errCode == QProcess.ReadError:
+            self.output.writeMsg(i18n("Could not read from the LilyPond process."),
+                "msgerr")
+        elif self._p.state() == QProcess.NotRunning:
+            self.output.writeMsg(i18n("An unknown error occured."), "msgerr")
+        if self._p.state() == QProcess.NotRunning:
+            # otherwise we delete ourselves during our event handler, causing crash
+            QTimer.singleShot(0, lambda: self.done(False, self))
+        
+    def _readOutput(self):
         encoding = sys.getfilesystemencoding() or 'utf-8'
         text = str(self._p.readAllStandardOutput()).decode(encoding, 'replace')
         parts = _ly_message_re.split(text)
