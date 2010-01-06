@@ -289,7 +289,7 @@ class JobManager(object):
 class LogWidget(QFrame):
     def __init__(self, parent=None):
         QFrame.__init__(self, parent)
-        self._preview = False # this is used by Ly2PDF and the ActionManager
+        self._preview = False   # this is used by the ActionManager
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
