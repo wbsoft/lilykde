@@ -420,10 +420,13 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         # run LilyPond actions
         @self.onAction(i18n("Run LilyPond (preview)"), "run-lilypond", key="Ctrl+M")
         def lilypond_run_preview():
-            lilypond_run_publish(True)
+            lilypond_run(True)
             
         @self.onAction(i18n("Run LilyPond (publish)"), "run-lilypond")
-        def lilypond_run_publish(preview=False):
+        def lilypond_run_publish():
+            lilypond_run(False)
+        
+        def lilypond_run(preview):
             d = self.currentDocument()
             if not d:
                 return
@@ -439,7 +442,20 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                 return sorry(i18n(
                     "Your document has been modified, "
                     "please save first."))
-            # Run LilyPond; get a LogWidget and create a job
+            
+            # get a logwidget
+            log = self.tools["log"].createLog(d)
+            log.setPreview(preview)
+            log.clear()
+            
+            # create a Job
+            import frescobaldi_app.runlily
+            job = frescobaldi_app.runlily.DocumentJob(d)
+            job.setPreview(preview)
+            job.output.connect(log)
+            
+            # open PDF and action bar when finished
+            @job.done.connect
             def finished(success, job):
                 result = job.updatedFiles()
                 pdfs = result("pdf")
@@ -452,9 +468,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                     self.actionManager().addActionsToLog(result, log)
                     if not success:
                         log.show() # even if LP didn't show an error location
-            log = self.tools["log"].createLog(d)
-            job = self.jobManager().createJob(d, log, preview)
-            job.done.connect(finished)
+            
+            # run LilyPond
+            self.jobManager().run(job)
         
         @self.onAction(i18n("Interrupt LilyPond Job"), "process-stop")
         def lilypond_abort():

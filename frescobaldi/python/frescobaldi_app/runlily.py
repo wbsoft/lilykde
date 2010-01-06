@@ -32,7 +32,7 @@ from PyKDE4.kdeui import (
     KApplication, KDialog, KIcon, KMenu, KMessageBox, KStandardGuiItem)
 from PyKDE4.kio import KEncodingFileDialog
 
-from signals import Signal
+from signals import Signal, SignalProxy
 
 from kateshell.app import resolvetabs_text
 from frescobaldi_app.actions import openPDF
@@ -45,148 +45,215 @@ def config(group):
 _ly_message_re = re.compile(r"^((.*?):(\d+)(?::(\d+))?)(?=:)", re.M)
 
 
-class Ly2PDF(object):
+class BasicLilyPondJob(object):
     """
-    An object of this class performs one LilyPond run on a LilyPond file
-    given in filename, with output to the LogWidget log.
+    Performs one job to run LilyPond.
     
-    It emits the signal done(success, self) when the jobs has finished.
-    The updatedFiles method then can return a function that returns the
-    updated files of a given type.
+    Set different parameters and then call start() to start.
+    The Signal done(success, self) is emitted when the job has finished.
+    The SignalProxy output(msg, type, newline=False) is emitted when there is output
+    (stderr and stdout).  This proxy is called like Log and LogWidget.
+    Don't use (Basic)LilyPondJob for more than one run.
     """
-    preview = False
-    def __init__(self, lyfile, log):
+    
+    def __init__(self):
+        self._command = "lilypond"
+        self._arguments = "--pdf"
+        self._filePath = None
+        self._preview = False
+        self._verbose = False
+        self._delfiles = False # delete intermediate files
+        self.output = SignalProxy()
         self.done = Signal(fireonce=True)
-        # save this so the log knows if we built a PDF with point and click:
-        log.preview = self.preview
-        self.log = log
         
-        self.lyfile = lyfile
-        self.basename = os.path.splitext(lyfile)[0]
-        self.directory, self.lyfile_arg = os.path.split(lyfile)
-
-        self.p = KProcess()
-        self.p.setOutputChannelMode(KProcess.MergedChannels)
-        self.p.setWorkingDirectory(self.directory)
-        cmd = [frescobaldi_app.mainapp.lilypondCommand()]
-        if config("preferences").readEntry("verbose lilypond output", False):
-            cmd.append("--verbose")
-        cmd.append("--pdf")
-        cmd.append(self.preview and "-dpoint-and-click" or "-dno-point-and-click")
-        if config("preferences").readEntry("delete intermediate files", True):
-            cmd.append("-ddelete-intermediate-files")
-        cmd.append(self.lyfile_arg)
+    def setCommand(self, command):
+        self._command = command
         
-        self.p.setProgram(cmd)
-        self.p.finished.connect(self.finished)
-        self.p.error.connect(self.error)
-        self.p.readyRead.connect(self.readOutput)
+    def command(self):
+        return self._command
+    
+    def setArguments(self, *args):
+        self._arguments = args
         
-        self.log.clear()
-        mode = self.preview and i18n("preview mode") or i18n("publish mode")
-        self.log.writeLine(i18n("LilyPond [%1] starting (%2)...", self.lyfile_arg, mode))
-        self.startTime = time.time()
-        self.p.start()
+    def arguments(self):
+        return self._arguments
+        
+    def setFilePath(self, filePath):
+        self._filePath = filePath
+        
+    def filePath(self):
+        return self._filePath
+        
+    def setPreview(self, preview):
+        self._preview = preview
+        
+    def preview(self):
+        return self._preview
+        
+    def setVerbose(self, verbose):
+        self._verbose = verbose
+        
+    def verbose(self):
+        return self._verbose
+    
+    def setDeleteIntermediateFiles(self, delfiles):
+        self._delfiles = delfiles
+        
+    def deleteIntermediateFiles(self):
+        return self._delfiles
+        
+    def startTime(self):
+        """ Returns the time.time() this process has been started. """
+        return self._startTime
+        
+    def start(self):
+        """ Starts the process. """
+        # save some values
+        self._directory, self._fileName = os.path.split(self._filePath)
+        
+        # construct the full LilyPond command.
+        cmd = [self._command]
+        self._verbose and cmd.append("--verbose")
+        cmd.append("-dpoint-and-click=" + scmbool(self._preview))
+        cmd.append("-ddelete-intermediate-files=" + scmbool(self._delfiles))
+        cmd.append(self._fileName)
+        
+        # create KProcess instance that does the work
+        p = self._p = KProcess()
+        p.setOutputChannelMode(KProcess.MergedChannels)
+        p.setWorkingDirectory(self._directory)
+        p.setProgram(cmd)
+        p.finished.connect(self.finished)
+        p.error.connect(self.error)
+        p.readyRead.connect(self.readOutput)
+        
+        mode = i18n("preview mode") if self._preview else i18n("publish mode")
+        self.output.writeLine(i18n("LilyPond [%1] starting (%2)...", self._fileName, mode))
+        
+        self._startTime = time.time()
+        p.start()
         
     def finished(self, exitCode, exitStatus):
         if exitCode:
-            self.log.writeMsg(i18n("LilyPond [%1] exited with return code %2.",
-                self.lyfile_arg, exitCode), "msgerr")
+            self.output.writeMsg(i18n("LilyPond [%1] exited with return code %2.",
+                self._fileName, exitCode), "msgerr")
         elif exitStatus:
-            self.log.writeMsg(i18n("LilyPond [%1] exited with exit status %2.",
-                self.lyfile_arg, exitStatus), "msgerr")
+            self.output.writeMsg(i18n("LilyPond [%1] exited with exit status %2.",
+                self._fileName, exitStatus), "msgerr")
         else:
             # We finished successfully, show elapsed time...
-            minutes, seconds = divmod(time.time() - self.startTime, 60)
+            minutes, seconds = divmod(time.time() - self._startTime, 60)
             f = "{0:.0f}'{1:.0f}\"" if minutes else '{1:.1f}"'
-            self.log.writeMsg(i18n("LilyPond [%1] finished (%2).",
-                self.lyfile_arg, f.format(minutes, seconds)), "msgok")
-        self.bye(not (exitCode or exitStatus))
+            self.output.writeMsg(i18n("LilyPond [%1] finished (%2).",
+                self._fileName, f.format(minutes, seconds)), "msgok")
+        
+        # otherwise we delete ourselves during our event handler, causing crash
+        QTimer.singleShot(0, lambda: self.done(not (exitCode or exitStatus), self))
     
     def error(self, errCode):
         """ Called when QProcess encounters an error """
         if errCode == QProcess.FailedToStart:
-            self.log.writeMsg(i18n(
+            self.output.writeMsg(i18n(
                 "Could not start LilyPond. Please check path and permissions."),
                 "msgerr")
         elif errCode == QProcess.ReadError:
-            self.log.writeMsg(i18n("Could not read from the LilyPond process."),
+            self.output.writeMsg(i18n("Could not read from the LilyPond process."),
                 "msgerr")
-        elif self.p.state() == QProcess.NotRunning:
-            self.log.writeMsg(i18n("An unknown error occured."), "msgerr")
-        if self.p.state() == QProcess.NotRunning:
-            self.bye(False)
+        elif self._p.state() == QProcess.NotRunning:
+            self.output.writeMsg(i18n("An unknown error occured."), "msgerr")
+        if self._p.state() == QProcess.NotRunning:
+            # otherwise we delete ourselves during our event handler, causing crash
+            QTimer.singleShot(0, lambda: self.done(False, self))
         
-    def bye(self, success):
-        # otherwise we delete ourselves during our event handler, causing crash
-        QTimer.singleShot(0, lambda: self.done(success, self))
-
     def abort(self):
         """ Abort the LilyPond job """
-        self.p.terminate()
+        self._p.terminate()
 
     def kill(self):
         """
         Immediately kill the job, and disconnect it's output signals, etc.
         Emits the done(False) signal.
         """
-        self.p.finished.disconnect(self.finished)
-        self.p.error.disconnect(self.error)
-        self.p.readyRead.disconnect(self.readOutput)
-        self.p.kill()
-        self.p.waitForFinished(2000)
+        self._p.finished.disconnect(self.finished)
+        self._p.error.disconnect(self.error)
+        self._p.readyRead.disconnect(self.readOutput)
+        self._p.kill()
+        self._p.waitForFinished(2000)
         self.done(False, self)
         
     def readOutput(self):
         encoding = sys.getfilesystemencoding() or 'utf-8'
-        text = str(self.p.readAllStandardOutput()).decode(encoding, 'replace')
+        text = str(self._p.readAllStandardOutput()).decode(encoding, 'replace')
         parts = _ly_message_re.split(text)
         # parts has an odd length(1, 6, 11 etc)
         # message, <url, path, line, col, message> etc.
-        self.log.write(parts.pop(0))
+        self.output.write(parts.pop(0))
         while len(parts[:5]) == 5:
             url, path, line, col, msg = parts[:5]
-            path = os.path.join(self.directory, path)
+            path = os.path.join(self._directory, path)
             line = int(line or "1") or 1
             col = int(col or "0")
-            self.log.writeFileRef(url, path, line, col)
-            self.log.write(msg)
+            self.output.writeFileRef(url, path, line, col)
+            self.output.write(msg)
             del parts[:5]
     
     def updatedFiles(self):
         """
         Returns a function that can list updated files based on extension.
         """
-        return frescobaldi_app.mainapp.updatedFiles(self.lyfile,
-            math.floor(self.startTime))
-        
+        return frescobaldi_app.mainapp.updatedFiles(self._filePath,
+            math.floor(self._startTime))
 
-class LyDoc2PDF(Ly2PDF):
+
+class LilyPondJob(BasicLilyPondJob):
     """
-    Runs LilyPond on the given Document.
+    A LilyPondJob with default settings from Frescobaldi config.
     """
-    def __init__(self, doc, log, preview):
-        self.preview = preview
-        if doc.needsLocalFileManager():
+    def __init__(self):
+        super(LilyPondJob, self).__init__()
+        self.setCommand(frescobaldi_app.mainapp.lilypondCommand())
+        self.setArguments("--pdf")
+        self.setVerbose(config("preferences").readEntry("verbose lilypond output", False))
+        self.setDeleteIntermediateFiles(
+            config("preferences").readEntry("delete intermediate files", True))
+
+
+class DocumentJob(LilyPondJob):
+    """
+    A job to be run on a Document instance.
+    """
+    def __init__(self, doc=None):
+        self._doc = doc
+        super(DocumentJob, self).__init__()
+        
+    def setDocument(self, doc):
+        self._doc = doc
+        
+    def document(self):
+        return self._doc
+        
+    def start(self):
+        if self._doc.needsLocalFileManager():
             # handle nonlocal or unnamed documents
-            lyfile = doc.localFileManager(True).makeLocalFile()
+            lyfile = self._doc.localFileManager(True).makeLocalFile()
         else:
-            lyfile = doc.localPath()
-            lvars = doc.variables()
-            ly = (lvars.get(preview and 'master-preview' or 'master-publish')
+            lyfile = self._doc.localPath()
+            lvars = self._doc.variables()
+            ly = (lvars.get(self.preview() and 'master-preview' or 'master-publish')
                   or lvars.get('master'))
             if ly:
                 lyfile = os.path.join(os.path.dirname(lyfile), ly)
-        super(LyDoc2PDF, self).__init__(lyfile, log)
-        doc.closed.connect(self.kill)
-        
+        self.setFilePath(lyfile)
+        self._doc.closed.connect(self.kill)
+        super(DocumentJob, self).start()
+
 
 class JobManager(object):
     """
     Manages LilyPond jobs.
     
-    Create new jobs with the createJob method.
-    (Stop jobs by calling abort() on the job).
+    Start jobs run() method.
+    Stop jobs by calling abort() on the job.
     Emits:
     jobStarted(Document)
     jobFinished(Document, success, job)
@@ -205,23 +272,24 @@ class JobManager(object):
         
     def docs(self):
         return self.jobs.keys()
-        
-    def createJob(self, doc, log, preview):
-        if doc in self.jobs:
+    
+    def run(self, job):
+        if job.document() in self.jobs:
             return
-        self.jobs[doc] = LyDoc2PDF(doc, log, preview)
-        self.jobStarted(doc)
-        def finished(success, job):
-            del self.jobs[doc]
-            self.jobFinished(doc, success, job)
-        self.jobs[doc].done.connect(finished)
-        return self.jobs[doc]
+        self.jobs[job.document()] = job
+        job.done.connect(self._finished)
+        job.start()
+        self.jobStarted(job.document())
+    
+    def _finished(self, success, job):
+        del self.jobs[job.document()]
+        self.jobFinished(job.document(), success, job)
 
 
 class LogWidget(QFrame):
     def __init__(self, parent=None):
         QFrame.__init__(self, parent)
-        self.preview = False # this is used by Ly2PDF and the ActionManager
+        self._preview = False # this is used by Ly2PDF and the ActionManager
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
@@ -244,6 +312,16 @@ class LogWidget(QFrame):
         self.setFrameStyle(self.textBrowser.frameStyle())
         self.textBrowser.setFrameStyle(QFrame.NoFrame)
     
+    def setPreview(self, preview):
+        """
+        Set whether this log is of a document in preview mode, this is used
+        by the ActionManager. (preview is either True or False)
+        """
+        self._preview = preview
+        
+    def preview(self):
+        return self._preview
+        
     def clear(self):
         self.textBrowser.clear()
         self.actionBar.clear()
@@ -494,8 +572,11 @@ class BackgroundJob(object):
         with open(lyfile, 'w') as f:
             f.write(text.encode('utf-8'))
         # ... and run LilyPond.
-        self.job = Ly2PDF(lyfile, self.log)
-        self.job.done.connect(self.finished)
+        job = self.job = LilyPondJob()
+        job.setFilePath(lyfile)
+        job.output.connect(self.log)
+        job.done.connect(self.finished)
+        job.start()
     
     def finished(self):
         """
@@ -652,3 +733,11 @@ def anchorgen(num = 0):
     while True:
         yield "anchor{0}".format(num)
         num += 1
+
+
+def scmbool(value):
+    """
+    Returns the Scheme notation for the boolean value.
+    """
+    return "#t" if value else "#f"
+

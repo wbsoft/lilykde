@@ -95,3 +95,34 @@ class Signal:
         except KeyError:
             pass
 
+
+class SignalProxy:
+    """
+    A Signal that dispatches method calls to connected objects.
+    
+    Call methods on this proxy object and the same method will be called
+    on all connected objects with the same arguments.
+    
+    Attributes other than methods are not supported.
+    Methods can't be named 'connect' or 'disconnect'
+    Return values are discarded.
+    A SignalProxy keeps weak references to connected objects.
+    """
+    def __init__(self):
+        self._objects = weakref.WeakKeyDictionary()
+    
+    def connect(self, obj):
+        self._objects[obj] = True
+        
+    def disconnect(self, obj):
+        try:
+            del self._objects[obj]
+        except KeyError:
+            pass
+
+    def __getattr__(self, attr):
+        def func(*args, **kwargs):
+            for obj in self._objects:
+                getattr(obj, attr)(*args, **kwargs)
+        func.func_name = attr
+        return func
