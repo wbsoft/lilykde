@@ -104,7 +104,7 @@ class SignalProxy:
     on all connected objects with the same arguments.
     
     Attributes other than methods are not supported.
-    Methods can't be named 'connect' or 'disconnect'
+    Methods can't be named 'connect' or 'disconnect'.
     Return values are discarded.
     A SignalProxy keeps weak references to connected objects.
     """
@@ -125,4 +125,5 @@ class SignalProxy:
             for obj in self._objects:
                 getattr(obj, attr)(*args, **kwargs)
         func.func_name = attr
+        setattr(self, attr, func)
         return func

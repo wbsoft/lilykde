@@ -142,9 +142,9 @@ class BasicLilyPondJob(object):
         Immediately kill the job, and disconnect it's output signals, etc.
         Emits the done(False) signal.
         """
-        self._p.finished.disconnect(self.finished)
-        self._p.error.disconnect(self.error)
-        self._p.readyRead.disconnect(self.readOutput)
+        self._p.finished.disconnect(self._finished)
+        self._p.error.disconnect(self._error)
+        self._p.readyRead.disconnect(self._readOutput)
         self._p.kill()
         self._p.waitForFinished(2000)
         self.done(False, self)
