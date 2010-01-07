@@ -56,67 +56,34 @@ class BasicLilyPondJob(object):
     Don't use (Basic)LilyPondJob for more than one run.
     """
     
+    # these are default values for attributes that can be set:
+    
+    command = "lilypond"        # lilypond command to run
+    arguments = ["--pdf"]       # arguments
+    lyfile = None               # lilypond document filename to run on
+    
+    preview = False             # run with point and click
+    verbose = False             # run with --verbose
+    delfiles = True             # delete intermediate files
+    
+    startTime = 0.0             # time.time() this job started
+    
     def __init__(self):
-        self._command = "lilypond"
-        self._arguments = "--pdf"
-        self._filePath = None
-        self._preview = False
-        self._verbose = False
-        self._delfiles = False # delete intermediate files
         self.output = SignalProxy()
         self.done = Signal(fireonce=True)
-        
-    def setCommand(self, command):
-        self._command = command
-        
-    def command(self):
-        return self._command
-    
-    def setArguments(self, *args):
-        self._arguments = args
-        
-    def arguments(self):
-        return self._arguments
-        
-    def setFilePath(self, filePath):
-        self._filePath = filePath
-        
-    def filePath(self):
-        return self._filePath
-        
-    def setPreview(self, preview):
-        self._preview = preview
-        
-    def preview(self):
-        return self._preview
-        
-    def setVerbose(self, verbose):
-        self._verbose = verbose
-        
-    def verbose(self):
-        return self._verbose
-    
-    def setDeleteIntermediateFiles(self, delfiles):
-        self._delfiles = delfiles
-        
-    def deleteIntermediateFiles(self):
-        return self._delfiles
-        
-    def startTime(self):
-        """ Returns the time.time() this process has been started. """
-        return self._startTime
         
     def start(self):
         """ Starts the process. """
         # save some values
-        self._directory, self._fileName = os.path.split(self._filePath)
+        self._directory, self._basename = os.path.split(self.lyfile)
         
         # construct the full LilyPond command.
-        cmd = [self._command]
-        self._verbose and cmd.append("--verbose")
-        cmd.append("-dpoint-and-click=" + scmbool(self._preview))
-        cmd.append("-ddelete-intermediate-files=" + scmbool(self._delfiles))
-        cmd.append(self._fileName)
+        cmd = [self.command]
+        self.verbose and cmd.append("--verbose")
+        cmd.append("-dpoint-and-click=" + scmbool(self.preview))
+        cmd.append("-ddelete-intermediate-files=" + scmbool(self.delfiles))
+        cmd.extend(self.arguments)
+        cmd.append(self._basename)
         
         # create KProcess instance that does the work
         p = self._p = KProcess()
@@ -127,10 +94,10 @@ class BasicLilyPondJob(object):
         p.error.connect(self._error)
         p.readyRead.connect(self._readOutput)
         
-        mode = i18n("preview mode") if self._preview else i18n("publish mode")
-        self.output.writeLine(i18n("LilyPond [%1] starting (%2)...", self._fileName, mode))
+        mode = i18n("preview mode") if self.preview else i18n("publish mode")
+        self.output.writeLine(i18n("LilyPond [%1] starting (%2)...", self._basename, mode))
         
-        self._startTime = time.time()
+        self.startTime = time.time()
         p.start()
         
     def abort(self):
@@ -152,16 +119,16 @@ class BasicLilyPondJob(object):
     def _finished(self, exitCode, exitStatus):
         if exitCode:
             self.output.writeMsg(i18n("LilyPond [%1] exited with return code %2.",
-                self._fileName, exitCode), "msgerr")
+                self._basename, exitCode), "msgerr")
         elif exitStatus:
             self.output.writeMsg(i18n("LilyPond [%1] exited with exit status %2.",
-                self._fileName, exitStatus), "msgerr")
+                self._basename, exitStatus), "msgerr")
         else:
             # We finished successfully, show elapsed time...
-            minutes, seconds = divmod(time.time() - self._startTime, 60)
+            minutes, seconds = divmod(time.time() - self.startTime, 60)
             f = "{0:.0f}'{1:.0f}\"" if minutes else '{1:.1f}"'
             self.output.writeMsg(i18n("LilyPond [%1] finished (%2).",
-                self._fileName, f.format(minutes, seconds)), "msgok")
+                self._basename, f.format(minutes, seconds)), "msgok")
         
         # otherwise we delete ourselves during our event handler, causing crash
         QTimer.singleShot(0, lambda: self.done(not (exitCode or exitStatus), self))
@@ -188,7 +155,7 @@ class BasicLilyPondJob(object):
         # parts has an odd length(1, 6, 11 etc)
         # message, <url, path, line, col, message> etc.
         self.output.write(parts.pop(0))
-        while len(parts[:5]) == 5:
+        while parts:
             url, path, line, col, msg = parts[:5]
             path = os.path.join(self._directory, path)
             line = int(line or "1") or 1
@@ -201,8 +168,8 @@ class BasicLilyPondJob(object):
         """
         Returns a function that can list updated files based on extension.
         """
-        return frescobaldi_app.mainapp.updatedFiles(self._filePath,
-            math.floor(self._startTime))
+        return frescobaldi_app.mainapp.updatedFiles(self.lyfile,
+            math.floor(self.startTime))
 
 
 class LilyPondJob(BasicLilyPondJob):
@@ -211,40 +178,35 @@ class LilyPondJob(BasicLilyPondJob):
     """
     def __init__(self):
         super(LilyPondJob, self).__init__()
-        self.setCommand(frescobaldi_app.mainapp.lilypondCommand())
-        self.setArguments("--pdf")
-        self.setVerbose(config("preferences").readEntry("verbose lilypond output", False))
-        self.setDeleteIntermediateFiles(
-            config("preferences").readEntry("delete intermediate files", True))
+        self.command = frescobaldi_app.mainapp.lilypondCommand()
+        self.arguments = ["--pdf"]
+        self.verbose = config("preferences").readEntry("verbose lilypond output", False)
+        self.delfiles = config("preferences").readEntry("delete intermediate files", True)
 
 
 class DocumentJob(LilyPondJob):
     """
     A job to be run on a Document instance.
+    The document is available in the document attribute.
     """
     def __init__(self, doc=None):
-        self._doc = doc
+        self.document = doc
         super(DocumentJob, self).__init__()
         
-    def setDocument(self, doc):
-        self._doc = doc
-        
-    def document(self):
-        return self._doc
-        
     def start(self):
-        if self._doc.needsLocalFileManager():
+        if self.document.needsLocalFileManager():
             # handle nonlocal or unnamed documents
-            lyfile = self._doc.localFileManager(True).makeLocalFile()
+            lyfile = self.document.localFileManager(True).makeLocalFile()
         else:
-            lyfile = self._doc.localPath()
-            lvars = self._doc.variables()
-            ly = (lvars.get(self.preview() and 'master-preview' or 'master-publish')
+            # look for %%master directives
+            lyfile = self.document.localPath()
+            lvars = self.document.variables()
+            ly = (lvars.get(self.preview and 'master-preview' or 'master-publish')
                   or lvars.get('master'))
             if ly:
                 lyfile = os.path.join(os.path.dirname(lyfile), ly)
-        self.setFilePath(lyfile)
-        self._doc.closed.connect(self.kill)
+        self.lyfile = lyfile
+        self.document.closed.connect(self.kill)
         super(DocumentJob, self).start()
 
 
@@ -274,22 +236,24 @@ class JobManager(object):
         return self.jobs.keys()
     
     def run(self, job):
-        if job.document() in self.jobs:
+        if job.document in self.jobs:
             return
-        self.jobs[job.document()] = job
+        self.jobs[job.document] = job
         job.done.connect(self._finished)
         job.start()
-        self.jobStarted(job.document())
+        self.jobStarted(job.document)
     
     def _finished(self, success, job):
-        del self.jobs[job.document()]
-        self.jobFinished(job.document(), success, job)
+        del self.jobs[job.document]
+        self.jobFinished(job.document, success, job)
 
 
 class LogWidget(QFrame):
+    
+    preview = False   # this is used by the ActionManager
+    
     def __init__(self, parent=None):
         QFrame.__init__(self, parent)
-        self._preview = False   # this is used by the ActionManager
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
@@ -312,16 +276,6 @@ class LogWidget(QFrame):
         self.setFrameStyle(self.textBrowser.frameStyle())
         self.textBrowser.setFrameStyle(QFrame.NoFrame)
     
-    def setPreview(self, preview):
-        """
-        Set whether this log is of a document in preview mode, this is used
-        by the ActionManager. (preview is either True or False)
-        """
-        self._preview = preview
-        
-    def preview(self):
-        return self._preview
-        
     def clear(self):
         self.textBrowser.clear()
         self.actionBar.clear()
@@ -573,7 +527,7 @@ class BackgroundJob(object):
             f.write(text.encode('utf-8'))
         # ... and run LilyPond.
         job = self.job = LilyPondJob()
-        job.setFilePath(lyfile)
+        job.lyfile = lyfile
         job.output.connect(self.log)
         job.done.connect(self.finished)
         job.start()

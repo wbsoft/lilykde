@@ -445,13 +445,13 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             
             # get a logwidget
             log = self.tools["log"].createLog(d)
-            log.setPreview(preview)
+            log.preview = preview
             log.clear()
             
             # create a Job
             import frescobaldi_app.runlily
             job = frescobaldi_app.runlily.DocumentJob(d)
-            job.setPreview(preview)
+            job.preview = preview
             job.output.connect(log)
             
             # open PDF and action bar when finished
@@ -469,7 +469,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                     if not success:
                         log.show() # even if LP didn't show an error location
             
-            # run LilyPond
+            # run the LilyPond Job
             self.jobManager().run(job)
         
         @self.onAction(i18n("Interrupt LilyPond Job"), "process-stop")

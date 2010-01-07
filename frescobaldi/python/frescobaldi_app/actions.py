@@ -98,7 +98,7 @@ class ActionManager(object):
             a = bar.addAction(KIcon("mail-send"), i18n("Email..."))
             a.setShortcut(QKeySequence("Ctrl+E"))
             a.setToolTip("{0} ({1})".format(a.toolTip(), a.shortcut().toString()))
-            a.triggered.connect(lambda: self.email(updatedFiles, log.preview()))
+            a.triggered.connect(lambda: self.email(updatedFiles, log.preview))
             log.checkScroll(bar.show)
         
     def openPDF(self, fileName):
