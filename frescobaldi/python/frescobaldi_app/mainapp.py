@@ -383,6 +383,11 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         return man
     
     @cacheresult
+    def runLilyPondDialog(self):
+        import frescobaldi_app.runlily
+        return frescobaldi_app.runlily.RunLilyPondDialog(self)
+    
+    @cacheresult
     def progressBarManager(self, jobmanager):
         import frescobaldi_app.progress
         return frescobaldi_app.progress.ProgressBarManager(jobmanager,
@@ -420,13 +425,23 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         # run LilyPond actions
         @self.onAction(i18n("Run LilyPond (preview)"), "run-lilypond", key="Ctrl+M")
         def lilypond_run_preview():
-            lilypond_run(True)
+            lilypond_run("preview")
             
         @self.onAction(i18n("Run LilyPond (publish)"), "run-lilypond")
         def lilypond_run_publish():
-            lilypond_run(False)
+            lilypond_run("publish")
         
-        def lilypond_run(preview):
+        @self.onAction(i18n("Run LilyPond (custom)"), "run-lilypond", key="Shift+Ctrl+M")
+        def lilypond_run_custom():
+            lilypond_run("custom")
+        
+        def lilypond_run(mode):
+            """Runs LilyPond.
+            
+            mode is "preview", "publish" or "custom".
+            For "custom", a dialog is opened where the user can adjust the
+            parameters for the LilyPond run (such as which version to use).
+            """
             d = self.currentDocument()
             if not d:
                 return
@@ -443,15 +458,22 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                     "Your document has been modified, "
                     "please save first."))
             
-            # get a logwidget
-            log = self.tools["log"].createLog(d)
-            log.preview = preview
-            log.clear()
-            
             # create a Job
             import frescobaldi_app.runlily
             job = frescobaldi_app.runlily.DocumentJob(d)
-            job.preview = preview
+            
+            # configure this Job
+            job.preview = False
+            if mode == "preview":
+                job.preview = True
+            elif mode == "custom":
+                if not self.runLilyPondDialog().configureJob(job, d):
+                    return # job configure dialog cancelled by user
+                
+            # get a logwidget
+            log = self.tools["log"].createLog(d)
+            log.preview = job.preview
+            log.clear()
             job.output.connect(log)
             
             # open PDF and action bar when finished

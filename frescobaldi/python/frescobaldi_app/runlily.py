@@ -212,6 +212,23 @@ class DocumentJob(LilyPondJob):
         super(DocumentJob, self).start()
 
 
+class RunLilyPondDialog(KDialog):
+    """
+    A dialog where a DocumentJob can be configured before it's started.
+    """
+    def __init__(self, mainwin):
+        self.mainwin = mainwin
+        KDialog.__init__(self, mainwin)
+        self.setCaption(i18n("Run LilyPond"))
+        self.setButtons(KDialog.ButtonCode(
+            KDialog.Help | KDialog.Ok | KDialog.Cancel ))
+        self.setButtonText(KDialog.Ok, i18n("Run LilyPond"))
+        self.setButtonIcon(KDialog.Ok, KIcon("run-lilypond"))
+    
+    def configureJob(self, job, doc=None):
+        return self.exec_()
+
+
 class JobManager(object):
     """
     Manages LilyPond jobs.
