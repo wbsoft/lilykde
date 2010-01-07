@@ -261,28 +261,30 @@ class RunLilyPondDialog(KDialog):
         default = conf.readEntry("default", "lilypond")
         
         import ly.version
-        ver = lambda path: ly.version.LilyPondInstance(path).version()
-        fver = lambda path: format(ver(path)) if ver(path) else i18n("unknown")
+        
+        # get all versions
+        ver = dict((path, ly.version.LilyPondInstance(path).version())
+            for path in paths)
         
         # default
         if default not in paths:
             default = paths[0]
             
         # Sort on version
-        paths.sort(key=ver)
+        paths.sort(key=ver.get)
         
         # Determine automatic version (lowest possible)
         autopath = None
         docVersion = ly.version.getVersion(doc.text())
         if docVersion:
             for path in paths:
-                if ver(path) >= docVersion:
+                if ver[path] >= docVersion:
                     autopath = path
                     break
         
         def addItem(version, path, icon, title, tooltip):
             item = QListWidgetItem(self.lilypond)
-            item.setIcon(KIcon(icon if version else "dialog-error"))
+            item.setIcon(KIcon(icon))
             item.setText("{0}\n{1}: {2}".format(title, i18n("Command"), path))
             item.setToolTip(tooltip)
             version or item.setFlags(Qt.NoItemFlags)
@@ -291,22 +293,29 @@ class RunLilyPondDialog(KDialog):
         
         # default version is always present:
         addItem("default", default, "bookmarks",
-            i18n("Default LilyPond Version (%1)", fver(default)),
+            i18n("Default LilyPond Version (%1)",
+                format(ver[default]) if ver[default] else i18n("unknown")),
             i18n("Use the default LilyPond version."))
         
         # Automatic versions if there is more than one to choose from:
         if autopath:
             addItem("auto", autopath, "tools-wizard",
-                i18n("Automatic LilyPond Version (%1)", fver(autopath)),
+                i18n("Automatic LilyPond Version (%1)", format(ver[autopath])),
                 i18n("Determine LilyPond version to use from the "
                      "\\version statement in the document."))
         
         # Add all available LilyPond versions:
         for path in paths:
-            addItem(format(ver(path) or ""), path, "run-lilypond",
-                i18n("LilyPond %1", fver(path)),
-                i18n("Use LilyPond version %1\nPath: %2", fver(path),
-                    ly.version.LilyPondInstance(path).command() or path))
+            if ver[path]:
+                addItem(format(ver[path]), path, "run-lilypond",
+                    i18n("LilyPond %1", format(ver[path])),
+                    i18n("Use LilyPond version %1\nPath: %2", format(ver[path]),
+                        ly.version.LilyPondInstance(path).command() or path))
+            else:
+                addItem("", path, "dialog-error",
+                    i18n("LilyPond (version unknown)"),
+                    i18n("Use LilyPond (version unknown)\nPath: %1",
+                        ly.version.LilyPondInstance(path).command() or path))
         
         # Copy the settings from the document:
         self.preview.setChecked(doc.metainfo["preview"])
