@@ -825,6 +825,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         act = self.actionCollection().action
         act("lilypond_run_preview").setEnabled(not running)
         act("lilypond_run_publish").setEnabled(not running)
+        act("lilypond_run_custom").setEnabled(not running)
         act("lilypond_abort").setEnabled(running)
         if running:
             icon = "process-stop"
