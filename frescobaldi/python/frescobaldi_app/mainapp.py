@@ -122,6 +122,8 @@ class Document(kateshell.app.Document):
     
     metainfoDefaults = {
         "lilypond version": "default",
+        "verbose": False,
+        "preview": True,
         }
     
     def __init__(self, *args, **kwargs):
@@ -411,11 +413,11 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         def lilypond_runner():
             d = self.currentDocument()
             if d:
-                job = self.jobManager().job(d)
-                if job:
-                    job.abort()
+                if KApplication.keyboardModifiers() & Qt.ShiftModifier:
+                    self.runLilypond("custom")
                 else:
-                    lilypond_run_preview()
+                    job = self.jobManager().job(d)
+                    job.abort() if job else self.runLilypond("preview")
 
         # Score wizard
         @self.onAction(i18n("Setup New Score..."), "text-x-lilypond", key="Ctrl+Shift+N")
@@ -425,74 +427,15 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         # run LilyPond actions
         @self.onAction(i18n("Run LilyPond (preview)"), "run-lilypond", key="Ctrl+M")
         def lilypond_run_preview():
-            lilypond_run("preview")
+            self.runLilypond("preview")
             
         @self.onAction(i18n("Run LilyPond (publish)"), "run-lilypond")
         def lilypond_run_publish():
-            lilypond_run("publish")
+            self.runLilypond("publish")
         
         @self.onAction(i18n("Run LilyPond (custom)"), "run-lilypond", key="Shift+Ctrl+M")
         def lilypond_run_custom():
-            lilypond_run("custom")
-        
-        def lilypond_run(mode):
-            """Runs LilyPond.
-            
-            mode is "preview", "publish" or "custom".
-            For "custom", a dialog is opened where the user can adjust the
-            parameters for the LilyPond run (such as which version to use).
-            """
-            d = self.currentDocument()
-            if not d:
-                return
-            sorry = lambda msg: KMessageBox.sorry(self, msg,
-                i18n("Can't process document"))
-            if self.jobManager().job(d):
-                return sorry(i18n(
-                    "There is already a LilyPond job running "
-                    "for this document."))
-            if (d.url().protocol() == "file" and d.isModified()) and not (
-                    config().readEntry("save on run", False)
-                    and d.save()):
-                return sorry(i18n(
-                    "Your document has been modified, "
-                    "please save first."))
-            
-            # create a Job
-            import frescobaldi_app.runlily
-            job = frescobaldi_app.runlily.DocumentJob(d)
-            
-            # configure this Job
-            job.preview = False
-            if mode == "preview":
-                job.preview = True
-            elif mode == "custom":
-                if not self.runLilyPondDialog().configureJob(job, d):
-                    return # job configure dialog cancelled by user
-                
-            # get a logwidget
-            log = self.tools["log"].createLog(d)
-            log.preview = job.preview
-            log.clear()
-            job.output.connect(log)
-            
-            # open PDF and action bar when finished
-            @job.done.connect
-            def finished(success, job):
-                result = job.updatedFiles()
-                pdfs = result("pdf")
-                if pdfs:
-                    if "pdf" in self.tools:
-                        self.tools["pdf"].openUrl(KUrl(pdfs[0]))
-                    d.resetCursorTranslations()
-                log = self.tools["log"].log(d)
-                if log:
-                    self.actionManager().addActionsToLog(result, log)
-                    if not success:
-                        log.show() # even if LP didn't show an error location
-            
-            # run the LilyPond Job
-            self.jobManager().run(job)
+            self.runLilypond("custom")
         
         @self.onAction(i18n("Interrupt LilyPond Job"), "process-stop")
         def lilypond_abort():
@@ -819,20 +762,81 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
         menu.aboutToShow.connect(populateGenFilesMenu)
             
+    def runLilypond(self, mode):
+        """Run LilyPond on the current document.
+        
+        mode is "preview", "publish" or "custom".
+        For "custom", a dialog is opened where the user can adjust the
+        parameters for the LilyPond run (such as which version to use).
+        """
+        d = self.currentDocument()
+        if not d:
+            return
+        sorry = lambda msg: KMessageBox.sorry(self, msg,
+            i18n("Can't process document"))
+        if (d.url().protocol() == "file" and d.isModified()) and not (
+                config().readEntry("save on run", False)
+                and d.save()):
+            return sorry(i18n(
+                "Your document has been modified, "
+                "please save first."))
+        
+        # create a Job
+        import frescobaldi_app.runlily
+        job = frescobaldi_app.runlily.DocumentJob(d)
+        
+        # configure this Job
+        job.preview = False
+        if mode == "preview":
+            job.preview = True
+        elif mode == "custom":
+            if not self.runLilyPondDialog().configureJob(job, d):
+                return # job configure dialog cancelled by user
+            
+        # check if there is not already a job running. We do it now, so the
+        # custom dialog can be requested even when there is a job running.
+        if self.jobManager().job(d):
+            return sorry(i18n(
+                "There is already a LilyPond job running "
+                "for this document."))
+        
+        # get a logwidget
+        log = self.tools["log"].createLog(d)
+        log.preview = job.preview
+        log.clear()
+        job.output.connect(log)
+        
+        # open PDF and action bar when finished
+        @job.done.connect
+        def finished(success, job):
+            result = job.updatedFiles()
+            pdfs = result("pdf")
+            if pdfs:
+                if "pdf" in self.tools:
+                    self.tools["pdf"].openUrl(KUrl(pdfs[0]))
+                d.resetCursorTranslations()
+            log = self.tools["log"].log(d)
+            if log:
+                self.actionManager().addActionsToLog(result, log)
+                if not success:
+                    log.show() # even if LP didn't show an error location
+        
+        # run the LilyPond Job
+        self.jobManager().run(job)
+        
     def updateJobActions(self):
         doc = self.currentDocument()
         running = bool(doc and not doc.isEmpty() and self.jobManager().job(doc))
         act = self.actionCollection().action
         act("lilypond_run_preview").setEnabled(not running)
         act("lilypond_run_publish").setEnabled(not running)
-        act("lilypond_run_custom").setEnabled(not running)
         act("lilypond_abort").setEnabled(running)
         if running:
             icon = "process-stop"
             tip = i18n("Abort the running LilyPond process")
         else:
             icon = "run-lilypond"
-            tip = i18n("Run LilyPond in preview mode")
+            tip = i18n("Run LilyPond in preview mode (Shift-click for custom dialog)")
         act("lilypond_runner").setIcon(KIcon(icon))
         act("lilypond_runner").setToolTip(tip)
     

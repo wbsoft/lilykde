@@ -25,8 +25,9 @@ import math, os, re, shutil, sys, tempfile, time
 
 from PyQt4.QtCore import QProcess, QSize, QTimer, QUrl, Qt
 from PyQt4.QtGui import (
-    QBrush, QColor, QFont, QFrame, QStackedWidget, QTextBrowser,
-    QTextCharFormat, QTextCursor, QToolBar, QVBoxLayout, QWidget)
+    QBrush, QCheckBox, QColor, QFont, QFrame, QLabel, QListWidget,
+    QListWidgetItem, QStackedWidget, QTextBrowser, QTextCharFormat, QTextCursor,
+    QToolBar, QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, KPluginLoader, KProcess, KUrl, i18n
 from PyKDE4.kdeui import (
     KApplication, KDialog, KIcon, KMenu, KMessageBox, KStandardGuiItem)
@@ -224,9 +225,126 @@ class RunLilyPondDialog(KDialog):
             KDialog.Help | KDialog.Ok | KDialog.Cancel ))
         self.setButtonText(KDialog.Ok, i18n("Run LilyPond"))
         self.setButtonIcon(KDialog.Ok, KIcon("run-lilypond"))
-    
+        
+        layout = QVBoxLayout(self.mainWidget())
+        
+        layout.addWidget(QLabel(i18n(
+            "Select which LilyPond version you want to run:")))
+            
+        self.lilypond = QListWidget()
+        self.lilypond.setIconSize(QSize(22, 22))
+        self.lilypond.setSpacing(4)
+        layout.addWidget(self.lilypond)
+        
+        self.preview = QCheckBox(i18n(
+            "Run LilyPond in preview mode (with Point and Click)"))
+        layout.addWidget(self.preview)
+        
+        self.verbose = QCheckBox(i18n("Run LilyPond with verbose output"))
+        layout.addWidget(self.verbose)
+        
     def configureJob(self, job, doc=None):
-        return self.exec_()
+        """Configure a job, belonging to document.
+        
+        If the document is not given, it is expected to live in the document
+        attribute of the job. If there is already a job running, we just display,
+        but disable the Run button, until the old job finishes.
+        """
+        doc = doc or job.document
+        
+        # populate the dialog based on remembered settings for this document
+        self.lilypond.clear()
+        
+        # find the configured lilypond versions
+        conf = config("lilypond")
+        paths = conf.readEntry("paths", ["lilypond"]) or ["lilypond"]
+        default = conf.readEntry("default", "lilypond")
+        
+        import ly.version
+        ver = lambda path: ly.version.LilyPondInstance(path).version()
+        fver = lambda path: format(ver(path)) if ver(path) else i18n("unknown")
+        
+        # default
+        if default not in paths:
+            default = paths[0]
+            
+        # Sort on version
+        paths.sort(key=ver)
+        
+        # Determine automatic version (lowest possible)
+        autopath = None
+        docVersion = ly.version.getVersion(doc.text())
+        if docVersion:
+            for path in paths:
+                if ver(path) >= docVersion:
+                    autopath = path
+                    break
+        
+        def addItem(version, path, icon, title, tooltip):
+            item = QListWidgetItem(self.lilypond)
+            item.setIcon(KIcon(icon if version else "dialog-error"))
+            item.setText("{0}\n{1}: {2}".format(title, i18n("Command"), path))
+            item.setToolTip(tooltip)
+            version or item.setFlags(Qt.NoItemFlags)
+            item.version = version
+            item.path = path
+        
+        # default version is always present:
+        addItem("default", default, "bookmarks",
+            i18n("Default LilyPond Version (%1)", fver(default)),
+            i18n("Use the default LilyPond version."))
+        
+        # Automatic versions if there is more than one to choose from:
+        if autopath:
+            addItem("auto", autopath, "tools-wizard",
+                i18n("Automatic LilyPond Version (%1)", fver(autopath)),
+                i18n("Determine LilyPond version to use from the "
+                     "\\version statement in the document."))
+        
+        # Add all available LilyPond versions:
+        for path in paths:
+            addItem(format(ver(path) or ""), path, "run-lilypond",
+                i18n("LilyPond %1", fver(path)),
+                i18n("Use LilyPond version %1\nPath: %2", fver(path),
+                    ly.version.LilyPondInstance(path).command() or path))
+        
+        # Copy the settings from the document:
+        self.preview.setChecked(doc.metainfo["preview"])
+        self.verbose.setChecked(doc.metainfo["verbose"])
+        for i in range(self.lilypond.count()):
+            if self.lilypond.item(i).version == doc.metainfo["lilypond version"]:
+                self.lilypond.setCurrentRow(i)
+                break
+        else:
+            self.lilypond.setCurrentRow(0)
+            
+        # Focus our listbox:
+        self.lilypond.setFocus()
+        
+        # Disable the Run button if a job is running for this document
+        oldjob = self.mainwin.jobManager().job(doc)
+        self.enableButtonOk(not oldjob)
+        if oldjob:
+            enable = lambda: self.enableButtonOk(True)
+            oldjob.done.connect(enable)
+        
+        # Wait for user interaction:
+        result = self.exec_()
+        
+        # If a job was running, don't listen to it anymore
+        if oldjob:
+            oldjob.done.disconnect(enable)
+        
+        if not result:
+            return False # cancelled
+        
+        # Save the settings in the document's metainfo and configure job:
+        doc.metainfo["preview"] = job.preview = self.preview.isChecked()
+        doc.metainfo["verbose"] = job.verbose = self.verbose.isChecked()
+        item = self.lilypond.currentItem() or self.lilypond.item(0) # default
+        doc.metainfo["lilypond version"] = item.version
+        job.command = item.path
+        return True
 
 
 class JobManager(object):
