@@ -189,6 +189,8 @@ class DocumentJob(LilyPondJob):
     A job to be run on a Document instance.
     The document is available in the document attribute.
     """
+    document = None
+    
     def __init__(self, doc=None):
         self.document = doc
         super(DocumentJob, self).__init__()
@@ -353,9 +355,10 @@ class Log(LogWidget):
     
     def showContextMenu(self, pos):
         m = KMenu(self.textBrowser)
+        m.aboutToHide.connect(m.deleteLater)
         m.addTitle(i18n("LilyPond Log"))
         self.addContextMenuActions(m)
-        m.exec_(self.textBrowser.mapToGlobal(pos))
+        m.popup(self.textBrowser.mapToGlobal(pos))
         
     def addContextMenuActions(self, menu):
         a = menu.addAction(KIcon("edit-copy"), i18n("&Copy"))
