@@ -272,6 +272,7 @@ class RunLilyPondDialog(KDialog):
             
         # Sort on version
         paths.sort(key=ver.get)
+        versions = map(ver.get, paths)
         
         # Determine automatic version (lowest possible)
         autopath = None
@@ -291,25 +292,23 @@ class RunLilyPondDialog(KDialog):
             item.version = version
             item.path = path
         
-        # default version is always present:
-        addItem("default", default, "bookmarks",
-            i18n("Default LilyPond Version (%1)",
-                format(ver[default]) if ver[default] else i18n("unknown")),
-            i18n("Use the default LilyPond version."))
-        
-        # Automatic versions if there is more than one to choose from:
-        if autopath:
-            addItem("auto", autopath, "tools-wizard",
-                i18n("Automatic LilyPond Version (%1)", format(ver[autopath])),
-                i18n("Determine LilyPond version to use from the "
-                     "\\version statement in the document."))
-        
         # Add all available LilyPond versions:
         for path in paths:
             if ver[path]:
-                addItem(format(ver[path]), path, "run-lilypond",
-                    i18n("LilyPond %1", format(ver[path])),
-                    i18n("Use LilyPond version %1\nPath: %2", format(ver[path]),
+                title = i18n("LilyPond %1", format(ver[path]))
+                tooltip = i18n("Use LilyPond version %1", format(ver[path]))
+                addenda, tips = [], []
+                if path == default:
+                    addenda.append(i18n("default"))
+                    tips.append(i18n("Default LilyPond Version."))
+                if path == autopath:
+                    addenda.append(i18n("automatic"))
+                    tips.append(i18n("Automatic LilyPond Version (determined from document)."))
+                if addenda:
+                    title += " [{0}]".format(", ".join(addenda))
+                    tooltip += "\n{0}".format("\n".join(tips))
+                addItem(format(ver[path]), path, "run-lilypond", title,
+                    tooltip + "\n" + i18n("Path: %1",
                         ly.version.LilyPondInstance(path).command() or path))
             else:
                 addItem("", path, "dialog-error",
@@ -320,12 +319,11 @@ class RunLilyPondDialog(KDialog):
         # Copy the settings from the document:
         self.preview.setChecked(doc.metainfo["preview"])
         self.verbose.setChecked(doc.metainfo["verbose"])
-        for i in range(self.lilypond.count()):
-            if self.lilypond.item(i).version == doc.metainfo["lilypond version"]:
-                self.lilypond.setCurrentRow(i)
-                break
-        else:
-            self.lilypond.setCurrentRow(0)
+        
+        try:
+            self.lilypond.setCurrentRow(versions.index(doc.metainfo["lilypond version"]))
+        except ValueError:
+            self.lilypond.setCurrentRow(paths.index(default))
             
         # Focus our listbox:
         self.lilypond.setFocus()
