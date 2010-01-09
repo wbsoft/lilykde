@@ -1,5 +1,10 @@
 Changes in 1.1.0 --
 
+* It is now possible to use multiple versions of LilyPond easily from within
+  Frescobaldi. LilyPond instances can be configured under Settings, Paths.
+  There is also a custom Run LilyPond command where a version can be chosen,
+  among other options.  And Frescobaldi can be configured to automatically
+  choose a LilyPond version according to the document's \version statement.
 * New dialog to insert special characters from the Unicode table, with the
   ability to assign keyboard shortcuts to often used characters.
 * Quick Insert Panel:
@@ -9,6 +14,8 @@ Changes in 1.0.1 --
 
 * Translations:
   - New Galician translation by Manuel A. Vázquez
+* Bugfix:
+  - Make rumor config more robust if no MIDI outputs available.
 
 Changes in 1.0.0 -- December 26th, 2009
 
@@ -79,7 +86,7 @@ Changes in 0.7.17 -- November 29th, 2009
   - Fix crash when swichting to a document opened using the Open File dialog
     when multiple files were opened at the same time
   - All pitch manipulation functions better detect the end of unbracketed markup
-    expressions like: g g g-\markup \sharp g g g.  Frescobaldo now knows the
+    expressions like: g g g-\markup \sharp g g g.  Frescobaldi now knows the
     number of arguments each markup command has and will not mistake the g after
     \sharp for a markup argument.
 * Installation:

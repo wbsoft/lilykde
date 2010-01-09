@@ -608,6 +608,7 @@ class LilyPondInfoDialog(KDialog):
         self.setButtons(KDialog.ButtonCode(
             KDialog.Ok | KDialog.Cancel | KDialog.Help))
         self.setCaption(i18n("LilyPond"))
+        self.setHelp("settings-paths-lilypond")
         layout = QGridLayout(self.mainWidget())
         
         l = QLabel(i18n("LilyPond Command:"))
