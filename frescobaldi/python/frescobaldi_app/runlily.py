@@ -289,8 +289,6 @@ class RunLilyPondDialog(KDialog):
             item.setText("{0}\n{1}: {2}".format(title, i18n("Command"), path))
             item.setToolTip(tooltip)
             version or item.setFlags(Qt.NoItemFlags)
-            item.version = version
-            item.path = path
         
         # Add all available LilyPond versions:
         for path in paths:
@@ -348,9 +346,9 @@ class RunLilyPondDialog(KDialog):
         # Save the settings in the document's metainfo and configure job:
         doc.metainfo["preview"] = job.preview = self.preview.isChecked()
         doc.metainfo["verbose"] = job.verbose = self.verbose.isChecked()
-        item = self.lilypond.currentItem() or self.lilypond.item(0) # default
-        doc.metainfo["lilypond version"] = item.version
-        job.command = item.path
+        index = self.lilypond.currentRow()
+        doc.metainfo["lilypond version"] = versions[index]
+        job.command = paths[index]
         return True
 
 

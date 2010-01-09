@@ -411,6 +411,7 @@ class LilyPondInfoList(QGroupBox):
     """
     def __init__(self, parent=None):
         QGroupBox.__init__(self, i18n("LilyPond versions to use:"), parent)
+        self.changed = Signal()
         
         layout = QGridLayout(self)
         self.instances = QListWidget()
@@ -419,17 +420,21 @@ class LilyPondInfoList(QGroupBox):
         editButton = KPushButton(KStandardGuiItem.configure())
         removeButton = KPushButton(KStandardGuiItem.remove())
         
+        self.auto = QCheckBox(i18n(
+            "Enable automatic version selection "
+            "(choose LilyPond version from document)"),
+            clicked=lambda: self.changed())
+        
         layout.addWidget(self.instances, 0, 0, 3, 1)
         layout.addWidget(addButton, 0, 1)
         layout.addWidget(editButton, 1, 1)
         layout.addWidget(removeButton, 2, 1)
+        layout.addWidget(self.auto, 3, 0, 1, 2)
         
         addButton.clicked.connect(self.addClicked)
         editButton.clicked.connect(self.editClicked)
         removeButton.clicked.connect(self.removeClicked)
         self.instances.itemDoubleClicked.connect(self.itemDoubleClicked)
-        
-        self.changed = Signal()
         
     @cacheresult
     def lilyPondInfoDialog(self):
@@ -480,6 +485,7 @@ class LilyPondInfoList(QGroupBox):
         info = LilyPondInfoItem()
         self.instances.addItem(info)
         self.instances.setCurrentItem(info)
+        self.auto.setChecked(False)
         info.changed()
         
     def loadSettings(self):
@@ -487,6 +493,7 @@ class LilyPondInfoList(QGroupBox):
         while self.instances.takeItem(0):
             pass
         conf = config("lilypond")
+        self.auto.setChecked(conf.readEntry("automatic version", False))
         paths = conf.readEntry("paths", ["lilypond"])
         default = conf.readEntry("default", "lilypond")
         for path in paths:
@@ -513,6 +520,7 @@ class LilyPondInfoList(QGroupBox):
             default = paths[0]
         conf.writeEntry("paths", paths)
         conf.writeEntry("default", default)
+        conf.writeEntry("automatic version", self.auto.isChecked())
 
 
 class LilyPondInfo(object):
@@ -525,11 +533,13 @@ class LilyPondInfo(object):
                 of the lilypond command; the name is also the default value for
                 the command.
     default     whether to set this lilypond command as the default
+    auto        whether to include this command in automatic version selection
     """
     def __init__(self, lilypond="lilypond"):
         self.lilypond = lilypond
         self.commands = dict((name, name) for name, descr in self.commandNames())
         self.default = False
+        self.auto = True
         
     @staticmethod
     def commandNames():
@@ -550,12 +560,14 @@ class LilyPondInfo(object):
     def loadSettings(self, group):
         for cmd, descr in self.commandNames():
             self.commands[cmd] = group.readEntry(cmd, cmd)
+        self.auto = group.readEntry("auto", True)
         self.changed()
     
     def saveSettings(self, group):
         for cmd, descr in self.commandNames():
             group.writeEntry(cmd, self.commands[cmd])
-            
+        group.writeEntry("auto", self.auto)
+
 
 class LilyPondInfoItem(QListWidgetItem, LilyPondInfo):
     def __init__(self, lilypond="lilypond"):
@@ -621,6 +633,8 @@ class LilyPondInfoDialog(KDialog):
             row += 1
         self.default = QCheckBox(i18n("Set as default"))
         layout.addWidget(self.default, row, 1)
+        self.auto = QCheckBox(i18n("Include in automatic version selection"))
+        layout.addWidget(self.auto, row+1, 1)
         
     def loadInfo(self, info):
         """ Display the settings in the LilyPondInfo object in our dialog. """
@@ -628,6 +642,7 @@ class LilyPondInfoDialog(KDialog):
         for name, value in info.commands.items():
             self.commands[name].setText(value)
         self.default.setChecked(info.default)
+        self.auto.setChecked(info.auto)
         
     def saveInfo(self, info):
         """ Write the settings in our dialog to the LilyPondInfo object. """
@@ -635,6 +650,7 @@ class LilyPondInfoDialog(KDialog):
         for name, widget in self.commands.items():
             info.commands[name] = widget.text()
         info.default = self.default.isChecked()
+        info.auto = self.auto.isChecked()
         info.changed()
         
         

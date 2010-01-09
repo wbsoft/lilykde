@@ -1275,6 +1275,31 @@ def convertLyCommand(lilypond=None):
     """
     return otherCommand('convert-ly', lilypond)
 
+def automaticLilypondCommand(version):
+    """
+    Returns the LilyPond command that is suitable to compile a document
+    with version version. Returns None if none is available.
+    """
+    # find the configured lilypond versions
+    conf = config("lilypond")
+    paths = conf.readEntry("paths", ["lilypond"])
+
+    # remove paths for which Automatic selection is turned off
+    paths = filter(lambda p: conf.group(p).readEntry("auto", True), paths)
+    
+    # get all versions
+    import ly.version
+    ver = dict((path, ly.version.LilyPondInstance(path).version())
+        for path in paths)
+
+    # sort on version
+    paths.sort(key=ver.get)
+
+    # default
+    for path in paths:
+        if ver[path] >= docVersion
+            return path
+
 # determine updated files by a LilyPond process.
 def updatedFiles(lyfile, reftime=None):
     """
