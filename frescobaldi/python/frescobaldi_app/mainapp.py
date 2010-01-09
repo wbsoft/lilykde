@@ -1297,7 +1297,7 @@ def automaticLilypondCommand(version):
 
     # default
     for path in paths:
-        if ver[path] >= docVersion
+        if ver[path] >= version:
             return path
 
 # determine updated files by a LilyPond process.

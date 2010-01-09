@@ -278,10 +278,7 @@ class RunLilyPondDialog(KDialog):
         autopath = None
         docVersion = ly.version.getVersion(doc.text())
         if docVersion:
-            for path in paths:
-                if ver[path] >= docVersion:
-                    autopath = path
-                    break
+            autopath = frescobaldi_app.mainapp.automaticLilypondCommand(docVersion)
         
         def addItem(version, path, icon, title, tooltip):
             item = QListWidgetItem(self.lilypond)
