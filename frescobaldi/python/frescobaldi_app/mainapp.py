@@ -1295,7 +1295,7 @@ def automaticLilypondCommand(version):
     # sort on version
     paths.sort(key=ver.get)
 
-    # default
+    # return lowerst possible version
     for path in paths:
         if ver[path] >= version:
             return path

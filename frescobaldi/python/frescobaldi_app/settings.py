@@ -479,9 +479,7 @@ class LilyPondInfoList(QGroupBox):
             
     def defaults(self):
         """ Reset ourselves to default state. """
-        # remove all items
-        while self.instances.takeItem(0):
-            pass
+        self.instances.clear()
         info = LilyPondInfoItem()
         self.instances.addItem(info)
         self.instances.setCurrentItem(info)
@@ -489,9 +487,7 @@ class LilyPondInfoList(QGroupBox):
         info.changed()
         
     def loadSettings(self):
-        # remove all items
-        while self.instances.takeItem(0):
-            pass
+        self.instances.clear()
         conf = config("lilypond")
         self.auto.setChecked(conf.readEntry("automatic version", False))
         paths = conf.readEntry("paths", ["lilypond"])
