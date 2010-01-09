@@ -5,7 +5,7 @@
 <title>Creating PDF output</title>
 
 <para>
-There are currently two different ways you can run &lilypond; on your document.
+There are currently three different ways you can run &lilypond; on your document.
 </para>
 
 <para>
@@ -17,11 +17,18 @@ of the &lilypond; input by clicking a note and then shift-clicking another one.
 </para>
 
 <para>
-In the <guilabel>&lilypond;</guilabel> menu, you can also find the option <guilabel>Run &lilypond; (publish)</guilabel>.
+In the <guilabel>&lilypond;</guilabel> menu, you can also find the command <guilabel>Run &lilypond; (publish)</guilabel>.
 This option also runs &lilypond;, but with clickable notes disabled. The resulting PDF
 is much smaller and better suitable for distribution via e-mail or the Web. With
 large musical scores, disabling the clickable notes can make the PDF many times
 smaller.
+</para>
+
+<para>
+The third possibility is the command <guilabel>Run &lilypond; (custom)</guilabel>.
+This option shows a dialog where you can set some parameters for this run, overriding default settings.
+If you have <link linkend="multiple-versions">multiple versions of &lilypond;</link> installed,
+you can choose which &lilypond; you want to run.
 </para>
 
 <para>
@@ -186,5 +193,21 @@ on the whole score or book.
 "Master" and include files only work with documents that are on your local hard drive.
 </para>
 </sect1>
+
+
+<sect1 id="multiple-versions">
+<title>Using multiple &lilypond; versions</title>
+
+<para>
+If you have multiple versions of &lilypond; installed you can add them to &frescobaldi;
+under &menu.settings.paths;.
+One of the &lilypond; instances can be set as the default.
+It is also possible to automatically start a &lilypond; instance with a version closest
+to the <userinput>\version</userinput> statement in your document.
+See <link linkend="settings-paths-lilypond">Settings Dialog, Paths</link> for more information.
+</para>
+
+</sect1>
+
 
 </chapter>

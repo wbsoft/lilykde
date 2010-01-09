@@ -232,6 +232,7 @@ class RunLilyPondDialog(KDialog):
             KDialog.Help | KDialog.Ok | KDialog.Cancel ))
         self.setButtonText(KDialog.Ok, i18n("Run LilyPond"))
         self.setButtonIcon(KDialog.Ok, KIcon("run-lilypond"))
+        self.setHelp("running")
         
         layout = QVBoxLayout(self.mainWidget())
         
