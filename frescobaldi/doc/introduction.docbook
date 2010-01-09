@@ -1,0 +1,27 @@
+<preface id="introduction">
+<title>Introduction</title>
+
+<para>
+&lilypond; (<ulink url="http://lilypond.org/">lilypond.org</ulink>)
+is an open-source music engraving program, producing very high-quality sheet music
+printouts from fairly simple text input files. Those text files can be created with
+any text editor, and &lilypond; then loads the text file and outputs a beatiful
+engraving, by default in PDF format.
+</para>
+
+<para>
+&frescobaldi; is an application designed to make editing &lilypond; music scores
+faster and easier. You still will need to learn the &lilypond; input language.
+If you read the "First Steps" section of this User Guide,
+you'll also pickup some &lilypond; basics.
+Then you can continue to learn using the Learning Manual from 
+<ulink url="http://lilypond.org/doc/">LilyPond's excellent online documentation</ulink>.
+</para>
+
+<note><para>
+Virtually all keyboard shortcuts that are mentioned in this User Guide are the
+default ones; you can change them using <menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Configure shortcuts...</guimenuitem></menuchoice>.
+</para></note>
+
+</preface>
