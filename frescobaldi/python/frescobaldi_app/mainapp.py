@@ -121,7 +121,7 @@ class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """
     
     metainfoDefaults = {
-        "lilypond version": "default",
+        "lilypond version": "",
         "verbose": False,
         "preview": True,
         }
@@ -248,6 +248,14 @@ class Document(kateshell.app.Document):
 
     def resetLocalFileManager(self):
         self._localFileManager = None
+
+    def lilyPondVersion(self):
+        """
+        Returns the version of LilyPond this document uses (looking at
+        the \version "x.x.x" statement). Returns None if not available.
+        """
+        import ly.version
+        return ly.version.getVersion(self.text())
 
 
 class SymbolManager(object):
@@ -792,14 +800,12 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                 return # job configure dialog cancelled by user
         else:
             job.preview = mode == "preview"
-            job.command = lilypondCommand()
+            command = None
             if config("lilypond").readEntry("automatic version", False):
-                import ly.version
-                docVersion = ly.version.getVersion(d.text())
+                docVersion = d.lilyPondVersion()
                 if docVersion:
-                    cmd = automaticLilypondCommand(docVersion)
-                    if cmd:
-                        job.command = cmd
+                    command = automaticLilyPondCommand(docVersion)
+            job.command = command or lilyPondCommand()
             
         # check if there is not already a job running. We do it now, so the
         # custom dialog can be requested even when there is a job running.
@@ -1262,9 +1268,14 @@ class QuickInsertShortcuts(kateshell.mainwindow.UserShortcutManager):
 def config(group="preferences"):
     return KGlobal.config().group(group)
     
-def lilypondCommand():
+def lilyPondCommand():
     """ The default configured LilyPond command. """
     return config("lilypond").readEntry("default", "lilypond")
+    
+def lilyPondVersion(command):
+    """ The version of the LilyPond binary command """
+    import ly.version
+    return ly.version.LilyPondInstance(command).version()
     
 def otherCommand(name, lilypond=None):
     """
@@ -1272,7 +1283,7 @@ def otherCommand(name, lilypond=None):
     to the given or default lilypond command.
     """
     if not lilypond:
-        lilypond = lilypondCommand()
+        lilypond = lilyPondCommand()
     cmd = config("lilypond").group(lilypond).readEntry(name, name)
     import ly.version
     return ly.version.LilyPondInstance(lilypond).path_to(cmd) or cmd
@@ -1283,7 +1294,7 @@ def convertLyCommand(lilypond=None):
     """
     return otherCommand('convert-ly', lilypond)
 
-def automaticLilypondCommand(version):
+def automaticLilyPondCommand(version):
     """
     Returns the LilyPond command that is suitable to compile a document
     with version version. Returns None if none is available.

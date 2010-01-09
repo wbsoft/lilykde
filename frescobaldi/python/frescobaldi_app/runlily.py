@@ -37,7 +37,9 @@ from signals import Signal, SignalProxy
 
 from kateshell.app import resolvetabs_text
 from frescobaldi_app.actions import openPDF
-import frescobaldi_app.mainapp
+from frescobaldi_app.mainapp import (
+    automaticLilyPondCommand, lilyPondCommand, lilyPondVersion, updatedFiles)
+
 
 def config(group):
     return KGlobal.config().group(group)
@@ -96,7 +98,13 @@ class BasicLilyPondJob(object):
         p.readyRead.connect(self._readOutput)
         
         mode = i18n("preview mode") if self.preview else i18n("publish mode")
-        self.output.writeLine(i18n("LilyPond [%1] starting (%2)...", self._basename, mode))
+        version = lilyPondVersion(self.command)
+        if version:
+            self.output.writeLine(i18n("LilyPond %1 [%2] starting (%3)...",
+                format(version), self._basename, mode))
+        else:
+            self.output.writeLine(i18n("LilyPond [%1] starting (%2)...",
+                self._basename, mode))
         
         self.startTime = time.time()
         p.start()
@@ -169,8 +177,7 @@ class BasicLilyPondJob(object):
         """
         Returns a function that can list updated files based on extension.
         """
-        return frescobaldi_app.mainapp.updatedFiles(self.lyfile,
-            math.floor(self.startTime))
+        return updatedFiles(self.lyfile, math.floor(self.startTime))
 
 
 class LilyPondJob(BasicLilyPondJob):
@@ -179,7 +186,7 @@ class LilyPondJob(BasicLilyPondJob):
     """
     def __init__(self):
         super(LilyPondJob, self).__init__()
-        self.command = frescobaldi_app.mainapp.lilypondCommand()
+        self.command = lilyPondCommand()
         self.arguments = ["--pdf"]
         self.verbose = config("preferences").readEntry("verbose lilypond output", False)
         self.delfiles = config("preferences").readEntry("delete intermediate files", True)
@@ -263,8 +270,7 @@ class RunLilyPondDialog(KDialog):
         import ly.version
         
         # get all versions
-        ver = dict((path, ly.version.LilyPondInstance(path).version())
-            for path in paths)
+        ver = dict((path, lilyPondVersion(path)) for path in paths)
         
         # default
         if default not in paths:
@@ -276,9 +282,9 @@ class RunLilyPondDialog(KDialog):
         
         # Determine automatic version (lowest possible)
         autopath = None
-        docVersion = ly.version.getVersion(doc.text())
+        docVersion = doc.lilyPondVersion()
         if docVersion:
-            autopath = frescobaldi_app.mainapp.automaticLilypondCommand(docVersion)
+            autopath = automaticLilyPondCommand(docVersion)
         
         def addItem(version, path, icon, title, tooltip):
             item = QListWidgetItem(self.lilypond)

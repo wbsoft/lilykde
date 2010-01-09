@@ -32,7 +32,7 @@ from PyKDE4.ktexteditor import KTextEditor
 
 import ly.tokenize, ly.version, ly.words, ly.colors
 import frescobaldi_app.version
-from frescobaldi_app.mainapp import lilypondCommand
+from frescobaldi_app.mainapp import lilyPondCommand
 
 
 class CompletionHelper(object):
@@ -227,7 +227,7 @@ def findMatches(model, view, word, invocationType):
                 return ly.words.markupcommands
         commands = (ly.words.keywords + ly.words.keywords_completion
             + ly.words.musiccommands + ly.words.musiccommands_completion
-            + lilypondVersion())
+            + lilyPondVersion())
         if tokenizer.parser().token == "\\context":
             return commands + ly.words.contexts
         else:
@@ -266,12 +266,12 @@ def findMatches(model, view, word, invocationType):
 
 # load some (cached) data
 def musicglyph_names():
-    font = ly.version.LilyPondInstance(lilypondCommand()).fontInfo("emmentaler-20")
+    font = ly.version.LilyPondInstance(lilyPondCommand()).fontInfo("emmentaler-20")
     if font:
         return tuple(font.glyphs())
     return ()
 
-def lilypondVersion():
+def lilyPondVersion():
     ver = frescobaldi_app.version.defaultVersion()
     return ('version "{0}"'.format(ver),) if ver else ()
 

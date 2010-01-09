@@ -34,7 +34,7 @@ from PyKDE4.ktexteditor import KTextEditor
 
 import ly.rx, ly.pitch, ly.parse, ly.tokenize, ly.tools, ly.version
 from kateshell.app import cacheresult
-from frescobaldi_app.mainapp import lilypondCommand
+from frescobaldi_app.mainapp import lilyPondCommand
 from frescobaldi_app.widgets import promptText
 
 
@@ -492,7 +492,7 @@ class DocumentManipulator(object):
             localdir = self.doc.app.defaultDirectory() or os.getcwd()
         url = os.path.normpath(os.path.join(localdir, fileName))
         if not os.path.exists(url):
-            datadir = ly.version.LilyPondInstance(lilypondCommand()).datadir()
+            datadir = ly.version.LilyPondInstance(lilyPondCommand()).datadir()
             if datadir and os.path.exists(os.path.join(datadir, 'ly', fileName)):
                 url = os.path.join(datadir, 'ly', fileName)
         self.doc.app.openUrl(url).setActive()
