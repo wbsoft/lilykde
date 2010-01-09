@@ -422,10 +422,10 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             d = self.currentDocument()
             if d:
                 if KApplication.keyboardModifiers() & Qt.ShiftModifier:
-                    self.runLilypond("custom")
+                    self.runLilyPond("custom")
                 else:
                     job = self.jobManager().job(d)
-                    job.abort() if job else self.runLilypond("preview")
+                    job.abort() if job else self.runLilyPond("preview")
 
         # Score wizard
         @self.onAction(i18n("Setup New Score..."), "text-x-lilypond", key="Ctrl+Shift+N")
@@ -435,15 +435,15 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         # run LilyPond actions
         @self.onAction(i18n("Run LilyPond (preview)"), "run-lilypond", key="Ctrl+M")
         def lilypond_run_preview():
-            self.runLilypond("preview")
+            self.runLilyPond("preview")
             
         @self.onAction(i18n("Run LilyPond (publish)"), "run-lilypond")
         def lilypond_run_publish():
-            self.runLilypond("publish")
+            self.runLilyPond("publish")
         
         @self.onAction(i18n("Run LilyPond (custom)"), "run-lilypond", key="Shift+Ctrl+M")
         def lilypond_run_custom():
-            self.runLilypond("custom")
+            self.runLilyPond("custom")
         
         @self.onAction(i18n("Interrupt LilyPond Job"), "process-stop")
         def lilypond_abort():
@@ -770,7 +770,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
         menu.aboutToShow.connect(populateGenFilesMenu)
             
-    def runLilypond(self, mode):
+    def runLilyPond(self, mode):
         """Run LilyPond on the current document.
         
         mode is "preview", "publish" or "custom".
