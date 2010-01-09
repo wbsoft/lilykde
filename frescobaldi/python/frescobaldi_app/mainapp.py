@@ -787,11 +787,19 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         
         # configure this Job
         job.preview = False
-        if mode == "preview":
-            job.preview = True
-        elif mode == "custom":
+        if mode == "custom":
             if not self.runLilyPondDialog().configureJob(job, d):
                 return # job configure dialog cancelled by user
+        else:
+            job.preview = mode == "preview"
+            job.command = lilypondCommand()
+            if config("lilypond").readEntry("automatic version", False):
+                import ly.version
+                docVersion = ly.version.getVersion(d.text())
+                if docVersion:
+                    cmd = automaticLilypondCommand(docVersion)
+                    if cmd:
+                        job.command = cmd
             
         # check if there is not already a job running. We do it now, so the
         # custom dialog can be requested even when there is a job running.

@@ -318,7 +318,8 @@ class RunLilyPondDialog(KDialog):
         try:
             self.lilypond.setCurrentRow(versions.index(doc.metainfo["lilypond version"]))
         except ValueError:
-            self.lilypond.setCurrentRow(paths.index(default))
+            cmd = autopath if autopath and conf.readEntry("automatic version", False) else default
+            self.lilypond.setCurrentRow(paths.index(cmd))
             
         # Focus our listbox:
         self.lilypond.setFocus()
