@@ -14,8 +14,10 @@ Changes in 1.0.1 --
 
 * Translations:
   - New Galician translation by Manuel A. Vázquez
-* Bugfix:
-  - Make rumor config more robust if no MIDI outputs available.
+* Bugfixes:
+  - Rumor: Make config dialog more robust if no MIDI outputs available.
+  - Score Wizard: Fix disappearing instrumentName if this is a markup object and
+    the same one as shortInstrumentName.
 
 Changes in 1.0.0 -- December 26th, 2009
 
