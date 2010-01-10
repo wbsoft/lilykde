@@ -89,7 +89,5 @@ def newLilyPondConfig():
     group.writeEntry("paths", [lily])
     group = group.group(lily)
     group.writeEntry("convert-ly", conv)
-    cmds.deleteEntry("lilypond")
-    cmds.deleteEntry("convert-ly")
     c.sync()
     
