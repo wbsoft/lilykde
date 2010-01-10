@@ -6,12 +6,15 @@ After you installed &frescobaldi;, run it from your KDE4 menu (under Audio or Ut
 You'll see an empty screen like this:
 </para>
 
-<mediaobject>
-<imageobject><imagedata format="PNG" fileref="first-steps1.png"/></imageobject>
-<textobject>
-<phrase>Empty &frescobaldi; window</phrase>  
-</textobject>
-</mediaobject>
+<figure>
+  <title>Empty &frescobaldi; window</title>
+  <mediaobject>
+  <imageobject><imagedata format="PNG" fileref="first-steps1.png"/></imageobject>
+  <textobject>
+  <phrase>Empty &frescobaldi; window</phrase>  
+  </textobject>
+  </mediaobject>
+</figure>
 
 <para>
 Now write some &lilypond; code, like this:
@@ -40,13 +43,15 @@ it will produce a PDF file that will be displayed at the right of the
 &frescobaldi; window: 
 </para>
 
-<mediaobject>
-<imageobject><imagedata format="PNG" fileref="first-steps2.png"/></imageobject>
-<textobject>
-<phrase>&frescobaldi; window with Free Software Song</phrase>  
-</textobject>
-</mediaobject>
-
+<figure>
+  <title>&frescobaldi; window with Free Software Song</title>
+  <mediaobject>
+  <imageobject><imagedata format="PNG" fileref="first-steps2.png"/></imageobject>
+  <textobject>
+  <phrase>&frescobaldi; window with Free Software Song</phrase>  
+  </textobject>
+  </mediaobject>
+</figure>
 <para>
 You can zoom the PDF preview by dragging the middle mouse button or by using the mouse
 wheel with <keycap>Ctrl</keycap> pressed down. The PDF preview is an embedded Okular, KDE's default PDF viewer.
