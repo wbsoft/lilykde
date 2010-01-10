@@ -950,9 +950,15 @@ class Builder(object):
                 names = self.getInstrumentNames(names, num)
             ly.dom.addInstrumentNameEngraverIfNecessary(node)
             w = node.getWith()
-            w['instrumentName'] = names[s.instrFirst.currentIndex()]
+            first = names[s.instrFirst.currentIndex()]
+            w['instrumentName'] = first
             if s.instrOther.currentIndex() < 2:
-                w['shortInstrumentName'] = names[s.instrOther.currentIndex()]
+                other = names[s.instrOther.currentIndex()]
+                # if these are markup objects, copy them otherwise the assignment
+                # to shortInstrumentName takes it away from the instrumentName.
+                if other is first and isinstance(first, ly.dom.Node):
+                    other = other.copy()
+                w['shortInstrumentName'] = other
 
     def setMidiInstrument(self, node, midiInstrument):
         """

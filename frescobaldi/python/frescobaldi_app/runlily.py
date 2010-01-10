@@ -673,6 +673,7 @@ class BackgroundJob(object):
         lyfile = os.path.join(self.directory(), fileName)
         with open(lyfile, 'w') as f:
             f.write(text.encode('utf-8'))
+        self.log.clear()
         # ... and run LilyPond.
         job = self.job = LilyPondJob()
         job.lyfile = lyfile

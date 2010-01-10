@@ -174,6 +174,17 @@ class Node(object):
         """ Remove all children """
         del self[:]
 
+    def copy(self):
+        """ Return a deep copy of the node and its children """
+        obj = self.__class__.__new__(self.__class__)
+        for name, value in vars(self).items():
+            name.startswith("_") or setattr(obj, name, value)
+        obj._parent = None
+        obj._children = []
+        for n in self:
+            obj.append(n.copy())
+        return obj
+            
     def ancestors(self):
         """ climb the tree up over the parents """
         node = self.parent()
