@@ -164,7 +164,7 @@ class Dialog(KDialog):
         
         self.setDetailsWidget(paperSettings)
         # cleanup on exit
-        self.destroyed.connect(self.slotDestroyed)
+        mainwin.aboutToClose.connect(self.cleanup)
         # buttons
         self.resetClicked.connect(self.default)
         self.tryClicked.connect(self.showPreview)
@@ -275,7 +275,7 @@ class Dialog(KDialog):
         output.append('}\n')
         return ly.indent.indent('\n'.join(output))
 
-    def slotDestroyed(self):
+    def cleanup(self):
         for job in self.jobs[:]: # copy
             job.cleanup()
 
