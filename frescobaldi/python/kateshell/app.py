@@ -123,7 +123,7 @@ class MainApp(DBusItem):
         
         # If the application got upgraded, run a special method
         config = KGlobal.config().group("") # root group
-        oldVersion = config.readEntry("version", "0.0")
+        oldVersion = config.readEntry("version", "")
         if oldVersion != self.version():
             config.writeEntry("version", self.version())
             self.upgradeVersion(oldVersion)
