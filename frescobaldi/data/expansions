@@ -74,7 +74,7 @@ Text=\\header {\n  (|)\n}\n
 [h]
 Name=Header Template
 Name[nl]=Header-sjabloon
-Text=\\header {\n  title = "(|)"\n  composer = ""\n  tagline = \\markup {\n    Engraved at\n    \\simple #(strftime "%d-%m-%Y" (localtime (current-time)))\n    with \\with-url #"http://lilypond.org/web/"\n    { LilyPond \\simple #(lilypond-version) (http://lilypond.org/) }\n  }\n}
+Text=\\header {\n  title = "(|)"\n  composer = ""\n  tagline = \\markup {\n    Engraved at\n    \\simple #(strftime "%Y-%m-%d" (localtime (current-time)))\n    with \\with-url #"http://lilypond.org/web/"\n    { LilyPond \\simple #(lilypond-version) (http://lilypond.org/) }\n  }\n}
 
 [nt]
 Name=Header: No Tagline
