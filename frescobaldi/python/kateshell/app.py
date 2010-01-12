@@ -121,6 +121,14 @@ class MainApp(DBusItem):
         # KApplication needs to be instantiated before any D-Bus stuff
         self.kapp = KApplication()
         
+        # If the application got upgraded, run a special method
+        config = KGlobal.config().group("") # root group
+        oldVersion = config.readEntry("version", "0.0")
+        if oldVersion != self.version():
+            config.writeEntry("version", self.version())
+            self.upgradeVersion(oldVersion)
+            config.sync()
+        
         # DBus init
         serviceName = "{0}{1}".format(servicePrefix, os.getpid())
         DBusItem.__init__(self, serviceName, '/MainApp')
@@ -279,6 +287,16 @@ class MainApp(DBusItem):
         """
         return KGlobal.mainComponent().aboutData().version()
 
+    def upgradeVersion(self, oldVersion):
+        """
+        Called if the application is upgraded to a different version.
+        Implement this to update configuration etc.  kateshell saves the new
+        version in the config so you don't have to do that.
+        oldVersion is the old version as a string, e.g. "1.0".
+        
+        """
+        pass
+    
     def showException(self, exctype, excvalue, exctb):
         """
         Called when a Python exception goes unhandled

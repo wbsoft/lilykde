@@ -28,14 +28,12 @@ import os, re
 
 from PyKDE4.kdecore import KConfig, KGlobal
 
-def install(app):
+def install(app, oldVersion):
     """
     Run when the version in the root config group is different from the
     running Frescobaldi version.
     """
-    conf = KGlobal.config().group("")
-    version = tuple(map(int,
-        re.findall(r'\d+', conf.readEntry("version", ""))))
+    version = tuple(map(int, re.findall(r'\d+', oldVersion)))
     
     if not version:
         installKateModeRC()
@@ -51,9 +49,7 @@ def install(app):
     
     # ... other stuff can be added here ...
     
-    # save the version of the current Frescobaldi
-    conf.writeEntry("version", app.version())
-    conf.sync()
+
 
 def installKateModeRC():
     """ Preset a few variables in the LilyPond Kate mode """
