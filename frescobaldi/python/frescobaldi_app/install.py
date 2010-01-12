@@ -46,6 +46,9 @@ def install(app):
     if version < (1, 1, 0):
         newLilyPondConfig()
     
+    # on every update:
+    checkNewExpandDefaultShortcuts()
+    
     # ... other stuff can be added here ...
     
     # save the version of the current Frescobaldi
@@ -91,3 +94,17 @@ def newLilyPondConfig():
     group.writeEntry("convert-ly", conv)
     c.sync()
     
+def checkNewExpandDefaultShortcuts():
+    """ Check the expansions file for new default shortcuts. """
+    exp = KConfig("expansions", KConfig.NoGlobals, "appdata")
+    shc = KGlobal.config().group("expand shortcuts")
+    for name in exp.groupList():
+        group = exp.group(name)
+        if group.hasKey("Name") and group.hasKey("Default Shortcut"):
+            shortcut = group.readEntry("Default Shortcut", "")
+            group.deleteEntry("Default Shortcut")
+            if shortcut:
+                shc.writeEntry(name, shortcut)
+    exp.sync()
+    shc.sync()
+

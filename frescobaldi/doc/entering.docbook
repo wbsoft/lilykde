@@ -119,6 +119,58 @@ Clicking OK will enter the currently selected snippet in the text editor.
 See the "What's This" info (<keycap>Shift+F1</keycap>) in the dialog
 for more information.
 </para>
+
+<para>
+Some quick text expansions have default keyboard shortcuts.
+The most important ones are listed below:
+</para>
+
+<informaltable>
+<tgroup cols="2">
+<tbody>
+
+<row>
+<entry><para><keycap>Alt+1</keycap></para></entry>
+<entry><para>Enter <userinput>\voiceOne</userinput></para></entry>
+</row>
+
+<row>
+<entry><para><keycap>Alt+2</keycap></para></entry>
+<entry><para>Enter <userinput>\voiceTwo</userinput></para></entry>
+</row>
+
+<row>
+<entry><para><keycap>Alt+3</keycap></para></entry>
+<entry><para>Enter <userinput>\voiceThree</userinput></para></entry>
+</row>
+
+<row>
+<entry><para><keycap>Alt+4</keycap></para></entry>
+<entry><para>Enter <userinput>\voiceFour</userinput></para></entry>
+</row>
+
+<row>
+<entry><para><keycap>Alt+0</keycap></para></entry>
+<entry><para>Enter <userinput>\oneVoice</userinput></para></entry>
+</row>
+
+<row>
+<entry><para><keycap>Ctrl+3</keycap></para></entry>
+<entry><para>Enter <userinput>\times 2/3 { }</userinput> and leave the cursor between the brackets</para></entry>
+</row>
+
+<row>
+<entry><para><keycap>Alt+M</keycap>, <keycap>Alt+B</keycap></para></entry>
+<entry><para>Enter <userinput>\markup \bold { }</userinput> and leave the cursor between the brackets</para></entry>
+</row>
+
+<row>
+<entry><para><keycap>Alt+M</keycap>, <keycap>Alt+I</keycap></para></entry>
+<entry><para>Enter <userinput>\markup \italic { }</userinput> and leave the cursor between the brackets</para></entry>
+</row>
+
+</tbody></tgroup></informaltable>
+
 </sect1>
 
 <sect1 id="rumor">
