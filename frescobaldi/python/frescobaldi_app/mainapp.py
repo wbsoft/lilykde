@@ -687,7 +687,11 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         @self.onSelAction(i18n("Remove hyphenation"), keepSelection=False)
         def lyrics_dehyphen(text):
             return text.replace(' -- ', '')
-            
+        
+        @self.onSelAction(i18n("Copy Lyrics with hyphenation removed"), keepSelection=False)
+        def lyrics_copy_dehyphen(text):
+            KApplication.clipboard().setText(text.replace(' -- ', ''))
+        
         # Other actions
         @self.onAction(i18n("Single Quote"), key="Ctrl+'")
         def insert_quote_single():

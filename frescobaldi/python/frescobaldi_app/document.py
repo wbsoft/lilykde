@@ -476,8 +476,11 @@ class DocumentManipulator(object):
         
         # Hyphenate Lyrics
         if selection and isinstance(tokenizer.parser(), tokenizer.LyricModeParser):
+            menu.addSeparator()
             menu.addAction(
                 self.doc.app.mainwin.actionCollection().action("lyrics_hyphen"))
+            menu.addAction(
+                self.doc.app.mainwin.actionCollection().action("lyrics_copy_dehyphen"))
     
     def openIncludeFile(self, fileName):
         """
