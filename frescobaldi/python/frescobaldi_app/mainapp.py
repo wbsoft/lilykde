@@ -963,7 +963,6 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
             "pdf", i18n("PDF Preview"), "application-pdf",
             key="Meta+Alt+P", dock=kateshell.mainwindow.Right)
-        mainwin.currentDocumentChanged.connect(self.sync)
         self._urlToOpen = None
         self._currentUrl = None
         # We open urls with a timer otherwise Okular is called 
@@ -972,6 +971,8 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         self._timer.setSingleShot(True)
         self._timer.setInterval(250)
         self._timer.timeout.connect(self.timeoutFunc)
+        mainwin.aboutToClose.connect(self._timer.stop)
+        mainwin.currentDocumentChanged.connect(self.sync)
     
     def timeoutFunc(self):
         """
