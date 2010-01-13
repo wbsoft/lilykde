@@ -37,8 +37,7 @@ from PyKDE4.kio import KFileDialog, KIO
 
 import ly, ly.indent
 from kateshell.app import cacheresult
-from frescobaldi_app.mainapp import SymbolManager
-from frescobaldi_app.version import defaultVersion
+from frescobaldi_app.mainapp import SymbolManager, lilyPondVersion
 from frescobaldi_app.widgets import StackFader, ClefSelector
 from frescobaldi_app.runlily import BackgroundJob, LilyPreviewDialog
 from frescobaldi_app.actions import openPDF, printPDF
@@ -216,7 +215,7 @@ class Dialog(KDialog):
         """
         staff = self.stack.currentWidget()
         output = []
-        version = defaultVersion()
+        version = lilyPondVersion()
         if version:
             output.append('\\version "{0}"\n'.format(version))
         output.append('#(set-global-staff-size {0})\n'.format(self.staffSize.value()))
@@ -802,17 +801,10 @@ class StaffItem(Item):
         w.layout().addWidget(l, 0, 0, Qt.AlignRight)
         w.layout().addWidget(self.clef, 0, 1)
         self.clef.currentIndexChanged.connect(self.clefChanged)
-        self.spaceAbove = QSpinBox()
-        self.spaceAbove.setRange(0, 25)
-        self.spaceAbove.setValue(5)
         self.spaceBelow = QSpinBox()
         self.spaceBelow.setRange(0, 25)
         self.spaceBelow.setValue(5)
-        w.layout().addWidget(self.spaceAbove, 1, 1)
         w.layout().addWidget(self.spaceBelow, 2, 1)
-        l = QLabel(i18n("Space above:"))
-        l.setBuddy(self.spaceAbove)
-        w.layout().addWidget(l, 1, 0, Qt.AlignRight)
         l = QLabel(i18n("Space below:"))
         l.setBuddy(self.spaceBelow)
         w.layout().addWidget(l, 2, 0, Qt.AlignRight)
@@ -832,9 +824,14 @@ class StaffItem(Item):
             staff = 'Staff'
         layout.addStaffContext(staff)
         music = ['\\new {0} \\with {{'.format(staff)]
-        music.append(
-            "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-{0} . {1})".format(
-                self.spaceBelow.value(), self.spaceAbove.value()))
+        if lilyPondVersion() < (2, 13, 4):
+            music.append(
+                "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-{0} . 5)".format(
+                    self.spaceBelow.value()))
+        else:
+            music.append(
+                "\\override VerticalAxisGroup #'next-staff-spacing = #'((space . {0}))".format(
+                    self.spaceBelow.value() + 5))
         if not clef:
             music.append('\\remove "Clef_engraver"')
         if not clef or clef == 'tab':

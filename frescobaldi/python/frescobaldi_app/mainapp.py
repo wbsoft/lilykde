@@ -1277,10 +1277,13 @@ def lilyPondCommand():
     """ The default configured LilyPond command. """
     return config("lilypond").readEntry("default", "lilypond")
     
-def lilyPondVersion(command):
-    """ The version of the LilyPond binary command """
+def lilyPondVersion(command = None):
+    """
+    The version of the LilyPond binary command.
+    If no command is given, the default LilyPond command is used.
+    """
     import ly.version
-    return ly.version.LilyPondInstance(command).version()
+    return ly.version.LilyPondInstance(command or lilyPondCommand()).version()
     
 def otherCommand(name, lilypond=None):
     """
