@@ -969,7 +969,6 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         # too quickly when the user switches documents too fast.
         self._timer = QTimer()
         self._timer.setSingleShot(True)
-        self._timer.setInterval(250)
         self._timer.timeout.connect(self.timeoutFunc)
         mainwin.aboutToClose.connect(self._timer.stop)
         mainwin.currentDocumentChanged.connect(self.sync)
@@ -983,7 +982,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         if self._urlToOpen:
             super(PDFTool, self).openUrl(self._urlToOpen)
             self._urlToOpen = None
-            self._timer.start()
+            self._timer.start(500)
 
     def _reallyOpenUrl(self, url):
         """
@@ -992,12 +991,8 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         quickly again. If the timer is already running, the url is recorded and
         opened on timeout().
         """
-        if self._timer.isActive():
-            self._urlToOpen = url
-        else:
-            self._urlToOpen = None
-            self._timer.start()
-            QTimer.singleShot(0, lambda: super(PDFTool, self).openUrl(url))
+        self._urlToOpen = url
+        self._timer.isActive() or self._timer.start(0)
         
     def openUrl(self, url):
         """ Expects KUrl."""
