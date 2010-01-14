@@ -950,7 +950,7 @@ class StateManager(object):
         for g in self.metainfos.groupList():
             last = self.metainfos.group(g.encode('utf-8')).readEntry("time", 0.0)
             if (time.time() - last) / 86400 > 31:
-                self.metainfos.deleteGroup(g)
+                self.metainfos.deleteGroup(g.encode('utf-8'))
         self.metainfos.sync()
 
 
