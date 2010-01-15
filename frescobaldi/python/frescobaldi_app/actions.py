@@ -28,8 +28,7 @@ from subprocess import Popen, PIPE
 
 from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
-    QAbstractItemView, QKeySequence, QLabel, QListWidget, QListWidgetItem,
-    QMenu, QToolButton)
+    QKeySequence, QLabel, QListWidget, QListWidgetItem, QMenu, QToolButton)
 from PyKDE4.kdecore import KGlobal, KShell, KToolInvocation, KUrl, i18n, i18np
 from PyKDE4.kdeui import KDialog, KIcon, KMessageBox, KVBox
 from PyKDE4.kio import KRun
@@ -162,7 +161,6 @@ class EmailDialog(KDialog):
         b.setSpacing(4)
         QLabel(i18n("Please select the files you want to send:"), b)
         fileList = QListWidget(b)
-        fileList.setSelectionMode(QAbstractItemView.ExtendedSelection)
         fileList.setIconSize(QSize(22, 22))
         fileList.setWhatsThis(i18n(
             "These are the files that are up-to-date (i.e. newer than "
@@ -195,41 +193,40 @@ class EmailDialog(KDialog):
         basedir = os.path.dirname(updatedFiles.lyfile)
         exts = config("general").readEntry("email_extensions", [".pdf"])
         
-        class Item(QListWidgetItem):
-            def __init__(self, icon, fileName):
-                directory, name = os.path.split(fileName)
-                if directory != basedir:
-                    name += " ({0})".format(os.path.normpath(directory))
-                QListWidgetItem.__init__(self, KIcon(icon), name, fileList)
-                self.fileName = fileName
-                self.ext = os.path.splitext(fileName)[1]
-                if self.ext in exts:
-                    self.setSelected(True)
+        def item(icon, fileName):
+            """ Add item to the fileList list widget. """
+            directory, name = os.path.split(fileName)
+            if directory != basedir:
+                name += " ({0})".format(os.path.normpath(directory))
+            i = QListWidgetItem(KIcon(icon), name, fileList)
+            i.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsUserCheckable)
+            i.ext = os.path.splitext(fileName)[1]
+            i.url = KUrl.fromPath(fileName).url()
+            i.setCheckState(Qt.Checked if i.ext in exts else Qt.Unchecked)
 
-            def url(self):
-                return KUrl.fromPath(self.fileName).url()
-                
         # insert the files
         for lyfile in lyFiles:
-            Item("text-x-lilypond", lyfile)
+            item("text-x-lilypond", lyfile)
         for pdf in pdfFiles:
-            Item("application-pdf", pdf)
+            item("application-pdf", pdf)
         for midi in midiFiles:
-            Item("audio-midi", midi)
+            item("audio-midi", midi)
         
+    def selectedItems(self):
+        """ Yields all checked items. """
+        for row in range(self.fileList.count()):
+            item = self.fileList.item(row)
+            if item.checkState() == Qt.Checked:
+                yield item
+            
     def done(self, result):
         if result:
             # Save selected extensions to preselect next time.
-            exts = list(set(item.ext for item in self.fileList.selectedItems()))
+            exts = list(set(item.ext for item in self.selectedItems()))
             config("general").writeEntry("email_extensions", exts)
-            self.sendEmail()
+            urls = [item.url for item in self.selectedItems()]
+            emailFiles(urls)
         KDialog.done(self, result)
-        
-    def sendEmail(self):
-        """ Now do it. """
-        urls = [item.url() for item in self.fileList.selectedItems()]
-        to, cc, bcc, subject, body, msgfile = '', '', '', '', '', ''
-        KToolInvocation.invokeMailer(to, cc, bcc, subject, body, msgfile, urls)
         
         
         
@@ -287,3 +284,8 @@ def printPDF(pdfFileName, window):
             i18n("The print command contains errors. "
                     "Please check your settings."))
 
+def emailFiles(urls):
+    """ Open the default mailer with the given urls (list of str) attached. """
+    to, cc, bcc, subject, body, msgfile = '', '', '', '', '', ''
+    KToolInvocation.invokeMailer(to, cc, bcc, subject, body, msgfile, urls)
+    
