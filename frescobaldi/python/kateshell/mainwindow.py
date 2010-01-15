@@ -743,7 +743,8 @@ class Tool(object):
         
     def materialize(self):
         if self.widget is None:
-            self.widget = self.factory()
+            with self.mainwin.app.busyCursor():
+                self.widget = self.factory()
     
     def factory(self):
         """

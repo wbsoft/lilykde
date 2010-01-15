@@ -29,6 +29,7 @@ from dbus.service import method, signal
 from signals import Signal
 
 from PyQt4.QtCore import QObject, Qt, SIGNAL
+from PyQt4.QtGui import QCursor
 from PyKDE4.kdecore import i18n, KConfig, KGlobal, KUrl
 from PyKDE4.kdeui import KApplication, KMessageBox, KStandardGuiItem
 from PyKDE4.kio import KEncodingFileDialog
@@ -313,6 +314,17 @@ class MainApp(DBusItem):
         a user's configured setting.
         """
         return False
+        
+    @contextmanager
+    def busyCursor(self, cursor=None):
+        """
+        Performs code with a busy cursor set for the application.
+        """
+        if cursor is None:
+            cursor = QCursor(Qt.WaitCursor)
+        KApplication.setOverrideCursor(cursor)
+        yield
+        KApplication.restoreOverrideCursor()
 
 
 class Document(DBusItem):

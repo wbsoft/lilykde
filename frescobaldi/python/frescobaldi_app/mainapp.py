@@ -370,8 +370,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         
     @cacheresult
     def scoreWizard(self):
-        import frescobaldi_app.scorewiz
-        return frescobaldi_app.scorewiz.ScoreWizard(self)
+        with self.app.busyCursor():
+            import frescobaldi_app.scorewiz
+            return frescobaldi_app.scorewiz.ScoreWizard(self)
     
     @cacheresult
     def applyRhythmDialog(self):
@@ -406,13 +407,15 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
     
     @cacheresult
     def blankStaffPaperWizard(self):
-        import frescobaldi_app.blankpaper
-        return frescobaldi_app.blankpaper.Dialog(self)
+        with self.app.busyCursor():
+            import frescobaldi_app.blankpaper
+            return frescobaldi_app.blankpaper.Dialog(self)
         
     @cacheresult
     def charSelectDialog(self):
-        import frescobaldi_app.charselect
-        return frescobaldi_app.charselect.Dialog(self)
+        with self.app.busyCursor():
+            import frescobaldi_app.charselect
+            return frescobaldi_app.charselect.Dialog(self)
         
     def setupActions(self):
         super(MainWindow, self).setupActions()
@@ -727,8 +730,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         # Settings
         @self.onAction(KStandardAction.Preferences)
         def options_configure():
-            import frescobaldi_app.settings
-            frescobaldi_app.settings.SettingsDialog(self).show()
+            with self.app.busyCursor():
+                import frescobaldi_app.settings
+                frescobaldi_app.settings.SettingsDialog(self).show()
         
         @self.onSelAction(i18n("Repeat selected music"), key="Ctrl+Shift+R",
             keepSelection=False)
