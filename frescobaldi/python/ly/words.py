@@ -1670,6 +1670,21 @@ break_visibility = (
     'center-invisible',
 )
 
+mark_formatters = (
+    'format-mark-alphabet',
+    'format-mark-barnumbers',
+    'format-mark-letters',
+    'format-mark-numbers',
+    'format-mark-box-alphabet',
+    'format-mark-box-barnumbers',
+    'format-mark-box-letters',
+    'format-mark-box-numbers',
+    'format-mark-circle-alphabet',
+    'format-mark-circle-barnumbers',
+    'format-mark-circle-letters',
+    'format-mark-circle-numbers',
+)
+
 
 set_context_re = re.compile(r'\\(un)?set\s+(' + '|'.join(contexts) + r')\s*.\s*$')
 context_re = re.compile(r'\b(' + '|'.join(contexts) + r')\s*\.\s*$')

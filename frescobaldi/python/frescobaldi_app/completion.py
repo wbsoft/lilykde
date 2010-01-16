@@ -178,6 +178,8 @@ def findMatches(model, view, word, invocationType):
         return ly.words.midi_instruments
     if re.search(r'\\musicglyph\s*#"$', text):
         return musicglyph_names()
+    if re.search(r'\bmarkFormatter\s*=\s*#$', text):
+        return ly.words.mark_formatters
     if re.search(r'\\key\s+[a-z]+\s*\\$', text):
         return ly.words.modes
     if re.search(r'\\(un)?set\b\s*$', text):
