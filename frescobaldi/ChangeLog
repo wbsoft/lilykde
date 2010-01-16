@@ -13,15 +13,20 @@ Changes in 1.1.0 --
 * Quick Insert Panel:
   - It is now possible to assign keyboard shortcuts to the articulation buttons
 * Email files: select files with checkboxes instead of Ctrl+Click
+* Installation:
+  - byte compiling the Python modules can be supressed by adding
+    -DBYTECOMPILE=NO to the cmake command line
 
 Changes in 1.0.1 -- 
 
 * Translations:
   - New Galician translation by Manuel A. Vázquez
 * Bugfixes:
-  - Rumor: Make config dialog more robust if no MIDI outputs available.
+  - Rumor: Make config dialog more robust if no MIDI outputs available
   - Score Wizard: Fix disappearing instrumentName if this is a markup object and
-    the same one as shortInstrumentName.
+    the same one as shortInstrumentName
+  - Stability improvements
+  - Some corrections in the default expansions of the Expansion Manager
 
 Changes in 1.0.0 -- December 26th, 2009
 
