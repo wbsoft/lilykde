@@ -1312,7 +1312,7 @@ def automaticLilyPondCommand(version):
     paths = conf.readEntry("paths", ["lilypond"])
 
     # remove paths for which Automatic selection is turned off
-    paths = filter(lambda p: conf.group(p).readEntry("auto", True), paths)
+    paths = [p for p in paths if conf.group(p).readEntry("auto", True)]
     
     # get all versions
     import ly.version
