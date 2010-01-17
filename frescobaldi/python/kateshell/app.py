@@ -960,9 +960,10 @@ class StateManager(object):
     def cleanup(self):
         """ Purge entries that are not used for more than a month. """
         for g in self.metainfos.groupList():
-            last = self.metainfos.group(g.encode('utf-8')).readEntry("time", 0.0)
+            group = self.metainfos.group(g.encode('utf-8'))
+            last = group.readEntry("time", 0.0)
             if (time.time() - last) / 86400 > 31:
-                self.metainfos.deleteGroup(g.encode('utf-8'))
+                group.deleteGroup()
         self.metainfos.sync()
 
 
