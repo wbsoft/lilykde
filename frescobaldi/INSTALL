@@ -50,6 +50,11 @@ about missing modules. You can fix this by explicitly defining the Python
 interpreter to use. Add -DPYTHON_EXECUTABLE=/usr/bin/python2.5 to the cmake
 command line in that case.
 
+The icons in pics/ are built using lilypond and convert (from ImageMagick). You
+can define the locations of those programs using the LILYPOND_EXECUTABLE and the
+CONVERT_EXECUTABLE variables. Otherwise the programs are searched for in the
+PATH environment variable.
+
  
 Dependencies:
 =============
