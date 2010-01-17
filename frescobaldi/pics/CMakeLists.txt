@@ -1,5 +1,8 @@
 # Generate PNGs from LilyPond files
 
+find_program(LILYPOND_EXECUTABLE NAMES lilypond)
+find_program(CONVERT_EXECUTABLE NAMES convert)
+
 # keep a list of all pngs for adding them to our target
 set(all_pngs)
 
@@ -29,12 +32,12 @@ macro(lilypond_png_icon _lyfile _size)
   add_custom_command(
     OUTPUT ${_outp}
     DEPENDS ${_deps}
-    COMMAND lilypond 
+    COMMAND ${LILYPOND_EXECUTABLE}
         -ddelete-intermediate-files
         --png -dpixmap-format=pngalpha
         -o "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}"
         "${_lyfile}"
-    COMMAND convert
+    COMMAND ${CONVERT_EXECUTABLE}
         "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
         -trim
         -bordercolor transparent -border ${_size}
