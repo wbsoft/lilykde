@@ -483,6 +483,11 @@ class Settings(SymbolManager, QWidget):
             "score. The MIDI output also uses the metronome setting."))
         v.addWidget(self.metro)
 
+        self.book = QCheckBox(i18n("Wrap score in \\book block"))
+        self.book.setToolTip(i18n(
+            "If checked, wraps the \\score block inside a \\book block."))
+        v.addWidget(self.book)
+
         # paper size:
         h = KHBox()
         v.addWidget(h)
@@ -541,6 +546,7 @@ class Settings(SymbolManager, QWidget):
         conf.writeEntry('remove barnumbers', self.barnum.isChecked())
         conf.writeEntry('midi', self.midi.isChecked())
         conf.writeEntry('metronome mark', self.metro.isChecked())
+        conf.writeEntry('wrap in book', self.book.isChecked())
         if self.paper.currentIndex() > 0:
             conf.writeEntry('paper size', ly.paperSizes[self.paper.currentIndex() - 1])
         conf.writeEntry('paper landscape', self.paperLandscape.isChecked())
@@ -558,6 +564,7 @@ class Settings(SymbolManager, QWidget):
         self.barnum.setChecked(conf.readEntry('remove barnumbers', False))
         self.midi.setChecked(conf.readEntry('midi', True))
         self.metro.setChecked(conf.readEntry('metronome mark', False))
+        self.book.setChecked(conf.readEntry('wrap in book', False))
 
         psize = conf.readEntry('paper size', "")
         if psize in ly.paperSizes:
@@ -597,6 +604,7 @@ class Settings(SymbolManager, QWidget):
         self.barnum.setChecked(False)
         self.midi.setChecked(True)
         self.metro.setChecked(False)
+        self.book.setChecked(False)
         self.paper.setCurrentIndex(0)
         self.paperLandscape.setEnabled(False)
         self.instrFirst.setCurrentIndex(0)
@@ -640,24 +648,33 @@ class Builder(object):
 
     Parts may interact with:
     
-    include             to request filenames to be included
+    methods:
+    include(fileName)   to request filenames to be included
     
-    addCodeBlock        to add arbitrary strings to the output (e.g. functions)
-
-    lilypondVersion     a tuple like (2, 11, 64) describing the LilyPond the
-                        document is built for.
+    addCodeBlock()      to add arbitrary strings to the output (e.g. functions)
 
     getInstrumentNames  to translate instrument names
 
     setInstrumentNames  to translate and set instrument names for a node
     
+    setMidiInstrument   to set the Midi instrument for a node
+    
+    properties:
+    lilypondVersion     a tuple like (2, 11, 64) describing the LilyPond the
+                        document is built for.
+
     midi                property is True if MIDI output is requested
     
-    setMidiInstrument   to set the Midi instrument for a node
+    book                True if the main \\score { } block is to be wrapped
+                        inside a \\book { } block. A part may set this to True
+                        if it is needed (e.g. when alternate output files are to
+                        be created).
+    
     """
     def __init__(self, wizard):
         self.wizard = wizard
         self.midi = wizard.settings.midi.isChecked()
+        self.book = wizard.settings.book.isChecked()
         
     def ly(self, doc=None):
         """ Return LilyPond formatted output. """
@@ -870,12 +887,15 @@ class Builder(object):
                 for n in part.nodes:
                     sim.append(n)
 
-        # clean up the parts:
-        for part in partList:
-            part.cleanup()
-        
         # put the score in the document
-        doc.append(score)
+        if self.book:
+            book = ly.dom.Book()
+            book.append(score)
+            doc.append(book)
+        else:
+            doc.append(score)
+        
+        # Add some layout stuff
         lay = ly.dom.Layout(score)
         if s.barnum.isChecked():
             ly.dom.Line('\\remove "Bar_number_engraver"',
@@ -887,7 +907,18 @@ class Builder(object):
                 val = int(val) * mul
                 ly.dom.Context('Score', mid)['tempoWholesPerMinute'] = \
                     ly.dom.Scheme("(ly:make-moment {0} {1})".format(val, base))
+        
+        # Add possible aftermath:
+        for part in partList:
+            if part.aftermath:
+                ly.dom.BlankLine(doc)
+                for n in part.aftermath:
+                    doc.append(n)
 
+        # clean up the parts:
+        for part in partList:
+            part.cleanup()
+        
     ##
     # The following methods are to be used by the parts.
     ##
@@ -983,10 +1014,11 @@ class PartBase(object):
 
     def cleanup(self):
         """
-        Delete previously built assignments and nodes
+        Delete previously built assignments, nodes and aftermath
         """
         self.assignments = []
         self.nodes = []
+        self.aftermath = []
         
     def run(self, builder):
         """
@@ -1032,6 +1064,10 @@ class PartBase(object):
         self.assignments and self.nodes.
         builder is a Builder instance providing access to users settings.
         You must implement this method in your part subclasses.
+        
+        You may also add ly.dom.Node objects to the self.aftermath list. These
+        are reproduces below the main score and can be used to create additional
+        score sections or markups, etc.
         """
         pass
 
