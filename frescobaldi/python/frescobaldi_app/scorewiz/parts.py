@@ -983,6 +983,7 @@ class Choir(VocalPart):
         splitStaves = staves.split('-')
         p = ChoirStaff()
         choir = Sim(p)
+        self.nodes.append(p)
         # print main instrumentName if there are more choirs, and we
         # have more than one staff.
         if len(splitStaves) > 1 and self.num:
@@ -1148,7 +1149,6 @@ class Choir(VocalPart):
             if (name, verse) not in refs:
                 refs[(name, verse)] = self.assignLyrics(name, verse)
             Identifier(refs[(name, verse)], node)
-        self.nodes.append(p)
 
         # Create the piano reduction if desired
         if self.pianoReduction.isChecked():
@@ -1216,8 +1216,8 @@ class Choir(VocalPart):
         if self.rehearsalMidi.isChecked():
             builder.book = True # force \book { } block
             self.aftermath.append(Comment(i18n("Rehearsal MIDI files:")))
+            
             for ref, name, num, lyrName in rehearsalMidis:
-                
                 output_suffix = "choir{0}-".format(self.num) if self.num else ""
                 output_suffix += name + format(num or "")
                 self.aftermath.append(
@@ -1242,7 +1242,6 @@ class Choir(VocalPart):
                     midiInstrument = "tenor sax"
                 
                 for ref1, name1, num1, lyrName1 in rehearsalMidis:
-                    
                     staff = Staff(parent=choir)
                     seq = Seq(staff)
                     Text('s1*0\\f', seq) # add one dynamic
