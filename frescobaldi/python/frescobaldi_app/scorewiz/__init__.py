@@ -649,15 +649,17 @@ class Builder(object):
     Parts may interact with:
     
     methods:
-    include(fileName)   to request filenames to be included
+    include             to request filenames to be included
     
-    addCodeBlock()      to add arbitrary strings to the output (e.g. functions)
+    addCodeBlock        to add arbitrary strings to the output (e.g. functions)
 
     getInstrumentNames  to translate instrument names
 
     setInstrumentNames  to translate and set instrument names for a node
     
     setMidiInstrument   to set the Midi instrument for a node
+    
+    setMidiTempo        to write the configured tempo in the given context
     
     properties:
     lilypondVersion     a tuple like (2, 11, 64) describing the LilyPond the
@@ -903,10 +905,7 @@ class Builder(object):
         if self.midi:
             mid = ly.dom.Midi(score)
             if tempoText or not metro:
-                base, mul = midiDurations[s.metroDur.currentIndex()]
-                val = int(val) * mul
-                ly.dom.Context('Score', mid)['tempoWholesPerMinute'] = \
-                    ly.dom.Scheme("(ly:make-moment {0} {1})".format(val, base))
+                self.setMidiTempo(ly.dom.Context('Score', mid))
         
         # Add possible aftermath:
         for part in partList:
@@ -997,6 +996,17 @@ class Builder(object):
         """
         if self.midi:
             node.getWith()['midiInstrument'] = midiInstrument
+    
+    def setMidiTempo(self, node):
+        """
+        Writes the configured tempo to the 'tempoWholesPerMinute' variable
+        of the given context (should be subclass of ly.dom.HandleVars).
+        """
+        s = self.wizard.settings
+        base, mul = midiDurations[s.metroDur.currentIndex()]
+        val = int(s.metroVal.currentText()) * mul
+        node['tempoWholesPerMinute'] = ly.dom.Scheme(
+            "(ly:make-moment {0} {1})".format(val, base))
 
 
 class PartBase(object):

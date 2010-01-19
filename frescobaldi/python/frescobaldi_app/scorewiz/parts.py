@@ -958,6 +958,11 @@ class Choir(VocalPart):
         self.pianoReduction.setToolTip(i18n(
             "Adds an automatically generated piano reduction."))
         layout.addWidget(self.pianoReduction)
+        self.rehearsalMidi = QCheckBox(i18n("Rehearsal MIDI files"))
+        self.rehearsalMidi.setToolTip(i18n(
+            "Creates a rehearsal MIDI file for every voice, "
+            "even if no MIDI output is generated for the main score."))
+        layout.addWidget(self.rehearsalMidi)
 
     partInfo = {
         'S': ('soprano', 1, SopranoVoice.instrumentNames),
@@ -982,11 +987,19 @@ class Choir(VocalPart):
         # have more than one staff.
         if len(splitStaves) > 1 and self.num:
             builder.setInstrumentNames(p, I18N_NOOP("Choir|Ch."), self.num)
+        
         count = dict.fromkeys('SATB', 0)  # dict with count of parts.
         maxLen = max(map(len, splitStaves))
         toGo = max(2, len(splitStaves)) # nr staves with same lyrics below + 1
         lyr, staffNames = [], []
+        if self.stanzas.value() == 1:
+            stanzas = [0]
+        else:
+            stanzas = list(range(1, self.stanzas.value() + 1))
+        
         pianoReduction = dict((key, []) for key in 'SATB')
+        rehearsalMidis = []
+
         for staff in splitStaves:
             toGo -= 1
             # sort the letters in order SATB
@@ -1033,9 +1046,6 @@ class Choir(VocalPart):
             elif 'T' in staff:
                 Clef('treble_8', mus)
 
-            stanzas = self.stanzas.value()
-            stanzas = stanzas == 1 and [0] or range(1, stanzas + 1)
-
             # Add the voices
             if len(staff) == 1:
                 part, name, num, octave = voices[0]
@@ -1061,9 +1071,12 @@ class Choir(VocalPart):
                         for verse in stanzas:
                             lyr.append((LyricsTo(vname, Lyrics(parent=choir)),
                                 lyrName, verse))
-                pianoReduction[part].append(ref)
                 if self.ambitus.isChecked():
                     Line('\\consists "Ambitus_engraver"', s.getWith())
+                
+                pianoReduction[part].append(ref)
+                rehearsalMidis.append((ref, name, num, lyrName))
+                
             else:
                 # There is more than one voice in the staff.
                 # Determine their order (\voiceOne, \voiceTwo etc.)
@@ -1102,30 +1115,34 @@ class Choir(VocalPart):
                     Text('\\voice' + ly.nums(vnum), v)
                     stub, ref = self.assignMusic(mname, octave)
                     Identifier(ref, v)
-                    pianoReduction[part].append(ref)
-                    if self.lyrAllSame.isChecked() and toGo and vnum == 1:
+                    
+                    if self.lyrAllSame.isChecked():
                         lyrName = 'verse'
                         above = False
                     elif self.lyrEachSame.isChecked():
                         lyrName = 'verse'
                         above = vnum & 1
-                    elif self.lyrEachDiff.isChecked():
+                    else: #self.lyrEachDiff.isChecked():
                         lyrName = mname + 'Verse'
                         above = vnum & 1
-                    else:
-                        continue
-                    # Create the lyrics. If they should be above the staff,
-                    # give the staff a suitable name, and use alignAboveContext
-                    # to align the Lyrics above the staff.
-                    if above:
-                        s.cid = Reference(staffName)
-                    for verse in stanzas:
-                        l = Lyrics(parent=choir)
+                    
+                    pianoReduction[part].append(ref)
+                    rehearsalMidis.append((ref, name, num, lyrName))
+                    
+                    if not self.lyrAllSame.isChecked() or (toGo and vnum != 1):
+                        # Create the lyrics. If they should be above the staff,
+                        # give the staff a suitable name, and use alignAboveContext
+                        # to align the Lyrics above the staff.
                         if above:
-                            l.getWith()['alignAboveContext'] = s.cid
-                        lyr.append((LyricsTo(vname, l), lyrName, verse))
+                            s.cid = Reference(staffName)
+                        for verse in stanzas:
+                            l = Lyrics(parent=choir)
+                            if above:
+                                l.getWith()['alignAboveContext'] = s.cid
+                            lyr.append((LyricsTo(vname, l), lyrName, verse))
 
         # Assign the lyrics, so their definitions come after the note defs.
+        # (These refs are used again below in the midi rehearsal routine.)
         refs = {}
         for node, name, verse in lyr:
             if (name, verse) not in refs:
@@ -1194,6 +1211,51 @@ class Choir(VocalPart):
             if builder.midi:
                 Line('\\remove "Staff_performer"', rightStaff.getWith())
                 Line('\\remove "Staff_performer"', leftStaff.getWith())
+        
+        # Create MIDI files if desired
+        if self.rehearsalMidi.isChecked():
+            builder.book = True # force \book { } block
+            self.aftermath.append(Comment(i18n("Rehearsal MIDI files:")))
+            for ref, name, num, lyrName in rehearsalMidis:
+                
+                output_suffix = "choir{0}-".format(self.num) if self.num else ""
+                output_suffix += name + format(num or "")
+                self.aftermath.append(
+                    Line('#(define output-suffix "{0}")'.format(output_suffix)))
+                
+                book = Book()
+                self.aftermath.append(book)
+                self.aftermath.append(BlankLine())
+                
+                score = Score(book)
+                choir = Sim(ChoirStaff(parent=Command('unfoldRepeats', score)))
+                midi = Midi(score)
+                ctx = Context('Score', midi)
+                ctx['midiMinimumVolume'] = Scheme('0.5')
+                ctx['midiMaximumVolume'] = Scheme('0.5')
+                builder.setMidiTempo(ctx)
+                
+                # TODO: make configurable
+                if name in ('soprano', 'alto'):
+                    midiInstrument = "soprano sax"
+                else:
+                    midiInstrument = "tenor sax"
+                
+                for ref1, name1, num1, lyrName1 in rehearsalMidis:
+                    
+                    staff = Staff(parent=choir)
+                    seq = Seq(staff)
+                    Text('s1*0\\f', seq) # add one dynamic
+                    Identifier(ref1, seq) # add the reference to the voice
+                    
+                    if ref1 is ref:
+                        # This is the part to be rehearsed, make it louder:
+                        w = staff.getWith()
+                        w['midiInstrument'] = Scheme('"{0}"'.format(midiInstrument))
+                        w['midiMinimumVolume'] = Scheme('0.8')
+                        w['midiMaximumVolume'] = Scheme('1.0')
+                        # Also add the lyrics for this voice (first stanza)
+                        Identifier(refs[(lyrName, stanzas[0])], AddLyrics(staff))
 
 
 class Piano(KeyboardPart):

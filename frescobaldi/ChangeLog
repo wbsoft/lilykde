@@ -5,6 +5,12 @@ Changes in 1.1.0 --
   There is also a custom Run LilyPond command where a version can be chosen,
   among other options.  And Frescobaldi can be configured to automatically
   choose a LilyPond version according to the document's \version statement.
+* Score Wizard:
+  - The Choir part type has a new checkbox to create rehearsal MIDI files. If
+    checked, one MIDI file is generated for each voice, with the voice standing
+    out in a clear sound and the other voices in a lower volume. Repeats are
+    unfolded and lyrics for the current voice are also added to the MIDI file.
+  - Checkbox option to wrap the score in a \book block.
 * New dialog to insert special characters from the Unicode table, with the
   ability to assign keyboard shortcuts to often used characters.
 * New command: Copy Lyrics with hyphenation removed
