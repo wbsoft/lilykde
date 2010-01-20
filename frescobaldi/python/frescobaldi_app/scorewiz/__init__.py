@@ -659,6 +659,8 @@ class Builder(object):
     
     setMidiInstrument   to set the Midi instrument for a node
     
+    getMidiTempo        to get the configured tempo e.g."(ly:make-moment 100 4)"
+    
     setMidiTempo        to write the configured tempo in the given context
     
     properties:
@@ -997,16 +999,21 @@ class Builder(object):
         if self.midi:
             node.getWith()['midiInstrument'] = midiInstrument
     
+    def getMidiTempo(self):
+        """
+        Returns the configured tempo as a string e.g. "(ly:make-moment 100 4)"
+        """
+        s = self.wizard.settings
+        base, mul = midiDurations[s.metroDur.currentIndex()]
+        val = int(s.metroVal.currentText()) * mul
+        return "(ly:make-moment {0} {1})".format(val, base)
+        
     def setMidiTempo(self, node):
         """
         Writes the configured tempo to the 'tempoWholesPerMinute' variable
         of the given context (should be subclass of ly.dom.HandleVars).
         """
-        s = self.wizard.settings
-        base, mul = midiDurations[s.metroDur.currentIndex()]
-        val = int(s.metroVal.currentText()) * mul
-        node['tempoWholesPerMinute'] = ly.dom.Scheme(
-            "(ly:make-moment {0} {1})".format(val, base))
+        node['tempoWholesPerMinute'] = ly.dom.Scheme(self.getMidiTempo())
 
 
 class PartBase(object):

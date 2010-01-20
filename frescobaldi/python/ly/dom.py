@@ -733,6 +733,19 @@ class Seqr(Seq): may_remove_brackets = True
 class Simr(Sim): may_remove_brackets = True
     
 
+class SchemeLily(Enclosed):
+    """ A LilyPond expression between #{ #} (inside scheme) """
+    pre, post = "#{", "#}"
+
+
+class SchemeList(Enclosed):
+    """ A list of items enclosed in parentheses """
+    pre, post = "(", ")"
+    
+    def ly(self, printer):
+        return self.pre + super(Enclosed, self).ly(printer) + self.post
+
+
 class StatementEnclosed(Named, Enclosed):
     """
     Base class for LilyPond commands that have a single bracket-enclosed
