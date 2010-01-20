@@ -1215,46 +1215,56 @@ class Choir(VocalPart):
         # Create MIDI files if desired
         if self.rehearsalMidi.isChecked():
             builder.book = True # force \book { } block
+
+            a, rehearsalMidi = self.assign('rehearsalMidi')
+            
+            func = SchemeList(a)
+            func.pre = '#(' # hack
+            Text('define-music-function', func)
+            Line('(parser location name midiInstrument lyrics) (string? string? ly:music?)', func)
+            choir = Sim(Command('unfoldRepeats', SchemeLily(func)))
+            
             self.aftermath.append(Comment(i18n("Rehearsal MIDI files:")))
             
             for ref, name, num, lyrName in rehearsalMidis:
+                # Append voice to the rehearsalMidi function
+                seq = Seq(Voice(name, parent=Staff(name, parent=choir)))
+                Text('s1*0\\f', seq) # add one dynamic
+                Identifier(ref, seq) # add the reference to the voice
+                
+                # Append score to the aftermath (stuff put below the main score)
                 output_suffix = "choir{0}-".format(self.num) if self.num else ""
                 output_suffix += name + format(num or "")
                 self.aftermath.append(
                     Line('#(define output-suffix "{0}")'.format(output_suffix)))
-                
                 book = Book()
                 self.aftermath.append(book)
                 self.aftermath.append(BlankLine())
-                
                 score = Score(book)
-                choir = Sim(ChoirStaff(parent=Command('unfoldRepeats', score)))
-                midi = Midi(score)
-                ctx = Context('Score', midi)
-                ctx['midiMinimumVolume'] = Scheme('0.5')
-                ctx['midiMaximumVolume'] = Scheme('0.5')
-                builder.setMidiTempo(ctx)
                 
                 # TODO: make configurable
                 if name in ('soprano', 'alto'):
                     midiInstrument = "soprano sax"
                 else:
                     midiInstrument = "tenor sax"
-                
-                for ref1, name1, num1, lyrName1 in rehearsalMidis:
-                    staff = Staff(parent=choir)
-                    seq = Seq(staff)
-                    Text('s1*0\\f', seq) # add one dynamic
-                    Identifier(ref1, seq) # add the reference to the voice
-                    
-                    if ref1 is ref:
-                        # This is the part to be rehearsed, make it louder:
-                        w = staff.getWith()
-                        w['midiInstrument'] = Scheme('"{0}"'.format(midiInstrument))
-                        w['midiMinimumVolume'] = Scheme('0.8')
-                        w['midiMaximumVolume'] = Scheme('1.0')
-                        # Also add the lyrics for this voice (first stanza)
-                        Identifier(refs[(lyrName, stanzas[0])], AddLyrics(staff))
+
+                cmd = Command(rehearsalMidi, score)
+                QuotedString(name, cmd)
+                QuotedString(midiInstrument, cmd)
+                Identifier(refs[(lyrName, stanzas[0])], cmd)
+                Midi(score)
+            
+            Text("\\context Staff = $name \\context Voice = $name", choir)
+            seq = Seq(choir)
+            Line("\\set Score.midiMinimumVolume = #0.5", seq)
+            Line("\\set Score.midiMaximumVolume = #0.5", seq)
+            Line("\\set Score.tempoWholesPerMinute = #" + builder.getMidiTempo(), seq)
+            Line("\\set Staff.midiMinimumVolume = #0.8", seq)
+            Line("\\set Staff.midiMaximumVolume = #1.0", seq)
+            Line("\\set Staff.midiInstrument = $midiInstrument", seq)
+            lyr = Lyrics(parent=choir)
+            lyr.getWith()['alignBelowContext'] = Text('$name')
+            Text("\\lyricsto $name $lyrics", lyr)
 
 
 class Piano(KeyboardPart):
