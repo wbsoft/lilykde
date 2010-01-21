@@ -1254,7 +1254,7 @@ class Choir(VocalPart):
                 Identifier(refs[(lyrName, stanzas[0])], cmd)
                 Midi(score)
             
-            Text("\\context Staff = $name \\context Voice = $name", choir)
+            Text("\\context Staff = $name", choir)
             seq = Seq(choir)
             Line("\\set Score.midiMinimumVolume = #0.5", seq)
             Line("\\set Score.midiMaximumVolume = #0.5", seq)
