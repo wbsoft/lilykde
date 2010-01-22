@@ -143,8 +143,9 @@ class Titles(QWidget):
         t.setContentsMargins(2, 2, 2, 2)
         t.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         t.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        t.document().documentLayout().documentSizeChanged.connect(
-            lambda size: t.setMinimumSize(size.toSize() + QSize(4, 4)))
+        t.setMinimumSize(QSize(350, 350))
+        #t.document().documentLayout().documentSizeChanged.connect(
+            #lambda size: t.setMinimumSize(size.toSize() + QSize(4, 4)))
 
         headers = ly.headers(i18n)
         msg = i18n("Click to enter a value.")

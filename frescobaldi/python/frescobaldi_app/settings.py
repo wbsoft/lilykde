@@ -306,6 +306,9 @@ class Commands(QWidget):
         l.setBuddy(self.hyphenPaths)
         layout.addWidget(l, layout.rowCount(), 0, 1, 2)
         layout.addWidget(self.hyphenPaths, layout.rowCount(), 0, 1, 2)
+        # stretch lilypond version widget more than hyphen path widget
+        layout.setRowStretch(0, 2)
+        layout.setRowStretch(layout.rowCount() - 1, 1)
 
     def setHyphenPaths(self, paths):
         self.hyphenPaths.setPlainText('\n'.join(paths))
