@@ -70,6 +70,9 @@ class SettingsDialog(KPageDialog):
         tree = self.findChild(QTreeView)
         if tree:
             tree.setIconSize(QSize(22, 22))
+        # restore our dialog size
+        self.restoreDialogSize(config("settings dialog"))
+        self.finished.connect(lambda: self.saveDialogSize(config("settings dialog")))
     
     def changed(self, changed=True):
         self.enableButton(KPageDialog.Apply, changed)
@@ -290,6 +293,7 @@ class Commands(QWidget):
             "Url or path to the LilyPond documentation.")
         l.setToolTip(tooltip)
         self.lilydoc.setToolTip(tooltip)
+        self.lilydoc.fileDialog().setCaption(i18n("LilyPond Documentation"))
         layout.addWidget(l, row, 0)
         layout.addWidget(self.lilydoc, row, 1)
         self.lilydoc.setMode(KFile.Mode(
@@ -495,6 +499,8 @@ class LilyPondInfoList(QGroupBox):
         self.auto.setChecked(conf.readEntry("automatic version", False))
         paths = conf.readEntry("paths", ["lilypond"])
         default = conf.readEntry("default", "lilypond")
+        # sort on version and move erratic entries to the end
+        paths.sort(key=lambda path: ly.version.LilyPondInstance(path).version() or (999,))
         for path in paths:
             info = LilyPondInfoItem(path)
             info.default = path == default
@@ -619,6 +625,7 @@ class LilyPondInfoDialog(KDialog):
         l.setBuddy(self.lilypond)
         self.lilypond.lineEdit().setToolTip(i18n(
             "Name or full path of the LilyPond program."))
+        self.lilypond.fileDialog().setCaption(i18n("LilyPond Command"))
         layout.addWidget(l, 0, 0, 1, 2)
         layout.addWidget(self.lilypond, 1, 0, 1, 2)
         
