@@ -990,11 +990,14 @@ class Choir(VocalPart):
         count = dict.fromkeys('SATB', 0)  # dict with count of parts.
         maxLen = max(map(len, splitStaves))
         toGo = max(2, len(splitStaves)) # nr staves with same lyrics below + 1
-        lyr, staffNames = [], []
+        staffNames = []
         if self.stanzas.value() == 1:
             stanzas = [0]
         else:
             stanzas = list(range(1, self.stanzas.value() + 1))
+        
+        # group lyric assignments by stanza number
+        lyr = dict((k, []) for k in stanzas)
         
         lyrAllSame, lyrEachSame, lyrEachDiff = (
             self.lyrics.currentIndex() == i for i in range(3))
@@ -1024,7 +1027,7 @@ class Choir(VocalPart):
                 builder.setInstrumentNames(s, name, num)
                 # if *all* staves have only one voice, addlyrics is used.
                 # In that case, don't remove the braces.
-                mus = maxLen == 1 and Seq(s) or Seqr(s)
+                mus = Seq(s) if maxLen == 1 else Seqr(s)
             else:
                 # There are more instrument names for the staff, stack them in
                 # a markup column.
@@ -1059,7 +1062,7 @@ class Choir(VocalPart):
                     Identifier(ref, mus)
                     if toGo or not lyrAllSame:
                         for verse in stanzas:
-                            lyr.append((AddLyrics(s), lyrName, verse))
+                            lyr[verse].append((AddLyrics(s), lyrName))
                 else:
                     # otherwise create explicit Voice and Lyrics contexts.
                     vname = name + str(num or '')
@@ -1068,8 +1071,8 @@ class Choir(VocalPart):
                     Identifier(ref, v)
                     if toGo or not lyrAllSame:
                         for verse in stanzas:
-                            lyr.append((LyricsTo(vname, Lyrics(parent=choir)),
-                                lyrName, verse))
+                            lyr[verse].append((LyricsTo(vname,
+                                    Lyrics(parent=choir)), lyrName))
                 if self.ambitus.isChecked():
                     Line('\\consists "Ambitus_engraver"', s.getWith())
                 
@@ -1130,23 +1133,27 @@ class Choir(VocalPart):
                     
                     if not lyrAllSame or (toGo and vnum != 1):
                         # Create the lyrics. If they should be above the staff,
-                        # give the staff a suitable name, and use alignAboveContext
-                        # to align the Lyrics above the staff.
+                        # give the staff a suitable name, and use alignAbove-
+                        # Context to align the Lyrics above the staff.
                         if above:
                             s.cid = Reference(staffName)
                         for verse in stanzas:
                             l = Lyrics(parent=choir)
                             if above:
                                 l.getWith()['alignAboveContext'] = s.cid
-                            lyr.append((LyricsTo(vname, l), lyrName, verse))
+                                if builder.lilypondVersion >= (2, 13, 4):
+                                    Line("\\override VerticalAxisGroup "
+                                      "#'staff-affinity = #DOWN", l.getWith())
+                            lyr[verse].append((LyricsTo(vname, l), lyrName))
 
         # Assign the lyrics, so their definitions come after the note defs.
         # (These refs are used again below in the midi rehearsal routine.)
         refs = {}
-        for node, name, verse in lyr:
-            if (name, verse) not in refs:
-                refs[(name, verse)] = self.assignLyrics(name, verse)
-            Identifier(refs[(name, verse)], node)
+        for verse in stanzas:
+            for node, name in lyr[verse]:
+                if (name, verse) not in refs:
+                    refs[(name, verse)] = self.assignLyrics(name, verse)
+                Identifier(refs[(name, verse)], node)
 
         # Create the piano reduction if desired
         if self.pianoReduction.isChecked():
