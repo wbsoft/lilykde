@@ -934,25 +934,23 @@ class Choir(VocalPart):
             'SS-A-T-B', 'S-A-TT-B', 'SS-A-TT-B',
             'S-S-A-T-T-B', 'S-S-A-A-T-T-B-B',
             ))
-        g = QGroupBox(i18n("Lyrics"))
-        layout.addWidget(g)
-        group = QVBoxLayout()
-        g.setLayout(group)
-        self.lyrAllSame = QRadioButton(i18n("All voices same lyrics"))
-        self.lyrAllSame.setChecked(True)
-        self.lyrAllSame.setToolTip(i18n(
-            "One set of the same lyrics is placed between all staves."))
-        group.addWidget(self.lyrAllSame)
-        self.lyrEachSame = QRadioButton(i18n("Every voice same lyrics"))
-        self.lyrEachSame.setToolTip(i18n(
-            "Every voice gets its own lyrics, using the same text as the "
-            "other voices."))
-        group.addWidget(self.lyrEachSame)
-        self.lyrEachDiff = QRadioButton(i18n("Every voice different lyrics"))
-        self.lyrEachDiff.setToolTip(i18n(
-            "Every voice gets a different set of lyrics."))
-        group.addWidget(self.lyrEachDiff)
-        self.stanzaWidget(group)
+        self.stanzaWidget(layout)
+        h = KHBox()
+        layout.addWidget(h)
+        l = QLabel(i18n("Lyrics:"), h)
+        self.lyrics = QComboBox(h)
+        l.setBuddy(self.lyrics)
+        for index, (text, tooltip) in enumerate((
+         (i18n("All voices same lyrics"),
+          i18n("One set of the same lyrics is placed between all staves.")),
+         (i18n("Every voice same lyrics"),
+          i18n("Every voice gets its own lyrics, using the same text as the"
+               " other voices.")),
+         (i18n("Every voice different lyrics"),
+          i18n("Every voice gets a different set of lyrics.")))):
+            self.lyrics.addItem(text)
+            self.lyrics.setItemData(index, tooltip, Qt.ToolTipRole)
+        self.lyrics.setCurrentIndex(0)
         self.ambitusWidget(layout)
         self.pianoReduction = QCheckBox(i18n("Piano reduction"))
         self.pianoReduction.setToolTip(i18n(
@@ -997,6 +995,9 @@ class Choir(VocalPart):
             stanzas = [0]
         else:
             stanzas = list(range(1, self.stanzas.value() + 1))
+        
+        lyrAllSame, lyrEachSame, lyrEachDiff = (
+            self.lyrics.currentIndex() == i for i in range(3))
         
         pianoReduction = dict((key, []) for key in 'SATB')
         rehearsalMidis = []
@@ -1051,15 +1052,12 @@ class Choir(VocalPart):
             if len(staff) == 1:
                 part, name, num, octave = voices[0]
                 mname = name + (num and ly.nums(num) or '')
-                if self.lyrEachDiff.isChecked():
-                    lyrName = mname + 'Verse'
-                else:
-                    lyrName = 'verse'
+                lyrName = mname + 'Verse' if lyrEachDiff else 'verse'
                 if maxLen == 1:
                     # if all staves have only one voice, use \addlyrics...
                     stub, ref = self.assignMusic(mname, octave)
                     Identifier(ref, mus)
-                    if not (self.lyrAllSame.isChecked() and not toGo):
+                    if toGo or not lyrAllSame:
                         for verse in stanzas:
                             lyr.append((AddLyrics(s), lyrName, verse))
                 else:
@@ -1068,7 +1066,7 @@ class Choir(VocalPart):
                     v = Seqr(Voice(vname, parent=mus))
                     stub, ref = self.assignMusic(mname, octave)
                     Identifier(ref, v)
-                    if not (self.lyrAllSame.isChecked() and not toGo):
+                    if toGo or not lyrAllSame:
                         for verse in stanzas:
                             lyr.append((LyricsTo(vname, Lyrics(parent=choir)),
                                 lyrName, verse))
@@ -1117,20 +1115,20 @@ class Choir(VocalPart):
                     stub, ref = self.assignMusic(mname, octave)
                     Identifier(ref, v)
                     
-                    if self.lyrAllSame.isChecked():
+                    if lyrAllSame:
                         lyrName = 'verse'
                         above = False
-                    elif self.lyrEachSame.isChecked():
+                    elif lyrEachSame:
                         lyrName = 'verse'
                         above = vnum & 1
-                    else: #self.lyrEachDiff.isChecked():
+                    else: #lyrEachDiff
                         lyrName = mname + 'Verse'
                         above = vnum & 1
                     
                     pianoReduction[part].append(ref)
                     rehearsalMidis.append((ref, name, num, lyrName))
                     
-                    if not self.lyrAllSame.isChecked() or (toGo and vnum != 1):
+                    if not lyrAllSame or (toGo and vnum != 1):
                         # Create the lyrics. If they should be above the staff,
                         # give the staff a suitable name, and use alignAboveContext
                         # to align the Lyrics above the staff.
