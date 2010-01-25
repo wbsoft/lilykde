@@ -998,9 +998,13 @@ class Choir(VocalPart):
         
         splitStaves = staves.split('-')
         numStaves = len(splitStaves)
-        staffNames = defaultdict(int)   # number same-name staff Context-IDs
+        staffCIDs = defaultdict(int)    # number same-name staff Context-IDs
         voiceCounter = defaultdict(int) # dict to number same voice types
         maxNumVoices = max(map(len, splitStaves)) # largest number of voices
+        numStanzas = self.stanzas.value()
+        lyrics = defaultdict(list)      # lyrics grouped by stanza number
+        pianoReduction = defaultdict(list)
+        rehearsalMidis = []
         
         p = ChoirStaff()
         choir = Sim(p)
@@ -1011,20 +1015,38 @@ class Choir(VocalPart):
         if numStaves > 1 and self.num:
             builder.setInstrumentNames(p, I18N_NOOP("Choir|Ch."), self.num)
         
-        if self.stanzas.value() == 1:
-            stanzas = [0]
-        else:
-            stanzas = list(range(1, self.stanzas.value() + 1))
-        
-        # group lyric assignments by stanza number
-        lyrics = defaultdict(list)
-        
+        # get the preferred way of adding lyrics
         lyrAllSame, lyrEachSame, lyrEachDiff, lyrSpread = (
             self.lyrics.currentIndex() == i for i in range(4))
+        lyrEach = lyrEachSame or lyrEachDiff
         
-        pianoReduction = defaultdict(list)
-        rehearsalMidis = []
-
+        # stanzas to print (0 = don't print stanza number):
+        if numStanzas == 1:
+            allStanzas = [0]
+        else:
+            allStanzas = list(range(1, numStanzas + 1))
+        
+        # a function to set staff affinity (in LilyPond 2.13.4 and above):
+        if builder.lilyPondVersion >= (2, 13, 4):
+            def setStaffAffinity(context, affinity):
+                Line("\\override VerticalAxisGroup "
+                     "#'staff-affinity = #" + affinity, context.getWith())
+        else:
+            def setStaffAffinity(lyricsContext, affinity):
+                pass
+        
+        # a function to make a column markup:
+        if builder.lilyPondVersion >= (2, 11, 57):
+            columnCommand = 'center-column'
+        else:
+            columnCommand = 'center-align'
+        def makeColumnMarkup(names):
+            node = Markup()
+            column = MarkupEnclosed(columnCommand, node)
+            for name in names:
+                QuotedString(name, column)
+            return node
+                
         for index, staff in enumerate(splitStaves):
             # are we in the last staff?
             lastStaff = index == numStaves - 1
@@ -1036,8 +1058,8 @@ class Choir(VocalPart):
             s = Staff(parent=choir)
             builder.setMidiInstrument(s, self.midiInstrument)
             
-            # Build a list of the voices in this staff. Each entry is a
-            # tuple(name, num).
+            # Build a list of the voices in this staff.
+            # Each entry is a tuple(name, num).
             # name is one of 'S', 'A', 'T', or 'B'
             # num is an integer: 0 when a voice occurs only once, or >= 1 when
             # there are more voices of the same type (e.g. Soprano I and II)
@@ -1049,155 +1071,104 @@ class Choir(VocalPart):
             
             # Add the instrument names to the staff:
             if numVoices == 1:
-                # There is only one voice in the staff. Just set the instrument
-                # name directly in the staff.
                 voice, num = voices[0]
                 builder.setInstrumentNames(s, self.instrumentNames[voice], num)
-                # if *all* staves have only one voice, addlyrics is used.
-                # In that case, don't remove the braces.
-                mus = Seq(s) if maxNumVoices == 1 else Seqr(s)
             else:
-                # There are more instrument names for the staff, stack them in
-                # a markup column.
-                def mkup(names):
-                    n = Markup()
-                    if builder.lilyPondVersion >= (2, 11, 57):
-                        col = MarkupEnclosed('center-column', n)
-                    else:
-                        col = MarkupEnclosed('center-align', n)
-                    for name in names:
-                        QuotedString(name, col)
-                    return n
-                builder.setInstrumentNames(s, map(mkup, zip(*[
-                  builder.getInstrumentNames(self.instrumentNames[voice], num)
-                  for voice, num in voices])))
-                mus = Simr(s)
+                # stack instrument names (long and short) in a markup column.
+                builder.setInstrumentNames(s,
+                  map(makeColumnMarkup, zip(*[builder.getInstrumentNames(
+                  self.instrumentNames[voice], num) for voice, num in voices])))
+            
+            # Make the { } or << >> holder for this staff's children.
+            # If *all* staves have only one voice, addlyrics is used.
+            # In that case, don't remove the braces.
+            staffMusic = (Seq if lyrEach and maxNumVoices == 1 else
+                          Seqr if numVoices == 1 else Simr)(s)
             
             # Set the clef for this staff:
             if 'B' in staff:
-                Clef('bass', mus)
+                Clef('bass', staffMusic)
             elif 'T' in staff:
-                Clef('treble_8', mus)
+                Clef('treble_8', staffMusic)
 
-            # Write lyrics below this staff?
-            # In case of EachSame or EachDiff not below the last staff, unless
-            # there is only one staff.
-            makeLyrics = (lyrEachSame or lyrEachDiff or not lastStaff or
-                                                            numStaves == 1)
-            
-            # Add the voices and their lyrics:
+            # Add the voices and their lyrics.
+            # Determine voice order (\voiceOne, \voiceTwo etc.)
             if numVoices == 1:
-                voice, num = voices[0]
+                order = (0,)
+            elif numVoices == 2:
+                order = 1, 2
+            elif staff in ('SSA', 'TTB'):
+                order = 1, 3, 2
+            elif staff in ('SAA', 'TBB'):
+                order = 1, 2, 4
+            elif staff in ('SSAA', 'TTBB'):
+                order = 1, 3, 2, 4
+            else:
+                order = range(1, numVoices + 1)
+            
+            # What name would the staff get if we need to refer to it?
+            # If a name (like 's' or 'sa') is already in use in this part,
+            # just add a number ('ss2' or 'sa2', etc.)
+            staffCIDs[staff] += 1
+            cid = staff + str(staffCIDs[staff] if staffCIDs[staff] > 1 else "")
+            
+            # Which stanzas to print:
+            stanzas = allStanzas
+            
+            # Create voices and their lyrics:
+            for (voice, num), voiceNum in zip(voices, order):
                 name = self.identifiers[voice]
                 if num:
                     name += ly.nums(num)
                 stub, ref = self.assignMusic(name, self.octaves[voice])
                 lyrName = name + 'Verse' if lyrEachDiff else 'verse'
-                if maxNumVoices == 1 and (lyrEachSame or lyrEachDiff):
-                    # if all staves have only one voice, and its lyrics do not
-                    # belong to the staff below as well, use \addlyrics...
-                    Identifier(ref, mus)
-                    if makeLyrics:
-                        for verse in stanzas:
-                            lyrics[verse].append((AddLyrics(s), lyrName))
+            
+                # Use \addlyrics if all staves have exactly one voice.
+                if lyrEach and maxNumVoices == 1:
+                    for verse in stanzas:
+                        lyrics[verse].append((AddLyrics(s), lyrName))
+                    Identifier(ref, staffMusic)
                 else:
-                    # otherwise create explicit Voice and Lyrics contexts.
                     voiceName = self.identifiers[voice] + str(num or '')
-                    v = Seqr(Voice(voiceName, parent=mus))
-                    Identifier(ref, v)
-                    if makeLyrics:
-                        for verse in stanzas:
-                            l = Lyrics(parent=choir)
-                            if (builder.lilyPondVersion >= (2, 13, 4) and
-                                  not lastStaff and (lyrAllSame or lyrSpread)):
-                                Line("\\override VerticalAxisGroup "
-                                     "#'staff-affinity = #CENTER", l.getWith())
-                            lyrics[verse].append((LyricsTo(voiceName, l), lyrName))
-                if self.ambitus.isChecked():
-                    Line('\\consists "Ambitus_engraver"', s.getWith())
-                
-                pianoReduction[voice].append(ref)
-                rehearsalMidis.append((voice, num, ref, lyrName))
-                
-            else:
-                # There is more than one voice in the staff.
-                # Determine their order (\voiceOne, \voiceTwo etc.)
-                if numVoices == 2:
-                    order = 1, 2
-                elif staff in ('SSA', 'TTB'):
-                    order = 1, 3, 2
-                elif staff in ('SAA', 'TBB'):
-                    order = 1, 2, 4
-                elif staff in ('SSAA', 'TTBB'):
-                    order = 1, 3, 2, 4
-                else:
-                    order = range(1, numVoices + 1)
-                
-                # What name would the staff get if we need to refer to it?
-                # if a name (like 's' or 'sa') is already in use in this part,
-                # just add a number ('ss2' or 'sa2', etc.)
-                staffNames[staff] += 1
-                if staffNames[staff] > 1:
-                    staff += str(staffNames[staffName])
-                # We want the staff name (actually context-id) in lower case.
-                staffRef = Reference(staff.lower())
-                
-                # Create the voices and their lyrics.
-                for (voice, num), voiceNum in zip(voices, order):
-                    name = self.identifiers[voice]
-                    if num:
-                        name += ly.nums(num)
-                    voiceName = self.identifiers[voice] + str(num or '')
-                    v = Voice(voiceName, parent=mus)
-                    # Add ambitus to voice, move to the right if necessary
-                    if self.ambitus.isChecked():
-                        Line('\\consists "Ambitus_engraver"', v.getWith())
-                        if voiceNum > 1:
-                            Line("\\override Ambitus #'X-offset = #{0}".format(
-                                 (voiceNum - 1) * 2.0), v.getWith())
-                    v = Seq(v)
-                    Text('\\voice' + ly.nums(voiceNum), v)
-                    stub, ref = self.assignMusic(name, self.octaves[voice])
-                    Identifier(ref, v)
+                    v = Voice(voiceName, parent=staffMusic)
+                    voiceMusic = Seqr(v)
+                    if voiceNum:
+                        Text('\\voice' + ly.nums(voiceNum), voiceMusic)
+                    Identifier(ref, voiceMusic)
                     
-                    if lyrAllSame or lyrSpread:
-                        lyrName = 'verse'
-                        above = False
-                    elif lyrEachSame:
-                        lyrName = 'verse'
-                        above = voiceNum & 1
-                    else: #lyrEachDiff
-                        lyrName = name + 'Verse'
-                        above = voiceNum & 1
-                    
-                    pianoReduction[voice].append(ref)
-                    rehearsalMidis.append((voice, num, ref, lyrName))
-                    
-                    if lyrEachSame or lyrEachDiff or (voiceNum == 1 and (
-                                        not lastStaff or numStaves == 1)):
+                    if stanzas and (lyrEach or (voiceNum <= 1 and
+                                    (not lastStaff or numStaves == 1))):
                         # Create the lyrics. If they should be above the staff,
                         # give the staff a suitable name, and use alignAbove-
                         # Context to align the Lyrics above the staff.
+                        above = voiceNum & 1 if lyrEach else False
                         if above and s.cid is None:
-                            s.cid = staffRef
+                            s.cid = cid
+
                         for verse in stanzas:
                             l = Lyrics(parent=choir)
                             if above:
-                                l.getWith()['alignAboveContext'] = s.cid
-                                if builder.lilyPondVersion >= (2, 13, 4):
-                                    Line("\\override VerticalAxisGroup "
-                                      "#'staff-affinity = #DOWN", l.getWith())
-                            elif (lyrAllSame or lyrSpread) and not lastStaff:
-                                if builder.lilyPondVersion >= (2, 13, 4):
-                                    Line("\\override VerticalAxisGroup "
-                                      "#'staff-affinity = #CENTER", l.getWith())
-                                    
+                                l.getWith()['alignAboveContext'] = cid
+                                setStaffAffinity(l, "DOWN")
+                            elif not lyrEach and not lastStaff:
+                                setStaffAffinity(l, "CENTER")
                             lyrics[verse].append((LyricsTo(voiceName, l), lyrName))
 
+                # Add ambitus:
+                if self.ambitus.isChecked():
+                    ambitusContext = (s if numVoices == 1 else v).getWith()
+                    Line('\\consists "Ambitus_engraver"', ambitusContext)
+                    if voiceNum > 1:
+                        Line("\\override Ambitus #'X-offset = #{0}".format(
+                                 (voiceNum - 1) * 2.0), ambitusContext)
+            
+                pianoReduction[voice].append(ref)
+                rehearsalMidis.append((voice, num, ref, lyrName))
+            
         # Assign the lyrics, so their definitions come after the note defs.
         # (These refs are used again below in the midi rehearsal routine.)
         refs = {}
-        for verse in stanzas:
+        for verse in allStanzas:
             for node, name in lyrics[verse]:
                 if (name, verse) not in refs:
                     refs[(name, verse)] = self.assignLyrics(name, verse)
