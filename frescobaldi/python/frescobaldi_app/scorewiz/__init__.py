@@ -665,7 +665,7 @@ class Builder(object):
     setMidiTempo        to write the configured tempo in the given context
     
     properties:
-    lilypondVersion     a tuple like (2, 11, 64) describing the LilyPond the
+    lilyPondVersion     a tuple like (2, 11, 64) describing the LilyPond the
                         document is built for.
 
     midi                property is True if MIDI output is requested
@@ -725,7 +725,7 @@ class Builder(object):
         version = s.lyversion.currentText()
         ly.dom.Version(version, doc)
         ly.dom.BlankLine(doc)
-        self.lilypondVersion = tuple(map(int, re.findall('\\d+', version)))
+        self.lilyPondVersion = tuple(map(int, re.findall('\\d+', version)))
 
         # header:
         h = ly.dom.Header()
@@ -828,7 +828,7 @@ class Builder(object):
         match = re.search('(\\d+).*?(\\d+)', s.time.currentText())
         if match:
             if s.time.currentText() in ('2/2', '4/4'):
-                if self.lilypondVersion >= (2, 11, 44):
+                if self.lilyPondVersion >= (2, 11, 44):
                     ly.dom.Line(r"\numericTimeSignature", g)
                 else:
                     ly.dom.Line(r"\override Staff.TimeSignature #'style = #'()", g)
