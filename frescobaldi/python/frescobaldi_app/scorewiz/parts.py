@@ -1110,7 +1110,8 @@ class Choir(VocalPart):
             # If a name (like 's' or 'sa') is already in use in this part,
             # just add a number ('ss2' or 'sa2', etc.)
             staffCIDs[staff] += 1
-            cid = staff + str(staffCIDs[staff] if staffCIDs[staff] > 1 else "")
+            cid = Reference(staff.lower() +
+                str(staffCIDs[staff] if staffCIDs[staff] > 1 else ""))
             
             # Which stanzas to print:
             stanzas = allStanzas
