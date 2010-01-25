@@ -25,6 +25,7 @@ In separate file to ease maintenance.
 """
 
 from fractions import Fraction
+from collections import defaultdict
 
 from PyQt4.QtCore import QRegExp, Qt
 from PyQt4.QtGui import (
@@ -947,7 +948,11 @@ class Choir(VocalPart):
           i18n("Every voice gets its own lyrics, using the same text as the"
                " other voices.")),
          (i18n("Every voice different lyrics"),
-          i18n("Every voice gets a different set of lyrics.")))):
+          i18n("Every voice gets a different set of lyrics.")),
+         (i18n("Distribute stanzas"),
+          i18n("All voices share the same lyrics, but the stanzas are "
+               "distributed across the staves.\nThis is useful if you want to "
+               "engrave e.g. four-part songs with many stanzas.")))):
             self.lyrics.addItem(text)
             self.lyrics.setItemData(index, tooltip, Qt.ToolTipRole)
         self.lyrics.setCurrentIndex(0)
@@ -962,13 +967,27 @@ class Choir(VocalPart):
             "even if no MIDI output is generated for the main score."))
         layout.addWidget(self.rehearsalMidi)
 
-    partInfo = {
-        'S': ('soprano', 1, SopranoVoice.instrumentNames),
-        'A': ('alto', 0, AltoVoice.instrumentNames),
-        'T': ('tenor', 0, TenorVoice.instrumentNames),
-        'B': ('bass', -1, BassVoice.instrumentNames),
+    identifiers = {
+        'S': 'soprano',
+        'A': 'alto',
+        'T': 'tenor',
+        'B': 'bass',
     }
-
+    
+    octaves = {
+        'S': SopranoVoice.octave,
+        'A': AltoVoice.octave,
+        'T': TenorVoice.octave,
+        'B': BassVoice.octave,
+    }
+    
+    instrumentNames = {
+        'S': SopranoVoice.instrumentNames,
+        'A': AltoVoice.instrumentNames,
+        'T': TenorVoice.instrumentNames,
+        'B': BassVoice.instrumentNames,
+    }
+            
     def build(self, builder):
         # normalize voicing
         staves = self.voicing.currentText().upper()
@@ -987,10 +1006,10 @@ class Choir(VocalPart):
         if len(splitStaves) > 1 and self.num:
             builder.setInstrumentNames(p, I18N_NOOP("Choir|Ch."), self.num)
         
-        count = dict.fromkeys('SATB', 0)  # dict with count of parts.
+        count = defaultdict(int)  # dict with count of voices.
         maxLen = max(map(len, splitStaves))
         toGo = max(2, len(splitStaves)) # nr staves with same lyrics below + 1
-        staffNames = []
+        staffNames = defaultdict(int)
         if self.stanzas.value() == 1:
             stanzas = [0]
         else:
@@ -999,10 +1018,10 @@ class Choir(VocalPart):
         # group lyric assignments by stanza number
         lyr = dict((k, []) for k in stanzas)
         
-        lyrAllSame, lyrEachSame, lyrEachDiff = (
-            self.lyrics.currentIndex() == i for i in range(3))
+        lyrAllSame, lyrEachSame, lyrEachDiff, lyrSpread = (
+            self.lyrics.currentIndex() == i for i in range(4))
         
-        pianoReduction = dict((key, []) for key in 'SATB')
+        pianoReduction = defaultdict(list)
         rehearsalMidis = []
 
         for staff in splitStaves:
@@ -1012,19 +1031,24 @@ class Choir(VocalPart):
             # Create the staff for the voices
             s = Staff(parent=choir)
             builder.setMidiInstrument(s, self.midiInstrument)
-            # Build lists of the voices and their instrument names
-            instrNames, voices = [], []
-            for part in staff:
-                if staves.count(part) > 1:
-                    count[part] += 1
-                name, octave, instrName = self.partInfo[part]
-                instrNames.append((instrName, count[part]))
-                voices.append((part, name, count[part], octave))
+            
+            # Build a list of the voices in this staff. Each entry is a
+            # tuple(name, num).
+            # name is one of 'S', 'A', 'T', or 'B'
+            # num is an integer: 0 when a voice occurs only once, or >= 1 when
+            # there are more voices of the same type (e.g. Soprano I and II)
+            voices = []
+            for voice in staff:
+                if staves.count(voice) > 1:
+                    count[voice] += 1
+                voices.append((voice, count[voice]))
+            
+            # Add the instrument names to the staff:
             if len(staff) == 1:
                 # There is only one voice in the staff. Just set the instrument
                 # name directly in the staff.
-                name, num = instrNames[0]
-                builder.setInstrumentNames(s, name, num)
+                voice, num = voices[0]
+                builder.setInstrumentNames(s, self.instrumentNames[voice], num)
                 # if *all* staves have only one voice, addlyrics is used.
                 # In that case, don't remove the braces.
                 mus = Seq(s) if maxLen == 1 else Seqr(s)
@@ -1034,29 +1058,31 @@ class Choir(VocalPart):
                 def mkup(names):
                     n = Markup()
                     if builder.lilyPondVersion >= (2, 11, 57):
-                        col = 'center-column'
+                        col = MarkupEnclosed('center-column', n)
                     else:
-                        col = 'center-align'
-                    col = MarkupEnclosed(col, n)
+                        col = MarkupEnclosed('center-align', n)
                     for name in names:
                         QuotedString(name, col)
                     return n
-                builder.setInstrumentNames(s, map(mkup, zip(
-                    *[builder.getInstrumentNames(name, num)
-                        for name, num in instrNames])))
+                builder.setInstrumentNames(s, map(mkup, zip(*[
+                  builder.getInstrumentNames(self.instrumentNames[voice], num)
+                  for voice, num in voices])))
                 mus = Simr(s)
+            
             # Set the clef for this staff:
             if 'B' in staff:
                 Clef('bass', mus)
             elif 'T' in staff:
                 Clef('treble_8', mus)
 
-            # Add the voices
+            # Add the voices:
             if len(staff) == 1:
-                part, name, num, octave = voices[0]
-                mname = name + (num and ly.nums(num) or '')
-                stub, ref = self.assignMusic(mname, octave)
-                lyrName = mname + 'Verse' if lyrEachDiff else 'verse'
+                voice, num = voices[0]
+                name = self.identifiers[voice]
+                if num:
+                    name += ly.nums(num)
+                stub, ref = self.assignMusic(name, self.octaves[voice])
+                lyrName = name + 'Verse' if lyrEachDiff else 'verse'
                 if maxLen == 1:
                     # if all staves have only one voice, use \addlyrics...
                     Identifier(ref, mus)
@@ -1065,18 +1091,18 @@ class Choir(VocalPart):
                             lyr[verse].append((AddLyrics(s), lyrName))
                 else:
                     # otherwise create explicit Voice and Lyrics contexts.
-                    vname = name + str(num or '')
-                    v = Seqr(Voice(vname, parent=mus))
+                    voiceName = self.identifiers[voice] + str(num or '')
+                    v = Seqr(Voice(voiceName, parent=mus))
                     Identifier(ref, v)
                     if toGo or not lyrAllSame:
                         for verse in stanzas:
-                            lyr[verse].append((LyricsTo(vname,
+                            lyr[verse].append((LyricsTo(voiceName,
                                     Lyrics(parent=choir)), lyrName))
                 if self.ambitus.isChecked():
                     Line('\\consists "Ambitus_engraver"', s.getWith())
                 
-                pianoReduction[part].append(ref)
-                rehearsalMidis.append((ref, name, num, lyrName))
+                pianoReduction[voice].append(ref)
+                rehearsalMidis.append((voice, num, ref, lyrName))
                 
             else:
                 # There is more than one voice in the staff.
@@ -1091,30 +1117,32 @@ class Choir(VocalPart):
                     order = 1, 3, 2, 4
                 else:
                     order = range(1, len(staff) + 1)
+                
                 # What name would the staff get if we need to refer to it?
-                staffName, snum = staff, 1
                 # if a name (like 's' or 'sa') is already in use in this part,
                 # just add a number ('ss2' or 'sa2', etc.)
-                while staffName in staffNames:
-                    snum += 1
-                    staffName = staff + str(snum)
-                staffNames.append(staffName)
+                staffNames[staff] += 1
+                if staffNames[staff] > 1:
+                    staff += str(staffNames[staffName])
                 # We want the staff name (actually context-id) in lower case.
-                staffName = staffName.lower()
+                staffRef = Reference(staff.lower())
+                
                 # Create the voices and their lyrics.
-                for (part, name, num, octave), vnum in zip(voices, order):
-                    mname = name + (num and ly.nums(num) or '')
-                    vname = name + str(num or '')
-                    v = Voice(vname, parent=mus)
+                for (voice, num), voiceNum in zip(voices, order):
+                    name = self.identifiers[voice]
+                    if num:
+                        name += ly.nums(num)
+                    voiceName = self.identifiers[voice] + str(num or '')
+                    v = Voice(voiceName, parent=mus)
                     # Add ambitus to voice, move to the right if necessary
                     if self.ambitus.isChecked():
                         Line('\\consists "Ambitus_engraver"', v.getWith())
-                        if vnum > 1:
+                        if voiceNum > 1:
                             Line("\\override Ambitus #'X-offset = #{0}".format(
-                                 (vnum - 1) * 2.0), v.getWith())
+                                 (voiceNum - 1) * 2.0), v.getWith())
                     v = Seq(v)
-                    Text('\\voice' + ly.nums(vnum), v)
-                    stub, ref = self.assignMusic(mname, octave)
+                    Text('\\voice' + ly.nums(voiceNum), v)
+                    stub, ref = self.assignMusic(name, self.octaves[voice])
                     Identifier(ref, v)
                     
                     if lyrAllSame:
@@ -1127,15 +1155,15 @@ class Choir(VocalPart):
                         lyrName = mname + 'Verse'
                         above = vnum & 1
                     
-                    pianoReduction[part].append(ref)
-                    rehearsalMidis.append((ref, name, num, lyrName))
+                    pianoReduction[voice].append(ref)
+                    rehearsalMidis.append((voice, num, ref, lyrName))
                     
-                    if not lyrAllSame or (toGo and vnum == 1):
+                    if not lyrAllSame or (toGo and voiceNum == 1):
                         # Create the lyrics. If they should be above the staff,
                         # give the staff a suitable name, and use alignAbove-
                         # Context to align the Lyrics above the staff.
                         if above and s.cid is None:
-                            s.cid = Reference(staffName)
+                            s.cid = staffRef
                         for verse in stanzas:
                             l = Lyrics(parent=choir)
                             if above:
@@ -1143,7 +1171,7 @@ class Choir(VocalPart):
                                 if builder.lilyPondVersion >= (2, 13, 4):
                                     Line("\\override VerticalAxisGroup "
                                       "#'staff-affinity = #DOWN", l.getWith())
-                            lyr[verse].append((LyricsTo(vname, l), lyrName))
+                            lyr[verse].append((LyricsTo(voiceName, l), lyrName))
 
         # Assign the lyrics, so their definitions come after the note defs.
         # (These refs are used again below in the midi rehearsal routine.)
@@ -1205,7 +1233,8 @@ class Choir(VocalPart):
 
             # Make the piano part somewhat smaller
             Line("fontSize = #-1", piano.getWith())
-            Line("\\override StaffSymbol #'staff-space = #(magstep -1)", piano.getWith())
+            Line("\\override StaffSymbol #'staff-space = #(magstep -1)",
+                piano.getWith())
             
             # Nice to add Mark engravers
             Line('\\consists "Mark_engraver"', rightStaff.getWith())
@@ -1225,29 +1254,33 @@ class Choir(VocalPart):
             func = SchemeList(a)
             func.pre = '#(' # hack
             Text('define-music-function', func)
-            Line('(parser location name midiInstrument lyrics) (string? string? ly:music?)', func)
+            Line('(parser location name midiInstrument lyrics) '
+                 '(string? string? ly:music?)', func)
             choir = Sim(Command('unfoldRepeats', SchemeLily(func)))
             
             self.aftermath.append(Comment(i18n("Rehearsal MIDI files:")))
             
-            for ref, name, num, lyrName in rehearsalMidis:
+            for voice, num, ref, lyrName in rehearsalMidis:
                 # Append voice to the rehearsalMidi function
+                name = self.identifiers[voice] + str(num or '')
                 seq = Seq(Voice(name, parent=Staff(name, parent=choir)))
                 Text('s1*0\\f', seq) # add one dynamic
                 Identifier(ref, seq) # add the reference to the voice
                 
                 # Append score to the aftermath (stuff put below the main score)
-                output_suffix = "choir{0}-".format(self.num) if self.num else ""
-                output_suffix += name + format(num or "")
+                if self.num:
+                    suffix = "choir{0}-{1}".format(self.num, name)
+                else:
+                    suffix = name
                 self.aftermath.append(
-                    Line('#(define output-suffix "{0}")'.format(output_suffix)))
+                    Line('#(define output-suffix "{0}")'.format(suffix)))
                 book = Book()
                 self.aftermath.append(book)
                 self.aftermath.append(BlankLine())
                 score = Score(book)
                 
                 # TODO: make configurable
-                if name in ('soprano', 'alto'):
+                if voice in ('SA'):
                     midiInstrument = "soprano sax"
                 else:
                     midiInstrument = "tenor sax"
