@@ -1033,7 +1033,7 @@ class Choir(VocalPart):
                 # a markup column.
                 def mkup(names):
                     n = Markup()
-                    if builder.lilypondVersion >= (2, 11, 57):
+                    if builder.lilyPondVersion >= (2, 11, 57):
                         col = 'center-column'
                     else:
                         col = 'center-align'
@@ -1055,10 +1055,10 @@ class Choir(VocalPart):
             if len(staff) == 1:
                 part, name, num, octave = voices[0]
                 mname = name + (num and ly.nums(num) or '')
+                stub, ref = self.assignMusic(mname, octave)
                 lyrName = mname + 'Verse' if lyrEachDiff else 'verse'
                 if maxLen == 1:
                     # if all staves have only one voice, use \addlyrics...
-                    stub, ref = self.assignMusic(mname, octave)
                     Identifier(ref, mus)
                     if toGo or not lyrAllSame:
                         for verse in stanzas:
@@ -1067,7 +1067,6 @@ class Choir(VocalPart):
                     # otherwise create explicit Voice and Lyrics contexts.
                     vname = name + str(num or '')
                     v = Seqr(Voice(vname, parent=mus))
-                    stub, ref = self.assignMusic(mname, octave)
                     Identifier(ref, v)
                     if toGo or not lyrAllSame:
                         for verse in stanzas:
@@ -1135,13 +1134,13 @@ class Choir(VocalPart):
                         # Create the lyrics. If they should be above the staff,
                         # give the staff a suitable name, and use alignAbove-
                         # Context to align the Lyrics above the staff.
-                        if above:
+                        if above and s.cid is None:
                             s.cid = Reference(staffName)
                         for verse in stanzas:
                             l = Lyrics(parent=choir)
                             if above:
                                 l.getWith()['alignAboveContext'] = s.cid
-                                if builder.lilypondVersion >= (2, 13, 4):
+                                if builder.lilyPondVersion >= (2, 13, 4):
                                     Line("\\override VerticalAxisGroup "
                                       "#'staff-affinity = #DOWN", l.getWith())
                             lyr[verse].append((LyricsTo(vname, l), lyrName))
