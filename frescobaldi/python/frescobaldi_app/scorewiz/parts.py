@@ -1130,7 +1130,7 @@ class Choir(VocalPart):
                     pianoReduction[part].append(ref)
                     rehearsalMidis.append((ref, name, num, lyrName))
                     
-                    if not lyrAllSame or (toGo and vnum != 1):
+                    if not lyrAllSame or (toGo and vnum == 1):
                         # Create the lyrics. If they should be above the staff,
                         # give the staff a suitable name, and use alignAbove-
                         # Context to align the Lyrics above the staff.
