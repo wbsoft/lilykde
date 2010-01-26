@@ -1026,6 +1026,11 @@ class Choir(VocalPart):
         else:
             allStanzas = list(range(1, numStanzas + 1))
         
+        # Which stanzas to print where:
+        stanzaGroups = [allStanzas] * numStaves
+        # TODO: implement lyrSpread here
+            
+        
         # a function to set staff affinity (in LilyPond 2.13.4 and above):
         if builder.lilyPondVersion >= (2, 13, 4):
             def setStaffAffinity(context, affinity):
@@ -1046,10 +1051,11 @@ class Choir(VocalPart):
             for name in names:
                 QuotedString(name, column)
             return node
-                
-        for index, staff in enumerate(splitStaves):
+        
+        stavesLeft = numStaves
+        for staff, stanzas in zip(splitStaves, stanzaGroups):
             # are we in the last staff?
-            lastStaff = index == numStaves - 1
+            stavesLeft -= 1
             # the number of voices in this staff
             numVoices = len(staff)
             # sort the letters in order SATB
@@ -1113,9 +1119,6 @@ class Choir(VocalPart):
             cid = Reference(staff.lower() +
                 str(staffCIDs[staff] if staffCIDs[staff] > 1 else ""))
             
-            # Which stanzas to print:
-            stanzas = allStanzas
-            
             # Create voices and their lyrics:
             for (voice, num), voiceNum in zip(voices, order):
                 name = self.identifiers[voice]
@@ -1138,7 +1141,7 @@ class Choir(VocalPart):
                     Identifier(ref, voiceMusic)
                     
                     if stanzas and (lyrEach or (voiceNum <= 1 and
-                                    (not lastStaff or numStaves == 1))):
+                                    (stavesLeft or numStaves == 1))):
                         # Create the lyrics. If they should be above the staff,
                         # give the staff a suitable name, and use alignAbove-
                         # Context to align the Lyrics above the staff.
@@ -1151,7 +1154,7 @@ class Choir(VocalPart):
                             if above:
                                 l.getWith()['alignAboveContext'] = cid
                                 setStaffAffinity(l, "DOWN")
-                            elif not lyrEach and not lastStaff:
+                            elif not lyrEach and stavesLeft:
                                 setStaffAffinity(l, "CENTER")
                             lyrics[verse].append((LyricsTo(voiceName, l), lyrName))
 
