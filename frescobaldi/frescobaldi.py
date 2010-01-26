@@ -70,9 +70,11 @@ docs = [app.openUrl(args.url(c), args.getOption("encoding"))
         for c in range(args.count())]
 if docs:
     docs[-1].setActive()
-    if args.isSet("line") or args.isSet("column"):
-        line = int(args.getOption("line") or 1)
-        col = int(args.getOption("column") or 0)
-        docs[-1].setCursorPosition(line, col, args.isSet("smart"))
+    line = args.getOption("line")
+    if line.isdigit():
+        line = int(line) or 1
+        column = args.getOption("column")
+        column = int(column) if column.isdigit() else 0
+        docs[-1].setCursorPosition(line, column, args.isSet("smart"))
     
 app.run()
