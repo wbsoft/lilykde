@@ -1028,15 +1028,14 @@ class Choir(VocalPart):
             allStanzas = list(range(1, numStanzas + 1))
         
         # Which stanzas to print where:
-        stanzaGroups = [allStanzas] * numStaves
         if lyrSpread and numStanzas > 1 and numStaves > 2:
             spaces = numStaves - 1
-            count, rest = divmod(numStanzas, spaces)
-            if count == 0:
-                rest = spaces
+            count, rest = divmod(max(numStanzas, spaces), spaces)
             stanzaSource = cycle(allStanzas)
             stanzaGroups = (islice(stanzaSource, num) for num in chain(
                 repeat(count + 1, rest), repeat(count, numStaves - rest)))
+        else:
+            stanzaGroups = repeat(allStanzas, numStaves)
         
         # a function to set staff affinity (in LilyPond 2.13.4 and above):
         if builder.lilyPondVersion >= (2, 13, 4):
@@ -1104,7 +1103,6 @@ class Choir(VocalPart):
             elif 'T' in staff:
                 Clef('treble_8', staffMusic)
 
-            # Add the voices and their lyrics.
             # Determine voice order (\voiceOne, \voiceTwo etc.)
             if numVoices == 1:
                 order = (0,)
