@@ -26,6 +26,7 @@ In separate file to ease maintenance.
 
 from fractions import Fraction
 from collections import defaultdict
+from itertools import cycle, islice, chain, repeat
 
 from PyQt4.QtCore import QRegExp, Qt
 from PyQt4.QtGui import (
@@ -1028,8 +1029,14 @@ class Choir(VocalPart):
         
         # Which stanzas to print where:
         stanzaGroups = [allStanzas] * numStaves
-        # TODO: implement lyrSpread here
-            
+        if lyrSpread and numStanzas > 1 and numStaves > 2:
+            spaces = numStaves - 1
+            count, rest = divmod(numStanzas, spaces)
+            if count == 0:
+                rest = spaces
+            stanzaSource = cycle(allStanzas)
+            stanzaGroups = (islice(stanzaSource, num) for num in chain(
+                repeat(count + 1, rest), repeat(count, numStaves - rest)))
         
         # a function to set staff affinity (in LilyPond 2.13.4 and above):
         if builder.lilyPondVersion >= (2, 13, 4):
