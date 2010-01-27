@@ -69,8 +69,10 @@ def blockSignals(widget):
         ...
     """
     block = widget.blockSignals(True)
-    yield widget
-    widget.blockSignals(block)
+    try:
+        yield widget
+    finally:
+        widget.blockSignals(block)
 
 
 class DBusItem(dbus.service.Object):
@@ -323,8 +325,10 @@ class MainApp(DBusItem):
         if cursor is None:
             cursor = QCursor(Qt.WaitCursor)
         KApplication.setOverrideCursor(cursor)
-        yield
-        KApplication.restoreOverrideCursor()
+        try:
+            yield
+        finally:
+            KApplication.restoreOverrideCursor()
 
 
 class Document(DBusItem):
@@ -837,8 +841,10 @@ class Document(DBusItem):
     @contextmanager
     def editContext(self):
         self.doc.startEditing()
-        yield
-        self.doc.endEditing()
+        try:
+            yield
+        finally:
+            self.doc.endEditing()
         
     def resetCursorTranslations(self):
         """
