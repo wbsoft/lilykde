@@ -40,6 +40,7 @@ def groups(i18nFunc=None):
             ('portato', i18n("Portato")),
             ('tenuto', i18n("Tenuto")),
             ('espressivo', i18n("Espressivo")),
+            ('snappizzicato', i18n("Snappizzicato")),
             )),
         (i18n("Ornaments"), (
             ('trill', i18n("Trill")),
@@ -71,6 +72,7 @@ def groups(i18nFunc=None):
             ('upbow', i18n("Upbow")),
             ('downbow', i18n("Downbow")),
             ('open', i18n("Open (e.g. brass)")),
+            ('halfopen', i18n("Half open (e.g. brass)")),
             ('stopped', i18n("Stopped (e.g. brass)")),
             ('flageolet', i18n("Flageolet")),
             ('thumb', i18n("Thumb")),

@@ -29,6 +29,9 @@ If you build Frescobaldi out-of-source (or if you install Frescobaldi from SVN),
 those icons and translations need to be generated. In that case you also need
 LilyPond, ImageMagick and GNU Gettext.
 
+Because of the new articulations (halfopen and snappizzicato) building the icons
+now requires LilyPond 2.13.11 or higher!
+
 
 CMake command line options:
 ===========================
