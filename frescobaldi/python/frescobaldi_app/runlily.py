@@ -22,6 +22,7 @@ from __future__ import unicode_literals
 """ Code to run LilyPond and display its output in a LogWidget """
 
 import math, os, re, shutil, sys, tempfile, time
+from itertools import count, repeat
 
 from PyQt4.QtCore import QProcess, QSize, QTimer, QUrl, Qt
 from PyQt4.QtGui import (
@@ -160,18 +161,16 @@ class BasicLilyPondJob(object):
     def _readOutput(self):
         encoding = sys.getfilesystemencoding() or 'utf-8'
         text = str(self._p.readAllStandardOutput()).decode(encoding, 'replace')
-        parts = _ly_message_re.split(text)
+        parts = iter(_ly_message_re.split(text))
         # parts has an odd length(1, 6, 11 etc)
         # message, <url, path, line, col, message> etc.
-        self.output.write(parts.pop(0))
-        while parts:
-            url, path, line, col, msg = parts[:5]
+        self.output.write(next(parts))
+        for url, path, line, col, msg in zip(*repeat(parts, 5)):
             path = os.path.join(self._directory, path)
             line = int(line or "1") or 1
             col = int(col or "0")
             self.output.writeFileRef(url, path, line, col)
             self.output.write(msg)
-            del parts[:5]
     
     def updatedFiles(self):
         """
@@ -833,9 +832,8 @@ def anchorgen(num = 0):
     Generates an infinite row of anchor names, named
     "anchor0", "anchor1", etc.
     """
-    while True:
+    for num in count(num):
         yield "anchor{0}".format(num)
-        num += 1
 
 
 def scmbool(value):

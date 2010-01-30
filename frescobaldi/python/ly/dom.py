@@ -859,6 +859,7 @@ class CueVoice(ContextType): pass
 class Devnull(ContextType): pass
 class DrumStaff(ContextType): pass
 class DrumVoice(ContextType): pass
+class Dynamics(ContextType): pass
 class FiguredBass(ContextType): pass
 class FretBoards(ContextType): pass
 class Global(ContextType): pass
