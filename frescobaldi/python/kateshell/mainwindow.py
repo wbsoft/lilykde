@@ -538,14 +538,14 @@ class ViewTabBar(QTabBar):
         """
         g = KStandardGuiItem.save()
         a = menu.addAction(g.icon(), g.text())
-        a.triggered.connect(doc.save)
+        a.triggered.connect(lambda: doc.save())
         g = KStandardGuiItem.saveAs()
         a = menu.addAction(g.icon(), g.text())
-        a.triggered.connect(doc.saveAs)
+        a.triggered.connect(lambda: doc.saveAs())
         menu.addSeparator()
         g = KStandardGuiItem.close()
         a = menu.addAction(g.icon(), g.text())
-        a.triggered.connect(doc.close)
+        a.triggered.connect(lambda: doc.close())
         
 
 class TabBar(KMultiTabBar):
