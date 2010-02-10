@@ -1,11 +1,6 @@
 TODO for Frescobaldi (also some random ideas)
 =============================================
 
-New LilyPond features (as soon as 2.14 is out):
-
-- snappizicato articulation
-- halfopen articulation
-
 
 Music length related (needs infrastructure to compute duration of music
 expressions):
@@ -72,6 +67,16 @@ Editing:
 - Document structure browser
 
 
+Running LilyPond:
+
+- separate "server" process that runs LilyPond and communicates with clients
+  like Frescobaldi.  This way a user can exit Frescobaldi while a job is
+  running, and have job feedback from the systray and can e.g. start LilyPond
+  jobs from a file manager service menu.  The server process exits when there is
+  nothing to do, and is automatically started when there is something to do.
+  Communication should be done via D-Bus.
+
+
 PDF Preview:
 
 - tighter coupling with editor part, possibly by using a custom PDF (or even
@@ -117,21 +122,18 @@ DONE:
 =====
 
 Editing:
-
 - Cut and assign: check mode of cut-out fragment and reuse (e.g. \lyricmode)
-
 - Context sensitive context menu to do all sorts of things on the current
   cursor position or text selection
 
-
 Pitch related:
-
 - transpose music
-
 - relative -> absolute and vice versa
 
-
 Score Wizard:
-
 - more than one voice for Tablature instruments (Guitar, Jazz Guitar)
+
+New LilyPond features (as soon as 2.14 is out):
+- snappizicato articulation
+- halfopen articulation
 
