@@ -188,7 +188,7 @@ class MainWindow(KParts.MainWindow):
         a = KActionMenu(i18n("&Tool Views"), self)
         self.actionCollection().addAction('options_toolviews', a)
         menu = a.menu()
-        def populate(menu=menu):
+        def populate():
             menu.clear()
             for tool in self.tools.itervalues():
                 menu.addSeparator()
@@ -572,7 +572,7 @@ class TabBar(KMultiTabBar):
         tab.setContextMenuPolicy(Qt.CustomContextMenu)
         tab.clicked.connect(tool.toggle)
         tab.customContextMenuRequested.connect(
-            lambda pos, tab=tab, tool=tool: tool.showContextMenu(tab.mapToGlobal(pos)))
+            lambda pos: tool.showContextMenu(tab.mapToGlobal(pos)))
 
     def removeTool(self, tool):
         self._tools.remove(tool)
