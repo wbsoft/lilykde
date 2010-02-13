@@ -286,7 +286,8 @@ class Commands(QWidget):
         
         # LilyPond documentation URL
         l = QLabel(i18n("LilyPond documentation:"))
-        self.lilydoc = KUrlRequester(textChanged=lambda: dialog.changed())
+        self.lilydoc = KUrlRequester()
+        self.lilydoc.textChanged.connect(lambda: dialog.changed())
         l.setBuddy(self.lilydoc)
         row = layout.rowCount()
         tooltip = i18n(
