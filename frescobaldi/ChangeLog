@@ -32,6 +32,7 @@ Changes in 1.1.0 --
 * Installation:
   - byte compiling the Python modules can be supressed by adding
     -DBYTECOMPILE=NO to the cmake command line
+* Some workarounds for subtle SIP 4.10/KDE 4.4 garbage collection bugs
 
 Changes in 1.0.1 -- January 17th, 2010
 

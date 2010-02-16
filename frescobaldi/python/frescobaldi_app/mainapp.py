@@ -573,8 +573,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         a.setToolTip(i18n("Change the LilyPond language used for pitch names "
                           "in this document or in the selection."))
         self.actionCollection().addAction('pitch_change_language', a)
-        a.menu().aboutToShow.connect(
-            (lambda menu: lambda: self.currentDocument().manipulator().populateLanguageMenu(menu))(a.menu()))
+        a.menu().aboutToShow.connect((lambda action:
+            lambda: self.currentDocument().manipulator().populateLanguageMenu(action.menu()))(a))
         
         @self.onAction(i18n("Convert Relative to &Absolute"), tooltip=i18n(
             "Converts the notes in the document or selection from relative to absolute pitch."))
@@ -768,6 +768,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         super(MainWindow, self).setupGeneratedMenus()
         # Generated file menu:
         menu = self.factory().container("lilypond_actions", self)
+        menu.setParent(menu.parent()) # BUG: SIP 4.10 otherwise looses outer scope of this function
         def populateGenFilesMenu(menu=menu):
             for action in menu.actions():
                 if action.objectName() != "actions_email":
