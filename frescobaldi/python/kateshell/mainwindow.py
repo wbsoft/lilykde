@@ -187,14 +187,14 @@ class MainWindow(KParts.MainWindow):
         # tool views submenu
         a = KActionMenu(i18n("&Tool Views"), self)
         self.actionCollection().addAction('options_toolviews', a)
-        menu = a.menu()
         def populate():
+            menu = a.menu()
             menu.clear()
             for tool in self.tools.itervalues():
                 menu.addSeparator()
                 menu.addAction(tool.action())
                 tool.addMenuActions(menu)
-        menu.aboutToShow.connect(populate)
+        a.menu().aboutToShow.connect(populate)
 
     def setupTools(self):
         """
@@ -226,6 +226,7 @@ class MainWindow(KParts.MainWindow):
                     a.setChecked(True)
                 docGroup.addAction(a)
                 docMenu.addAction(a)
+        docMenu.setParent(docMenu.parent()) # BUG: SIP otherwise looses outer scope
         docMenu.aboutToShow.connect(populateDocMenu)
         
     def act(self, name, texttype, func,
@@ -571,6 +572,7 @@ class TabBar(KMultiTabBar):
             i18n("Right-click for tab options")))
         tab.setContextMenuPolicy(Qt.CustomContextMenu)
         tab.clicked.connect(tool.toggle)
+        tab.setParent(tab.parent()) # BUG: otherwise SIP looses outer scope
         tab.customContextMenuRequested.connect(
             lambda pos: tool.showContextMenu(tab.mapToGlobal(pos)))
 
