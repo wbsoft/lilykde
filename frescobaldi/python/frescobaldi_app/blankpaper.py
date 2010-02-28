@@ -651,12 +651,15 @@ class CustomStaff(SymbolManager, QWidget):
         
         operations.setSpacing(0)
         operations.setContentsMargins(0, 0, 0, 0)
-        removeButton = KPushButton(KStandardGuiItem.remove(), clicked=self.removeSelectedItems)
+        removeButton = KPushButton(KStandardGuiItem.remove())
+        removeButton.clicked.connect(self.removeSelectedItems)
         operations.addWidget(removeButton)
-        upButton = QToolButton(clicked=self.moveSelectedItemsUp)
+        upButton = QToolButton()
+        upButton.clicked.connect(self.moveSelectedItemsUp)
         upButton.setIcon(KIcon("go-up"))
         operations.addWidget(upButton)
-        downButton = QToolButton(clicked=self.moveSelectedItemsDown)
+        downButton = QToolButton()
+        downButton.clicked.connect(self.moveSelectedItemsDown)
         downButton.setIcon(KIcon("go-down"))
         operations.addWidget(downButton)
         newStaves.setSpacing(0)
@@ -672,7 +675,8 @@ class CustomStaff(SymbolManager, QWidget):
             BraceItem,
             StaffItem,
             ):
-            b = QPushButton(staffType.name(), clicked=(lambda t: lambda: self.createItem(t))(staffType))
+            b = QPushButton(staffType.name())
+            b.clicked.connect((lambda t: lambda: self.createItem(t))(staffType))
             b.setIconSize(QSize(40, 40))
             self.addSymbol(b, staffType.symbol())
             newStaves.addWidget(b)
