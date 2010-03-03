@@ -240,7 +240,7 @@ class DocumentManipulator(object):
         col = curPos.column()
         if col > 0 and not isblank(self.doc.line()[col-1]):
             result = " " + result
-        self.doc.view.insertText(result + " ")
+        self.doc.view.insertText(result)
     
     def selectLines(self):
         """
