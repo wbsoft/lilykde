@@ -1,4 +1,4 @@
-Changes in 1.1.0 --
+Changes in 1.1.0 -- March 26th, 2010
 
 * It is now possible to use multiple versions of LilyPond easily from within
   Frescobaldi. LilyPond instances can be configured under Settings, Paths.
@@ -28,10 +28,12 @@ Changes in 1.1.0 --
 * Quick Insert Panel:
   - New buttons for \halfopen and \snappizzicato
   - It is now possible to assign keyboard shortcuts to the articulation buttons
+* Repeat last expression: don't append space
 * Email files: select files with checkboxes instead of Ctrl+Click
 * Installation:
   - byte compiling the Python modules can be supressed by adding
     -DBYTECOMPILE=NO to the cmake command line
+  - building the icons from SVN or out-of-source requires LilyPond 2.13.11+
 * Some workarounds for subtle SIP 4.10/KDE 4.4 garbage collection bugs
 
 Changes in 1.0.2 -- February 18th, 2010

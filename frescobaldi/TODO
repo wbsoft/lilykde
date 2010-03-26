@@ -40,6 +40,7 @@ Score Wizard:
 General:
 
 - Session save and restore (possibly combined with named sessions like Kate)
+- Support other programs besides LilyPond like mup, abc, pmw, cmn, etc.
 
 
 Editing:
@@ -75,7 +76,6 @@ Running LilyPond:
   jobs from a file manager service menu.  The server process exits when there is
   nothing to do, and is automatically started when there is something to do.
   Communication should be done via D-Bus.
-
 
 PDF Preview:
 
