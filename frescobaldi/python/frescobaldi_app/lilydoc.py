@@ -715,6 +715,12 @@ class NotationReferenceIndex(Index):
         # from 2.13 on the url scheme changed slightly
         'notation/LilyPond-command-index',
         'notation/LilyPond-command-index.html',
+        # new website layout uses lower case:
+        'notation/lilypond-command-index',
+        'notation/lilypond-command-index.html',
+        # in case the manuals.html page is used as index:
+        '../notation/lilypond-command-index',
+        '../notation/lilypond-command-index.html',
         )
     
     def parse(self, html):
@@ -755,6 +761,12 @@ class LearningManualIndex(Index):
         # from 2.13 on the url scheme changed slightly
         'learning/LilyPond-index',
         'learning/LilyPond-index.html',
+        # new website layout uses lower case:
+        'learning/lilypond-index',
+        'learning/lilypond-index.html',
+        # in case the manuals.html page is used as index:
+        '../learning/lilypond-index',
+        '../learning/lilypond-index.html',
         )
     
     def parse(self, html):
