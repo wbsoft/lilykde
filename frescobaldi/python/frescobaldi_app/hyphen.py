@@ -36,7 +36,7 @@ try:
 except ValueError:
     language, encoding = None, None
 
-defaultPaths = (
+defaultPaths = [
     'share/dict/ooo',
     'lib/openoffice/share/dict/ooo',
     '/opt/OpenOffice.org/share/dict/ooo',
@@ -48,7 +48,7 @@ defaultPaths = (
     'share/myspell',
     'share/myspell/dicts',
     'share/hunspell',
-)
+]
 
 hyphdicts = {}
 
