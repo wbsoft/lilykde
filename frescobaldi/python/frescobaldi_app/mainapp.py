@@ -125,6 +125,7 @@ class Document(kateshell.app.Document):
         "lilypond version": "",
         "verbose": False,
         "preview": True,
+        "build time": 0.0,
         }
     
     def __init__(self, *args, **kwargs):

@@ -35,7 +35,6 @@ class ProgressBarManager(object):
         self.bar = progressbar
         self.man = jobmanager
         self.times = weakref.WeakKeyDictionary() # don't keep real references
-        self.runtimes = weakref.WeakKeyDictionary()
         self.timer = QTimer()
         self.hideTimer = QTimer()
         
@@ -49,7 +48,7 @@ class ProgressBarManager(object):
         
     def start(self, doc):
         """ Call this when a job on doc started. """
-        lastruntime = self.runtimes.get(doc, 0.0)
+        lastruntime = doc.metainfo["build time"]
         if lastruntime == 0.0:
             lastruntime = 3.0 + doc.lines() / 20 # very arbitrary estimate...
         self.times[doc] = time.time()
@@ -67,7 +66,7 @@ class ProgressBarManager(object):
         starttime = self.times.get(doc, 0.0)
         if starttime and success:
             runtime = time.time() - starttime
-            self.runtimes[doc] = runtime
+            doc.metainfo["build time"] = runtime
         
         if self.man.count() == 0:
             self.timer.stop()
