@@ -273,7 +273,8 @@ def printPDF(pdfFileName, window):
                     i18n("Printing failed: %1", p.stderr.read()))
             else:
                 KMessageBox.information(window,
-                    i18n("The document has been sent to the printer."))
+                    i18n("The document has been sent to the printer."), None,
+                    "print_file")
         except OSError as e:
             KMessageBox.error(window, i18n(
                 "Printing failed: %1\n\nThe print command %2 does "

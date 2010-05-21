@@ -116,7 +116,8 @@ lyric_word = re.compile(r'[^\W0-9_]+', re.UNICODE)
 include_file = re.compile(r'\\include\s*"([^"]+)"')
 
 # does not take percent signs inside quoted strings into account
-all_comments = re.compile(r'%\{.*?%\}|%.*?\n', re.DOTALL)
+comment = r'%\{.*?%\}|%.*?\n'
+all_comments = re.compile(comment, re.DOTALL)
 
 # document language
 language = re.compile(
@@ -124,3 +125,11 @@ language = re.compile(
         "nederlands|english|deutsch|norsk|svenska|suomi|"
         "italiano|catalan|espanol|portugues|vlaams"
     r')\.ly"', re.DOTALL)
+
+# point and click, check for matchgroup 1 (on) and/or 2 (off)
+point_and_click = re.compile(
+    quotedstring + "|" + comment +
+    r"|(\\pointAndClickOn\b|#\s*\(ly:set-option\s+'point-and-click\s+#t\s*\))"
+    r"|(\\pointAndClickOff\b|#\s*\(ly:set-option\s+'point-and-click\s+#f\s*\))",
+    re.DOTALL)
+

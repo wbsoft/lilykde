@@ -26,7 +26,7 @@ Config dialog
 from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
     QCheckBox, QGridLayout, QGroupBox, QLabel, QLineEdit, QListWidget,
-    QListWidgetItem, QRadioButton, QTextEdit, QTreeView, QWidget)
+    QListWidgetItem, QRadioButton, QTextEdit, QTreeView, QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
     KIcon, KDialog, KPageDialog, KPushButton, KStandardGuiItem, KVBox)
@@ -168,6 +168,7 @@ class GeneralPreferences(KVBox):
             
         grid = QGridLayout(QGroupBox(i18n(
             "LilyPond version number to use for new documents"), self))
+        grid.setSpacing(0) # match the KVBox spacing
         for title, name in (
             (i18n("Use version number of installed LilyPond"), "lilypond"),
             (i18n("Use version number of last convert-ly rule"), "convert-ly"),
@@ -184,7 +185,18 @@ class GeneralPreferences(KVBox):
         grid.addWidget(self.versionOptions["custom"], 2, 0, 1, 1)
         grid.addWidget(self.customVersion, 2, 1, 1, 1)
         
-        self.layout().addStretch(1)
+        self.notifications = []
+        l = QVBoxLayout(QGroupBox(i18n("Warnings and Notifications"), self))
+        l.setSpacing(0)
+        for title, name in (
+            (i18n("Notify when a document has been sent to the printer"), "print_file"),
+            (i18n("Warn when a document contains a conflicting point and click setting"), "point_and_click"),
+        ):
+            b = QCheckBox(title, self, clicked=lambda: dialog.changed())
+            l.addWidget(b)
+            self.notifications.append((b, name))
+        
+        self.layout().addStretch(2)
 
     def defaults(self):
         for widget, name, default in self.checks:
@@ -192,6 +204,9 @@ class GeneralPreferences(KVBox):
         # lily version:
         self.customVersion.clear()
         self.versionOptions["lilypond"].setChecked(True)
+        # notifications:
+        for widget, name in self.notifications:
+            widget.setChecked(True)
             
     def loadSettings(self):
         conf = config("preferences")
@@ -203,6 +218,10 @@ class GeneralPreferences(KVBox):
         if name not in self.versionOptions:
             name = "lilypond"
         self.versionOptions[name].setChecked(True)
+        # notifications:
+        conf = config("Notification Messages")
+        for widget, name in self.notifications:
+            widget.setChecked(conf.readEntry(name, True))
 
     def saveSettings(self):
         conf = config("preferences")
@@ -222,6 +241,10 @@ class GeneralPreferences(KVBox):
             if widget.isChecked():
                 conf.writeEntry("default version", name)
                 break
+        # notifications:
+        conf = config("Notification Messages")
+        for widget, name in self.notifications:
+            conf.writeEntry(name, widget.isChecked())
 
 
 class Commands(QWidget):

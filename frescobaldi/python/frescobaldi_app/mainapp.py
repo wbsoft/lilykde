@@ -29,7 +29,7 @@ from PyQt4.QtGui import (
 from PyKDE4.kdecore import KConfig, KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
     KActionMenu, KApplication, KDialog, KIcon, KIconLoader, KLineEdit, KMenu,
-    KMessageBox, KStandardAction, KVBox)
+    KMessageBox, KStandardAction, KStandardGuiItem, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -824,6 +824,32 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                 "There is already a LilyPond job running "
                 "for this document."))
         
+        # check if the user has a forced point and click setting in the file
+        text = d.text()
+        import ly.rx
+        for m in ly.rx.point_and_click.finditer(text):
+            if m.group(1) or m.group(2):
+                on, off = m.start(1), m.start(2)
+                ask = lambda msg: KMessageBox.warningContinueCancel(self,
+                    "<p>{0}</p><p>{1}</p>".format(msg, i18n("Continue anyway?")),
+                    None, KStandardGuiItem.cont(), KStandardGuiItem.cancel(),
+                    "point_and_click") == KMessageBox.Continue
+                if ((job.preview and off >= 0 and not ask(i18n(
+                    "You want to run LilyPond in preview mode (with point and click "
+                    "enabled), but your document contains a command to turn "
+                    "point and click off."))) or
+                    (not job.preview and on >= 0 and not ask(i18n(
+                    "You want to run LilyPond in publish mode (with point and click "
+                    "disabled), but your document contains a command to turn "
+                    "point and click on.")))):
+                    # cancelled
+                    # put the cursor at the point and click command
+                    import frescobaldi_app.document
+                    cursor = frescobaldi_app.document.Cursor()
+                    cursor.walk(text[:m.start()])
+                    d.view.setCursorPosition(cursor.kteCursor())
+                    return
+                    
         # get a logwidget
         log = self.tools["log"].createLog(d)
         log.preview = job.preview
