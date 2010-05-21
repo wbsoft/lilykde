@@ -1,11 +1,15 @@
 Changes in 1.1.2 -- 
 
+* New features:
+  - Segno bar line added (available in LilyPond 2.13.19 and higher)
 * Run LilyPond:
   - warn if the document contains a conflicting point and click setting
 * General:
   - warnings and notifications have a "dont ask again" checkbox, and can be
     turned back on in the settings
   - progress indicator saves the build time in document metainfo
+* Installation:
+  - building the icons from SVN or out-of-source requires LilyPond >= 2.13.19
 
 Changes in 1.1.1 -- May 3rd, 2010
 

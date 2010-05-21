@@ -678,6 +678,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             ("bar_ww", ".|.", i18n("Double wide bar line"), None),
             ("bar_cswc", ":|.:", i18n("Repeat both (old)"), None),
             ("bar_cswsc", ":|.|:", i18n("Repeat both (classic)"), None),
+            ("bar_segno", "S", i18n("Segno bar line"), None),
             ):
             a = self.act(name, title, key=key, func=(lambda text:
                 lambda: self.currentDocument().manipulator().insertBarLine(text))(text))
