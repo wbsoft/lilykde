@@ -126,7 +126,9 @@ User interface:
 Import/Export:
 
 - import wizard for MIDI files and other files
-
+- export to OpenDocument Text using the LilyPond EPS backed (generate vector
+  or raster images for every system and then put them together as paragraphs).
+  If possible put on clipboard for direct pasting in apps like OpenOffice.org.
 
 
 DONE:
