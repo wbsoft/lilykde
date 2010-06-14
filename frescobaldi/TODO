@@ -43,6 +43,7 @@ General:
 
 - Session save and restore (possibly combined with named sessions like Kate)
 - Support other programs besides LilyPond like mup, abc, pmw, cmn, etc.
+- Print dialog for printing generated PDFs, instead of just calling 'lpr'
 
 
 Editing:
@@ -81,6 +82,11 @@ Running LilyPond:
   jobs from a file manager service menu.  The server process exits when there is
   nothing to do, and is automatically started when there is something to do.
   Communication should be done via D-Bus.
+
+- A wizard to download LilyPond binaries from lilypond.org and install them into
+  a local directory to explore different versions of LilyPond without needing
+  to install them via a distribution's package manager.
+
 
 PDF Preview:
 
