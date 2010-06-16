@@ -30,7 +30,7 @@ import subprocess
 from itertools import repeat
 
 from PyQt4.QtGui import QPrintEngine, QPrinter
-from PyKDE4.kdecore import KShell, KStandardDirs, i18n
+from PyKDE4.kdecore import KShell, KStandardDirs
 
 
 # Exceptions:
