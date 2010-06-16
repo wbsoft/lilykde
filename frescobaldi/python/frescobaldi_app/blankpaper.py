@@ -354,7 +354,7 @@ class SavePDF(BlankPaperJob):
 class PrintPDF(BlankPaperJob):
     @staticmethod
     def name():
-        return i18n("Directly print on default printer")
+        return i18n("Print...")
 
     def handlePDF(self, fileName):
         printPDF(fileName, self.dialog)

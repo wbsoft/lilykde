@@ -28,9 +28,10 @@ from subprocess import Popen, PIPE
 
 from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
-    QKeySequence, QLabel, QListWidget, QListWidgetItem, QMenu, QToolButton)
+    QKeySequence, QLabel, QListWidget, QListWidgetItem, QMenu, QPrinter,
+    QToolButton)
 from PyKDE4.kdecore import KGlobal, KShell, KToolInvocation, KUrl, i18n, i18np
-from PyKDE4.kdeui import KDialog, KIcon, KMessageBox, KVBox
+from PyKDE4.kdeui import KdePrint, KDialog, KIcon, KMessageBox, KVBox
 from PyKDE4.kio import KRun
 
 import ly.parse
@@ -262,28 +263,29 @@ def openFile(fileName, window, cmd = None):
     sip.transferto(KRun(KUrl.fromPath(fileName), window), None)
     
 def printPDF(pdfFileName, window):
-    """ Prints the PDF using the configured print command """
-    cmd, err = KShell.splitArgs(config("commands").readEntry("lpr", "lpr"))
-    if err == KShell.NoError:
-        cmd.append(pdfFileName)
-        try:
-            p = Popen(cmd, stderr=PIPE)
-            if p.wait() != 0:
-                KMessageBox.error(window,
-                    i18n("Printing failed: %1", p.stderr.read()))
-            else:
-                KMessageBox.information(window,
-                    i18n("The document has been sent to the printer."), None,
-                    "print_file")
-        except OSError as e:
-            KMessageBox.error(window, i18n(
-                "Printing failed: %1\n\nThe print command %2 does "
-                "probably not exist. Please check your settings.",
-                unicode(e), cmd[0]))
-    else:
-        KMessageBox.error(window,
-            i18n("The print command contains errors. "
-                    "Please check your settings."))
+    """ Opens a print dialog to print the give PDF file. """
+    printer = QPrinter()
+    dlg = KdePrint.createPrintDialog(printer, window)
+    dlg.setWindowTitle(KDialog.makeStandardCaption(
+        i18n("Print %1", os.path.basename(pdfFileName))))
+    if not dlg.exec_():
+        return
+    
+    import kateshell.fileprinter
+    try:
+        kateshell.fileprinter.printPDF(pdfFileName, printer)
+    except kateshell.fileprinter.NoPrintCommandFound:
+        KMessageBox.error(window, i18n(
+            "A print command (like 'lpr' or 'lp') could not be found on your "
+            "system."))
+    except kateshell.fileprinter.CommandNotFound as e:
+        KMessageBox.error(window, i18n(
+            "The command '%1' could not be found on your system.", e.args[0]))
+    except kateshell.fileprinter.CommandFailed as e:
+        cmd, ret = e.args
+        KMessageBox.error(window, i18n(
+            "The command below has been run, but exited with a return code %1."
+            "\n\n%2", ret, cmd))
 
 def emailFiles(urls):
     """ Open the default mailer with the given urls (list of str) attached. """

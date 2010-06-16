@@ -2,6 +2,8 @@ Changes in 1.1.2 --
 
 * New features:
   - Segno bar line added (available in LilyPond 2.13.19 and higher)
+  - Printing generated PDF files now uses a print dialog, instead of just
+    sending the PDF to the 'lpr' command.
 * Run LilyPond:
   - warn if the document contains a conflicting point and click setting
 * General:

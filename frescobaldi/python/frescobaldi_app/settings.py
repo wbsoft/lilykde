@@ -189,7 +189,6 @@ class GeneralPreferences(KVBox):
         l = QVBoxLayout(QGroupBox(i18n("Warnings and Notifications"), self))
         l.setSpacing(0)
         for title, name in (
-            (i18n("Notify when a document has been sent to the printer"), "print_file"),
             (i18n("Warn when a document contains a conflicting point and click setting"), "point_and_click"),
         ):
             b = QCheckBox(title, self, clicked=lambda: dialog.changed())
@@ -275,10 +274,6 @@ class Commands(QWidget):
             ('midi player', '', i18n("MIDI Player:"), ExecArgsLineEdit,
                 i18n("MIDI Player") + " " +
                 i18n("(leave empty for operating system default)")),
-            ('lpr', 'lpr', i18n("Printcommand:"), ExecArgsLineEdit,
-                i18n("Command to print a PDF file, for example lpr or "
-                  "kprinter. You may add some arguments, e.g. "
-                  "lpr -P myprinter.")),
         ):
             label = QLabel(title)
             widget = lineedit()
