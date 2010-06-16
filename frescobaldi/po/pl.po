@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.1\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-05-21 21:29+0200\n"
+"POT-Creation-Date: 2010-06-16 20:37+0200\n"
 "PO-Revision-Date: 2009-12-07 10:33+0100\n"
 "Last-Translator: Piotr Komorowski <piotr-komorowski@wp.pl>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -473,52 +473,53 @@ msgstr "Nie można wczytać %1"
 msgid "Please install %1"
 msgstr "Proszę zainstalować %1"
 
-#: ../python/frescobaldi_app/actions.py:56
+#: ../python/frescobaldi_app/actions.py:57
 msgid "Open %1 in external viewer"
 msgstr "Otwórz %1 w przeglądarce zewnętrznej"
 
-#: ../python/frescobaldi_app/actions.py:58
+#: ../python/frescobaldi_app/actions.py:59
+#: ../python/frescobaldi_app/actions.py:270
 msgid "Print %1"
 msgstr "Drukuj %1"
 
-#: ../python/frescobaldi_app/actions.py:65
+#: ../python/frescobaldi_app/actions.py:66
 msgid "Play %1"
 msgstr "Graj %1"
 
-#: ../python/frescobaldi_app/actions.py:91
+#: ../python/frescobaldi_app/actions.py:92
 msgid "Open PDF"
 msgstr "Otwórz PDF"
 
-#: ../python/frescobaldi_app/actions.py:92
+#: ../python/frescobaldi_app/actions.py:93
 msgid "Print"
 msgstr "Drukuj"
 
-#: ../python/frescobaldi_app/actions.py:94
+#: ../python/frescobaldi_app/actions.py:95
 msgid "Play MIDI"
 msgstr "Graj MIDI"
 
-#: ../python/frescobaldi_app/actions.py:97
+#: ../python/frescobaldi_app/actions.py:98
 #: ../python/frescobaldi_app/mainapp.py:728
 msgid "Email..."
 msgstr "Email..."
 
-#: ../python/frescobaldi_app/actions.py:149
+#: ../python/frescobaldi_app/actions.py:150
 msgid "There are no files to send via email."
 msgstr "Brak plików do wysłania przez e-mail."
 
-#: ../python/frescobaldi_app/actions.py:150
+#: ../python/frescobaldi_app/actions.py:151
 msgid "No files to send"
 msgstr "Brak plików do wysłania"
 
-#: ../python/frescobaldi_app/actions.py:158
+#: ../python/frescobaldi_app/actions.py:159
 msgid "Email documents"
 msgstr "Wyślij dokumenty e-mailem"
 
-#: ../python/frescobaldi_app/actions.py:162
+#: ../python/frescobaldi_app/actions.py:163
 msgid "Please select the files you want to send:"
 msgstr "Proszę wybrać pliki do wysłania:"
 
-#: ../python/frescobaldi_app/actions.py:166
+#: ../python/frescobaldi_app/actions.py:167
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document).  Also LilyPond files included by the source document are shown."
@@ -526,7 +527,7 @@ msgstr ""
 "To są zaktualizowane pliki (tj. nowsze niż dokument źródłowy LilyPonda). "
 "Pokazane są również pliki zawarte w dokumencie źródłowym."
 
-#: ../python/frescobaldi_app/actions.py:176
+#: ../python/frescobaldi_app/actions.py:177
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -550,27 +551,20 @@ msgstr[2] ""
 "co znacznie zwiększa jego objętość.Proszę rozważyć zamianę na tryb wydruku, "
 "co spowoduję znaczne zmniejszenie objętości pliku."
 
-#: ../python/frescobaldi_app/actions.py:273
-msgid "Printing failed: %1"
-msgstr "Drukowanie nie powiodło się: %1"
-
-#: ../python/frescobaldi_app/actions.py:276
-msgid "The document has been sent to the printer."
-msgstr "Dokument został wysłany do drukarki"
-
-#: ../python/frescobaldi_app/actions.py:280
-msgid ""
-"Printing failed: %1\n"
-"\n"
-"The print command %2 does probably not exist. Please check your settings."
+#: ../python/frescobaldi_app/actions.py:279
+msgid "A print command (like 'lpr' or 'lp') could not be found on your system."
 msgstr ""
-"Drukowanie nie powiodło się: %1\n"
-"\n"
-"Zadanie wydruku %2 prawdopodobnie nie istnieje. Proszę sprawdzić ustawienia."
 
-#: ../python/frescobaldi_app/actions.py:285
-msgid "The print command contains errors. Please check your settings."
-msgstr "Zadanie wydruku zawiera błędy. Proszę sprawdzić ustawienia."
+#: ../python/frescobaldi_app/actions.py:283
+msgid "The command '%1' could not be found on your system."
+msgstr ""
+
+#: ../python/frescobaldi_app/actions.py:287
+msgid ""
+"The command below has been run, but exited with a return code %1.\n"
+"\n"
+"%2"
+msgstr ""
 
 #: ../python/frescobaldi_app/blankpaper.py:56
 #: ../python/frescobaldi_app/mainapp.py:755
@@ -677,8 +671,9 @@ msgid "Save PDF"
 msgstr "Zapisz PDF"
 
 #: ../python/frescobaldi_app/blankpaper.py:357
-msgid "Directly print on default printer"
-msgstr "Wydrukuj bezpośrednio na drukarce domyślnej."
+#, fuzzy
+msgid "Print..."
+msgstr "Drukuj"
 
 #: ../python/frescobaldi_app/blankpaper.py:366
 msgid "Copy LilyPond code to editor"
@@ -1133,7 +1128,7 @@ msgid "LilyPond files"
 msgstr "Pliki LilyPond"
 
 #: ../python/frescobaldi_app/mainapp.py:425
-#: ../python/frescobaldi_app/settings.py:643
+#: ../python/frescobaldi_app/settings.py:638
 #: ../python/frescobaldi_app/scorewiz/__init__.py:348
 msgid "LilyPond"
 msgstr "LilyPond"
@@ -1590,7 +1585,7 @@ msgid "Rumor"
 msgstr "Rumor"
 
 #: ../python/frescobaldi_app/mainapp.py:1205
-#: ../python/frescobaldi_app/settings.py:320
+#: ../python/frescobaldi_app/settings.py:315
 msgid "LilyPond Documentation"
 msgstr "Dokumentacja LilyPonda"
 
@@ -1894,7 +1889,7 @@ msgid "Use LilyPond version %1"
 msgstr "Wstaw wersję LilyPonda"
 
 #: ../python/frescobaldi_app/runlily.py:303
-#: ../python/frescobaldi_app/settings.py:624
+#: ../python/frescobaldi_app/settings.py:619
 #, fuzzy
 msgid "default"
 msgstr "Domyślny"
@@ -2009,72 +2004,55 @@ msgid "Warnings and Notifications"
 msgstr ""
 
 #: ../python/frescobaldi_app/settings.py:192
-#, fuzzy
-msgid "Notify when a document has been sent to the printer"
-msgstr "Dokument został wysłany do drukarki"
-
-#: ../python/frescobaldi_app/settings.py:193
 msgid "Warn when a document contains a conflicting point and click setting"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:257
+#: ../python/frescobaldi_app/settings.py:256
 msgid "Paths"
 msgstr "Ścieżki"
 
-#: ../python/frescobaldi_app/settings.py:258
+#: ../python/frescobaldi_app/settings.py:257
 msgid "Paths to programs or data used by Frescobaldi"
 msgstr "Ścieżka do programów lub danych używanych przez Frescobaldiego"
 
-#: ../python/frescobaldi_app/settings.py:272
+#: ../python/frescobaldi_app/settings.py:271
 msgid "PDF Viewer:"
 msgstr "Przeglądarka PDF:"
 
-#: ../python/frescobaldi_app/settings.py:273
+#: ../python/frescobaldi_app/settings.py:272
 msgid "PDF Viewer"
 msgstr "Przeglądarka PDF"
 
-#: ../python/frescobaldi_app/settings.py:274
-#: ../python/frescobaldi_app/settings.py:277
+#: ../python/frescobaldi_app/settings.py:273
+#: ../python/frescobaldi_app/settings.py:276
 msgid "(leave empty for operating system default)"
 msgstr "(pozostaw puste dla domyślnych wartości systemu operacyjnego)"
 
-#: ../python/frescobaldi_app/settings.py:275
+#: ../python/frescobaldi_app/settings.py:274
 msgid "MIDI Player:"
 msgstr "Odtwarzacz MIDI:"
 
-#: ../python/frescobaldi_app/settings.py:276
+#: ../python/frescobaldi_app/settings.py:275
 msgid "MIDI Player"
 msgstr "Odtwarzacz MIDI"
 
-#: ../python/frescobaldi_app/settings.py:278
-msgid "Printcommand:"
-msgstr "Polecenie wydruku:"
-
-#: ../python/frescobaldi_app/settings.py:279
-msgid ""
-"Command to print a PDF file, for example lpr or kprinter. You may add some "
-"arguments, e.g. lpr -P myprinter."
-msgstr ""
-"Polecenie wydruku pliku PDF, np. lpr lub kprinter. Możesz dodać różne "
-"wartości, np. lpr -P myprinter."
-
-#: ../python/frescobaldi_app/settings.py:295
+#: ../python/frescobaldi_app/settings.py:290
 msgid "Default directory:"
 msgstr "Domyślna lokalizacja:"
 
-#: ../python/frescobaldi_app/settings.py:300
+#: ../python/frescobaldi_app/settings.py:295
 msgid "The default folder for your LilyPond documents (optional)."
 msgstr "Domyślny folder dla Twoich dokumentów LilyPonda (do wyboru)."
 
-#: ../python/frescobaldi_app/settings.py:311
+#: ../python/frescobaldi_app/settings.py:306
 msgid "LilyPond documentation:"
 msgstr "Dokumentacja LilyPonda:"
 
-#: ../python/frescobaldi_app/settings.py:317
+#: ../python/frescobaldi_app/settings.py:312
 msgid "Url or path to the LilyPond documentation."
 msgstr "Url lub ścieżka do dokumentacji LilyPonda."
 
-#: ../python/frescobaldi_app/settings.py:328
+#: ../python/frescobaldi_app/settings.py:323
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
@@ -2084,23 +2062,23 @@ msgstr ""
 "KOffice, itd., (po jednej na linię). Jeśli pozostawisz początkowy lewy "
 "ukośnik, użyte zostaną prefiksy dla zmiennych środowiskowych z KDEDIRS. "
 
-#: ../python/frescobaldi_app/settings.py:389
+#: ../python/frescobaldi_app/settings.py:384
 msgid "Rumor MIDI input"
 msgstr "Wejście MIDI Rumora"
 
-#: ../python/frescobaldi_app/settings.py:390
+#: ../python/frescobaldi_app/settings.py:385
 msgid "Rumor MIDI input plugin settings"
 msgstr "Ustawienia wtyczki wejścia MIDI Rumora"
 
-#: ../python/frescobaldi_app/settings.py:395
+#: ../python/frescobaldi_app/settings.py:390
 msgid "Commands used by the Rumor MIDI input module"
 msgstr "Polecenia używane przez moduł wejścia MIDI Rumora"
 
-#: ../python/frescobaldi_app/settings.py:402
+#: ../python/frescobaldi_app/settings.py:397
 msgid "Name or full path of the Rumor program."
 msgstr "Nazwa lub pełna ścieżka programu Rumor."
 
-#: ../python/frescobaldi_app/settings.py:404
+#: ../python/frescobaldi_app/settings.py:399
 msgid ""
 "Name or full path of the aconnect program (part of ALSA, for MIDI input and "
 "playback using Rumor)."
@@ -2108,67 +2086,67 @@ msgstr ""
 "Nazwa lub pełna ścieżka do programu aconnect (część ALSA, dla wejść i wyjść "
 "MIDI przy użyciu Rumora)."
 
-#: ../python/frescobaldi_app/settings.py:408
+#: ../python/frescobaldi_app/settings.py:403
 msgid ""
 "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Pełne polecenie rozpoczynające Timidity (lub inny program), jako klienta "
 "MIDI dla ALSA."
 
-#: ../python/frescobaldi_app/settings.py:444
+#: ../python/frescobaldi_app/settings.py:439
 #, fuzzy
 msgid "LilyPond versions to use:"
 msgstr "Wstaw wersję LilyPonda"
 
-#: ../python/frescobaldi_app/settings.py:455
+#: ../python/frescobaldi_app/settings.py:450
 msgid ""
 "Enable automatic version selection (choose LilyPond version from document)"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:581
+#: ../python/frescobaldi_app/settings.py:576
 msgid "Convert-ly:"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:582
+#: ../python/frescobaldi_app/settings.py:577
 #, fuzzy
 msgid "Lilypond-book:"
 msgstr "LilyPond"
 
-#: ../python/frescobaldi_app/settings.py:618
+#: ../python/frescobaldi_app/settings.py:613
 #, fuzzy
 msgid "Path"
 msgstr "Ścieżki"
 
-#: ../python/frescobaldi_app/settings.py:619
+#: ../python/frescobaldi_app/settings.py:614
 #, fuzzy
 msgid "Version"
 msgstr "Wersja:"
 
-#: ../python/frescobaldi_app/settings.py:622
+#: ../python/frescobaldi_app/settings.py:617
 #, fuzzy
 msgid "Can't determine LilyPond version."
 msgstr "Wstaw wersję LilyPonda"
 
-#: ../python/frescobaldi_app/settings.py:647
+#: ../python/frescobaldi_app/settings.py:642
 #, fuzzy
 msgid "LilyPond Command:"
 msgstr "Indeks poleceń LilyPonda"
 
-#: ../python/frescobaldi_app/settings.py:651
+#: ../python/frescobaldi_app/settings.py:646
 msgid "Name or full path of the LilyPond program."
 msgstr "Nazwa lub pełna ścieżka do programu LilyPond."
 
-#: ../python/frescobaldi_app/settings.py:652
+#: ../python/frescobaldi_app/settings.py:647
 #, fuzzy
 msgid "LilyPond Command"
 msgstr "Indeks poleceń LilyPonda"
 
-#: ../python/frescobaldi_app/settings.py:665
+#: ../python/frescobaldi_app/settings.py:660
 #, fuzzy
 msgid "Set as default"
 msgstr "Ustaw jako domyślne."
 
-#: ../python/frescobaldi_app/settings.py:667
+#: ../python/frescobaldi_app/settings.py:662
 msgid "Include in automatic version selection"
 msgstr ""
 
@@ -3224,6 +3202,42 @@ msgstr "Instrumenty klawiszowe"
 #: ../python/frescobaldi_app/scorewiz/parts.py:1521
 msgid "Special"
 msgstr "Specjalne"
+
+#~ msgid "Printing failed: %1"
+#~ msgstr "Drukowanie nie powiodło się: %1"
+
+#~ msgid "The document has been sent to the printer."
+#~ msgstr "Dokument został wysłany do drukarki"
+
+#~ msgid ""
+#~ "Printing failed: %1\n"
+#~ "\n"
+#~ "The print command %2 does probably not exist. Please check your settings."
+#~ msgstr ""
+#~ "Drukowanie nie powiodło się: %1\n"
+#~ "\n"
+#~ "Zadanie wydruku %2 prawdopodobnie nie istnieje. Proszę sprawdzić "
+#~ "ustawienia."
+
+#~ msgid "The print command contains errors. Please check your settings."
+#~ msgstr "Zadanie wydruku zawiera błędy. Proszę sprawdzić ustawienia."
+
+#~ msgid "Directly print on default printer"
+#~ msgstr "Wydrukuj bezpośrednio na drukarce domyślnej."
+
+#, fuzzy
+#~ msgid "Notify when a document has been sent to the printer"
+#~ msgstr "Dokument został wysłany do drukarki"
+
+#~ msgid "Printcommand:"
+#~ msgstr "Polecenie wydruku:"
+
+#~ msgid ""
+#~ "Command to print a PDF file, for example lpr or kprinter. You may add "
+#~ "some arguments, e.g. lpr -P myprinter."
+#~ msgstr ""
+#~ "Polecenie wydruku pliku PDF, np. lpr lub kprinter. Możesz dodać różne "
+#~ "wartości, np. lpr -P myprinter."
 
 #~ msgid "Space above:"
 #~ msgstr "Przestrzeń powyżej:"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.5\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-05-21 21:29+0200\n"
+"POT-Creation-Date: 2010-06-16 20:37+0200\n"
 "PO-Revision-Date: 2009-12-06 18:05+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -477,54 +477,55 @@ msgstr "Nešlo nahrát %1"
 msgid "Please install %1"
 msgstr "Nainstalujte, prosím, %1"
 
-#: ../python/frescobaldi_app/actions.py:56
+#: ../python/frescobaldi_app/actions.py:57
 msgid "Open %1 in external viewer"
 msgstr "Otevřít %1 ve vnějším prohlížeči"
 
-#: ../python/frescobaldi_app/actions.py:58
+#: ../python/frescobaldi_app/actions.py:59
+#: ../python/frescobaldi_app/actions.py:270
 msgid "Print %1"
 msgstr "Tisk %1"
 
-#: ../python/frescobaldi_app/actions.py:65
+#: ../python/frescobaldi_app/actions.py:66
 msgid "Play %1"
 msgstr "Přehrát %1"
 
-#: ../python/frescobaldi_app/actions.py:91
+#: ../python/frescobaldi_app/actions.py:92
 msgid "Open PDF"
 msgstr "Otevřít PDF"
 
-#: ../python/frescobaldi_app/actions.py:92
+#: ../python/frescobaldi_app/actions.py:93
 msgid "Print"
 msgstr "Tisk"
 
-#: ../python/frescobaldi_app/actions.py:94
+#: ../python/frescobaldi_app/actions.py:95
 msgid "Play MIDI"
 msgstr "Přehrát MIDI"
 
-#: ../python/frescobaldi_app/actions.py:97
+#: ../python/frescobaldi_app/actions.py:98
 #: ../python/frescobaldi_app/mainapp.py:728
 msgid "Email..."
 msgstr "E-mail..."
 
-#: ../python/frescobaldi_app/actions.py:149
+#: ../python/frescobaldi_app/actions.py:150
 msgid "There are no files to send via email."
 msgstr ""
 "Nejsou zde žádné soubory, které by bylo možné odeslat prostřednictvím e-"
 "mailu."
 
-#: ../python/frescobaldi_app/actions.py:150
+#: ../python/frescobaldi_app/actions.py:151
 msgid "No files to send"
 msgstr "Žádné soubory k odeslání"
 
-#: ../python/frescobaldi_app/actions.py:158
+#: ../python/frescobaldi_app/actions.py:159
 msgid "Email documents"
 msgstr "E-mailové dokumenty"
 
-#: ../python/frescobaldi_app/actions.py:162
+#: ../python/frescobaldi_app/actions.py:163
 msgid "Please select the files you want to send:"
 msgstr "Vyberte, prosím, soubory, které si přejete odeslat:"
 
-#: ../python/frescobaldi_app/actions.py:166
+#: ../python/frescobaldi_app/actions.py:167
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document).  Also LilyPond files included by the source document are shown."
@@ -533,7 +534,7 @@ msgstr ""
 "LilyPondu). Jsou ukázány i soubory LilyPondu, které jsou zahrnuté zdrojovým "
 "dokumentem."
 
-#: ../python/frescobaldi_app/actions.py:176
+#: ../python/frescobaldi_app/actions.py:177
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -560,28 +561,20 @@ msgstr[2] ""
 "souboru. Zvažte, prosím, že znovu necháte sestavit tyto soubory ve "
 "vydavatelském režimu, protože pak jsou PDF soubory mnohem menší."
 
-#: ../python/frescobaldi_app/actions.py:273
-msgid "Printing failed: %1"
-msgstr "Tisk selhal: %1"
-
-#: ../python/frescobaldi_app/actions.py:276
-msgid "The document has been sent to the printer."
-msgstr "Dokument byl poslán do tiskárny."
-
-#: ../python/frescobaldi_app/actions.py:280
-msgid ""
-"Printing failed: %1\n"
-"\n"
-"The print command %2 does probably not exist. Please check your settings."
+#: ../python/frescobaldi_app/actions.py:279
+msgid "A print command (like 'lpr' or 'lp') could not be found on your system."
 msgstr ""
-"Tisk selhal: %1\n"
-"\n"
-"Pravděpodobně neexistuje příkaz pro tisk %2. Zkontrolujte, prosím, vaše "
-"nastavení."
 
-#: ../python/frescobaldi_app/actions.py:285
-msgid "The print command contains errors. Please check your settings."
-msgstr "Příkaz pro tisk obsahuje chyby. Zkontrolujte, prosím, vaše nastavení."
+#: ../python/frescobaldi_app/actions.py:283
+msgid "The command '%1' could not be found on your system."
+msgstr ""
+
+#: ../python/frescobaldi_app/actions.py:287
+msgid ""
+"The command below has been run, but exited with a return code %1.\n"
+"\n"
+"%2"
+msgstr ""
 
 #: ../python/frescobaldi_app/blankpaper.py:56
 #: ../python/frescobaldi_app/mainapp.py:755
@@ -688,8 +681,9 @@ msgid "Save PDF"
 msgstr "Uložit PDF"
 
 #: ../python/frescobaldi_app/blankpaper.py:357
-msgid "Directly print on default printer"
-msgstr "Tisknout přímo na výchozí tiskárně"
+#, fuzzy
+msgid "Print..."
+msgstr "Tisk"
 
 #: ../python/frescobaldi_app/blankpaper.py:366
 msgid "Copy LilyPond code to editor"
@@ -1141,7 +1135,7 @@ msgid "LilyPond files"
 msgstr "Soubory LilyPond"
 
 #: ../python/frescobaldi_app/mainapp.py:425
-#: ../python/frescobaldi_app/settings.py:643
+#: ../python/frescobaldi_app/settings.py:638
 #: ../python/frescobaldi_app/scorewiz/__init__.py:348
 msgid "LilyPond"
 msgstr "LilyPond"
@@ -1595,7 +1589,7 @@ msgid "Rumor"
 msgstr "Rumor"
 
 #: ../python/frescobaldi_app/mainapp.py:1205
-#: ../python/frescobaldi_app/settings.py:320
+#: ../python/frescobaldi_app/settings.py:315
 msgid "LilyPond Documentation"
 msgstr "Dokumentace k LilyPondu"
 
@@ -1901,7 +1895,7 @@ msgid "Use LilyPond version %1"
 msgstr "Vložit číslo verze aplikace LilyPond"
 
 #: ../python/frescobaldi_app/runlily.py:303
-#: ../python/frescobaldi_app/settings.py:624
+#: ../python/frescobaldi_app/settings.py:619
 #, fuzzy
 msgid "default"
 msgstr "Výchozí"
@@ -2016,72 +2010,55 @@ msgid "Warnings and Notifications"
 msgstr ""
 
 #: ../python/frescobaldi_app/settings.py:192
-#, fuzzy
-msgid "Notify when a document has been sent to the printer"
-msgstr "Dokument byl poslán do tiskárny."
-
-#: ../python/frescobaldi_app/settings.py:193
 msgid "Warn when a document contains a conflicting point and click setting"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:257
+#: ../python/frescobaldi_app/settings.py:256
 msgid "Paths"
 msgstr "Cesty"
 
-#: ../python/frescobaldi_app/settings.py:258
+#: ../python/frescobaldi_app/settings.py:257
 msgid "Paths to programs or data used by Frescobaldi"
 msgstr "Cesty k programům nebo datům používaným programem Frescobaldi"
 
-#: ../python/frescobaldi_app/settings.py:272
+#: ../python/frescobaldi_app/settings.py:271
 msgid "PDF Viewer:"
 msgstr "Prohlížeč PDF:"
 
-#: ../python/frescobaldi_app/settings.py:273
+#: ../python/frescobaldi_app/settings.py:272
 msgid "PDF Viewer"
 msgstr "Prohlížeč PDF"
 
-#: ../python/frescobaldi_app/settings.py:274
-#: ../python/frescobaldi_app/settings.py:277
+#: ../python/frescobaldi_app/settings.py:273
+#: ../python/frescobaldi_app/settings.py:276
 msgid "(leave empty for operating system default)"
 msgstr "(ponechat prázdné pro výchozí nastavení operačního systému)"
 
-#: ../python/frescobaldi_app/settings.py:275
+#: ../python/frescobaldi_app/settings.py:274
 msgid "MIDI Player:"
 msgstr "Přehrávač MIDI:"
 
-#: ../python/frescobaldi_app/settings.py:276
+#: ../python/frescobaldi_app/settings.py:275
 msgid "MIDI Player"
 msgstr "Přehrávač MIDI"
 
-#: ../python/frescobaldi_app/settings.py:278
-msgid "Printcommand:"
-msgstr "Tiskový příkaz:"
-
-#: ../python/frescobaldi_app/settings.py:279
-msgid ""
-"Command to print a PDF file, for example lpr or kprinter. You may add some "
-"arguments, e.g. lpr -P myprinter."
-msgstr ""
-"Příkaz pro tisk PDF souboru; například lpr nebo kprinter. Můžete přidat "
-"některé nezávisle proměnné; např. lpr -P myprinter."
-
-#: ../python/frescobaldi_app/settings.py:295
+#: ../python/frescobaldi_app/settings.py:290
 msgid "Default directory:"
 msgstr "Výchozí adresář:"
 
-#: ../python/frescobaldi_app/settings.py:300
+#: ../python/frescobaldi_app/settings.py:295
 msgid "The default folder for your LilyPond documents (optional)."
 msgstr "Výchozí složka pro vaše dokumenty LilyPond (volitelná)."
 
-#: ../python/frescobaldi_app/settings.py:311
+#: ../python/frescobaldi_app/settings.py:306
 msgid "LilyPond documentation:"
 msgstr "Dokumentace k LilyPondu:"
 
-#: ../python/frescobaldi_app/settings.py:317
+#: ../python/frescobaldi_app/settings.py:312
 msgid "Url or path to the LilyPond documentation."
 msgstr "Adresa nebo cesta k dokumentaci programu LilyPond."
 
-#: ../python/frescobaldi_app/settings.py:328
+#: ../python/frescobaldi_app/settings.py:323
 msgid ""
 "Paths to search for hyphenation dictionaries of OpenOffice.org, Scribus, "
 "KOffice, etc, one per line. If you leave out the starting slash, the "
@@ -2092,23 +2069,23 @@ msgstr ""
 "Jestliže vynecháte počáteční lomítko, jsou na začátek přidány předpony z "
 "proměnné prostředí KDEDIRS."
 
-#: ../python/frescobaldi_app/settings.py:389
+#: ../python/frescobaldi_app/settings.py:384
 msgid "Rumor MIDI input"
 msgstr "MIDI vstup Rumor"
 
-#: ../python/frescobaldi_app/settings.py:390
+#: ../python/frescobaldi_app/settings.py:385
 msgid "Rumor MIDI input plugin settings"
 msgstr "Nastavení přídavného modulu pro MIDI vstup Rumor"
 
-#: ../python/frescobaldi_app/settings.py:395
+#: ../python/frescobaldi_app/settings.py:390
 msgid "Commands used by the Rumor MIDI input module"
 msgstr "Příkazy používané modulem pro MIDI vstup Rumor"
 
-#: ../python/frescobaldi_app/settings.py:402
+#: ../python/frescobaldi_app/settings.py:397
 msgid "Name or full path of the Rumor program."
 msgstr "Název nebo úplná cesta k programu Rumor."
 
-#: ../python/frescobaldi_app/settings.py:404
+#: ../python/frescobaldi_app/settings.py:399
 msgid ""
 "Name or full path of the aconnect program (part of ALSA, for MIDI input and "
 "playback using Rumor)."
@@ -2116,67 +2093,67 @@ msgstr ""
 "Název nebo úplná cesta k programu aconnect (část ALSA, určen pro MIDI vstup "
 "a přehrávání s využitím programu Rumor)."
 
-#: ../python/frescobaldi_app/settings.py:408
+#: ../python/frescobaldi_app/settings.py:403
 msgid ""
 "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Úplný příkaz pro spuštění Timidity (nebo jakéhokoli jiného programu) jako "
 "ALSA MIDI klienta."
 
-#: ../python/frescobaldi_app/settings.py:444
+#: ../python/frescobaldi_app/settings.py:439
 #, fuzzy
 msgid "LilyPond versions to use:"
 msgstr "Vložit číslo verze aplikace LilyPond"
 
-#: ../python/frescobaldi_app/settings.py:455
+#: ../python/frescobaldi_app/settings.py:450
 msgid ""
 "Enable automatic version selection (choose LilyPond version from document)"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:581
+#: ../python/frescobaldi_app/settings.py:576
 msgid "Convert-ly:"
 msgstr ""
 
-#: ../python/frescobaldi_app/settings.py:582
+#: ../python/frescobaldi_app/settings.py:577
 #, fuzzy
 msgid "Lilypond-book:"
 msgstr "LilyPond"
 
-#: ../python/frescobaldi_app/settings.py:618
+#: ../python/frescobaldi_app/settings.py:613
 #, fuzzy
 msgid "Path"
 msgstr "Cesty"
 
-#: ../python/frescobaldi_app/settings.py:619
+#: ../python/frescobaldi_app/settings.py:614
 #, fuzzy
 msgid "Version"
 msgstr "Verze"
 
-#: ../python/frescobaldi_app/settings.py:622
+#: ../python/frescobaldi_app/settings.py:617
 #, fuzzy
 msgid "Can't determine LilyPond version."
 msgstr "Vložit číslo verze aplikace LilyPond"
 
-#: ../python/frescobaldi_app/settings.py:647
+#: ../python/frescobaldi_app/settings.py:642
 #, fuzzy
 msgid "LilyPond Command:"
 msgstr "Rejstřík příkazů pro LilyPond"
 
-#: ../python/frescobaldi_app/settings.py:651
+#: ../python/frescobaldi_app/settings.py:646
 msgid "Name or full path of the LilyPond program."
 msgstr "Název nebo úplná cesta k programu LilyPond."
 
-#: ../python/frescobaldi_app/settings.py:652
+#: ../python/frescobaldi_app/settings.py:647
 #, fuzzy
 msgid "LilyPond Command"
 msgstr "Rejstřík příkazů pro LilyPond"
 
-#: ../python/frescobaldi_app/settings.py:665
+#: ../python/frescobaldi_app/settings.py:660
 #, fuzzy
 msgid "Set as default"
 msgstr "Nastavit nastavení na výchozí."
 
-#: ../python/frescobaldi_app/settings.py:667
+#: ../python/frescobaldi_app/settings.py:662
 msgid "Include in automatic version selection"
 msgstr ""
 
@@ -3235,6 +3212,43 @@ msgstr "Klávesové nástroje"
 #: ../python/frescobaldi_app/scorewiz/parts.py:1521
 msgid "Special"
 msgstr "Speciální"
+
+#~ msgid "Printing failed: %1"
+#~ msgstr "Tisk selhal: %1"
+
+#~ msgid "The document has been sent to the printer."
+#~ msgstr "Dokument byl poslán do tiskárny."
+
+#~ msgid ""
+#~ "Printing failed: %1\n"
+#~ "\n"
+#~ "The print command %2 does probably not exist. Please check your settings."
+#~ msgstr ""
+#~ "Tisk selhal: %1\n"
+#~ "\n"
+#~ "Pravděpodobně neexistuje příkaz pro tisk %2. Zkontrolujte, prosím, vaše "
+#~ "nastavení."
+
+#~ msgid "The print command contains errors. Please check your settings."
+#~ msgstr ""
+#~ "Příkaz pro tisk obsahuje chyby. Zkontrolujte, prosím, vaše nastavení."
+
+#~ msgid "Directly print on default printer"
+#~ msgstr "Tisknout přímo na výchozí tiskárně"
+
+#, fuzzy
+#~ msgid "Notify when a document has been sent to the printer"
+#~ msgstr "Dokument byl poslán do tiskárny."
+
+#~ msgid "Printcommand:"
+#~ msgstr "Tiskový příkaz:"
+
+#~ msgid ""
+#~ "Command to print a PDF file, for example lpr or kprinter. You may add "
+#~ "some arguments, e.g. lpr -P myprinter."
+#~ msgstr ""
+#~ "Příkaz pro tisk PDF souboru; například lpr nebo kprinter. Můžete přidat "
+#~ "některé nezávisle proměnné; např. lpr -P myprinter."
 
 #~ msgid "Space above:"
 #~ msgstr "Mezera nad:"
