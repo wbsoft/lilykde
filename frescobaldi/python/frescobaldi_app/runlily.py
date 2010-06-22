@@ -358,30 +358,41 @@ class RunLilyPondDialog(KDialog):
 
 class JobManager(object):
     """
-    Manages LilyPond jobs.
+    Manages running LilyPond jobs.
     
-    Start jobs run() method.
-    Stop jobs by calling abort() on the job.
     Emits:
     jobStarted(Document)
     jobFinished(Document, success, job)
     """
-    def __init__(self, mainwin):
-        self.mainwin = mainwin
+    def __init__(self):
         self.jobs = {}
         self.jobStarted = Signal()
         self.jobFinished = Signal()
         
     def job(self, doc):
+        """
+        Returns the job running for the given document, or None if no job is running.
+        """
         return self.jobs.get(doc)
     
     def count(self):
+        """
+        Returns the number of running jobs.
+        """
         return len(self.jobs)
         
     def docs(self):
+        """
+        Returns a list of documents that have a LilyPond job running.
+        """
         return self.jobs.keys()
     
     def run(self, job):
+        """
+        Adds the job to the list of running jobs, calls its start() method,
+        and emit the jobStarted signal. The jobFinished signal is emitted when
+        the job has finished.
+        """
         if job.document in self.jobs:
             return
         self.jobs[job.document] = job

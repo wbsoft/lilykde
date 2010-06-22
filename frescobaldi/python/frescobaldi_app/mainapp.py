@@ -387,7 +387,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
     @cacheresult
     def jobManager(self):
         import frescobaldi_app.runlily
-        man = frescobaldi_app.runlily.JobManager(self)
+        man = frescobaldi_app.runlily.JobManager()
         man.jobStarted.connect(self.updateJobActions)
         man.jobFinished.connect(self.updateJobActions)
         self.progressBarManager(man) # show progress of jobs using progress bar
