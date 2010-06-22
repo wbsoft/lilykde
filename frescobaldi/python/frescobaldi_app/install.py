@@ -110,8 +110,10 @@ def checkNewExpandDefaultShortcuts():
 
 def saveOnRunWarning():
     """ Copy old setting to the new save on run notification setting (1.1.2)"""
-    conf = KGlobal.config().group("preferences")
-    if conf.readEntry("save on run", False):
-        conf = KGlobal.config().group("Notification Messages")
-        conf.writeEntry("save_on_run", False)
+    c = KGlobal.config()
+    group = c.group("preferences")
+    if group.readEntry("save on run", False):
+        group = c.group("Notification Messages")
+        group.writeEntry("save_on_run", False)
+        c.sync()
 
