@@ -61,12 +61,12 @@ If your document is on the local drive but has been modified,
 &frescobaldi; asks you to save it first. (&frescobaldi; does not use a temporary directory
 for files that are already on the local drive.)
 If you want &frescobaldi; to always save your last local modifications before running
-&lilypond;, you can go to
+&lilypond;, check the box &quot;Don't ask this question again.&quot;
+(Under
 <menuchoice>
   <guimenu>Settings</guimenu>
   <guimenuitem>Configure &frescobaldi;...</guimenuitem>
-</menuchoice>
-and check the option <guilabel>Save document when &lilypond; is run</guilabel>.
+</menuchoice> you can re-enable this warning if you want.)
 </para>
 
 <para>

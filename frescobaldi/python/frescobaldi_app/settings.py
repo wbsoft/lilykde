@@ -143,8 +143,6 @@ class GeneralPreferences(KVBox):
         
         self.checks = []
         for title, name, default in (
-            (i18n("Save document when LilyPond is run"),
-                "save on run", False),
             (i18n("Let LilyPond delete intermediate output files"),
                 "delete intermediate files", True),
             (i18n("Run LilyPond with verbose output"),
@@ -190,6 +188,7 @@ class GeneralPreferences(KVBox):
         l.setSpacing(0)
         for title, name in (
             (i18n("Warn when a document contains a conflicting point and click setting"), "point_and_click"),
+            (i18n("Warn when a document needs to be saved before LilyPond is run"), "save_on_run"),
         ):
             b = QCheckBox(title, self, clicked=lambda: dialog.changed())
             l.addWidget(b)

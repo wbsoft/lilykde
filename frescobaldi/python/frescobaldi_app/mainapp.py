@@ -792,14 +792,13 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         d = self.currentDocument()
         if not d:
             return
-        sorry = lambda msg: KMessageBox.sorry(self, msg,
-            i18n("Can't process document"))
-        if (d.url().protocol() == "file" and d.isModified()) and not (
-                config().readEntry("save on run", False)
-                and d.save()):
-            return sorry(i18n(
-                "Your document has been modified, "
-                "please save first."))
+        if d.url().protocol() == "file" and d.isModified() and not (
+            KMessageBox.warningContinueCancel(self, i18n(
+                "Your document has been modified and needs to be saved before "
+                "LilyPond can be started."), None,
+                KStandardGuiItem.save(), KStandardGuiItem.cancel(),
+                "save_on_run") == KMessageBox.Continue and d.save()):
+            return # cancelled save of local file
         
         # create a Job
         import frescobaldi_app.runlily
@@ -822,9 +821,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         # check if there is not already a job running. We do it now, so the
         # custom dialog can be requested even when there is a job running.
         if self.jobManager().job(d):
-            return sorry(i18n(
+            return KMessageBox.sorry(self, i18n(
                 "There is already a LilyPond job running "
-                "for this document."))
+                "for this document."), i18n("Can't process document"))
         
         # check if the user has a forced point and click setting in the file
         text = d.text()

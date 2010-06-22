@@ -42,16 +42,6 @@ Here you can set some general preferences to influence the behaviour of
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Save Document when &lilypond; is run</guilabel></term>
-<listitem>
-  <para>
-  If checked, &frescobaldi; will save the document (if modified) before running
-  &lilypond;.
-  </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Let &lilypond; delete intermediate files</guilabel></term>
 <listitem>
   <para>
@@ -155,17 +145,31 @@ Here you can set some general preferences to influence the behaviour of
     </listitem>
     </varlistentry>
   </variablelist>
+  
+  <note><para>
+  Note that the Score Wizard is able to adjust its output depending on the version
+  you specify in the Score Wizard. It is therefore possible to write documents for
+  older &lilypond; versions, although in general using the most recent stable
+  &lilypond; release is recommended.
+  </para></note>
+
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Warnings and notifications</guilabel></term>
+<listitem>
+  <para>
+  Here you can check which warnings and notifications you want to get. Usually,
+  warning messages have a checkbox &quot;Don't show this message again&quot;
+  (or &quot;Don't ask this question again&quot;).
+  When you enable a warning here, its dialog will be shown on the next occurrence.
+  </para>
 </listitem>
 </varlistentry>
 
 </variablelist>
 
-<note><para>
-Note that the Score Wizard is able to adjust its output depending on the version
-you specify in the Score Wizard. It is therefore possible to write documents for
-older &lilypond; versions, although in general using the most recent stable
-&lilypond; release is recommended.
-</para></note>
 
 </sect2>
 
