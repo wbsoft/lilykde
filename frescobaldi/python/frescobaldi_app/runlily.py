@@ -64,6 +64,7 @@ class BasicLilyPondJob(object):
     
     command = "lilypond"        # lilypond command to run
     arguments = ["--pdf"]       # arguments
+    include = []                # directories to add to include path
     lyfile = None               # lilypond document filename to run on
     
     preview = False             # run with point and click
@@ -86,6 +87,9 @@ class BasicLilyPondJob(object):
         self.verbose and cmd.append("--verbose")
         cmd.append("-dpoint-and-click=" + scmbool(self.preview))
         cmd.append("-ddelete-intermediate-files=" + scmbool(self.delfiles))
+        for path in self.include:
+            cmd.append("--include")
+            cmd.append(path)
         cmd.extend(self.arguments)
         cmd.append(self._basename)
         
@@ -189,9 +193,7 @@ class LilyPondJob(BasicLilyPondJob):
         self.arguments = ["--pdf"]
         self.verbose = config("preferences").readEntry("verbose lilypond output", False)
         self.delfiles = config("preferences").readEntry("delete intermediate files", True)
-        for path in config("preferences").readPathEntry("lilypond include path", []):
-            self.arguments.append('--include')
-            self.arguments.append(path)
+        self.include = config("preferences").readPathEntry("lilypond include path", [])
 
 
 class DocumentJob(LilyPondJob):
