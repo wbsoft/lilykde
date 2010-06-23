@@ -28,10 +28,14 @@ from time import time
 
 from PyQt4.QtCore import QProcess, QRegExp, QTimeLine, Qt
 from PyQt4.QtGui import (
-    QComboBox, QLabel, QLineEdit, QPainter, QPixmap, QPushButton, QSlider,
-    QSpinBox, QToolButton, QRegExpValidator, QWidget)
+    QComboBox, QFileDialog, QGridLayout, QLabel, QLineEdit, QListWidget,
+    QPainter, QPixmap, QPushButton, QSlider, QSpinBox, QToolButton,
+    QRegExpValidator, QWidget)
 from PyKDE4.kdecore import i18n, KProcess
-from PyKDE4.kdeui import KApplication, KDialog, KLineEdit, KVBox
+from PyKDE4.kdeui import (
+    KApplication, KDialog, KLineEdit, KPushButton, KStandardGuiItem, KVBox)
+
+from signals import Signal
 
 from frescobaldi_app.mainapp import SymbolManager
 
@@ -230,6 +234,95 @@ class ExecArgsLineEdit(ExecLineEdit):
             return filename.split()[0]
         else:
             return ''
+
+
+class FilePathEdit(QWidget):
+    """
+    A widget to edit a list of directories (e.g. a file path).
+    """
+    def __init__(self, *args, **kwargs):
+        QWidget.__init__(self, *args, **kwargs)
+        self.changed = Signal()
+        layout = QGridLayout(self)
+        self.setLayout(layout)
+        
+        addButton = KPushButton(KStandardGuiItem.add())
+        editButton = KPushButton(KStandardGuiItem.configure())
+        removeButton = KPushButton(KStandardGuiItem.remove())
+        listBox = self.listBox = QListWidget()
+        listBox.setDragDropMode(QListWidget.InternalMove)
+        
+        layout.setContentsMargins(1, 1, 1, 1)
+        layout.setSpacing(0)
+        layout.addWidget(listBox, 0, 0, 3, 1)
+        layout.addWidget(addButton, 0, 1)
+        layout.addWidget(editButton, 1, 1)
+        layout.addWidget(removeButton, 2, 1)
+        
+        @addButton.clicked.connect
+        def addClicked():
+            directory = self.getDirectory()
+            if directory:
+                self.listBox.addItem(directory)
+                self.changed()
+                
+        @editButton.clicked.connect
+        def editClicked():
+            item = self.listBox.currentItem()
+            if item:
+                directory = self.getDirectory(item.text())
+                if directory:
+                    item.setText(directory)
+                    self.changed()
+        
+        @removeButton.clicked.connect
+        def removeClicked():
+            item = self.listBox.currentItem()
+            if item:
+                self.listBox.takeItem(self.listBox.currentRow())
+                self.changed()
+        
+        @listBox.itemDoubleClicked.connect
+        def itemDoubleClicked(item):
+            directory = self.getDirectory(item.text())
+            if directory:
+                item.setText(directory)
+                self.changed()
+            
+        listBox.model().layoutChanged.connect(self.changed)
+        
+        def updateSelection():
+            selected = bool(listBox.currentItem())
+            editButton.setEnabled(selected)
+            removeButton.setEnabled(selected)
+        self.changed.connect(updateSelection)
+        listBox.itemSelectionChanged.connect(updateSelection)
+        updateSelection()
+        
+    def setValue(self, directories):
+        """Sets the listbox to a list of paths."""
+        self.listBox.clear()
+        self.listBox.addItems(directories)
+        self.changed()
+        
+    def value(self):
+        """Returns the list of paths in the listbox."""
+        directories = []
+        for i in range(self.listBox.count()):
+            directories.append(self.listBox.item(i).text())
+        return directories
+    
+    def clear(self):
+        """Clears the listbox."""
+        self.listBox.clear()
+        self.changed()
+        
+    def getDirectory(self, directory=None):
+        """Asks the user for an (existing) directory, returns it as a string.
+        
+        Returns an empty string if the user cancelled the dialog.
+        """
+        return QFileDialog.getExistingDirectory(self, None, directory)
 
 
 class StackFader(QWidget):

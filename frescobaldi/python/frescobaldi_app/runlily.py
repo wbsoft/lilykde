@@ -189,6 +189,9 @@ class LilyPondJob(BasicLilyPondJob):
         self.arguments = ["--pdf"]
         self.verbose = config("preferences").readEntry("verbose lilypond output", False)
         self.delfiles = config("preferences").readEntry("delete intermediate files", True)
+        for path in config("preferences").readPathEntry("lilypond include path", []):
+            self.arguments.append('--include')
+            self.arguments.append(path)
 
 
 class DocumentJob(LilyPondJob):

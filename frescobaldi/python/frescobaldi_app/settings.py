@@ -36,7 +36,7 @@ from signals import Signal
 
 import ly.version
 from kateshell.app import cacheresult
-from frescobaldi_app.widgets import ExecLineEdit, ExecArgsLineEdit
+from frescobaldi_app.widgets import ExecLineEdit, ExecArgsLineEdit, FilePathEdit
 
 # these modules provide their own default settings or update functions
 import frescobaldi_app.hyphen, frescobaldi_app.mainapp, frescobaldi_app.rumor
@@ -285,6 +285,14 @@ class Commands(QWidget):
             layout.addWidget(widget, row, 1)
             self.commands.append((widget, name, default))
         
+        # LilyPond include path
+        l = QLabel(i18n("LilyPond include path:"))
+        self.includePath = FilePathEdit(self)
+        self.includePath.changed.connect(lambda: dialog.changed())
+        row = layout.rowCount()
+        layout.addWidget(l, row, 0)
+        layout.addWidget(self.includePath, row, 1)
+        
         # default directory
         l = QLabel(i18n("Default directory:"))
         self.folder = KUrlRequester()
@@ -339,6 +347,7 @@ class Commands(QWidget):
         self.lilypond.defaults()
         for widget, name, default in self.commands:
             widget.setText(default)
+        self.includePath.clear()
         self.setHyphenPaths(frescobaldi_app.hyphen.defaultPaths)
         self.folder.setPath('')
         self.lilydoc.setUrl(KUrl())
@@ -350,6 +359,8 @@ class Commands(QWidget):
             widget.setText(conf.readEntry(name, default))
         paths = config("hyphenation").readEntry("paths", frescobaldi_app.hyphen.defaultPaths)
         self.setHyphenPaths(paths)
+        self.includePath.setValue(
+            config("preferences").readPathEntry("lilypond include path", []))
         self.folder.setPath(
             config("preferences").readPathEntry("default directory", ""))
         self.lilydoc.setUrl(KUrl(
@@ -365,6 +376,8 @@ class Commands(QWidget):
         config("hyphenation").writeEntry("paths", paths)
         # reload the table of hyphenation dictionaries
         frescobaldi_app.hyphen.findDicts()
+        config("preferences").writePathEntry("lilypond include path",
+            self.includePath.value())
         config("preferences").writePathEntry("default directory",
             self.folder.url().path())
         config("preferences").writeEntry("lilypond documentation",
