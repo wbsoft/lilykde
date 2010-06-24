@@ -98,14 +98,25 @@ class SettingsDialog(KPageDialog):
         self.changed(False)
             
     def slotCurrentPageChanged(self, current, before):
-        w = current.widget()
-        if hasattr(w, "help"):
-            self.setHelp(w.help)
-        else:
-            self.setHelp("settings-dialog")
+        self.setHelp(getattr(current.widget(), "help", "settings-dialog"))
         
 
-class SettingsPage(QWidget):
+class SettingsBase(object):
+    """ Base class for a unit that contains settings. """
+    def defaults(self):
+        """ Implement in subclass """
+        pass
+    
+    def loadSettings(self):
+        """ Implement in subclass """
+        pass
+    
+    def saveSettings(self):
+        """ Implement in subclass """
+        pass
+    
+    
+class SettingsPage(QWidget, SettingsBase):
     def __init__(self, dialog):
         QWidget.__init__(self, dialog)
         self.dialog = dialog
@@ -127,7 +138,7 @@ class SettingsPage(QWidget):
             group.saveSettings()
     
 
-class SettingsGroup(QGroupBox):
+class SettingsGroup(QGroupBox, SettingsBase):
     """ Base class for a group box with settings """
     def __init__(self, title, page):
         """ page is a SettingsPage """
@@ -138,18 +149,6 @@ class SettingsGroup(QGroupBox):
         self.changed = page.changed # quick connect :-)
         self.page = page
         
-    def defaults(self):
-        """ Implement in subclass """
-        pass
-    
-    def loadSettings(self):
-        """ Implement in subclass """
-        pass
-    
-    def saveSettings(self):
-        """ Implement in subclass """
-        pass
-    
 
 class CheckGroup(SettingsGroup):
     """ Base class for a group box with check boxes. """
@@ -520,29 +519,25 @@ class RumorSettings(KVBox):
                 conf.writeEntry(name, widget.text())
 
 
-class EditorComponent(object):
+class EditorComponent(SettingsPage):
     def __init__(self, dialog):
-        editorItem = dialog.addPage(QWidget(), i18n("Editor Component"))
+        super(EditorComponent, self).__init__(dialog)
+        editorItem = dialog.addPage(self, i18n("Editor Component"))
         editorItem.setHeader(i18n("Editor Component Options"))
         editorItem.setIcon(KIcon("accessories-text-editor"))
+        self.help = 'settings-editor-component'
         self.editorPages = []
         editor = dialog.mainwin.app.editor
         # Get the KTextEditor config pages.
         for i in range(editor.configPages()):
-            cPage = editor.configPage(i, dialog)
-            cPage.changed.connect(dialog.changed)
+            cPage = editor.configPage(i, self)
+            cPage.changed.connect(self.changed)
             self.editorPages.append(cPage)
             item = dialog.addSubPage(editorItem, cPage, editor.configPageName(i))
             item.setHeader(editor.configPageFullName(i))
             item.setIcon(editor.configPageIcon(i))
             cPage.help = 'settings-editor-component'
 
-    def defaults(self):
-        pass # not available
-        
-    def loadSettings(self):
-        pass # not necessary
-        
     def saveSettings(self):
         for page in self.editorPages:
             page.apply()
