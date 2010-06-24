@@ -354,26 +354,28 @@ class Warnings(CheckGroup):
                 "save_on_run", True))
 
 
-class Commands(QWidget):
+class Commands(SettingsPage):
     """
     Settings regarding commands of lilypond and associated programs
     """
     def __init__(self, dialog):
-        QWidget.__init__(self, dialog)
-        self.mainwin = dialog.mainwin
+        super(Commands, self).__init__(dialog)
         item = dialog.addPage(self, i18n("Paths"))
         item.setHeader(i18n("Paths to programs or data used by Frescobaldi"))
         item.setIcon(KIcon("utilities-terminal"))
         self.help = 'settings-paths'
         
+        LilyPondInfoList(self)
+        HelperApps(self)
+        LilyDocBrowser(self)
+        HyphenationSettings(self)
+
+
+class HelperApps(SettingsGroup):
+    def __init__(self, page):
+        super(HelperApps, self).__init__(i18n("Helper applications"), page)
+        
         layout = QGridLayout(self)
-        
-        # lilypond versions/instances
-        self.lilypond = LilyPondInfoList(self)
-        self.lilypond.changed.connect(dialog.changed)
-        layout.addWidget(self.lilypond, 0, 0, 1, 2)
-        
-        # commands
         self.commands = []
         for name, default, title, lineedit, tooltip in (
             ('pdf viewer', '', i18n("PDF Viewer:"), ExecArgsLineEdit,
@@ -385,7 +387,7 @@ class Commands(QWidget):
         ):
             label = QLabel(title)
             widget = lineedit()
-            widget.textEdited.connect(lambda: dialog.changed())
+            widget.textEdited.connect(page.changed)
             label.setBuddy(widget)
             label.setToolTip(tooltip)
             widget.setToolTip(tooltip)
@@ -393,23 +395,66 @@ class Commands(QWidget):
             layout.addWidget(label, row, 0)
             layout.addWidget(widget, row, 1)
             self.commands.append((widget, name, default))
+
+    def defaults(self):
+        for widget, name, default in self.commands:
+            widget.setText(default)
         
-        # LilyPond documentation URL
-        l = QLabel(i18n("LilyPond documentation:"))
-        self.lilydoc = KUrlRequester()
-        self.lilydoc.textChanged.connect(lambda: dialog.changed())
+    def loadSettings(self):
+        conf = config("commands")
+        for widget, name, default in self.commands:
+            widget.setText(conf.readEntry(name, default))
+
+    def saveSettings(self):
+        conf = config("commands")
+        for widget, name, default in self.commands:
+            if widget.text() or not default:
+                conf.writeEntry(name, widget.text())
+
+
+class LilyDocBrowser(SettingsGroup):
+    def __init__(self, page):
+        super(LilyDocBrowser, self).__init__(i18n("LilyPond Documentation"), page)
+        
+        layout = QVBoxLayout(self)
+        layout.setSpacing(0)
+        
+        h = KHBox()
+        l = QLabel(i18n("Url:"), h)
+        self.lilydoc = KUrlRequester(h)
+        self.lilydoc.textChanged.connect(page.changed)
         l.setBuddy(self.lilydoc)
-        row = layout.rowCount()
         tooltip = i18n(
             "Url or path to the LilyPond documentation.")
         l.setToolTip(tooltip)
         self.lilydoc.setToolTip(tooltip)
         self.lilydoc.fileDialog().setCaption(i18n("LilyPond Documentation"))
-        layout.addWidget(l, row, 0)
-        layout.addWidget(self.lilydoc, row, 1)
+        layout.addWidget(h)
         self.lilydoc.setMode(KFile.Mode(
             KFile.File | KFile.Directory | KFile.ExistingOnly))
+
+    def defaults(self):
+        self.lilydoc.setUrl(KUrl())
         
+    def loadSettings(self):
+        self.lilydoc.setUrl(KUrl(
+            config("preferences").readEntry("lilypond documentation", "")))
+
+    def saveSettings(self):
+        config("preferences").writeEntry(
+            "lilypond documentation", self.lilydoc.url().url())
+        lilydoc = self.dialog.mainwin.tools.get('lilydoc')
+        if lilydoc:
+            lilydoc.newDocFinder()
+
+
+class HyphenationSettings(SettingsGroup):
+    def __init__(self, page):
+        super(HyphenationSettings, self).__init__(i18n("Lyrics Hyphenation"), page)
+        
+        layout = QVBoxLayout(self)
+        layout.setSpacing(0)
+    
         # hyphen paths
         l = QLabel(i18n(
             "Paths to search for hyphenation dictionaries of OpenOffice.org, "
@@ -417,68 +462,49 @@ class Commands(QWidget):
             "If you leave out the starting slash, the prefixes from the "
             "KDEDIRS environment variable are prepended."))
         l.setWordWrap(True)
-        self.hyphenPaths = QTextEdit(textChanged=lambda: dialog.changed())
+        self.hyphenPaths = QTextEdit(textChanged=page.changed)
         l.setBuddy(self.hyphenPaths)
-        layout.addWidget(l, layout.rowCount(), 0, 1, 2)
-        layout.addWidget(self.hyphenPaths, layout.rowCount(), 0, 1, 2)
-        # stretch lilypond version widget more than hyphen path widget
-        layout.setRowStretch(0, 2)
-        layout.setRowStretch(layout.rowCount() - 1, 1)
+        layout.addWidget(l)
+        layout.addWidget(self.hyphenPaths)
 
     def setHyphenPaths(self, paths):
         self.hyphenPaths.setPlainText('\n'.join(paths))
         
     def defaults(self):
-        self.lilypond.defaults()
-        for widget, name, default in self.commands:
-            widget.setText(default)
         self.setHyphenPaths(frescobaldi_app.hyphen.defaultPaths)
-        self.folder.setPath('')
-        self.lilydoc.setUrl(KUrl())
         
     def loadSettings(self):
-        self.lilypond.loadSettings()
-        conf = config("commands")
-        for widget, name, default in self.commands:
-            widget.setText(conf.readEntry(name, default))
         paths = config("hyphenation").readEntry("paths", frescobaldi_app.hyphen.defaultPaths)
         self.setHyphenPaths(paths)
-        self.lilydoc.setUrl(KUrl(
-            config("preferences").readEntry("lilypond documentation", "")))
 
     def saveSettings(self):
-        self.lilypond.saveSettings()
-        conf = config("commands")
-        for widget, name, default in self.commands:
-            if widget.text() or not default:
-                conf.writeEntry(name, widget.text())
         paths = [p for p in self.hyphenPaths.toPlainText().splitlines() if p]
         config("hyphenation").writeEntry("paths", paths)
         # reload the table of hyphenation dictionaries
         frescobaldi_app.hyphen.findDicts()
-        config("preferences").writeEntry("lilypond documentation",
-            self.lilydoc.url().url())
-        lilydoc = self.mainwin.tools.get('lilydoc')
-        if lilydoc:
-            lilydoc.newDocFinder()
 
 
-class RumorSettings(KVBox):
+class RumorSettings(SettingsPage):
     """
     Settings regarding commands of lilypond and associated programs
     """
     def __init__(self, dialog):
-        QWidget.__init__(self, dialog)
+        super(RumorSettings, self).__init__(dialog)
         item = dialog.addPage(self, i18n("Rumor MIDI input"))
         item.setHeader(i18n("Rumor MIDI input plugin settings"))
         item.setIcon(KIcon("media-record"))
         self.help = 'rumor'
         
-        layout = QGridLayout(QGroupBox(i18n(
-            "Commands used by the Rumor MIDI input module"), self))
-        row = 0
+        RumorCommands(self)
         
-        # Rumor related commands
+
+class RumorCommands(SettingsGroup):
+    def __init__(self, page):
+        super(RumorCommands, self).__init__(i18n(
+            "Commands used by the Rumor MIDI input module"), page)
+        
+        layout = QGridLayout(self)
+        
         self.commands = []
         for name, default, title, lineedit, tooltip in (
             ('rumor', 'rumor', "Rumor:", ExecLineEdit,
@@ -493,15 +519,14 @@ class RumorSettings(KVBox):
         ):
             label = QLabel(title)
             widget = lineedit()
-            widget.textEdited.connect(lambda: dialog.changed())
+            widget.textEdited.connect(page.changed)
             label.setBuddy(widget)
             label.setToolTip(tooltip)
             widget.setToolTip(tooltip)
+            row = layout.rowCount()
             layout.addWidget(label, row, 0)
             layout.addWidget(widget, row, 1)
             self.commands.append((widget, name, default))
-            row += 1
-        self.layout().addStretch(1)
         
     def defaults(self):
         for widget, name, default in self.commands:
@@ -543,13 +568,12 @@ class EditorComponent(SettingsPage):
             page.apply()
             
 
-class LilyPondInfoList(QGroupBox):
+class LilyPondInfoList(SettingsGroup):
     """
     Manages a list of LilyPondInfo instances.
     """
-    def __init__(self, parent=None):
-        QGroupBox.__init__(self, i18n("LilyPond versions to use:"), parent)
-        self.changed = Signal()
+    def __init__(self, page):
+        super(LilyPondInfoList, self).__init__(i18n("LilyPond versions to use:"), page)
         
         layout = QGridLayout(self)
         self.instances = QListWidget()
