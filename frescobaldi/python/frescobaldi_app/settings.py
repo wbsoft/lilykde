@@ -530,7 +530,6 @@ class HyphenationSettings(SettingsGroup):
         frescobaldi_app.hyphen.findDicts()
 
 
-
 class RumorCommands(SettingsGroup):
     def __init__(self, page):
         super(RumorCommands, self).__init__(i18n(
