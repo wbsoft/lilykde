@@ -4,6 +4,8 @@ Changes in 1.1.2 --
   - Segno bar line added (available in LilyPond 2.13.19 and higher)
   - Printing generated PDF files now uses a print dialog, instead of just
     sending the PDF to the 'lpr' command.
+  - It is now possible to configure the path that is used to find
+    files that are included via the LilyPond \include command.
 * Run LilyPond:
   - warn if the document contains a conflicting point and click setting
 * General:
@@ -12,6 +14,8 @@ Changes in 1.1.2 --
   - progress indicator saves the build time in document metainfo
 * Autocompletion:
   - only popup completions from the expansion manager on blank lines
+* Settings dialog:
+  - the settings have been organized in more logical groups
 * Installation:
   - building the icons from SVN or out-of-source requires LilyPond >= 2.13.19
 * Translations:
