@@ -42,49 +42,6 @@ Here you can set some general preferences to influence the behaviour of
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Let &lilypond; delete intermediate files</guilabel></term>
-<listitem>
-  <para>
-  If checked, &frescobaldi; will run &lilypond; with the
-  <option>delete-intermediate-files</option> option, so that e.g. PostScript
-  files are deleted after the PDF file has been generated.
-  </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Run &lilypond; with verbose output</guilabel></term>
-<listitem>
-  <para>
-  If checked, &frescobaldi; will run &lilypond; with the
-  <option>verbose</option> option, displaying more information during the
-  compile process.
-  </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Remember cursor position, bookmarks, etc.</guilabel></term>
-<listitem>
-  <para>
-  If checked, &frescobaldi; will save the cursor position, bookmarks and some
-  view settings for a document when it is closed. This meta-information is
-  retained for one month.
-  </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Disable the built-in PDF preview</guilabel></term>
-<listitem>
-  <para>
-  If checked, the built-in PDF preview will be disabled. This is useful if you
-  prefer an external PDF viewer (e.g. <productname>Okular</productname>).
-  </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>&lilypond; version number to use for new documents</guilabel></term>
 <listitem>
   <para>
@@ -153,6 +110,89 @@ Here you can set some general preferences to influence the behaviour of
   &lilypond; release is recommended.
   </para></note>
 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>When saving documents</guilabel></term>
+<listitem>
+  <variablelist>
+    <varlistentry>
+    <term><guilabel>Remember cursor position, bookmarks, etc.</guilabel></term>
+    <listitem>
+      <para>
+      If checked, &frescobaldi; will save the cursor position, bookmarks and some
+      view settings for a document when it is closed. This meta-information is
+      retained for one month.
+      </para>
+    </listitem>
+    </varlistentry>
+
+    <varlistentry>
+    <term><guilabel>Default folder</guilabel></term>
+    <listitem>
+      <para>
+      Here you can configure a default folder that is displayed when saving a new document
+      for the first time.
+      </para>
+    </listitem>
+    </varlistentry>
+  </variablelist>
+  
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Running &lilypond;</guilabel></term>
+<listitem>
+  <para>
+  Here you can adjust how &lilypond; is run.
+  </para>
+  
+  <variablelist>
+    <varlistentry>
+    <term><guilabel>Let &lilypond; delete intermediate files</guilabel></term>
+    <listitem>
+      <para>
+      If checked, &frescobaldi; will run &lilypond; with the
+      <option>delete-intermediate-files</option> option, so that e.g. PostScript
+      files are deleted after the PDF file has been generated.
+      </para>
+    </listitem>
+    </varlistentry>
+
+    <varlistentry>
+    <term><guilabel>Run &lilypond; with verbose output</guilabel></term>
+    <listitem>
+      <para>
+      If checked, &frescobaldi; will run &lilypond; with the
+      <option>verbose</option> option, displaying more information during the
+      compile process.
+      </para>
+    </listitem>
+    </varlistentry>
+
+    <varlistentry>
+    <term><guilabel>Disable the built-in PDF preview</guilabel></term>
+    <listitem>
+      <para>
+      If checked, the built-in PDF preview will be disabled. This is useful if you
+      prefer an external PDF viewer (e.g. <productname>Okular</productname>).
+      </para>
+    </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+    <term><guilabel>&lilypond; include path</guilabel></term>
+    <listitem>
+      <para>
+      Here you can enter a list of directories that are searched for files that
+      are included via the &lilypond; <userinput>\include</userinput> command.
+      </para>
+    </listitem>
+    </varlistentry>
+    
+  </variablelist>
 </listitem>
 </varlistentry>
 
@@ -228,8 +268,7 @@ The print command is usually <command>lpr</command>.
 </para>
 
 <para>
-You can also set a default directory for all your &lilypond; documents, and
-provide the URL or path to the documentation for the built-in
+You can also provide the URL or path to the documentation for the built-in
 <link linkend="lilydoc">&lilypond; documentation browser</link>.
 </para>
 
