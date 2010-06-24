@@ -29,8 +29,8 @@ from time import time
 from PyQt4.QtCore import QProcess, QRegExp, QTimeLine, Qt
 from PyQt4.QtGui import (
     QComboBox, QFileDialog, QGridLayout, QLabel, QLineEdit, QListWidget,
-    QPainter, QPixmap, QPushButton, QSlider, QSpinBox, QToolButton,
-    QRegExpValidator, QWidget)
+    QListWidgetItem, QPainter, QPixmap, QPushButton, QSlider, QSpinBox,
+    QToolButton, QRegExpValidator, QWidget)
 from PyKDE4.kdecore import i18n, KProcess
 from PyKDE4.kdeui import (
     KApplication, KDialog, KLineEdit, KPushButton, KStandardGuiItem, KVBox)
@@ -236,9 +236,9 @@ class ExecArgsLineEdit(ExecLineEdit):
             return ''
 
 
-class FilePathEdit(QWidget):
+class ListEdit(QWidget):
     """
-    A widget to edit a list of directories (e.g. a file path).
+    A widget to edit a list of items (e.g. a list of directories).
     """
     def __init__(self, *args, **kwargs):
         QWidget.__init__(self, *args, **kwargs)
@@ -246,83 +246,120 @@ class FilePathEdit(QWidget):
         layout = QGridLayout(self)
         self.setLayout(layout)
         
-        addButton = KPushButton(KStandardGuiItem.add())
-        editButton = KPushButton(KStandardGuiItem.configure())
-        removeButton = KPushButton(KStandardGuiItem.remove())
-        listBox = self.listBox = QListWidget()
-        listBox.setDragDropMode(QListWidget.InternalMove)
+        self.addButton = KPushButton(KStandardGuiItem.add())
+        self.editButton = KPushButton(KStandardGuiItem.configure())
+        self.removeButton = KPushButton(KStandardGuiItem.remove())
+        self.listBox = QListWidget()
         
         layout.setContentsMargins(1, 1, 1, 1)
         layout.setSpacing(0)
-        layout.addWidget(listBox, 0, 0, 3, 1)
-        layout.addWidget(addButton, 0, 1)
-        layout.addWidget(editButton, 1, 1)
-        layout.addWidget(removeButton, 2, 1)
+        layout.addWidget(self.listBox, 0, 0, 3, 1)
+        layout.addWidget(self.addButton, 0, 1)
+        layout.addWidget(self.editButton, 1, 1)
+        layout.addWidget(self.removeButton, 2, 1)
         
-        @addButton.clicked.connect
+        @self.addButton.clicked.connect
         def addClicked():
-            directory = self.getDirectory()
-            if directory:
-                self.listBox.addItem(directory)
-                self.changed()
+            item = self.createItem()
+            if self.openEditor(item):
+                self.addItem(item)
                 
-        @editButton.clicked.connect
+        @self.editButton.clicked.connect
         def editClicked():
             item = self.listBox.currentItem()
-            if item:
-                directory = self.getDirectory(item.text())
-                if directory:
-                    item.setText(directory)
-                    self.changed()
+            item and self.editItem(item)
         
-        @removeButton.clicked.connect
+        @self.removeButton.clicked.connect
         def removeClicked():
             item = self.listBox.currentItem()
             if item:
-                self.listBox.takeItem(self.listBox.currentRow())
-                self.changed()
+                self.removeItem(item)
         
-        @listBox.itemDoubleClicked.connect
+        @self.listBox.itemDoubleClicked.connect
         def itemDoubleClicked(item):
-            directory = self.getDirectory(item.text())
-            if directory:
-                item.setText(directory)
-                self.changed()
+            item and self.editItem(item)
             
-        listBox.model().layoutChanged.connect(self.changed)
-        
+        self.listBox.model().layoutChanged.connect(self.changed)
+    
         def updateSelection():
-            selected = bool(listBox.currentItem())
-            editButton.setEnabled(selected)
-            removeButton.setEnabled(selected)
+            selected = bool(self.listBox.currentItem())
+            self.editButton.setEnabled(selected)
+            self.removeButton.setEnabled(selected)
         self.changed.connect(updateSelection)
-        listBox.itemSelectionChanged.connect(updateSelection)
+        self.listBox.itemSelectionChanged.connect(updateSelection)
         updateSelection()
+    
+    def createItem(self):
+        return QListWidgetItem()
         
-    def setValue(self, directories):
-        """Sets the listbox to a list of paths."""
+    def addItem(self, item):
+        self.listBox.addItem(item)
+        self.changed()
+        
+    def removeItem(self, item):
+        self.listBox.takeItem(self.listBox.row(item))
+        self.changed()
+        
+    def editItem(self, item):
+        if self.openEditor(item):
+            self.changed()
+            
+    def setCurrentItem(self, item):
+        self.listBox.setCurrentItem(item)
+        
+    def openEditor(self, item):
+        """Opens an editor (dialog) for the item.
+        
+        Returns True if the dialog was accepted and the item edited.
+        Returns False if the dialog was cancelled (the item must be left
+        unedited).
+        """
+        pass
+    
+    def setValue(self, strings):
+        """Sets the listbox to a list of strings."""
         self.listBox.clear()
-        self.listBox.addItems(directories)
+        self.listBox.addItems(strings)
         self.changed()
         
     def value(self):
         """Returns the list of paths in the listbox."""
-        directories = []
-        for i in range(self.listBox.count()):
-            directories.append(self.listBox.item(i).text())
-        return directories
+        return [self.listBox.item(i).text()
+            for i in range(self.listBox.count())]
     
+    def setItems(self, items):
+        """Sets the listbox to a list of items."""
+        self.listBox.clear()
+        for item in items:
+            self.listBox.addItem(item)
+        self.changed()
+    
+    def items(self):
+        """Returns the list of items in the listbox."""
+        return [self.listBox.item(i)
+            for i in range(self.listBox.count())]
+        
     def clear(self):
         """Clears the listbox."""
         self.listBox.clear()
         self.changed()
         
-    def getDirectory(self, directory=None):
-        """Asks the user for an (existing) directory, returns it as a string.
+
+class FilePathEdit(ListEdit):
+    """
+    A widget to edit a list of directories (e.g. a file path).
+    """
+    def __init__(self, *args, **kwargs):
+        super(FilePathEdit, self).__init__(*args, **kwargs)
         
-        Returns an empty string if the user cancelled the dialog.
-        """
-        return QFileDialog.getExistingDirectory(self, None, directory)
+    def openEditor(self, item):
+        """Asks the user for an (existing) directory."""
+        directory = item.text()
+        directory = QFileDialog.getExistingDirectory(self, None, directory)
+        if directory:
+            item.setText(directory)
+            return True
+        return False
 
 
 class StackFader(QWidget):

@@ -36,7 +36,8 @@ from signals import Signal
 
 import ly.version
 from kateshell.app import cacheresult
-from frescobaldi_app.widgets import ExecLineEdit, ExecArgsLineEdit, FilePathEdit
+from frescobaldi_app.widgets import (
+    ExecLineEdit, ExecArgsLineEdit, FilePathEdit, ListEdit)
 
 # these modules provide their own default settings or update functions
 import frescobaldi_app.hyphen, frescobaldi_app.mainapp, frescobaldi_app.rumor
@@ -104,19 +105,20 @@ class SettingsDialog(KPageDialog):
 class SettingsBase(object):
     """ Base class for a unit that contains settings. """
     def defaults(self):
-        """ Implement in subclass """
+        """ Implement in subclass: reset settings to default. """
         pass
     
     def loadSettings(self):
-        """ Implement in subclass """
+        """ Implement in subclass: load settings from configfile. """
         pass
     
     def saveSettings(self):
-        """ Implement in subclass """
+        """ Implement in subclass: write settings to configfile. """
         pass
     
     
 class SettingsPage(QWidget, SettingsBase):
+    """ Base class for a page with settings, possibly in SettingsGroups"""
     def __init__(self, dialog):
         QWidget.__init__(self, dialog)
         self.dialog = dialog
@@ -180,6 +182,9 @@ class CheckGroup(SettingsGroup):
     
         
 class GeneralPreferences(SettingsPage):
+    """
+    General preferences.
+    """
     def __init__(self, dialog):
         super(GeneralPreferences, self).__init__(dialog)
         item = dialog.addPage(self, i18n("General Preferences"))
@@ -192,6 +197,64 @@ class GeneralPreferences(SettingsPage):
         Warnings(self)
         
         
+class Commands(SettingsPage):
+    """
+    Settings regarding commands of lilypond and associated programs.
+    """
+    def __init__(self, dialog):
+        super(Commands, self).__init__(dialog)
+        item = dialog.addPage(self, i18n("Paths"))
+        item.setHeader(i18n("Paths to programs or data used by Frescobaldi"))
+        item.setIcon(KIcon("utilities-terminal"))
+        self.help = 'settings-paths'
+        
+        LilyPondVersions(self)
+        HelperApps(self)
+        LilyDocBrowser(self)
+        HyphenationSettings(self)
+
+
+class RumorSettings(SettingsPage):
+    """
+    Settings regarding rumor and associated programs.
+    """
+    def __init__(self, dialog):
+        super(RumorSettings, self).__init__(dialog)
+        item = dialog.addPage(self, i18n("Rumor MIDI input"))
+        item.setHeader(i18n("Rumor MIDI input plugin settings"))
+        item.setIcon(KIcon("media-record"))
+        self.help = 'rumor'
+        
+        RumorCommands(self)
+        
+
+class EditorComponent(SettingsPage):
+    """
+    Settings from the KatePart editing component.
+    """
+    def __init__(self, dialog):
+        super(EditorComponent, self).__init__(dialog)
+        editorItem = dialog.addPage(self, i18n("Editor Component"))
+        editorItem.setHeader(i18n("Editor Component Options"))
+        editorItem.setIcon(KIcon("accessories-text-editor"))
+        self.help = 'settings-editor-component'
+        self.editorPages = []
+        editor = dialog.mainwin.app.editor
+        # Get the KTextEditor config pages.
+        for i in range(editor.configPages()):
+            cPage = editor.configPage(i, self)
+            cPage.changed.connect(self.changed)
+            self.editorPages.append(cPage)
+            item = dialog.addSubPage(editorItem, cPage, editor.configPageName(i))
+            item.setHeader(editor.configPageFullName(i))
+            item.setIcon(editor.configPageIcon(i))
+            cPage.help = 'settings-editor-component'
+
+    def saveSettings(self):
+        for page in self.editorPages:
+            page.apply()
+            
+
 class RunningLilyPond(CheckGroup):
     
     configGroup = "preferences"
@@ -354,23 +417,6 @@ class Warnings(CheckGroup):
                 "save_on_run", True))
 
 
-class Commands(SettingsPage):
-    """
-    Settings regarding commands of lilypond and associated programs
-    """
-    def __init__(self, dialog):
-        super(Commands, self).__init__(dialog)
-        item = dialog.addPage(self, i18n("Paths"))
-        item.setHeader(i18n("Paths to programs or data used by Frescobaldi"))
-        item.setIcon(KIcon("utilities-terminal"))
-        self.help = 'settings-paths'
-        
-        LilyPondInfoList(self)
-        HelperApps(self)
-        LilyDocBrowser(self)
-        HyphenationSettings(self)
-
-
 class HelperApps(SettingsGroup):
     def __init__(self, page):
         super(HelperApps, self).__init__(i18n("Helper applications"), page)
@@ -443,7 +489,7 @@ class LilyDocBrowser(SettingsGroup):
     def saveSettings(self):
         config("preferences").writeEntry(
             "lilypond documentation", self.lilydoc.url().url())
-        lilydoc = self.dialog.mainwin.tools.get('lilydoc')
+        lilydoc = self.page.dialog.mainwin.tools.get('lilydoc')
         if lilydoc:
             lilydoc.newDocFinder()
 
@@ -484,19 +530,6 @@ class HyphenationSettings(SettingsGroup):
         frescobaldi_app.hyphen.findDicts()
 
 
-class RumorSettings(SettingsPage):
-    """
-    Settings regarding commands of lilypond and associated programs
-    """
-    def __init__(self, dialog):
-        super(RumorSettings, self).__init__(dialog)
-        item = dialog.addPage(self, i18n("Rumor MIDI input"))
-        item.setHeader(i18n("Rumor MIDI input plugin settings"))
-        item.setIcon(KIcon("media-record"))
-        self.help = 'rumor'
-        
-        RumorCommands(self)
-        
 
 class RumorCommands(SettingsGroup):
     def __init__(self, page):
@@ -544,105 +577,24 @@ class RumorCommands(SettingsGroup):
                 conf.writeEntry(name, widget.text())
 
 
-class EditorComponent(SettingsPage):
-    def __init__(self, dialog):
-        super(EditorComponent, self).__init__(dialog)
-        editorItem = dialog.addPage(self, i18n("Editor Component"))
-        editorItem.setHeader(i18n("Editor Component Options"))
-        editorItem.setIcon(KIcon("accessories-text-editor"))
-        self.help = 'settings-editor-component'
-        self.editorPages = []
-        editor = dialog.mainwin.app.editor
-        # Get the KTextEditor config pages.
-        for i in range(editor.configPages()):
-            cPage = editor.configPage(i, self)
-            cPage.changed.connect(self.changed)
-            self.editorPages.append(cPage)
-            item = dialog.addSubPage(editorItem, cPage, editor.configPageName(i))
-            item.setHeader(editor.configPageFullName(i))
-            item.setIcon(editor.configPageIcon(i))
-            cPage.help = 'settings-editor-component'
-
-    def saveSettings(self):
-        for page in self.editorPages:
-            page.apply()
-            
-
-class LilyPondInfoList(SettingsGroup):
-    """
-    Manages a list of LilyPondInfo instances.
-    """
+class LilyPondVersions(SettingsGroup):
+    """Manage multiple versions of LilyPond."""
     def __init__(self, page):
-        super(LilyPondInfoList, self).__init__(i18n("LilyPond versions to use:"), page)
+        super(LilyPondVersions, self).__init__(i18n("LilyPond versions to use:"), page)
+        layout = QVBoxLayout(self)
         
-        layout = QGridLayout(self)
-        self.instances = QListWidget()
-        
-        addButton = KPushButton(KStandardGuiItem.add())
-        editButton = KPushButton(KStandardGuiItem.configure())
-        removeButton = KPushButton(KStandardGuiItem.remove())
-        
+        self.instances = LilyPondInfoList(self)
+        layout.addWidget(self.instances)
         self.auto = QCheckBox(i18n(
             "Enable automatic version selection "
             "(choose LilyPond version from document)"),
-            clicked=lambda: self.changed())
+            clicked=page.changed)
+        layout.addWidget(self.auto)
         
-        layout.addWidget(self.instances, 0, 0, 3, 1)
-        layout.addWidget(addButton, 0, 1)
-        layout.addWidget(editButton, 1, 1)
-        layout.addWidget(removeButton, 2, 1)
-        layout.addWidget(self.auto, 3, 0, 1, 2)
-        
-        addButton.clicked.connect(self.addClicked)
-        editButton.clicked.connect(self.editClicked)
-        removeButton.clicked.connect(self.removeClicked)
-        self.instances.itemDoubleClicked.connect(self.itemDoubleClicked)
-        
-    @cacheresult
-    def lilyPondInfoDialog(self):
-        return LilyPondInfoDialog(self)
-        
-    def addClicked(self):
-        """ Called when the user clicks Add. """
-        dlg = self.lilyPondInfoDialog()
-        dlg.loadInfo(LilyPondInfo())
-        if dlg.exec_():
-            info = LilyPondInfoItem()
-            self.instances.addItem(info)
-            self.instances.setCurrentItem(info)
-            dlg.saveInfo(info)
-            self.changed()
-
-    def editClicked(self):
-        """ Called when the user clicks Edit. """
-        info = self.instances.currentItem()
-        if info:
-            dlg = self.lilyPondInfoDialog()
-            dlg.loadInfo(info)
-            if dlg.exec_():
-                dlg.saveInfo(info)
-                self.changed()
-            
-    def removeClicked(self, item):
-        """ Called when the user clicks Remove. """
-        self.instances.takeItem(self.instances.currentRow())
-        self.changed()
-    
-    def itemDoubleClicked(self, item):
-        """ Called when the user doubleclicks an item. """
-        if item:
-            self.instances.setCurrentItem(item)
-            self.editClicked()
-            
-    def items(self):
-        """ Iterator over the items in the list. """
-        for c in range(self.instances.count()):
-            yield self.instances.item(c)
-            
     def defaults(self):
         """ Reset ourselves to default state. """
         self.instances.clear()
-        info = LilyPondInfoItem()
+        info = self.instances.createItem()
         self.instances.addItem(info)
         self.instances.setCurrentItem(info)
         self.auto.setChecked(False)
@@ -669,7 +621,7 @@ class LilyPondInfoList(SettingsGroup):
         default = ""
         conf = config("lilypond")
         conf.deleteGroup()
-        for info in self.items():
+        for info in self.instances.items():
             paths.append(info.lilypond)
             if info.default:
                 default = info.lilypond
@@ -682,6 +634,26 @@ class LilyPondInfoList(SettingsGroup):
         conf.writeEntry("default", default)
         conf.writeEntry("automatic version", self.auto.isChecked())
 
+
+class LilyPondInfoList(ListEdit):
+    """
+    Manages a list of LilyPondInfo instances.
+    """
+    @cacheresult
+    def lilyPondInfoDialog(self):
+        return LilyPondInfoDialog(self)
+        
+    def createItem(self):
+        return LilyPondInfoItem()
+    
+    def openEditor(self, item):
+        dlg = self.lilyPondInfoDialog()
+        dlg.loadInfo(item)
+        if dlg.exec_():
+            dlg.saveInfo(item)
+            return True
+        return False
+        
 
 class LilyPondInfo(object):
     """
@@ -814,8 +786,7 @@ class LilyPondInfoDialog(KDialog):
         info.default = self.default.isChecked()
         info.auto = self.auto.isChecked()
         info.changed()
-        
-        
+
 
 def config(group):
     return KGlobal.config().group(group)
