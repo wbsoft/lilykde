@@ -29,7 +29,7 @@ from PyQt4.QtGui import (
     QListWidgetItem, QRadioButton, QTextEdit, QTreeView, QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
-    KIcon, KDialog, KPageDialog, KPushButton, KStandardGuiItem, KVBox)
+    KDialog, KHBox, KIcon, KPageDialog, KPushButton, KStandardGuiItem, KVBox)
 from PyKDE4.kio import KFile, KUrlRequester
 
 from signals import Signal
@@ -105,68 +105,202 @@ class SettingsDialog(KPageDialog):
             self.setHelp("settings-dialog")
         
 
-class EditorComponent(object):
+class SettingsPage(QWidget):
     def __init__(self, dialog):
-        editorItem = dialog.addPage(QWidget(), i18n("Editor Component"))
-        editorItem.setHeader(i18n("Editor Component Options"))
-        editorItem.setIcon(KIcon("accessories-text-editor"))
-        self.editorPages = []
-        editor = dialog.mainwin.app.editor
-        # Get the KTextEditor config pages.
-        for i in range(editor.configPages()):
-            cPage = editor.configPage(i, dialog)
-            cPage.changed.connect(dialog.changed)
-            self.editorPages.append(cPage)
-            item = dialog.addSubPage(editorItem, cPage, editor.configPageName(i))
-            item.setHeader(editor.configPageFullName(i))
-            item.setIcon(editor.configPageIcon(i))
-            cPage.help = 'settings-editor-component'
-
+        QWidget.__init__(self, dialog)
+        self.dialog = dialog
+        self.setLayout(QVBoxLayout())
+        self.groups = []
+        self.changed = Signal()
+        self.changed.connect(lambda: dialog.changed())
+        
     def defaults(self):
-        pass # not available
-        
+        for group in self.groups:
+            group.defaults()
+    
     def loadSettings(self):
-        pass # not necessary
-        
-    def saveSettings(self):
-        for page in self.editorPages:
-            page.apply()
+        for group in self.groups:
+            group.loadSettings()
             
+    def saveSettings(self):
+        for group in self.groups:
+            group.saveSettings()
+    
 
-class GeneralPreferences(KVBox):
+class SettingsGroup(QGroupBox):
+    """ Base class for a group box with settings """
+    def __init__(self, title, page):
+        """ page is a SettingsPage """
+        QGroupBox.__init__(self, title, page)
+        page.layout().addWidget(self)
+        page.layout().addStretch(1)
+        page.groups.append(self)
+        self.changed = page.changed # quick connect :-)
+        self.page = page
+        
+    def defaults(self):
+        """ Implement in subclass """
+        pass
+    
+    def loadSettings(self):
+        """ Implement in subclass """
+        pass
+    
+    def saveSettings(self):
+        """ Implement in subclass """
+        pass
+    
+
+class CheckGroup(SettingsGroup):
+    """ Base class for a group box with check boxes. """
+    
+    configGroup = None  # must define a name in subclass
+    
+    def __init__(self, title, page):
+        super(CheckGroup, self).__init__(title, page)
+        self.checks = []
+        
+    def addCheckBox(self, title, name, default):
+        b = QCheckBox(title, self, clicked=self.changed)
+        self.checks.append((b, name, default))
+        return b
+            
+    def defaults(self):
+        for widget, name, default in self.checks:
+            widget.setChecked(default)
+            
+    def loadSettings(self):
+        conf = config(self.configGroup)
+        for widget, name, default in self.checks:
+            widget.setChecked(conf.readEntry(name, default))
+
+    def saveSettings(self):
+        conf = config(self.configGroup)
+        for widget, name, default in self.checks:
+            conf.writeEntry(name, widget.isChecked())
+    
+        
+class GeneralPreferences(SettingsPage):
     def __init__(self, dialog):
-        KVBox.__init__(self, dialog)
-        self.mainwin = dialog.mainwin
+        super(GeneralPreferences, self).__init__(dialog)
         item = dialog.addPage(self, i18n("General Preferences"))
         item.setHeader(i18n("General Frescobaldi Preferences"))
         item.setIcon(KIcon("configure"))
         
-        self.checks = []
-        for title, name, default in (
-            (i18n("Let LilyPond delete intermediate output files"),
-                "delete intermediate files", True),
-            (i18n("Run LilyPond with verbose output"),
-                "verbose lilypond output", False),
-            (i18n("Remember cursor position, bookmarks, etc."),
-                "save metainfo", False),
-            (i18n("Disable the built-in PDF preview"),
-                "disable pdf preview", False),
-        ):
-            b = QCheckBox(title, self, clicked=lambda: dialog.changed())
-            self.checks.append((b, name, default))
+        LilyPondDocumentVersion(self)
+        SavingDocument(self)
+        RunningLilyPond(self)
+        Warnings(self)
+        
+        
+class RunningLilyPond(CheckGroup):
+    
+    configGroup = "preferences"
+    
+    def __init__(self, page):
+        super(RunningLilyPond, self).__init__(i18n("Running LilyPond"), page)
+        layout = QVBoxLayout(self)
+        layout.setSpacing(0)
+        
+        layout.addWidget(
+            self.addCheckBox(i18n("Let LilyPond delete intermediate output files"),
+                "delete intermediate files", True))
+        layout.addWidget(
+            self.addCheckBox(i18n("Run LilyPond with verbose output"),
+                "verbose lilypond output", False))
+
+        layout.addWidget(
+            self.addCheckBox(i18n("Disable the built-in PDF preview"),
+                "disable pdf preview", False))
+        
+        h = KHBox()
+        QLabel(i18n("LilyPond include path:"), h)
+        self.includePath = FilePathEdit(h)
+        self.includePath.changed.connect(page.changed)
+        layout.addWidget(h)
+
+    def defaults(self):
+        super(RunningLilyPond, self).defaults()
+        self.includePath.clear()
+        
+    def loadSettings(self):
+        super(RunningLilyPond, self).loadSettings()
+        self.includePath.setValue(
+            config("preferences").readPathEntry("lilypond include path", []))
+
+    def saveSettings(self):
+        super(RunningLilyPond, self).saveSettings()
+        conf = config("preferences")
+        conf.writePathEntry("lilypond include path",
+            self.includePath.value())
+        # disable or enable the builtin PDF preview
+        mainwin = self.page.dialog.mainwin
+        disable = conf.readEntry("disable pdf preview", False)
+        running = "pdf" in mainwin.tools
+        if disable and running:
+            mainwin.tools["pdf"].delete()
+        elif not disable and not running:
+            tool = frescobaldi_app.mainapp.PDFTool(mainwin)
+            tool.sync(mainwin.currentDocument())
+
+
+class SavingDocument(CheckGroup):
+    
+    configGroup = "preferences"
+
+    def __init__(self, page):
+        super(SavingDocument, self).__init__(i18n("When saving documents"), page)
+        layout = QVBoxLayout(self)
+        layout.setSpacing(0)
+        
+        layout.addWidget(
+            self.addCheckBox(i18n("Remember cursor position, bookmarks, etc."),
+                "save metainfo", False))
+
+        # default directory
+        h = KHBox()
+        l = QLabel(i18n("Default directory:"), h)
+        self.folder = KUrlRequester(h)
+        l.setBuddy(self.folder)
+        tooltip = i18n("The default folder for your LilyPond documents (optional).")
+        l.setToolTip(tooltip)
+        self.folder.setToolTip(tooltip)
+        layout.addWidget(h)
+        self.folder.setMode(KFile.Mode(
+            KFile.Directory | KFile.ExistingOnly | KFile.LocalOnly))
+        self.folder.button().setIcon(KIcon("document-open-folder"))
+        self.folder.textChanged.connect(page.changed)
+
+    def defaults(self):
+        super(SavingDocument, self).defaults()
+        
+    def loadSettings(self):
+        super(SavingDocument, self).loadSettings()
+        self.folder.setPath(
+            config("preferences").readPathEntry("default directory", ""))
+        
+    def saveSettings(self):
+        super(SavingDocument, self).saveSettings()
+        config("preferences").writePathEntry("default directory",
+            self.folder.url().path())
+        
+
+class LilyPondDocumentVersion(SettingsGroup):
+    
+    def __init__(self, page):
+        super(LilyPondDocumentVersion, self).__init__(i18n(
+            "LilyPond version number to use for new documents"), page)
             
-        self.layout().addSpacing(20)
+        grid = QGridLayout(self)
+        grid.setSpacing(0)
         
         self.versionOptions = {}
-        self.customVersion = QLineEdit(textChanged=lambda: dialog.changed())
+        self.customVersion = QLineEdit(textChanged=page.changed)
             
         def changed(dummy):
-            dialog.changed()
+            page.changed()
             self.customVersion.setEnabled(self.versionOptions["custom"].isChecked())
             
-        grid = QGridLayout(QGroupBox(i18n(
-            "LilyPond version number to use for new documents"), self))
-        grid.setSpacing(0) # match the KVBox spacing
         for title, name in (
             (i18n("Use version number of installed LilyPond"), "lilypond"),
             (i18n("Use version number of last convert-ly rule"), "convert-ly"),
@@ -182,67 +316,43 @@ class GeneralPreferences(KVBox):
         grid.addWidget(self.versionOptions["convert-ly"], 1, 0, 1, 2)
         grid.addWidget(self.versionOptions["custom"], 2, 0, 1, 1)
         grid.addWidget(self.customVersion, 2, 1, 1, 1)
-        
-        self.notifications = []
-        l = QVBoxLayout(QGroupBox(i18n("Warnings and Notifications"), self))
-        l.setSpacing(0)
-        for title, name in (
-            (i18n("Warn when a document contains a conflicting point and click setting"), "point_and_click"),
-            (i18n("Warn when a document needs to be saved before LilyPond is run"), "save_on_run"),
-        ):
-            b = QCheckBox(title, self, clicked=lambda: dialog.changed())
-            l.addWidget(b)
-            self.notifications.append((b, name))
-        
-        self.layout().addStretch(2)
 
     def defaults(self):
-        for widget, name, default in self.checks:
-            widget.setChecked(default)
-        # lily version:
         self.customVersion.clear()
         self.versionOptions["lilypond"].setChecked(True)
-        # notifications:
-        for widget, name in self.notifications:
-            widget.setChecked(True)
             
     def loadSettings(self):
         conf = config("preferences")
-        for widget, name, default in self.checks:
-            widget.setChecked(conf.readEntry(name, default))
-        # lily version:
         self.customVersion.setText(conf.readEntry("custom version", ""))
         name = conf.readEntry("default version", "")
         if name not in self.versionOptions:
             name = "lilypond"
         self.versionOptions[name].setChecked(True)
-        # notifications:
-        conf = config("Notification Messages")
-        for widget, name in self.notifications:
-            widget.setChecked(conf.readEntry(name, True))
 
     def saveSettings(self):
         conf = config("preferences")
-        for widget, name, default in self.checks:
-            conf.writeEntry(name, widget.isChecked())
-        # disable or enable the builtin PDF preview
-        disable = conf.readEntry("disable pdf preview", False)
-        running = "pdf" in self.mainwin.tools
-        if disable and running:
-            self.mainwin.tools["pdf"].delete()
-        elif not disable and not running:
-            tool = frescobaldi_app.mainapp.PDFTool(self.mainwin)
-            tool.sync(self.mainwin.currentDocument())
-        # lily version:
         conf.writeEntry("custom version", self.customVersion.text())
         for name, widget in self.versionOptions.items():
             if widget.isChecked():
                 conf.writeEntry("default version", name)
                 break
-        # notifications:
-        conf = config("Notification Messages")
-        for widget, name in self.notifications:
-            conf.writeEntry(name, widget.isChecked())
+
+
+class Warnings(CheckGroup):
+    
+    configGroup = "Notification Messages"
+    
+    def __init__(self, page):
+        super(Warnings, self).__init__(i18n("Warnings and Notifications"), page)
+        layout = QVBoxLayout(self)
+        layout.setSpacing(0)
+        
+        layout.addWidget(
+            self.addCheckBox(i18n("Warn when a document contains a conflicting point and click setting"),
+                "point_and_click", True))
+        layout.addWidget(
+            self.addCheckBox(i18n("Warn when a document needs to be saved before LilyPond is run"),
+                "save_on_run", True))
 
 
 class Commands(QWidget):
@@ -285,30 +395,6 @@ class Commands(QWidget):
             layout.addWidget(widget, row, 1)
             self.commands.append((widget, name, default))
         
-        # LilyPond include path
-        l = QLabel(i18n("LilyPond include path:"))
-        self.includePath = FilePathEdit(self)
-        self.includePath.changed.connect(lambda: dialog.changed())
-        row = layout.rowCount()
-        layout.addWidget(l, row, 0)
-        layout.addWidget(self.includePath, row, 1)
-        
-        # default directory
-        l = QLabel(i18n("Default directory:"))
-        self.folder = KUrlRequester()
-        l.setBuddy(self.folder)
-        row = layout.rowCount()
-        tooltip = i18n(
-            "The default folder for your LilyPond documents (optional).")
-        l.setToolTip(tooltip)
-        self.folder.setToolTip(tooltip)
-        layout.addWidget(l, row, 0)
-        layout.addWidget(self.folder, row, 1)
-        self.folder.setMode(KFile.Mode(
-            KFile.Directory | KFile.ExistingOnly | KFile.LocalOnly))
-        self.folder.button().setIcon(KIcon("document-open-folder"))
-        self.folder.textChanged.connect(lambda dummy: dialog.changed())
-        
         # LilyPond documentation URL
         l = QLabel(i18n("LilyPond documentation:"))
         self.lilydoc = KUrlRequester()
@@ -347,7 +433,6 @@ class Commands(QWidget):
         self.lilypond.defaults()
         for widget, name, default in self.commands:
             widget.setText(default)
-        self.includePath.clear()
         self.setHyphenPaths(frescobaldi_app.hyphen.defaultPaths)
         self.folder.setPath('')
         self.lilydoc.setUrl(KUrl())
@@ -359,10 +444,6 @@ class Commands(QWidget):
             widget.setText(conf.readEntry(name, default))
         paths = config("hyphenation").readEntry("paths", frescobaldi_app.hyphen.defaultPaths)
         self.setHyphenPaths(paths)
-        self.includePath.setValue(
-            config("preferences").readPathEntry("lilypond include path", []))
-        self.folder.setPath(
-            config("preferences").readPathEntry("default directory", ""))
         self.lilydoc.setUrl(KUrl(
             config("preferences").readEntry("lilypond documentation", "")))
 
@@ -376,10 +457,6 @@ class Commands(QWidget):
         config("hyphenation").writeEntry("paths", paths)
         # reload the table of hyphenation dictionaries
         frescobaldi_app.hyphen.findDicts()
-        config("preferences").writePathEntry("lilypond include path",
-            self.includePath.value())
-        config("preferences").writePathEntry("default directory",
-            self.folder.url().path())
         config("preferences").writeEntry("lilypond documentation",
             self.lilydoc.url().url())
         lilydoc = self.mainwin.tools.get('lilydoc')
@@ -442,6 +519,34 @@ class RumorSettings(KVBox):
             if widget.text():
                 conf.writeEntry(name, widget.text())
 
+
+class EditorComponent(object):
+    def __init__(self, dialog):
+        editorItem = dialog.addPage(QWidget(), i18n("Editor Component"))
+        editorItem.setHeader(i18n("Editor Component Options"))
+        editorItem.setIcon(KIcon("accessories-text-editor"))
+        self.editorPages = []
+        editor = dialog.mainwin.app.editor
+        # Get the KTextEditor config pages.
+        for i in range(editor.configPages()):
+            cPage = editor.configPage(i, dialog)
+            cPage.changed.connect(dialog.changed)
+            self.editorPages.append(cPage)
+            item = dialog.addSubPage(editorItem, cPage, editor.configPageName(i))
+            item.setHeader(editor.configPageFullName(i))
+            item.setIcon(editor.configPageIcon(i))
+            cPage.help = 'settings-editor-component'
+
+    def defaults(self):
+        pass # not available
+        
+    def loadSettings(self):
+        pass # not necessary
+        
+    def saveSettings(self):
+        for page in self.editorPages:
+            page.apply()
+            
 
 class LilyPondInfoList(QGroupBox):
     """
