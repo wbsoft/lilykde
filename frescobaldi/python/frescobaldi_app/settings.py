@@ -96,6 +96,7 @@ class SettingsDialog(KPageDialog):
     def saveSettings(self):
         for page in self.pages:
             page.saveSettings()
+            page.applySettings()
         self.changed(False)
             
     def slotCurrentPageChanged(self, current, before):
@@ -114,6 +115,11 @@ class SettingsBase(object):
     
     def saveSettings(self):
         """ Implement in subclass: write settings to configfile. """
+        pass
+    
+    def applySettings(self):
+        """ Implement in subclass: do something after the new settings have been
+        saved. """
         pass
     
     
@@ -139,6 +145,10 @@ class SettingsPage(QWidget, SettingsBase):
         for group in self.groups:
             group.saveSettings()
     
+    def applySettings(self):
+        for group in self.groups:
+            group.applySettings()
+
 
 class SettingsGroup(QGroupBox, SettingsBase):
     """ Base class for a group box with settings """
@@ -238,6 +248,9 @@ class EditorComponent(SettingsPage):
         editorItem.setHeader(i18n("Editor Component Options"))
         editorItem.setIcon(KIcon("accessories-text-editor"))
         self.help = 'settings-editor-component'
+        
+        TabBarSettings(self)
+        
         self.editorPages = []
         editor = dialog.mainwin.app.editor
         # Get the KTextEditor config pages.
@@ -251,6 +264,7 @@ class EditorComponent(SettingsPage):
             cPage.help = 'settings-editor-component'
 
     def saveSettings(self):
+        super(EditorComponent, self).saveSettings()
         for page in self.editorPages:
             page.apply()
             
@@ -295,9 +309,11 @@ class RunningLilyPond(CheckGroup):
         conf = config("preferences")
         conf.writePathEntry("lilypond include path",
             self.includePath.value())
+    
+    def applySettings(self):
         # disable or enable the builtin PDF preview
         mainwin = self.page.dialog.mainwin
-        disable = conf.readEntry("disable pdf preview", False)
+        disable = config("preferences").readEntry("disable pdf preview", False)
         running = "pdf" in mainwin.tools
         if disable and running:
             mainwin.tools["pdf"].delete()
@@ -489,6 +505,8 @@ class LilyDocBrowser(SettingsGroup):
     def saveSettings(self):
         config("preferences").writeEntry(
             "lilypond documentation", self.lilydoc.url().url())
+    
+    def applySettings(self):
         lilydoc = self.page.dialog.mainwin.tools.get('lilydoc')
         if lilydoc:
             lilydoc.newDocFinder()
@@ -526,6 +544,8 @@ class HyphenationSettings(SettingsGroup):
     def saveSettings(self):
         paths = [p for p in self.hyphenPaths.toPlainText().splitlines() if p]
         config("hyphenation").writeEntry("paths", paths)
+        
+    def applySettings(self):
         # reload the table of hyphenation dictionaries
         frescobaldi_app.hyphen.findDicts()
 
@@ -632,6 +652,26 @@ class LilyPondVersions(SettingsGroup):
         conf.writeEntry("paths", paths)
         conf.writeEntry("default", default)
         conf.writeEntry("automatic version", self.auto.isChecked())
+
+
+class TabBarSettings(CheckGroup):
+    """
+    Settings for the document tab bar provided by kateshell.
+    """
+    configGroup = "tab bar"
+    
+    def __init__(self, page):
+        super(TabBarSettings, self).__init__(i18n("Document Tabs"), page)
+        layout = QVBoxLayout(self)
+        layout.setSpacing(0)
+        
+        layout.addWidget(
+            self.addCheckBox(i18n("Close Button"), "close button", True))
+        layout.addWidget(
+            self.addCheckBox(i18n("Large Tabs"), "expanding", False))
+    
+    def applySettings(self):
+        self.page.dialog.mainwin.viewTabs.readSettings()
 
 
 class LilyPondInfoList(ListEdit):

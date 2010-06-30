@@ -487,6 +487,29 @@ class ViewTabBar(QTabBar):
         mainwin.app.documentMaterialized.connect(self.setDocumentStatus)
         self.currentChanged.connect(self.slotCurrentChanged)
         mainwin.currentDocumentChanged.connect(self.setCurrentDocument)
+        try:
+            self.setTabsClosable
+            self.tabCloseRequested.connect(self.slotTabCloseRequested)
+        except AttributeError:
+            pass
+        self.readSettings()
+        
+    def readSettings(self):
+        # closeable? only in Qt >= 4.6
+        try:
+            self.setTabsClosable
+        except AttributeError:
+            pass
+        else:
+            self.setTabsClosable(config("tab bar").readEntry("close button", True))
+        
+        # expanding? only in Qt >= 4.5
+        try:
+            self.setExpanding
+        except AttributeError:
+            pass
+        else:
+            self.setExpanding(config("tab bar").readEntry("expanding", False))
         
     def addDocument(self, doc):
         if doc not in self.docs:
@@ -523,15 +546,18 @@ class ViewTabBar(QTabBar):
     def slotCurrentChanged(self, index):
         """ Called when the user clicks a tab. """
         self.docs[index].setActive()
+    
+    def slotTabCloseRequested(self, index):
+        """ Called when the user clicks the close button. """
+        self.docs[index].close()
         
     def contextMenuEvent(self, ev):
         """ Called when the right mouse button is clicked on the tab bar. """
         tab = self.tabAt(ev.pos())
-        if tab == -1:
-            return
-        menu = KMenu()
-        self.addMenuActions(menu, self.docs[tab])
-        menu.exec_(ev.globalPos())
+        if tab >= 0:
+            menu = KMenu()
+            self.addMenuActions(menu, self.docs[tab])
+            menu.exec_(ev.globalPos())
 
     def addMenuActions(self, menu, doc):
         """
@@ -547,7 +573,7 @@ class ViewTabBar(QTabBar):
         g = KStandardGuiItem.close()
         a = menu.addAction(g.icon(), g.text())
         a.triggered.connect(lambda: doc.close())
-        
+
 
 class TabBar(KMultiTabBar):
     """

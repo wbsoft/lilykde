@@ -299,11 +299,11 @@ a terminal and use a command like this to get a list of paths that you can simpl
 text entry to have &frescobaldi; find all installed pattern files:
 </para>
 
-<programlisting>locate '*hyph_*.dic' | sed s,/[^/]*$,, | sort -u</programlisting>
+<programlisting>locate '*/hyph_*.dic' | sed s,/[^/]*$,, | sort -u</programlisting>
 
 <para>or:</para>
 
-<programlisting>locate '*hyph_*.dic' | xargs -n1 dirname | sort -u</programlisting>
+<programlisting>locate '*/hyph_*.dic' | xargs -n1 dirname | sort -u</programlisting>
 
 </sect3>
 </sect2>

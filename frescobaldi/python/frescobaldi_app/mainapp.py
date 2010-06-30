@@ -795,7 +795,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         if d.url().protocol() == "file" and d.isModified() and not (
             KMessageBox.warningContinueCancel(self, i18n(
                 "Your document has been modified and needs to be saved before "
-                "LilyPond can be started."), None,
+                "LilyPond can be started.\n\n"
+                "Save the document now?"), None,
                 KStandardGuiItem.save(), KStandardGuiItem.cancel(),
                 "save_on_run") == KMessageBox.Continue and d.save()):
             return # cancelled save of local file
