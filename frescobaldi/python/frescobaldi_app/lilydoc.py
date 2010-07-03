@@ -543,8 +543,9 @@ class HtmlLoader(object):
     Tries to load an url using KIO and follows HTTP and HTML redirects.
     Sends the done(self) Python signal if done.
     """
+    done = Signal()
+    
     def __init__(self, url):
-        self.done = Signal()
         self._html = None
         self.startJob(url)
     
@@ -595,9 +596,10 @@ class HtmlMultiLoader(object):
     Loads the first URL of a list that succeeds.
     Calls done() when done with the correct Loader or with None.
     """
+    done = Signal()
+    
     def __init__(self, urls):
         self._urls = urls
-        self.done = Signal()
         self.loadNext()
         
     def loadNext(self):
@@ -626,9 +628,10 @@ class Index(object):
     
     urls = []
     
+    loadFinished = Signal()
+    
     def __init__(self, loader, tool):
         self.loaded = None
-        self.loadFinished = Signal()
         self._loader = loader
         self.tool = tool
         loader.done.connect(self._initialLoaderDone)

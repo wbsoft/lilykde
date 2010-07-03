@@ -23,7 +23,8 @@ A simple signal/slot implementation.
 
 import inspect, weakref
 
-class Signal:
+
+class SignalInstance(object):
     """
     A simple implementation of the Signal/Slot pattern.
     
@@ -38,14 +39,10 @@ class Signal:
     
     Emit the signal (to call all connected slots) by simply invoking it.
     The order in which the slots are called is undetermined.
-    
-    If you create the signal instance with fireonce=True, it will clear
-    all connections after being invoked.
     """
-    def __init__(self, fireonce=False):
+    def __init__(self):
         self.functions = set()
         self.objects = weakref.WeakKeyDictionary()
-        self.fireonce = fireonce
 
     def __call__(self, *args, **kwargs):
         """ call all connected slots """
@@ -67,8 +64,6 @@ class Signal:
                     func(obj, *args, **kwargs)
                 else:
                     func(obj, *args[:func.func_code.co_argcount-1], **kwargs)
-        if self.fireonce:
-            self.clear()
             
     def connect(self, func):
         if inspect.ismethod(func):
@@ -96,7 +91,16 @@ class Signal:
             pass
 
 
-class SignalProxy:
+class SignalInstanceFireOnce(SignalInstance):
+    """
+    Clears all connections after being invoked.
+    """
+    def __call__(self, *args, **kwargs):
+        SignalInstance.__call__(self, *args, **kwargs)
+        self.clear()
+
+
+class SignalProxyInstance(object):
     """
     A Signal that dispatches method calls to connected objects.
     
@@ -127,3 +131,50 @@ class SignalProxy:
         func.func_name = attr
         setattr(self, attr, func)
         return func
+
+
+class SignalBase(object):
+    """Abstract base class for class level Signal and SignalProxy classes."""
+    def __init__(self, docstring=""):
+        if docstring:
+            self.__doc__ = docstring
+        self.instances = weakref.WeakKeyDictionary()
+        
+    def __get__(self, instance, owner):
+        if instance is not None:
+            try:
+                return self.instances[instance]
+            except KeyError:
+                ret = self.instances[instance] = self.signalType()
+                return ret
+        else:
+            return self
+
+
+class Signal(SignalBase):
+    """A class level Signal/Slot mechanism.
+    
+    Use an instance of Signal() as a class attribute, and it will automatically
+    work on instances as soon as the attribute is accessed via the instance.
+    
+    If you create the Signal with fireOnce=True, all connections to the
+    signal of the object instance will be cleared after being invoked.
+    
+    See SignalInstance and SignalInstanceFireOnce
+    """
+    def __init__(self, docstring="", fireOnce=False):
+        super(Signal, self).__init__(docstring)
+        self.signalType = SignalInstanceFireOnce if fireOnce else SignalInstance
+
+
+class SignalProxy(SignalBase):
+    """A class level Signal proxy.
+    
+    Add as a class attribute to a class and access it via an instance.
+    A SignalProxyInstance instance will then be returned.
+    
+    See SignalProxyInstance.
+    """
+    signalType = SignalProxyInstance
+
+

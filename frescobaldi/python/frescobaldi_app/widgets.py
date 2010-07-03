@@ -240,9 +240,10 @@ class ListEdit(QWidget):
     """
     A widget to edit a list of items (e.g. a list of directories).
     """
+    changed = Signal()
+    
     def __init__(self, *args, **kwargs):
         QWidget.__init__(self, *args, **kwargs)
-        self.changed = Signal()
         layout = QGridLayout(self)
         self.setLayout(layout)
         

@@ -124,13 +124,15 @@ class SettingsBase(object):
     
     
 class SettingsPage(QWidget, SettingsBase):
-    """ Base class for a page with settings, possibly in SettingsGroups"""
+    """ Base class for a page with settings, possibly in SettingsGroups. """
+    
+    changed = Signal()
+    
     def __init__(self, dialog):
         QWidget.__init__(self, dialog)
         self.dialog = dialog
         self.setLayout(QVBoxLayout())
         self.groups = []
-        self.changed = Signal()
         self.changed.connect(lambda: dialog.changed())
         
     def defaults(self):

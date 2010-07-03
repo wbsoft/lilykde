@@ -94,26 +94,26 @@ class MainApp(DBusItem):
     Our main application instance. Also exposes some methods to DBus.
     Instantiated only once.
     
-    Emits three signals to Python others can connect to:
+    Emits four signals to Python others can connect to:
     activeChanged(Document)
     documentCreated(Document)
     documentMaterialized(Document)
     documentClosed(Document)
     """
+    activeChanged = Signal("called with Document instance")
+    documentCreated = Signal("called with Document instance")
+    documentMaterialized = Signal("called with Document instance")
+    documentClosed = Signal("called with Document instance")
+    
+    excepthook = Signal()
+    
     iface = DBUS_IFACE_PREFIX + "MainApp"
     defaultEncoding = 'UTF-8'
     defaultMode = None
     fileTypes = []
     
     def __init__(self, servicePrefix):
-        # others can connect to our events
-        self.activeChanged = Signal()
-        self.documentCreated = Signal()
-        self.documentMaterialized = Signal()
-        self.documentClosed = Signal()
-
         # make it easy to connect more error handlers
-        self.excepthook = Signal()
         self.excepthook.connect(sys.excepthook)
         sys.excepthook = self.excepthook
         
@@ -345,8 +345,16 @@ class Document(DBusItem):
     saved(doc, bool saveAs)
     closed(doc)
     """
+    
     __instance_counter = 0
     iface = DBUS_IFACE_PREFIX + "Document"
+    
+    urlChanged = Signal()
+    captionChanged = Signal()
+    statusChanged = Signal()
+    selectionChanged = Signal()
+    saved = Signal()
+    closed = Signal()
     
     # In this dict names and default values can be set for properties that are
     # saved by the state manager (if the user wants to keep state info)
@@ -374,13 +382,6 @@ class Document(DBusItem):
         self._cursor = None     # line, col. None = not set.
         self._encoding = encoding or self.app.defaultEncoding # encoding [UTF-8]
         self._cursorTranslator = None   # for translating cursor positions
-        
-        self.urlChanged = Signal()
-        self.captionChanged = Signal()
-        self.statusChanged = Signal()
-        self.selectionChanged = Signal()
-        self.saved = Signal()
-        self.closed = Signal()
         
         self.app.addDocument(self)
         

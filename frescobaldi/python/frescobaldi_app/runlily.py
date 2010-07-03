@@ -73,9 +73,11 @@ class BasicLilyPondJob(object):
     
     startTime = 0.0             # time.time() this job started
     
+    done = Signal(fireOnce=True)
+    output = SignalProxy()
+    
     def __init__(self):
-        self.output = SignalProxy()
-        self.done = Signal(fireonce=True)
+        pass
         
     def start(self):
         """ Starts the process. """
@@ -369,10 +371,11 @@ class JobManager(object):
     jobStarted(Document)
     jobFinished(Document, success, job)
     """
+    jobStarted = Signal()
+    jobFinished = Signal()
+    
     def __init__(self):
         self.jobs = {}
-        self.jobStarted = Signal()
-        self.jobFinished = Signal()
         
     def job(self, doc):
         """

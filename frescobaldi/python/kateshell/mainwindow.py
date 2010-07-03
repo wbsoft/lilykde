@@ -57,14 +57,15 @@ class MainWindow(KParts.MainWindow):
     - currentDocumentChanged(Document) if the active document changes or its url.
     - aboutToClose() when the window will be closed.
     """
+    currentDocumentChanged = Signal()
+    aboutToClose = Signal()
+    
     def __init__(self, app):
         KParts.MainWindow.__init__(self)
         self.app = app
         self._currentDoc = None
         self.docks = {}
         self.tools = {}
-        self.currentDocumentChanged = Signal()
-        self.aboutToClose = Signal()
         
         # status bar
         sb = self.statusBar()
