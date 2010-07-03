@@ -160,7 +160,7 @@ class Signal(SignalBase):
     If you create the Signal with fireOnce=True, all connections to the
     signal of the object instance will be cleared after being invoked.
     
-    See SignalInstance and SignalInstanceFireOnce
+    See SignalInstance and SignalInstanceFireOnce.
     """
     def __init__(self, docstring="", fireOnce=False):
         super(Signal, self).__init__(docstring)
