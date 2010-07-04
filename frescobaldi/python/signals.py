@@ -135,20 +135,18 @@ class SignalProxyInstance(object):
 
 class SignalBase(object):
     """Abstract base class for class level Signal and SignalProxy classes."""
-    def __init__(self, docstring=""):
-        if docstring:
-            self.__doc__ = docstring
+    def __init__(self, doc=None):
+        self.__doc__ = doc
         self.instances = weakref.WeakKeyDictionary()
         
     def __get__(self, instance, owner):
-        if instance is not None:
-            try:
-                return self.instances[instance]
-            except KeyError:
-                ret = self.instances[instance] = self.signalType()
-                return ret
-        else:
+        if instance is None:
             return self
+        try:
+            return self.instances[instance]
+        except KeyError:
+            ret = self.instances[instance] = self.signalType()
+            return ret
 
 
 class Signal(SignalBase):
@@ -162,8 +160,8 @@ class Signal(SignalBase):
     
     See SignalInstance and SignalInstanceFireOnce.
     """
-    def __init__(self, docstring="", fireOnce=False):
-        super(Signal, self).__init__(docstring)
+    def __init__(self, doc=None, fireOnce=False):
+        super(Signal, self).__init__(doc)
         self.signalType = SignalInstanceFireOnce if fireOnce else SignalInstance
 
 
