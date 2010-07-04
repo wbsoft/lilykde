@@ -148,7 +148,6 @@ class MainWindow(KParts.MainWindow):
         self.setAutoSaveSettings()
         self.loadSettings()
         self.setAcceptDrops(True)
-        self.show()
         app.documentCreated.connect(self.addToRecentFiles)
         app.documentMaterialized.connect(self.addDocument)
         app.activeChanged.connect(self.setCurrentDocument)

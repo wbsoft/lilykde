@@ -209,6 +209,7 @@ class MainApp(DBusItem):
         if len(self.documents) == 0:
             self.createDocument().setActive()
         self.excepthook.connect(self.showException)
+        self.mainwin.show()
         self.kapp.exec_()
         KGlobal.config().sync()
        
