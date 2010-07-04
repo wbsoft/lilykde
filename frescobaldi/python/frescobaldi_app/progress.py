@@ -29,6 +29,7 @@ import weakref, time
 from PyQt4.QtCore import QTimer
 
 _ticks = 10     # ticks per second
+
 class ProgressBarManager(object):
     
     def __init__(self, jobmanager, progressbar):
@@ -46,8 +47,9 @@ class ProgressBarManager(object):
         self.man.jobStarted.connect(self.start)
         self.man.jobFinished.connect(self.stop)
         
-    def start(self, doc):
-        """ Call this when a job on doc started. """
+    def start(self, job):
+        """ Call this when a job has started. """
+        doc = job.document
         lastruntime = doc.metainfo["build time"]
         if lastruntime == 0.0:
             lastruntime = 3.0 + doc.lines() / 20 # very arbitrary estimate...
@@ -61,8 +63,9 @@ class ProgressBarManager(object):
             self.timer.start()
         self.bar.setMaximum(self.bar.maximum() + int(_ticks * lastruntime))
                 
-    def stop(self, doc, success):
-        """ Call this when a job on doc stopped. """
+    def stop(self, job, success):
+        """ Call this when a job has stopped. """
+        doc = job.document
         starttime = self.times.get(doc, 0.0)
         if starttime and success:
             runtime = time.time() - starttime

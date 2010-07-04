@@ -391,8 +391,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         man = JobManager()
         man.jobStarted.connect(self.updateJobActions)
         man.jobFinished.connect(self.updateJobActions)
-        man.jobStarted.connect(self.viewTabs.setDocumentStatus)
-        man.jobFinished.connect(self.viewTabs.setDocumentStatus)
+        man.jobStarted.connect(self.setTabIcons)
+        man.jobFinished.connect(self.setTabIcons)
         return man
     
     @cacheresult
@@ -858,18 +858,12 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         log.clear()
         job.output.connect(log)
         
-        # open PDF and action bar when finished
+        # show action bar when finished
         @job.done.connect
         def finished(success, job):
-            result = job.updatedFiles()
-            pdfs = result("pdf")
-            if pdfs:
-                if "pdf" in self.tools:
-                    self.tools["pdf"].openUrl(KUrl(pdfs[0]))
-                d.resetCursorTranslations()
             log = self.tools["log"].log(d)
             if log:
-                self.actionManager().addActionsToLog(result, log)
+                self.actionManager().addActionsToLog(job.updatedFiles(), log)
                 if not success:
                     log.show() # even if LP didn't show an error location
         
@@ -879,8 +873,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         self.jobManager().run(job)
         
     def updateJobActions(self):
+        """Called when the current document (or its status) has changed."""
         doc = self.currentDocument()
-        running = bool(doc and not doc.isEmpty() and self.jobManager().job(doc))
+        running = bool(doc and self.jobManager().job(doc))
         act = self.actionCollection().action
         act("lilypond_run_preview").setEnabled(not running)
         act("lilypond_run_publish").setEnabled(not running)
@@ -894,6 +889,10 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         act("lilypond_runner").setIcon(KIcon(icon))
         act("lilypond_runner").setToolTip(tip)
     
+    def setTabIcons(self, job):
+        """Called on startp/stop of a job, to update the icon in the tab bar."""
+        self.viewTabs.setDocumentStatus(job.document)
+        
     def allActionCollections(self):
         for name, coll in super(MainWindow, self).allActionCollections():
             yield name, coll
@@ -1007,6 +1006,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         self._timer.timeout.connect(self.timeoutFunc)
         mainwin.aboutToClose.connect(self._timer.stop)
         mainwin.currentDocumentChanged.connect(self.sync)
+        mainwin.jobManager().jobFinished.connect(self.openUpdatedPDF)
     
     def timeoutFunc(self):
         """
@@ -1047,6 +1047,13 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             if pdfs:
                 self.openUrl(KUrl(pdfs[0]))
 
+    def openUpdatedPDF(self, job):
+        result = job.updatedFiles()
+        pdfs = result("pdf")
+        if pdfs:
+            self.openUrl(KUrl(pdfs[0]))
+            job.document.resetCursorTranslations()
+        
     def addMenuActions(self, m):
         def act(name, title):
             a = m.addAction(title)
@@ -1233,8 +1240,8 @@ class JobManager(object):
     Manages running LilyPond jobs.
     
     Emits:
-    jobStarted(Document)
-    jobFinished(Document, success, job)
+    jobStarted(job)
+    jobFinished(job, success)
     """
     jobStarted = Signal()
     jobFinished = Signal()
@@ -1271,11 +1278,11 @@ class JobManager(object):
         self.jobs[job.document] = job
         job.done.connect(self._finished)
         job.start()
-        self.jobStarted(job.document)
+        self.jobStarted(job)
     
     def _finished(self, success, job):
         del self.jobs[job.document]
-        self.jobFinished(job.document, success, job)
+        self.jobFinished(job, success)
 
 
 class CompletionModel(KTextEditor.CodeCompletionModel):
