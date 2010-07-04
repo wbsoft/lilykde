@@ -890,7 +890,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         act("lilypond_runner").setToolTip(tip)
     
     def setTabIcons(self, job):
-        """Called on startp/stop of a job, to update the icon in the tab bar."""
+        """Called on start/stop of a job, to update the icon in the tab bar."""
         self.viewTabs.setDocumentStatus(job.document)
         
     def allActionCollections(self):
@@ -1048,8 +1048,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
                 self.openUrl(KUrl(pdfs[0]))
 
     def openUpdatedPDF(self, job):
-        result = job.updatedFiles()
-        pdfs = result("pdf")
+        pdfs = job.updatedFiles()("pdf")
         if pdfs:
             self.openUrl(KUrl(pdfs[0]))
             job.document.resetCursorTranslations()
