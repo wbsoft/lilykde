@@ -33,6 +33,8 @@ from PyKDE4.kdeui import (
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
+from signals import Signal
+
 import kateshell.app, kateshell.mainwindow
 from kateshell.app import cacheresult
 
@@ -386,11 +388,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
     
     @cacheresult
     def jobManager(self):
-        import frescobaldi_app.runlily
-        man = frescobaldi_app.runlily.JobManager()
+        man = JobManager()
         man.jobStarted.connect(self.updateJobActions)
         man.jobFinished.connect(self.updateJobActions)
-        self.progressBarManager(man) # show progress of jobs using progress bar
         man.jobStarted.connect(self.viewTabs.setDocumentStatus)
         man.jobFinished.connect(self.viewTabs.setDocumentStatus)
         return man
@@ -401,9 +401,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         return frescobaldi_app.runlily.RunLilyPondDialog(self)
     
     @cacheresult
-    def progressBarManager(self, jobmanager):
+    def progressBarManager(self):
         import frescobaldi_app.progress
-        return frescobaldi_app.progress.ProgressBarManager(jobmanager,
+        return frescobaldi_app.progress.ProgressBarManager(self.jobManager(),
             self.progressBar)
     
     @cacheresult
@@ -873,6 +873,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                 if not success:
                     log.show() # even if LP didn't show an error location
         
+        # init the progress bar (only done once)
+        self.progressBarManager()
         # run the LilyPond Job
         self.jobManager().run(job)
         
@@ -1224,6 +1226,56 @@ class LilyDocTool(kateshell.mainwindow.Tool):
         self.materialize()
         self.widget.openUrl(url)
         self.show()
+
+
+class JobManager(object):
+    """
+    Manages running LilyPond jobs.
+    
+    Emits:
+    jobStarted(Document)
+    jobFinished(Document, success, job)
+    """
+    jobStarted = Signal()
+    jobFinished = Signal()
+    
+    def __init__(self):
+        self.jobs = {}
+        
+    def job(self, doc):
+        """
+        Returns the job running for the given document, or None if no job is running.
+        """
+        return self.jobs.get(doc)
+    
+    def count(self):
+        """
+        Returns the number of running jobs.
+        """
+        return len(self.jobs)
+        
+    def docs(self):
+        """
+        Returns a list of documents that have a LilyPond job running.
+        """
+        return self.jobs.keys()
+    
+    def run(self, job):
+        """
+        Adds the job to the list of running jobs, calls its start() method,
+        and emit the jobStarted signal. The jobFinished signal is emitted when
+        the job has finished.
+        """
+        if job.document in self.jobs:
+            return
+        self.jobs[job.document] = job
+        job.done.connect(self._finished)
+        job.start()
+        self.jobStarted(job.document)
+    
+    def _finished(self, success, job):
+        del self.jobs[job.document]
+        self.jobFinished(job.document, success, job)
 
 
 class CompletionModel(KTextEditor.CodeCompletionModel):
