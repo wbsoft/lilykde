@@ -852,20 +852,11 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                     d.view.setCursorPosition(cursor.kteCursor())
                     return
                     
-        # get a logwidget
-        log = self.tools["log"].createLog(d)
-        log.preview = job.preview
-        log.clear()
-        job.output.connect(log)
-        
-        # show action bar when finished
+        # reset cursor position translations if LilyPond created a new PDF
         @job.done.connect
         def finished(success, job):
-            log = self.tools["log"].log(d)
-            if log:
-                self.actionManager().addActionsToLog(job.updatedFiles(), log)
-                if not success:
-                    log.show() # even if LP didn't show an error location
+            if job.updatedFiles()("pdf"):
+                d.resetCursorTranslations()
         
         # init the progress bar (only done once)
         self.progressBarManager()
@@ -1051,7 +1042,6 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         pdfs = job.updatedFiles()("pdf")
         if pdfs:
             self.openUrl(KUrl(pdfs[0]))
-            job.document.resetCursorTranslations()
         
     def addMenuActions(self, m):
         def act(name, title):
@@ -1141,6 +1131,8 @@ class LogTool(kateshell.mainwindow.Tool):
         mainwin.currentDocumentChanged.connect(self.showLog)
         mainwin.app.documentClosed.connect(self.removeLog)
         self.widget.destroyed.connect(lambda: self.logs.clear())
+        mainwin.jobManager().jobStarted.connect(self.startJob)
+        mainwin.jobManager().jobFinished.connect(self.finishJob)
             
     def showLog(self, doc):
         if doc in self.logs:
@@ -1168,6 +1160,19 @@ class LogTool(kateshell.mainwindow.Tool):
                     self.dock()
                 self.hide()
     
+    def startJob(self, job):
+        log = self.createLog(job.document)
+        log.preview = job.preview
+        log.clear()
+        job.output.connect(log)
+    
+    def finishJob(self, job, success):
+        log = self.log(job.document)
+        if log:
+            self.mainwin.actionManager().addActionsToLog(job.updatedFiles(), log)
+            if not success:
+                log.show() # even if LP didn't show an error location
+        
     def addMenuActions(self, m):
         def act(name, title):
             a = m.addAction(title)
@@ -1276,8 +1281,8 @@ class JobManager(object):
             return
         self.jobs[job.document] = job
         job.done.connect(self._finished)
-        job.start()
         self.jobStarted(job)
+        job.start()
     
     def _finished(self, success, job):
         del self.jobs[job.document]
