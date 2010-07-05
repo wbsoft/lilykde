@@ -85,9 +85,10 @@ class MainApp(kateshell.app.MainApp):
 
     @method("org.lilypond.TextEdit", in_signature='s', out_signature='b')
     def openTextEditUrl(self, url):
-        """
+        """Opens the specified textedit:// URL.
+
         To be called by ktexteditservice (part of lilypond-kde4).
-        Opens the specified textedit:// URL.
+        
         """
         return bool(self.openUrl(url))
 
@@ -102,9 +103,10 @@ class MainApp(kateshell.app.MainApp):
         return config().readPathEntry("default directory", "")
     
     def findDocument(self, url):
-        """
-        Finds the document at KUrl url.
+        """Finds the document at KUrl url.
+        
         Also non-local or nameless documents are checked: see runlily.py
+        
         """
         d = super(MainApp, self).findDocument(url)
         if d:
@@ -183,20 +185,19 @@ class Document(kateshell.app.Document):
             self.manipulator().adjustSelectionToChords()
     
     def variables(self):
-        """
-        Returns a dictionary with variables put in specially formatted LilyPond
+        """Returns a dictionary with variables put in specially formatted LilyPond
         comments, like:
         %%varname: value
-        (double percent at start of line, varname, colon and value)
+        (double percent at start of line, varname, colon and value).
+        
         Varname should consist of lowercase letters, and may contain (but not
         end or start with) single hyphens.
+        
         """
         return dict(_variables_re.findall(self.text()))
     
     def updatedFiles(self):
-        """
-        Returns a function that can list updated files based on extension.
-        """
+        """Returns a function that can list updated files based on extension."""
         if self.localFileManager():
             path = self.localFileManager().path()
         else:
@@ -205,20 +206,18 @@ class Document(kateshell.app.Document):
 
     @cacheresult
     def manipulator(self):
-        """
-        Returns a singleton object for this document that can
-        perform more advanced manipulations.
-        """
+        """Returns a singleton object for this document that can perform more
+        advanced manipulations."""
         import frescobaldi_app.document
         return frescobaldi_app.document.DocumentManipulator(self)
 
     def currentIndent(self, cursor=None, checkColumn=True):
-        """
-        Returns the indent of the line the given cursor is on, or
-        of the current line.
+        """Returns the indent of the line the given cursor is on, or of the
+        current line.
         
         If checkColumn is True (default), the indent returned is not deeper
         than the column the cursor is on.
+        
         """
         if cursor is None:
             cursor = self.view.cursorPosition()
@@ -228,10 +227,8 @@ class Document(kateshell.app.Document):
         return len(re.match(r'\s*', text).group().expandtabs(self.tabWidth()))
         
     def indent(self, text, start = None, startscheme = False):
-        """
-        Convenience method to indent text according to settings of this
-        document.
-        """
+        """Convenience method to indent text according to settings of this
+        document."""
         import ly.indent
         return ly.indent.indent(text,
             start = start,
@@ -254,22 +251,24 @@ class Document(kateshell.app.Document):
         self._localFileManager = None
 
     def lilyPondVersion(self):
-        """
-        Returns the version of LilyPond this document uses (looking at
-        the \version "x.x.x" statement). Returns None if not available.
+        """Returns the version of LilyPond this document uses (looking at
+        the \version "x.x.x" statement).
+        
+        Returns None if the document does not specify a version.
+        
         """
         import ly.version
         return ly.version.getVersion(self.text())
 
 
 class SymbolManager(object):
-    """
-    Manages the LilyPond icons for objects like widgets and actions.
+    """Manages the LilyPond icons for objects like widgets and actions.
     
     Ensures that if the palette is changed, the icons are redrawn in the current
     foreground color. You can mixin this with a widget or just instantiate it
     and call the recolor method on palette changes (look at our changeEvent
     method for an example).
+    
     """
     def __init__(self):
         # we store mapping obj->(icon_name, size) in a weak dict
@@ -364,10 +363,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         
     @cacheresult
     def actionManager(self):
-        """
-        Returns the ActionManager, managing actions that can be performed
-        on files creating by LilyPond.
-        """
+        """Returns the ActionManager, managing actions that can be performed
+        on files creating by LilyPond."""
         import frescobaldi_app.actions
         return frescobaldi_app.actions.ActionManager(self)
         
@@ -433,12 +430,14 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                     job.abort() if job else self.runLilyPond("preview")
 
         # Score wizard
-        @self.onAction(i18n("Setup New Score..."), "text-x-lilypond", key="Ctrl+Shift+N")
+        @self.onAction(i18n("Setup New Score..."), "text-x-lilypond",
+            key="Ctrl+Shift+N")
         def lilypond_score_wizard():
             self.scoreWizard().show()
         
         # run LilyPond actions
-        @self.onAction(i18n("Run LilyPond (preview)"), "run-lilypond", key="Ctrl+M")
+        @self.onAction(i18n("Run LilyPond (preview)"), "run-lilypond",
+            key="Ctrl+M")
         def lilypond_run_preview():
             self.runLilyPond("preview")
             
@@ -446,7 +445,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         def lilypond_run_publish():
             self.runLilyPond("publish")
         
-        @self.onAction(i18n("Run LilyPond (custom)..."), "run-lilypond", key="Shift+Ctrl+M")
+        @self.onAction(i18n("Run LilyPond (custom)..."), "run-lilypond",
+            key="Shift+Ctrl+M")
         def lilypond_run_custom():
             self.runLilyPond("custom")
         
@@ -459,8 +459,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                     job.abort()
         
         # Edit menu actions:
-        @self.onSelAction(i18n("Cut and Assign"), "edit-cut", key="Ctrl+Shift+C",
-            tooltip=i18n("Cut selection and assign it to a LilyPond variable."))
+        @self.onSelAction(i18n("Cut and Assign"), "edit-cut",
+            key="Ctrl+Shift+C", tooltip=i18n(
+                "Cut selection and assign it to a LilyPond variable."))
         def edit_cut_assign(text):
             self.currentDocument().manipulator().assignSelectionToVariable()
         
@@ -507,7 +508,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         
         @self.onAction(i18n("Select to next blank line"), key="Shift+Alt+Down",
             tooltip=i18n(
-            "Selects text from the current position down to and including the next blank line."))
+                "Selects text from the current position down to and "
+                "including the next blank line."))
         def edit_select_next_blank_line():
             d = self.currentDocument()
             cursor = d.view.cursorPosition()
@@ -534,7 +536,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         
         @self.onAction(i18n("Select to previous blank line"), key="Shift+Alt+Up",
             tooltip=i18n(
-            "Selects text from the current position up to right after the previous blank line."))
+                "Selects text from the current position up to right after the "
+                "previous blank line."))
         def edit_select_previous_blank_line():
             d = self.currentDocument()
             cursor = d.view.cursorPosition()
@@ -558,12 +561,14 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             d.view.setSelection(KTextEditor.Range(cursor, newcur))
             d.view.setCursorPosition(newcur)
         
-        @self.onSelAction(i18n("Move selection to next blank line"), key="Shift+Alt+Ctrl+Down",
+        @self.onSelAction(i18n("Move selection to next blank line"),
+            key="Shift+Alt+Ctrl+Down",
             tooltip=i18n("Moves selected block to next blank line."))
         def edit_moveto_next_blank_line(text):
             self.currentDocument().manipulator().moveSelectionDown()
         
-        @self.onSelAction(i18n("Move selection to previous blank line"), key="Shift+Alt+Ctrl+Up",
+        @self.onSelAction(i18n("Move selection to previous blank line"),
+            key="Shift+Alt+Ctrl+Up",
             tooltip=i18n("Moves selected block to previous blank line."))
         def edit_moveto_previous_blank_line(text):
             self.currentDocument().manipulator().moveSelectionUp()
@@ -575,15 +580,18 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                           "in this document or in the selection."))
         self.actionCollection().addAction('pitch_change_language', a)
         a.menu().aboutToShow.connect((lambda action:
-            lambda: self.currentDocument().manipulator().populateLanguageMenu(action.menu()))(a))
+            lambda: self.currentDocument().manipulator().populateLanguageMenu(
+                action.menu()))(a))
         
         @self.onAction(i18n("Convert Relative to &Absolute"), tooltip=i18n(
-            "Converts the notes in the document or selection from relative to absolute pitch."))
+            "Converts the notes in the document or selection from relative to "
+            "absolute pitch."))
         def pitch_relative_to_absolute():
             self.currentDocument().manipulator().convertRelativeToAbsolute()
             
         @self.onAction(i18n("Convert Absolute to &Relative"), tooltip=i18n(
-            "Converts the notes in the document or selection from absolute to relative pitch."))
+            "Converts the notes in the document or selection from absolute to "
+            "relative pitch."))
         def pitch_absolute_to_relative():
             self.currentDocument().manipulator().convertAbsoluteToRelative()
 
@@ -611,14 +619,14 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             import ly.duration
             return ly.duration.dotDurations(text)
             
-        @self.onSelAction(i18n("Undot durations"),
-            tooltip=i18n("Remove one dot from all the durations in the selection."))
+        @self.onSelAction(i18n("Undot durations"), tooltip=i18n(
+            "Remove one dot from all the durations in the selection."))
         def durations_undot(text):
             import ly.duration
             return ly.duration.undotDurations(text)
             
-        @self.onSelAction(i18n("Remove scaling"),
-            tooltip=i18n("Remove all scaling (*n/m) from the durations in the selection."))
+        @self.onSelAction(i18n("Remove scaling"), tooltip=i18n(
+            "Remove all scaling (*n/m) from the durations in the selection."))
         def durations_remove_scaling(text):
             import ly.duration
             return ly.duration.removeScaling(text)
@@ -629,8 +637,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             import ly.duration
             return ly.duration.removeDurations(text)
             
-        @self.onSelAction(i18n("Make implicit"),
-            tooltip=i18n("Make durations implicit (remove repeated durations)."))
+        @self.onSelAction(i18n("Make implicit"), tooltip=i18n(
+            "Make durations implicit (remove repeated durations)."))
         def durations_implicit(text):
             import ly.duration
             return ly.duration.makeImplicit(text)
@@ -681,11 +689,13 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             ("bar_segno", "S", i18n("Segno bar line"), None),
             ):
             a = self.act(name, title, key=key, func=(lambda text:
-                lambda: self.currentDocument().manipulator().insertBarLine(text))(text))
+                lambda: self.currentDocument().manipulator().insertBarLine(
+                    text))(text))
             self.addSymbol(a, name)
             
         # Setup lyrics hyphen and de-hyphen action
-        @self.onSelAction(i18n("Hyphenate Lyrics Text"), keepSelection=False, key="Ctrl+L")
+        @self.onSelAction(i18n("Hyphenate Lyrics Text"), keepSelection=False,
+            key="Ctrl+L")
         def lyrics_hyphen(text):
             import frescobaldi_app.hyphen
             return frescobaldi_app.hyphen.hyphenate(text, self)
@@ -694,7 +704,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         def lyrics_dehyphen(text):
             return text.replace(' -- ', '')
         
-        @self.onSelAction(i18n("Copy Lyrics with hyphenation removed"), keepSelection=False)
+        @self.onSelAction(i18n("Copy Lyrics with hyphenation removed"),
+            keepSelection=False)
         def lyrics_copy_dehyphen(text):
             KApplication.clipboard().setText(text.replace(' -- ', ''))
         
@@ -742,7 +753,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             return self.currentDocument().manipulator().wrapSelection(text, 
                 "\\repeat volta 2 {")
         
-        @self.onAction(i18n("Insert pair of braces"), "code-context", key="Ctrl+{")
+        @self.onAction(i18n("Insert pair of braces"), "code-context",
+            key="Ctrl+{")
         def edit_insert_braces():
             d = self.currentDocument()
             if d.selectionText():
@@ -788,6 +800,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         mode is "preview", "publish" or "custom".
         For "custom", a dialog is opened where the user can adjust the
         parameters for the LilyPond run (such as which version to use).
+        
         """
         d = self.currentDocument()
         if not d:
@@ -837,13 +850,13 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                     None, KStandardGuiItem.cont(), KStandardGuiItem.cancel(),
                     "point_and_click") == KMessageBox.Continue
                 if ((job.preview and off >= 0 and not ask(i18n(
-                    "You want to run LilyPond in preview mode (with point and click "
-                    "enabled), but your document contains a command to turn "
-                    "point and click off."))) or
+                    "You want to run LilyPond in preview mode (with point and "
+                    "click enabled), but your document contains a command to "
+                    "turn point and click off."))) or
                     (not job.preview and on >= 0 and not ask(i18n(
-                    "You want to run LilyPond in publish mode (with point and click "
-                    "disabled), but your document contains a command to turn "
-                    "point and click on.")))):
+                    "You want to run LilyPond in publish mode (with point and "
+                    "click disabled), but your document contains a command to "
+                    "turn point and click on.")))):
                     # cancelled
                     # put the cursor at the point and click command
                     import frescobaldi_app.document
@@ -876,7 +889,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             tip = i18n("Abort the running LilyPond process")
         else:
             icon = "run-lilypond"
-            tip = i18n("Run LilyPond in preview mode (Shift-click for custom dialog)")
+            tip = i18n("Run LilyPond in preview mode "
+                       "(Shift-click for custom dialog)")
         act("lilypond_runner").setIcon(KIcon(icon))
         act("lilypond_runner").setToolTip(tip)
     
@@ -918,8 +932,8 @@ class ApplyRhythmDialog(KDialog):
     def doApply(self):
         import ly.duration
         self.lineedit.completionObject().addItem(self.lineedit.text())
-        self.parent().currentDocument().replaceSelectionWith(ly.duration.applyRhythm(
-            self.text, self.lineedit.text()))
+        self.parent().currentDocument().replaceSelectionWith(
+            ly.duration.applyRhythm(self.text, self.lineedit.text()))
 
     def edit(self, text):
         self.text = text
@@ -1000,10 +1014,10 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         mainwin.jobManager().jobFinished.connect(self.openUpdatedPDF)
     
     def timeoutFunc(self):
-        """
-        (Internal)
-        Called when the timer times out.  If an url was recorded, it is opened
-        now.
+        """(Internal) Called when the timer times out.
+        
+        If an url was recorded, it is opened now.
+        
         """
         if self._urlToOpen:
             super(PDFTool, self).openUrl(self._urlToOpen)
@@ -1011,11 +1025,12 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             self._timer.start(500)
 
     def _reallyOpenUrl(self, url):
-        """
-        (Internal)
-        Opens the url and starts a timer to prevent it from being called too
-        quickly again. If the timer is already running, the url is recorded and
-        opened on timeout().
+        """(Internal) Opens the url and starts a timer to prevent it from being
+        called too quickly again.
+        
+        If the timer is already running, the url is recorded and opened on
+        timeout().
+        
         """
         self._urlToOpen = url
         self._timer.isActive() or self._timer.start(0)
@@ -1127,13 +1142,14 @@ class LogTool(kateshell.mainwindow.Tool):
             key="Meta+Alt+L", dock=kateshell.mainwindow.Bottom,
             widget=QStackedWidget())
         self.logs = {}
-        self.widget.addWidget(QLabel(u"<center>({0})</center>".format(i18n("no log"))))
+        self.widget.addWidget(QLabel(u"<center>({0})</center>".format(
+            i18n("no log"))))
         mainwin.currentDocumentChanged.connect(self.showLog)
         mainwin.app.documentClosed.connect(self.removeLog)
         self.widget.destroyed.connect(lambda: self.logs.clear())
         mainwin.jobManager().jobStarted.connect(self.startJob)
         mainwin.jobManager().jobFinished.connect(self.finishJob)
-            
+        
     def showLog(self, doc):
         if doc in self.logs:
             self.widget.setCurrentWidget(self.logs[doc])
@@ -1240,12 +1256,12 @@ class LilyDocTool(kateshell.mainwindow.Tool):
 
 
 class JobManager(object):
-    """
-    Manages running LilyPond jobs.
+    """Manages running LilyPond jobs.
     
     Emits:
     jobStarted(job)
     jobFinished(job, success)
+    
     """
     jobStarted = Signal()
     jobFinished = Signal()
@@ -1254,28 +1270,28 @@ class JobManager(object):
         self.jobs = {}
         
     def job(self, doc):
-        """
-        Returns the job running for the given document, or None if no job is running.
+        """Returns the job running for the given document.
+        
+        Returns None if no job is running.
+        
         """
         return self.jobs.get(doc)
     
     def count(self):
-        """
-        Returns the number of running jobs.
-        """
+        """Returns the number of running jobs."""
         return len(self.jobs)
         
     def docs(self):
-        """
-        Returns a list of documents that have a LilyPond job running.
-        """
+        """Returns a list of documents that have a LilyPond job running."""
         return self.jobs.keys()
     
     def run(self, job):
-        """
-        Adds the job to the list of running jobs, calls its start() method,
-        and emit the jobStarted signal. The jobFinished signal is emitted when
-        the job has finished.
+        """Runs a job.
+        
+        Adds the job to the list of running jobs, emits the jobStarted() signal,
+        and calls the job.start() method. The jobFinished() signal is emitted
+        when the job has finished.
+        
         """
         if job.document in self.jobs:
             return
@@ -1317,11 +1333,12 @@ class CompletionModel(KTextEditor.CodeCompletionModel):
 
 
 class ExpansionShortcuts(kateshell.mainwindow.UserShortcutManager):
-    """
-    Manages shortcuts for the expand dialog.
+    """Manages shortcuts for the expand dialog.
+    
     This is setup initially so that keyboard shortcuts for expansions
     work without the expandManager being loaded. Pressing a keyboard
     shortcut actually loads the expansion manager to perform the action.
+    
     """
     # which config group to store our shortcuts
     configGroup = "expand shortcuts"
@@ -1334,9 +1351,7 @@ class ExpansionShortcuts(kateshell.mainwindow.UserShortcutManager):
 
 
 class CharSelectShortcuts(kateshell.mainwindow.UserShortcutManager):
-    """
-    Manages shortcuts for the charselect dialog.
-    """
+    """Manages shortcuts for the charselect dialog."""
     configGroup = "charselect shortcuts"
     
     def widget(self):
@@ -1347,9 +1362,7 @@ class CharSelectShortcuts(kateshell.mainwindow.UserShortcutManager):
 
 
 class QuickInsertShortcuts(kateshell.mainwindow.UserShortcutManager):
-    """
-    Manages shortcuts for the Quick Insert panel.
-    """
+    """Manages shortcuts for the Quick Insert panel."""
     configGroup = "quickinsert shortcuts"
     
     def widget(self):
@@ -1370,34 +1383,35 @@ def lilyPondCommand():
     return config("lilypond").readEntry("default", "lilypond")
     
 def lilyPondVersion(command = None):
-    """
-    The version of the LilyPond binary command.
+    """The version of the LilyPond binary command.
+    
     If no command is given, the default LilyPond command is used.
+    
     """
     import ly.version
     return ly.version.LilyPondInstance(command or lilyPondCommand()).version()
     
-def otherCommand(name, lilypond=None):
-    """
-    Return the full path to the named command (e.g. 'convert-ly') that belongs
-    to the given or default lilypond command.
-    """
+def otherCommand(command, lilypond=None):
+    """Returns the full path to the command (e.g. 'convert-ly') that belongs
+    to the given or default lilypond command."""
     if not lilypond:
         lilypond = lilyPondCommand()
-    cmd = config("lilypond").group(lilypond).readEntry(name, name)
+    cmd = config("lilypond").group(lilypond).readEntry(command, command)
     import ly.version
     return ly.version.LilyPondInstance(lilypond).path_to(cmd) or cmd
     
 def convertLyCommand(lilypond=None):
-    """
-    The convert-ly command belonging to the given (or default) lilypond command.
-    """
+    """Returns the convert-ly command belonging to the given (or default)
+    lilypond command."""
     return otherCommand('convert-ly', lilypond)
 
 def automaticLilyPondCommand(version):
-    """
-    Returns the LilyPond command that is suitable to compile a document
-    with version version. Returns None if none is available.
+    """Returns the LilyPond command that is suitable to compile a document
+    with version version.
+    
+    The version argument should be a ly.version.Version instance.
+    Returns None if no suitable LilyPond version is available.
+    
     """
     # find the configured lilypond versions
     conf = config("lilypond")
@@ -1421,11 +1435,12 @@ def automaticLilyPondCommand(version):
 
 # determine updated files by a LilyPond process.
 def updatedFiles(lyfile, reftime=None):
-    """
-    Return a generator that can list updated files belonging to
+    """Returns a generator that yields updated files belonging to
     LilyPond document lyfile.
-    Calling the generator with some extension
-    returns files newer than lyfile, with that extension.
+    
+    Calling the returned generator with an extension (e.g. 'pdf') returns files
+    newer than lyfile, with that extension.
+    
     """
     import fnmatch
     if lyfile and os.path.exists(lyfile):
@@ -1452,14 +1467,12 @@ def updatedFiles(lyfile, reftime=None):
 
 # is string an empty or blank line?
 def isblank(text):
+    """True if text is empty or whitespace-only."""
     return not text or text.isspace()
 
 def filenamekey(filename):
-    """
-    Returns a key for natural sorting file names
-    """
+    """Returns a key for natural sorting file names containing numbers."""
     name, ext = os.path.splitext(filename)
-    l = [m.group(2) or int(m.group(1))
-            for m in re.finditer(r'(\d+)|(\D+)', name)]
+    l = tuple(int(s) if s.isdigit() else s for s in re.split(r'(\d+)', name))
     return l, ext
 
