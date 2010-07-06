@@ -150,6 +150,11 @@ class Document(kateshell.app.Document):
             action = self.view.actionCollection().action(name)
             if action:
                 sip.delete(action)
+        # rename "Print..." action to make clear KatePart's print action prints
+        # the source text instead of LilyPond scores
+        action = self.view.actionCollection().action("file_print")
+        if action:
+            action.setText(i18n("Print Source..."))
         # activate completion
         iface = self.view.codeCompletionInterface()
         if iface:
