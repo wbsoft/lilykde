@@ -275,7 +275,17 @@ construct.
 
 <row>
 <entry><para><keycombo><keycap>Ctrl+M</keycap></keycombo></para></entry>
-<entry><para> Run &lilypond; on the current document in preview mode </para></entry>
+<entry><para> <link linkend="running">Run &lilypond;</link> on the current document in preview mode </para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Alt+Ctrl+P</keycap></keycombo></para></entry>
+<entry><para> Run &lilypond; on the current document in publish mode </para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+Shift+M</keycap></keycombo></para></entry>
+<entry><para> Open a dialog to run &lilypond; on the current document in custom mode </para></entry>
 </row>
 
 <row>
@@ -289,6 +299,13 @@ construct.
 <entry><para><keycombo><keycap>Ctrl+E</keycap></keycombo></para></entry>
 <entry><para>
 Email the generated output documents (PDF, MIDI, etc.) after a &lilypond; run
+</para></entry>
+</row>
+
+<row>
+<entry><para><keycombo><keycap>Ctrl+Shift+P</keycap></keycombo></para></entry>
+<entry><para>
+Print the generated PDF output document(s) after a &lilypond; run
 </para></entry>
 </row>
 

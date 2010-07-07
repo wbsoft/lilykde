@@ -459,7 +459,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         def lilypond_run_preview():
             self.runLilyPond("preview")
             
-        @self.onAction(i18n("Run LilyPond (publish)"), "run-lilypond")
+        @self.onAction(i18n("Run LilyPond (publish)"), "run-lilypond",
+            key="Ctrl+Alt+P")
         def lilypond_run_publish():
             self.runLilyPond("publish")
         
