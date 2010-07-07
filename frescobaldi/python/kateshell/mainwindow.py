@@ -162,6 +162,8 @@ class MainWindow(KParts.MainWindow):
             lambda: self.app.activeDocument().save())
         self.act('file_save_as', KStandardAction.SaveAs,
             lambda: self.app.activeDocument().saveAs())
+        self.act('file_close_other', i18n("Close Other Documents"),
+            self.closeOtherDocuments)
         self.act('file_quit', KStandardAction.Quit, self.app.quit)
         self.act('doc_back', KStandardAction.Back, self.app.back)
         self.act('doc_forward', KStandardAction.Forward, self.app.forward)
@@ -433,7 +435,20 @@ class MainWindow(KParts.MainWindow):
         self.saveSettings()
         self.aboutToClose()
         return True
-        
+    
+    def closeOtherDocuments(self):
+        """ Close all documents except the current document. """
+        unmodified = []
+        # iterate over a copy, current first, except current document
+        for d in self.app.history[-2::-1]:
+            if d.isModified():
+                if not d.close(True):
+                    return # cancelled
+            else:
+                unmodified.append(d)
+        for d in unmodified:
+            d.close(False)
+    
     def loadSettings(self):
         """ Load some settings from our configfile. """
         self.openRecent.loadEntries(config("recent files"))
