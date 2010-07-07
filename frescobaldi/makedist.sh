@@ -34,6 +34,9 @@ cp build/pics/*.png pics/
 # Remove build directory
 rm -fr build
 
+# Remove ourselves, not useful outside SVN checkout
+rm makedist.sh
+
 # Create tarball
 cd ..
 tar zcf $pkg.tar.gz $pkg || die "making tarball failed"
