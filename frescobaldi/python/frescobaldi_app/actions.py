@@ -31,7 +31,8 @@ from PyQt4.QtGui import (
     QKeySequence, QLabel, QListWidget, QListWidgetItem, QMenu, QPrinter,
     QToolButton)
 from PyKDE4.kdecore import KGlobal, KShell, KToolInvocation, KUrl, i18n, i18np
-from PyKDE4.kdeui import KdePrint, KDialog, KIcon, KMessageBox, KVBox
+from PyKDE4.kdeui import (
+    KdePrint, KDialog, KIcon, KMessageBox, KStandardGuiItem, KVBox)
 from PyKDE4.kio import KRun
 
 import ly.parse
@@ -146,8 +147,31 @@ class ActionManager(object):
             KMessageBox.sorry(self.mainwin,
                 i18n("There are no files to send via email."),
                 i18n("No files to send"))
-                
         
+    def print_(self, updatedFiles):
+        """
+        Print updated PDF files.
+        
+        If there are no updated PDF's a warning is displayed.
+        If there is one updated PDF, the print dialog is displayed.
+        If there is more than one PDF, a dialog is displayed to select the
+        files to print.
+        """
+        pdfs = updatedFiles("pdf")
+        if not pdfs:
+            KMessageBox.sorry(self.mainwin, i18n(
+                "There are no PDF documents to print.\n\n"
+                "You probably need to run LilyPond to create or update a "
+                "PDF document. If you are creating MIDI files, be sure you "
+                "also put a \layout { } section in your score, otherwise "
+                "LilyPond will not create a PDF."),
+                i18n("No files to print"))
+        elif len(pdfs) == 1:
+            printPDF(pdfs[0], self.mainwin)
+        else:
+            PrintSelectDialog(self.mainwin, pdfs).exec_()
+        
+
 class EmailDialog(KDialog):
     def __init__(self, parent, updatedFiles, warnpreview):
         KDialog.__init__(self, parent)
@@ -162,7 +186,7 @@ class EmailDialog(KDialog):
         fileList.setIconSize(QSize(22, 22))
         fileList.setWhatsThis(i18n(
             "These are the files that are up-to-date (i.e. newer than "
-            "the LilyPond source document).  Also LilyPond files included "
+            "the LilyPond source document). Also LilyPond files included "
             "by the source document are shown."))
         
         lyFiles = ly.parse.findIncludeFiles(updatedFiles.lyfile)
@@ -185,8 +209,8 @@ class EmailDialog(KDialog):
         
         if not pdfFiles and not midiFiles:
             QLabel(i18n(
-                "Note: If there are no PDF and no MIDI files, you'll "
-                "probably want to run LilyPond to update those files, "
+                "Note: If there are no PDF and no MIDI files, you "
+                "probably need to run LilyPond to update those files, "
                 "before sending the e-mail."),
                 b).setWordWrap(True)
             
@@ -233,7 +257,56 @@ class EmailDialog(KDialog):
         KDialog.done(self, result)
         
         
+class PrintSelectDialog(KDialog):
+    def __init__(self, mainwin, pdfs):
+        KDialog.__init__(self, mainwin)
+        self.mainwin = mainwin
+        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setButtons(KDialog.ButtonCode(
+            KDialog.User1 | KDialog.Ok | KDialog.Cancel))
+        self.setButtonGuiItem(KDialog.Ok, KStandardGuiItem.print_())
+        self.setButtonIcon(KDialog.User1, KIcon("edit-select-all"))
+        self.setButtonText(KDialog.User1, i18n("Select all"))
+        self.setCaption(i18n("Print documents"))
+        b = KVBox(self)
+        b.setSpacing(4)
+        QLabel(i18n("Please select the files you want to print:"), b)
+        fileList = QListWidget(b)
+        fileList.setIconSize(QSize(22, 22))
+        fileList.setWhatsThis(i18n(
+            "These are the PDF documents that are up-to-date (i.e. newer than "
+            "the LilyPond source document). "
+            "Check the documents you want to send to the printer."))
         
+        for pdf in pdfs:
+            i = QListWidgetItem(KIcon("application-pdf"), os.path.basename(pdf),
+                fileList)
+            i.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable |
+                Qt.ItemIsUserCheckable)
+            i.setCheckState(Qt.Unchecked)
+        
+        fileList.item(0).setCheckState(Qt.Checked)
+        self.fileList = fileList
+        self.setMainWidget(b)
+        self.resize(350, 200)
+        self.pdfs = pdfs
+        self.user1Clicked.connect(self.selectAll)
+        
+    def selectAll(self):
+        for i in range(self.fileList.count()):
+            self.fileList.item(i).setCheckState(Qt.Checked)
+
+    def done(self, result):
+        pdfs = []
+        if result:
+            for i, pdf in zip(range(self.fileList.count()), self.pdfs):
+                if self.fileList.item(i).checkState() == Qt.Checked:
+                    pdfs.append(pdf)
+        KDialog.done(self, result)
+        if pdfs:
+            printPDFs(pdfs, self.mainwin)
+
+
 def openPDF(fileName, window):
     """
     Opens a PDF in the configured external PDF viewer, or in the
@@ -266,17 +339,30 @@ def openFile(fileName, window, cmd = None):
     sip.transferto(KRun(KUrl.fromPath(fileName), window), None)
     
 def printPDF(pdfFileName, window):
-    """ Opens a print dialog to print the give PDF file. """
+    """ Opens a print dialog to print the given PDF file. """
+    printPDFs([pdfFileName], window)
+    
+def printPDFs(pdfFileNames, window):
+    """ Opens a print dialog to print the given list of PDF files. """
+    if not pdfFileNames:
+        return  # don't do anything on an empty list.
+    
     printer = QPrinter()
     dlg = KdePrint.createPrintDialog(printer, window)
-    dlg.setWindowTitle(KDialog.makeStandardCaption(
-        i18n("Print %1", os.path.basename(pdfFileName))))
+    if len(pdfFileNames) == 1:
+        dlg.setWindowTitle(KDialog.makeStandardCaption(
+            i18n("Print %1", os.path.basename(pdfFileNames[0]))))
+    else:
+        dlg.setWindowTitle(KDialog.makeStandardCaption(
+            i18np("Print 1 file", "Print %1 files", len(pdfFileNames))))
+        dlg.setOption(dlg.PrintToFile, False)
+        
     if not dlg.exec_():
         return
-    
+
     import kateshell.fileprinter
     try:
-        kateshell.fileprinter.printPDF(pdfFileName, printer)
+        kateshell.fileprinter.printFiles(pdfFileNames, printer)
     except kateshell.fileprinter.NoPrintCommandFound:
         KMessageBox.error(window, i18n(
             "A print command (like 'lpr' or 'lp') could not be found on your "

@@ -480,7 +480,8 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         @self.onAction(i18n("Print Score (PDF)..."), "document-print",
             key="Ctrl+Shift+P")
         def file_print_score():
-            pass
+            d = self.currentDocument()
+            self.actionManager().print_(d.updatedFiles())
         
         @self.onAction(i18n("Email Documents..."), "mail-send", key="Ctrl+E")
         def file_email_documents():

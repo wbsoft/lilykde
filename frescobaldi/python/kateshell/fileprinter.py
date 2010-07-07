@@ -35,32 +35,29 @@ from PyKDE4.kdecore import KShell, KStandardDirs
 
 # Exceptions:
 class NoPrintCommandFound(Exception):
-    """
-    Raised if no valid print command can be found.
-    """
+    """Raised if no valid print command can be found."""
     pass
 
 class CommandNotFound(Exception):
-    """
-    Raised if the command could not be started.
-    """
+    """Raised if the command could not be started."""
     pass
 
 class CommandFailed(Exception):
-    """
-    Raised if the command could be started but exited with a non-zero
-    return value.
-    """
+    """Raised if the command could be started but exited with a non-zero
+    return value."""
 
-def printPDF(fileName, printer):
-    """
-    Prints the PDF (or PS) file to the printer configured in the given QPrinter,
-    by constructing a command with all the relevant options.
-    """
+def printFiles(fileNames, printer):
+    """Prints a list of files (PS or PDF) via a printer command.
+
+    The printer command is constructed by quering the QPrinter object.
+    If there is more than one PDF file, print to file should have been disabled
+    in the QPrintDialog that configured the printer.
     
+    """
     output = printer.outputFileName()
     if output:
-        # Print to File, determine suffixes
+        # Print to File, determine suffixes, assume one file
+        fileName = fileNames[0]
         inext, outext = (os.path.splitext(name)[1].lower()
                     for name in (fileName, output))
         if inext == outext:
@@ -200,8 +197,8 @@ def printPDF(fileName, printer):
         for name, value in zip(*repeat(iter(properties), 2)):
             option("{0}={1}".format(name, value) if value else name)
     
-    # file name
-    cmd.append(fileName)
+    # file names
+    cmd.extend(fileNames)
     try:
         ret = subprocess.call(cmd)
         if ret:
