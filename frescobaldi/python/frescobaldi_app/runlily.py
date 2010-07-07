@@ -285,7 +285,7 @@ class RunLilyPondDialog(KDialog):
             
         # Sort on version
         paths.sort(key=ver.get)
-        versions = map(ver.get, paths)
+        versions = [format(ver.get(p)) for p in paths]
         
         # Determine automatic version (lowest possible)
         autopath = None
@@ -325,13 +325,15 @@ class RunLilyPondDialog(KDialog):
                         ly.version.LilyPondInstance(path).command() or path))
         
         # Copy the settings from the document:
-        self.preview.setChecked(doc.metainfo["preview"])
-        self.verbose.setChecked(doc.metainfo["verbose"])
+        self.preview.setChecked(doc.metainfo["custom preview"])
+        self.verbose.setChecked(doc.metainfo["custom verbose"])
         
         try:
-            self.lilypond.setCurrentRow(versions.index(doc.metainfo["lilypond version"]))
+            self.lilypond.setCurrentRow(versions.index(
+                doc.metainfo["custom lilypond version"]))
         except ValueError:
-            cmd = autopath if autopath and conf.readEntry("automatic version", False) else default
+            cmd = autopath if autopath and conf.readEntry("automatic version",
+                False) else default
             self.lilypond.setCurrentRow(paths.index(cmd))
             
         # Focus our listbox:
@@ -355,10 +357,10 @@ class RunLilyPondDialog(KDialog):
             return False # cancelled
         
         # Save the settings in the document's metainfo and configure job:
-        doc.metainfo["preview"] = job.preview = self.preview.isChecked()
-        doc.metainfo["verbose"] = job.verbose = self.verbose.isChecked()
+        doc.metainfo["custom preview"] = job.preview = self.preview.isChecked()
+        doc.metainfo["custom verbose"] = job.verbose = self.verbose.isChecked()
         index = self.lilypond.currentRow()
-        doc.metainfo["lilypond version"] = versions[index]
+        doc.metainfo["custom lilypond version"] = versions[index]
         job.command = paths[index]
         return True
 

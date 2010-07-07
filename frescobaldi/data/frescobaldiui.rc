@@ -14,12 +14,16 @@
     <DefineGroup name="save_merge" append="save_merge" />
     <Action name="file_save"/>
     <Action name="file_save_as"/>
-    <Separator/>
-
     <DefineGroup name="revert_merge" append="revert_merge"/>
+    <Separator/>
+    
+    <Action name="file_print_score"/>
     <DefineGroup name="print_merge" append="print_merge"/>
     <Separator/>
 
+    <Action name="file_email_documents"/>
+    <Separator/>
+    
     <Action name="file_close"/>
     <Action name="file_close_other"/>
     <DefineGroup name="close_merge" append="close_merge"/>
@@ -63,9 +67,8 @@
     <Action name="lilypond_run_publish"/>
     <Action name="lilypond_run_custom"/>
     <Action name="lilypond_abort"/>
-    <Menu name="lilypond_actions"><text>&amp;Generated Files</text>
-      <Action name="actions_email"/>
-    </Menu>
+    <Action name="lilypond_actions"/>
+    
     <Separator />
     <Menu name="insert"><text>&amp;Insert</text>
       <Action name="version_insert"/>

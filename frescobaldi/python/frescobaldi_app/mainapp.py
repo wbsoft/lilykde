@@ -126,10 +126,11 @@ class Document(kateshell.app.Document):
     """ Our own Document type with LilyPond-specific features """
     
     metainfoDefaults = {
-        "lilypond version": "",
-        "verbose": False,
-        "preview": True,
-        "build time": 0.0,
+        "custom lilypond version": "", # lily version last used in custom dialog
+        "custom verbose": False,       # custom dialog: was verbose checked?
+        "custom preview": True,        # custom dialog: was preview checked?
+        "build time": 0.0,             # remember build time
+        "preview": True,               # was last run in preview mode?
         }
     
     def __init__(self, *args, **kwargs):
@@ -202,11 +203,22 @@ class Document(kateshell.app.Document):
         return dict(_variables_re.findall(self.text()))
     
     def updatedFiles(self):
-        """Returns a function that can list updated files based on extension."""
+        """Returns a function that can list updated files based on extension.
+        
+        Checks the mode of the last LilyPond run (preview or not) and honors
+        the %%master directives that would have been used by the Job.
+        
+        """
         if self.localFileManager():
             path = self.localFileManager().path()
         else:
             path = self.localPath()
+            # look for %%master directives
+            lvars = self.variables()
+            ly = (lvars.get('master-preview' if self.metainfo["preview"]
+                        else 'master-publish') or lvars.get('master'))
+            if ly:
+                path = os.path.join(os.path.dirname(path), ly)
         return updatedFiles(path)
 
     @cacheresult
@@ -365,6 +377,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         self.expansionShortcuts = ExpansionShortcuts(self)
         self.charSelectShortcuts = CharSelectShortcuts(self)
         self.quickInsertShortcuts = QuickInsertShortcuts(self)
+        self.jobManager().jobFinished.connect(self.setDocumentStatus)
         
     @cacheresult
     def actionManager(self):
@@ -462,6 +475,17 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                 job = self.jobManager().job(d)
                 if job:
                     job.abort()
+        
+        # File menu actions:
+        @self.onAction(i18n("Print Score (PDF)..."), "document-print",
+            key="Ctrl+Shift+P")
+        def file_print_score():
+            pass
+        
+        @self.onAction(i18n("Email Documents..."), "mail-send", key="Ctrl+E")
+        def file_email_documents():
+            d = self.currentDocument()
+            self.actionManager().email(d.updatedFiles(), d.metainfo["preview"])
         
         # Edit menu actions:
         @self.onSelAction(i18n("Cut and Assign"), "edit-cut",
@@ -578,6 +602,19 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         def edit_moveto_previous_blank_line(text):
             self.currentDocument().manipulator().moveSelectionUp()
         
+        # Generated files menu:
+        a = KActionMenu(i18n("&Generated Files"), self)
+        self.actionCollection().addAction('lilypond_actions', a)
+        def makefunc(menu):
+            def populateMenu():
+                menu.clear()
+                doc = self.currentDocument()
+                if not doc:
+                    return
+                self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
+            return populateMenu
+        a.menu().aboutToShow.connect(makefunc(a.menu()))
+            
         # actions and functionality for editing pitches
         a = KActionMenu(KIcon("applications-education-language"),
                 i18n("Pitch Name Language"), self)
@@ -741,10 +778,6 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         def file_open_current_folder():
             self.actionManager().openDirectory()
     
-        @self.onAction(i18n("Email..."), "mail-send")
-        def actions_email():
-            self.actionManager().email(self.currentDocument().updatedFiles())
-            
         # Settings
         @self.onAction(KStandardAction.Preferences)
         def options_configure():
@@ -773,7 +806,6 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         def wizard_blank_staff_paper():
             self.blankStaffPaperWizard().show()
 
-            
     def setupTools(self):
         KonsoleTool(self)
         LogTool(self)
@@ -782,22 +814,6 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         if not config().readEntry("disable pdf preview", False):
             PDFTool(self)
         LilyDocTool(self)
-    
-    def setupGeneratedMenus(self):
-        super(MainWindow, self).setupGeneratedMenus()
-        # Generated file menu:
-        menu = self.factory().container("lilypond_actions", self)
-        menu.setParent(menu.parent()) # BUG: SIP 4.10 otherwise looses outer scope of this function
-        def populateGenFilesMenu(menu=menu):
-            for action in menu.actions():
-                if action.objectName() != "actions_email":
-                    sip.delete(action)
-            doc = self.currentDocument()
-            if not doc:
-                return
-            menu.addSeparator()
-            self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
-        menu.aboutToShow.connect(populateGenFilesMenu)
             
     def runLilyPond(self, mode):
         """Run LilyPond on the current document.
@@ -870,12 +886,6 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                     d.view.setCursorPosition(cursor.kteCursor())
                     return
                     
-        # reset cursor position translations if LilyPond created a new PDF
-        @job.done.connect
-        def finished(success, job):
-            if job.updatedFiles()("pdf"):
-                d.resetCursorTranslations()
-        
         # init the progress bar (only done once)
         self.progressBarManager()
         # run the LilyPond Job
@@ -902,6 +912,15 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
     def setTabIcons(self, job):
         """Called on start/stop of a job, to update the icon in the tab bar."""
         self.viewTabs.setDocumentStatus(job.document)
+    
+    def setDocumentStatus(self, job, success):
+        """Called when a job exits. """
+        doc = job.document
+        # reset cursor position translations if LilyPond created a new PDF
+        if job.updatedFiles()("pdf"):
+            doc.resetCursorTranslations()
+        # remember if the last run used point and click or not
+        doc.metainfo["preview"] = job.preview
         
     def allActionCollections(self):
         for name, coll in super(MainWindow, self).allActionCollections():

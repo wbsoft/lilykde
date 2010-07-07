@@ -56,9 +56,7 @@ class ActionManager(object):
             a = menu.addAction(KIcon("application-pdf"),
                 i18n("Open %1 in external viewer", name))
             a.triggered.connect((lambda pdf: lambda: self.openPDF(pdf))(pdf))
-            a = menu.addAction(KIcon("document-print"), i18n("Print %1", name))
-            a.triggered.connect((lambda pdf: lambda: self.printPDF(pdf))(pdf))
-            menu.addSeparator()
+        menu.addSeparator()
         # MIDIs
         midis = updatedFiles("mid*")
         for midi in midis:
@@ -96,7 +94,6 @@ class ActionManager(object):
         # if any actions were added, also add the email action and show.
         if len(bar.actions()) > 0:
             a = bar.addAction(KIcon("mail-send"), i18n("Email..."))
-            a.setShortcut(QKeySequence("Ctrl+E"))
             a.setToolTip("{0} ({1})".format(a.toolTip(), a.shortcut().toString()))
             a.triggered.connect(lambda: self.email(updatedFiles, log.preview))
             log.checkScroll(bar.show)
@@ -173,7 +170,7 @@ class EmailDialog(KDialog):
         midiFiles = updatedFiles("mid*")
         
         if warnpreview and pdfFiles:
-            l = QLabel(i18np(
+            QLabel(i18np(
                 "Note: this PDF file has been created with "
                 "embedded point-and-click URLs (preview mode), which "
                 "increases the file size dramatically. "
@@ -184,9 +181,15 @@ class EmailDialog(KDialog):
                 "increases the file size dramatically. "
                 "Please consider to rebuild the files in publish mode, "
                 "because then the PDF files are much smaller.",
-                len(pdfFiles)), b)
-            l.setWordWrap(True)
+                len(pdfFiles)), b).setWordWrap(True)
         
+        if not pdfFiles and not midiFiles:
+            QLabel(i18n(
+                "Note: If there are no PDF and no MIDI files, you'll "
+                "probably want to run LilyPond to update those files, "
+                "before sending the e-mail."),
+                b).setWordWrap(True)
+            
         self.fileList = fileList
         self.setMainWidget(b)
         self.resize(450, 300)
