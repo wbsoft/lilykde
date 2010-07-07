@@ -57,13 +57,20 @@ class ActionManager(object):
             a = menu.addAction(KIcon("application-pdf"),
                 i18n("Open %1 in external viewer", name))
             a.triggered.connect((lambda pdf: lambda: self.openPDF(pdf))(pdf))
-        menu.addSeparator()
+        if pdfs:
+            menu.addSeparator()
         # MIDIs
         midis = updatedFiles("mid*")
         for midi in midis:
             name = '"{0}"'.format(os.path.basename(midi))
             a = menu.addAction(KIcon("media-playback-start"), i18n("Play %1", name))
             a.triggered.connect((lambda midi: lambda: self.openMIDI(midi))(midi))
+        if not pdfs and not midis:
+            a = menu.addAction(
+                i18n("(No up-to-date MIDI or PDF files available.)"))
+            a.setToolTip(i18n(
+                "There are no up-to-date MIDI or PDF files available. "
+                "Please run LilyPond to create one or more output files."))
 
     def addActionsToLog(self, updatedFiles, log):
         """

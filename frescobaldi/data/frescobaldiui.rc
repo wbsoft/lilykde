@@ -17,7 +17,7 @@
     <DefineGroup name="revert_merge" append="revert_merge"/>
     <Separator/>
     
-    <Action name="file_print_score"/>
+    <Action name="file_print_music"/>
     <DefineGroup name="print_merge" append="print_merge"/>
     <Separator/>
 
@@ -188,6 +188,8 @@
   <DefineGroup name="zoom_operations" />
   <Separator />
   <Action name="lilypond_runner" />
+  <Action name="file_print_music"/>
+  <Action name="lilypond_actions"/>
 </ToolBar>
 
 </kpartgui>

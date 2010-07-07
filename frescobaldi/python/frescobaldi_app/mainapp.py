@@ -477,9 +477,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                     job.abort()
         
         # File menu actions:
-        @self.onAction(i18n("Print Score (PDF)..."), "document-print",
+        @self.onAction(i18n("Print Music..."), "document-print",
             key="Ctrl+Shift+P")
-        def file_print_score():
+        def file_print_music():
             d = self.currentDocument()
             self.actionManager().print_(d.updatedFiles())
         
@@ -604,8 +604,9 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             self.currentDocument().manipulator().moveSelectionUp()
         
         # Generated files menu:
-        a = KActionMenu(i18n("&Generated Files"), self)
+        a = KActionMenu(KIcon("media-playback-start"), i18n("Play/View"), self)
         self.actionCollection().addAction('lilypond_actions', a)
+        a.setDelayed(False)
         def makefunc(menu):
             def populateMenu():
                 menu.clear()
