@@ -168,7 +168,8 @@ def findMatches(model, view, word, invocationType):
     """
     doc = view.document()
     line, col = word.start().line(), word.start().column()
-    text = doc.line(line)[:col]
+    text = doc.line(line)
+    text = text[:col] if text else "" # cause KatePart returns None i.s.o. ""
     
     # determine what the user tries to type
     # very specific situations:
@@ -211,8 +212,8 @@ def findMatches(model, view, word, invocationType):
     if re.search(r"#'break-visibility\s*=\s*#$", text):
         return ly.words.break_visibility
     # parse to get current context
-    fragment = doc.text(KTextEditor.Range(
-        KTextEditor.Cursor(0, 0), word.start()))
+    fragment = doc.text(KTextEditor.Range(KTextEditor.Cursor(0, 0),
+        word.start())) or "" # KatePart returns None instead of empty string
     tokenizer = ly.tokenize.Tokenizer()
     token = None # in case the next loop does not run at all
     for token in tokenizer.tokens(fragment):
