@@ -22,7 +22,7 @@ cd "$pkg" || die "could not cd into package"
 
 ( mkdir build &&
   cd build &&
-  cmake .. &&
+  cmake -DLILYPOND_EXECUTABLE=${LILYPOND:-lilypond} .. &&
   make
 ) || die "could not build package"
 
