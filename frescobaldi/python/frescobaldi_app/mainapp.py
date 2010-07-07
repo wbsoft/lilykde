@@ -608,15 +608,16 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         a = KActionMenu(KIcon("media-playback-start"), i18n("Play/View"), self)
         self.actionCollection().addAction('lilypond_actions', a)
         a.setDelayed(False)
-        def makefunc(menu):
+        def makefunc(action):
             def populateMenu():
+                menu = action.menu()
                 menu.clear()
                 doc = self.currentDocument()
                 if not doc:
                     return
                 self.actionManager().addActionsToMenu(doc.updatedFiles(), menu)
             return populateMenu
-        a.menu().aboutToShow.connect(makefunc(a.menu()))
+        a.menu().aboutToShow.connect(makefunc(a))
             
         # actions and functionality for editing pitches
         a = KActionMenu(KIcon("applications-education-language"),
