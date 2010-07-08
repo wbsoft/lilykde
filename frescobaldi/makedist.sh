@@ -1,4 +1,9 @@
 #/bin/sh
+
+# Exports a SVN checkout, builds the icons in pics/ and MO files in po/ and
+# creates a tar ball. Set the LILYPOND environment variable to specify a
+# LilyPond binary to build the icons.
+
 package=$(sed -n 's/^project\s*(\s*\(\w*\).*/\1/p' CMakeLists.txt)
 version=$(sed -n 's/.*VERSION "\(.*\)".*/\1/p' CMakeLists.txt)
 
@@ -11,6 +16,11 @@ die()
   exit 1
 }
 
+CMAKE_ARGS=""
+if [ -n "${LILYPOND}" ]; then
+  CMAKE_ARGS="-DLILYPOND_EXECUTABLE=${LILYPOND}"
+fi
+
 echo Creating $pkg.tar.gz
 svn export . $pkg || die "export failed"
 
@@ -22,7 +32,7 @@ cd "$pkg" || die "could not cd into package"
 
 ( mkdir build &&
   cd build &&
-  cmake -DLILYPOND_EXECUTABLE=${LILYPOND:-lilypond} .. &&
+  cmake ${CMAKE_ARGS} .. &&
   make
 ) || die "could not build package"
 
