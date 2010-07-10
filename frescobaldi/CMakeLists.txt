@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.4)
 project(frescobaldi NONE)
-set(VERSION "1.1.2")
+set(VERSION "1.1.3")
 
 option(HANDBOOK "Install Frescobaldi User Guide" ON)
 option(BYTECOMPILE "Byte-compile Python modules on install" ON)
