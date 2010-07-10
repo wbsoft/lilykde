@@ -857,6 +857,7 @@ class InternalsReferenceIndex(Index):
         except HTMLParser.HTMLParseError:
             return False
     
+
 class InternalsReferenceContextsIndex(InternalsReferenceIndex):
     urls = (
         'user/lilypond-internals/Contexts',
@@ -907,6 +908,9 @@ class InternalsReferenceEngraversIndex(InternalsReferenceIndex):
     urls = (
         'user/lilypond-internals/Engravers',
         'user/lilypond-internals/Engravers.html',
+        # 2.12
+        'user/lilypond-internals/Engravers-and-Performers',
+        'user/lilypond-internals/Engravers-and-Performers.html',
         # from 2.13 on the url scheme changed slightly
         'internals/Engravers-and-Performers',
         'internals/Engravers-and-Performers.html',
