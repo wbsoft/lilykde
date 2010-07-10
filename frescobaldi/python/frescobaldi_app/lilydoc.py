@@ -537,6 +537,45 @@ class NotationReferenceIndexParser(IndexParser):
 class LearningManualIndexParser(IndexParser):
     indexClass = 'index-cp'
     
+class InternalsReferenceChapterParser(HtmlParser):
+    """Parses a chapter of the LilyPond Internals Reference.
+    
+    Makes lists of Contexts or Grobs, etc.
+    
+    """
+    def __init__(self, html):
+        HtmlParser.__init__(self)
+        self._tableTag = None
+        self._parsing = False
+        self._anchor = None
+        self._title = ""
+        self.items = {}
+        self.feed(html)
+    
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if not self._parsing:
+            if tag in ('ul', 'table') and attrs.get('class') == "menu":
+                self._tableTag = tag
+                self._parsing = True
+        elif tag == 'a' and 'href' in attrs:
+            self._anchor = attrs['href']
+            
+    def handle_data(self, data):
+        if self._anchor is not None:
+            self._title += data
+            
+    def handle_endtag(self, tag):
+        if not self._parsing:
+            return
+        elif tag == self._tableTag:
+            self._parsing = False
+        elif tag == 'a':
+            title = self._title.split()[-1]
+            self.items[title] = self._anchor
+            self._title = ""
+            self._anchor = None
+
 
 class HtmlLoader(object):
     """
@@ -700,6 +739,13 @@ class Index(object):
         a.setSeparator(True)
         menu.insertAction(self.loadingAction, a)
         
+    def addMenuTitle(self, menu, title):
+        """
+        Add a title. Use this instead of menu.addTitle, because
+        different indexes may add entries asynchroneously to the same menu.
+        """
+        menu.addTitle(title, self.loadingAction)
+        
     def addMenuUrl(self, menu, title, url):
         """
         Adds an action to the menu with an url relative
@@ -802,26 +848,109 @@ class LearningManualIndex(Index):
                 break
         self.addMenuUrl(menu, i18n("Learning Manual Index"), self.url)
         
-            
+
+class InternalsReferenceIndex(Index):
+    def parse(self, html):
+        try:
+            self.items = InternalsReferenceChapterParser(html).items
+            return True
+        except HTMLParser.HTMLParseError:
+            return False
+    
+class InternalsReferenceContextsIndex(InternalsReferenceIndex):
+    urls = (
+        'user/lilypond-internals/Contexts',
+        'user/lilypond-internals/Contexts.html',
+        # from 2.13 on the url scheme changed slightly
+        'internals/Contexts',
+        'internals/Contexts.html',
+        # new website layout uses lower case:
+        'internals/contexts',
+        'internals/contexts.html',
+        # in case the manuals.html page is used as index:
+        '../internals/contexts',
+        '../internals/contexts.html',
+        )
+        
+    def addMenuActions(self, menu, text, column):
+        for m in re.finditer(r"[A-Z][A-Za-z]+", text):
+            if m.start() <= column <= m.end() and m.group() in self.items:
+                self.addMenuTitle(menu, i18n("Internals Reference"))
+                self.addMenuUrl(menu, i18n("The %1 context", m.group()), self.items[m.group()])
+                break
+
+
+class InternalsReferenceGrobsIndex(InternalsReferenceIndex):
+    urls = (
+        'user/lilypond-internals/All-layout-objects',
+        'user/lilypond-internals/All-layout-objects.html',
+        # from 2.13 on the url scheme changed slightly
+        'internals/All-layout-objects',
+        'internals/All-layout-objects.html',
+        # new website layout uses lower case:
+        'internals/all-layout-objects',
+        'internals/all-layout-objects.html',
+        # in case the manuals.html page is used as index:
+        '../internals/all-layout-objects',
+        '../internals/all-layout-objects.html',
+        )
+        
+    def addMenuActions(self, menu, text, column):
+        for m in re.finditer(r"[A-Z][A-Za-z]+", text):
+            if m.start() <= column <= m.end() and m.group() in self.items:
+                self.addMenuTitle(menu, i18n("Internals Reference"))
+                self.addMenuUrl(menu, i18n("The %1 layout object", m.group()), self.items[m.group()])
+                break
+
+
+class InternalsReferenceEngraversIndex(InternalsReferenceIndex):
+    urls = (
+        'user/lilypond-internals/Engravers',
+        'user/lilypond-internals/Engravers.html',
+        # from 2.13 on the url scheme changed slightly
+        'internals/Engravers-and-Performers',
+        'internals/Engravers-and-Performers.html',
+        # new website layout uses lower case:
+        'internals/engravers-and-performers',
+        'internals/engravers-and-performers.html',
+        # in case the manuals.html page is used as index:
+        '../internals/engravers-and-performers',
+        '../internals/engravers-and-performers.html',
+        )
+        
+    def addMenuActions(self, menu, text, column):
+        for m in re.finditer(r"[A-Z][A-Za-z]*(_[A-Za-z]+)+", text):
+            if m.start() <= column <= m.end() and m.group() in self.items:
+                self.addMenuTitle(menu, i18n("Internals Reference"))
+                self.addMenuUrl(menu, m.group(), self.items[m.group()])
+                break
+
+
 class DocFinder(object):
     """
     Find and pre-parse LilyPond documentation.
     """
     def __init__(self, tool):
         loader = HtmlLoader(KUrl(docHomeUrl()))
-        self.commandIndex = NotationReferenceIndex(loader, tool)
-        self.learningIndex = LearningManualIndex(loader, tool)
-            
+        self.indices = [
+            NotationReferenceIndex(loader, tool),        
+            LearningManualIndex(loader, tool),
+            InternalsReferenceContextsIndex(loader, tool),
+            InternalsReferenceGrobsIndex(loader, tool),
+            InternalsReferenceEngraversIndex(loader, tool),
+            ]
+        
     def addHelpMenu(self, contextMenu, text, column):
-        if (self.commandIndex.loaded is False
-            and self.learningIndex.loaded is False):
+        for index in self.indices:
+            if index.loaded is not False:
+                break
+        else:
             return # no docs available
         menu = KMenu(i18n("LilyPond &Help"), contextMenu)
         menu.setIcon(KIcon("lilydoc"))
         contextMenu.addMenu(menu)
-        self.learningIndex.addMenuActionsWhenLoaded(menu, text, column)
-        self.commandIndex.addMenuActionsWhenLoaded(menu, text, column)
-
+        for index in self.indices:
+            index.addMenuActionsWhenLoaded(menu, text, column)
 
 
 # Easily get our global config
