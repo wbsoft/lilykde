@@ -605,6 +605,7 @@ class LilyPondVersions(SettingsGroup):
         layout = QVBoxLayout(self)
         
         self.instances = LilyPondInfoList(self)
+        self.instances.changed.connect(page.changed)
         layout.addWidget(self.instances)
         self.auto = QCheckBox(i18n(
             "Enable automatic version selection "
