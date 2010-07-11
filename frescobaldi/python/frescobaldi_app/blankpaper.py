@@ -511,11 +511,15 @@ class PianoStaff(StaffBase):
         layout.setSpanBarContexts(['PianoStaff'])
         if not self.clefs.isChecked():
             layout.add('Staff', '\\remove "Clef_engraver"')
+        if lilyPondVersion() < (2, 13, 4):
+            spacing = "#'minimum-Y-extent = #'(-6 . 3)"
+        else:
+            spacing = "#'next-staff-spacing = #'((space . 10))"
         return ['\\new PianoStaff <<',
-            '\\new Staff { \\clef treble \\music }',
             '\\new Staff \\with {',
-            "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-3 . 6)",
-            '} { \\clef bass \\music }',
+            '\\override VerticalAxisGroup ' + spacing,
+            '} { \\clef treble \\music }',
+            '\\new Staff { \\clef bass \\music }',
             '>>']
 
 
@@ -528,13 +532,21 @@ class OrganStaff(PianoStaff):
         self.clefs.setChecked(True)
     
     def music(self, layout):
-        PianoStaff.music(self, layout)
+        layout.setSpanBarContexts(['GrandStaff'])
+        if not self.clefs.isChecked():
+            layout.add('Staff', '\\remove "Clef_engraver"')
+        if lilyPondVersion() < (2, 13, 4):
+            spacing = "#'minimum-Y-extent = #'(-6 . 3)"
+        else:
+            spacing = "#'next-staff-spacing = #'((space . 12) (stretchability . 1))"
+            layout.add('Staff', "\\override VerticalAxisGroup "
+                "#'next-staff-spacing = #'((space . 10) (stretchability . 1))")
         return ['<<',
-            '\\new PianoStaff <<',
-            '\\new Staff { \\clef treble \\music }',
+            '\\new GrandStaff <<',
             '\\new Staff \\with {',
-            "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-5 . 6)",
-            '} { \\clef bass \\music }',
+            '\\override VerticalAxisGroup ' + spacing,
+            '} { \\clef treble \\music }',
+            '\\new Staff { \\clef bass \\music }',
             '>>',
             '\\new Staff { \\clef bass \\music }',
             '>>']
@@ -611,8 +623,9 @@ class ChoirStaff(StaffBase):
         else:
             clefs = [None] * length
             layout.add("Staff", '\\remove "Clef_engraver"')
-        layout.add("Staff",
-            "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 4)")
+        if lilyPondVersion() < (2, 13, 4):
+            layout.add("Staff",
+                "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 4)")
         music = ['\\new ChoirStaff <<']
         for clef in clefs:
             music.append('\\new Staff {{{0} \\music }}'.format({
@@ -822,10 +835,7 @@ class StaffItem(Item):
     
     def music(self, layout):
         clef = self.clef.clef()
-        if clef == 'tab':
-            staff = 'TabStaff'
-        else:
-            staff = 'Staff'
+        staff = 'TabStaff' if clef == 'tab' else 'Staff'
         layout.addStaffContext(staff)
         music = ['\\new {0} \\with {{'.format(staff)]
         if lilyPondVersion() < (2, 13, 4):
