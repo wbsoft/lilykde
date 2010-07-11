@@ -490,7 +490,10 @@ class IndexParser(HtmlParser):
         self._tableTag = None
         self.items = {}
         self.initLine()
-        self.feed(html)
+        try:
+            self.feed(html)
+        except HTMLParser.HTMLParseError:
+            pass
     
     def initLine(self):
         self._anchors = []
@@ -550,7 +553,10 @@ class InternalsReferenceChapterParser(HtmlParser):
         self._anchor = None
         self._title = ""
         self.items = {}
-        self.feed(html)
+        try:
+            self.feed(html)
+        except HTMLParser.HTMLParseError:
+            pass
     
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -773,11 +779,8 @@ class NotationReferenceIndex(Index):
         )
     
     def parse(self, html):
-        try:
-            self.items = NotationReferenceIndexParser(html).items
-            return True
-        except HTMLParser.HTMLParseError:
-            return False
+        self.items = NotationReferenceIndexParser(html).items
+        return bool(self.items)
     
     def menuTitle(self):
         return i18n("Notation Reference")
@@ -819,11 +822,8 @@ class LearningManualIndex(Index):
         )
     
     def parse(self, html):
-        try:
-            self.items = LearningManualIndexParser(html).items
-            return True
-        except HTMLParser.HTMLParseError:
-            return False
+        self.items = LearningManualIndexParser(html).items
+        return bool(self.items)
     
     def menuTitle(self):
         return i18n("Learning Manual")
@@ -851,11 +851,8 @@ class LearningManualIndex(Index):
 
 class InternalsReferenceIndex(Index):
     def parse(self, html):
-        try:
-            self.items = InternalsReferenceChapterParser(html).items
-            return True
-        except HTMLParser.HTMLParseError:
-            return False
+        self.items = InternalsReferenceChapterParser(html).items
+        return bool(self.items)
     
 
 class InternalsReferenceContextsIndex(InternalsReferenceIndex):
