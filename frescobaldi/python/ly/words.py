@@ -485,6 +485,7 @@ markupcommands_nargs = (
 (
     'doubleflat',
     'doublesharp',
+    'eyeglasses',
     'flat',
     'natural',
     'null',
