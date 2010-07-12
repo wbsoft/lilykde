@@ -513,19 +513,15 @@ class ViewTabBar(QTabBar):
     def readSettings(self):
         # closeable? only in Qt >= 4.6
         try:
-            self.setTabsClosable
+            self.setTabsClosable(config("tab bar").readEntry("close button", True))
         except AttributeError:
             pass
-        else:
-            self.setTabsClosable(config("tab bar").readEntry("close button", True))
         
         # expanding? only in Qt >= 4.5
         try:
-            self.setExpanding
+            self.setExpanding(config("tab bar").readEntry("expanding", False))
         except AttributeError:
             pass
-        else:
-            self.setExpanding(config("tab bar").readEntry("expanding", False))
         
     def addDocument(self, doc):
         if doc not in self.docs:
@@ -576,9 +572,7 @@ class ViewTabBar(QTabBar):
             menu.exec_(ev.globalPos())
 
     def addMenuActions(self, menu, doc):
-        """
-        Populate the menu with actions relevant for the document.
-        """
+        """ Populate the menu with actions relevant for the document. """
         g = KStandardGuiItem.save()
         a = menu.addAction(g.icon(), g.text())
         a.triggered.connect(lambda: doc.save())
@@ -592,9 +586,7 @@ class ViewTabBar(QTabBar):
 
 
 class TabBar(KMultiTabBar):
-    """
-    Our own tabbar with some nice defaults.
-    """
+    """Our own tabbar with some nice defaults."""
     def __init__(self, orientation, parent, maxSize=18):
         KMultiTabBar.__init__(self, orientation, parent)
         self.setStyle(KMultiTabBar.KDEV3ICON)
@@ -635,11 +627,11 @@ class TabBar(KMultiTabBar):
 
 
 class Dock(QStackedWidget):
-    """
-    A dock where tools can be added to.
-    Hides itself when there are no tools visible.
+    """A dock where tools can be added to.
     
+    Hides itself when there are no tools visible.
     When it receives a tool, a button is created in the associated tabbar.
+    
     """
     def __init__(self, parent, tabbar, icon, title):
         QStackedWidget.__init__(self, parent)
@@ -666,9 +658,10 @@ class Dock(QStackedWidget):
             self.hide()
         
     def showTool(self, tool):
-        """
-        Only to be called by tool.show().
-        Call tool.show() to make it active.
+        """Internal: only to be called by tool.show().
+        
+        Use tool.show() to make a tool active.
+        
         """
         if tool not in self._tools or tool is self._currentTool:
             return
@@ -684,9 +677,10 @@ class Dock(QStackedWidget):
             self.show()
             
     def hideTool(self, tool):
-        """
-        Only to be called by tool.hide().
-        Call tool.hide() to make it inactive.
+        """Internal: only to be called by tool.hide().
+        
+        Use tool.hide() to make a tool inactive.
+        
         """
         self.tabbar.hideTool(tool)
         if tool is self._currentTool:
@@ -701,9 +695,7 @@ class Dock(QStackedWidget):
 
 
 class DockDialog(QDialog):
-    """
-    A QDialog that (re)docks itself when closed.
-    """
+    """A QDialog that (re)docks itself when closed."""
     def __init__(self, tool):
         QDialog.__init__(self, tool.mainwin)
         QVBoxLayout(self).setContentsMargins(0, 0, 0, 0)
@@ -738,9 +730,10 @@ class DockDialog(QDialog):
 
 
 class Tool(object):
-    """
-    A Tool, that can be docked or undocked in/from the MainWindow.
-    Can be subclassed.
+    """A Tool, that can be docked or undocked in/from the MainWindow.
+    
+    Intended to be subclassed.
+    
     """
     allowedPlaces = Top, Right, Bottom, Left
     defaultHeight = 300
@@ -778,28 +771,42 @@ class Tool(object):
         return self.mainwin.actionCollection().action("tool_" + self.name)
     
     def slotAction(self):
-        """
-        Called when our action is triggered.
+        """Called when our action is triggered.
+        
         Default behaviour is to toggle the visibility of our tool.
         Override this to implement other behaviour when our action is called
         (e.g. focus instead of hide).
+        
         """
         self.toggle()
         
     def materialize(self):
+        """If not yet done, calls self.factory() to get the widget of our tool.
+        
+        The widget is stored in the widget instance attribute.
+        Use this to make tools 'lazy': only instantiate the widget and load
+        other modules if needed as soon as the user wants to show the tool.
+        
+        """
         if self.widget is None:
             with self.mainwin.app.busyCursor():
                 self.widget = self.factory()
     
     def factory(self):
-        """
-        Should return this Tool's widget when it must become visible.
+        """Should return this Tool's widget when it must become visible.
+        
         I you didn't supply a widget on init, you must override this method.
+        
         """
         return QWidget()
         
     def delete(self):
-        """ Completely remove our tool """
+        """Completely remove the tool.
+        
+        Its association with the mainwindow is removed, and it will be
+        garbage collected as soon as the last reference to it is lost.
+        
+        """
         if not self._docked:
             self.dock()
         self._dock.removeTool(self)
@@ -821,7 +828,7 @@ class Tool(object):
             self._dialog.raise_()
             
     def hide(self):
-        """ Hide our tool """
+        """ Hide our tool. """
         if self._docked:
             self._active = False
             self._dock.hideTool(self)
@@ -830,6 +837,7 @@ class Tool(object):
                 view.setFocus()
 
     def toggle(self):
+        """ Toggle visibility if docked. """
         if self._docked:
             if self._active:
                 self.hide()
@@ -837,12 +845,19 @@ class Tool(object):
                 self.show()
 
     def isActive(self):
+        """ Returns True if the tool is currently the active one in its dock."""
         return self._active
     
     def isDocked(self):
+        """ Returns True if the tool is docked. """
         return self._docked
         
     def setDock(self, place):
+        """ Puts the tool in one of the four places.
+        
+        place is one of (KMultiTabBar).Top, Right, Bottom, Left
+        
+        """
         dock = self.mainwin.docks.get(place, self._dock)
         if dock is self._dock:
             return
@@ -902,9 +917,7 @@ class Tool(object):
             self._dialog.updateState()
             
     def showContextMenu(self, globalPos):
-        """
-        Show a popup menu to manipulate this tool.
-        """
+        """Show a popup menu to manipulate this tool."""
         m = KMenu(self.mainwin)
         places = [place for place in Left, Right, Top, Bottom
             if place in self.allowedPlaces
@@ -927,9 +940,7 @@ class Tool(object):
         m.popup(globalPos)
 
     def addMenuActions(self, menu):
-        """
-        Use this to add your own actions to a tool menu.
-        """
+        """Use this to add your own actions to a tool menu."""
         pass
     
     def config(self):
@@ -947,22 +958,25 @@ class Tool(object):
         self.writeConfig(conf)
         
     def readConfig(self, conf):
-        """
-        You can implement this in your subclass to read additional config data.
-        """
+        """Implement this in your subclass to read additional config data."""
         pass
     
     def writeConfig(self, conf):
-        """
-        You can implement this in your subclass to write additional config data.
-        """
+        """Implement this in your subclass to write additional config data."""
         pass
     
     def help(self):
+        """Invokes Help on our tool.
+        
+        See the helpAnchor and helpAppName attributes.
+        
+        """
         KToolInvocation.invokeHelp(self.helpAnchor, self.helpAppName)
 
 
 class KPartTool(Tool):
+    """A Tool where the widget is loaded via the KParts system."""
+    
     # set this to the library name you want to load
     _partlibrary = ""
     # set this to the name of the app containing this part
@@ -1016,14 +1030,15 @@ class KPartTool(Tool):
 
 
 class UserShortcutManager(object):
-    """
-    Manages user-defined keyboard shortcuts.
+    """Manages user-defined keyboard shortcuts.
+    
     Keyboard shortcuts can be loaded without loading the module they belong to.
     If a shortcut is triggered, the module is loaded on demand and the action
     triggered.
 
     You should subclass this base class and implement the widget() and client()
     methods.
+    
     """
 
     # which config group to store our shortcuts
@@ -1045,27 +1060,26 @@ class UserShortcutManager(object):
         self._collection.readSettings()
     
     def widget(self):
-        """
-        Should return the widget where the actions should be added to.
-        """
+        """Should return the widget where the actions should be added to."""
         pass
         
     def client(self):
-        """
-        Should return the object that can further process our actions.
+        """Should return the object that can further process our actions.
         
         Most times this will be a kateshell.shortcut.ShortcutClientBase instance.
         
         It should have the following methods:
         - actionTriggered(name)
         - populateAction(name, action)
+        
         """
         pass
         
     def addAction(self, name):
-        """
-        (Internal) Create a new action with name name.
+        """(Internal) Create a new action with name name.
+        
         If existing, return the existing action.
+        
         """
         action = self._collection.action(name)
         if not action:
@@ -1075,10 +1089,7 @@ class UserShortcutManager(object):
         return action
     
     def actionCollection(self):
-        """
-        Returns the action collection, fully populated with texts and
-        icons.
-        """
+        """Returns the action collection, populated with texts and icons."""
         for action in self._collection.actions()[:]:
             if action.shortcut().isEmpty():
                 sip.delete(action)
