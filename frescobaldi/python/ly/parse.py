@@ -23,11 +23,16 @@ from __future__ import unicode_literals
 General functions that parse LilyPond document text.
 """
 
-import os, ly.rx
+import os
+import ly.rx
 
-def findIncludeFiles(lyfile):
-    """
-    Finds files included by the document in lyfile.
+
+def findIncludeFiles(lyfile, path=()):
+    """Finds files included by the document in lyfile.
+    
+    If path is given, it must be a list of directories that are also searched
+    for files to be included.
+    
     """
     files = set()
     basedir = os.path.dirname(lyfile)
@@ -45,14 +50,16 @@ def findIncludeFiles(lyfile):
                 # new, recursive, relative include
                 if directory != basedir:
                     find(os.path.join(directory, f))
+                # if path is given, also search there:
+                for p in path:
+                    find(os.path.join(p, f))
     find(lyfile)
     return files
 
 def documentLanguage(text):
-    """
-    Return the LilyPond pitch language name for the document, if set.
-    """
+    """Return the LilyPond pitch language name for the document, if set."""
     text = ly.rx.all_comments.sub('', text)
     m = ly.rx.language.match(text)
     if m:
         return m.group(1)
+

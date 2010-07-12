@@ -196,7 +196,8 @@ class EmailDialog(KDialog):
             "the LilyPond source document). Also LilyPond files included "
             "by the source document are shown."))
         
-        lyFiles = ly.parse.findIncludeFiles(updatedFiles.lyfile)
+        lyFiles = ly.parse.findIncludeFiles(updatedFiles.lyfile,
+            config("preferences").readPathEntry("lilypond include path", []))
         pdfFiles = updatedFiles("pdf")
         midiFiles = updatedFiles("mid*")
         
