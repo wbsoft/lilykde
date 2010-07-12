@@ -576,8 +576,8 @@ class ViewTabBar(QTabBar):
     
     def slotTabMoved(self, index_from, index_to):
         """ Called when the user moved a tab. """
-        (self.docs[index_to], self.docs[index_from]) = (
-            self.docs[index_from], self.docs[index_to])
+        doc = self.docs.pop(index_from)
+        self.docs.insert(index_to, doc)
         
     def contextMenuEvent(self, ev):
         """ Called when the right mouse button is clicked on the tab bar. """
