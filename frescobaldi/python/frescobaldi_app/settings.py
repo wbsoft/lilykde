@@ -672,6 +672,8 @@ class TabBarSettings(CheckGroup):
             self.addCheckBox(i18n("Close Button"), "close button", True))
         layout.addWidget(
             self.addCheckBox(i18n("Large Tabs"), "expanding", False))
+        layout.addWidget(
+            self.addCheckBox(i18n("Tabs can be moved"), "movable", True))
     
     def applySettings(self):
         self.page.dialog.mainwin.viewTabs.readSettings()

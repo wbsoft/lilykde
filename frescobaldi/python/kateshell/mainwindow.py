@@ -508,6 +508,11 @@ class ViewTabBar(QTabBar):
             self.tabCloseRequested.connect(self.slotTabCloseRequested)
         except AttributeError:
             pass
+        try:
+            self.setMovable
+            self.tabMoved.connect(self.slotTabMoved)
+        except AttributeError:
+            pass
         self.readSettings()
         
     def readSettings(self):
@@ -520,6 +525,12 @@ class ViewTabBar(QTabBar):
         # expanding? only in Qt >= 4.5
         try:
             self.setExpanding(config("tab bar").readEntry("expanding", False))
+        except AttributeError:
+            pass
+        
+        # movable? only in Qt >= 4.5
+        try:
+            self.setMovable(config("tab bar").readEntry("movable", True))
         except AttributeError:
             pass
         
@@ -562,6 +573,11 @@ class ViewTabBar(QTabBar):
     def slotTabCloseRequested(self, index):
         """ Called when the user clicks the close button. """
         self.docs[index].close()
+    
+    def slotTabMoved(self, index_from, index_to):
+        """ Called when the user moved a tab. """
+        (self.docs[index_to], self.docs[index_from]) = (
+            self.docs[index_from], self.docs[index_to])
         
     def contextMenuEvent(self, ev):
         """ Called when the right mouse button is clicked on the tab bar. """
