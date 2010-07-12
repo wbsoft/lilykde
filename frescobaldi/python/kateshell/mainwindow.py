@@ -27,10 +27,10 @@ from PyQt4.QtGui import (
     QStackedWidget, QTabBar, QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, KPluginLoader, KToolInvocation, KUrl, i18n
 from PyKDE4.kdeui import (
-    KAction, KActionCollection, KActionMenu, KDialog, KEditToolBar, KHBox,
-    KIcon, KKeySequenceWidget, KMenu, KMessageBox, KMultiTabBar, KShortcut,
-    KShortcutsDialog, KShortcutsEditor, KStandardAction, KStandardGuiItem,
-    KToggleFullScreenAction, KVBox)
+    KAcceleratorManager, KAction, KActionCollection, KActionMenu, KDialog,
+    KEditToolBar, KHBox, KIcon, KKeySequenceWidget, KMenu, KMessageBox,
+    KMultiTabBar, KShortcut, KShortcutsDialog, KShortcutsEditor,
+    KStandardAction, KStandardGuiItem, KToggleFullScreenAction, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 from PyKDE4.kio import KEncodingFileDialog
@@ -490,6 +490,7 @@ class ViewTabBar(QTabBar):
     """
     def __init__(self, mainwin):
         QTabBar.__init__(self)
+        KAcceleratorManager.setNoAccel(self)
         self.mainwin = mainwin
         self.docs = []
         # get the documents to create their tabs.
