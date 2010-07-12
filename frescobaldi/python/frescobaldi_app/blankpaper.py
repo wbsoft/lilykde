@@ -153,9 +153,9 @@ class Dialog(KDialog):
             self.stack.setCurrentWidget(self.typeWidgets[index]))
 
         self.actors = [
-            OpenPDF,
-            SavePDF,
             PrintPDF,
+            SavePDF,
+            OpenPDF,
             CopyToEditor,
             ]
         for actor in self.actors:
@@ -195,12 +195,18 @@ class Dialog(KDialog):
             widget.default()
 
     def loadSettings(self):
-        # only remember option to remove default FRESCOBALDI.ORG tagline
-        self.removeTagline.setChecked(config().readEntry("remove tagline", False))
+        conf = config()
+        self.removeTagline.setChecked(conf.readEntry("remove tagline", False))
+        action = conf.readEntry("action", "PrintPDF")
+        for index, actor in enumerate(self.actors):
+            if actor.__name__ == action:
+                self.actionChooser.setCurrentIndex(index)
     
     def saveSettings(self):
-        # only remember option to remove default FRESCOBALDI.ORG tagline
-        config().writeEntry("remove tagline", self.removeTagline.isChecked())
+        conf = config()
+        conf.writeEntry("remove tagline", self.removeTagline.isChecked())
+        action = self.actors[self.actionChooser.currentIndex()].__name__
+        conf.writeEntry("action", action)
     
     def showPreview(self):
         self.previewDialog().showPreview(self.ly())
