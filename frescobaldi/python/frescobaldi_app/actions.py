@@ -346,28 +346,31 @@ def openFile(fileName, window, cmd = None):
     # let C++ own the KRun object, it will delete itself.
     sip.transferto(KRun(KUrl.fromPath(fileName), window), None)
     
-def printPDF(pdfFileName, window):
-    """ Opens a print dialog to print the given PDF file. """
-    printPDFs([pdfFileName], window)
+def printPDF(pdfFileName, window, printer=None):
+    """Prints the given PDF file. See printPDFs for more information. """
+    printPDFs([pdfFileName], window, printer)
     
-def printPDFs(pdfFileNames, window):
-    """ Opens a print dialog to print the given list of PDF files. """
+def printPDFs(pdfFileNames, window, printer=None):
+    """Prints the give list of PDF files.
+    
+    If printer (a QPrinter instance) is not given, a print dialog is opened.
+    
+    """
     if not pdfFileNames:
         return  # don't do anything on an empty list.
-    
-    printer = QPrinter()
-    dlg = KdePrint.createPrintDialog(printer, window)
-    if len(pdfFileNames) == 1:
-        dlg.setWindowTitle(KDialog.makeStandardCaption(
-            i18n("Print %1", os.path.basename(pdfFileNames[0]))))
-    else:
-        dlg.setWindowTitle(KDialog.makeStandardCaption(
-            i18np("Print 1 file", "Print %1 files", len(pdfFileNames))))
-        dlg.setOption(dlg.PrintToFile, False)
-        
-    if not dlg.exec_():
-        return
 
+    if printer is None:
+        # open a dialog
+        if len(pdfFileNames) == 1:
+            printer = getPrinter(window,
+                i18n("Print %1", os.path.basename(pdfFileNames[0])))
+        else:
+            printer = getPrinter(window,
+                i18np("Print 1 file", "Print %1 files", len(pdfFileNames)),
+                allowPrintToFile=False)
+    if not printer:
+        return # cancelled
+        
     import kateshell.fileprinter
     try:
         kateshell.fileprinter.printFiles(pdfFileNames, printer)
@@ -383,6 +386,26 @@ def printPDFs(pdfFileNames, window):
         KMessageBox.error(window, i18n(
             "The command below has been run, but exited with a return code %1."
             "\n\n%2", ret, cmd))
+
+def getPrinter(window, caption=None, printer=None, allowPrintToFile=True):
+    """Opens a Print Dialog and waits for user interaction.
+    
+    If the dialog is accepted, the configured printer (a QPrinter) is
+    returned, otherwise None.
+    
+    window is the parent window for the print dialog.
+    If printer is given, it must be a QPrinter instance.
+    If allowPrintToFile=False, printing to a file is not allowed.
+    
+    """
+    if printer is None:
+        printer = QPrinter()
+    dlg = KdePrint.createPrintDialog(printer, window)
+    if caption:
+        dlg.setWindowTitle(KDialog.makeStandardCaption(caption))
+    dlg.setOption(dlg.PrintToFile, allowPrintToFile)
+    if dlg.exec_():
+        return printer
 
 def emailFiles(urls):
     """ Open the default mailer with the given urls (list of str) attached. """
