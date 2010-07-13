@@ -40,7 +40,7 @@ from kateshell.app import cacheresult
 from frescobaldi_app.mainapp import SymbolManager, lilyPondVersion
 from frescobaldi_app.widgets import StackFader, ClefSelector
 from frescobaldi_app.runlily import BackgroundJob, LilyPreviewDialog
-from frescobaldi_app.actions import openPDF, printPDF
+from frescobaldi_app.actions import openPDF, printPDF, getPrinter
 
 
 class Dialog(KDialog):
@@ -362,8 +362,25 @@ class PrintPDF(BlankPaperJob):
     def name():
         return i18n("Print...")
 
+    def __init__(self, dialog):
+        BlankPaperJob.__init__(self, dialog)
+        self.printer = None
+        self.fileName = None
+        printer = getPrinter(dialog, i18n("Print staff paper"))
+        if printer:
+            self.printer = printer
+            self.printPDF()
+        else:
+            self.cleanup()
+            
     def handlePDF(self, fileName):
-        printPDF(fileName, self.dialog)
+        self.fileName = fileName
+        self.printPDF()
+        
+    def printPDF(self):
+        """ Prints if the printer and the PDF are both there."""
+        if self.printer and self.fileName:
+            printPDF(self.fileName, self.dialog, self.printer)
 
 
 class CopyToEditor(object):
