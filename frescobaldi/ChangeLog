@@ -3,11 +3,11 @@ Changes in 1.1.3 --
 * General:
   - Tabs can be reordered (can be turned off)
   - Tabs don't get automatic shortcuts, they sometimes conflict with ours
+  - Basic session management has been added: if you log out with Frescobaldi
+    running and then back in, Frescobaldi will reopen the documents that were
+    open at logout.
 * Context sensitive LilyPond help:
   - added support for internals reference: contexts, grobs and engravers.
-* Session management:
-  - If you log out with Frescobaldi running and then back in, Frescobaldi will
-    reopen the documents that were open at logout.
 * Translations:
   - Dutch updated by Wilbert Berendsen
   - Turkish updated by Server Acim
