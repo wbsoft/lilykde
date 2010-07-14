@@ -414,22 +414,16 @@ class MainWindow(KParts.MainWindow):
 
     def queryClose(self):
         """ Quit the application, also called by closing the window """
-        # First, close the modified documents, if any. (This way, if the user
-        # cancels the first close dialog, all documents are still there.)
-        unmodified = []
+        self.saveSession()
+        # just ask, cancel at any time will keep all documents.
         for d in self.app.history[::-1]: # iterate over a copy, current first
             if d.isModified():
                 d.setActive()
-                if not d.close(True):
+                if not d.queryClose():
                     return False # cancelled
-            else:
-                unmodified.append(d)
-        # Then close the unmodified documents. We keep this list ourselves,
-        # because MainApp always creates a new document if the last one is
-        # closed. This way we at least prevent app from creating a new document
-        # twice.
+        # Then close the documents
         self.currentDocumentChanged.clear() # disconnect all tools etc.
-        for d in unmodified:
+        for d in self.app.documents[:]: # iterate over a copy
             d.close(False)
         # save some settings
         self.saveSettings()
@@ -440,15 +434,34 @@ class MainWindow(KParts.MainWindow):
         """ Close all documents except the current document. """
         unmodified = []
         # iterate over a copy, current first, except current document
-        for d in self.app.history[-2::-1]:
+        docs = self.app.history[-2::-1]
+        for d in docs:
             if d.isModified():
-                if not d.close(True):
+                if not d.queryClose():
                     return # cancelled
-            else:
-                unmodified.append(d)
-        for d in unmodified:
+        for d in docs:
             d.close(False)
     
+    def saveSession(self):
+        """ Store the list of documents. TODO: named sessions like kate """
+        sess = config("sessions").group("default")
+        urls = [d.url().url() for d in self.viewTabs.docs] # order of tabs
+        current = self.viewTabs.docs.index(self.currentDocument())
+        sess.writePathEntry("urls", urls)
+        sess.writeEntry("active", current)
+        
+    def restoreSession(self):
+        """ Restores the documents. TODO: named sessions like kate """
+        sess = config("sessions").group("default")
+        urls = sess.readPathEntry("urls", [])
+        active = sess.readEntry("active", 0)
+        if any(urls):
+            docs = [self.app.openUrl(KUrl(url)) for url in urls]
+            if docs:
+                if active < 0 or active >= len(docs):
+                    active = len(docs) - 1
+                docs[active].setActive()
+        
     def loadSettings(self):
         """ Load some settings from our configfile. """
         self.openRecent.loadEntries(config("recent files"))
@@ -481,6 +494,10 @@ class MainWindow(KParts.MainWindow):
             docs = map(self.app.openUrl, urls)
             if docs:
                 docs[-1].setActive()
+    
+    def readProperties(self, conf):
+        """Called on session restore, but we just use our own config."""
+        self.restoreSession()
 
 
 class ViewTabBar(QTabBar):

@@ -206,6 +206,8 @@ class MainApp(DBusItem):
         Last minute setup and enter the KDE event loop.
         At the very last, instantiates one empty doc if nothing loaded yet.
         """
+        if self.kapp.isSessionRestored():
+            self.mainwin.restore(1, False)
         if len(self.documents) == 0:
             self.createDocument().setActive()
         self.excepthook.connect(self.showException)
@@ -674,11 +676,7 @@ class Document(DBusItem):
             self.documentName()), i18n("Close Document"),
             KStandardGuiItem.save(), KStandardGuiItem.discard())
         if res == KMessageBox.Yes:
-            if self.url().isEmpty():
-                self.saveAs()
-            else:
-                self.save()
-            return self.doc.waitSaveComplete()
+            self.save()
         elif res == KMessageBox.No:
             return True
         else: # cancel
