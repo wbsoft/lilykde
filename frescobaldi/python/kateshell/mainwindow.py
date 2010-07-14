@@ -414,7 +414,8 @@ class MainWindow(KParts.MainWindow):
 
     def queryClose(self):
         """ Quit the application, also called by closing the window """
-        self.saveSession()
+        if self.app.kapp.sessionSaving():
+            self.saveDocumentList(self.app.kapp.sessionConfig().group("documents"))
         # just ask, cancel at any time will keep all documents.
         for d in self.app.history[::-1]: # iterate over a copy, current first
             if d.isModified():
@@ -432,7 +433,6 @@ class MainWindow(KParts.MainWindow):
     
     def closeOtherDocuments(self):
         """ Close all documents except the current document. """
-        unmodified = []
         # iterate over a copy, current first, except current document
         docs = self.app.history[-2::-1]
         for d in docs:
@@ -442,26 +442,29 @@ class MainWindow(KParts.MainWindow):
         for d in docs:
             d.close(False)
     
-    def saveSession(self):
-        """ Store the list of documents. TODO: named sessions like kate """
-        sess = config("sessions").group("default")
+    def readGlobalProperties(self, conf):
+        """Called on session restore, loads the list of open documents."""
+        self.loadDocumentList(conf.group("documents"))
+        
+    def saveDocumentList(self, cg):
+        """Stores the list of documents to the given KConfigGroup."""
         urls = [d.url().url() for d in self.viewTabs.docs] # order of tabs
         current = self.viewTabs.docs.index(self.currentDocument())
-        sess.writePathEntry("urls", urls)
-        sess.writeEntry("active", current)
+        cg.writePathEntry("urls", urls)
+        cg.writeEntry("active", current)
+        cg.sync()
         
-    def restoreSession(self):
-        """ Restores the documents. TODO: named sessions like kate """
-        sess = config("sessions").group("default")
-        urls = sess.readPathEntry("urls", [])
-        active = sess.readEntry("active", 0)
+    def loadDocumentList(self, cg):
+        """Loads the documents mentioned in the given KConfigGroup."""
+        urls = cg.readPathEntry("urls", [])
+        active = cg.readEntry("active", 0)
         if any(urls):
             docs = [self.app.openUrl(KUrl(url)) for url in urls]
             if docs:
                 if active < 0 or active >= len(docs):
                     active = len(docs) - 1
                 docs[active].setActive()
-        
+    
     def loadSettings(self):
         """ Load some settings from our configfile. """
         self.openRecent.loadEntries(config("recent files"))
@@ -494,10 +497,6 @@ class MainWindow(KParts.MainWindow):
             docs = map(self.app.openUrl, urls)
             if docs:
                 docs[-1].setActive()
-    
-    def readProperties(self, conf):
-        """Called on session restore, but we just use our own config."""
-        self.restoreSession()
 
 
 class ViewTabBar(QTabBar):
