@@ -37,6 +37,7 @@ from PyKDE4.kio import KEncodingFileDialog
 
 from signals import Signal
 
+from kateshell.app import cacheresult
 
 # Easily get our global config
 def config(group="kateshell"):
@@ -210,7 +211,7 @@ class MainWindow(KParts.MainWindow):
         def sessions_save():
             pass # TODO: implement
             
-        @self.onAction(i18n("Manage..."), "view-choose")
+        @self.onAction(i18n("Manage Sessions..."), "view-choose")
         def sessions_manage():
             pass # TODO: implement
             
@@ -256,9 +257,9 @@ class MainWindow(KParts.MainWindow):
             for a in sessGroup.actions():
                 sip.delete(a)
             
-            # TODO: make real!
-            sessions = ["Test 1", "test 2", "test 3"]
-            current = "test 2"
+            sm = self.sessionManager()
+            sessions = sm.names()
+            current = sm.current()
             
             if not sessions:
                 return
@@ -268,7 +269,7 @@ class MainWindow(KParts.MainWindow):
             if not current:
                 a.setChecked(True)
             else:
-                a.triggered.connect(lambda: self.sessionManager().noSession())
+                a.triggered.connect(lambda: sm.noSession())
             sessGroup.addAction(a)
             sessMenu.addAction(a)
             # other sessions:
@@ -277,13 +278,20 @@ class MainWindow(KParts.MainWindow):
                 a.setCheckable(True)
                 if name == current:
                     a.setChecked(True)
-                a.triggered.connect(
-                    (lambda name: lambda: self.sessionManager().switch(name))(name))
+                a.triggered.connect((lambda name: lambda: sm.switch(name))(name))
                 sessGroup.addAction(a)
                 sessMenu.addAction(a)
         sessMenu.setParent(sessMenu.parent()) # BUG: SIP otherwise looses outer scope
         sessMenu.aboutToShow.connect(populateSessMenu)
         
+    @cacheresult
+    def sessionManager(self):
+        return self.createSessionManager()
+        
+    def createSessionManager(self):
+        """Override this to return a different session manager."""
+        return SessionManager(self)
+    
     def act(self, name, texttype, func,
             icon=None, tooltip=None, whatsthis=None, key=None):
         """ Create an action and add it to own actionCollection """
@@ -1182,4 +1190,36 @@ class UserShortcutManager(object):
                 self.client().populateAction(action.objectName(), action)
         return self._collection
 
+
+class SessionManager(object):
+    """Manages sessions (basically lists of open documents)."""
+    def __init__(self, mainwin):
+        self.mainwin = mainwin
+        self._current = "test 2" # should become None
+        
+    def switch(self, name):
+        """Switches to the given session."""
+        self._current = name
+        pass # TODO: implement
+        
+    def noSession(self):
+        """Switches to the 'No Session' state."""
+        self._current = None
+    
+    def names(self):
+        """Returns a list of names of all sessions."""
+        return ["Test 1", "test 2", "test 3"]
+        pass # TODO: implement
+        
+    def current(self):
+        """Returns the name of the current session."""
+        return self._current
+    
+    def save(self):
+        """Saves the current session."""
+        pass # TODO: implement
+
+    def new(self):
+        """Prompts for a name for a new session."""
+        pass # TODO: implement
 
