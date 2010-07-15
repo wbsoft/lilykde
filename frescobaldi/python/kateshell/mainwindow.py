@@ -199,7 +199,7 @@ class MainWindow(KParts.MainWindow):
                     menu.addAction(tool.action())
                     tool.addMenuActions(menu)
             return populate
-        a.menu().aboutToShow.connect(populate(a))
+        a.menu().aboutToShow.connect(makefunc(a))
 
     def setupTools(self):
         """
