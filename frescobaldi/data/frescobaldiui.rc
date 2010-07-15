@@ -56,8 +56,6 @@
     <Action name="doc_back"/>
     <Action name="doc_forward"/>
     <Separator />
-    <Action name="session_list"/>
-    <Separator />
   </Menu>
 
   <Menu name="lilypond"><text>&amp;LilyPond</text>
@@ -147,6 +145,13 @@
   </Menu>
 
   <Merge/>
+  
+  <Menu name="sessions"><text>&amp;Sessions</text>
+    <Action name="sessions_new"/>
+    <Action name="sessions_save"/>
+    <Action name="sessions_manage"/>
+    <Separator/>
+  </Menu>
   
   <Menu name="tools"><text>&amp;Tools</text>
     <DefineGroup name="tools_operations" />

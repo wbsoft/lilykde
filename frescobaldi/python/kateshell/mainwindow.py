@@ -186,17 +186,20 @@ class MainWindow(KParts.MainWindow):
             self.editToolbars)
         self.act('options_configure_keys', KStandardAction.KeyBindings,
             self.editKeys)
+        
         # tool views submenu
         a = KActionMenu(i18n("&Tool Views"), self)
         self.actionCollection().addAction('options_toolviews', a)
-        def populate():
-            menu = a.menu()
-            menu.clear()
-            for tool in self.tools.itervalues():
-                menu.addSeparator()
-                menu.addAction(tool.action())
-                tool.addMenuActions(menu)
-        a.menu().aboutToShow.connect(populate)
+        def makefunc(action):
+            def populate():
+                menu = action.menu()
+                menu.clear()
+                for tool in self.tools.itervalues():
+                    menu.addSeparator()
+                    menu.addAction(tool.action())
+                    tool.addMenuActions(menu)
+            return populate
+        a.menu().aboutToShow.connect(populate(a))
 
     def setupTools(self):
         """
