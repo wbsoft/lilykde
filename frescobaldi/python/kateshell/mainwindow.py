@@ -200,7 +200,21 @@ class MainWindow(KParts.MainWindow):
                     tool.addMenuActions(menu)
             return populate
         a.menu().aboutToShow.connect(makefunc(a))
-
+        
+        # sessions menu
+        @self.onAction(i18n("New..."), "document-new")
+        def sessions_new():
+            pass # TODO: implement
+            
+        @self.onAction(KStandardGuiItem.save().text(), "document-save")
+        def sessions_save():
+            pass # TODO: implement
+            
+        @self.onAction(i18n("Manage..."), "view-choose")
+        def sessions_manage():
+            pass # TODO: implement
+            
+        
     def setupTools(self):
         """
         Implement this to create the Tool instances. This is called before the
@@ -233,6 +247,42 @@ class MainWindow(KParts.MainWindow):
                 docMenu.addAction(a)
         docMenu.setParent(docMenu.parent()) # BUG: SIP otherwise looses outer scope
         docMenu.aboutToShow.connect(populateDocMenu)
+        
+        sessMenu = self.factory().container("sessions", self)
+        sessGroup = QActionGroup(sessMenu)
+        sessGroup.setExclusive(True)
+            
+        def populateSessMenu():
+            for a in sessGroup.actions():
+                sip.delete(a)
+            
+            # TODO: make real!
+            sessions = ["Test 1", "test 2", "test 3"]
+            current = "test 2"
+            
+            if not sessions:
+                return
+            # "No Session" action
+            a = KAction(i18n("No Session"), sessGroup)
+            a.setCheckable(True)
+            if not current:
+                a.setChecked(True)
+            else:
+                a.triggered.connect(lambda: self.sessionManager().noSession())
+            sessGroup.addAction(a)
+            sessMenu.addAction(a)
+            # other sessions:
+            for name in sessions:
+                a = KAction(name, sessGroup)
+                a.setCheckable(True)
+                if name == current:
+                    a.setChecked(True)
+                a.triggered.connect(
+                    (lambda name: lambda: self.sessionManager().switch(name))(name))
+                sessGroup.addAction(a)
+                sessMenu.addAction(a)
+        sessMenu.setParent(sessMenu.parent()) # BUG: SIP otherwise looses outer scope
+        sessMenu.aboutToShow.connect(populateSessMenu)
         
     def act(self, name, texttype, func,
             icon=None, tooltip=None, whatsthis=None, key=None):
