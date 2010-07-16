@@ -494,11 +494,11 @@ class MainWindow(KParts.MainWindow):
                     return False # cancelled
         # Then close the documents
         self.currentDocumentChanged.clear() # disconnect all tools etc.
+        self.aboutToClose()
         for d in self.app.documents[:]: # iterate over a copy
             d.close(False)
         # save some settings
         self.saveSettings()
-        self.aboutToClose()
         return True
     
     def closeOtherDocuments(self):
@@ -1286,7 +1286,8 @@ class SessionManager(object):
         
         # HACK: we use the order of the tabs
         cg = self.config()
-        urls = [d.url().url() for d in self.mainwin.viewTabs.docs] 
+        urls = [d.url().url() for d in self.mainwin.viewTabs.docs]
+        print urls#DEBUG
         current = self.mainwin.viewTabs.docs.index(self.mainwin.currentDocument())
         cg.writePathEntry("urls", urls)
         cg.writeEntry("active", current)
