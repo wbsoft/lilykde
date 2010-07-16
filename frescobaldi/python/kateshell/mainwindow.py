@@ -1222,40 +1222,18 @@ class SessionManager(object):
         if name == "none":
             name = None
         self.autoSave()
-        cg = self.config(name)
-        urls = cg.readPathEntry("urls", [])
-        active = cg.readEntry("active", 0)
-        if active < 0 or active >= len(urls):
-            active = len(urls) - 1
         
-        # now close the documents that are not in urls,
-        # and open the new documents from urls.
-        # If the user cancels any close operation, the session is not switched.
-        newList = []
-        for url in urls:
-            if url:
-                d = self.mainwin.app.findDocument(KUrl(url))
-                if d:
-                    newList.append(d)
-                    continue
-            newList.append(url)
-        # close the documents not in newList
-        toClose = [d for d in self.mainwin.app.documents if d not in newList]
-        for d in toClose:
-            if not d.queryClose():
-                return False
-        for d in toClose:
-            d.close(False)
-        # open the new documents
-        newDocs = []
-        for index, item in enumerate(newList):
-            if not isinstance(item, kateshell.app.Document):
-                item = self.mainwin.app.openUrl(KUrl(item))
-            newDocs.append(item)
-            if index == active:
-                item.setActive()
-        # TODO: retain the order of documents if some remained open
+        if name:
+            # close all the documents
+            docs = self.mainwin.app.history[::-1] # copy, reversed
+            for d in docs:
+                if not d.queryClose():
+                    return False
+            for d in docs:
+                d.close(False)
+            self.mainwin.loadDocumentList(self.config(name))
         self._current = name
+        return True
     
     def names(self):
         """Returns a list of names of all sessions."""
@@ -1283,20 +1261,13 @@ class SessionManager(object):
         """Saves the current session."""
         if self._current is None:
             return # TODO: ask for a name and create a new session
-        
-        # HACK: we use the order of the tabs
-        cg = self.config()
-        urls = [d.url().url() for d in self.mainwin.viewTabs.docs]
-        print urls#DEBUG
-        current = self.mainwin.viewTabs.docs.index(self.mainwin.currentDocument())
-        cg.writePathEntry("urls", urls)
-        cg.writeEntry("active", current)
-        cg.sync()
+        self.mainwin.saveDocumentList(self.config())
     
     def autoSave(self):
         """Saves the current session if the session wants to be autosaved."""
         if self._current and self.config().readEntry("autosave", True):
             self.save()
+        self.config().sync()
             
     def new(self):
         """Prompts for a name for a new session."""
