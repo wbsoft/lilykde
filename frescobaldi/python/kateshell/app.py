@@ -258,6 +258,10 @@ class MainApp(DBusItem):
         self.mainwin.setWindowState(
             self.mainwin.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
     
+    @method(iface, in_signature='s', out_signature='b')
+    def startSession(self, session):
+        return self.mainwin.sessionManager().switch(session)
+        
     def addDocument(self, doc):
         self.documents.append(doc)
         self.history.append(doc)

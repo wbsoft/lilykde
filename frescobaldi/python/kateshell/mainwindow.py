@@ -25,7 +25,8 @@ from PyQt4.QtCore import QEvent, QTimer, Qt, SLOT, pyqtSignature
 from PyQt4.QtGui import (
     QAction, QActionGroup, QDialog, QKeySequence, QLabel, QPixmap, QSplitter,
     QStackedWidget, QTabBar, QVBoxLayout, QWidget)
-from PyKDE4.kdecore import KGlobal, KPluginLoader, KToolInvocation, KUrl, i18n
+from PyKDE4.kdecore import (
+    KConfig, KGlobal, KPluginLoader, KToolInvocation, KUrl, i18n)
 from PyKDE4.kdeui import (
     KAcceleratorManager, KAction, KActionCollection, KActionMenu, KDialog,
     KEditToolBar, KHBox, KIcon, KKeySequenceWidget, KMenu, KMessageBox,
@@ -37,6 +38,7 @@ from PyKDE4.kio import KEncodingFileDialog
 
 from signals import Signal
 
+import kateshell.app
 from kateshell.app import cacheresult
 
 # Easily get our global config
@@ -225,7 +227,13 @@ class MainWindow(KParts.MainWindow):
         pass
     
     def setupGeneratedMenus(self):
-        """ This should setup menus that are generated on show. """
+        """This should setup menus that are generated on show.
+        
+        The generated menus that are setup here must be rebound to the XMLGUI if
+        the toolbars are reconfigured by the user, that's why they must be setup
+        in this method. This method is called again if the user changes the
+        toolbars.
+        """
         # Set up the documents menu so that it shows all open documents.
         docMenu = self.factory().container("documents", self)
         docGroup = QActionGroup(docMenu)
@@ -249,6 +257,7 @@ class MainWindow(KParts.MainWindow):
         docMenu.setParent(docMenu.parent()) # BUG: SIP otherwise looses outer scope
         docMenu.aboutToShow.connect(populateDocMenu)
         
+        # sessions menu
         sessMenu = self.factory().container("sessions", self)
         sessGroup = QActionGroup(sessMenu)
         sessGroup.setExclusive(True)
@@ -269,7 +278,7 @@ class MainWindow(KParts.MainWindow):
             if not current:
                 a.setChecked(True)
             else:
-                a.triggered.connect(lambda: sm.noSession())
+                a.triggered.connect(lambda: sm.switch(None))
             sessGroup.addAction(a)
             sessMenu.addAction(a)
             # other sessions:
@@ -1192,33 +1201,102 @@ class UserShortcutManager(object):
 
 
 class SessionManager(object):
-    """Manages sessions (basically lists of open documents)."""
+    """Manages sessions (basically lists of open documents).
+    
+    Sessions are stored in the appdata/sessions configfile, with each session
+    in its own group.
+    
+    """
     def __init__(self, mainwin):
         self.mainwin = mainwin
-        self._current = "test 2" # should become None
-        
-    def switch(self, name):
-        """Switches to the given session."""
-        self._current = name
-        pass # TODO: implement
-        
-    def noSession(self):
-        """Switches to the 'No Session' state."""
+        mainwin.aboutToClose.connect(self.autoSave)
         self._current = None
+        self.sessionConfig = KConfig("sessions", KConfig.NoGlobals, "appdata")
+    
+    def switch(self, name):
+        """Switches to the given session.
+        
+        Use None or "none" for the no-session state.
+        
+        """
+        if name == "none":
+            name = None
+        self.autoSave()
+        cg = self.config(name)
+        urls = cg.readPathEntry("urls", [])
+        active = cg.readEntry("active", 0)
+        if active < 0 or active >= len(urls):
+            active = len(urls) - 1
+        
+        # now close the documents that are not in urls,
+        # and open the new documents from urls.
+        # If the user cancels any close operation, the session is not switched.
+        newList = []
+        for url in urls:
+            if url:
+                d = self.mainwin.app.findDocument(KUrl(url))
+                if d:
+                    newList.append(d)
+                    continue
+            newList.append(url)
+        # close the documents not in newList
+        toClose = [d for d in self.mainwin.app.documents if d not in newList]
+        for d in toClose:
+            if not d.queryClose():
+                return False
+        for d in toClose:
+            d.close(False)
+        # open the new documents
+        newDocs = []
+        for index, item in enumerate(newList):
+            if not isinstance(item, kateshell.app.Document):
+                item = self.mainwin.app.openUrl(KUrl(item))
+            newDocs.append(item)
+            if index == active:
+                item.setActive()
+        # TODO: retain the order of documents if some remained open
+        self._current = name
     
     def names(self):
         """Returns a list of names of all sessions."""
-        return ["Test 1", "test 2", "test 3"]
-        pass # TODO: implement
+        return self.sessionConfig.groupList()
         
     def current(self):
         """Returns the name of the current session."""
         return self._current
     
+    def config(self, session=None):
+        """Returns the config group for the named or current session.
+        
+        If session=False or 0, returns always the root KConfigGroup.
+        If session=None (default), returns the group for the current session,
+        if the current session is None, returns the root group.
+        
+        """
+        if session:
+            return self.sessionConfig.group(session)
+        if session is None and self._current:
+            return self.sessionConfig.group(self._current)
+        return self.sessionConfig.group(None)
+        
     def save(self):
         """Saves the current session."""
-        pass # TODO: implement
-
+        if self._current is None:
+            return # TODO: ask for a name and create a new session
+        
+        # HACK: we use the order of the tabs
+        cg = self.config()
+        urls = [d.url().url() for d in self.mainwin.viewTabs.docs] 
+        current = self.mainwin.viewTabs.docs.index(self.mainwin.currentDocument())
+        cg.writePathEntry("urls", urls)
+        cg.writeEntry("active", current)
+        cg.sync()
+    
+    def autoSave(self):
+        """Saves the current session if the session wants to be autosaved."""
+        if self._current and self.config().readEntry("autosave", True):
+            self.save()
+            
     def new(self):
         """Prompts for a name for a new session."""
         pass # TODO: implement

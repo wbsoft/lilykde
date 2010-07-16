@@ -66,6 +66,8 @@ KCmdLineArgs.addCmdLineOptions(options)
 args = KCmdLineArgs.parsedArgs()
 
 app = not args.isSet("new") and runningApp() or newApp()
+if args.isSet("start"):
+    app.startSession(args.getOption("start"))
 docs = [app.openUrl(args.url(c), args.getOption("encoding"))
         for c in range(args.count())]
 if docs:
