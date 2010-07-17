@@ -393,19 +393,20 @@ class MainWindow(KParts.MainWindow):
         self.currentDocumentChanged(doc or self._currentDoc)
 
     def updateCaption(self):
-        doc = self.currentDocument()
-        name = self.showPath.isChecked() and doc.prettyUrl() or doc.documentName()
-        if len(name) > 72:
-            name = '...' + name[-69:]
-        if doc.isModified():
-            caption = "{0} [{1}]".format(name, i18n("modified"))
-            self.sb_modified.setPixmap(KIcon("document-save").pixmap(16))
-        else:
-            caption = name
-            self.sb_modified.setPixmap(QPixmap())
         session = self.sessionManager().current()
-        if session:
-            caption = "{0}: {1}".format(session, caption)
+        caption = "{0}: ".format(session) if session else ""
+        doc = self.currentDocument()
+        if doc:
+            name = (self.showPath.isChecked() and doc.prettyUrl() or
+                    doc.documentName())
+            if len(name) > 72:
+                name = '...' + name[-69:]
+            caption += name
+            if doc.isModified():
+                caption += " [{0}]".format(i18n("modified"))
+                self.sb_modified.setPixmap(KIcon("document-save").pixmap(16))
+            else:
+                self.sb_modified.setPixmap(QPixmap())
         self.setCaption(caption)
         
     def updateStatusBar(self):
