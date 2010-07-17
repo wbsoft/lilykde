@@ -42,15 +42,24 @@ class ManagerDialog(KDialog):
         self.sessions = SessionList(self)
         self.setMainWidget(self.sessions)
         
-    def exec_(self):
+    def show(self):
         self.sessions.load()
-        return self.exec_()
+        KDialog.show(self)
 
 
 class SessionList(kateshell.widgets.ListEdit):
     """Manage the list of sessions."""
-    
+    def __init__(self, dialog):
+        self.sm = dialog.sm # SessionManager
+        super(SessionList, self).__init__(dialog)
+        
+    def load(self):
+        self.clear()
+        self.setValue(self.sm.names())
 
+    def removeItem(self, item):
+        self.sm.deleteSession(item.text())
+        super(SessionList, self).removeItem(item)
 
 
 class EditorDialog(KPageDialog):

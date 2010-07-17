@@ -216,7 +216,7 @@ class MainWindow(KParts.MainWindow):
             
         @self.onAction(i18n("Manage Sessions..."), "view-choose")
         def sessions_manage():
-            pass # TODO: implement
+            self.sessionManager().manage()
             
         
     def setupTools(self):
@@ -1223,8 +1223,38 @@ class SessionManager(object):
         self.mainwin = mainwin
         mainwin.aboutToClose.connect(self.shutdown)
         self._current = None
+        self.sessionConfig = None
+        self.reConfig()
+        
+    def reConfig(self):
+        """Destroys and recreate the sessions KConfig object.
+        
+        Intended as a workaround for BUG 192266 in bugs.KDE.org.
+        Otherwise deleting sessions does not work well.
+        """
+        if self.sessionConfig:
+            self.sessionConfig.sync()
+            sip.delete(self.sessionConfig)
         self.sessionConfig = KConfig("sessions", KConfig.NoGlobals, "appdata")
-    
+        
+    def config(self, session=None):
+        """Returns the config group for the named or current session.
+        
+        If session=False or 0, returns always the root KConfigGroup.
+        If session=None (default), returns the group for the current session,
+        if the current session is None, returns the root group.
+        
+        """
+        if session:
+            return self.sessionConfig.group(session)
+        if session is None and self._current:
+            return self.sessionConfig.group(self._current)
+        return self.sessionConfig.group(None)
+        
+    def manage(self):
+        """Opens the Manage Sessions dialog."""
+        self.managerDialog().show()
+        
     @cacheresult
     def managerDialog(self):
         return self.createManagerDialog()
@@ -1280,20 +1310,6 @@ class SessionManager(object):
         """Returns the name of the current session."""
         return self._current
     
-    def config(self, session=None):
-        """Returns the config group for the named or current session.
-        
-        If session=False or 0, returns always the root KConfigGroup.
-        If session=None (default), returns the group for the current session,
-        if the current session is None, returns the root group.
-        
-        """
-        if session:
-            return self.sessionConfig.group(session)
-        if session is None and self._current:
-            return self.sessionConfig.group(self._current)
-        return self.sessionConfig.group(None)
-        
     def save(self):
         """Saves the current session."""
         if self._current is None:
@@ -1333,9 +1349,11 @@ class SessionManager(object):
 
     def deleteSession(self, name):
         """Deletes the named session."""
-        self.config(name).deleteGroup()
         if name == self._current:
-            self.switch(None)
+            self._current = None
+            self.sessionChanged()
+        self.config(name).deleteGroup()
+        self.reConfig()
 
     def addSession(self, name):
         """Adds the named session, with the current document list."""
