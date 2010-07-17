@@ -24,9 +24,10 @@ Code for managing editor sessions.
 See SessionManager (started on startup) in mainwindow.py.
 """
 
-from PyQt4.QtGui import QCheckBox, QLabel, QLineEdit, QVBoxLayout, QWidget
-from PyKDE4.kdecore import i18n
+from PyQt4.QtGui import QCheckBox, QGridLayout, QLabel, QLineEdit, QVBoxLayout, QWidget
+from PyKDE4.kdecore import KUrl, i18n
 from PyKDE4.kdeui import KDialog, KHBox, KIcon, KPageDialog
+from PyKDE4.kio import KFile, KUrlRequester
 
 import kateshell.widgets
 from kateshell.app import cacheresult
@@ -86,17 +87,25 @@ class EditorDialog(KPageDialog):
         item.setHeader(i18n("Properties of this session"))
         item.setIcon(KIcon("configure"))
         
-        layout = QVBoxLayout(page)
+        layout = QGridLayout(page)
         
-        h = KHBox()
-        l = QLabel(i18n("Name:"), h)
-        self.name = QLineEdit(h)
+        l = QLabel(i18n("Name:"))
+        self.name = QLineEdit()
         l.setBuddy(self.name)
-        layout.addWidget(h)
+        layout.addWidget(l, 0, 0)
+        layout.addWidget(self.name, 0, 1)
         
         self.autosave = QCheckBox(i18n(
             "Always save the list of documents in this session"))
-        layout.addWidget(self.autosave)
+        layout.addWidget(self.autosave, 1, 1)
+        
+        l = QLabel(i18n("Base directory:"))
+        self.basedir = KUrlRequester()
+        self.basedir.setMode(KFile.Mode(
+            KFile.Directory | KFile.ExistingOnly | KFile.LocalOnly))
+        l.setBuddy(self.basedir)
+        layout.addWidget(l, 2, 0)
+        layout.addWidget(self.basedir, 2, 1)
         
         # other pages
         self.pages = []
@@ -115,11 +124,13 @@ class EditorDialog(KPageDialog):
             self.name.setText(name)
             conf = self.sm.config(name)
             self.autosave.setChecked(conf.readEntry("autosave", True))
+            self.basedir.setUrl(KUrl(conf.readPathEntry("basedir", "")))
         else:
             self.setCaption(i18n("Edit new session"))
             self.name.clear()
             self.name.setFocus()
             self.autosave.setChecked(True)
+            self.basedir.setUrl(KUrl())
         if self.exec_():
             # save
             name = self.name.text()
@@ -127,6 +138,7 @@ class EditorDialog(KPageDialog):
                 self.sm.renameSession(self._originalName, name)
             conf = self.sm.config(name)
             conf.writeEntry("autosave", self.autosave.isChecked())
+            conf.writePathEntry("basedir", self.basedir.url().path())
             return name
 
 
