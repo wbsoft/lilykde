@@ -282,6 +282,7 @@ class MainWindow(KParts.MainWindow):
                 a.triggered.connect(lambda: sm.switch(None))
             sessGroup.addAction(a)
             sessMenu.addAction(a)
+            sessGroup.addAction(sessMenu.addSeparator())
             # other sessions:
             for name in sessions:
                 a = KAction(name, sessGroup)
@@ -1314,8 +1315,9 @@ class SessionManager(object):
     def save(self):
         """Saves the current session."""
         if self._current is None:
-            return # TODO: ask for a name and create a new session
-        self.mainwin.saveDocumentList(self.config())
+            self.new()
+        else:
+            self.mainwin.saveDocumentList(self.config())
     
     def autoSave(self):
         """Saves the current session if the session wants to be autosaved."""
