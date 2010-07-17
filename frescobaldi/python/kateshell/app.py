@@ -42,6 +42,11 @@ from kateshell import DBUS_IFACE_PREFIX
 dbus.mainloop.qt.DBusQtMainLoop(set_as_default=True)
 
 
+# Easily get our global config
+def config(group="kateshell"):
+    return KGlobal.config().group(group)
+
+
 def cacheresult(func):
     """
     A decorator that performs the decorated method call only the first time,
@@ -145,6 +150,7 @@ class MainApp(DBusItem):
         self.editor.readConfig()
 
         # restore session etc.
+        self._sessionStartedFromCommandLine = False
         
     @cacheresult
     def stateManager(self):
@@ -208,6 +214,10 @@ class MainApp(DBusItem):
         """
         if self.kapp.isSessionRestored():
             self.mainwin.restore(1, False)
+        elif (len(self.documents) == 0
+            and not self._sessionStartedFromCommandLine
+            and config("preferences").readEntry("restore last session", True)):
+            self.mainwin.sessionManager().restoreLastSession()
         if len(self.documents) == 0:
             self.createDocument().setActive()
         self.excepthook.connect(self.showException)
@@ -260,6 +270,7 @@ class MainApp(DBusItem):
     
     @method(iface, in_signature='s', out_signature='b')
     def startSession(self, session):
+        self._sessionStartedFromCommandLine = True
         return self.mainwin.sessionManager().switch(session)
         
     def addDocument(self, doc):

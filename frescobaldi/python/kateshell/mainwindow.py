@@ -155,6 +155,7 @@ class MainWindow(KParts.MainWindow):
         app.documentMaterialized.connect(self.addDocument)
         app.activeChanged.connect(self.setCurrentDocument)
         app.documentClosed.connect(self.removeDocument)
+        self.sessionManager().sessionChanged.connect(self.updateCaption)
         
     def setupActions(self):
         self.act('file_new', KStandardAction.New, self.newDocument)
@@ -397,12 +398,16 @@ class MainWindow(KParts.MainWindow):
         if len(name) > 72:
             name = '...' + name[-69:]
         if doc.isModified():
-            self.setCaption("{0} [{1}]".format(name, i18n("modified")))
+            caption = "{0} [{1}]".format(name, i18n("modified"))
             self.sb_modified.setPixmap(KIcon("document-save").pixmap(16))
         else:
-            self.setCaption(name)
+            caption = name
             self.sb_modified.setPixmap(QPixmap())
-    
+        session = self.sessionManager().current()
+        if session:
+            caption = "{0}: {1}".format(session, caption)
+        self.setCaption(caption)
+        
     def updateStatusBar(self):
         doc = self.currentDocument()
         pos = doc.view.cursorPositionVirtual()
@@ -485,7 +490,9 @@ class MainWindow(KParts.MainWindow):
     def queryClose(self):
         """ Quit the application, also called by closing the window """
         if self.app.kapp.sessionSaving():
-            self.saveDocumentList(self.app.kapp.sessionConfig().group("documents"))
+            session_config = self.app.kapp.sessionConfig()
+            self.saveDocumentList(session_config.group("documents"))
+            self.sessionManager().saveProperties(session_config)
         # just ask, cancel at any time will keep all documents.
         for d in self.app.history[::-1]: # iterate over a copy, current first
             if d.isModified():
@@ -515,6 +522,7 @@ class MainWindow(KParts.MainWindow):
     def readGlobalProperties(self, conf):
         """Called on session restore, loads the list of open documents."""
         self.loadDocumentList(conf.group("documents"))
+        self.sessionManager().readProperties(conf)
         
     def saveDocumentList(self, cg):
         """Stores the list of documents to the given KConfigGroup."""
@@ -1207,9 +1215,11 @@ class SessionManager(object):
     in its own group.
     
     """
+    sessionChanged = Signal()
+    
     def __init__(self, mainwin):
         self.mainwin = mainwin
-        mainwin.aboutToClose.connect(self.autoSave)
+        mainwin.aboutToClose.connect(self.shutdown)
         self._current = None
         self.sessionConfig = KConfig("sessions", KConfig.NoGlobals, "appdata")
     
@@ -1233,6 +1243,7 @@ class SessionManager(object):
                 d.close(False)
             self.mainwin.loadDocumentList(self.config(name))
         self._current = name
+        self.sessionChanged()
         return True
     
     def names(self):
@@ -1268,7 +1279,28 @@ class SessionManager(object):
         if self._current and self.config().readEntry("autosave", True):
             self.save()
         self.config().sync()
-            
+    
+    def shutdown(self):
+        """Called on application exit."""
+        self.config(False).writeEntry("lastused", self.current() or "none")
+        self.autoSave()
+        
+    def restoreLastSession(self):
+        """Restores the last saved session."""
+        name = self.config(False).readEntry("lastused", "none")
+        if name != "none":
+            self.switch(name)
+        
+    def saveProperties(self, conf):
+        """Save our state in a session of QSessionManager."""
+        conf.group().writeEntry("session_name", self._current or "none")
+        conf.sync()
+    
+    def readProperties(self, conf):
+        """Restore our state from a QSessionManager session."""
+        name = conf.group().readEntry("session_name", "none")
+        self._current = None if name == "none" else name
+    
     def new(self):
         """Prompts for a name for a new session."""
         pass # TODO: implement
