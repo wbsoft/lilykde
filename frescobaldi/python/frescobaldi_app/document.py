@@ -34,8 +34,8 @@ from PyKDE4.ktexteditor import KTextEditor
 
 import ly.rx, ly.pitch, ly.parse, ly.tokenize, ly.tools, ly.version
 from kateshell.app import cacheresult
+from kateshell.widgets import promptText
 from frescobaldi_app.mainapp import lilyPondCommand
-from frescobaldi_app.widgets import promptText
 
 
 class DocumentManipulator(object):

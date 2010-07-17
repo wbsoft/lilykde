@@ -37,8 +37,9 @@ from PyKDE4.kio import KFileDialog, KIO
 
 import ly, ly.indent
 from kateshell.app import cacheresult
+from kateshell.widgets import StackFader
 from frescobaldi_app.mainapp import SymbolManager, lilyPondVersion
-from frescobaldi_app.widgets import StackFader, ClefSelector
+from frescobaldi_app.widgets import ClefSelector
 from frescobaldi_app.runlily import BackgroundJob, LilyPreviewDialog
 from frescobaldi_app.actions import openPDF, printPDF, getPrinter
 

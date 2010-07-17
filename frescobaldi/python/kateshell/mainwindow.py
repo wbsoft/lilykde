@@ -528,7 +528,8 @@ class MainWindow(KParts.MainWindow):
     def saveDocumentList(self, cg):
         """Stores the list of documents to the given KConfigGroup."""
         urls = [d.url().url() for d in self.viewTabs.docs] # order of tabs
-        current = self.viewTabs.docs.index(self.currentDocument())
+        d = self.currentDocument()
+        current = self.viewTabs.docs.index(d) if d else -1
         cg.writePathEntry("urls", urls)
         cg.writeEntry("active", current)
         cg.sync()
@@ -1224,25 +1225,49 @@ class SessionManager(object):
         self._current = None
         self.sessionConfig = KConfig("sessions", KConfig.NoGlobals, "appdata")
     
+    @cacheresult
+    def managerDialog(self):
+        return self.createManagerDialog()
+        
+    def createManagerDialog(self):
+        """Override this to return a subclass of ManagerDialog."""
+        import kateshell.sessions
+        return kateshell.sessions.ManagerDialog(self)
+        
+    @cacheresult
+    def editorDialog(self):
+        """Returns a dialog to edit properties of the session."""
+        return self.createEditorDialog()
+    
+    def createEditorDialog(self):
+        """Override this to return a subclass of EditorDialog."""
+        import kateshell.sessions
+        return kateshell.sessions.EditorDialog(self)
+
     def switch(self, name):
         """Switches to the given session.
         
         Use None or "none" for the no-session state.
-        
+        If the given session does not exist, it is created from the current
+        setup.
         """
         if name == "none":
             name = None
         self.autoSave()
         
         if name:
-            # close all the documents
-            docs = self.mainwin.app.history[::-1] # copy, reversed
-            for d in docs:
-                if not d.queryClose():
-                    return False
-            for d in docs:
-                d.close(False)
-            self.mainwin.loadDocumentList(self.config(name))
+            if self.config(False).hasGroup(name):
+                # existing group, close all the documents
+                docs = self.mainwin.app.history[::-1] # copy, reversed
+                for d in docs:
+                    if not d.queryClose():
+                        return False
+                for d in docs:
+                    d.close(False)
+                self.mainwin.loadDocumentList(self.config(name))
+            else:
+                # this group did not exist, create it
+                self.addSession(name)
         self._current = name
         self.sessionChanged()
         return True
@@ -1306,3 +1331,14 @@ class SessionManager(object):
         """Prompts for a name for a new session."""
         pass # TODO: implement
 
+    def deleteSession(self, name):
+        """Deletes the named session."""
+        self.config(name).deleteGroup()
+        if name == self._current:
+            self.switch(None)
+
+    def addSession(self, name):
+        """Adds the named session, with the current document list."""
+        if not self.config(False).hasGroup(name):
+            self.mainwin.saveDocumentList(self.config(name))
+        

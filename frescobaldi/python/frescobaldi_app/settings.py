@@ -36,7 +36,7 @@ from signals import Signal
 
 import ly.version
 from kateshell.app import cacheresult
-from frescobaldi_app.widgets import (
+from kateshell.widgets import (
     ExecLineEdit, ExecArgsLineEdit, FilePathEdit, ListEdit)
 
 # these modules provide their own default settings or update functions
