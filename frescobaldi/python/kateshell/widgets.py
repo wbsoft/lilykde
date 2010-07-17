@@ -84,7 +84,7 @@ class ListEdit(QWidget):
         
         layout.setContentsMargins(1, 1, 1, 1)
         layout.setSpacing(0)
-        layout.addWidget(self.listBox, 0, 0, 3, 1)
+        layout.addWidget(self.listBox, 0, 0, 4, 1)
         layout.addWidget(self.addButton, 0, 1)
         layout.addWidget(self.editButton, 1, 1)
         layout.addWidget(self.removeButton, 2, 1)
@@ -137,6 +137,9 @@ class ListEdit(QWidget):
             
     def setCurrentItem(self, item):
         self.listBox.setCurrentItem(item)
+        
+    def setCurrentRow(self, row):
+        self.listBox.setCurrentRow(row)
         
     def openEditor(self, item):
         """Opens an editor (dialog) for the item.

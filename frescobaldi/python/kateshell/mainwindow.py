@@ -208,11 +208,11 @@ class MainWindow(KParts.MainWindow):
         # sessions menu
         @self.onAction(i18n("New..."), "document-new")
         def sessions_new():
-            pass # TODO: implement
+            self.sessionManager().new()
             
         @self.onAction(KStandardGuiItem.save().text(), "document-save")
         def sessions_save():
-            pass # TODO: implement
+            self.sessionManager().save()
             
         @self.onAction(i18n("Manage Sessions..."), "view-choose")
         def sessions_manage():
@@ -1231,6 +1231,7 @@ class SessionManager(object):
         
         Intended as a workaround for BUG 192266 in bugs.KDE.org.
         Otherwise deleting sessions does not work well.
+        Call this after using deleteGroup.
         """
         if self.sessionConfig:
             self.sessionConfig.sync()
@@ -1344,8 +1345,17 @@ class SessionManager(object):
         self._current = None if name == "none" else name
     
     def new(self):
-        """Prompts for a name for a new session."""
-        pass # TODO: implement
+        """Prompts for a name for a new session.
+        
+        If the user enters a name and accepts the dialog, the session is
+        created and switched to.
+        """
+        name = self.editorDialog().edit()
+        if name:
+            # switch there with the current document list
+            self.mainwin.saveDocumentList(self.config(name))
+            self._current = name
+            self.sessionChanged()
 
     def deleteSession(self, name):
         """Deletes the named session."""
@@ -1354,7 +1364,24 @@ class SessionManager(object):
             self.sessionChanged()
         self.config(name).deleteGroup()
         self.reConfig()
-
+    
+    def renameSession(self, old, new):
+        """Renames a session.
+        
+        The document list is taken over but not the other settings.
+        Both names must be valid session names, and old must exist.
+        """
+        oldConfig = self.config(old)
+        newConfig = self.config(new)
+        newConfig.writePathEntry("urls", oldConfig.readPathEntry("urls", []))
+        newConfig.writeEntry("active", oldConfig.readEntry("active", 0))
+        
+        if old == self._current:
+            self._current = new
+            self.sessionChanged()
+        self.config(old).deleteGroup()
+        self.reConfig()
+            
     def addSession(self, name):
         """Adds the named session, with the current document list."""
         if not self.config(False).hasGroup(name):

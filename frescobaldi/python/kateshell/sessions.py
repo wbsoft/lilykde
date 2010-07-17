@@ -24,8 +24,9 @@ Code for managing editor sessions.
 See SessionManager (started on startup) in mainwindow.py.
 """
 
+from PyQt4.QtGui import QCheckBox, QLabel, QLineEdit, QVBoxLayout, QWidget
 from PyKDE4.kdecore import i18n
-from PyKDE4.kdeui import KDialog, KPageDialog
+from PyKDE4.kdeui import KDialog, KHBox, KIcon, KPageDialog
 
 import kateshell.widgets
 from kateshell.app import cacheresult
@@ -36,7 +37,6 @@ class ManagerDialog(KDialog):
     def __init__(self, manager):
         KDialog.__init__(self, manager.mainwin)
         self.sm = manager
-        self.mainwin = manager.mainwin
         self.setCaption(i18n("Manage Sessions"))
         self.setButtons(KDialog.ButtonCode(KDialog.Help | KDialog.Close))
         self.sessions = SessionList(self)
@@ -54,17 +54,81 @@ class SessionList(kateshell.widgets.ListEdit):
         super(SessionList, self).__init__(dialog)
         
     def load(self):
-        self.clear()
-        self.setValue(self.sm.names())
+        names, current = self.sm.names(), self.sm.current()
+        self.setValue(names)
+        if current in names:
+            self.setCurrentRow(names.index(current))
 
     def removeItem(self, item):
         self.sm.deleteSession(item.text())
         super(SessionList, self).removeItem(item)
 
+    def openEditor(self, item):
+        name = self.sm.editorDialog().edit(item.text())
+        if name:
+            item.setText(name)
+            return True
+
 
 class EditorDialog(KPageDialog):
-    """A dialog to edit properties of one session."""
+    """A dialog to edit properties of a session."""
+    def __init__(self, manager):
+        super(EditorDialog, self).__init__(manager.mainwin)
+        self.mainwin = manager.mainwin
+        self.sm = manager
+        self.setButtons(KDialog.ButtonCode(
+            KDialog.Help | KDialog.Ok | KDialog.Cancel))
+        self.setFaceType(KPageDialog.List)
+        
+        # First page with name and auto-save option
+        page = QWidget(self)
+        item = self.addPage(page, i18n("Session"))
+        item.setHeader(i18n("Properties of this session"))
+        item.setIcon(KIcon("configure"))
+        
+        layout = QVBoxLayout(page)
+        
+        h = KHBox()
+        l = QLabel(i18n("Name:"), h)
+        self.name = QLineEdit(h)
+        l.setBuddy(self.name)
+        layout.addWidget(h)
+        
+        self.autosave = QCheckBox(i18n(
+            "Always save the list of documents in this session"))
+        layout.addWidget(self.autosave)
+        
+        # other pages
+        self.pages = []
+        self.initializePages()
+        
+    def initializePages(self):
+        """Adds the pages to the dialog."""
+        pass
     
-    
-    
+    def edit(self, name=None):
+        """Edit the named or new (if not given) session."""
+        # load the session
+        self._originalName = name
+        if name:
+            self.setCaption(i18n("Edit session: %1", name))
+            self.name.setText(name)
+            conf = self.sm.config(name)
+            self.autosave.setChecked(conf.readEntry("autosave", True))
+        else:
+            self.setCaption(i18n("Edit new session"))
+            self.name.clear()
+            self.name.setFocus()
+            self.autosave.setChecked(True)
+        if self.exec_():
+            # save
+            name = self.name.text()
+            if self._originalName and name != self._originalName:
+                self.sm.renameSession(self._originalName, name)
+            conf = self.sm.config(name)
+            conf.writeEntry("autosave", self.autosave.isChecked())
+            return name
+
+
+        
     
