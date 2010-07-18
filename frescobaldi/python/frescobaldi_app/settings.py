@@ -435,6 +435,9 @@ class Warnings(CheckGroup):
         layout.addWidget(
             self.addCheckBox(i18n("Warn when a document needs to be saved before LilyPond is run"),
                 "save_on_run", True))
+        layout.addWidget(
+            self.addCheckBox(i18n("Warn when saving a session would overwrite another"),
+                "session_overwrite", True))
 
 
 class HelperApps(SettingsGroup):
@@ -837,8 +840,7 @@ class LilyPondInfoDialog(KDialog):
 class SessionsStartup(SettingsGroup):
     
     def __init__(self, page):
-        super(SessionsStartup, self).__init__(i18n(
-            "Session to load if Frescobaldi is started without arguments"), page)
+        super(SessionsStartup, self).__init__(i18n("Sessions"), page)
             
         grid = QGridLayout(self)
         grid.setSpacing(0)
@@ -857,14 +859,16 @@ class SessionsStartup(SettingsGroup):
         ):
             self.sessionOptions[name] = QRadioButton(title, toggled=changed)
         
-        self.customSession.setToolTip(i18n(
-            "Choose a session."))
-        self.sessionOptions["custom"].clicked.connect(lambda: self.customSession.setFocus())
+        self.customSession.setToolTip(i18n("Choose a session."))
+        self.sessionOptions["custom"].clicked.connect(
+            lambda: self.customSession.setFocus())
         
-        grid.addWidget(self.sessionOptions["none"], 0, 0, 1, 2)
-        grid.addWidget(self.sessionOptions["lastused"], 1, 0, 1, 2)
-        grid.addWidget(self.sessionOptions["custom"], 2, 0, 1, 1)
-        grid.addWidget(self.customSession, 2, 1, 1, 1)
+        grid.addWidget(QLabel(
+            i18n("If Frescobaldi is started without arguments...")), 0, 0, 1, 2)
+        grid.addWidget(self.sessionOptions["none"], 1, 0, 1, 2)
+        grid.addWidget(self.sessionOptions["lastused"], 2, 0, 1, 2)
+        grid.addWidget(self.sessionOptions["custom"], 3, 0, 1, 1)
+        grid.addWidget(self.customSession, 3, 1, 1, 1)
         
         self.customSession.addItem(i18n("Choose..."))
         self.customSession.addItems(page.dialog.mainwin.sessionManager().names())

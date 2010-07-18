@@ -26,7 +26,7 @@ See SessionManager (started on startup) in mainwindow.py.
 
 from PyQt4.QtGui import QCheckBox, QGridLayout, QLabel, QLineEdit, QVBoxLayout, QWidget
 from PyKDE4.kdecore import KUrl, i18n
-from PyKDE4.kdeui import KDialog, KHBox, KIcon, KPageDialog
+from PyKDE4.kdeui import KDialog, KHBox, KIcon, KMessageBox, KPageDialog, KStandardGuiItem
 from PyKDE4.kio import KFile, KUrlRequester
 
 import kateshell.widgets
@@ -87,7 +87,7 @@ class EditorDialog(KPageDialog):
         
         # First page with name and auto-save option
         page = QWidget(self)
-        item = self.addPage(page, i18n("Session"))
+        item = self.firstPage = self.addPage(page, i18n("Session"))
         item.setHeader(i18n("Properties of this session"))
         item.setIcon(KIcon("configure"))
         
@@ -145,6 +145,37 @@ class EditorDialog(KPageDialog):
             conf.writePathEntry("basedir", self.basedir.url().path())
             return name
 
-
+    def done(self, result):
+        if not result or self.validate():
+            super(EditorDialog, self).done(result)
         
+    def validate(self):
+        """Checks if the input is acceptable.
+        
+        If this function returns True, the dialog is accepted when OK is
+        clicked.  Otherwise a messagebox could be displayed, and the dialog
+        will remain visible.
+        """
+        name = self.name.text()
+        if '&' in name:
+            KMessageBox.error(self, i18n(
+                "Please do not use the ampersand (&) character "
+                "in a session name."))
+            self.setCurrentPage(self.firstPage)
+            self.name.setFocus()
+            return False
+            
+        if self._originalName != name and name in self.sm.names():
+            if KMessageBox.warningContinueCancel(self, i18n(
+                "Another session with the name %1 exists already.\n\n"
+                "Do you want to overwrite it?", name), None,
+                KStandardGuiItem.overwrite(), KStandardGuiItem.cancel(),
+                "session_overwrite") == KMessageBox.Cancel:
+                self.setCurrentPage(self.firstPage)
+                self.name.setFocus()
+                return False
+                
+            
+            
+        return True
     
