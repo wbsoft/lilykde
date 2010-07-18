@@ -4,6 +4,8 @@
 # frescobaldiui.rc :
 i18n("&Insert")
 i18n("&Document")
+i18n("&LilyPond")
+i18n("&Sessions")
 i18n("&Pitch")
 i18n("&Lyrics")
 i18n("&Rhythm")
