@@ -65,6 +65,15 @@ def cacheresult(func):
     return wrapper
 
 
+def naturalsort(text):
+    """Returns a key for the list.sort() method.
+    
+    Intended to sort strings in a human way, for e.g. version numbers.
+    
+    """
+    return tuple(int(s) if s.isdigit() else s for s in re.split(r'(\d+)', text))
+
+
 @contextmanager
 def blockSignals(widget):
     """

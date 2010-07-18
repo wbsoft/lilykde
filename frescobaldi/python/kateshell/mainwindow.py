@@ -19,7 +19,7 @@
 
 from __future__ import unicode_literals
 
-import os, sip, weakref
+import os, re, sip, weakref
 
 from PyQt4.QtCore import QEvent, QTimer, Qt, SLOT, pyqtSignature
 from PyQt4.QtGui import (
@@ -39,7 +39,7 @@ from PyKDE4.kio import KEncodingFileDialog
 from signals import Signal
 
 import kateshell.app
-from kateshell.app import cacheresult
+from kateshell.app import cacheresult, naturalsort
 
 # Easily get our global config
 def config(group="kateshell"):
@@ -1308,7 +1308,9 @@ class SessionManager(object):
     
     def names(self):
         """Returns a list of names of all sessions."""
-        return self.sessionConfig.groupList()
+        names = self.sessionConfig.groupList()
+        names.sort(key=naturalsort)
+        return names
         
     def current(self):
         """Returns the name of the current session."""
