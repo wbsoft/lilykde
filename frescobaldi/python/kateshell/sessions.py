@@ -42,10 +42,14 @@ class ManagerDialog(KDialog):
         self.setButtons(KDialog.ButtonCode(KDialog.Help | KDialog.Close))
         self.sessions = SessionList(self)
         self.setMainWidget(self.sessions)
+        self.sm.sessionAdded.connect(self.load)
         
     def show(self):
-        self.sessions.load()
+        self.load()
         KDialog.show(self)
+    
+    def load(self):
+        self.sessions.load()
 
 
 class SessionList(kateshell.widgets.ListEdit):

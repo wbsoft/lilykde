@@ -468,7 +468,8 @@ class MainWindow(KParts.MainWindow):
         """ Open an existing document. """
         res = KEncodingFileDialog.getOpenUrlsAndEncoding(
             self.app.defaultEncoding,
-            self.currentDocument().url().url() or self.app.defaultDirectory(),
+            self.currentDocument().url().url()
+            or self.sessionManager().basedir() or self.app.defaultDirectory(),
             '\n'.join(self.app.fileTypes + ["*|" + i18n("All Files")]),
             self, i18n("Open File"))
         docs = [self.app.openUrl(url, res.encoding)
@@ -1219,6 +1220,7 @@ class SessionManager(object):
     
     """
     sessionChanged = Signal()
+    sessionAdded = Signal()
     
     def __init__(self, mainwin):
         self.mainwin = mainwin
@@ -1358,6 +1360,7 @@ class SessionManager(object):
             self.mainwin.saveDocumentList(self.config(name))
             self._current = name
             self.sessionChanged()
+            self.sessionAdded()
 
     def deleteSession(self, name):
         """Deletes the named session."""
@@ -1389,3 +1392,8 @@ class SessionManager(object):
         if not self.config(False).hasGroup(name):
             self.mainwin.saveDocumentList(self.config(name))
         
+    def basedir(self):
+        """Returns the configured base directory for this session, if any."""
+        if self._current:
+            return self.config().readPathEntry("basedir", "")
+

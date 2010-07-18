@@ -25,8 +25,9 @@ Config dialog
 
 from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
-    QCheckBox, QGridLayout, QGroupBox, QLabel, QLineEdit, QListWidget,
-    QListWidgetItem, QRadioButton, QTextEdit, QTreeView, QVBoxLayout, QWidget)
+    QCheckBox, QComboBox, QGridLayout, QGroupBox, QLabel, QLineEdit,
+    QListWidget, QListWidgetItem, QRadioButton, QTextEdit, QTreeView,
+    QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
     KDialog, KHBox, KIcon, KPageDialog, KPushButton, KStandardGuiItem, KVBox)
@@ -251,6 +252,7 @@ class EditorComponent(SettingsPage):
         editorItem.setIcon(KIcon("accessories-text-editor"))
         self.help = 'settings-editor-component'
         
+        SessionsStartup(self)
         TabBarSettings(self)
         
         self.editorPages = []
@@ -830,6 +832,74 @@ class LilyPondInfoDialog(KDialog):
         info.default = self.default.isChecked()
         info.auto = self.auto.isChecked()
         info.changed()
+
+
+class SessionsStartup(SettingsGroup):
+    
+    def __init__(self, page):
+        super(SessionsStartup, self).__init__(i18n(
+            "Session to load if Frescobaldi is started without arguments"), page)
+            
+        grid = QGridLayout(self)
+        grid.setSpacing(0)
+        
+        self.sessionOptions = {}
+        self.customSession = QComboBox(currentIndexChanged=page.changed)
+            
+        def changed(dummy):
+            page.changed()
+            self.customSession.setEnabled(self.sessionOptions["custom"].isChecked())
+            
+        for title, name in (
+            (i18n("Start with no session"), "none"),
+            (i18n("Start with last used session"), "lastused"),
+            (i18n("Start with session:"), "custom"),
+        ):
+            self.sessionOptions[name] = QRadioButton(title, toggled=changed)
+        
+        self.customSession.setToolTip(i18n(
+            "Choose a session."))
+        self.sessionOptions["custom"].clicked.connect(lambda: self.customSession.setFocus())
+        
+        grid.addWidget(self.sessionOptions["none"], 0, 0, 1, 2)
+        grid.addWidget(self.sessionOptions["lastused"], 1, 0, 1, 2)
+        grid.addWidget(self.sessionOptions["custom"], 2, 0, 1, 1)
+        grid.addWidget(self.customSession, 2, 1, 1, 1)
+        
+        self.customSession.addItem(i18n("Choose..."))
+        self.customSession.addItems(page.dialog.mainwin.sessionManager().names())
+        
+    def defaults(self):
+        current = self.page.dialog.mainwin.sessionManager().current()
+        if current:
+            for index in range(1, self.customSession.count() + 1):
+                if self.customSession.itemText(index) == current:
+                    self.customSession.setCurrentIndex(index)
+        self.sessionOptions["none"].setChecked(True)
+            
+    def loadSettings(self):
+        conf = config("preferences")
+        session = conf.readEntry("custom session", "")
+        if session:
+            for index in range(1, self.customSession.count() + 1):
+                if self.customSession.itemText(index) == session:
+                    self.customSession.setCurrentIndex(index)
+        name = conf.readEntry("default session", "")
+        if name not in self.sessionOptions:
+            name = "none"
+        self.sessionOptions[name].setChecked(True)
+
+    def saveSettings(self):
+        conf = config("preferences")
+        if self.customSession.currentIndex() > 0:
+            session = self.customSession.currentText()
+        else:
+            session = "none"
+        conf.writeEntry("custom session", session)
+        for name, widget in self.sessionOptions.items():
+            if widget.isChecked():
+                conf.writeEntry("default session", name)
+                break
 
 
 def config(group):

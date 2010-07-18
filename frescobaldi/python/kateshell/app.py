@@ -215,9 +215,15 @@ class MainApp(DBusItem):
         if self.kapp.isSessionRestored():
             self.mainwin.restore(1, False)
         elif (len(self.documents) == 0
-            and not self._sessionStartedFromCommandLine
-            and config("preferences").readEntry("restore last session", True)):
-            self.mainwin.sessionManager().restoreLastSession()
+              and not self._sessionStartedFromCommandLine):
+            # restore named session?
+            action = config("preferences").readEntry("default session", "")
+            if action == "lastused":
+                self.mainwin.sessionManager().restoreLastSession()
+            elif action == "custom":
+                session = config("preferences").readEntry("custom session", "")
+                if session in self.mainwin.sessionManager().names():
+                    self.mainwin.sessionManager().switch(session)
         if len(self.documents) == 0:
             self.createDocument().setActive()
         self.excepthook.connect(self.showException)
@@ -511,6 +517,7 @@ class Document(DBusItem):
     def saveAs(self):
         if self.doc:
             dlg = KEncodingFileDialog(
+                self.app.mainwin.sessionManager().basedir() or
                 self.app.defaultDirectory(),
                 self.doc.encoding(),
                 '\n'.join(self.app.fileTypes + ["*|" + i18n("All Files")]),
