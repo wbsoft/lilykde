@@ -19,7 +19,7 @@
 
 from __future__ import unicode_literals
 
-import os, re, sip, weakref
+import itertools, os, re, sip, weakref
 
 from PyQt4.QtCore import QEvent, QTimer, Qt, SLOT, pyqtSignature
 from PyQt4.QtGui import (
@@ -50,6 +50,28 @@ Top = KMultiTabBar.Top
 Right = KMultiTabBar.Right
 Bottom = KMultiTabBar.Bottom
 Left = KMultiTabBar.Left
+
+
+def addAccelerators(actions):
+    """Adds accelerators to the list of actions.
+    
+    Actions that have accelerators are skipped, but the accelerators they use
+    are recorded. This can be used for e.g. menus that are created on the fly,
+    and not picked up by KAcceleratorManager.
+    
+    """
+    todo, used = [], []
+    for a in actions:
+        m = re.search(r'&(\w)', a.text())
+        used.append(m.group(1)) if m else todo.append(a)
+    for a in todo:
+        text = a.text()
+        for m in itertools.chain(re.finditer(r'\b\w', text),
+                                 re.finditer(r'\B\w', text)):
+            if m.group() not in used:
+                used.append(m.group())
+                a.setText(text[:m.start()] + '&' + text[m.start():])
+                break
 
 
 class MainWindow(KParts.MainWindow):
@@ -255,6 +277,7 @@ class MainWindow(KParts.MainWindow):
                     a.setChecked(True)
                 docGroup.addAction(a)
                 docMenu.addAction(a)
+            addAccelerators(docMenu.actions())
         docMenu.setParent(docMenu.parent()) # BUG: SIP otherwise looses outer scope
         docMenu.aboutToShow.connect(populateDocMenu)
         
@@ -292,6 +315,7 @@ class MainWindow(KParts.MainWindow):
                 a.triggered.connect((lambda name: lambda: sm.switch(name))(name))
                 sessGroup.addAction(a)
                 sessMenu.addAction(a)
+            addAccelerators(sessMenu.actions())
         sessMenu.setParent(sessMenu.parent()) # BUG: SIP otherwise looses outer scope
         sessMenu.aboutToShow.connect(populateSessMenu)
         
