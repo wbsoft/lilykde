@@ -505,7 +505,7 @@ class MainWindow(KParts.MainWindow):
         # Then close the documents
         self.currentDocumentChanged.clear() # disconnect all tools etc.
         self.aboutToClose()
-        for d in self.app.documents[:]: # iterate over a copy
+        for d in self.app.history[:]: # iterate over a copy
             d.close(False)
         # save some settings
         self.saveSettings()
@@ -1292,8 +1292,8 @@ class SessionManager(object):
         if name:
             if self.config(False).hasGroup(name):
                 # existing group, close all the documents
-                docs = self.mainwin.app.history[::-1] # copy, reversed
-                for d in docs:
+                docs = self.mainwin.app.history[:] # copy
+                for d in docs[::-1]: # in reversed order
                     if not d.queryClose():
                         return False
                 for d in docs:
