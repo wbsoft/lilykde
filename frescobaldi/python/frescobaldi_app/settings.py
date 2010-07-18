@@ -219,6 +219,7 @@ class LilyPondPreferences(SettingsPage):
         item = dialog.addPage(self, i18n("LilyPond Preferences"))
         item.setHeader(i18n("LilyPond Preferences"))
         item.setIcon(KIcon("run-lilypond"))
+        self.help = 'settings-lilypond'
         
         LilyPondVersions(self)
         LilyPondDocumentVersion(self)

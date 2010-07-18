@@ -36,10 +36,115 @@ Finally, &frescobaldi; has the usual menu entries
 
 <para>
 Here you can set some general preferences to influence the behaviour of
-&frescobaldi; and &lilypond;:
+&frescobaldi;.
 </para>
 
 <variablelist>
+
+<varlistentry>
+<term><guilabel>Session to load if &frescobaldi; is started without arguments</guilabel></term>
+<listitem>
+  <para>
+  Here you can choose if you want &frescobaldi; to load documents by default.
+  You can let &frescobaldi; start up empty, with the last used session or with a specific
+  session.
+  See <link linkend="sessions">Sessions</link> for more information.
+  </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>When saving documents</guilabel></term>
+<listitem>
+  <variablelist>
+    <varlistentry>
+    <term><guilabel>Remember cursor position, bookmarks, etc.</guilabel></term>
+    <listitem>
+      <para>
+      If checked, &frescobaldi; will save the cursor position, bookmarks and some
+      view settings for a document when it is closed. This meta-information is
+      retained for one month.
+      </para>
+    </listitem>
+    </varlistentry>
+
+    <varlistentry>
+    <term><guilabel>Default folder</guilabel></term>
+    <listitem>
+      <para>
+      Here you can configure a default folder that is displayed when saving a new document
+      for the first time.
+      </para>
+    </listitem>
+    </varlistentry>
+  </variablelist>
+  
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Warnings and notifications</guilabel></term>
+<listitem>
+  <para>
+  Here you can check which warnings and notifications you want to get. Usually,
+  warning messages have a checkbox &quot;Don't show this message again&quot;
+  (or &quot;Don't ask this question again&quot;).
+  When you enable a warning here, its dialog will be shown on the next occurrence.
+  </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect2>
+
+
+
+<sect2 id="settings-lilypond">
+<title>&lilypond; Preferences</title>
+
+<para>
+Here you can you configure all &lilypond;-related things.
+</para>
+
+<variablelist>
+
+<varlistentry id="settings-paths-lilypond">
+<term><guilabel>&lilypond; versions to use</guilabel></term>
+<listitem>
+  <para>
+  This list normally shows just one item, "lilypond".
+  But if you have multiple versions of &lilypond; installed you can add them to the list by clicking
+  the <guibutton>Add</guibutton> button.
+  Existing entries can be configured by clicking <guibutton>Configure</guibutton>.
+  </para>
+
+  <para>
+  In the dialog that opens you can specify the exact path to &lilypond;.
+  If you just enter <command>lilypond</command>, the first &lilypond; instance in your
+  <envar>PATH</envar> environment variable is used.
+  You can also enter the paths to related commands such as <command>convert-ly</command>
+  and <command>lilypond-book</command>. But if you don't specify the paths, these commands will be
+  searched for in the same directory as the <command>lilypond</command> command was found.
+  </para>
+
+  <para>
+  Check <guilabel>Set as default</guilabel> to make the current &lilypond; entry the default,
+  i.e. the one that is run for all actions (also the Blank Staff Paper tool, etc.).
+  The other checkbox, <guilabel>Include in automatic version selection</guilabel>, if checked,
+  will include the current &lilypond; entry in the automatic version selection (see below).
+  </para>
+
+  <para>
+  Below the list of installed &lilypond; instances, there is a checkbox
+  <guilabel>Enable automatic version selection</guilabel>.
+  If checked, &frescobaldi; will check the <userinput>\version</userinput> statement in your
+  document and choose the most suitable &lilypond; version from your installed list to run.
+  This is the lowest available version number that's still higher than or equal to the document's version.
+  You can exclude particular instances (e.g. development or testing versions) by unchecking the
+  option <guilabel>Include in automatic version selection</guilabel> of that &lilypond; entry.
+  </para>
+</listitem>
+</varlistentry>
 
 <varlistentry>
 <term><guilabel>&lilypond; version number to use for new documents</guilabel></term>
@@ -113,34 +218,6 @@ Here you can set some general preferences to influence the behaviour of
 </listitem>
 </varlistentry>
 
-<varlistentry>
-<term><guilabel>When saving documents</guilabel></term>
-<listitem>
-  <variablelist>
-    <varlistentry>
-    <term><guilabel>Remember cursor position, bookmarks, etc.</guilabel></term>
-    <listitem>
-      <para>
-      If checked, &frescobaldi; will save the cursor position, bookmarks and some
-      view settings for a document when it is closed. This meta-information is
-      retained for one month.
-      </para>
-    </listitem>
-    </varlistentry>
-
-    <varlistentry>
-    <term><guilabel>Default folder</guilabel></term>
-    <listitem>
-      <para>
-      Here you can configure a default folder that is displayed when saving a new document
-      for the first time.
-      </para>
-    </listitem>
-    </varlistentry>
-  </variablelist>
-  
-</listitem>
-</varlistentry>
 
 <varlistentry>
 <term><guilabel>Running &lilypond;</guilabel></term>
@@ -195,23 +272,10 @@ Here you can set some general preferences to influence the behaviour of
   </variablelist>
 </listitem>
 </varlistentry>
-
-<varlistentry>
-<term><guilabel>Warnings and notifications</guilabel></term>
-<listitem>
-  <para>
-  Here you can check which warnings and notifications you want to get. Usually,
-  warning messages have a checkbox &quot;Don't show this message again&quot;
-  (or &quot;Don't ask this question again&quot;).
-  When you enable a warning here, its dialog will be shown on the next occurrence.
-  </para>
-</listitem>
-</varlistentry>
-
 </variablelist>
 
-
 </sect2>
+
 
 <sect2 id="settings-paths">
 <title>Paths</title>
@@ -220,99 +284,77 @@ Here you can set some general preferences to influence the behaviour of
 Here you can specify the paths to use for different commands.
 </para>
 
-<sect3 id="settings-paths-lilypond">
-<title>&lilypond; versions to use</title>
+<variablelist>
 
-<para>
-This list normally shows just one item, "lilypond".
-But if you have multiple versions of &lilypond; installed you can add them to the list by clicking
-the <guibutton>Add</guibutton> button.
-Existing entries can be configured by clicking <guibutton>Configure</guibutton>.
-</para>
+<varlistentry>
+<term><guilabel>Helper applications</guilabel></term>
+<listitem>
+  <para>
+  Here you can specify paths to your favorite viewers for PDF and MIDI.
+  If you leave the paths empty, the preferences set in KDE's System Settings
+  are used.
+  </para>
+</listitem>
+</varlistentry>
 
-<para>
-In the dialog that opens you can specify the exact path to &lilypond;.
-If you just enter <command>lilypond</command>, the first &lilypond; instance in your
-<envar>PATH</envar> environment variable is used.
-You can also enter the paths to related commands such as <command>convert-ly</command>
-and <command>lilypond-book</command>. But if you don't specify the paths, these commands will be
-searched for in the same directory as the <command>lilypond</command> command was found.
-</para>
+<varlistentry>
+<term><guilabel>&lilypond; Documentation</guilabel></term>
+<listitem>
+  <para>
+  You can also provide the URL or path to the documentation for the built-in
+  <link linkend="lilydoc">&lilypond; documentation browser</link>.
+  </para>
+</listitem>
+</varlistentry>
 
-<para>
-Check <guilabel>Set as default</guilabel> to make the current &lilypond; entry the default,
-i.e. the one that is run for all actions (also the Blank Staff Paper tool, etc.).
-The other checkbox, <guilabel>Include in automatic version selection</guilabel>, if checked,
-will include the current &lilypond; entry in the automatic version selection (see below).
-</para>
+<varlistentry id="settings-hyphenation">
+<term><guilabel>Hyphenation settings</guilabel></term>
+<listitem>
+  <para>
+  Finally, at the bottom of the Paths section, you can configure a list of
+  directories to search for hyphenation pattern files that can be used to break
+  <link linkend="lyrics">lyrics</link> into syllables.
+  </para>
 
-<para>
-Below the list of installed &lilypond; instances, there is a checkbox
-<guilabel>Enable automatic version selection</guilabel>.
-If checked, &frescobaldi; will check the <userinput>\version</userinput> statement in your
-document and choose the most suitable &lilypond; version from your installed list to run.
-This is the lowest available version number that's still higher than or equal to the document's version.
-You can exclude particular instances (e.g. development or testing versions) by unchecking the
-option <guilabel>Include in automatic version selection</guilabel> of that &lilypond; entry.
-</para>
+  <para>
+  &frescobaldi; currently does not include hyphenation pattern files by itself,
+  but it can use the hyphenation patterns that are often installed with programs like
+  <productname>OpenOffice.org</productname>, <productname>KOffice</productname>,
+  <productname>Scribus</productname> or in specialized packages like <productname>myspell</productname>.
+  </para>
 
-</sect3>
+  <para>
+  If &frescobaldi; doesn't find any hyphenation files,
+  while you're sure you installed some of the software mentioned above,
+  try to find out where those files are in your file system, and list the paths
+  in the text entry.
+  If your operating system supports the <command>locate</command> command, you can open
+  a terminal and use a command like this to get a list of paths that you can simply paste in the
+  text entry to have &frescobaldi; find all installed pattern files:
+  </para>
 
-<sect3>
-<title>Other path settings</title>
+  <programlisting>locate '*/hyph_*.dic' | sed s,/[^/]*$,, | sort -u</programlisting>
 
-<para>
-Next, you can specify paths to your favorite viewers for PDF and MIDI.
-If you leave the paths empty, the KDE preferences are used.
-The print command is usually <command>lpr</command>.
-</para>
+  <para>or:</para>
 
-<para>
-You can also provide the URL or path to the documentation for the built-in
-<link linkend="lilydoc">&lilypond; documentation browser</link>.
-</para>
+  <programlisting>locate '*/hyph_*.dic' | xargs -n1 dirname | sort -u</programlisting>
 
-</sect3>
+</listitem>
+</varlistentry>
+</variablelist>
 
-<sect3 id="settings-hyphenation">
-<title>Hyphenation settings</title>
-<para>
-Finally, at the bottom of the Paths section, you can configure a list of
-directories to search for hyphenation pattern files that can be used to break
-<link linkend="lyrics">lyrics</link> into syllables.
-</para>
-
-<para>
-&frescobaldi; currently does not include hyphenation pattern files by itself,
-but it can use the hyphenation patterns that are often installed with programs like
-<productname>OpenOffice.org</productname>, <productname>KOffice</productname>,
-<productname>Scribus</productname> or in specialized packages like <productname>myspell</productname>.
-</para>
-
-<para>
-If &frescobaldi; doesn't find any hyphenation files,
-while you're sure you installed some of the software mentioned above,
-try to find out where those files are in your file system, and list the paths
-in the text entry.
-If your operating system supports the <command>locate</command> command, you can open
-a terminal and use a command like this to get a list of paths that you can simply paste in the
-text entry to have &frescobaldi; find all installed pattern files:
-</para>
-
-<programlisting>locate '*/hyph_*.dic' | sed s,/[^/]*$,, | sort -u</programlisting>
-
-<para>or:</para>
-
-<programlisting>locate '*/hyph_*.dic' | xargs -n1 dirname | sort -u</programlisting>
-
-</sect3>
 </sect2>
 
 <sect2 id="settings-editor-component">
 <title>Editor Component</title>
 
 <para>
-Here configuration options can be set for the KatePart editor component that is used by &frescobaldi;.
+In this page you can configure the looks and behaviour of the documents tab bar.
+</para>
+
+<para>
+Below this page,
+configuration options can be set for the KatePart editor component that is used by &frescobaldi;.
 Documentation for the editor component can be found in the manuals for
 <ulink url="help:/kwrite/pref-dialog.html">KWrite</ulink> and
 <ulink url="help:/kate/config-dialog-editor.html">Kate</ulink>.
