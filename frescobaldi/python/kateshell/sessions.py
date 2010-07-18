@@ -40,6 +40,7 @@ class ManagerDialog(KDialog):
         self.sm = manager
         self.setCaption(i18n("Manage Sessions"))
         self.setButtons(KDialog.ButtonCode(KDialog.Help | KDialog.Close))
+        self.setHelp("sessions")
         self.sessions = SessionList(self)
         self.setMainWidget(self.sessions)
         self.sm.sessionAdded.connect(self.load)
@@ -84,6 +85,7 @@ class EditorDialog(KPageDialog):
         self.setButtons(KDialog.ButtonCode(
             KDialog.Help | KDialog.Ok | KDialog.Cancel))
         self.setFaceType(KPageDialog.List)
+        self.setHelp("sessions")
         
         # First page with name and auto-save option
         page = QWidget(self)
@@ -111,14 +113,6 @@ class EditorDialog(KPageDialog):
         layout.addWidget(l, 2, 0)
         layout.addWidget(self.basedir, 2, 1)
         
-        # other pages
-        self.pages = []
-        self.initializePages()
-        
-    def initializePages(self):
-        """Adds the pages to the dialog."""
-        pass
-    
     def edit(self, name=None):
         """Edit the named or new (if not given) session."""
         # load the session
@@ -152,9 +146,9 @@ class EditorDialog(KPageDialog):
     def validate(self):
         """Checks if the input is acceptable.
         
-        If this function returns True, the dialog is accepted when OK is
-        clicked.  Otherwise a messagebox could be displayed, and the dialog
-        will remain visible.
+        If this method returns True, the dialog is accepted when OK is clicked.
+        Otherwise a messagebox could be displayed, and the dialog will remain
+        visible.
         """
         name = self.name.text()
         if '&' in name:
@@ -174,8 +168,6 @@ class EditorDialog(KPageDialog):
                 self.setCurrentPage(self.firstPage)
                 self.name.setFocus()
                 return False
-                
-            
             
         return True
     

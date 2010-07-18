@@ -1,0 +1,50 @@
+<chapter id="sessions">
+<title>Sessions</title>
+
+<para>
+&frescobaldi; supports named sessions.
+A session remembers the list of open files and optionally a base directory.
+If you are editing a group of files you want to quickly reopen later, you can
+create a new session via
+<menuchoice>
+  <guimenu>Sessions</guimenu>
+  <guimenuitem>New...</guimenuitem>
+</menuchoice>.
+</para>
+
+<para>
+In the dialog that appears you can enter a name for the session.
+The session will automatically remember the list of documents that are currently loaded
+in the editor.
+If you want to keep this fixed list in the session (even if you later close some documents
+or open other documents), uncheck the option
+<guilabel>Always save the list of documents in this session</guilabel>.
+You can also specify a base directory for the session, which will be shown if you want to
+save a new document.
+</para>
+
+<para>
+The new session will automatically be selected,
+and it shows up in the <guimenu>Sessions</guimenu> menu.
+In the same menu there is also the option <guimenuitem>Manage Sessions...</guimenuitem>,
+that will show the list of sessions. Here you can change, add or delete sessions.
+</para>
+
+<note><para>
+If you switch to a different session, the current list of open documents will be closed.
+If you cancel the closing of a modified document, sessions will not be switched,
+and all current documents will remain open.
+</para></note>
+
+<note><para>
+If you switch from a named session to the "No Session" state,
+all current documents will remain open.
+</para></note>
+
+<note><para>
+If you run &frescobaldi; with arguments (e.g. by clicking a &lilypond; file
+in the file manager), it will always open without a session.
+This way your sessions will not be cluttered with unintended documents.
+</para></note>
+
+</chapter>
