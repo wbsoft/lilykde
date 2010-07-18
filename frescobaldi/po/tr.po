@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-07-18 20:32+0200\n"
+"POT-Creation-Date: 2010-07-18 21:27+0200\n"
 "PO-Revision-Date: 2010-07-08 23:30+0200\n"
 "Last-Translator: Server Acim <serveracim@gmail.com>\n"
 "Language-Team: Turkish <kde-i18n-doc@kde.org>\n"
@@ -497,6 +497,65 @@ msgstr "Yüklenemedi %s"
 #: ../python/kateshell/mainwindow.py:1118
 msgid "Please install %1"
 msgstr "Lütfen kurunuz %1"
+
+#: ../python/kateshell/shortcut.py:163
+#, fuzzy
+msgid "Configure Keyboard Shortcut"
+msgstr "Klavye Kısayollarını Yapılandır (%1)"
+
+#: ../python/kateshell/shortcut.py:172
+msgid "Press the button to configure the keyboard shortcut for:"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:41
+#, fuzzy
+msgid "Manage Sessions"
+msgstr "Genişlemeleri Gir veya Düzenle..."
+
+#: ../python/kateshell/sessions.py:92
+#, fuzzy
+msgid "Session"
+msgstr "Başlatılacak oturum"
+
+#: ../python/kateshell/sessions.py:93
+msgid "Properties of this session"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:98
+#, fuzzy
+msgid "Name:"
+msgstr "İsim"
+
+#: ../python/kateshell/sessions.py:105
+msgid "Always save the list of documents in this session"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:108
+#, fuzzy
+msgid "Base directory:"
+msgstr "Öntanımlı dizin:"
+
+#: ../python/kateshell/sessions.py:121
+#, fuzzy
+msgid "Edit session: %1"
+msgstr "Başlayan numara:"
+
+#: ../python/kateshell/sessions.py:127
+#, fuzzy
+msgid "Edit new session"
+msgstr "Başlayan numara:"
+
+#: ../python/kateshell/sessions.py:156
+#, fuzzy
+msgid "Please do not use the ampersand (&) character in a session name."
+msgstr "Genişleme adında lütfen sadece harf, rakkkam ve küçük harf kullanın."
+
+#: ../python/kateshell/sessions.py:164
+msgid ""
+"Another session with the name %1 exists already.\n"
+"\n"
+"Do you want to overwrite it?"
+msgstr ""
 
 #: ../python/frescobaldi_app/actions.py:58
 msgid "Open %1 in external viewer"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 1.1.3\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-07-18 20:32+0200\n"
+"POT-Creation-Date: 2010-07-18 21:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -490,6 +490,57 @@ msgstr ""
 
 #: ../python/kateshell/mainwindow.py:1118
 msgid "Please install %1"
+msgstr ""
+
+#: ../python/kateshell/shortcut.py:163
+msgid "Configure Keyboard Shortcut"
+msgstr ""
+
+#: ../python/kateshell/shortcut.py:172
+msgid "Press the button to configure the keyboard shortcut for:"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:41
+msgid "Manage Sessions"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:92
+msgid "Session"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:93
+msgid "Properties of this session"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:98
+msgid "Name:"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:105
+msgid "Always save the list of documents in this session"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:108
+msgid "Base directory:"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:121
+msgid "Edit session: %1"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:127
+msgid "Edit new session"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:156
+msgid "Please do not use the ampersand (&) character in a session name."
+msgstr ""
+
+#: ../python/kateshell/sessions.py:164
+msgid ""
+"Another session with the name %1 exists already.\n"
+"\n"
+"Do you want to overwrite it?"
 msgstr ""
 
 #: ../python/frescobaldi_app/actions.py:58

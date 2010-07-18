@@ -19,6 +19,8 @@ xgettext \
     ../python/ly/*.py \
     ../python/kateshell/exception.py \
     ../python/kateshell/mainwindow.py \
+    ../python/kateshell/shortcut.py \
+    ../python/kateshell/sessions.py \
     ../python/frescobaldi_app/*.py \
     ../python/frescobaldi_app/scorewiz/*.py
 #   ../python/kateshell/app.py is not needed, strings there are also in Katepart    

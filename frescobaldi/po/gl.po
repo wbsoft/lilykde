@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.17\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-07-18 20:32+0200\n"
+"POT-Creation-Date: 2010-07-18 21:27+0200\n"
 "PO-Revision-Date: 2009-12-30 10:14+0100\n"
 "Last-Translator: Manuel A. Vazquez <xixirei@yahoo.es>\n"
 "Language-Team: Galician <proxecto@trasno.net>\n"
@@ -495,6 +495,66 @@ msgstr "Non se puido cargar %1"
 #: ../python/kateshell/mainwindow.py:1118
 msgid "Please install %1"
 msgstr "Instale %1"
+
+#: ../python/kateshell/shortcut.py:163
+msgid "Configure Keyboard Shortcut"
+msgstr ""
+
+#: ../python/kateshell/shortcut.py:172
+msgid "Press the button to configure the keyboard shortcut for:"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:41
+#, fuzzy
+msgid "Manage Sessions"
+msgstr "Inserir ou xestionar expansións..."
+
+#: ../python/kateshell/sessions.py:92
+#, fuzzy
+msgid "Session"
+msgstr "Sesión para iniciar"
+
+#: ../python/kateshell/sessions.py:93
+msgid "Properties of this session"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:98
+#, fuzzy
+msgid "Name:"
+msgstr "Nome"
+
+#: ../python/kateshell/sessions.py:105
+msgid "Always save the list of documents in this session"
+msgstr ""
+
+#: ../python/kateshell/sessions.py:108
+#, fuzzy
+msgid "Base directory:"
+msgstr "Directorio predeterminado:"
+
+#: ../python/kateshell/sessions.py:121
+#, fuzzy
+msgid "Edit session: %1"
+msgstr "Comezar en:"
+
+#: ../python/kateshell/sessions.py:127
+#, fuzzy
+msgid "Edit new session"
+msgstr "Comezar en:"
+
+#: ../python/kateshell/sessions.py:156
+#, fuzzy
+msgid "Please do not use the ampersand (&) character in a session name."
+msgstr "Empregue só letras, números e o guión baixo no nome da expansión."
+
+#: ../python/kateshell/sessions.py:164
+#, fuzzy
+msgid ""
+"Another session with the name %1 exists already.\n"
+"\n"
+"Do you want to overwrite it?"
+msgstr ""
+"Xa existe un ficheiro chamado \"%1\". Est´a seguro de querer sobrescribilo?"
 
 #: ../python/frescobaldi_app/actions.py:58
 msgid "Open %1 in external viewer"
@@ -3462,12 +3522,6 @@ msgstr "Especial"
 
 #~ msgid "Space above:"
 #~ msgstr "Espazo por enriba:"
-
-#~ msgid ""
-#~ "A file named \"%1\" already exists. Are you sure you want to overwrite it?"
-#~ msgstr ""
-#~ "Xa existe un ficheiro chamado \"%1\". Est´a seguro de querer "
-#~ "sobrescribilo?"
 
 #~ msgid "Overwrite File?"
 #~ msgstr "Sobrescribir ficheiro?"
