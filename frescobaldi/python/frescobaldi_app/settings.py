@@ -63,6 +63,7 @@ class SettingsDialog(KPageDialog):
             
         self.pages = [
             GeneralPreferences(self),
+            LilyPondPreferences(self),
             Commands(self),
             RumorSettings(self),
             EditorComponent(self),
@@ -80,7 +81,7 @@ class SettingsDialog(KPageDialog):
         self.enableButton(KPageDialog.Apply, changed)
         
     def done(self, result):
-        if result:
+        if result and self.button(KDialog.Apply).isEnabled():
             self.saveSettings()
         KPageDialog.done(self, result)
         
@@ -204,12 +205,27 @@ class GeneralPreferences(SettingsPage):
         item.setHeader(i18n("General Frescobaldi Preferences"))
         item.setIcon(KIcon("configure"))
         
-        LilyPondDocumentVersion(self)
+        SessionsStartup(self)
         SavingDocument(self)
-        RunningLilyPond(self)
         Warnings(self)
         
+
+class LilyPondPreferences(SettingsPage):
+    """
+    General preferences.
+    """
+    def __init__(self, dialog):
+        super(LilyPondPreferences, self).__init__(dialog)
+        item = dialog.addPage(self, i18n("LilyPond Preferences"))
+        item.setHeader(i18n("LilyPond Preferences"))
+        item.setIcon(KIcon("run-lilypond"))
         
+        LilyPondVersions(self)
+        LilyPondDocumentVersion(self)
+        RunningLilyPond(self)
+
+
+
 class Commands(SettingsPage):
     """
     Settings regarding commands of lilypond and associated programs.
@@ -221,7 +237,6 @@ class Commands(SettingsPage):
         item.setIcon(KIcon("utilities-terminal"))
         self.help = 'settings-paths'
         
-        LilyPondVersions(self)
         HelperApps(self)
         LilyDocBrowser(self)
         HyphenationSettings(self)
@@ -252,7 +267,6 @@ class EditorComponent(SettingsPage):
         editorItem.setIcon(KIcon("accessories-text-editor"))
         self.help = 'settings-editor-component'
         
-        SessionsStartup(self)
         TabBarSettings(self)
         
         self.editorPages = []
@@ -840,7 +854,8 @@ class LilyPondInfoDialog(KDialog):
 class SessionsStartup(SettingsGroup):
     
     def __init__(self, page):
-        super(SessionsStartup, self).__init__(i18n("Sessions"), page)
+        super(SessionsStartup, self).__init__(i18n(
+            "Session to load if Frescobaldi is started without arguments"), page)
             
         grid = QGridLayout(self)
         grid.setSpacing(0)
@@ -863,12 +878,10 @@ class SessionsStartup(SettingsGroup):
         self.sessionOptions["custom"].clicked.connect(
             lambda: self.customSession.setFocus())
         
-        grid.addWidget(QLabel(
-            i18n("If Frescobaldi is started without arguments...")), 0, 0, 1, 2)
-        grid.addWidget(self.sessionOptions["none"], 1, 0, 1, 2)
-        grid.addWidget(self.sessionOptions["lastused"], 2, 0, 1, 2)
-        grid.addWidget(self.sessionOptions["custom"], 3, 0, 1, 1)
-        grid.addWidget(self.customSession, 3, 1, 1, 1)
+        grid.addWidget(self.sessionOptions["none"], 0, 0, 1, 2)
+        grid.addWidget(self.sessionOptions["lastused"], 1, 0, 1, 2)
+        grid.addWidget(self.sessionOptions["custom"], 2, 0, 1, 1)
+        grid.addWidget(self.customSession, 2, 1, 1, 1)
         
         self.customSession.addItem(i18n("Choose..."))
         self.customSession.addItems(page.dialog.mainwin.sessionManager().names())
