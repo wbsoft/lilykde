@@ -28,18 +28,17 @@
   <!ENTITY frescobaldi-about SYSTEM "about.docbook">
   
   <!-- often used menus -->
+  <!ENTITY menu.settings.lilypond
+    '<menuchoice>
+      <guimenu>Settings</guimenu>
+      <guisubmenu>Configure &frescobaldi;...</guisubmenu>
+      <guimenuitem>&lilypond; Preferences</guimenuitem>
+    </menuchoice>'>
   <!ENTITY menu.settings.paths
     '<menuchoice>
       <guimenu>Settings</guimenu>
       <guisubmenu>Configure &frescobaldi;...</guisubmenu>
       <guimenuitem>Paths</guimenuitem>
-    </menuchoice>'>
-  <!ENTITY menu.settings.printcommand
-    '<menuchoice>
-      <guimenu>Settings</guimenu>
-      <guisubmenu>Configure &frescobaldi;...</guisubmenu>
-      <guisubmenu>Paths</guisubmenu>
-      <guimenuitem>Print command</guimenuitem>
     </menuchoice>'>
   <!ENTITY menu.lilypond.hyphenation
     '<menuchoice>

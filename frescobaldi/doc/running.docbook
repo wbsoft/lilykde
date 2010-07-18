@@ -75,9 +75,8 @@ of the Log view.
 </para>
 
 <para>
-If &lilypond; created a PDF, a button will be shown to open the PDF in the default
-PDF viewer, and a button to (directly!) print the PDF by sending it to the <command>lpr</command>
-command. (You can configure a different print command in &menu.settings.printcommand;.)
+If &lilypond; created a PDF, buttons will be shown to open the PDF in the default
+PDF viewer, and to print the PDF document.
 </para>
 
 </sect1>
@@ -210,11 +209,11 @@ on the whole score or book.
 
 <para>
 If you have multiple versions of &lilypond; installed you can add them to &frescobaldi;
-under &menu.settings.paths;.
+under &menu.settings.lilypond;.
 One of the &lilypond; instances can be set as the default.
 It is also possible to automatically start a &lilypond; instance with a version closest
 to the <userinput>\version</userinput> statement in your document.
-See <link linkend="settings-paths-lilypond">Settings Dialog, Paths</link> for more information.
+See <link linkend="settings-lilypond">Settings Dialog, &lilypond; Preferences</link> for more information.
 </para>
 
 </sect1>
