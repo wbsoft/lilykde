@@ -37,6 +37,9 @@ from PyKDE4.kio import KRun
 
 import ly.parse
 
+from kateshell.mainwindow import addAccelerators
+
+
 # Easily get our global config
 def config(group):
     return KGlobal.config().group(group)
@@ -71,6 +74,8 @@ class ActionManager(object):
             a.setToolTip(i18n(
                 "There are no up-to-date MIDI or PDF files available. "
                 "Please run LilyPond to create one or more output files."))
+        else:
+            addAccelerators(menu.actions())
 
     def addActionsToLog(self, updatedFiles, log):
         """

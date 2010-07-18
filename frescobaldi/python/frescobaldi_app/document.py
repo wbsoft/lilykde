@@ -35,6 +35,7 @@ from PyKDE4.ktexteditor import KTextEditor
 import ly.rx, ly.pitch, ly.parse, ly.tokenize, ly.tools, ly.version
 from kateshell.app import cacheresult
 from kateshell.widgets import promptText
+from kateshell.mainwindow import addAccelerators
 from frescobaldi_app.mainapp import lilyPondCommand
 
 
@@ -55,6 +56,7 @@ class DocumentManipulator(object):
             if lang == currentLang:
                 a.setChecked(True)
             a.triggered.connect((lambda lang: lambda: self.changeLanguage(lang))(lang))
+        addAccelerators(menu.actions())
     
     def changeLanguage(self, lang):
         """
