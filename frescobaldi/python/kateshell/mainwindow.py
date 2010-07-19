@@ -482,7 +482,8 @@ class MainWindow(KParts.MainWindow):
             self.applyMainWindowSettings(conf)
             self.setupGeneratedMenus()
         dlg.newToolbarConfig.connect(newToolbarConfig)
-        dlg.exec_()
+        dlg.setModal(True)
+        dlg.show()
 
     def newDocument(self):
         """ Create a new empty document """
