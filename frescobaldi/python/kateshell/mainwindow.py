@@ -62,8 +62,9 @@ def addAccelerators(actions):
     """
     todo, used = [], []
     for a in actions:
-        m = re.search(r'&(\w)', a.text())
-        used.append(m.group(1).lower()) if m else todo.append(a)
+        if a.text():
+            m = re.search(r'&(\w)', a.text())
+            used.append(m.group(1).lower()) if m else todo.append(a)
     for a in todo:
         text = a.text()
         for m in itertools.chain(re.finditer(r'\b\w', text),
