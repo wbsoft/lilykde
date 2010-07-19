@@ -81,7 +81,7 @@ class SettingsDialog(KPageDialog):
         self.enableButton(KPageDialog.Apply, changed)
         
     def done(self, result):
-        if result and self.button(KDialog.Apply).isEnabled():
+        if result:
             self.saveSettings()
         KPageDialog.done(self, result)
         
