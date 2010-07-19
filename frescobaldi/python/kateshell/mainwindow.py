@@ -519,9 +519,9 @@ class MainWindow(KParts.MainWindow):
     def queryClose(self):
         """ Quit the application, also called by closing the window """
         if self.app.kapp.sessionSaving():
-            session_config = self.app.kapp.sessionConfig()
-            self.saveDocumentList(session_config.group("documents"))
-            self.sessionManager().saveProperties(session_config)
+            sc = self.app.kapp.sessionConfig()
+            self.saveDocumentList(sc.group("documents"))
+            self.sessionManager().saveProperties(sc.group("session"))
         # just ask, cancel at any time will keep all documents.
         for d in self.app.history[::-1]: # iterate over a copy, current first
             if d.isModified():
@@ -551,7 +551,7 @@ class MainWindow(KParts.MainWindow):
     def readGlobalProperties(self, conf):
         """Called on session restore, loads the list of open documents."""
         self.loadDocumentList(conf.group("documents"))
-        self.sessionManager().readProperties(conf)
+        self.sessionManager().readProperties(conf.group("session"))
         
     def saveDocumentList(self, cg):
         """Stores the list of documents to the given KConfigGroup."""
@@ -1367,14 +1367,16 @@ class SessionManager(object):
             self.switch(name)
         
     def saveProperties(self, conf):
-        """Save our state in a session of QSessionManager."""
-        conf.group().writeEntry("session_name", self._current or "none")
+        """Save our state in a session group of QSessionManager."""
+        conf.writeEntry("name", self._current or "none")
         conf.sync()
     
     def readProperties(self, conf):
-        """Restore our state from a QSessionManager session."""
-        name = conf.group().readEntry("session_name", "none")
+        """Restore our state from a QSessionManager session group."""
+        name = conf.readEntry("name", "none")
         self._current = None if name == "none" else name
+        if self._current:
+            self.sessionChanged()
     
     def new(self):
         """Prompts for a name for a new session.
