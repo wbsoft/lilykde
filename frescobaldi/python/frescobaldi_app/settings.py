@@ -212,7 +212,7 @@ class GeneralPreferences(SettingsPage):
 
 class LilyPondPreferences(SettingsPage):
     """
-    General preferences.
+    LilyPond preferences.
     """
     def __init__(self, dialog):
         super(LilyPondPreferences, self).__init__(dialog)
@@ -226,10 +226,9 @@ class LilyPondPreferences(SettingsPage):
         RunningLilyPond(self)
 
 
-
 class Commands(SettingsPage):
     """
-    Settings regarding commands of lilypond and associated programs.
+    Settings regarding paths and helper apps.
     """
     def __init__(self, dialog):
         super(Commands, self).__init__(dialog)
