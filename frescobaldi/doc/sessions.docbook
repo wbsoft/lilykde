@@ -16,11 +16,23 @@ create a new session via
 In the dialog that appears you can enter a name for the session.
 The session will automatically remember the list of documents that are currently loaded
 in the editor.
-If you want to keep this fixed list in the session (even if you later close some documents
-or open other documents), uncheck the option
-<guilabel>Always save the list of documents in this session</guilabel>.
-You can also specify a base directory for the session, which will be shown if you want to
-save a new document.
+</para>
+
+<para>
+By default &frescobaldi; saves the list of open documents when switching to a different session
+or when you close &frescobaldi;.
+But if you want to keep this list fixed in the session,
+even if you later close some documents or open other documents,
+uncheck the option <guilabel>Always save the list of documents in this session</guilabel>.
+You can always save a session manually via the menu command <menuchoice>
+  <guimenu>Sessions</guimenu>
+  <guimenuitem>Save</guimenuitem>
+</menuchoice>.)
+</para>
+
+<para>
+In the session dialog you can also specify a base directory for the session,
+which will be shown if you save a new document.
 </para>
 
 <para>
@@ -33,7 +45,7 @@ The name of the current session is also visible in the titlebar of the &frescoba
 </para>
 
 <para>
-You can also start &frescobaldi; in a specific session by using the <option>--start</option>
+You can start &frescobaldi; in a specific session by using the <option>--start</option>
 option on the <command>frescobaldi</command> command line.
 In this case, if you specify a non-existing session, it will be created on the fly.
 </para>
