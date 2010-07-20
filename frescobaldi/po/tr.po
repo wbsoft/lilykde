@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-07-18 21:27+0200\n"
+"POT-Creation-Date: 2010-07-20 09:18+0200\n"
 "PO-Revision-Date: 2010-07-08 23:30+0200\n"
 "Last-Translator: Server Acim <serveracim@gmail.com>\n"
 "Language-Team: Turkish <kde-i18n-doc@kde.org>\n"
@@ -395,106 +395,106 @@ msgstr "Hata Raporunu E-posta ile gönder..."
 msgid "Optionally describe what you were doing below:"
 msgstr "Aşağıya ne yaptığını opsiyonel olarak tanımla:"
 
-#: ../python/kateshell/mainwindow.py:98
+#: ../python/kateshell/mainwindow.py:121
 msgid "Left Sidebar"
 msgstr "Sol Kenar Çubuğu"
 
-#: ../python/kateshell/mainwindow.py:102
+#: ../python/kateshell/mainwindow.py:125
 msgid "Right Sidebar"
 msgstr "Sağ Kenar Çubuğu"
 
-#: ../python/kateshell/mainwindow.py:114
+#: ../python/kateshell/mainwindow.py:137
 msgid "Top Sidebar"
 msgstr "Üst Kenar Çubuğu"
 
-#: ../python/kateshell/mainwindow.py:127
+#: ../python/kateshell/mainwindow.py:150
 msgid "Bottom Sidebar"
 msgstr "Alt Kenar Çubuğu"
 
-#: ../python/kateshell/mainwindow.py:169
+#: ../python/kateshell/mainwindow.py:192
 msgid "Close Other Documents"
 msgstr "Diğer Belgeleri Kapat"
 
-#: ../python/kateshell/mainwindow.py:174
+#: ../python/kateshell/mainwindow.py:197
 msgid "Show Path"
 msgstr "Yolu Göster"
 
-#: ../python/kateshell/mainwindow.py:177
+#: ../python/kateshell/mainwindow.py:200
 msgid "Show Document Tabs"
 msgstr "Belge Sekmelerini Göster"
 
-#: ../python/kateshell/mainwindow.py:195
+#: ../python/kateshell/mainwindow.py:218
 msgid "&Tool Views"
 msgstr "&Araç Görünümleri"
 
-#: ../python/kateshell/mainwindow.py:209
+#: ../python/kateshell/mainwindow.py:232
 msgid "New..."
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:217
+#: ../python/kateshell/mainwindow.py:240
 #, fuzzy
 msgid "Manage Sessions..."
 msgstr "Genişlemeleri Gir veya Düzenle..."
 
-#: ../python/kateshell/mainwindow.py:277
+#: ../python/kateshell/mainwindow.py:301
 #, fuzzy
 msgid "No Session"
 msgstr "Vurmalı Çalgılar"
 
-#: ../python/kateshell/mainwindow.py:352
+#: ../python/kateshell/mainwindow.py:377
 msgid "Please select some text first."
 msgstr "Lütfen önce bir metin seçiniz."
 
-#: ../python/kateshell/mainwindow.py:407
+#: ../python/kateshell/mainwindow.py:432
 msgid "modified"
 msgstr "değiştirilmiş"
 
-#: ../python/kateshell/mainwindow.py:417
+#: ../python/kateshell/mainwindow.py:442
 msgid "Line: %1 Col: %2"
 msgstr "Satır: %1 Sütun: %2"
 
-#: ../python/kateshell/mainwindow.py:426
+#: ../python/kateshell/mainwindow.py:451
 msgid "BLOCK"
 msgstr "GENİŞLİK"
 
-#: ../python/kateshell/mainwindow.py:426
+#: ../python/kateshell/mainwindow.py:451
 msgid "Block selection mode"
 msgstr "Genişlik seçim kipi"
 
-#: ../python/kateshell/mainwindow.py:428
+#: ../python/kateshell/mainwindow.py:453
 msgid "LINE"
 msgstr "SATIR"
 
-#: ../python/kateshell/mainwindow.py:428
+#: ../python/kateshell/mainwindow.py:453
 msgid "Line selection mode"
 msgstr "Satır seçim kipi"
 
-#: ../python/kateshell/mainwindow.py:473
+#: ../python/kateshell/mainwindow.py:499
 #: ../python/frescobaldi_app/blankpaper.py:338
 msgid "All Files"
 msgstr "Tüm dosyalar"
 
-#: ../python/kateshell/mainwindow.py:474
+#: ../python/kateshell/mainwindow.py:500
 msgid "Open File"
 msgstr "Dosya Aç"
 
-#: ../python/kateshell/mainwindow.py:720
+#: ../python/kateshell/mainwindow.py:746
 msgid "Right-click for tab options"
 msgstr "Sekme seçenekleri için sağ-tıklayınız"
 
-#: ../python/kateshell/mainwindow.py:1040
+#: ../python/kateshell/mainwindow.py:1066
 msgid "Move To"
 msgstr "Buraya Taşı"
 
-#: ../python/kateshell/mainwindow.py:1046
+#: ../python/kateshell/mainwindow.py:1072
 msgid "Undock"
 msgstr "Uzat"
 
-#: ../python/kateshell/mainwindow.py:1117
+#: ../python/kateshell/mainwindow.py:1143
 msgid "Could not load %1"
 msgstr "Yüklenemedi %s"
 
-#: ../python/kateshell/mainwindow.py:1118
+#: ../python/kateshell/mainwindow.py:1144
 msgid "Please install %1"
 msgstr "Lütfen kurunuz %1"
 
@@ -545,31 +545,40 @@ msgstr "Başlayan numara:"
 msgid "Edit new session"
 msgstr "Başlayan numara:"
 
-#: ../python/kateshell/sessions.py:156
+#: ../python/kateshell/sessions.py:158
+#, fuzzy
+msgid "Please enter a session name."
+msgstr "Genişleme adında lütfen sadece harf, rakkkam ve küçük harf kullanın."
+
+#: ../python/kateshell/sessions.py:167
+msgid "Please do not use the name '%1'."
+msgstr ""
+
+#: ../python/kateshell/sessions.py:174
 #, fuzzy
 msgid "Please do not use the ampersand (&) character in a session name."
 msgstr "Genişleme adında lütfen sadece harf, rakkkam ve küçük harf kullanın."
 
-#: ../python/kateshell/sessions.py:164
+#: ../python/kateshell/sessions.py:182
 msgid ""
 "Another session with the name %1 exists already.\n"
 "\n"
 "Do you want to overwrite it?"
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:58
+#: ../python/frescobaldi_app/actions.py:61
 msgid "Open %1 in external viewer"
 msgstr "Bu dosyayı %1 dış görüntüleyicide aç"
 
-#: ../python/frescobaldi_app/actions.py:66
+#: ../python/frescobaldi_app/actions.py:69
 msgid "Play %1"
 msgstr "Çal %1"
 
-#: ../python/frescobaldi_app/actions.py:70
+#: ../python/frescobaldi_app/actions.py:73
 msgid "(No up-to-date MIDI or PDF files available.)"
 msgstr "(Hiç güncel MIDI veya PDF dosyası yok)"
 
-#: ../python/frescobaldi_app/actions.py:72
+#: ../python/frescobaldi_app/actions.py:75
 msgid ""
 "There are no up-to-date MIDI or PDF files available. Please run LilyPond to "
 "create one or more output files."
@@ -577,31 +586,31 @@ msgstr ""
 "Güncel hiç MIDI veya PDF dosyası yok. Lütfen bir veya birden fazla çıktı "
 "dosyası oluşturmak için LilyPond'u çalıştırın."
 
-#: ../python/frescobaldi_app/actions.py:98
+#: ../python/frescobaldi_app/actions.py:103
 msgid "Open PDF"
 msgstr "PDF aç"
 
-#: ../python/frescobaldi_app/actions.py:99
+#: ../python/frescobaldi_app/actions.py:104
 msgid "Print"
 msgstr "Yazdır"
 
-#: ../python/frescobaldi_app/actions.py:101
+#: ../python/frescobaldi_app/actions.py:106
 msgid "Play MIDI"
 msgstr "MIDI çal"
 
-#: ../python/frescobaldi_app/actions.py:104
+#: ../python/frescobaldi_app/actions.py:109
 msgid "Email..."
 msgstr "E-posta..."
 
-#: ../python/frescobaldi_app/actions.py:155
+#: ../python/frescobaldi_app/actions.py:160
 msgid "There are no files to send via email."
 msgstr "E-posta olarak gönderilecek dosya bulunmamaktadır."
 
-#: ../python/frescobaldi_app/actions.py:156
+#: ../python/frescobaldi_app/actions.py:161
 msgid "No files to send"
 msgstr "Gönderilecek dosya yok"
 
-#: ../python/frescobaldi_app/actions.py:170
+#: ../python/frescobaldi_app/actions.py:175
 msgid ""
 "There are no PDF documents to print.\n"
 "\n"
@@ -616,19 +625,19 @@ msgstr ""
 "bölmesi eklediğinizden emin olun, aksi taktirde LilyPond bir PDF "
 "oluşturmayacaktır."
 
-#: ../python/frescobaldi_app/actions.py:175
+#: ../python/frescobaldi_app/actions.py:180
 msgid "No files to print"
 msgstr "Yazdırılacak dosya yok"
 
-#: ../python/frescobaldi_app/actions.py:187
+#: ../python/frescobaldi_app/actions.py:192
 msgid "Email documents"
 msgstr "E-posta belgeleri"
 
-#: ../python/frescobaldi_app/actions.py:191
+#: ../python/frescobaldi_app/actions.py:196
 msgid "Please select the files you want to send:"
 msgstr "Lütfen göndermek istediğiniz dosyaları seçiniz:"
 
-#: ../python/frescobaldi_app/actions.py:195
+#: ../python/frescobaldi_app/actions.py:200
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document). Also LilyPond files included by the source document are shown."
@@ -636,7 +645,7 @@ msgstr ""
 "Güncel dosyalar var (örn. LilyPond kaynak dosyasından daha yeniler). Ayrıca, "
 "LilyPond kaynak dosyaları da görüntülenmektedir."
 
-#: ../python/frescobaldi_app/actions.py:206
+#: ../python/frescobaldi_app/actions.py:211
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -653,7 +662,7 @@ msgstr[0] ""
 "kipinde yeniden derlemeyi deneyiniz, böylece PDF dosya boyutu daha "
 "küçülecektir."
 
-#: ../python/frescobaldi_app/actions.py:220
+#: ../python/frescobaldi_app/actions.py:225
 msgid ""
 "Note: If there are no PDF and no MIDI files, you probably need to run "
 "LilyPond to update those files, before sending the e-mail."
@@ -662,19 +671,19 @@ msgstr ""
 "belgeleri güncellemek için büyük olasılıkla LilyPond'u çalıştırmanız "
 "gerekecektir."
 
-#: ../python/frescobaldi_app/actions.py:277
+#: ../python/frescobaldi_app/actions.py:282
 msgid "Select all"
 msgstr "Hepsini seç"
 
-#: ../python/frescobaldi_app/actions.py:278
+#: ../python/frescobaldi_app/actions.py:283
 msgid "Print documents"
 msgstr "Belgeleri yazdır"
 
-#: ../python/frescobaldi_app/actions.py:281
+#: ../python/frescobaldi_app/actions.py:286
 msgid "Please select the files you want to print:"
 msgstr "Lütfen yazdırmak istediğiniz dosyaları seçiniz:"
 
-#: ../python/frescobaldi_app/actions.py:285
+#: ../python/frescobaldi_app/actions.py:290
 msgid ""
 "These are the PDF documents that are up-to-date (i.e. newer than the "
 "LilyPond source document). Check the documents you want to send to the "
@@ -683,24 +692,24 @@ msgstr ""
 "Güncel PDF dosyaları var (örn. LilyPond kaynak dosyasından daha yeniler). "
 "Yazıcıya göndermek istediğiniz belgeleri denetleyin."
 
-#: ../python/frescobaldi_app/actions.py:366
+#: ../python/frescobaldi_app/actions.py:371
 msgid "Print %1"
 msgstr "Yazdır %1"
 
-#: ../python/frescobaldi_app/actions.py:369
+#: ../python/frescobaldi_app/actions.py:374
 msgid "Print 1 file"
 msgid_plural "Print %1 files"
 msgstr[0] "%1 dosyalarını yazdır"
 
-#: ../python/frescobaldi_app/actions.py:379
+#: ../python/frescobaldi_app/actions.py:384
 msgid "A print command (like 'lpr' or 'lp') could not be found on your system."
 msgstr "Bir yazdırma komutu ('lpr' veya 'lp' gibi) sisteminizde bulunamadı."
 
-#: ../python/frescobaldi_app/actions.py:383
+#: ../python/frescobaldi_app/actions.py:388
 msgid "The command '%1' could not be found on your system."
 msgstr "Komut '%1' sisteminizde çalıştırılamıyor."
 
-#: ../python/frescobaldi_app/actions.py:387
+#: ../python/frescobaldi_app/actions.py:392
 msgid ""
 "The command below has been run, but exited with a return code %1.\n"
 "\n"
@@ -947,7 +956,7 @@ msgstr "Özel Karakterler"
 msgid "unknown"
 msgstr "bilinmeyen"
 
-#: ../python/frescobaldi_app/document.py:68
+#: ../python/frescobaldi_app/document.py:70
 msgid ""
 "Can't perform the requested translation.\n"
 "\n"
@@ -959,7 +968,7 @@ msgstr ""
 "Müzik, çeyrek ses değişimleri içermektedir, fakat bunlar \"%1\" ses dili "
 "için mümkün değildir."
 
-#: ../python/frescobaldi_app/document.py:82
+#: ../python/frescobaldi_app/document.py:84
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
@@ -967,29 +976,29 @@ msgstr ""
 "Seçilmiş olan metindeki ses noktası dili güncellendi, fakat belgeniz "
 "aşağıdaki komutu elle eklemelisiniz:"
 
-#: ../python/frescobaldi_app/document.py:85
+#: ../python/frescobaldi_app/document.py:87
 #: ../python/frescobaldi_app/mainapp.py:624
 msgid "Pitch Name Language"
 msgstr "Ses Adı Dili"
 
-#: ../python/frescobaldi_app/document.py:140
+#: ../python/frescobaldi_app/document.py:142
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr "Lütfen, metne atamak üzere değişkene bir ad veriniz:"
 
-#: ../python/frescobaldi_app/document.py:141
+#: ../python/frescobaldi_app/document.py:143
 #: ../python/frescobaldi_app/mainapp.py:493
 msgid "Cut and Assign"
 msgstr "Kes ve Ata:"
 
-#: ../python/frescobaldi_app/document.py:451
+#: ../python/frescobaldi_app/document.py:453
 msgid "Open %1"
 msgstr "Aç %1"
 
-#: ../python/frescobaldi_app/document.py:705
+#: ../python/frescobaldi_app/document.py:707
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr "Lütfen bir ifade seçiniz, aralarında <<...>> veya { ... } olsun."
 
-#: ../python/frescobaldi_app/document.py:725
+#: ../python/frescobaldi_app/document.py:727
 msgid ""
 "Could not understand the entered pitches.\n"
 "\n"
@@ -999,7 +1008,7 @@ msgstr ""
 "\n"
 "Lütfen ses adlarının doğru dilde yazıldığına emin olun, seçilen dil \"%1\"."
 
-#: ../python/frescobaldi_app/document.py:733
+#: ../python/frescobaldi_app/document.py:735
 msgid ""
 "Can't perform the requested transposition.\n"
 "\n"
@@ -1011,19 +1020,19 @@ msgstr ""
 "Aktarılmış müzik, çeyrek ses değişimleri içermektedir, fakat bunlar %1 ses "
 "dili için mümkün değildir."
 
-#: ../python/frescobaldi_app/document.py:746
+#: ../python/frescobaldi_app/document.py:748
 msgid "Transpose"
 msgstr "Aktarım"
 
-#: ../python/frescobaldi_app/document.py:753
+#: ../python/frescobaldi_app/document.py:755
 msgid "Please enter a start pitch and a destination pitch:"
 msgstr "Lütfen bir başlangıç sesi ve aktarılacak uzaklıktaki sesi giriniz:"
 
-#: ../python/frescobaldi_app/document.py:757
+#: ../python/frescobaldi_app/document.py:759
 msgid "Transpose from:"
 msgstr "Aktarın yapılacak yer:"
 
-#: ../python/frescobaldi_app/document.py:761
+#: ../python/frescobaldi_app/document.py:763
 msgid "to:"
 msgstr "yön:"
 

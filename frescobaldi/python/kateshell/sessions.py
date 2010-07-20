@@ -150,7 +150,25 @@ class EditorDialog(KPageDialog):
         Otherwise a messagebox could be displayed, and the dialog will remain
         visible.
         """
-        name = self.name.text()
+        # strip off whitespace
+        name = self.name.text().strip()
+        self.name.setText(name)
+        
+        if not name:
+            KMessageBox.error(self, i18n("Please enter a session name."))
+            if self._originalName:
+                self.name.setText(self._originalName)
+            self.setCurrentPage(self.firstPage)
+            self.name.setFocus()
+            return False
+        
+        if name == 'none':
+            KMessageBox.error(self, i18n(
+                "Please do not use the name '%1'.", "none"))
+            self.setCurrentPage(self.firstPage)
+            self.name.setFocus()
+            return False
+        
         if '&' in name:
             KMessageBox.error(self, i18n(
                 "Please do not use the ampersand (&) character "

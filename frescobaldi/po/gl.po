@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.17\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-07-18 21:27+0200\n"
+"POT-Creation-Date: 2010-07-20 09:18+0200\n"
 "PO-Revision-Date: 2009-12-30 10:14+0100\n"
 "Last-Translator: Manuel A. Vazquez <xixirei@yahoo.es>\n"
 "Language-Team: Galician <proxecto@trasno.net>\n"
@@ -393,106 +393,106 @@ msgstr "Enviar informe de erro..."
 msgid "Optionally describe what you were doing below:"
 msgstr "Opcionalmente, describe aquí o que estaba a facer:"
 
-#: ../python/kateshell/mainwindow.py:98
+#: ../python/kateshell/mainwindow.py:121
 msgid "Left Sidebar"
 msgstr "Barra lateral esquerda"
 
-#: ../python/kateshell/mainwindow.py:102
+#: ../python/kateshell/mainwindow.py:125
 msgid "Right Sidebar"
 msgstr "Barra lateral dereita"
 
-#: ../python/kateshell/mainwindow.py:114
+#: ../python/kateshell/mainwindow.py:137
 msgid "Top Sidebar"
 msgstr "Barra superior"
 
-#: ../python/kateshell/mainwindow.py:127
+#: ../python/kateshell/mainwindow.py:150
 msgid "Bottom Sidebar"
 msgstr "Barra inferior"
 
-#: ../python/kateshell/mainwindow.py:169
+#: ../python/kateshell/mainwindow.py:192
 msgid "Close Other Documents"
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:174
+#: ../python/kateshell/mainwindow.py:197
 msgid "Show Path"
 msgstr "Amosar a ruta"
 
-#: ../python/kateshell/mainwindow.py:177
+#: ../python/kateshell/mainwindow.py:200
 msgid "Show Document Tabs"
 msgstr "Amosar separadores do documento"
 
-#: ../python/kateshell/mainwindow.py:195
+#: ../python/kateshell/mainwindow.py:218
 msgid "&Tool Views"
 msgstr "Vistas de ferramen&tas"
 
-#: ../python/kateshell/mainwindow.py:209
+#: ../python/kateshell/mainwindow.py:232
 msgid "New..."
 msgstr ""
 
-#: ../python/kateshell/mainwindow.py:217
+#: ../python/kateshell/mainwindow.py:240
 #, fuzzy
 msgid "Manage Sessions..."
 msgstr "Inserir ou xestionar expansións..."
 
-#: ../python/kateshell/mainwindow.py:277
+#: ../python/kateshell/mainwindow.py:301
 #, fuzzy
 msgid "No Session"
 msgstr "Percusión"
 
-#: ../python/kateshell/mainwindow.py:352
+#: ../python/kateshell/mainwindow.py:377
 msgid "Please select some text first."
 msgstr "Seleccione primeiro algo de texto."
 
-#: ../python/kateshell/mainwindow.py:407
+#: ../python/kateshell/mainwindow.py:432
 msgid "modified"
 msgstr "modificado"
 
-#: ../python/kateshell/mainwindow.py:417
+#: ../python/kateshell/mainwindow.py:442
 msgid "Line: %1 Col: %2"
 msgstr "Liña: %1 Columna: %2"
 
-#: ../python/kateshell/mainwindow.py:426
+#: ../python/kateshell/mainwindow.py:451
 msgid "BLOCK"
 msgstr "BLOQUE"
 
-#: ../python/kateshell/mainwindow.py:426
+#: ../python/kateshell/mainwindow.py:451
 msgid "Block selection mode"
 msgstr "Modo de selección de bloques"
 
-#: ../python/kateshell/mainwindow.py:428
+#: ../python/kateshell/mainwindow.py:453
 msgid "LINE"
 msgstr "LIÑA"
 
-#: ../python/kateshell/mainwindow.py:428
+#: ../python/kateshell/mainwindow.py:453
 msgid "Line selection mode"
 msgstr "Modo de selección de liñas"
 
-#: ../python/kateshell/mainwindow.py:473
+#: ../python/kateshell/mainwindow.py:499
 #: ../python/frescobaldi_app/blankpaper.py:338
 msgid "All Files"
 msgstr "Todos os ficheiros"
 
-#: ../python/kateshell/mainwindow.py:474
+#: ../python/kateshell/mainwindow.py:500
 msgid "Open File"
 msgstr "Abrir ficheiro"
 
-#: ../python/kateshell/mainwindow.py:720
+#: ../python/kateshell/mainwindow.py:746
 msgid "Right-click for tab options"
 msgstr "Clic dereito para opcións dos separadores"
 
-#: ../python/kateshell/mainwindow.py:1040
+#: ../python/kateshell/mainwindow.py:1066
 msgid "Move To"
 msgstr "Mover a"
 
-#: ../python/kateshell/mainwindow.py:1046
+#: ../python/kateshell/mainwindow.py:1072
 msgid "Undock"
 msgstr "Desacoplar"
 
-#: ../python/kateshell/mainwindow.py:1117
+#: ../python/kateshell/mainwindow.py:1143
 msgid "Could not load %1"
 msgstr "Non se puido cargar %1"
 
-#: ../python/kateshell/mainwindow.py:1118
+#: ../python/kateshell/mainwindow.py:1144
 msgid "Please install %1"
 msgstr "Instale %1"
 
@@ -542,12 +542,21 @@ msgstr "Comezar en:"
 msgid "Edit new session"
 msgstr "Comezar en:"
 
-#: ../python/kateshell/sessions.py:156
+#: ../python/kateshell/sessions.py:158
+#, fuzzy
+msgid "Please enter a session name."
+msgstr "Empregue só letras, números e o guión baixo no nome da expansión."
+
+#: ../python/kateshell/sessions.py:167
+msgid "Please do not use the name '%1'."
+msgstr ""
+
+#: ../python/kateshell/sessions.py:174
 #, fuzzy
 msgid "Please do not use the ampersand (&) character in a session name."
 msgstr "Empregue só letras, números e o guión baixo no nome da expansión."
 
-#: ../python/kateshell/sessions.py:164
+#: ../python/kateshell/sessions.py:182
 #, fuzzy
 msgid ""
 "Another session with the name %1 exists already.\n"
@@ -556,49 +565,49 @@ msgid ""
 msgstr ""
 "Xa existe un ficheiro chamado \"%1\". Est´a seguro de querer sobrescribilo?"
 
-#: ../python/frescobaldi_app/actions.py:58
+#: ../python/frescobaldi_app/actions.py:61
 msgid "Open %1 in external viewer"
 msgstr "Abrir %1 nun visor externo"
 
-#: ../python/frescobaldi_app/actions.py:66
+#: ../python/frescobaldi_app/actions.py:69
 msgid "Play %1"
 msgstr "Reproducir %1"
 
-#: ../python/frescobaldi_app/actions.py:70
+#: ../python/frescobaldi_app/actions.py:73
 msgid "(No up-to-date MIDI or PDF files available.)"
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:72
+#: ../python/frescobaldi_app/actions.py:75
 msgid ""
 "There are no up-to-date MIDI or PDF files available. Please run LilyPond to "
 "create one or more output files."
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:98
+#: ../python/frescobaldi_app/actions.py:103
 msgid "Open PDF"
 msgstr "Abrir PDF"
 
-#: ../python/frescobaldi_app/actions.py:99
+#: ../python/frescobaldi_app/actions.py:104
 msgid "Print"
 msgstr "Imprimir"
 
-#: ../python/frescobaldi_app/actions.py:101
+#: ../python/frescobaldi_app/actions.py:106
 msgid "Play MIDI"
 msgstr "Reproducir MIDI"
 
-#: ../python/frescobaldi_app/actions.py:104
+#: ../python/frescobaldi_app/actions.py:109
 msgid "Email..."
 msgstr "Correo-e..."
 
-#: ../python/frescobaldi_app/actions.py:155
+#: ../python/frescobaldi_app/actions.py:160
 msgid "There are no files to send via email."
 msgstr "Non hai ningún ficheiro para enviar por correo-e."
 
-#: ../python/frescobaldi_app/actions.py:156
+#: ../python/frescobaldi_app/actions.py:161
 msgid "No files to send"
 msgstr "Non hai ningún ficheiro que enviar"
 
-#: ../python/frescobaldi_app/actions.py:170
+#: ../python/frescobaldi_app/actions.py:175
 msgid ""
 "There are no PDF documents to print.\n"
 "\n"
@@ -607,20 +616,20 @@ msgid ""
 "score, otherwise LilyPond will not create a PDF."
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:175
+#: ../python/frescobaldi_app/actions.py:180
 #, fuzzy
 msgid "No files to print"
 msgstr "Non hai ningún ficheiro que enviar"
 
-#: ../python/frescobaldi_app/actions.py:187
+#: ../python/frescobaldi_app/actions.py:192
 msgid "Email documents"
 msgstr "Documentos por correo electrónico"
 
-#: ../python/frescobaldi_app/actions.py:191
+#: ../python/frescobaldi_app/actions.py:196
 msgid "Please select the files you want to send:"
 msgstr "Seleccione os ficheiros que quere enviar:"
 
-#: ../python/frescobaldi_app/actions.py:195
+#: ../python/frescobaldi_app/actions.py:200
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document). Also LilyPond files included by the source document are shown."
@@ -629,7 +638,7 @@ msgstr ""
 "recentes que o documento fonte de LilyPond). Tamén se amosan os ficheiros de "
 "LilyPond incluídos polo documento fonte."
 
-#: ../python/frescobaldi_app/actions.py:206
+#: ../python/frescobaldi_app/actions.py:211
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -651,27 +660,27 @@ msgstr[1] ""
 "ficheiro. Considere a posibilidade de volver construír os ficheiros no modo "
 "publicación, porque os ficheiros PDF son moito máis pequenos."
 
-#: ../python/frescobaldi_app/actions.py:220
+#: ../python/frescobaldi_app/actions.py:225
 msgid ""
 "Note: If there are no PDF and no MIDI files, you probably need to run "
 "LilyPond to update those files, before sending the e-mail."
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:277
+#: ../python/frescobaldi_app/actions.py:282
 msgid "Select all"
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:278
+#: ../python/frescobaldi_app/actions.py:283
 #, fuzzy
 msgid "Print documents"
 msgstr "Documentos por correo electrónico"
 
-#: ../python/frescobaldi_app/actions.py:281
+#: ../python/frescobaldi_app/actions.py:286
 #, fuzzy
 msgid "Please select the files you want to print:"
 msgstr "Seleccione os ficheiros que quere enviar:"
 
-#: ../python/frescobaldi_app/actions.py:285
+#: ../python/frescobaldi_app/actions.py:290
 #, fuzzy
 msgid ""
 "These are the PDF documents that are up-to-date (i.e. newer than the "
@@ -682,26 +691,26 @@ msgstr ""
 "recentes que o documento fonte de LilyPond). Tamén se amosan os ficheiros de "
 "LilyPond incluídos polo documento fonte."
 
-#: ../python/frescobaldi_app/actions.py:366
+#: ../python/frescobaldi_app/actions.py:371
 msgid "Print %1"
 msgstr "Imprimir %1"
 
-#: ../python/frescobaldi_app/actions.py:369
+#: ../python/frescobaldi_app/actions.py:374
 #, fuzzy
 msgid "Print 1 file"
 msgid_plural "Print %1 files"
 msgstr[0] "Imprimir %1"
 msgstr[1] "Imprimir %1"
 
-#: ../python/frescobaldi_app/actions.py:379
+#: ../python/frescobaldi_app/actions.py:384
 msgid "A print command (like 'lpr' or 'lp') could not be found on your system."
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:383
+#: ../python/frescobaldi_app/actions.py:388
 msgid "The command '%1' could not be found on your system."
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:387
+#: ../python/frescobaldi_app/actions.py:392
 msgid ""
 "The command below has been run, but exited with a return code %1.\n"
 "\n"
@@ -946,7 +955,7 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:68
+#: ../python/frescobaldi_app/document.py:70
 msgid ""
 "Can't perform the requested translation.\n"
 "\n"
@@ -958,7 +967,7 @@ msgstr ""
 "A música contén alteracións de cuartos de ton, pero non están dispoñibles no "
 "idioma de notas \"%1\"."
 
-#: ../python/frescobaldi_app/document.py:82
+#: ../python/frescobaldi_app/document.py:84
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
@@ -966,29 +975,29 @@ msgstr ""
 "Actualizouse o idioma de notas do texto seleccionado, pero debe engadir "
 "manualmente a seguinte orde ao documento:"
 
-#: ../python/frescobaldi_app/document.py:85
+#: ../python/frescobaldi_app/document.py:87
 #: ../python/frescobaldi_app/mainapp.py:624
 msgid "Pitch Name Language"
 msgstr "Idioma das notas"
 
-#: ../python/frescobaldi_app/document.py:140
+#: ../python/frescobaldi_app/document.py:142
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr "Introduza o nome da variábel para asignarlle o texto seleccionado:"
 
-#: ../python/frescobaldi_app/document.py:141
+#: ../python/frescobaldi_app/document.py:143
 #: ../python/frescobaldi_app/mainapp.py:493
 msgid "Cut and Assign"
 msgstr "Cortar e asignar"
 
-#: ../python/frescobaldi_app/document.py:451
+#: ../python/frescobaldi_app/document.py:453
 msgid "Open %1"
 msgstr "Abrir %1"
 
-#: ../python/frescobaldi_app/document.py:705
+#: ../python/frescobaldi_app/document.py:707
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr "Seleccione unha expresión musical, pechada entre << ... >> ou { ... }."
 
-#: ../python/frescobaldi_app/document.py:725
+#: ../python/frescobaldi_app/document.py:727
 msgid ""
 "Could not understand the entered pitches.\n"
 "\n"
@@ -998,7 +1007,7 @@ msgstr ""
 "\n"
 "Asegúrese que emprega nomes de notas no idioma \"%1\"."
 
-#: ../python/frescobaldi_app/document.py:733
+#: ../python/frescobaldi_app/document.py:735
 msgid ""
 "Can't perform the requested transposition.\n"
 "\n"
@@ -1010,19 +1019,19 @@ msgstr ""
 "A música contén alteracións de cuartos de ton que non están dispoñibles no "
 "idioma das notas \"%1\"."
 
-#: ../python/frescobaldi_app/document.py:746
+#: ../python/frescobaldi_app/document.py:748
 msgid "Transpose"
 msgstr "Transportar"
 
-#: ../python/frescobaldi_app/document.py:753
+#: ../python/frescobaldi_app/document.py:755
 msgid "Please enter a start pitch and a destination pitch:"
 msgstr "Introduza unha nota de orixe e unha nota de destino:"
 
-#: ../python/frescobaldi_app/document.py:757
+#: ../python/frescobaldi_app/document.py:759
 msgid "Transpose from:"
 msgstr "Transportar desde:"
 
-#: ../python/frescobaldi_app/document.py:761
+#: ../python/frescobaldi_app/document.py:763
 msgid "to:"
 msgstr "a:"
 
