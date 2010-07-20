@@ -31,8 +31,14 @@ install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/frescobaldi DESTINATION ${BIN_INSTA
 
 add_subdirectory(python)
 add_subdirectory(data)
-add_subdirectory(pics)
-add_subdirectory(po)
+
+if(EXISTS ${CMAKE_SOURCE_DIR}/prebuilt)
+  add_subdirectory(prebuilt)
+else(EXISTS ${CMAKE_SOURCE_DIR}/prebuilt)
+  add_subdirectory(pics)
+  add_subdirectory(po)
+endif(EXISTS ${CMAKE_SOURCE_DIR}/prebuilt)
+
 if(HANDBOOK)
   add_subdirectory(doc)
 endif(HANDBOOK)

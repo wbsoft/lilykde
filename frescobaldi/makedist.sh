@@ -8,6 +8,12 @@ package=$(sed -n 's/^project\s*(\s*\(\w*\).*/\1/p' CMakeLists.txt)
 version=$(sed -n 's/.*VERSION "\(.*\)".*/\1/p' CMakeLists.txt)
 
 pkg="$package-$version"
+PREBUILT_DIR="prebuilt"
+
+CMAKE_ARGS=""
+if [ -n "${LILYPOND}" ]; then
+  CMAKE_ARGS="-DLILYPOND_EXECUTABLE=${LILYPOND}"
+fi
 
 die()
 {
@@ -15,11 +21,6 @@ die()
   echo "makedist: error: $msg" >&2
   exit 1
 }
-
-CMAKE_ARGS=""
-if [ -n "${LILYPOND}" ]; then
-  CMAKE_ARGS="-DLILYPOND_EXECUTABLE=${LILYPOND}"
-fi
 
 echo Creating $pkg.tar.gz
 svn export . $pkg || die "export failed"
@@ -36,10 +37,43 @@ cd "$pkg" || die "could not cd into package"
   make
 ) || die "could not build package"
 
-# put mo files in source tree
-cp build/po/*.mo po/
-# put pics (LilyPond-generated icons) in source tree
-cp build/pics/*.png pics/
+
+# This directory contains prebuilt stuff so release tarballs don't have
+# difficult dependencies.
+mkdir ${PREBUILT_DIR}
+
+# Put CMakeLists.txt in prebuilt dir
+cat <<-"EOF" > ${PREBUILT_DIR}/CMakeLists.txt
+add_subdirectory(pics)
+add_subdirectory(po)
+EOF
+
+# Add LilyPond-generated icons etc:
+mkdir ${PREBUILT_DIR}/pics
+cp build/pics/*.png ${PREBUILT_DIR}/pics/
+
+# Put CMakeLists.txt in prebuilt/pics
+cat <<-"EOF" > ${PREBUILT_DIR}/pics/CMakeLists.txt
+file(GLOB pngs *.png)
+install(FILES ${pngs} DESTINATION ${APP_DIR}/pics)
+EOF
+
+# Add translated PO files:
+mkdir ${PREBUILT_DIR}/po
+cp build/po/*.mo ${PREBUILT_DIR}/po/
+
+# Put CMakeLists.txt in prebuilt/po
+cat <<-"EOF" > ${PREBUILT_DIR}/po/CMakeLists.txt
+file(GLOB mo_files *.mo)
+foreach(mo ${mo_files})
+  get_filename_component(lang ${mo} NAME_WE)
+  install(
+    FILES ${mo}
+    DESTINATION ${LOCALE_INSTALL_DIR}/${lang}/LC_MESSAGES
+    RENAME ${PROJECT_NAME}.mo
+  )
+endforeach(mo)
+EOF
 
 # Remove build directory
 rm -fr build

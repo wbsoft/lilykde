@@ -22,15 +22,28 @@ cmake .. -DCMAKE_INSTALL_PREFIX=$(kde4-config --exec-prefix)
 make
 make install
 
-If you install Frescobaldi from a released tarball, the LilyPond musical symbol
-icons in pics/ and the translations in po/ are already prebuilt.
+If you install Frescobaldi from a SVN checkout, you need a very recent LilyPond,
+ImageMagick and GNU Gettext to built the LilyPond-generated icons and the
+translations.
 
-If you build Frescobaldi out-of-source (or if you install Frescobaldi from SVN),
-those icons and translations need to be generated. In that case you also need
-LilyPond, ImageMagick and GNU Gettext.
+If you install Frescobaldi from a released tarball (e.g.
+frescobaldi-1.1.3.tar.gz), the icons and translations are already prebuilt.
 
-Because of the new articulations (halfopen and snappizzicato) building the icons
-now requires LilyPond 2.13.19 or higher!
+
+Dependencies:
+=============
+
+This is the development (1.1) branch of Frescobaldi. It depends on:
+- Python 2.6
+- python-dbus (http://www.freedesktop.org/wiki/Software/DBusBindings#python)
+- Qt     >= 4.6
+- SIP    >= 4.9.3
+- PyQt4  >= 4.6
+- KDE4   >= 4.3.2. Modules needed: kdelibs, Okular and Konsole
+- PyKDE4 >= 4.0.2 Rev 2
+
+You also might need to install some of the the corresponding -dev packages from
+the above to install Frescobaldi from this source package.
 
 
 CMake command line options:
@@ -48,47 +61,26 @@ command line.
 
 If you get errors about missing Python modules, but you're sure that they are
 installed, CMake might be finding the wrong Python version. If you e.g. install
-PyKDE4 inside Python 2.5 but CMake is finding Python 2.6 then you get errors
+PyKDE4 inside Python 2.6 but CMake is finding Python 2.5 then you get errors
 about missing modules. You can fix this by explicitly defining the Python
-interpreter to use. Add -DPYTHON_EXECUTABLE=/usr/bin/python2.5 to the cmake
+interpreter to use. Add -DPYTHON_EXECUTABLE=/usr/bin/python2.6 to the cmake
 command line in that case.
 
-The icons in pics/ are built using lilypond and convert (from ImageMagick). You
-can define the locations of those programs using the LILYPOND_EXECUTABLE and the
-CONVERT_EXECUTABLE variables. Otherwise the programs are searched for in the
-PATH environment variable.
+If you install Frescobaldi from a SVN checkout (or have removed the prebuilt/
+directory) the icons in pics/ will need to be rebuilt using LilyPond and convert
+(from ImageMagick). You can define the locations of those programs using the
+LILYPOND_EXECUTABLE and the CONVERT_EXECUTABLE CMake variables. Otherwise the
+programs are searched for in the PATH environment variable. You need at least
+LilyPond-2.13.19 to build the icons.
 
- 
-Dependencies:
-=============
-
-This is the development (1.1) branch of Frescobaldi. It depends on:
-- KDE 4.3.2 or higher, esp. kdelibs, Okular and Konsole
-- Qt 4.5 or higher
-- Python 2.6
-- python-dbus (http://www.freedesktop.org/wiki/Software/DBusBindings#python)
-- SIP 4.9.1 or higher (4.9.3 or higher recommended)
-- PyQt4 4.6 or higher
-- PyKDE4 4.0.2 or higher
-
-The stable (1.0) branch of Frescobaldi depends on:
-- KDE 4.1.2 or higher, esp. kdelibs, Okular and Konsole
-- Qt 4.4 or higher
-- Python 2.4, 2.5 or 2.6
-- python-dbus (http://www.freedesktop.org/wiki/Software/DBusBindings#python)
-- SIP 4.7.7 til 4.9.3
-- PyQt4 4.4.3 or higher
-- PyKDE4 4.0.2 or higher
-
-For the stable branch, KDE 4.2 or higher is recommended. If you use KDE 4.1,
-you also need lilypond-kde4 (http://lilykde.googlecode.com/)
-
-You also might need to install some of the the corresponding -dev packages from
-the above to install Frescobaldi from this source package.
+If you install Frescobaldi from a SVN checkout (or have removed the prebuilt/
+directory) the translations in po/ will need to be rebuilt using Gettext's
+msgfmt tool. If this tool is not in your $PATH, you can define the
+GETTEXT_MSGFMT_EXECUTABLE CMake variable.
 
 
-Other useful programs:
-======================
+Other useful programs to use with Frescobaldi:
+==============================================
 
 Some other useful programs to use together with Frescobaldi are:
 - LilyPond (of course!) http://lilypond.org/

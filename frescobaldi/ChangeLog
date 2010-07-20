@@ -13,6 +13,13 @@ Changes in 1.1.3 --
   - added support for internals reference: contexts, grobs and engravers
 * Bugfixes:
   - Fix crash when editing toolbars
+* Installation:
+  - Using CMake out-of-source is now easier: icons and translations are not
+    rebuilt anymore so the Frescobaldi install procedure does not need LilyPond
+    anymore. The icons and translations are in the prebuilt/ directory. Simply
+    removing this directory restores the old behaviour (useful when you want to
+    develop Frescobaldi from a release tarball, although a fresh SVN checkout is
+    recommended in that case).
 * Translations:
   - Dutch updated by Wilbert Berendsen
   - Turkish updated by Server Acim
