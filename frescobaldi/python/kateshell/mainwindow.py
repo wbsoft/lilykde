@@ -129,7 +129,7 @@ class MainWindow(KParts.MainWindow):
         s.setStretchFactor(1, 1)
         s.setStretchFactor(2, 1)
         s.setChildrenCollapsible(False)
-        s.setSizes((100, 400, 400))
+        s.setSizes((100, 400, 600))
         
         tab_top = TabBar(Top, v)
         s1 = QSplitter(Qt.Vertical, v)
