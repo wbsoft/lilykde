@@ -60,19 +60,15 @@ def installKateModeRC():
     rc = katemoderc.group("LilyPond")
     rc.writeEntry("Variables", "kate: "
         "indent-mode lilypond; "
-        "indent-width 2; "
-        "space-indent on; "
-        "replace-tabs on; "
-        "replace-tabs-save on; "
         )
     rc.sync()
 
-def installOkularPartRC():
+def installOkularPartRC(command="frescobaldi"):
     """ Set our custom editor command in okularpartrc """
     okularpartrc = KConfig("okularpartrc", KConfig.NoGlobals)
     group = okularpartrc.group("General")
     group.writeEntry("ExternalEditor", "Custom")
-    group.writeEntry("ExternalEditorCommand", "frescobaldi --smart --line %l --column %c")
+    group.writeEntry("ExternalEditorCommand", command + " --smart --line %l --column %c")
     if not group.readEntry("WatchFile", True):
         group.writeEntry("WatchFile", True)
     group.sync()
