@@ -24,9 +24,9 @@ Functions that can be run if the user updates Frescobaldi
 to a newer version.
 """
 
-import os, re
+import os, re, sys
 
-from PyKDE4.kdecore import KConfig, KGlobal
+from PyKDE4.kdecore import KConfig, KGlobal, KStandardDirs
 
 def install(app, oldVersion):
     """
@@ -37,15 +37,15 @@ def install(app, oldVersion):
     
     if not version:
         installKateModeRC()
-        
-    if version < (0, 7, 8):
-        installOkularPartRC()
     
     if version < (1, 1, 0):
         newLilyPondConfig()
     
     if version < (1, 1, 2):
         saveOnRunWarning()
+    
+    if version < (1, 1, 3):
+        installOkularPartRC()
         
     # on every update:
     checkNewExpandDefaultShortcuts()
@@ -63,12 +63,19 @@ def installKateModeRC():
         )
     rc.sync()
 
-def installOkularPartRC(command="frescobaldi"):
+def installOkularPartRC():
     """ Set our custom editor command in okularpartrc """
+    # determine the command needed to run us
+    exe = os.path.abspath(sys.argv[0])
+    if exe == KStandardDirs.findExe('frescobaldi'):
+        command = 'frescobaldi'
+    else:
+        command = sys.executable + " " + exe
+    command += " --smart --line %l --column %c"
     okularpartrc = KConfig("okularpartrc", KConfig.NoGlobals)
     group = okularpartrc.group("General")
     group.writeEntry("ExternalEditor", "Custom")
-    group.writeEntry("ExternalEditorCommand", command + " --smart --line %l --column %c")
+    group.writeEntry("ExternalEditorCommand", command)
     if not group.readEntry("WatchFile", True):
         group.writeEntry("WatchFile", True)
     group.sync()
