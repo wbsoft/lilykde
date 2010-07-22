@@ -26,7 +26,7 @@ to a newer version.
 
 import os, re, sys
 
-from PyKDE4.kdecore import KConfig, KGlobal
+from PyKDE4.kdecore import KConfig, KGlobal, KStandardDirs
 
 def install(app, oldVersion):
     """
@@ -67,8 +67,11 @@ def installOkularPartRC():
     """ Set our custom editor command in okularpartrc """
     # determine the command needed to run us
     command = sys.argv[0]
-    if os.path.sep in command and not os.path.isabs(command):
-        command = os.path.abspath(command)
+    if os.path.sep in command: # does the command contain a directory separator?
+        if not os.path.isabs(command):
+            command = os.path.abspath(command)
+        if command == KStandardDirs.findExe("frescobaldi"):
+            command = "frescobaldi"
     command += " --smart --line %l --column %c"
     okularpartrc = KConfig("okularpartrc", KConfig.NoGlobals)
     group = okularpartrc.group("General")
