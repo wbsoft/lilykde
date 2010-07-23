@@ -14,7 +14,7 @@ Calling python run or ./run again will display a dialog with options
 to remove the Applications menu entry and restore the Okular binding.
 """
 
-import itertools, os, subprocess, sys
+import itertools, os, re, subprocess, sys
 
 def findExe(command):
     """
@@ -48,7 +48,15 @@ if sys.version_info[:2] != (2, 6):
 
 # find out our directory
 curdir = os.path.dirname(os.path.abspath(sys.argv[0]))
+os.chdir(curdir)
 sys.path.insert(0, curdir)
+
+try:
+    import sip
+    sip.setapi("QString", 2)
+    sip.setapi("QVariant", 2)
+except Exception:
+    die("Please install the Python-SIP module.\nCan't set the sip API.")
 
 # check modules
 import checkmodules
@@ -61,4 +69,110 @@ if missing:
 versions = checkmodules.checkVersions()
 if versions:
     die("Some packages have outdated versions:\n\n" + "\n".join(versions))
+
+# Everything look OK!
+
+import sip
+sip.setapi("QString", 2)
+sip.setapi("QVariant", 2)
+
+# Construct KApplication
+
+import shutil
+
+from PyKDE4.kdecore import KAboutData, KCmdLineArgs, KGlobal, ki18n
+from PyKDE4.kdeui import KApplication, KDialog
+
+aboutData = KAboutData(
+    'frescobaldi_runner',       # appName
+    'frescobaldi_runner',       # catalogName
+    ki18n('Frescobaldi Runner'),# programName
+    '1.0'                       # version
+    )
+
+KCmdLineArgs.init(sys.argv, aboutData)
+app = KApplication()
+
+# set some directories/values
+data = {}
+
+m = re.search(r'set\(VERSION\s+"(.*?)"', open('CMakeLists.txt').read())
+if not m:
+    die("Internal error: could not determine version from CMakeLists.txt")
+
+data['VERSION'] = m.group(1)
+data['MODULE_DIR'] = os.path.join(curdir, "python")
+data['PYTHON_EXECUTABLE'] = sys.executable
+data['CMAKE_INSTALL_PREFIX'] = os.path.join(curdir, 'image')
+data['APP_DIR'] = os.path.join(curdir, 'image', 'share', 'apps', 'frescobaldi')
+
+
+def configure_file(infile, outfile, dictionary):
+    with open(outfile, 'w') as f:
+        f.write(re.sub(r'@([A-Z]+(_[A-Z]+)*)@',
+            lambda m: data[m.group(1)], open(infile).read()))
+
+
+icon_install_dir = KGlobal.dirs().saveLocation('icon', 'hicolor/scalable/apps/')
+html_install_dir = KGlobal.dirs().saveLocation('html', 'en/')
+xdgdata_apps_install_dir = KGlobal.dirs().saveLocation('xdgdata-apps')
+
+# some shortcuts
+app_dir = data['APP_DIR']
+desktop_file = os.path.join(xdgdata_apps_install_dir, 'frescobaldi.desktop')
+
+
+class TarBall(object):
+    """Instantiated when we are in a Frescobaldi release tar ball."""
+    
+    def makeImage(self):
+        # puts some files under image/share/ ...
+        os.makedirs(app_dir)
+        
+        for name in ('frescobaldiui.rc', 'expansions', 'lilydoc.css'):
+            os.symlink(os.path.join(curdir, 'data', name), os.path.join(app_dir, name))
+        
+        for name in ('rumor', 'icons'):
+            os.symlink(os.path.join(curdir, name), os.path.join(app_dir, name))
+        
+        # pics
+        os.symlink(os.path.join(curdir, 'prebuilt', 'pics'), os.path.join(app_dir, 'pics'))
+        
+        
+    def installFrescobaldi(self):
+        # create the frescobaldi 'binary'
+        configure_file('frescobaldi.py', 'frescobaldi', data)
+        os.chmod('frescobaldi', 0o744)
+        
+        # put appIcon in icondir
+        shutil.copy(
+            os.path.join('data', 'frescobaldi-lily.svgz'),
+            os.path.join(icon_install_dir, 'frescobaldi.svgz'))
+        
+        # install desktop file
+        desktop = open(os.path.join('data', 'frescobaldi.desktop')).read()
+        newdesktop = re.sub(r'\bExec=frescobaldi\b', 'Exec=%s/frescobaldi' % curdir, desktop)
+        with open(desktop_file, 'w') as f:
+            f.write(newdesktop)
+
+        # install link to documentation
+        os.symlink(os.path.join(curdir, 'doc'), os.path.join(html_install_dir, 'frescobaldi'))
+        
+        # TODO: mo files
+        
+        
+    def removeFrescobaldi(self):
+        # remove the frescobaldi 'binary'
+        os.remove('frescobaldi')
+        
+        # remove appIcon
+        os.remove(os.path.join(icon_install_dir, 'frescobaldi.svgz'))
+        
+        # remove desktop file
+        os.remove(desktop_file)
+        
+        # remove link to documentation
+        os.remove(os.path.join(html_install_dir, 'frescobaldi'))
+        
+        # TODO: mo files
 
