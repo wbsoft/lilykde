@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+
+"""
+Try to run Frescobaldi immediately without installing.
+Does not require CMake.
+Checks the python version and modules.
+If not Python 2.6 try to rerun ourselves with python 2.6.
+Creates a local installdir (inside the frescobaldi-x.x.x directory).
+Creates a menu in the local xdgdata-apps dir.
+Records the current Okular textedit binding.
+Adjusts some settings and directly runs Frescobaldi.
+After having run this, users can run './frescobaldi' directly.
+Calling python run.py again will display a dialog with options
+to remove the Applications menu entry and restore the Okular binding.
+"""
+
+import os, subprocess, sys
+
+def findExe(command):
+    """
+    Look up a command in the system PATH, and return the full
+    path if it can be found.
+    """
+    for p in os.environ.get("PATH", os.defpath).split(os.pathsep):
+        path = os.path.join(p, command)
+        if os.access(path, os.X_OK):
+            return path
+
+
+def die(msg):
+    try:
+        KMessageBox.error(None, msg)
+    except Exception:
+        if os.environ.get('DISPLAY') and findExe('kdialog'):
+            subprocess.call(['kdialog', '--error', msg])
+        else:
+            sys.stderr.write(msg+'\n')
+    sys.exit(1)
+
+# Python must be 2.6
+if sys.version_info[:2] != (2, 6):
+    
+    # find Python 2.6
+    for path in (findExe('python2.6'), findExe('python')):
+        if path:
+            ver = subprocess.Popen([path, "--version"], stderr=subprocess.PIPE).communicate()[1]
+            if ' 2.6' in ver:
+                os.execl(path, path, sys.argv[0])
+    die("Could not find Python 2.6.\n\n"
+        "Please install the 2.6 version of Python.")
+
+# find out our directory
+curdir = os.path.dirname(os.path.abspath(sys.argv[0]))
+sys.path.insert(0, curdir)
+
+# check modules
+import checkmodules
+missing = checkmodules.checkModules()
+if missing:
+    die("The following Python modules are missing: %s.\n\n"
+        "Please install them and try again." % ", ".join(missing))
+
+# check versions
+versions = checkmodules.checkVersions()
+if versions:
+    die("Some packages have outdated versions:\n\n" + "\n".join(versions))
+
