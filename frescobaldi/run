@@ -10,22 +10,21 @@ Creates a menu in the local xdgdata-apps dir.
 Records the current Okular textedit binding.
 Adjusts some settings and directly runs Frescobaldi.
 After having run this, users can run './frescobaldi' directly.
-Calling python run.py again will display a dialog with options
+Calling python run or ./run again will display a dialog with options
 to remove the Applications menu entry and restore the Okular binding.
 """
 
-import os, subprocess, sys
+import itertools, os, subprocess, sys
 
 def findExe(command):
     """
-    Look up a command in the system PATH, and return the full
-    path if it can be found.
+    Look up a command in the system PATH, and return an iterable
+    across all places in the PATH the command is present
     """
     for p in os.environ.get("PATH", os.defpath).split(os.pathsep):
         path = os.path.join(p, command)
         if os.access(path, os.X_OK):
-            return path
-
+            yield path
 
 def die(msg):
     try:
@@ -39,13 +38,11 @@ def die(msg):
 
 # Python must be 2.6
 if sys.version_info[:2] != (2, 6):
-    
     # find Python 2.6
-    for path in (findExe('python2.6'), findExe('python')):
-        if path:
-            ver = subprocess.Popen([path, "--version"], stderr=subprocess.PIPE).communicate()[1]
-            if ' 2.6' in ver:
-                os.execl(path, path, sys.argv[0])
+    for path in itertools.chain(findExe('python2.6'), findExe('python'), findExe('python26')):
+        ver = subprocess.Popen([path, "--version"], stderr=subprocess.PIPE).communicate()[1]
+        if ' 2.6' in ver:
+            os.execl(path, path, sys.argv[0])
     die("Could not find Python 2.6.\n\n"
         "Please install the 2.6 version of Python.")
 
