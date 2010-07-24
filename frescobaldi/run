@@ -353,14 +353,26 @@ def main():
         installer.installFrescobaldi()
         saveOkularPart()
         configureOkularPart()
-        KMessageBox.information(None,
+        msg = [
             "Frescobaldi has been added to your Applications menu.\n\n"
             "If you want to remove Frescobaldi from the menu, just run this "
             "'run' script again.\n\n"
             "(It is recommended that you remove Frescobaldi from the menu "
             "when you really install Frescobaldi, as that will install a "
             "system-wide menu Applications menu entry.)\n\n"
-            "Frescobaldi will now be started. Enjoy!")
+            "Frescobaldi will now be started. Enjoy!"]
+        if not findExe('lilypond'):
+            msg.append(
+                "Note: LilyPond could not be found in your PATH. You really "
+                "should install LilyPond to be able to do anything useful "
+                "with Frescobaldi! "
+                "Visit www.lilypond.org for more information.")
+        if not findExe('rumor'):
+            msg.append(
+                "For music input via MIDI, the 'rumor' program is recommended. "
+                "See the Frescobaldi User Guide (accessible from Frescobaldi "
+                "with the F1 key) for more information.")
+        KMessageBox.information(None, '\n\n'.join(msg))
         runFrescobaldi()
     return 0
     

@@ -16,22 +16,23 @@ recommended for creating installable distribution packages):
 
 
 Try Frescobaldi without installing:
-==================================
+===================================
 
-just run the 'run' script:
+Just run the 'run' script:
 
-  python run
+  ./run
 
-If your system is missing some necessary software the script will inform you,
-if everything is fine, Frescobaldi will be added to your Applications menu
-and started right away without installing anything.
+If your system is missing some necessary software, the script will inform you.
+If everything is fine, Frescobaldi will be added to your Applications menu
+and started right away without installing anything. An executable 'frescobaldi'
+will be created in the current directory as well.
 
 Running the 'run' script again will give you the option to remove Frescobaldi
 from your Applications menu.
 
 
 Installing Frescobaldi from SVN:
-===============================
+================================
 
 If you install Frescobaldi from a SubVersion checkout, you need a very recent
 LilyPond, ImageMagick and GNU Gettext to built the LilyPond-generated icons and
