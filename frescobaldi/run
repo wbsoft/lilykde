@@ -215,12 +215,16 @@ class SVN(TarBall):
             if ly.version.LilyPondInstance(lily).version() >= (2, 13, 19):
                 break
         else:
-            dlg = KUrlRequesterDialog('lilypond', 
+            config = KGlobal.config().group(None)
+            lily = config.readEntry("lilypond", "lilypond")
+            dlg = KUrlRequesterDialog(lily, 
                 "LilyPond >= 2.13.19 is needed to run Frescobaldi from a SVN checkout.\n\n"
                 "Please install a recent LilyPond (e.g. from a binary download) and select "
                 "the binary here.", None)
             if dlg.exec_():
-                lily = dlg.selectedUrl().localPath()
+                lily = dlg.selectedUrl().path()
+                config.writeEntry("lilypond", lily)
+                config.sync()
             else:
                 sys.exit(1)
                 
@@ -240,6 +244,7 @@ class SVN(TarBall):
             
     def installBinary(self):
         shutil.copy2(os.path.join(self.builddir, 'frescobaldi'), 'frescobaldi')
+        os.chmod('frescobaldi', 0o744)
 
 
 def removeFrescobaldi():
@@ -325,9 +330,9 @@ def main():
             "Frescobaldi has been added to your Applications menu.\n\n"
             "If you want to remove Frescobaldi from the menu, just run this "
             "'run' script again.\n\n"
-            "It is recommended that you remove Frescobaldi from the menu "
+            "(It is recommended that you remove Frescobaldi from the menu "
             "when you really install Frescobaldi, as that will install a "
-            "system-wide menu Applications menu entry.\n\n"
+            "system-wide menu Applications menu entry.)\n\n"
             "Frescobaldi will now be started. Enjoy!")
         runFrescobaldi()
     return 0
