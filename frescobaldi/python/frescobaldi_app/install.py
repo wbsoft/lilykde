@@ -44,9 +44,6 @@ def install(app, oldVersion):
     if version < (1, 1, 2):
         saveOnRunWarning()
     
-    if version < (1, 1, 3):
-        installOkularPartRC()
-        
     # on every update:
     checkNewExpandDefaultShortcuts()
     

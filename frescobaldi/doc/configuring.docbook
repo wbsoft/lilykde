@@ -94,6 +94,17 @@ Here you can set some general preferences to influence the behaviour of
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Point and Click</guilabel></term>
+<listitem>
+  <para>
+  Click this button if Point &amp; Click does not work, i.e. clicking a note in the
+  PDF preview does not move the cursor in the text editor.
+  See also <link linkend="point-and-click">Configuring Point &amp; Click</link>.
+  </para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 </sect2>
 
@@ -395,8 +406,10 @@ When you install &frescobaldi;, on its first run it autoconfigures the Okular pa
 to run &frescobaldi; when a Point &amp; Click URL is clicked.
 But if for some reason this didn't happen, you can configure Okular manually
 to run &frescobaldi;.
-Right-click the PDF preview tab and choose <guimenuitem>Configure Okular...</guimenuitem>
-(or use
+The easiest way to do this is just clicking the button on the first page in the
+<link linkend="settings-dialog">Settings Dialog</link>.
+But you can also right-click the PDF preview tab and choose
+<guimenuitem>Configure Okular...</guimenuitem> (or use
 <menuchoice>
   <guimenu>Settings</guimenu>
   <guisubmenu>Tool Views</guisubmenu>

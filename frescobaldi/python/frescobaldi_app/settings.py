@@ -25,12 +25,13 @@ Config dialog
 
 from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
-    QCheckBox, QComboBox, QGridLayout, QGroupBox, QLabel, QLineEdit,
-    QListWidget, QListWidgetItem, QRadioButton, QTextEdit, QTreeView,
+    QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QLabel,
+    QLineEdit, QListWidget, QListWidgetItem, QRadioButton, QTextEdit, QTreeView,
     QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
-    KDialog, KHBox, KIcon, KPageDialog, KPushButton, KStandardGuiItem, KVBox)
+    KDialog, KHBox, KIcon, KMessageBox, KPageDialog, KPushButton,
+    KStandardGuiItem, KVBox)
 from PyKDE4.kio import KFile, KUrlRequester
 
 from signals import Signal
@@ -208,6 +209,7 @@ class GeneralPreferences(SettingsPage):
         SessionsStartup(self)
         SavingDocument(self)
         Warnings(self)
+        PointAndClick(self)
         
 
 class LilyPondPreferences(SettingsPage):
@@ -452,6 +454,44 @@ class Warnings(CheckGroup):
         layout.addWidget(
             self.addCheckBox(i18n("Warn when saving a session would overwrite another"),
                 "session_overwrite", True))
+
+
+class PointAndClick(SettingsGroup):
+    def __init__(self, page):
+        super(PointAndClick, self).__init__(i18n("Point and Click"), page)
+        
+        layout = QHBoxLayout(self)
+        self.button = KPushButton(i18n("Enable Point and Click"))
+        self.button.setFixedSize(self.button.sizeHint())
+        l = QLabel(i18n(
+            "Click this button to configure the (Okular) PDF preview to call "
+            "Frescobaldi when clickable objects are clicked. "
+            "See Shift+F1 (What's This) for more information."))
+        l.setWordWrap(True)
+        l.setWhatsThis(i18n(
+            "On its first run, Frescobaldi tries to auto-configure Okular "
+            "(which provides the PDF preview) to call Frescobaldi when a "
+            "clickable object is clicked."
+            "\n\n"
+            "But this setting can get lost when you move Frescobaldi to a "
+            "different location or when other applications reconfigure Okular."
+            "\n\n"
+            "Click this button to configure Frescobaldi as 'custom editor' "
+            "inside Okular.  This works best when all instances of Okular are "
+            "closed and the PDF preview has not yet been opened."))
+        self.button.setWhatsThis(l.whatsThis())
+        self.button.clicked.connect(self.installOkularPartRC)
+        layout.addWidget(self.button)
+        layout.addWidget(l)
+        
+    def installOkularPartRC(self):
+        import frescobaldi_app.install
+        frescobaldi_app.install.installOkularPartRC()
+        config("").writeEntry("configure okularpart", True)
+        KMessageBox.information(self, i18n(
+            "The Okular PDF preview has been reconfigured.\n\n"
+            "If you already opened the PDF preview, "
+            "restart Frescobaldi for the new settings to take effect."))
 
 
 class HelperApps(SettingsGroup):

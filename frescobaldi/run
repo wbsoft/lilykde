@@ -2,7 +2,7 @@
 
 """
 Try to run Frescobaldi immediately without installing.
-Does not require CMake.
+Does not require CMake and make for release tar balls.
 Checks the python version and modules.
 If not Python 2.6 try to rerun ourselves with python 2.6.
 Creates a local installdir (inside the frescobaldi-x.x.x directory).
@@ -44,8 +44,12 @@ def die(msg):
 # Python must be 2.6
 if sys.version_info[:2] != (2, 6):
     # find Python 2.6
-    for path in itertools.chain(findAllExe('python2.6'), findAllExe('python'), findAllExe('python26')):
-        ver = subprocess.Popen([path, "--version"], stderr=subprocess.PIPE).communicate()[1]
+    for path in itertools.chain(
+            findAllExe('python2.6'),
+            findAllExe('python'),
+            findAllExe('python26')):
+        ver = subprocess.Popen(
+            [path, "--version"], stderr=subprocess.PIPE).communicate()[1]
         if ' 2.6' in ver:
             os.execl(path, path, sys.argv[0])
     die("Could not find Python 2.6.\n\n"
@@ -85,7 +89,8 @@ sys.path[0] = os.path.join(curdir, 'python')
 import shutil
 
 from PyKDE4.kdecore import KAboutData, KCmdLineArgs, KConfig, KGlobal, ki18n
-from PyKDE4.kdeui import KApplication, KDialog, KGuiItem, KMessageBox, KStandardGuiItem
+from PyKDE4.kdeui import (
+    KApplication, KDialog, KGuiItem, KMessageBox, KStandardGuiItem)
 from PyKDE4.kio import KUrlRequesterDialog
 
 aboutData = KAboutData(
@@ -109,7 +114,8 @@ data['VERSION'] = m.group(1)
 data['MODULE_DIR'] = os.path.join(curdir, "python")
 data['PYTHON_EXECUTABLE'] = sys.executable
 data['CMAKE_INSTALL_PREFIX'] = os.path.join(curdir, 'image')
-data['APP_DIR'] = os.path.join(data['CMAKE_INSTALL_PREFIX'], 'share', 'apps', 'frescobaldi')
+data['APP_DIR'] = os.path.join(
+    data['CMAKE_INSTALL_PREFIX'], 'share', 'apps', 'frescobaldi')
 
 
 def configure_file(infile, outfile, dictionary):
@@ -124,7 +130,8 @@ def makedirs(path, mode=0o777):
 icon_install_dir = KGlobal.dirs().saveLocation('icon', 'hicolor/scalable/apps/')
 html_install_dir = KGlobal.dirs().saveLocation('html', 'en/')
 xdgdata_apps_install_dir = KGlobal.dirs().saveLocation('xdgdata-apps')
-locale_install_dir = os.path.join(data['CMAKE_INSTALL_PREFIX'], 'share', 'locale')
+locale_install_dir = os.path.join(
+    data['CMAKE_INSTALL_PREFIX'], 'share', 'locale')
 
 # some shortcuts
 app_dir = data['APP_DIR']
@@ -185,12 +192,14 @@ class TarBall:
         
         # install desktop file
         desktop = open(os.path.join('data', 'frescobaldi.desktop')).read()
-        newdesktop = re.sub(r'\bExec=frescobaldi\b', 'Exec=%s/frescobaldi' % curdir, desktop)
+        newdesktop = re.sub(r'\bExec=frescobaldi\b',
+            'Exec=%s/frescobaldi' % curdir, desktop)
         with open(desktop_file, 'w') as f:
             f.write(newdesktop)
 
         # install link to documentation
-        os.symlink(os.path.join(curdir, 'doc'), os.path.join(html_install_dir, 'frescobaldi'))
+        os.symlink(os.path.join(curdir, 'doc'),
+            os.path.join(html_install_dir, 'frescobaldi'))
         
 
 class SVN(TarBall):
@@ -205,15 +214,21 @@ class SVN(TarBall):
     def makeImage(self):
         # run CMake
         # check some programs.
+        missing = []
         if not findExe('cmake'):
-            die("CMake is needed to run Frescobaldi from a SVN checkout.\n"
+            missing.append(
+                "CMake is needed to run Frescobaldi from a SVN checkout.\n"
                 "Please install CMake.")
         if not findExe('make'):
-            die("Make is needed to run Frescobaldi from a SVN checkout.\n"
+            missing.append(
+                "Make is needed to run Frescobaldi from a SVN checkout.\n"
                 "Please install a 'make' program.")
         if not findExe('convert'):
-            die("convert (from ImageMagick) is needed to run Frescobaldi from a SVN checkout.\n"
-                "Please install ImageMagick.")
+            missing.append(
+                "'convert' (from ImageMagick) is needed to run Frescobaldi "
+                "from a SVN checkout.\nPlease install ImageMagick.")
+        if missing:
+            die('\n\n'.join(missing))
         
         import ly.version
         for lily in findAllExe('lilypond'):
@@ -223,9 +238,9 @@ class SVN(TarBall):
             config = KGlobal.config().group(None)
             lily = config.readEntry("lilypond", "lilypond")
             dlg = KUrlRequesterDialog(lily, 
-                "LilyPond >= 2.13.19 is needed to run Frescobaldi from a SVN checkout.\n\n"
-                "Please install a recent LilyPond (e.g. from a binary download) and select "
-                "the binary here.", None)
+                "LilyPond >= 2.13.19 is needed to run Frescobaldi from a SVN "
+                "checkout.\n\nPlease install a recent LilyPond (e.g. from a "
+                "binary download) and select the binary here.", None)
             if dlg.exec_():
                 lily = dlg.selectedUrl().path()
                 config.writeEntry("lilypond", lily)
@@ -266,28 +281,29 @@ def removeFrescobaldi():
     os.remove(os.path.join(html_install_dir, 'frescobaldi'))
 
 def runFrescobaldi():
-    subprocess.Popen([os.path.join(curdir, 'frescobaldi')], cwd=os.environ.get('HOME'))
+    subprocess.Popen([os.path.join(curdir, 'frescobaldi')],
+        cwd=os.environ.get('HOME'))
 
-def configureOkularPart():
-    """Configures Frescobaldi as custom editor in Okular."""
-    command = os.path.join(curdir, 'frescobaldi') + " --smart --line %l --column %c"
-    
+def saveOkularPart():
+    """Save the current OkularPart editor settings."""
     okularpartrc = KConfig("okularpartrc", KConfig.NoGlobals)
     group = okularpartrc.group("General")
     
     ourconfig = KGlobal.config()
     ourgroup = ourconfig.group('okular editor')
     
-    ourgroup.writeEntry("ExternalEditor", group.readEntry("ExternalEditor", ""))
-    ourgroup.writeEntry("ExternalEditorCommand", group.readEntry("ExternalEditorCommand", ""))
-    
-    group.writeEntry("ExternalEditor", "Custom")
-    group.writeEntry("ExternalEditorCommand", command)
-    
-    if not group.readEntry("WatchFile", True):
-        group.writeEntry("WatchFile", True)
-    group.sync()
+    ourgroup.writeEntry("ExternalEditor",
+        group.readEntry("ExternalEditor", ""))
+    ourgroup.writeEntry("ExternalEditorCommand",
+        group.readEntry("ExternalEditorCommand", ""))
     ourconfig.sync()
+
+def configureOkularPart():
+    """Lets Frescobaldi configure itself as custom editor in Okular."""
+    config = KConfig("frescobaldirc", KConfig.NoGlobals)
+    group = config.group("")
+    group.writeEntry("configure okularpart", True)
+    group.sync()
 
 def restoreOkularPart():
     """Restore the saved OkularPart editor settings."""
@@ -297,8 +313,10 @@ def restoreOkularPart():
     ourconfig = KGlobal.config()
     ourgroup = ourconfig.group('okular editor')
     
-    group.writeEntry("ExternalEditor", ourgroup.readEntry("ExternalEditor", ""))
-    group.writeEntry("ExternalEditorCommand", ourgroup.readEntry("ExternalEditorCommand", ""))
+    group.writeEntry("ExternalEditor",
+        ourgroup.readEntry("ExternalEditor", ""))
+    group.writeEntry("ExternalEditorCommand",
+        ourgroup.readEntry("ExternalEditorCommand", ""))
     group.sync()
 
 def main():
@@ -318,10 +336,13 @@ def main():
             KGuiItem("Remove Frescobaldi from menu", 'edit-delete'),
             KStandardGuiItem.cancel())
         if result == KMessageBox.Yes:
+            configureOkularPart()
             runFrescobaldi()
         elif result == KMessageBox.No:
             removeFrescobaldi()
             restoreOkularPart()
+            configureOkularPart()
+            
     else:
         # Frescobaldi seems not to be installed.
         if os.path.exists('prebuilt'):
@@ -330,6 +351,7 @@ def main():
             installer = SVN()
         installer.makeImage()
         installer.installFrescobaldi()
+        saveOkularPart()
         configureOkularPart()
         KMessageBox.information(None,
             "Frescobaldi has been added to your Applications menu.\n\n"

@@ -138,13 +138,11 @@ class MainApp(DBusItem):
         # KApplication needs to be instantiated before any D-Bus stuff
         self.kapp = KApplication()
         
-        # If the application got upgraded, run a special method
+        # Here we can setup config() stuff before MainWindow and its tools 
+        # are created.
         config = KGlobal.config().group("") # root group
-        oldVersion = config.readEntry("version", "")
-        if oldVersion != self.version():
-            config.writeEntry("version", self.version())
-            self.upgradeVersion(oldVersion)
-            config.sync()
+        self.setupConfiguration(config)
+        config.sync()
         
         # DBus init
         serviceName = "{0}{1}".format(servicePrefix, os.getpid())
@@ -160,6 +158,19 @@ class MainApp(DBusItem):
 
         # restore session etc.
         self._sessionStartedFromCommandLine = False
+        
+    def setupConfiguration(self, config):
+        """Read/manipulate the root group of the applications KConfig.
+        
+        This method is called after KApplication is created but before
+        DBus init and Mainwindow creation.
+        
+        """
+        # If the application got upgraded, run a special method
+        oldVersion = config.readEntry("version", "")
+        if oldVersion != self.version():
+            config.writeEntry("version", self.version())
+            self.upgradeVersion(oldVersion)
         
     @cacheresult
     def stateManager(self):
