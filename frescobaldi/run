@@ -16,7 +16,7 @@ to remove the Applications menu entry and restore the Okular binding.
 
 import glob, itertools, os, re, subprocess, sys
 
-def findExe(command):
+def findAllExe(command):
     """
     Look up a command in the system PATH, and return an iterable
     across all places in the PATH the command is present
@@ -25,6 +25,11 @@ def findExe(command):
         path = os.path.join(p, command)
         if os.access(path, os.X_OK):
             yield path
+
+def findExe(command):
+    """Returns the first found command in the PATH or None if not found."""
+    for path in findAllExe(command):
+        return path
 
 def die(msg):
     try:
@@ -39,7 +44,7 @@ def die(msg):
 # Python must be 2.6
 if sys.version_info[:2] != (2, 6):
     # find Python 2.6
-    for path in itertools.chain(findExe('python2.6'), findExe('python'), findExe('python26')):
+    for path in itertools.chain(findAllExe('python2.6'), findAllExe('python'), findAllExe('python26')):
         ver = subprocess.Popen([path, "--version"], stderr=subprocess.PIPE).communicate()[1]
         if ' 2.6' in ver:
             os.execl(path, path, sys.argv[0])
@@ -200,18 +205,18 @@ class SVN(TarBall):
     def makeImage(self):
         # run CMake
         # check some programs.
-        if not tuple(findExe('cmake')):
+        if not findExe('cmake'):
             die("CMake is needed to run Frescobaldi from a SVN checkout.\n"
                 "Please install CMake.")
-        if not tuple(findExe('make')):
+        if not findExe('make'):
             die("Make is needed to run Frescobaldi from a SVN checkout.\n"
                 "Please install a 'make' program.")
-        if not tuple(findExe('convert')):
+        if not findExe('convert'):
             die("convert (from ImageMagick) is needed to run Frescobaldi from a SVN checkout.\n"
                 "Please install ImageMagick.")
         
         import ly.version
-        for lily in findExe('lilypond'):
+        for lily in findAllExe('lilypond'):
             if ly.version.LilyPondInstance(lily).version() >= (2, 13, 19):
                 break
         else:
