@@ -464,8 +464,7 @@ class PointAndClick(SettingsGroup):
         self.button = KPushButton(i18n("Enable Point and Click"))
         self.button.setFixedSize(self.button.sizeHint())
         l = QLabel(i18n(
-            "Click this button to configure the (Okular) PDF preview to call "
-            "Frescobaldi when clickable objects are clicked. "
+            "Click this button if Point and Click does not work. "
             "See Shift+F1 (What's This) for more information."))
         l.setWordWrap(True)
         l.setWhatsThis(i18n(
