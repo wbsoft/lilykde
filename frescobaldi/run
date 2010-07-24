@@ -80,7 +80,7 @@ sys.path[0] = os.path.join(curdir, 'python')
 import shutil
 
 from PyKDE4.kdecore import KAboutData, KCmdLineArgs, KGlobal, ki18n
-from PyKDE4.kdeui import KApplication, KDialog
+from PyKDE4.kdeui import KApplication, KDialog, KGuiItem, KMessageBox, KStandardGuiItem
 
 aboutData = KAboutData(
     'frescobaldi_runner',       # appName
@@ -139,13 +139,22 @@ class TarBall:
         makedirs(app_dir)
         
         for name in ('frescobaldiui.rc', 'expansions', 'lilydoc.css'):
-            os.symlink(os.path.join(curdir, 'data', name), os.path.join(app_dir, name))
+            dest = os.path.join(app_dir, name)
+            if os.path.exists(dest):
+                os.remove(dest)
+            os.symlink(os.path.join(curdir, 'data', name), dest)
         
         for name in ('rumor', 'icons'):
-            os.symlink(os.path.join(curdir, name), os.path.join(app_dir, name))
+            dest = os.path.join(app_dir, name)
+            if os.path.exists(dest):
+                os.remove(dest)
+            os.symlink(os.path.join(curdir, name), dest)
         
         # pics
-        os.symlink(os.path.join(curdir, self.builddir, 'pics'), os.path.join(app_dir, 'pics'))
+        dest = os.path.join(app_dir, 'pics')
+        if os.path.exists(dest):
+            os.remove(dest)
+        os.symlink(os.path.join(curdir, self.builddir, 'pics'), dest)
         
         # install mo files
         for mo in glob.glob(os.path.join(self.builddir, 'po', '*.mo')):
@@ -176,19 +185,6 @@ class TarBall:
 
         # install link to documentation
         os.symlink(os.path.join(curdir, 'doc'), os.path.join(html_install_dir, 'frescobaldi'))
-        
-    def removeFrescobaldi(self):
-        # remove the frescobaldi 'binary'
-        os.remove('frescobaldi')
-        
-        # remove appIcon
-        os.remove(os.path.join(icon_install_dir, 'frescobaldi.svgz'))
-        
-        # remove desktop file
-        os.remove(desktop_file)
-        
-        # remove link to documentation
-        os.remove(os.path.join(html_install_dir, 'frescobaldi'))
         
 
 class SVN(TarBall):
@@ -239,3 +235,50 @@ class SVN(TarBall):
     def installBinary(self):
         shutil.copy2(os.path.join(self.builddir, 'frescobaldi'), 'frescobaldi')
 
+
+def removeFrescobaldi():
+    # remove the frescobaldi 'binary'
+    os.remove('frescobaldi')
+    
+    # remove appIcon
+    os.remove(os.path.join(icon_install_dir, 'frescobaldi.svgz'))
+    
+    # remove desktop file
+    os.remove(desktop_file)
+    
+    # remove link to documentation
+    os.remove(os.path.join(html_install_dir, 'frescobaldi'))
+
+
+def runFrescobaldi():
+    subprocess.Popen([os.path.join(curdir, 'frescobaldi')], cwd=os.environ.get('HOME'))
+
+# if the desktop file and the 'binary' do exist, assume Frescobaldi is installed and can be run.
+if os.path.exists(desktop_file) and os.path.exists('frescobaldi'):
+    # Frescobaldi can be run. Offer options to remove or run Frescobaldi
+    result = KMessageBox.questionYesNoCancel(None,
+            "Frescobaldi is available in your Applications menu.\n\n"
+            "Here you can choose if you want to remove Frescobaldi from the menu "
+            "or to run Frescobaldi. Cancel will do nothing.",
+        None,
+        KGuiItem("Run Frescobaldi"),
+        KGuiItem("Remove Frescobaldi from menu"),
+        KStandardGuiItem.cancel())
+    if result == KMessageBox.Yes:
+        runFrescobaldi()
+    elif result == KMessageBox.No:
+        removeFrescobaldi()
+else:
+    # Frescobaldi seems not to be installed.
+    if os.path.exists('prebuilt'):
+        installer = TarBall()
+    else:
+        installer = SVN()
+    installer.makeImage()
+    installer.installFrescobaldi()
+    KMessageBox.information(None,
+            "Frescobaldi has been added to your Applications menu.\n\n"
+            "Frescobaldi will now be started. Enjoy!")
+    runFrescobaldi()
+    
+sys.exit(0)
