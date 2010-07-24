@@ -3,31 +3,40 @@ How to install Frescobaldi:
 
 To install Frescobaldi in /usr/local:
 
-cmake .
-make
-make install
+  cmake .
+  make
+  make install
 
 To install Frescobaldi in your distributions default KDE4 directory (also 
 recommended for creating installable distribution packages):
 
-cmake . -DCMAKE_INSTALL_PREFIX=$(kde4-config --exec-prefix)
-make
-make install
+  cmake . -DCMAKE_INSTALL_PREFIX=$(kde4-config --exec-prefix)
+  make
+  make install
 
-Out-of-source builds are also possible, e.g.:
 
-mkdir build
-cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=$(kde4-config --exec-prefix)
-make
-make install
+Try Frescobaldi without installing:
+==================================
 
-If you install Frescobaldi from a SVN checkout, you need a very recent LilyPond,
-ImageMagick and GNU Gettext to built the LilyPond-generated icons and the
-translations.
+just run the 'run' script:
+
+  python run
+
+If your system is missing some necessary software the script will inform you,
+if everything is fine, Frescobaldi will be added to your Applications menu
+and started right away without installing anything.
+
+
+Installing Frescobaldi from SVN:
+===============================
+
+If you install Frescobaldi from a SubVersion checkout, you need a very recent
+LilyPond, ImageMagick and GNU Gettext to built the LilyPond-generated icons and
+the translations.
 
 If you install Frescobaldi from a released tarball (e.g.
 frescobaldi-1.1.3.tar.gz), the icons and translations are already prebuilt.
+The makedist.sh shell script creates a tar ball from a SVN checkout.
 
 
 Dependencies:

@@ -14,6 +14,8 @@ Changes in 1.1.3 --
 * Bugfixes:
   - Fix crash when editing toolbars
 * Installation:
+  - A 'run' script has been added to run Frescobaldi from the tarball (or even
+    SVN) without installing.
   - Using CMake out-of-source is now easier: icons and translations are not
     rebuilt anymore so the Frescobaldi install procedure does not need LilyPond
     and 'convert' (from ImageMagick) anymore. The icons and translations are in
