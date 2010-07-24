@@ -81,6 +81,7 @@ import shutil
 
 from PyKDE4.kdecore import KAboutData, KCmdLineArgs, KConfig, KGlobal, ki18n
 from PyKDE4.kdeui import KApplication, KDialog, KGuiItem, KMessageBox, KStandardGuiItem
+from PyKDE4.kio import KUrlRequesterDialog
 
 aboutData = KAboutData(
     'frescobaldi_runner',       # appName
@@ -214,9 +215,14 @@ class SVN(TarBall):
             if ly.version.LilyPondInstance(lily).version() >= (2, 13, 19):
                 break
         else:
-            die("LilyPond >= 2.13.19 is needed to run Frescobaldi from a SVN checkout.\n"
-                "Please install a recent LilyPond (e.g. from a binary download) and adjust\n"
-                "your PATH environment variable so it can be found; then try again.")
+            dlg = KUrlRequesterDialog('lilypond', 
+                "LilyPond >= 2.13.19 is needed to run Frescobaldi from a SVN checkout.\n\n"
+                "Please install a recent LilyPond (e.g. from a binary download) and select "
+                "the binary here.", None)
+            if dlg.exec_():
+                lily = dlg.selectedUrl().localPath()
+            else:
+                sys.exit(1)
                 
         makedirs(self.builddir)
         if subprocess.call([
