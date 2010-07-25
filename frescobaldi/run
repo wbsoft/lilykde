@@ -17,10 +17,7 @@ to remove the Applications menu entry and restore the Okular binding.
 import glob, itertools, os, re, subprocess, sys
 
 def findAllExe(command):
-    """
-    Look up a command in the system PATH, and return an iterable
-    across all places in the PATH the command is present
-    """
+    """Returns an iterable over all occurences of the command in the PATH."""
     for p in os.environ.get("PATH", os.defpath).split(os.pathsep):
         path = os.path.join(p, command)
         if os.access(path, os.X_OK):
@@ -32,6 +29,7 @@ def findExe(command):
         return path
 
 def die(msg):
+    """Show a message and exit with exitcode 1."""
     try:
         KMessageBox.error(None, msg)
     except Exception:
@@ -40,6 +38,24 @@ def die(msg):
         else:
             sys.stderr.write(msg+'\n')
     sys.exit(1)
+
+def configure_file(infile, outfile, dictionary):
+    """Replace variables in infile and write the result to outfile.
+    
+    Variables consist of uppercase letters and may contain underscores.
+    They start and end with the ampersand character. E.g. @MODULE_DIR@.
+    
+    This is analogous to the CMake configure_file function.
+    
+    """
+    with open(outfile, 'w') as f:
+        f.write(re.sub(r'@([A-Z]+(_[A-Z]+)*)@',
+            lambda m: dictionary[m.group(1)], open(infile).read()))
+
+def makedirs(path, mode=0o777):
+    """Like os.makedirs(), but doesn't error out if the full path exists."""
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 # Python must be 2.6
 if sys.version_info[:2] != (2, 6):
@@ -117,15 +133,6 @@ data['CMAKE_INSTALL_PREFIX'] = os.path.join(curdir, 'image')
 data['APP_DIR'] = os.path.join(
     data['CMAKE_INSTALL_PREFIX'], 'share', 'apps', 'frescobaldi')
 
-
-def configure_file(infile, outfile, dictionary):
-    with open(outfile, 'w') as f:
-        f.write(re.sub(r'@([A-Z]+(_[A-Z]+)*)@',
-            lambda m: data[m.group(1)], open(infile).read()))
-
-def makedirs(path, mode=0o777):
-    if not os.path.exists(path):
-        os.makedirs(path)
 
 icon_install_dir = KGlobal.dirs().saveLocation('icon', 'hicolor/scalable/apps/')
 html_install_dir = KGlobal.dirs().saveLocation('html', 'en/')
