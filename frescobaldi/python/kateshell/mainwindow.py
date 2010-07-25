@@ -76,12 +76,12 @@ def addAccelerators(actions):
 
 
 class MainWindow(KParts.MainWindow):
-    """
-    An editor main window.
+    """An editor main window.
     
     Emits the following (Python) signals:
     - currentDocumentChanged(Document) if the active document changes or its url.
     - aboutToClose() when the window will be closed.
+    
     """
     currentDocumentChanged = Signal()
     aboutToClose = Signal()
@@ -243,10 +243,10 @@ class MainWindow(KParts.MainWindow):
             
         
     def setupTools(self):
-        """
-        Implement this to create the Tool instances. This is called before the
-        ui.rc file s loaded, so the user can configure the keyboard shortcuts
-        for the tools.
+        """Implement this to create the Tool instances.
+        
+        This is called before the ui.rc file s loaded, so the user can
+        configure the keyboard shortcuts for the tools.
         """
         pass
     
@@ -257,6 +257,7 @@ class MainWindow(KParts.MainWindow):
         the toolbars are reconfigured by the user, that's why they must be setup
         in this method. This method is called again if the user changes the
         toolbars.
+        
         """
         # Set up the documents menu so that it shows all open documents.
         docMenu = self.factory().container("documents", self)
@@ -330,7 +331,7 @@ class MainWindow(KParts.MainWindow):
     
     def act(self, name, texttype, func,
             icon=None, tooltip=None, whatsthis=None, key=None):
-        """ Create an action and add it to own actionCollection """
+        """Create an action and add it to own actionCollection."""
         if isinstance(texttype, KStandardAction.StandardAction):
             a = self.actionCollection().addAction(texttype, name)
         else:
@@ -349,9 +350,10 @@ class MainWindow(KParts.MainWindow):
         return a
 
     def onAction(self, texttype, icon=None, tooltip=None, whatsthis=None, key=None):
-        """
-        Decorator to add a function to an action.
+        """Decorator to add a function to an action.
+        
         The name of the function becomes the name of the action.
+        
         """
         def decorator(func):
             self.act(func.func_name, texttype, func, icon, tooltip, whatsthis, key)
@@ -360,9 +362,11 @@ class MainWindow(KParts.MainWindow):
         
     def onSelAction(self, texttype, icon=None, tooltip=None, whatsthis=None, key=None,
                     warn=True, keepSelection=True):
-        """
-        Decorator to add a function that is run on selected text to an action.
+        """Decorator to add a function that is run on the selection to an action.
+        
         The name of the function becomes the name of the action.
+        If there is no selection, the action is automatically disabled.
+        
         """
         def decorator(func):
             def selfunc():
@@ -380,6 +384,7 @@ class MainWindow(KParts.MainWindow):
         return decorator
         
     def setCurrentDocument(self, doc):
+        """Called when the application makes a different Document active."""
         if self._currentDoc:
             self._currentDoc.urlChanged.disconnect(self.slotUrlChanged)
             self._currentDoc.captionChanged.disconnect(self.updateCaption)
@@ -399,26 +404,32 @@ class MainWindow(KParts.MainWindow):
         self.currentDocumentChanged(doc) # emit our signal
 
     def addDocument(self, doc):
+        """Internal. Add Document to our viewStack."""
         self.viewStack.addWidget(doc.view)
         
     def removeDocument(self, doc):
+        """Internal. Remove Document from our viewStack."""
         self.viewStack.removeWidget(doc.view)
         if doc is self._currentDoc:
             self.guiFactory().removeClient(doc.view)
             self._currentDoc = None
     
     def view(self):
+        """Returns the current view or None if none."""
         if self._currentDoc:
             return self._currentDoc.view
     
     def currentDocument(self):
+        """Returns the current Document or None if none."""
         return self._currentDoc
     
     def slotUrlChanged(self, doc=None):
+        """Called when the url of the current Document changes."""
         self.addToRecentFiles(doc)
         self.currentDocumentChanged(doc or self._currentDoc)
 
     def updateCaption(self):
+        """Called when the window title needs to be redisplayed."""
         session = self.sessionManager().current()
         caption = "{0}: ".format(session) if session else ""
         doc = self.currentDocument()
@@ -436,6 +447,7 @@ class MainWindow(KParts.MainWindow):
         self.setCaption(caption)
         
     def updateStatusBar(self):
+        """Called when the status bar needs to be redisplayed."""
         doc = self.currentDocument()
         pos = doc.view.cursorPositionVirtual()
         line, col = pos.line()+1, pos.column()
@@ -443,6 +455,7 @@ class MainWindow(KParts.MainWindow):
         self.sb_insmode.setText(doc.view.viewMode())
 
     def updateSelection(self):
+        """Called when the selection changes."""
         doc = self.currentDocument()
         enable = doc.view.selection() and not doc.view.selectionRange().isEmpty()
         for a in self._selectionActions:
@@ -455,7 +468,7 @@ class MainWindow(KParts.MainWindow):
         self.sb_selmode.setToolTip(tip)
 
     def editKeys(self):
-        """ Opens a window to edit the keyboard shortcuts """
+        """Opens a window to edit the keyboard shortcuts."""
         with self.app.busyCursor():
             dlg = KShortcutsDialog(KShortcutsEditor.AllActions,
                 KShortcutsEditor.LetterShortcutsDisallowed, self)
@@ -464,18 +477,20 @@ class MainWindow(KParts.MainWindow):
         dlg.configure()
     
     def allActionCollections(self):
-        """
+        """Iterator over KActionCollections.
+        
         Yields all KActionCollections that need to be checked if the user
         wants to alter a keyboard shortcut.
         
         Each item is a two-tuple (name, KActionCollection).
+        
         """
         yield KGlobal.mainComponent().aboutData().programName(), self.actionCollection()
         if self.view():
             yield None, self.view().actionCollection()
             
     def editToolbars(self):
-        """ Opens a window to edit the toolbar(s) """
+        """Opens a window to edit the toolbar(s)."""
         conf = config("MainWindow")
         self.saveMainWindowSettings(conf)
         dlg = KEditToolBar(self.guiFactory(), self)
@@ -487,11 +502,11 @@ class MainWindow(KParts.MainWindow):
         dlg.show()
 
     def newDocument(self):
-        """ Create a new empty document """
+        """Create a new empty document."""
         self.app.createDocument().setActive()
         
     def openDocument(self):
-        """ Open an existing document. """
+        """Open an existing document."""
         res = KEncodingFileDialog.getOpenUrlsAndEncoding(
             self.app.defaultEncoding,
             self.currentDocument().url().url()
@@ -504,7 +519,7 @@ class MainWindow(KParts.MainWindow):
             docs[-1].setActive()
     
     def addToRecentFiles(self, doc=None):
-        """ Add url of document to recently opened files. """
+        """Add url of document to recently opened files."""
         doc = doc or self.currentDocument()
         if doc:
             url = doc.url()
@@ -513,11 +528,15 @@ class MainWindow(KParts.MainWindow):
     
     @pyqtSignature("KUrl")
     def slotOpenRecent(self, url):
-        """ Called by the open recent files action """
+        """Called by the open recent files action."""
         self.app.openUrl(url).setActive()
 
     def queryClose(self):
-        """ Quit the application, also called by closing the window """
+        """Called when the user wants to close the MainWindow.
+        
+        Returns True if the application may quit.
+        
+        """
         if self.app.kapp.sessionSaving():
             sc = self.app.kapp.sessionConfig()
             self.saveDocumentList(sc.group("documents"))
@@ -538,7 +557,7 @@ class MainWindow(KParts.MainWindow):
         return True
     
     def closeOtherDocuments(self):
-        """ Close all documents except the current document. """
+        """Close all documents except the current document."""
         # iterate over a copy, current first, except current document
         docs = self.app.history[-2::-1]
         for d in docs:
@@ -574,14 +593,14 @@ class MainWindow(KParts.MainWindow):
                 docs[active].setActive()
     
     def loadSettings(self):
-        """ Load some settings from our configfile. """
+        """Load some settings from our configfile."""
         self.openRecent.loadEntries(config("recent files"))
         self.showPath.setChecked(config().readEntry("show full path", False))
         self.showTabs.setChecked(config().readEntry("show tabs", True))
         self.viewTabs.setVisible(self.showTabs.isChecked())
 
     def saveSettings(self):
-        """ Store settings in our configfile. """
+        """Store settings in our configfile."""
         self.openRecent.saveEntries(config("recent files"))
         config().writeEntry("show full path", self.showPath.isChecked())
         config().writeEntry("show tabs", self.showTabs.isChecked())
@@ -608,10 +627,7 @@ class MainWindow(KParts.MainWindow):
 
 
 class ViewTabBar(QTabBar):
-    """
-    The tab bar above the document editor view, used to switch
-    documents.
-    """
+    """The tab bar above the document editor view."""
     def __init__(self, mainwin):
         QTabBar.__init__(self)
         KAcceleratorManager.setNoAccel(self)
