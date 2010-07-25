@@ -227,6 +227,10 @@ class SVN(TarBall):
             missing.append(
                 "'convert' (from ImageMagick) is needed to run Frescobaldi "
                 "from a SVN checkout.\nPlease install ImageMagick.")
+        if not findExe('msgfmt'):
+            missing.append(
+                "'msgfmt' (from Gettext) is needed to run Frescobaldi "
+                "from a SVN checkout.\nPlease install Gettext.")
         if missing:
             die('\n\n'.join(missing))
         
