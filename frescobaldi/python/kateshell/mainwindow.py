@@ -1326,6 +1326,7 @@ class SessionManager(object):
         Use None or "none" for the no-session state.
         If the given session does not exist, it is created from the current
         setup.
+        
         """
         if name == "none":
             name = None
@@ -1399,6 +1400,7 @@ class SessionManager(object):
         
         If the user enters a name and accepts the dialog, the session is
         created and switched to.
+        
         """
         name = self.editorDialog().edit()
         if name:
@@ -1421,6 +1423,7 @@ class SessionManager(object):
         
         The document list is taken over but not the other settings.
         Both names must be valid session names, and old must exist.
+        
         """
         oldConfig = self.config(old)
         newConfig = self.config(new)
