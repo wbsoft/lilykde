@@ -1339,7 +1339,7 @@ class SessionManager(object):
         return names
         
     def current(self):
-        """Returns the name of the current session."""
+        """Returns the name of the current session, or None if none."""
         return self._current
     
     def save(self):

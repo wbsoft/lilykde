@@ -48,10 +48,16 @@ def config(group="kateshell"):
 
 
 def cacheresult(func):
-    """
-    A decorator that performs the decorated method call only the first time,
-    caches the return value, and returns that next time.
-    The argments tuple should be hashable.
+    """Method decorator that caches the result of method calls.
+    
+    The method is invoked and the return value cached in a dictionary with
+    the arguments tuple as key.
+    
+    When the method is invoked and the arguments tuple is available in the
+    cache, the cached value is returned instead of invoking the method again.
+    The decorator does not keep references to the arguments and the object the
+    method belongs to.
+    
     """
     cache = weakref.WeakKeyDictionary()
     @wraps(func)
@@ -76,11 +82,13 @@ def naturalsort(text):
 
 @contextmanager
 def blockSignals(widget):
-    """
-    Creates a context for a widget with blocked signals. Usage:
+    """Creates a context for a widget to perform code with blocked signals.
+    
+    Usage:
     
     with blockSignals(widget) as w:
         ...
+    
     """
     block = widget.blockSignals(True)
     try:
@@ -90,9 +98,11 @@ def blockSignals(widget):
 
 
 class DBusItem(dbus.service.Object):
-    """
-    An exported DBus item for our application.
-    To be subclassed!
+    """An exported DBus item for our application.
+    
+    Uses the class name as the DBus object name.
+    Intended to be subclassed.
+    
     """
     def __init__(self, serviceName, path=None):
         self.serviceName = serviceName
@@ -104,20 +114,21 @@ class DBusItem(dbus.service.Object):
 
 
 class MainApp(DBusItem):
-    """
-    Our main application instance. Also exposes some methods to DBus.
-    Instantiated only once.
+    """Our main application instance.
+    
+    Also exposes some methods to DBus. Instantiated only once.
     
     Emits four signals to Python others can connect to:
     activeChanged(Document)
     documentCreated(Document)
     documentMaterialized(Document)
     documentClosed(Document)
+    
     """
-    activeChanged = Signal("called with Document instance")
-    documentCreated = Signal("called with Document instance")
-    documentMaterialized = Signal("called with Document instance")
-    documentClosed = Signal("called with Document instance")
+    activeChanged = Signal()
+    documentCreated = Signal()
+    documentMaterialized = Signal()
+    documentClosed = Signal()
     
     excepthook = Signal()
     
@@ -160,17 +171,16 @@ class MainApp(DBusItem):
         self._sessionStartedFromCommandLine = False
         
     def setupConfiguration(self, config):
-        """Read/manipulate the root group of the applications KConfig.
+        """Opportunity to manipulate the root group of the global KConfig.
         
         This method is called after KApplication is created but before
         DBus init and Mainwindow creation.
         
+        You can implement this method in a subclass; the default implementation
+        does nothing.
+        
         """
-        # If the application got upgraded, run a special method
-        oldVersion = config.readEntry("version", "")
-        if oldVersion != self.version():
-            config.writeEntry("version", self.version())
-            self.upgradeVersion(oldVersion)
+        pass
         
     @cacheresult
     def stateManager(self):
@@ -253,58 +263,69 @@ class MainApp(DBusItem):
        
     @method(iface, in_signature='s', out_signature='b')
     def isOpen(self, url):
-        """
-        Returns true is the specified URL is opened by the current application
-        """
+        """Returns true if the specified URL is opened."""
         if not isinstance(url, KUrl):
             url = KUrl(url)
         return bool(self.findDocument(url))
         
     @method(iface, in_signature='', out_signature='o')
     def activeDocument(self):
-        """
-        Returns the currently active document
-        """
+        """Returns the currently active document."""
         return self.history[-1]
 
     @method(iface, in_signature='', out_signature='')
     def back(self):
-        """
-        Sets the previous document active.
-        """
+        """Sets the previous document active."""
         i = self.documents.index(self.activeDocument()) - 1
         self.documents[i].setActive()
 
     @method(iface, in_signature='', out_signature='')
     def forward(self):
-        """
-        Sets the next document active.
-        """
+        """Sets the next document active."""
         i = self.documents.index(self.activeDocument()) + 1
         i %= len(self.documents)
         self.documents[i].setActive()
 
     @method(iface, in_signature='', out_signature='b')
     def quit(self):
+        """Quits the application. Returns True if succeeded."""
         return self.mainwin.close()
 
     @method(iface, in_signature='', out_signature='')
     def show(self):
-        """ Raises our mainwindow if minimized """
+        """Raises our mainwindow if minimized."""
         self.mainwin.setWindowState(
             self.mainwin.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
     
     @method(iface, in_signature='s', out_signature='b')
     def startSession(self, session):
+        """Switch to the given session.
+        
+        Use "none" to switch to the empty session.
+        If the session does not exist, it is created on the fly.
+        Returns True if the switch succeeded.
+        
+        """
         self._sessionStartedFromCommandLine = True
         return self.mainwin.sessionManager().switch(session)
         
+    @method(iface, in_signature='', out_signature='s')
+    def startSession(self, session):
+        """Returns the name of the current session.
+        
+        Returns "none" if there is no active session.
+        
+        """
+        return self.mainwin.sessionManager().current() or "none"
+        
     def addDocument(self, doc):
+        """Internal. Called when a new Document is created."""
         self.documents.append(doc)
         self.history.append(doc)
         self.documentCreated(doc)
 
     def removeDocument(self, doc):
+        """Internal. Called when a Document is closed."""
         if doc in self.documents:
             # Was this the active document? Then activate previous active doc.
             if doc is self.activeDocument() and len(self.documents) > 1:
@@ -322,49 +343,38 @@ class MainApp(DBusItem):
 
     @method(iface, in_signature='', out_signature='s')
     def programName(self):
-        """
-        Returns the name of the application
-        """
+        """Returns the name of the application."""
         return KGlobal.mainComponent().aboutData().programName()
         
     @method(iface, in_signature='', out_signature='s')
     def version(self):
-        """
-        Returns the version of our app.
-        """
+        """Returns the version of our application."""
         return KGlobal.mainComponent().aboutData().version()
 
-    def upgradeVersion(self, oldVersion):
-        """
-        Called if the application is upgraded to a different version.
-        Implement this to update configuration etc.  kateshell saves the new
-        version in the config so you don't have to do that.
-        oldVersion is the old version as a string, e.g. "1.0".
-        
-        """
-        pass
-    
     def showException(self, exctype, excvalue, exctb):
-        """
-        Called when a Python exception goes unhandled
-        """
+        """Called when a Python exception goes unhandled."""
         import kateshell.exception
         kateshell.exception.showException(self, exctype, excvalue, exctb)
 
     def keepMetaInfo(self):
-        """
-        Returns whether meta information about documents should be kept
-        (e.g. state of view, cursor position, encoding etc.)
+        """Returns whether meta information about documents should be kept.
         
-        The default is to return False, reimplement this to return e.g.
-        a user's configured setting.
+        For example the state of the view, cursor position, encoding etc.
+        The default implementation returns False, reimplement this to return
+        e.g. a user's configured setting.
+        
         """
         return False
         
     @contextmanager
     def busyCursor(self, cursor=None):
-        """
-        Performs code with a busy cursor set for the application.
+        """Performs code with a busy cursor set for the application.
+        
+        The default cursor to use is the Qt.WaitCursor. Usage:
+        
+        with app.busyCursor():
+            ...
+
         """
         if cursor is None:
             cursor = QCursor(Qt.WaitCursor)
@@ -376,8 +386,8 @@ class MainApp(DBusItem):
 
 
 class Document(DBusItem):
-    """
-    A loaded (LilyPond) text document.
+    """A loaded text document.
+    
     We support lazy document instantiation: only when a view is requested,
     we create the KTextEditor document and view.
     
@@ -388,6 +398,7 @@ class Document(DBusItem):
     selectionChanged(doc)
     saved(doc, bool saveAs)
     closed(doc)
+    
     """
     
     __instance_counter = 0
@@ -430,7 +441,7 @@ class Document(DBusItem):
         self.app.addDocument(self)
         
     def materialize(self):
-        """ Really load the document, create doc and view etc. """
+        """Really load the document, create doc and view etc."""
         if self.doc:
             return
         self.doc = self.app.editor.createDocument(self.app.mainwin)
@@ -499,22 +510,22 @@ class Document(DBusItem):
         self.selectionChanged(self)
     
     def contextMenu(self):
-        """
-        Override this to set your own context menu.
-        """
+        """Override this to set your own context menu."""
         return self.view.defaultContextMenu()
     
     def viewCreated(self):
-        """
+        """Called when the view for this document is created.
+        
         Override this in subclasses to do things after the KTextEditor.View
         for this document has materialized.
         """
         pass 
     
     def openUrl(self, url, encoding):
-        """
-        Opens a different url and re-init some stuff.
+        """Internal. Opens a different url and re-init some stuff.
+        
         (Only call this on a Document that has already materialized.)
+        
         """
         self.materialize()
         self.setEncoding(encoding)
@@ -526,6 +537,11 @@ class Document(DBusItem):
         
     @method(iface, in_signature='', out_signature='b')
     def save(self):
+        """Saves the document, asking for a file name if necessary.
+        
+        Returns True if saving succeeded, otherwise False.
+        
+        """
         if self.doc:
             if self.url().isEmpty():
                 return self.saveAs()
@@ -535,6 +551,11 @@ class Document(DBusItem):
         
     @method(iface, in_signature='', out_signature='b')
     def saveAs(self):
+        """Saves the document, always asking for a file name.
+        
+        Returns True if saving succeeded, otherwise False.
+        
+        """
         if self.doc:
             dlg = KEncodingFileDialog(
                 self.app.mainwin.sessionManager().basedir() or
@@ -554,6 +575,7 @@ class Document(DBusItem):
             
     @method(iface, in_signature='s', out_signature='')
     def setEncoding(self, encoding):
+        """Sets the encoding for this document."""
         if self.doc:
             self.doc.setEncoding(encoding)
         else:
@@ -561,13 +583,14 @@ class Document(DBusItem):
 
     @method(iface, in_signature='', out_signature='s')
     def encoding(self):
+        """Returns the encoding for this document."""
         if self.doc:
             return self.doc.encoding()
         else:
             return self._encoding
             
     def url(self):
-        """ Returns the KUrl of this document """
+        """Returns the KUrl of this document."""
         if self.doc:
             return self.doc.url()
         else:
@@ -580,10 +603,16 @@ class Document(DBusItem):
         
     @method(iface, in_signature='', out_signature='s')
     def localPath(self):
+        """Returns the local file path for the document."""
         return self.url().toLocalFile() or ""
 
     @method(iface, in_signature='', out_signature='s')
     def documentName(self):
+        """Returns a printable name for this document.
+        
+        Normally this is the filename or "Untitled".
+        
+        """
         if self.doc:
             return self.doc.documentName() or ""
         else:
@@ -605,23 +634,28 @@ class Document(DBusItem):
 
     @method(iface, in_signature='', out_signature='b')
     def isEdited(self):
-        """Returns true is the document has already been modified and saved
-        during this process."""
+        """Returns true if the document has already been modified and saved."""
         return self._edited
     
     @method(iface, in_signature='', out_signature='b')
     def isEmpty(self):
+        """Returns True if the document is empty.
+        
+        Returns False if the document has not materialized yet.
+        
+        """
         if self.doc:
             return self.doc.isEmpty()
         return False # if not loaded, because we don't know it yet.
 
     @method(iface, in_signature='', out_signature='b')
     def isActive(self):
+        """Returns True if this document is the active one."""
         return bool(self.doc) and self.app.activeDocument() is self
 
     @method(iface, in_signature='', out_signature='')
     def setActive(self):
-        """ Make the document the active (shown) document """
+        """Makes the document the active (shown) document."""
         if not self.isActive():
             self.materialize()
             self.app.activeDocumentChanged(self)
@@ -630,8 +664,9 @@ class Document(DBusItem):
 
     @method(iface, in_signature='iib', out_signature='')
     def setCursorPosition(self, line, column, translate=True):
-        """
-        Sets the cursor in this document. Lines start at 1, columns at 0.
+        """Sets the cursor in this document.
+        
+        Lines start at 1, columns at 0.
         A TAB character counts as (max, depending on column) 8 characters.
         
         If translate is True, the cursor position is translated from the state
@@ -640,6 +675,7 @@ class Document(DBusItem):
         remain working, even if the document is edited, until the
         CursorTranslator is updated (which typically happens if a new build is
         started).
+        
         """
         if self.view:
             line -= 1 # katepart numbers lines from zero
@@ -654,16 +690,12 @@ class Document(DBusItem):
 
     @method(iface, in_signature='', out_signature='s')
     def text(self):
-        """
-        Returns the document text.
-        """
+        """Returns the full text of the document."""
         return self.doc and self.doc.text() or ""
     
     @method(iface, in_signature='s', out_signature='b')
     def setText(self, text):
-        """
-        Set the given text as new document content.
-        """
+        """Set the given text as new document content."""
         self.materialize()
         if self.doc.setText(text):
             self.resetCursorTranslations()
@@ -672,15 +704,11 @@ class Document(DBusItem):
         
     @method(iface, in_signature='', out_signature='i')
     def lines(self):
-        """
-        Returns the number of lines.
-        """
+        """Returns the number of lines."""
         return self.doc and self.doc.lines() or 0
         
     def textLines(self):
-        """
-        Returns the full document text as a list of lines.
-        """
+        """Returns the full document text as a list of lines."""
         if self.doc:
             return [line or ""
                 for line in self.doc.textLines(self.doc.documentRange())]
@@ -689,7 +717,7 @@ class Document(DBusItem):
     
     @method(iface, in_signature='b', out_signature='b')
     def close(self, prompt=True):
-        """Closes this document, returning true if closing succeeded."""
+        """Closes this document, returning True if closing succeeded."""
         if self.doc:
             if prompt and not self.queryClose():
                 return False
@@ -708,7 +736,7 @@ class Document(DBusItem):
         return True
 
     def queryClose(self):
-        """ Ask user if document modified and saves if desired. """
+        """Ask user if document modified and saves if desired."""
         # Many stuff copied from KatePart
         if not self.doc or not self.isModified():
             return True
@@ -725,19 +753,20 @@ class Document(DBusItem):
             return False
 
     def aboutToClose(self):
-        """
+        """Called just before a document is really closed.
+        
         Implement this if you want to save some last minute state, etc.
         After calling this the view and document (if they have materialized)
         will be deleted.
+        
         This method will also be called if the document never materialized.
         So check if self.view really is a View before you do something with it.
+        
         """
         pass
     
     def viewActions(self):
-        """
-        Iterate over the View actions for which the state could be saved.
-        """
+        """Iterate over the View actions for which the state could be saved."""
         if self.view:
             for name in (
                 "view_dynamic_word_wrap",
@@ -748,10 +777,11 @@ class Document(DBusItem):
                     yield name, action
 
     def readConfig(self, group):
-        """
-        This can be called by a state manager. You can read stuff from
-        the KConfigGroup group, to adjust settings for the loaded document
-        and its view.
+        """This can be called by a StateManager after the document materialized.
+        
+        You can read stuff from the KConfigGroup group, to adjust settings for
+        the loaded document and its view.
+        
         """
         # load custom properties
         for name, default in self.metainfoDefaults.items():
@@ -778,9 +808,11 @@ class Document(DBusItem):
                         markiface.addMark(line, mark)
 
     def writeConfig(self, group):
-        """
-        This can be called by a state manager. You can write stuff to
-        the KConfigGroup group, to save settings for the document and its view.
+        """This can be called by a StateManager, normally just before closing.
+        
+        You can write stuff to the KConfigGroup group, to save settings for the
+        document and its view.
+        
         """
         # save custom properties
         for name, default in self.metainfoDefaults.items():
@@ -809,20 +841,19 @@ class Document(DBusItem):
         group.writeEntry("encoding", self.encoding())
 
     def line(self, lineNumber = None):
-        """
-        Returns the text of the given or current line.
-        """
+        """Returns the text of the given or current line."""
         if self.doc:
             if lineNumber is None:
                 lineNumber = self.view.cursorPosition().line()
             return self.doc.line(lineNumber) or ""
     
     def textToCursor(self, line=None, column=None):
-        """
-        Returns the text from the start of the document to the given
+        """Returns the text from the start of the document to the given
         cursor position.
+        
         If line and column are None, the current cursor position is used.
         If column is None, line is expected to be a KTextEditor.Cursor object.
+        
         """
         if self.view:
             if line is None:
@@ -833,20 +864,18 @@ class Document(DBusItem):
             return self.doc.text(KTextEditor.Range(0, 0, line, column)) or ""
 
     def selectionText(self):
-        """
-        Returns the selected text or None.
-        """
+        """Returns the selected text or an empty string."""
         if self.view and self.view.selection():
             return self.view.selectionText() or ""
     
     def selectionOrDocument(self):
-        """
-        Returns a tuple(text, start).
+        """Returns a tuple(text, start).
         
         If there is a selection, start is the position in the text the selection
         starts, and text is the document text from the (0, 0) to the end of the
         selection. If there is no selection, the whole document text is returned
-        and start = 0.
+        and start=0.
+        
         """
         docRange = self.doc.documentRange()
         selRange = self.view.selectionRange()
@@ -857,9 +886,10 @@ class Document(DBusItem):
         return self.text(), 0
         
     def replaceSelectionWith(self, text, keepSelection=True):
-        """
-        Convenience method. Replaces the selection (if any) with text.
+        """Convenience method. Replaces the selection (if any) with text.
+        
         If keepSelection is true, select the newly inserted text again.
+        
         """
         v, d = self.view, self.doc
         selRange = v.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
@@ -882,6 +912,14 @@ class Document(DBusItem):
     
     @contextmanager
     def editContext(self):
+        """Context to perform operations on the document in one Undo-block.
+        
+        Usage:
+        
+        with doc.editContext():
+            ...
+        
+        """
         self.doc.startEditing()
         try:
             yield
@@ -889,19 +927,22 @@ class Document(DBusItem):
             self.doc.endEditing()
         
     def resetCursorTranslations(self):
-        """
-        Clears the cursor translations that keep Point and Click
+        """Clears the cursor translations that keep Point and Click
         working while the document changes.
-        Call this when the PDF output document has been updated by
-        a succesful LilyPond run (for example).
+        
+        Call this when a build has succeeded and cursor positions produced
+        by build errors or build output coincide with the current document text.
+        
         """
         if self.doc:
             self._cursorTranslator = CursorTranslator(self)
     
     def kateModeVariables(self):
-        """
-        Returns a dict with the katemoderc variables for the mode
-        of the current document, if available.
+        """Returns a dict with katemoderc variables.
+        
+        The current mode is used. Returns None if there is no document mode
+        active and there is no application default mode.
+        
         """
         mode = self.doc and self.doc.mode() or self.app.defaultMode
         if mode:
@@ -926,9 +967,10 @@ class Document(DBusItem):
             #return d.get(varName)
     
     def kateVariable(self, varName):
-        """
-        Returns the value of the kate variable varName, if set in the document
-        or in the modeline for the current document mode.
+        """Returns the value of the kate variable varName.
+        
+        Looks in the document and in the modeline for the current document mode.
+        Returns None if the variable is not set.
         """
         lines = self.textLines()
         del lines[10:-10] # only look at the first and last ten lines.
@@ -942,9 +984,7 @@ class Document(DBusItem):
             return d.get(varName)
         
     def tabWidth(self):
-        """
-        Returns the width of the tab character, valid for the current document.
-        """
+        """Returns the width of the tab character in this document."""
         v = self.kateVariable("tab-width")
         if v and v.isdigit():
             return int(v)
@@ -952,9 +992,7 @@ class Document(DBusItem):
         return group.readEntry("Tab Width", 8)
         
     def indentationWidth(self):
-        """
-        Returns the indent-width for the current document.
-        """
+        """Returns the indent-width for the current document."""
         v = self.kateVariable("indent-width")
         if v and v.isdigit():
             return int(v)
@@ -962,32 +1000,39 @@ class Document(DBusItem):
         return group.readEntry("Indentation Width", 2)
     
     def indentationSpaces(self):
-        """
-        Returns True if indent uses spaces, otherwise False.
-        """
-        v = self.kateVariable("space-indent")
+        """Returns True if indent uses spaces, otherwise False."""
+        v = self.kateVariable("space-indent") or self.kateVariable("replace-tabs")
         if v:
             return v in ('on', '1', 'yes', 'y', 'true')
-        group = KGlobal.config().group("Kate Document Defaults")
+        group = config("Kate Document Defaults")
         return bool(group.readEntry('Basic Config Flags', 0) & 0x2000000)
 
     
 class StateManager(object):
-    """
-    Manages state and meta-info for documents, like bookmarks
-    and cursor position, etc.
+    """Manages state and meta-info for documents.
+    
+    Asks Documents to save information like bookmarks and cursor position, etc.
+    The information is saved in the 'metainfos' config file in the applications
+    data directory.
+    
     """
     def __init__(self, app):
         self.app = app
         self.metainfos = KConfig("metainfos", KConfig.NoGlobals, "appdata")
         
     def groupForUrl(self, url, create=False):
+        """Returns a KConfigGroup for the given KUrl.
+        
+        Returns None if the group does not exist and create==False.
+        
+        """
         if not url.isEmpty():
             encodedurl = url.prettyUrl()
             if create or self.metainfos.hasGroup(encodedurl):
                 return self.metainfos.group(encodedurl.encode('utf-8'))
             
     def loadState(self, doc):
+        """Asks the Document to read its state from our config."""
         group = self.groupForUrl(doc.url())
         if group:
             last = group.readEntry("time", 0.0)
@@ -999,6 +1044,7 @@ class StateManager(object):
                 doc.readConfig(group)
             
     def saveState(self, doc):
+        """Asks the Document to save its state to our config."""
         if doc.view and not doc.url().isEmpty():
             group = self.groupForUrl(doc.url(), True)
             group.writeEntry("time", time.time())
@@ -1006,7 +1052,7 @@ class StateManager(object):
             group.sync()
             
     def cleanup(self):
-        """ Purge entries that are not used for more than a month. """
+        """Purge entries that are not used for more than a month."""
         for g in self.metainfos.groupList():
             group = self.metainfos.group(g.encode('utf-8'))
             last = group.readEntry("time", 0.0)
@@ -1016,10 +1062,12 @@ class StateManager(object):
 
 
 class CursorTranslator(object):
-    """
+    """Translates cursor positions after a document is edited.
+    
     This object makes a kind of snapshot of a document and makes it
     possible to translate cursor positions in that snapshot to the correct
     place in the current document.
+    
     """
     def __init__(self, doc):
         """ doc should be a kateshell.app.Document instance """
@@ -1034,10 +1082,11 @@ class CursorTranslator(object):
             self.iface.releaseRevision(self.revision)
         
     def cursor(self, line, column):
-        """
-        Translates a cursor position to the current document.
+        """Translates a cursor position to the current document.
+        
         Also resolves tabs (i.e. the column parameter is the virtual position).
         Returns a KTextEditor.Cursor instance.
+        
         """
         if line < len(self.savedTabs) and self.savedTabs[line]:
             column = resolvetabs_indices(column, self.savedTabs[line])
@@ -1053,9 +1102,10 @@ class CursorTranslator(object):
 
 
 def tabindices(text):
-    """
-    Returns a list of positions in text at which a tab character is found.
+    """Returns a list of positions in text at which a tab character is found.
+    
     If no tab character is found, returns None.
+    
     """
     result = []
     tab = text.find('\t')
@@ -1065,16 +1115,21 @@ def tabindices(text):
     return result or None
 
 def resolvetabs_text(column, text):
-    """
+    """Translates virtual column to the character column in a text string.
+    
+    Assumes tab stops are on 8 character positions.
     Parses text for tab stops and resolves column (a virtual position)
     to point to the correct character position in the text.
+    
     """
     return resolvetabs_indices(column, tabindices(text))
 
 def resolvetabs_indices(column, indices):
-    """
-    Uses the tabstops in indices (a list with the indices of tabstops in a text)
-    to translate a virtual cursor position to the correct character index.
+    """Translates virtual column to the character index in a text.
+
+    Assumes tab stops are on 8 character positions.
+    indices should be a list of tabstops (see the tabindices function).
+    
     """
     if not indices or column < indices[0]:
         return column
@@ -1090,10 +1145,11 @@ def resolvetabs_indices(column, indices):
         charcol += 1
         
 def cursorToPosition(line, column, text):
-    """
-    Returns the character position in text of a cursor with line and column.
+    """Returns the character position in text of a cursor with line and column.
+    
     Line and column both start with 0.
     Returns -1 if the position falls outside the text.
+    
     """
     pos = 0
     for i in range(line):

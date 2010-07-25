@@ -44,8 +44,9 @@ def configure_file(infile, outfile, dictionary):
     
     Variables consist of uppercase letters and may contain underscores.
     They start and end with the ampersand character. E.g. @MODULE_DIR@.
-    
     This is analogous to the CMake configure_file function.
+    
+    Raises KeyError if a variable does not exist in the dictionary.
     
     """
     with open(outfile, 'w') as f:

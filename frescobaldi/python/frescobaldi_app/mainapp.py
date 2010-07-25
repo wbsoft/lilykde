@@ -59,19 +59,19 @@ class MainApp(kateshell.app.MainApp):
         os.environ["FRESCOBALDI_PID"] = str(os.getpid())
     
     def setupConfiguration(self, config):
-        super(MainApp, self).setupConfiguration(config)
+        # If the application got upgraded, run the install module
+        oldVersion = config.readEntry("version", "")
+        if oldVersion != self.version():
+            config.writeEntry("version", self.version())
+            from frescobaldi_app.install import install
+            install(self, oldVersion)
         # force install ourselves as custom editor in okularpart
         # when this key is True or unset (e.g. by an installer).
         if config.readEntry('configure okularpart', True):
             config.writeEntry('configure okularpart', False)
             from frescobaldi_app.install import installOkularPartRC
             installOkularPartRC()
-            
-    def upgradeVersion(self, oldVersion):
-        """ called if stuff needs to be run after an update of Frescobaldi """
-        from frescobaldi_app.install import install
-        install(self, oldVersion)
-        
+    
     def openUrl(self, url, encoding=None):
         # The URL can be python string, dbus string or KUrl
         if not isinstance(url, KUrl):
