@@ -58,6 +58,11 @@ def makedirs(path, mode=0o777):
     if not os.path.exists(path):
         os.makedirs(path)
 
+# html
+p = lambda s: '<p>%s</p>\n' % s
+li = lambda s: '<li>%s</li>\n' % s
+ul = lambda *args: '<ul>\n%s</ul>\n' % ''.join(args)
+
 # Python must be 2.6
 if sys.version_info[:2] != (2, 6):
     # find Python 2.6
@@ -366,25 +371,36 @@ def main():
         saveOkularPart()
         configureOkularPart()
         msg = [
-            "Frescobaldi has been added to your Applications menu.\n\n"
-            "If you want to remove Frescobaldi from the menu, just run this "
-            "'run' script again.\n\n"
-            "(It is recommended that you remove Frescobaldi from the menu "
-            "when you really install Frescobaldi, as that will install a "
-            "system-wide menu Applications menu entry.)\n\n"
-            "Frescobaldi will now be started. Enjoy!"]
+            p("Frescobaldi has been added to your Applications menu."),
+            p("If you want to remove Frescobaldi from the menu, just run this "
+              "'run' script again."),
+            p("(It is recommended that you remove Frescobaldi from the menu "
+              "when you really install Frescobaldi, as that will install a "
+              "system-wide menu Applications menu entry.)"),
+            p("Frescobaldi will now be started. Enjoy!")]
+        notes = []
         if not findExe('lilypond'):
-            msg.append(
-                "Note: LilyPond could not be found in your PATH. You really "
-                "should install LilyPond to be able to do anything useful "
-                "with Frescobaldi! "
-                "Visit www.lilypond.org for more information.")
+            notes.append(
+                "LilyPond could not be found in your PATH. You really should "
+                "install LilyPond to be able to do anything useful with "
+                "Frescobaldi! Visit "
+                "<a href=\"http://www.lilypond.org/\">www.lilypond.org</a> "
+                "for more information.")
+        if not findExe('okular'):
+            notes.append(
+                "The Okular PDF viewer could not be found in your PATH. "
+                "The Okular KPart module provides the PDF preview, so "
+                "if the preview doesn't work, you should install Okular.")
         if not findExe('rumor'):
-            msg.append(
+            notes.append(
                 "For music input via MIDI, the 'rumor' program is recommended. "
                 "See the Frescobaldi User Guide (accessible from Frescobaldi "
                 "with the F1 key) for more information.")
-        KMessageBox.information(None, '\n\n'.join(msg))
+        if notes:
+            msg.insert(1, p("Note:"))
+            msg.insert(2, ul(*map(li, notes)))
+        KMessageBox.information(None, '<qt>' + ''.join(msg), None, None,
+            KMessageBox.Options(KMessageBox.Notify | KMessageBox.AllowLink))
         runFrescobaldi()
     return 0
     
