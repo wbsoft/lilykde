@@ -341,13 +341,13 @@ def main():
     # assume Frescobaldi is installed and can be run.
     if os.path.exists(desktop_file) and os.path.exists('frescobaldi'):
         # Frescobaldi can be run. Offer options to remove or run Frescobaldi
-        result = KMessageBox.questionYesNoCancel(None,
-                "Frescobaldi is available in your Applications menu.\n\n"
-                "Here you can choose if you want to remove Frescobaldi from "
-                "the menu or to run Frescobaldi.\n\n"
-                "It is recommended that you remove Frescobaldi from the menu "
-                "when you really install Frescobaldi, as that will install a "
-                "system-wide Applications menu entry.",
+        result = KMessageBox.questionYesNoCancel(None, '<qt>' +
+                p("Frescobaldi is available in your Applications menu.") +
+                p("Here you can choose if you want to remove Frescobaldi from "
+                  "the menu or to run Frescobaldi.") +
+                p("It is recommended that you remove Frescobaldi from the menu "
+                  "when you really install Frescobaldi, as that will install a "
+                  "system-wide Applications menu entry."),
             None,
             KGuiItem("Run Frescobaldi", 'system-run'),
             KGuiItem("Remove Frescobaldi from menu", 'edit-delete'),
@@ -397,8 +397,7 @@ def main():
                 "See the Frescobaldi User Guide (accessible from Frescobaldi "
                 "with the F1 key) for more information.")
         if notes:
-            msg.insert(1, p("Note:"))
-            msg.insert(2, ul(*map(li, notes)))
+            msg[1:1] = p("Note:"), ul(*map(li, notes))
         KMessageBox.information(None, '<qt>' + ''.join(msg), None, None,
             KMessageBox.Options(KMessageBox.Notify | KMessageBox.AllowLink))
         runFrescobaldi()
