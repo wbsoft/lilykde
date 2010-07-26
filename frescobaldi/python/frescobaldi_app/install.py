@@ -24,9 +24,9 @@ Functions that can be run if the user updates Frescobaldi
 to a newer version.
 """
 
-import os, re
+import os, re, sys
 
-from PyKDE4.kdecore import KCmdLineArgs, KConfig, KGlobal, KStandardDirs
+from PyKDE4.kdecore import KConfig, KGlobal, KStandardDirs
 
 def install(app, oldVersion):
     """
@@ -63,7 +63,7 @@ def installKateModeRC():
 def installOkularPartRC():
     """ Set our custom editor command in okularpartrc """
     # determine the command needed to run us
-    command = KCmdLineArgs.appName()
+    command = sys.argv[0]
     if os.path.sep in command: # does the command contain a directory separator?
         if not os.path.isabs(command):
             command = os.path.abspath(command)

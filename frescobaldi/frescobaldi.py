@@ -50,7 +50,7 @@ aboutData.setTranslator(
     ki18nc("NAME OF TRANSLATORS", "Your name"),
     ki18nc("EMAIL OF TRANSLATORS", "i18n@frescobaldi.org"))
  
-KCmdLineArgs.init(sys.argv, aboutData)
+KCmdLineArgs.init(list(sys.argv), aboutData)
 KComponentData(aboutData).dirs().addPrefix("@CMAKE_INSTALL_PREFIX@")
 
 options = KCmdLineOptions()
