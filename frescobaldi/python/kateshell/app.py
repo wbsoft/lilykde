@@ -1092,34 +1092,43 @@ class CursorTranslator(object):
             column = resolvetabs_indices(column, self.savedTabs[line])
         cursor = KTextEditor.Cursor(line, column)
         if self.iface:
-            t = KateSmartBackGroundThread(self.iface, self.revision, cursor)
-            t.start()
-            t.wait()
-            cursor = t.cursor
+            # Just because KDE 4.5 does a qFatal if useRevision is called in the
+            # main thread, and the Python KDE4 bindings not yet provide the new
+            # MovingInterface stuff, we need to create a background thread just
+            # to translate cursors from a certain document revision.
+            @anonymousThread
+            def translateCursor():
+                self.iface.smartMutex().lock()
+                self.iface.useRevision(self.revision)
+                newcur = self.iface.translateFromRevision(cursor,
+                    KTextEditor.SmartCursor.MoveOnInsert)
+                self.iface.clearRevision()
+                self.iface.smartMutex().unlock()
+                return newcur
+            cursor = translateCursor()
         return cursor
 
 
-class KateSmartBackGroundThread(QThread):
-    """A background thread to communicate with the KatePart SmartInterface.
-    
-    Just because KDE 4.5 does a qFatal if useRevision is called in the main
-    thread, and the Python KDE4 bindings not yet provide the new MovingInterface
-    stuff, we need to create a background thread just to translate cursors
-    from a certain document revision.
-    """
-    def __init__(self, iface, revision, cursor):
-        self.iface = iface
-        self.revision = revision
-        self.cursor = cursor
-        super(Thread, self).__init__()
+class _AnonymousThread(QThread):
+    """Runs a function without arguments in an anonymous QThread"""
+    def __init__(self, func):
+        super(_AnonymousThread, self).__init__()
+        self.func = func
+        self.result = None
+        self.start()
+        self.wait()
     
     def run(self):
-        self.iface.smartMutex().lock()
-        self.iface.useRevision(self.revision)
-        self.cursor = self.iface.translateFromRevision(self.cursor,
-            KTextEditor.SmartCursor.MoveOnInsert)
-        self.iface.clearRevision()
-        self.iface.smartMutex().unlock()
+        self.result = self.func()
+        
+
+def anonymousThread(func):
+    """Returns a wrapper for a func without arguments.
+    
+    When called, run the function in an anonymous QThread.
+    Waits for the function to complete and returns its result.
+    """
+    return lambda: _AnonymousThread(func).result
         
 
 def tabindices(text):
