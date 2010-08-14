@@ -28,7 +28,7 @@ from dbus.service import method, signal
 
 from signals import Signal
 
-from PyQt4.QtCore import QObject, Qt, SIGNAL
+from PyQt4.QtCore import QObject, QThread, Qt, SIGNAL
 from PyQt4.QtGui import QCursor
 from PyKDE4.kdecore import i18n, KConfig, KGlobal, KUrl
 from PyKDE4.kdeui import KApplication, KMessageBox, KStandardGuiItem
@@ -1092,14 +1092,35 @@ class CursorTranslator(object):
             column = resolvetabs_indices(column, self.savedTabs[line])
         cursor = KTextEditor.Cursor(line, column)
         if self.iface:
-            self.iface.smartMutex().lock()
-            self.iface.useRevision(self.revision)
-            cursor = self.iface.translateFromRevision(cursor,
-                KTextEditor.SmartCursor.MoveOnInsert)
-            self.iface.clearRevision()
-            self.iface.smartMutex().unlock()
+            t = KateSmartBackGroundThread(self.iface, self.revision, cursor)
+            t.start()
+            t.wait()
+            cursor = t.cursor
         return cursor
 
+
+class KateSmartBackGroundThread(QThread):
+    """A background thread to communicate with the KatePart SmartInterface.
+    
+    Just because KDE 4.5 does a qFatal if useRevision is called in the main
+    thread, and the Python KDE4 bindings not yet provide the new MovingInterface
+    stuff, we need to create a background thread just to translate cursors
+    from a certain document revision.
+    """
+    def __init__(self, iface, revision, cursor):
+        self.iface = iface
+        self.revision = revision
+        self.cursor = cursor
+        super(Thread, self).__init__()
+    
+    def run(self):
+        self.iface.smartMutex().lock()
+        self.iface.useRevision(self.revision)
+        self.cursor = self.iface.translateFromRevision(self.cursor,
+            KTextEditor.SmartCursor.MoveOnInsert)
+        self.iface.clearRevision()
+        self.iface.smartMutex().unlock()
+        
 
 def tabindices(text):
     """Returns a list of positions in text at which a tab character is found.
