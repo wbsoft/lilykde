@@ -1097,39 +1097,54 @@ class CursorTranslator(object):
             # MovingInterface stuff, we need to create a background thread just
             # to translate cursors from a certain document revision.
             @anonymousThread
-            def translateCursor():
+            def translateCursor(cursor):
                 self.iface.smartMutex().lock()
                 self.iface.useRevision(self.revision)
-                newcur = self.iface.translateFromRevision(cursor,
+                cursor = self.iface.translateFromRevision(cursor,
                     KTextEditor.SmartCursor.MoveOnInsert)
                 self.iface.clearRevision()
                 self.iface.smartMutex().unlock()
-                return newcur
-            cursor = translateCursor()
+                return cursor
+            cursor = translateCursor(cursor)
         return cursor
 
 
 class _AnonymousThread(QThread):
-    """Runs a function without arguments in an anonymous QThread"""
-    def __init__(self, func):
+    """Runs a function in an anonymous QThread.
+    
+    Exceptions are re-raised in the main thread.
+    
+    """
+    def __init__(self, func, args, kwargs):
         super(_AnonymousThread, self).__init__()
-        self.func = func
-        self.result = None
+        self.func = lambda: func(*args, **kwargs)
+        self.exc = None
         self.start()
         self.wait()
     
     def run(self):
-        self.result = self.func()
-        
+        try:
+            self._result = self.func()
+        except Exception:
+            self.exc = sys.exc_info()
+            sys.exc_clear()
+    
+    def result(self):
+        if self.exc:
+            raise self.exc[1], None, self.exc[2]
+        return self._result
+
 
 def anonymousThread(func):
-    """Returns a wrapper for a func without arguments.
+    """Returns a wrapper for a func to run it in an anonymous QThread.
     
-    When called, run the function in an anonymous QThread.
-    Waits for the function to complete and returns its result.
+    When called, waits for the function to complete and returns its result.
+    
     """
-    return lambda: _AnonymousThread(func).result
-        
+    def wrapper(*args, **kwargs):
+         return _AnonymousThread(func, args, kwargs).result()
+    return wrapper
+
 
 def tabindices(text):
     """Returns a list of positions in text at which a tab character is found.
