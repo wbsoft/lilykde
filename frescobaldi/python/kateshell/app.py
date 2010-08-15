@@ -1118,21 +1118,21 @@ class _AnonymousThread(QThread):
     def __init__(self, func, args, kwargs):
         super(_AnonymousThread, self).__init__()
         self.func = lambda: func(*args, **kwargs)
-        self.exc = None
+        self._result = None
+        self._exc_info = None
         self.start()
         self.wait()
     
     def run(self):
         try:
             self._result = self.func()
-        except Exception:
-            self.exc = sys.exc_info()
+        except:
+            self._exc_info = sys.exc_info()
             sys.exc_clear()
     
     def result(self):
-        if self.exc:
-            raise self.exc[1], None, self.exc[2]
-        return self._result
+        """Returns a tuple (result, exception)."""
+        return self._result, self._exc_info
 
 
 def anonymousThread(func):
@@ -1142,7 +1142,10 @@ def anonymousThread(func):
     
     """
     def wrapper(*args, **kwargs):
-         return _AnonymousThread(func, args, kwargs).result()
+        result, exc_info = _AnonymousThread(func, args, kwargs).result()
+        if exc_info:
+            raise exc_info[1], None, exc_info[2]
+        return result
     return wrapper
 
 
