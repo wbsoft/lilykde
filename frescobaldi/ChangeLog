@@ -1,8 +1,10 @@
 Changes in 1.1.5 --
 
-* Smart Point and Click:
+* Bugfixes and improvements:
   - Work-around a crash introduced in KDE 4.5 when using the --smart option
     to set the cursor position.
+  - Fix Python error message when adding a new LilyPond version with the "Set as
+    default" option checked.
 * Translations:
   - Czech updated by Pavel Fric
   - Polish updated by Piotr Komorowski

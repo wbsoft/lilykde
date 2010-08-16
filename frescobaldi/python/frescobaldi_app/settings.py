@@ -678,7 +678,6 @@ class LilyPondVersions(SettingsGroup):
         self.instances.addItem(info)
         self.instances.setCurrentItem(info)
         self.auto.setChecked(False)
-        info.changed()
         
     def loadSettings(self):
         self.instances.clear()
@@ -690,9 +689,9 @@ class LilyPondVersions(SettingsGroup):
         paths.sort(key=lambda path: ly.version.LilyPondInstance(path).version() or (999,))
         for path in paths:
             info = LilyPondInfoItem(path)
+            info.loadSettings(conf.group(path))
             info.default = path == default
             self.instances.addItem(info)
-            info.loadSettings(conf.group(path))
             if info.default:
                 self.instances.setCurrentItem(info)
     
@@ -756,6 +755,10 @@ class LilyPondInfoList(ListEdit):
             return True
         return False
         
+    def itemChanged(self, item):
+        item.changed()
+        self.setCurrentItem(item)
+
 
 class LilyPondInfo(object):
     """
@@ -787,15 +790,10 @@ class LilyPondInfo(object):
             ("lilypond-book", i18n("Lilypond-book:")),
         )
 
-    def changed(self):
-        """ Implement to be notified of changes. """
-        pass
-
     def loadSettings(self, group):
         for cmd, descr in self.commandNames():
             self.commands[cmd] = group.readEntry(cmd, cmd)
         self.auto = group.readEntry("auto", True)
-        self.changed()
     
     def saveSettings(self, group):
         for cmd, descr in self.commandNames():
@@ -827,7 +825,6 @@ class LilyPondInfoItem(QListWidgetItem, LilyPondInfo):
             self.setToolTip(i18n("Can't determine LilyPond version."))
         if self.default:
             lp += " [{0}]".format(i18n("default"))
-            
             # reset the default state for others
             for c in range(self.listWidget().count()):
                 item = self.listWidget().item(c)
@@ -887,7 +884,6 @@ class LilyPondInfoDialog(KDialog):
             info.commands[name] = widget.text()
         info.default = self.default.isChecked()
         info.auto = self.auto.isChecked()
-        info.changed()
 
 
 class SessionsStartup(SettingsGroup):

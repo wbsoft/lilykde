@@ -67,9 +67,9 @@ class ExecArgsLineEdit(ExecLineEdit):
 
 
 class ListEdit(QWidget):
-    """
-    A widget to edit a list of items (e.g. a list of directories).
-    """
+    """A widget to edit a list of items (e.g. a list of directories)."""
+    
+    # emitted when anything changed in the listbox.
     changed = Signal()
     
     def __init__(self, *args, **kwargs):
@@ -125,6 +125,7 @@ class ListEdit(QWidget):
         
     def addItem(self, item):
         self.listBox.addItem(item)
+        self.itemChanged(item)
         self.changed()
         
     def removeItem(self, item):
@@ -133,6 +134,7 @@ class ListEdit(QWidget):
         
     def editItem(self, item):
         if self.openEditor(item):
+            self.itemChanged(item)
             self.changed()
             
     def setCurrentItem(self, item):
@@ -147,6 +149,14 @@ class ListEdit(QWidget):
         Returns True if the dialog was accepted and the item edited.
         Returns False if the dialog was cancelled (the item must be left
         unedited).
+        """
+        pass
+    
+    def itemChanged(self, item):
+        """Called after an item has been added or edited.
+        
+        Re-implement to do something at this moment if needed, e.g. alter the
+        text or display of other items.
         """
         pass
     
