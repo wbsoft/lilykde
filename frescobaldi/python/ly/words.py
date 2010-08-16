@@ -590,6 +590,7 @@ markupcommands_nargs = (
     'pad-around',
     'pad-markup',
     'pad-x',
+    'path',     # added in LP 2.13.31
     'raise',
     'rotate',
     'translate',
