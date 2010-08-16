@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-07-26 10:55+0200\n"
+"POT-Creation-Date: 2010-08-16 13:57+0200\n"
 "PO-Revision-Date: 2010-08-01 19:03-0400\n"
 "Last-Translator: Ryan Kavanagh <ryanakca@kubuntu.org>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
@@ -717,8 +717,8 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
-"La commande suivante a été lancée, mais a terminée avec un code de sortie %1."
-"\n"
+"La commande suivante a été lancée, mais a terminée avec un code de sortie %"
+"1.\n"
 "\n"
 "%2"
 
@@ -1000,8 +1000,8 @@ msgstr "Ouvrir %1"
 #: ../python/frescobaldi_app/document.py:707
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr ""
-"Sélectionnez une expression musicale, contenue dans un bloc << ... >> ou { "
-"... }."
+"Sélectionnez une expression musicale, contenue dans un bloc << ... >> ou "
+"{ ... }."
 
 #: ../python/frescobaldi_app/document.py:727
 msgid ""
@@ -1312,7 +1312,7 @@ msgid "Print Source..."
 msgstr "Imprimer le document source..."
 
 #: ../python/frescobaldi_app/mainapp.py:449
-#: ../python/frescobaldi_app/settings.py:848
+#: ../python/frescobaldi_app/settings.py:845
 #: ../python/frescobaldi_app/scorewiz/__init__.py:348
 msgid "LilyPond"
 msgstr "LilyPond"
@@ -2088,7 +2088,7 @@ msgid "Use LilyPond version %1"
 msgstr "Utiliser la version %1 de LilyPond"
 
 #: ../python/frescobaldi_app/runlily.py:310
-#: ../python/frescobaldi_app/settings.py:829
+#: ../python/frescobaldi_app/settings.py:827
 msgid "default"
 msgstr "défaut"
 
@@ -2274,9 +2274,9 @@ msgid ""
 "But this setting can get lost when you move Frescobaldi to a different "
 "location or when other applications reconfigure Okular.\n"
 "\n"
-"Click this button to configure Frescobaldi as 'custom editor' inside Okular. "
-" This works best when all instances of Okular are closed and the PDF preview "
-"has not yet been opened."
+"Click this button to configure Frescobaldi as 'custom editor' inside "
+"Okular.  This works best when all instances of Okular are closed and the PDF "
+"preview has not yet been opened."
 msgstr ""
 "Au premier lançage, Frescobaldi essaye d'auto-configurer Okular (qui fournit "
 "l'aperçu des PDF)  d'appeler Frescobaldi lorsqu'un objet cliquable est "
@@ -2383,83 +2383,83 @@ msgstr ""
 "Activer la sélection de version automatique (la version de LilyPond sera "
 "choisie d'après le document)."
 
-#: ../python/frescobaldi_app/settings.py:725
+#: ../python/frescobaldi_app/settings.py:724
 msgid "Document Tabs"
 msgstr "Onglets de documents"
 
-#: ../python/frescobaldi_app/settings.py:730
+#: ../python/frescobaldi_app/settings.py:729
 msgid "Close Button"
 msgstr "Bouton de fermeture"
 
-#: ../python/frescobaldi_app/settings.py:732
+#: ../python/frescobaldi_app/settings.py:731
 msgid "Large Tabs"
 msgstr "Grands onglets"
 
-#: ../python/frescobaldi_app/settings.py:734
+#: ../python/frescobaldi_app/settings.py:733
 msgid "Tabs can be moved"
 msgstr "Les onglets peuvent êtres déplacés"
 
-#: ../python/frescobaldi_app/settings.py:786
+#: ../python/frescobaldi_app/settings.py:789
 msgid "Convert-ly:"
 msgstr "Convert-ly :"
 
-#: ../python/frescobaldi_app/settings.py:787
+#: ../python/frescobaldi_app/settings.py:790
 msgid "Lilypond-book:"
 msgstr "LilyPond-book :"
 
-#: ../python/frescobaldi_app/settings.py:823
+#: ../python/frescobaldi_app/settings.py:821
 msgid "Path"
 msgstr "Chemin"
 
-#: ../python/frescobaldi_app/settings.py:824
+#: ../python/frescobaldi_app/settings.py:822
 msgid "Version"
 msgstr "Version"
 
-#: ../python/frescobaldi_app/settings.py:827
+#: ../python/frescobaldi_app/settings.py:825
 msgid "Can't determine LilyPond version."
 msgstr "Impossible de déterminer la version de LilyPond."
 
-#: ../python/frescobaldi_app/settings.py:852
+#: ../python/frescobaldi_app/settings.py:849
 msgid "LilyPond Command:"
 msgstr "Commande de LilyPond :"
 
-#: ../python/frescobaldi_app/settings.py:856
+#: ../python/frescobaldi_app/settings.py:853
 msgid "Name or full path of the LilyPond program."
 msgstr "Nom ou chemin complet de l'exécutable LilyPond."
 
-#: ../python/frescobaldi_app/settings.py:857
+#: ../python/frescobaldi_app/settings.py:854
 msgid "LilyPond Command"
 msgstr "Commande de LilyPond"
 
-#: ../python/frescobaldi_app/settings.py:870
+#: ../python/frescobaldi_app/settings.py:867
 msgid "Set as default"
 msgstr "Définir en tant que défaut"
 
-#: ../python/frescobaldi_app/settings.py:872
+#: ../python/frescobaldi_app/settings.py:869
 msgid "Include in automatic version selection"
 msgstr "Inclure dans la sélection automatique de version."
 
-#: ../python/frescobaldi_app/settings.py:897
+#: ../python/frescobaldi_app/settings.py:893
 msgid "Session to load if Frescobaldi is started without arguments"
 msgstr "Session à charger si Frescobaldi est lancé sans arguments"
 
-#: ../python/frescobaldi_app/settings.py:910
+#: ../python/frescobaldi_app/settings.py:906
 msgid "Start with no session"
 msgstr "Commencer sans session"
 
-#: ../python/frescobaldi_app/settings.py:911
+#: ../python/frescobaldi_app/settings.py:907
 msgid "Start with last used session"
 msgstr "Commencer avec la dernière session utilisée"
 
-#: ../python/frescobaldi_app/settings.py:912
+#: ../python/frescobaldi_app/settings.py:908
 msgid "Start with session:"
 msgstr "Commencer avec la session:"
 
-#: ../python/frescobaldi_app/settings.py:916
+#: ../python/frescobaldi_app/settings.py:912
 msgid "Choose a session."
 msgstr "Choisir une session."
 
-#: ../python/frescobaldi_app/settings.py:925
+#: ../python/frescobaldi_app/settings.py:921
 msgid "Choose..."
 msgstr "Choisissez..."
 
