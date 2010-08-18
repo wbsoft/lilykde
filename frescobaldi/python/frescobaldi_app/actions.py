@@ -107,7 +107,6 @@ class ActionManager(object):
         # if any actions were added, also add the email action and show.
         if len(bar.actions()) > 0:
             a = bar.addAction(KIcon("mail-send"), i18n("Email..."))
-            a.setToolTip("{0} ({1})".format(a.toolTip(), a.shortcut().toString()))
             a.triggered.connect(lambda: self.email(updatedFiles, log.preview))
             log.checkScroll(bar.show)
         
