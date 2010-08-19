@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.1\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-08-16 13:57+0200\n"
+"POT-Creation-Date: 2010-08-19 11:47+0200\n"
 "PO-Revision-Date: 2010-07-28 11:17+0200\n"
 "Last-Translator: \n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -590,15 +590,15 @@ msgstr "Graj MIDI"
 msgid "Email..."
 msgstr "Email..."
 
-#: ../python/frescobaldi_app/actions.py:160
+#: ../python/frescobaldi_app/actions.py:159
 msgid "There are no files to send via email."
 msgstr "Brak plików do wysłania przez e-mail."
 
-#: ../python/frescobaldi_app/actions.py:161
+#: ../python/frescobaldi_app/actions.py:160
 msgid "No files to send"
 msgstr "Brak plików do wysłania"
 
-#: ../python/frescobaldi_app/actions.py:175
+#: ../python/frescobaldi_app/actions.py:174
 msgid ""
 "There are no PDF documents to print.\n"
 "\n"
@@ -613,19 +613,19 @@ msgstr ""
 "\\layout { } do swojej partytury, w przeciwnym wypadku LilyPond nie utworzy "
 "pliku PDF."
 
-#: ../python/frescobaldi_app/actions.py:180
+#: ../python/frescobaldi_app/actions.py:179
 msgid "No files to print"
 msgstr "Brak plików do wydrukowania"
 
-#: ../python/frescobaldi_app/actions.py:192
+#: ../python/frescobaldi_app/actions.py:191
 msgid "Email documents"
 msgstr "Wyślij dokumenty e-mailem"
 
-#: ../python/frescobaldi_app/actions.py:196
+#: ../python/frescobaldi_app/actions.py:195
 msgid "Please select the files you want to send:"
 msgstr "Proszę wybrać pliki do wysłania:"
 
-#: ../python/frescobaldi_app/actions.py:200
+#: ../python/frescobaldi_app/actions.py:199
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document). Also LilyPond files included by the source document are shown."
@@ -633,7 +633,7 @@ msgstr ""
 "To są zaktualizowane pliki (tj. nowsze niż dokument źródłowy LilyPonda). "
 "Pokazane są również pliki zawarte w dokumencie źródłowym."
 
-#: ../python/frescobaldi_app/actions.py:211
+#: ../python/frescobaldi_app/actions.py:210
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -657,7 +657,7 @@ msgstr[2] ""
 "co znacznie zwiększa jego objętość.Proszę rozważyć zamianę na tryb wydruku, "
 "co spowoduję znaczne zmniejszenie objętości pliku."
 
-#: ../python/frescobaldi_app/actions.py:225
+#: ../python/frescobaldi_app/actions.py:224
 msgid ""
 "Note: If there are no PDF and no MIDI files, you probably need to run "
 "LilyPond to update those files, before sending the e-mail."
@@ -666,19 +666,19 @@ msgstr ""
 "uruchomić LilyPonda, aby zaktualizować te pliki, zanim zostaną wysłane e-"
 "mailem."
 
-#: ../python/frescobaldi_app/actions.py:282
+#: ../python/frescobaldi_app/actions.py:281
 msgid "Select all"
 msgstr "Zaznacz wszystko"
 
-#: ../python/frescobaldi_app/actions.py:283
+#: ../python/frescobaldi_app/actions.py:282
 msgid "Print documents"
 msgstr "Wydrukuj dokument "
 
-#: ../python/frescobaldi_app/actions.py:286
+#: ../python/frescobaldi_app/actions.py:285
 msgid "Please select the files you want to print:"
 msgstr "Proszę wybrać pliki do drukowania:"
 
-#: ../python/frescobaldi_app/actions.py:290
+#: ../python/frescobaldi_app/actions.py:289
 msgid ""
 "These are the PDF documents that are up-to-date (i.e. newer than the "
 "LilyPond source document). Check the documents you want to send to the "
@@ -687,28 +687,28 @@ msgstr ""
 "To są dokumenty PDF, które są zaktualizowane (tj. nowsze niż źródłowy "
 "dokument LilyPonda). Sprawdź dokumenty, które chcesz wysłać do drukarki."
 
-#: ../python/frescobaldi_app/actions.py:371
+#: ../python/frescobaldi_app/actions.py:370
 msgid "Print %1"
 msgstr "Drukuj %1"
 
-#: ../python/frescobaldi_app/actions.py:374
+#: ../python/frescobaldi_app/actions.py:373
 msgid "Print 1 file"
 msgid_plural "Print %1 files"
 msgstr[0] "Drukuj 1 plik "
 msgstr[1] "Drukuj %1"
 msgstr[2] "Drukuj %1"
 
-#: ../python/frescobaldi_app/actions.py:384
+#: ../python/frescobaldi_app/actions.py:383
 msgid "A print command (like 'lpr' or 'lp') could not be found on your system."
 msgstr ""
 "Polecenie drukowania (tj. 'lpr' lub 'lp') nie zostało znalezione w Twoim "
 "systemie."
 
-#: ../python/frescobaldi_app/actions.py:388
+#: ../python/frescobaldi_app/actions.py:387
 msgid "The command '%1' could not be found on your system."
 msgstr "Polecenie '%1' nie zostało odnalezione w Twoim systemie."
 
-#: ../python/frescobaldi_app/actions.py:392
+#: ../python/frescobaldi_app/actions.py:391
 msgid ""
 "The command below has been run, but exited with a return code %1.\n"
 "\n"

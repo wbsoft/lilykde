@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-08-16 13:57+0200\n"
+"POT-Creation-Date: 2010-08-19 11:47+0200\n"
 "PO-Revision-Date: 2009-10-08 21:17+0300\n"
 "Last-Translator: Artem Zolochevskiy <artem.zolochevskiy@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -603,15 +603,15 @@ msgstr "Воспроизвести MIDI"
 msgid "Email..."
 msgstr "Email..."
 
-#: ../python/frescobaldi_app/actions.py:160
+#: ../python/frescobaldi_app/actions.py:159
 msgid "There are no files to send via email."
 msgstr "Нет файлов для email."
 
-#: ../python/frescobaldi_app/actions.py:161
+#: ../python/frescobaldi_app/actions.py:160
 msgid "No files to send"
 msgstr "Нет файлов для посылки."
 
-#: ../python/frescobaldi_app/actions.py:175
+#: ../python/frescobaldi_app/actions.py:174
 msgid ""
 "There are no PDF documents to print.\n"
 "\n"
@@ -620,20 +620,20 @@ msgid ""
 "score, otherwise LilyPond will not create a PDF."
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:180
+#: ../python/frescobaldi_app/actions.py:179
 #, fuzzy
 msgid "No files to print"
 msgstr "Нет файлов для посылки."
 
-#: ../python/frescobaldi_app/actions.py:192
+#: ../python/frescobaldi_app/actions.py:191
 msgid "Email documents"
 msgstr "Послать документы по email"
 
-#: ../python/frescobaldi_app/actions.py:196
+#: ../python/frescobaldi_app/actions.py:195
 msgid "Please select the files you want to send:"
 msgstr "Выберите файлы, которые Вы хотите послать:"
 
-#: ../python/frescobaldi_app/actions.py:200
+#: ../python/frescobaldi_app/actions.py:199
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document). Also LilyPond files included by the source document are shown."
@@ -641,7 +641,7 @@ msgstr ""
 "Эти файлы обновлены (т.е. созданы позже, чем исходные файлы LilyPond). Также "
 "показаны файлы включенные в исходный документ."
 
-#: ../python/frescobaldi_app/actions.py:211
+#: ../python/frescobaldi_app/actions.py:210
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -668,27 +668,27 @@ msgstr[2] ""
 "по электронной почте документы без \"point-and-click\", потому что они "
 "значительно меньше. Все равно продолжить?"
 
-#: ../python/frescobaldi_app/actions.py:225
+#: ../python/frescobaldi_app/actions.py:224
 msgid ""
 "Note: If there are no PDF and no MIDI files, you probably need to run "
 "LilyPond to update those files, before sending the e-mail."
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:282
+#: ../python/frescobaldi_app/actions.py:281
 msgid "Select all"
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:283
+#: ../python/frescobaldi_app/actions.py:282
 #, fuzzy
 msgid "Print documents"
 msgstr "Послать документы по email"
 
-#: ../python/frescobaldi_app/actions.py:286
+#: ../python/frescobaldi_app/actions.py:285
 #, fuzzy
 msgid "Please select the files you want to print:"
 msgstr "Выберите файлы, которые Вы хотите послать:"
 
-#: ../python/frescobaldi_app/actions.py:290
+#: ../python/frescobaldi_app/actions.py:289
 #, fuzzy
 msgid ""
 "These are the PDF documents that are up-to-date (i.e. newer than the "
@@ -698,11 +698,11 @@ msgstr ""
 "Эти файлы обновлены (т.е. созданы позже, чем исходные файлы LilyPond). Также "
 "показаны файлы включенные в исходный документ."
 
-#: ../python/frescobaldi_app/actions.py:371
+#: ../python/frescobaldi_app/actions.py:370
 msgid "Print %1"
 msgstr "Печать %1"
 
-#: ../python/frescobaldi_app/actions.py:374
+#: ../python/frescobaldi_app/actions.py:373
 #, fuzzy
 msgid "Print 1 file"
 msgid_plural "Print %1 files"
@@ -710,15 +710,15 @@ msgstr[0] "Печать %1"
 msgstr[1] "Печать %1"
 msgstr[2] "Печать %1"
 
-#: ../python/frescobaldi_app/actions.py:384
+#: ../python/frescobaldi_app/actions.py:383
 msgid "A print command (like 'lpr' or 'lp') could not be found on your system."
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:388
+#: ../python/frescobaldi_app/actions.py:387
 msgid "The command '%1' could not be found on your system."
 msgstr ""
 
-#: ../python/frescobaldi_app/actions.py:392
+#: ../python/frescobaldi_app/actions.py:391
 msgid ""
 "The command below has been run, but exited with a return code %1.\n"
 "\n"

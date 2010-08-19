@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-08-16 13:57+0200\n"
+"POT-Creation-Date: 2010-08-19 11:47+0200\n"
 "PO-Revision-Date: 2010-08-01 00:30+0200\n"
 "Last-Translator: Server Acim <serveracim@gmail.com>\n"
 "Language-Team: Turkish <kde-i18n-doc@kde.org>\n"
@@ -592,15 +592,15 @@ msgstr "MIDI çal"
 msgid "Email..."
 msgstr "E-posta..."
 
-#: ../python/frescobaldi_app/actions.py:160
+#: ../python/frescobaldi_app/actions.py:159
 msgid "There are no files to send via email."
 msgstr "E-posta olarak gönderilecek dosya bulunmamaktadır."
 
-#: ../python/frescobaldi_app/actions.py:161
+#: ../python/frescobaldi_app/actions.py:160
 msgid "No files to send"
 msgstr "Gönderilecek dosya yok"
 
-#: ../python/frescobaldi_app/actions.py:175
+#: ../python/frescobaldi_app/actions.py:174
 msgid ""
 "There are no PDF documents to print.\n"
 "\n"
@@ -615,19 +615,19 @@ msgstr ""
 "bölmesi eklediğinizden emin olun, aksi taktirde LilyPond bir PDF "
 "oluşturmayacaktır."
 
-#: ../python/frescobaldi_app/actions.py:180
+#: ../python/frescobaldi_app/actions.py:179
 msgid "No files to print"
 msgstr "Yazdırılacak dosya yok"
 
-#: ../python/frescobaldi_app/actions.py:192
+#: ../python/frescobaldi_app/actions.py:191
 msgid "Email documents"
 msgstr "E-posta belgeleri"
 
-#: ../python/frescobaldi_app/actions.py:196
+#: ../python/frescobaldi_app/actions.py:195
 msgid "Please select the files you want to send:"
 msgstr "Lütfen göndermek istediğiniz dosyaları seçiniz:"
 
-#: ../python/frescobaldi_app/actions.py:200
+#: ../python/frescobaldi_app/actions.py:199
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document). Also LilyPond files included by the source document are shown."
@@ -635,7 +635,7 @@ msgstr ""
 "Güncel dosyalar var (örn. LilyPond kaynak dosyasından daha yeniler). Ayrıca, "
 "LilyPond kaynak dosyaları da görüntülenmektedir."
 
-#: ../python/frescobaldi_app/actions.py:211
+#: ../python/frescobaldi_app/actions.py:210
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -652,7 +652,7 @@ msgstr[0] ""
 "kipinde yeniden derlemeyi deneyiniz, böylece PDF dosya boyutu daha "
 "küçülecektir."
 
-#: ../python/frescobaldi_app/actions.py:225
+#: ../python/frescobaldi_app/actions.py:224
 msgid ""
 "Note: If there are no PDF and no MIDI files, you probably need to run "
 "LilyPond to update those files, before sending the e-mail."
@@ -661,19 +661,19 @@ msgstr ""
 "belgeleri güncellemek için büyük olasılıkla LilyPond'u çalıştırmanız "
 "gerekecektir."
 
-#: ../python/frescobaldi_app/actions.py:282
+#: ../python/frescobaldi_app/actions.py:281
 msgid "Select all"
 msgstr "Hepsini seç"
 
-#: ../python/frescobaldi_app/actions.py:283
+#: ../python/frescobaldi_app/actions.py:282
 msgid "Print documents"
 msgstr "Belgeleri yazdır"
 
-#: ../python/frescobaldi_app/actions.py:286
+#: ../python/frescobaldi_app/actions.py:285
 msgid "Please select the files you want to print:"
 msgstr "Lütfen yazdırmak istediğiniz dosyaları seçiniz:"
 
-#: ../python/frescobaldi_app/actions.py:290
+#: ../python/frescobaldi_app/actions.py:289
 msgid ""
 "These are the PDF documents that are up-to-date (i.e. newer than the "
 "LilyPond source document). Check the documents you want to send to the "
@@ -682,24 +682,24 @@ msgstr ""
 "Güncel PDF dosyaları var (örn. LilyPond kaynak dosyasından daha yeniler). "
 "Yazıcıya göndermek istediğiniz belgeleri denetleyin."
 
-#: ../python/frescobaldi_app/actions.py:371
+#: ../python/frescobaldi_app/actions.py:370
 msgid "Print %1"
 msgstr "Yazdır %1"
 
-#: ../python/frescobaldi_app/actions.py:374
+#: ../python/frescobaldi_app/actions.py:373
 msgid "Print 1 file"
 msgid_plural "Print %1 files"
 msgstr[0] "%1 dosyalarını yazdır"
 
-#: ../python/frescobaldi_app/actions.py:384
+#: ../python/frescobaldi_app/actions.py:383
 msgid "A print command (like 'lpr' or 'lp') could not be found on your system."
 msgstr "Bir yazdırma komutu ('lpr' veya 'lp' gibi) sisteminizde bulunamadı."
 
-#: ../python/frescobaldi_app/actions.py:388
+#: ../python/frescobaldi_app/actions.py:387
 msgid "The command '%1' could not be found on your system."
 msgstr "Komut '%1' sisteminizde çalıştırılamıyor."
 
-#: ../python/frescobaldi_app/actions.py:392
+#: ../python/frescobaldi_app/actions.py:391
 msgid ""
 "The command below has been run, but exited with a return code %1.\n"
 "\n"

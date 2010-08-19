@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 0.7.5\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-08-16 13:57+0200\n"
+"POT-Creation-Date: 2010-08-19 11:47+0200\n"
 "PO-Revision-Date: 2010-07-28 09:27+0200\n"
 "Last-Translator: Pavel Fric <fripohled@blogspot.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -595,17 +595,17 @@ msgstr "Přehrát MIDI"
 msgid "Email..."
 msgstr "E-mail..."
 
-#: ../python/frescobaldi_app/actions.py:160
+#: ../python/frescobaldi_app/actions.py:159
 msgid "There are no files to send via email."
 msgstr ""
 "Nejsou zde žádné soubory, které by bylo možné odeslat prostřednictvím e-"
 "mailu."
 
-#: ../python/frescobaldi_app/actions.py:161
+#: ../python/frescobaldi_app/actions.py:160
 msgid "No files to send"
 msgstr "Žádné soubory k odeslání"
 
-#: ../python/frescobaldi_app/actions.py:175
+#: ../python/frescobaldi_app/actions.py:174
 msgid ""
 "There are no PDF documents to print.\n"
 "\n"
@@ -620,19 +620,19 @@ msgstr ""
 "notového zápisu vkládáte i oddíl \\layout { }, v opačném případě LilyPond "
 "soubor PDF nevytvoří."
 
-#: ../python/frescobaldi_app/actions.py:180
+#: ../python/frescobaldi_app/actions.py:179
 msgid "No files to print"
 msgstr "Žádné soubory k vytištění"
 
-#: ../python/frescobaldi_app/actions.py:192
+#: ../python/frescobaldi_app/actions.py:191
 msgid "Email documents"
 msgstr "E-mailové dokumenty"
 
-#: ../python/frescobaldi_app/actions.py:196
+#: ../python/frescobaldi_app/actions.py:195
 msgid "Please select the files you want to send:"
 msgstr "Vyberte, prosím, soubory, které si přejete odeslat:"
 
-#: ../python/frescobaldi_app/actions.py:200
+#: ../python/frescobaldi_app/actions.py:199
 msgid ""
 "These are the files that are up-to-date (i.e. newer than the LilyPond source "
 "document). Also LilyPond files included by the source document are shown."
@@ -641,7 +641,7 @@ msgstr ""
 "LilyPondu). Jsou ukázány i soubory LilyPondu, které jsou zahrnuté zdrojovým "
 "dokumentem."
 
-#: ../python/frescobaldi_app/actions.py:211
+#: ../python/frescobaldi_app/actions.py:210
 msgid ""
 "Note: this PDF file has been created with embedded point-and-click URLs "
 "(preview mode), which increases the file size dramatically. Please consider "
@@ -668,7 +668,7 @@ msgstr[2] ""
 "souboru. Zvažte, prosím, že znovu necháte sestavit tyto soubory ve "
 "vydavatelském režimu, protože pak jsou PDF soubory mnohem menší."
 
-#: ../python/frescobaldi_app/actions.py:225
+#: ../python/frescobaldi_app/actions.py:224
 msgid ""
 "Note: If there are no PDF and no MIDI files, you probably need to run "
 "LilyPond to update those files, before sending the e-mail."
@@ -676,19 +676,19 @@ msgstr ""
 "Poznámka: Pokud nejsou žádné soubory PDF a žádné soubory MIDI, pravděpodobně "
 "potřebujete tyto soubory obnovit předtím, než pošlete e-mail."
 
-#: ../python/frescobaldi_app/actions.py:282
+#: ../python/frescobaldi_app/actions.py:281
 msgid "Select all"
 msgstr "Vybrat vše"
 
-#: ../python/frescobaldi_app/actions.py:283
+#: ../python/frescobaldi_app/actions.py:282
 msgid "Print documents"
 msgstr "Vytisknout dokumenty"
 
-#: ../python/frescobaldi_app/actions.py:286
+#: ../python/frescobaldi_app/actions.py:285
 msgid "Please select the files you want to print:"
 msgstr "Vyberte, prosím, soubory, které si přejete vytisknout:"
 
-#: ../python/frescobaldi_app/actions.py:290
+#: ../python/frescobaldi_app/actions.py:289
 msgid ""
 "These are the PDF documents that are up-to-date (i.e. newer than the "
 "LilyPond source document). Check the documents you want to send to the "
@@ -697,28 +697,28 @@ msgstr ""
 "Toto jsou nejnovější dokumenty PDF (tedy novější než je zdrojový dokument "
 "LilyPondu). Zaškrtněte dokumenty, které chcete poslat na tiskárnu."
 
-#: ../python/frescobaldi_app/actions.py:371
+#: ../python/frescobaldi_app/actions.py:370
 msgid "Print %1"
 msgstr "Tisk %1"
 
-#: ../python/frescobaldi_app/actions.py:374
+#: ../python/frescobaldi_app/actions.py:373
 msgid "Print 1 file"
 msgid_plural "Print %1 files"
 msgstr[0] "Vytisknout jeden soubor"
 msgstr[1] "Vytisknout %1 soubory"
 msgstr[2] "Vytisknout %1 souborů"
 
-#: ../python/frescobaldi_app/actions.py:384
+#: ../python/frescobaldi_app/actions.py:383
 msgid "A print command (like 'lpr' or 'lp') could not be found on your system."
 msgstr ""
 "Příkaz k tisku /jako je 'lpr' nebo 'lp') se ve vašem systému nalézt "
 "nepodařilo."
 
-#: ../python/frescobaldi_app/actions.py:388
+#: ../python/frescobaldi_app/actions.py:387
 msgid "The command '%1' could not be found on your system."
 msgstr "Příkaz '%1' se ve vašem systému nalézt nepodařilo."
 
-#: ../python/frescobaldi_app/actions.py:392
+#: ../python/frescobaldi_app/actions.py:391
 msgid ""
 "The command below has been run, but exited with a return code %1.\n"
 "\n"
