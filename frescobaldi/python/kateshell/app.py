@@ -304,7 +304,7 @@ class MainApp(DBusItem):
         return self.mainwin.sessionManager().switch(session)
         
     @method(iface, in_signature='', out_signature='s')
-    def startSession(self, session):
+    def currentSession(self):
         """Returns the name of the current session.
         
         Returns "none" if there is no active session.
