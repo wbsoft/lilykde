@@ -63,19 +63,29 @@ p = lambda s: '<p>%s</p>\n' % s
 li = lambda s: '<li>%s</li>\n' % s
 ul = lambda *args: '<ul>\n%s</ul>\n' % ''.join(args)
 
-# Python must be 2.6
-if sys.version_info[:2] != (2, 6):
-    # find Python 2.6
+# this should return true if the Python version (supplied in tuple) can be used.
+usableVersion = lambda version: (2, 6) <= version < (3, 0)
+
+# Check version of current running Python
+if not usableVersion(sys.version_info[:2]):
+    # find another one that can be used
     for path in itertools.chain(
-            findAllExe('python2.6'),
             findAllExe('python'),
-            findAllExe('python26')):
+            findAllExe('python2.6'),
+            findAllExe('python2.7'),
+            findAllExe('python2'),
+            findAllExe('python26'),
+            findAllExe('python27'),
+    ):
+        # Get the output of 'python --version'
         ver = subprocess.Popen(
             [path, "--version"], stderr=subprocess.PIPE).communicate()[1]
-        if ' 2.6' in ver:
+        # Convert to a tuple of ints like (2, 6, 5)
+        ver = tuple(map(int, re.findall(r'\d+', ver)))
+        if usableVersion(ver):
             os.execl(path, path, sys.argv[0])
-    die("Could not find Python 2.6.\n\n"
-        "Please install the 2.6 version of Python.")
+    die("Could not find Python 2 version 2.6 or above.\n\n"
+        "Please install the 2.6 or 2.7 version of Python.")
 
 # find out our directory
 curdir = os.path.dirname(os.path.abspath(sys.argv[0]))

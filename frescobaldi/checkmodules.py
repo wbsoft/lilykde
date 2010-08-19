@@ -31,9 +31,9 @@ def checkVersions():
     # versions
     errors = []
     
-    if sys.version_info[:2] != (2, 6):
-        errors.append("Python version %s.%s.%s found, but need 2.6.\n"
-                    "(Use cmake -DPYTHON_EXECUTABLE=/path/to/python2.6)" %
+    if not (2, 6) <= sys.version_info[:2] < (3, 0):
+        errors.append("Python version %s.%s.%s found, but need 2.6 or 2.7.\n"
+                    "(Use e.g. cmake -DPYTHON_EXECUTABLE=/path/to/python2.6)" %
             sys.version_info[:3])
             
     if sip.SIP_VERSION < mkver(4, 9, 1):
