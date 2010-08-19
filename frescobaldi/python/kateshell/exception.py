@@ -67,7 +67,3 @@ class ExceptionDialog(KDialog):
         cc, bcc = '', ''
         KToolInvocation.invokeMailer(to, cc, bcc, subject, body)
 
-
-def showException(parent, exctype, excvalue, exctb):
-    ExceptionDialog(parent, exctype, excvalue, exctb)
-

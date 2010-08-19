@@ -130,18 +130,12 @@ class MainApp(DBusItem):
     documentMaterialized = Signal()
     documentClosed = Signal()
     
-    excepthook = Signal()
-    
     iface = DBUS_IFACE_PREFIX + "MainApp"
     defaultEncoding = 'UTF-8'
     defaultMode = None
     fileTypes = []
     
     def __init__(self, servicePrefix):
-        # make it easy to connect more error handlers
-        self.excepthook.connect(sys.excepthook)
-        sys.excepthook = self.excepthook
-        
         # We manage our own documents.
         self.documents = []
         self.history = []       # latest shown documents
@@ -256,7 +250,7 @@ class MainApp(DBusItem):
                     self.mainwin.sessionManager().switch(session)
         if len(self.documents) == 0:
             self.createDocument().setActive()
-        self.excepthook.connect(self.showException)
+        sys.excepthook = self.handleException
         self.mainwin.show()
         self.kapp.exec_()
         KGlobal.config().sync()
@@ -351,10 +345,19 @@ class MainApp(DBusItem):
         """Returns the version of our application."""
         return KGlobal.mainComponent().aboutData().version()
 
-    def showException(self, exctype, excvalue, exctb):
-        """Called when a Python exception goes unhandled."""
-        import kateshell.exception
-        kateshell.exception.showException(self, exctype, excvalue, exctb)
+    def handleException(self, exctype, excvalue, exctb):
+        """Called when a Python exception goes unhandled.
+        
+        Catches KeyboardInterrupt and shows a dialog for other errors.
+        Also writes the traceback to stderr.
+        
+        """
+        from traceback import format_exception
+        sys.stderr.write(''.join(format_exception(exctype, excvalue, exctb)))
+        
+        if exctype != KeyboardInterrupt:
+            from kateshell.exception import ExceptionDialog
+            ExceptionDialog(self, exctype, excvalue, exctb)
 
     def keepMetaInfo(self):
         """Returns whether meta information about documents should be kept.
