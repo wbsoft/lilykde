@@ -6,7 +6,7 @@ install(FILES frescobaldiui.rc expansions lilydoc.css DESTINATION ${APP_DIR})
 
 # Appicon
 install(
-    FILES frescobaldi-lily.svgz
+    FILES frescobaldi-lily.svg
     DESTINATION ${ICON_INSTALL_DIR}/hicolor/scalable/apps
-    RENAME frescobaldi.svgz
+    RENAME frescobaldi.svg
 )

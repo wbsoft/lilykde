@@ -210,8 +210,8 @@ class TarBall:
         
         # put appIcon in icondir
         shutil.copy(
-            os.path.join('data', 'frescobaldi-lily.svgz'),
-            os.path.join(icon_install_dir, 'frescobaldi.svgz'))
+            os.path.join('data', 'frescobaldi-lily.svg'),
+            os.path.join(icon_install_dir, 'frescobaldi.svg'))
         
         # install desktop file
         desktop = open(os.path.join('data', 'frescobaldi.desktop')).read()
@@ -299,7 +299,7 @@ def removeFrescobaldi():
     os.remove('frescobaldi')
     
     # remove appIcon
-    os.remove(os.path.join(icon_install_dir, 'frescobaldi.svgz'))
+    os.remove(os.path.join(icon_install_dir, 'frescobaldi.svg'))
     
     # remove desktop file
     os.remove(desktop_file)
