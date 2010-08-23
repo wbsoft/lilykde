@@ -52,9 +52,7 @@ class Player(QWidget):
                 # set auto start off
                 mobj = part.metaObject()
                 prop = mobj.property(mobj.indexOfProperty('autoStart'))
-                print prop
                 prop.write(part, False)
-                print prop.read(part)
         
         if not self.player:
             label = QLabel(i18n(
