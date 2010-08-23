@@ -984,8 +984,11 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
     _partlibrary = "libkonsolepart"
     _partappname = "Konsole"
     def __init__(self, mainwin):
+        import PyKDE4
+        kde_4_5_or_higher = PyKDE4.kdecore.version() >= 263424
+        icon = "utilities-terminal" if kde_4_5_or_higher else "terminal"
         kateshell.mainwindow.KPartTool.__init__(self, mainwin,
-            "konsole", i18n("Terminal"), "terminal",
+            "konsole", i18n("Terminal"), icon,
             key="Meta+Alt+T", dock=kateshell.mainwindow.Bottom)
         mainwin.currentDocumentChanged.connect(self.sync)
             
