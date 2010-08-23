@@ -25,11 +25,15 @@ A MIDI Player based on the kmid_part widget of KMid.
 
 import os
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyKDE4.kdecore import *
-from PyKDE4.kdeui import *
+from PyQt4.QtCore import Q_ARG, QMetaObject, Qt, SIGNAL
+from PyQt4.QtGui import (
+    QComboBox, QGridLayout, QKeySequence, QLabel, QLCDNumber, QToolButton,
+    QWidget)
+from PyKDE4.kdecore import KPluginLoader, KUrl, i18n
+from PyKDE4.kdeui import KAction, KIcon, KShortcut
 from PyKDE4.kparts import KParts
+
+EMPTY, STOPPED, PAUSED, PLAYING = 0, 1, 2, 3
 
 def player(tool):
     """ Return a player widget if KMid part can be found.
@@ -70,7 +74,7 @@ class Player(QWidget):
         
         pb = self.pauseButton = QToolButton()
         pb.setIcon(KIcon('media-playback-pause'))
-        pb.clicked.connect(self.slotPauseButtonClicked)
+        pb.clicked.connect(self.pause)
         pb.setToolTip(i18n("Pause"))
         layout.addWidget(pb, 1, 0)
         
@@ -91,7 +95,7 @@ class Player(QWidget):
         prop = mobj.property(mobj.indexOfProperty('autoStart'))
         prop.write(part, False)
         
-        # connect stateChanged
+        # connect stuff
         part.connect(part, SIGNAL("stateChanged(int)"),
             self.slotStateChanged, Qt.QueuedConnection)
         part.connect(part, SIGNAL("beat(int,int,int)"), self.slotBeat)
@@ -99,52 +103,103 @@ class Player(QWidget):
         tool.mainwin.aboutToClose.connect(self.quit)
         tool.mainwin.currentDocumentChanged.connect(self.setCurrentDocument)
         tool.mainwin.jobManager().jobFinished.connect(self.jobFinished)
-        self.setCurrentDocument(tool.mainwin.currentDocument())
         self.slotBeat(0, 0, 0)
-
+        self.setCurrentDocument(tool.mainwin.currentDocument())
+        
+        # keyboard action to pause playback, works when the MIDI tool is visible
+        # (hardcoded to Pause and MediaPlay)
+        a = KAction(self)
+        a.setShortcut(KShortcut(
+            QKeySequence(Qt.Key_Pause), QKeySequence(Qt.Key_MediaPlay)))
+        a.triggered.connect(self.slotAltSpace)
+        self.addAction(a)
+        
+        # keyboard action to stop playback, ESC and MediaStop
+        a = KAction(self)
+        a.setShortcut(KShortcut(
+            QKeySequence(Qt.Key_Escape), QKeySequence(Qt.Key_MediaStop)))
+        a.triggered.connect(self.stop)
+        self.addAction(a)
+        
+    def slotAltSpace(self):
+        """ Called when the user pressed alt-space.
+        
+        when stopped, starts playing
+        when playing, pauses
+        when paused, winds back a few seconds and starts playing
+        
+        """
+        state = self.state()
+        if state == STOPPED:
+            if self._currentFile:
+                self.play()
+        elif state == PAUSED:
+            self.pause()
+        elif state == PLAYING:
+            self.rewind(2200)
+            self.pause()
+        
     def setCurrentDocument(self, doc):
         """ Called when the current document changes. """
         self.setMidiFiles(doc.updatedFiles()("mid*"))
         
     def jobFinished(self, job):
         """ Called when a LilyPond job finishes. """
-        self.setMidiFiles(job.updatedFiles()("mid*"))
+        self.setMidiFiles(job.updatedFiles()("mid*"), True)
     
+    def play(self):
+        QMetaObject.invokeMethod(self.player, 'play')
+        
+    def pause(self):
+        QMetaObject.invokeMethod(self.player, 'pause')
+        
+    def stop(self):
+        QMetaObject.invokeMethod(self.player, 'stop')
+    
+    def seek(self, pos):
+        QMetaObject.invokeMethod(self.player, 'seek', Q_ARG("qlonglong", pos))
+        
+    def rewind(self, msec):
+        offset = msec * 768 / 1000
+        pos = self.readProperty('position') - offset
+        if pos < 0:
+            pos = 0
+        self.seek(pos)
+        
     def quit(self):
         """Called when the application exits."""
-        QMetaObject.invokeMethod(self.player, "stop")
+        self.stop()
         self.player.closeUrl()
         
-    def setMidiFiles(self, files):
+    def setMidiFiles(self, files, forceReload=False):
         """ Sets the list of MIDI files that can be played. """
         self._currentFileList = files
         self.fileList.clear()
         self.fileList.addItems([os.path.basename(f) for f in files])
+        icon = KIcon("audio-midi")
+        for i in range(self.fileList.count()):
+            self.fileList.setItemIcon(i, icon)
         self.fileList.setCurrentIndex(0)
         self.fileList.setEnabled(bool(files))
-        if files and not self.isPlaying():
-            self.loadFile(files[0])
+        if files and (forceReload or not self.isPlaying()):
+            self.loadFile(files[0], forceReload)
         
     def loadFile(self, fileName, forceReload=False):
         if forceReload or self._currentFile != fileName:
             self._currentFile = fileName
             playing = self.isPlaying()
             if playing:
-                QMetaObject.invokeMethod(self.player, 'stop')
+                self.stop()
             self.player.openUrl(KUrl(fileName))
             self.slotBeat(0, 0, 0)
             if playing:
-                QMetaObject.invokeMethod(self.player, 'play')
+                self.play()
         
     def slotItemActivated(self, index):
         self.loadFile(self._currentFileList[index])
     
-    def slotPauseButtonClicked(self):
-        QMetaObject.invokeMethod(self.player, 'pause')
-        
     def slotStateChanged(self, state):
-        if state == 1 and self._currentFile:
-            # stopped
+        if state == STOPPED and self._currentFile:
             if self._currentFileList:
                 # if there are other files, load one
                 if self._currentFile not in self._currentFileList:
@@ -153,20 +208,28 @@ class Player(QWidget):
             else:
                 # no updated files to load, just close
                 self.player.closeUrl()
-        self.pauseButton.setDown(state == 2) # paused?
+        self.pauseButton.setDown(state == PAUSED)
     
     def slotBeat(self, measnum, beat, measlen):
         self.lcd.display("{0}:{1}".format(measnum, beat))
         
+    def readProperty(self, name):
+        mobj = self.player.metaObject()
+        prop = mobj.property(mobj.indexOfProperty(name))
+        return prop.read(self.player)
+    
+    def writeProperty(self, name, value):
+        mobj = self.player.metaObject()
+        prop = mobj.property(mobj.indexOfProperty(name))
+        return prop.write(self.player, value)
+        
     def state(self):
         """Returns the state of the player."""
-        mobj = self.player.metaObject()
-        prop = mobj.property(mobj.indexOfProperty('state'))
-        return prop.read(self.player)
-        
+        return self.readProperty('state')
+    
     def isPlaying(self):
         """Returns True if state is playing or paused."""
-        return self.state() in (2, 3)
+        return self.state() in (PAUSED, PLAYING)
         
 
 

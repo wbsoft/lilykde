@@ -80,13 +80,18 @@ Dependencies:
 =============
 
 This is the development (1.1) branch of Frescobaldi. It depends on:
-- Python 2.6
+- Python 2.6 or 2.7
 - python-dbus (http://www.freedesktop.org/wiki/Software/DBusBindings#python)
-- Qt     >= 4.6
-- SIP    >= 4.9.3
-- PyQt4  >= 4.6
-- KDE4   >= 4.3.2. Modules needed: kdelibs, Okular and Konsole
-- PyKDE4 >= 4.0.2 Rev 2
+- Qt      >= 4.6
+- SIP     >= 4.9.3
+- PyQt4   >= 4.6
+- kdelibs >= 4.3.2
+- PyKDE4  >= 4.0.2 Rev 2
+
+Frescobaldi embeds the KParts of the following applications:
+- Okular  (required, necessary for the PDF preview)
+- Konsole (optional, used for the Terminal tool)
+- KMid    (recommended, needs version 2.4.0 or higher, for the MIDI player)
 
 You also might need to install some of the the corresponding -dev packages from
 the above to install Frescobaldi from this source package.
