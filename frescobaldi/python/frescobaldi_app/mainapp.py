@@ -827,6 +827,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         if not config().readEntry("disable pdf preview", False):
             PDFTool(self)
         LilyDocTool(self)
+        KMidTool(self)
             
     def runLilyPond(self, mode):
         """Run LilyPond on the current document.
@@ -1033,6 +1034,21 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
     def writeConfig(self, conf):
         conf.writeEntry("sync", self._sync)
         
+
+class KMidTool(kateshell.mainwindow.Tool):
+    def __init__(self, mainwin):
+        kateshell.mainwindow.Tool.__init__(self, mainwin,
+            "kmid", i18n("MIDI Player"), "audio-midi",
+            key="Meta+Alt+M", dock=kateshell.mainwindow.Bottom)
+        
+    def factory(self):
+        import frescobaldi_app.kmid
+        player = frescobaldi_app.kmid.Player(self)
+        self.mainwin.aboutToClose.connect(player.quit)
+        self.mainwin.currentDocumentChanged.connect(player.setCurrentDocument)
+        self.mainwin.jobManager().jobFinished.connect(player.jobFinished)
+        player.setCurrentDocument(self.mainwin.currentDocument())
+        return player
 
 class PDFTool(kateshell.mainwindow.KPartTool):
     _partlibrary = "okularpart"
