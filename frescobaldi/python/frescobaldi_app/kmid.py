@@ -79,7 +79,8 @@ class Player(QWidget):
         layout.addWidget(pb, 1, 0)
         
         lcd = self.lcd = QLCDNumber()
-        lcd.setMaximumHeight(70)
+        lcd.setMaximumHeight(60)
+        lcd.setSegmentStyle(QLCDNumber.Filled)
         layout.addWidget(lcd, 2, 0, 1, 2)
         
         # KMid Part widget
@@ -91,9 +92,7 @@ class Player(QWidget):
         widget.layout().setContentsMargins(0, 0, 0, 0)
         
         # set auto start off
-        mobj = part.metaObject()
-        prop = mobj.property(mobj.indexOfProperty('autoStart'))
-        prop.write(part, False)
+        self.writeProperty('autoStart', False)
         
         # connect stuff
         part.connect(part, SIGNAL("stateChanged(int)"),
@@ -111,7 +110,7 @@ class Player(QWidget):
         a = KAction(self)
         a.setShortcut(KShortcut(
             QKeySequence(Qt.Key_Pause), QKeySequence(Qt.Key_MediaPlay)))
-        a.triggered.connect(self.slotAltSpace)
+        a.triggered.connect(self.slotPlayPause)
         self.addAction(a)
         
         # keyboard action to stop playback, ESC and MediaStop
@@ -121,8 +120,8 @@ class Player(QWidget):
         a.triggered.connect(self.stop)
         self.addAction(a)
         
-    def slotAltSpace(self):
-        """ Called when the user pressed alt-space.
+    def slotPlayPause(self):
+        """ Called when the user presses the MediaPlay or Pause key.
         
         when stopped, starts playing
         when playing, pauses
@@ -232,5 +231,3 @@ class Player(QWidget):
         return self.state() in (PAUSED, PLAYING)
         
 
-
-            
