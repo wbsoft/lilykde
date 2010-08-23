@@ -820,14 +820,14 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             self.blankStaffPaperWizard().show()
 
     def setupTools(self):
+        QuickInsertTool(self)
         KonsoleTool(self)
         LogTool(self)
-        QuickInsertTool(self)
+        KMidTool(self)
         RumorTool(self)
         if not config().readEntry("disable pdf preview", False):
             PDFTool(self)
         LilyDocTool(self)
-        KMidTool(self)
             
     def runLilyPond(self, mode):
         """Run LilyPond on the current document.
@@ -1043,12 +1043,8 @@ class KMidTool(kateshell.mainwindow.Tool):
         
     def factory(self):
         import frescobaldi_app.kmid
-        player = frescobaldi_app.kmid.Player(self)
-        self.mainwin.aboutToClose.connect(player.quit)
-        self.mainwin.currentDocumentChanged.connect(player.setCurrentDocument)
-        self.mainwin.jobManager().jobFinished.connect(player.jobFinished)
-        player.setCurrentDocument(self.mainwin.currentDocument())
-        return player
+        return frescobaldi_app.kmid.player(self)
+
 
 class PDFTool(kateshell.mainwindow.KPartTool):
     _partlibrary = "okularpart"
@@ -1069,6 +1065,11 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         mainwin.currentDocumentChanged.connect(self.sync)
         mainwin.jobManager().jobFinished.connect(self.openUpdatedPDF)
     
+    def appQuit(self):
+        """ Called when the application exits. """
+        self._timer.stop()
+        self.part and self.part.closeUrl()
+        
     def timeoutFunc(self):
         """(Internal) Called when the timer times out.
         
