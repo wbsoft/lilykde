@@ -6,10 +6,11 @@ find_package(PythonInterp REQUIRED)
 macro(python_test_script _script)
   execute_process(
     COMMAND ${PYTHON_EXECUTABLE} "${_script}"
+    RESULT_VARIABLE _return
     ERROR_VARIABLE _error)
-  if(_error)
+  if(_return)
     message(FATAL_ERROR ${_error})
-  endif(_error)
+  endif(_return)
 endmacro(python_test_script)
 
 

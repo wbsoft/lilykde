@@ -11,6 +11,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 # some Python macros
 include(Python)
 
+# uninstall target
+include(uninstall)
+
 # Check if all required Python modules are present by running checkmodules.py
 python_test_script(${CMAKE_SOURCE_DIR}/checkmodules.py)
 

@@ -5,6 +5,14 @@ find_program(KDE4_MEINPROC_EXECUTABLE NAMES meinproc4)
 
 find_file(KDE4_XSL_STYLESHEET NAMES kde-chunk.xsl PATHS ${KDE4_DATA_INSTALL_DIR}/ksgmltools2/customization NO_DEFAULT_PATH)
 
+# Create a symlink on install
+macro(install_symlink _to _from)
+  install(CODE "
+    message(STATUS \"Creating symlink '${_to}' at \$ENV{DESTDIR}${_from}\")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${_to} \"\$ENV{DESTDIR}${_from}\" )
+    ")
+endmacro(install_symlink)
+
 # This macro can install docbook files and images from the current directory to the
 # correct location for KDE Helpcenter files.  If meinproc and the stylesheets are available,
 # a index.cache.bz2 is generated so the Helpcenter doesn't have to generate one per user.
@@ -28,8 +36,11 @@ macro(create_handbook _docbook _language)
   install(FILES ${_docbooks} ${_images} DESTINATION ${_installdir})
   
   # make the ../common symlink
-  install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ../common \"\$ENV{DESTDIR}${_installdir}/common\" )")
+  install_symlink("../common" "${_installdir}/common")
   
+  # remove the ../common symlink on uninstall
+  uninstall_file(${_installdir}/common)
+
   # if meinproc and the default style sheets are found, install a cached help file
   if(KDE4_MEINPROC_EXECUTABLE AND KDE4_XSL_STYLESHEET)
     get_filename_component(_input ${_docbook} ABSOLUTE)
