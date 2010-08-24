@@ -120,7 +120,8 @@ sys.path[0] = os.path.join(curdir, 'python')
 
 import shutil
 
-from PyKDE4.kdecore import KAboutData, KCmdLineArgs, KConfig, KGlobal, ki18n
+from PyKDE4.kdecore import (
+    KAboutData, KCmdLineArgs, KConfig, KGlobal, ki18n, KPluginLoader)
 from PyKDE4.kdeui import (
     KApplication, KDialog, KGuiItem, KMessageBox, KStandardGuiItem)
 from PyKDE4.kio import KUrlRequesterDialog
@@ -396,11 +397,21 @@ def main():
                 "Frescobaldi! Visit "
                 "<a href=\"http://www.lilypond.org/\">www.lilypond.org</a> "
                 "for more information.")
-        if not findExe('okular'):
+        if not KPluginLoader('okularpart').factory():
             notes.append(
-                "The Okular PDF viewer could not be found in your PATH. "
-                "The Okular KPart module provides the PDF preview, so "
+                "The Okular PDF viewer KPart module could not be found on your "
+                "system. This module provides the PDF preview, so "
                 "if the preview doesn't work, you should install Okular.")
+        if not KPluginLoader('kmid_part').factory():
+            notes.append(
+                "The KMid MIDI player KPart module could not be found on your "
+                "system. This module is used by the built-in MIDI player. "
+                "If the player doesn't work, you should install KMid >= 2.4.0.")
+        if not KPluginLoader('libkonsolepart').factory():
+            notes.append(
+                "The Konsole KPart module could not be found on your system. "
+                "This module provides the built-in terminal. If you want to "
+                "use the built-in terminal, you should install Konsole.")
         if not findExe('rumor'):
             notes.append(
                 "For music input via MIDI, the 'rumor' program is recommended. "
