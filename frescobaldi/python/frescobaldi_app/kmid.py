@@ -27,8 +27,8 @@ import os
 
 from PyQt4.QtCore import Q_ARG, QMetaObject, Qt, SIGNAL
 from PyQt4.QtGui import (
-    QComboBox, QGridLayout, QKeySequence, QLabel, QLCDNumber, QToolButton,
-    QWidget)
+    QComboBox, QGridLayout, QKeySequence, QLabel, QLCDNumber, QSlider,
+    QToolButton, QWidget)
 from PyKDE4.kdecore import KPluginLoader, KUrl, i18n
 from PyKDE4.kdeui import KAction, KIcon, KShortcut
 from PyKDE4.kparts import KParts
@@ -83,6 +83,12 @@ class Player(QWidget):
         lcd.setSegmentStyle(QLCDNumber.Filled)
         layout.addWidget(lcd, 2, 0, 1, 2)
         
+        vs = self.volumeSlider = QSlider(Qt.Vertical)
+        vs.setRange(0, 20)
+        vs.setValue(int(self.readProperty('volumeFactor') * 10))
+        vs.setToolTip(i18n("Volume"))
+        layout.addWidget(vs, 0, 2, 3, 1)
+        
         # KMid Part widget
         widget = self.widget = part.widget()
         layout.addWidget(widget, 1, 1)
@@ -98,6 +104,7 @@ class Player(QWidget):
         part.connect(part, SIGNAL("stateChanged(int)"),
             self.slotStateChanged, Qt.QueuedConnection)
         part.connect(part, SIGNAL("beat(int,int,int)"), self.slotBeat)
+        vs.valueChanged.connect(self.setVolumeFactor)
     
         tool.mainwin.aboutToClose.connect(self.quit)
         tool.mainwin.currentDocumentChanged.connect(self.setCurrentDocument)
@@ -230,4 +237,9 @@ class Player(QWidget):
         """Returns True if state is playing or paused."""
         return self.state() in (PAUSED, PLAYING)
         
+    def setVolumeFactor(self, volume):
+        """ Change the volume factor (0 - 20) """
+        QMetaObject.invokeMethod(self.player,
+            'setVolumeFactor', Q_ARG("double", volume / 20.0))
+
 
