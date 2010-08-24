@@ -175,8 +175,12 @@ class TarBall:
         # puts some files under image/share/ ...
         makedirs(app_dir)
         
-        # (Don't install frescobaldi.notifyrc in non-standard locations)
-        for name in ('frescobaldiui.rc', 'expansions', 'lilydoc.css'):
+        for name in (
+                'frescobaldiui.rc',
+                'expansions',
+                'lilydoc.css',
+                'frescobaldi.notifyrc',
+        ):
             dest = os.path.join(app_dir, name)
             if os.path.exists(dest):
                 os.remove(dest)
