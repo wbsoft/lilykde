@@ -110,9 +110,38 @@ Be sure to also add a <userinput>\layout { }</userinput> line if you add a <user
 </para>
 
 <para>
+You can also use the built-in MIDI player (see below).
+</para>
+
+<para>
 Also an email button is shown, allowing you to easily send the source and output
 documents to someone else using your default mail client.
 </para>
+
+<sect2 id="kmid">
+<title>The built-in MIDI player</title>
+
+<para>
+The built-in MIDI player can be started by clicking its tab at the bottom of the &frescobaldi; window or
+by pressing <keycap>Meta+Alt+M</keycap>.
+If a &lilypond; document generated multiple MIDI files, you can select which one to play.
+Use the small play and pause buttons to play the MIDI file.
+</para>
+
+<para>
+The media keys (<keycap>Play/Pause</keycap> and <keycap>Stop</keycap>) and the <keycap>Pause</keycap> can also be used
+to start or stop the music. If you pause the music using the <keycap>Pause</keycap> key, the music will automatically
+rewind a few seconds when you start the playing again.
+</para>
+
+<para>
+The built-in MIDI player uses the embeddable MIDI player component of
+<ulink url="http://kmid2.sourceforge.net/">KMid</ulink> version 2.4.0 or higher.
+If the MIDI player doesn't work it is recommended to run KMid once from the Applications menu to
+configure its sound settings.
+</para>
+
+</sect2>
 
 </sect1>
 

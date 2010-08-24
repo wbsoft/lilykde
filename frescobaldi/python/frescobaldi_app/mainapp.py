@@ -1036,6 +1036,7 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
         
 
 class KMidTool(kateshell.mainwindow.Tool):
+    helpAnchor = "kmid"
     def __init__(self, mainwin):
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "kmid", i18n("MIDI Player"), "audio-midi",
