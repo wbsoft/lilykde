@@ -24,8 +24,6 @@ Code that manages the progress bar at the bottom of
 the Frescobaldi main window
 """
 
-import weakref, time
-
 from PyQt4.QtCore import QTimer
 
 _ticks = 10     # ticks per second
@@ -35,7 +33,6 @@ class ProgressBarManager(object):
     def __init__(self, jobmanager, progressbar):
         self.bar = progressbar
         self.man = jobmanager
-        self.times = weakref.WeakKeyDictionary() # don't keep real references
         self.timer = QTimer()
         self.hideTimer = QTimer()
         
@@ -53,7 +50,6 @@ class ProgressBarManager(object):
         lastruntime = doc.metainfo["build time"]
         if lastruntime == 0.0:
             lastruntime = 3.0 + doc.lines() / 20 # very arbitrary estimate...
-        self.times[doc] = time.time()
         
         if self.man.count() == 1:
             self.hideTimer.stop()
@@ -65,11 +61,8 @@ class ProgressBarManager(object):
                 
     def stop(self, job, success):
         """ Call this when a job has stopped. """
-        doc = job.document
-        starttime = self.times.get(doc, 0.0)
-        if starttime and success:
-            runtime = time.time() - starttime
-            doc.metainfo["build time"] = runtime
+        if success:
+            job.document.metainfo["build time"] = job.buildTime
         
         if self.man.count() == 0:
             self.timer.stop()

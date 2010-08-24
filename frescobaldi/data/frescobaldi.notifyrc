@@ -1,0 +1,9 @@
+[Global]
+IconName=frescobaldi
+Name=Frescobaldi
+Comment=Frescobaldi
+
+[Event/compileFinished]
+Name=Compile Finished
+Comment=A LilyPond compile process has finished
+Action=Popup

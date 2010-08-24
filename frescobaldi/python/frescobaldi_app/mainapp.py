@@ -29,7 +29,7 @@ from PyQt4.QtGui import (
 from PyKDE4.kdecore import KConfig, KGlobal, KUrl, i18n
 from PyKDE4.kdeui import (
     KActionMenu, KApplication, KDialog, KIcon, KIconLoader, KLineEdit, KMenu,
-    KMessageBox, KStandardAction, KStandardGuiItem, KVBox)
+    KMessageBox, KNotification, KStandardAction, KStandardGuiItem, KVBox)
 from PyKDE4.kparts import KParts
 from PyKDE4.ktexteditor import KTextEditor
 
@@ -387,6 +387,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         self.charSelectShortcuts = CharSelectShortcuts(self)
         self.quickInsertShortcuts = QuickInsertShortcuts(self)
         self.jobManager().jobFinished.connect(self.setDocumentStatus)
+        self.jobManager().jobFinished.connect(self.notifyCompileFinished)
         
     @cacheresult
     def actionManager(self):
@@ -946,6 +947,20 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
     def saveSettings(self):
         self.app.stateManager().cleanup()
         super(MainWindow, self).saveSettings()
+
+    def notifyCompileFinished(self, job, success):
+        """Called when a job exits, notify the user on longer compiles."""
+        if job.buildTime >= 10 and self.isMinimized():
+            n = KNotification("compileFinished", self)
+            if success:
+                n.setText(i18n(
+                    "LilyPond has successfully compiled %1.",
+                    job.document.documentName()))
+            else:
+                n.setText(i18n(
+                    "LilyPond exited with an error compiling %1.",
+                    job.document.documentName()))
+            n.sendEvent()
 
 
 class ApplyRhythmDialog(KDialog):

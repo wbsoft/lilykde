@@ -72,6 +72,7 @@ class BasicLilyPondJob(object):
     delfiles = True             # delete intermediate files
     
     startTime = 0.0             # time.time() this job started
+    buildTime = 0.0             # time in seconds this job has been running
     
     done = Signal(fireOnce=True)
     output = SignalProxy()
@@ -115,22 +116,32 @@ class BasicLilyPondJob(object):
         
         self.startTime = time.time()
         p.start()
+    
+    def _exit(self, success):
+        """ Called when the job is finished (successfully or not).
+        
+        Emits the done(success, self) signal.
+        
+        """
+        self.buildTime = time.time() - self.startTime
+        self.done(success, self)
         
     def abort(self):
         """ Abort the LilyPond job """
         self._p.terminate()
 
     def kill(self):
-        """
-        Immediately kill the job, and disconnect it's output signals, etc.
-        Emits the done(False) signal.
+        """ Immediately kill the job, and disconnect it's output signals, etc.
+        
+        Will exit the job with success = False.
+        
         """
         self._p.finished.disconnect(self._finished)
         self._p.error.disconnect(self._error)
         self._p.readyRead.disconnect(self._readOutput)
         self._p.kill()
         self._p.waitForFinished(2000)
-        self.done(False, self)
+        self._exit(False)
         
     def _finished(self, exitCode, exitStatus):
         if exitCode:
@@ -147,7 +158,7 @@ class BasicLilyPondJob(object):
                 self._basename, f.format(minutes, seconds)), "msgok")
         
         # otherwise we delete ourselves during our event handler, causing crash
-        QTimer.singleShot(0, lambda: self.done(not (exitCode or exitStatus), self))
+        QTimer.singleShot(0, lambda: self._exit(not (exitCode or exitStatus)))
     
     def _error(self, errCode):
         """ Called when QProcess encounters an error """
@@ -162,7 +173,7 @@ class BasicLilyPondJob(object):
             self.output.writeMsg(i18n("An unknown error occured."), "msgerr")
         if self._p.state() == QProcess.NotRunning:
             # otherwise we delete ourselves during our event handler, causing crash
-            QTimer.singleShot(0, lambda: self.done(False, self))
+            QTimer.singleShot(0, lambda: self._exit(False))
         
     def _readOutput(self):
         encoding = sys.getfilesystemencoding() or 'utf-8'
