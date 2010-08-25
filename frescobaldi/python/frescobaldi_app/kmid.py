@@ -36,12 +36,7 @@ from PyKDE4.kparts import KParts
 EMPTY, STOPPED, PAUSED, PLAYING = 0, 1, 2, 3
 
 def player(tool):
-    """ Return a player widget if KMid part can be found.
-    
-    Otherwise returns a label with explanation.
-    
-    """
-    # load the KMid Part
+    """ Return a player widget if KMid part can be found. """
     factory = KPluginLoader("kmid_part").factory()
     if factory:
         part = factory.create(tool.mainwin)
