@@ -47,12 +47,6 @@ def player(tool):
         part = factory.create(tool.mainwin)
         if part:
             return Player(tool, part)
-
-    label = QLabel(i18n(
-        "Could not load the KMid part.\n"
-        "Please install KMid 2.4.0 or higher."))
-    label.setAlignment(Qt.AlignCenter)
-    return label
     
 
 class Player(QWidget):

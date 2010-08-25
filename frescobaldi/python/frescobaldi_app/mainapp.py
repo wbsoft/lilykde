@@ -1053,13 +1053,22 @@ class KonsoleTool(kateshell.mainwindow.KPartTool):
 class KMidTool(kateshell.mainwindow.Tool):
     helpAnchor = "kmid"
     def __init__(self, mainwin):
+        self.failed = False # failed the player to load?
         kateshell.mainwindow.Tool.__init__(self, mainwin,
             "kmid", i18n("MIDI Player"), "audio-midi",
             key="Meta+Alt+M", dock=kateshell.mainwindow.Bottom)
         
     def factory(self):
         import frescobaldi_app.kmid
-        return frescobaldi_app.kmid.player(self)
+        player = frescobaldi_app.kmid.player(self)
+        if player:
+            return player
+        self.failed = True
+        label = QLabel(i18n(
+            "Could not load the KMid part.\n"
+            "Please install KMid 2.4.0 or higher."))
+        label.setAlignment(Qt.AlignCenter)
+        return label
 
 
 class PDFTool(kateshell.mainwindow.KPartTool):
@@ -1215,8 +1224,9 @@ class LogTool(kateshell.mainwindow.Tool):
             key="Meta+Alt+L", dock=kateshell.mainwindow.Bottom,
             widget=QStackedWidget())
         self.logs = {}
-        self.widget.addWidget(QLabel(u"<center>({0})</center>".format(
-            i18n("no log"))))
+        label = QLabel("({0})".format(i18n("no log")))
+        label.setAlignment(Qt.AlignCenter)
+        self.widget.addWidget(label)
         mainwin.currentDocumentChanged.connect(self.showLog)
         mainwin.app.documentClosed.connect(self.removeLog)
         self.widget.destroyed.connect(lambda: self.logs.clear())
