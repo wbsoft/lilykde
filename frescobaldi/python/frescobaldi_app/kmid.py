@@ -240,6 +240,6 @@ class Player(QWidget):
     def setVolumeFactor(self, volume):
         """ Change the volume factor (0 - 20) """
         QMetaObject.invokeMethod(self.player,
-            'setVolumeFactor', Q_ARG("double", volume / 20.0))
+            'setVolumeFactor', Q_ARG("double", volume / 10.0))
 
 
