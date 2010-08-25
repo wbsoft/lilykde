@@ -11,6 +11,8 @@ macro(install_symlink _to _from)
     message(STATUS \"Creating symlink '${_to}' at \$ENV{DESTDIR}${_from}\")
     execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${_to} \"\$ENV{DESTDIR}${_from}\" )
     ")
+  # remove symlink on uninstall
+  uninstall_file(${_from})
 endmacro(install_symlink)
 
 # This macro can install docbook files and images from the current directory to the
@@ -38,9 +40,6 @@ macro(create_handbook _docbook _language)
   # make the ../common symlink
   install_symlink("../common" "${_installdir}/common")
   
-  # remove the ../common symlink on uninstall
-  uninstall_file(${_installdir}/common)
-
   # if meinproc and the default style sheets are found, install a cached help file
   if(KDE4_MEINPROC_EXECUTABLE AND KDE4_XSL_STYLESHEET)
     get_filename_component(_input ${_docbook} ABSOLUTE)
