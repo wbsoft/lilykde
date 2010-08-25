@@ -56,6 +56,7 @@ class Player(QWidget):
         self.player = part
         self._currentFile = None
         self._currentFileList = None
+        self._tempo = 60.0
         
         layout = QGridLayout()
         self.setLayout(layout)
@@ -98,6 +99,7 @@ class Player(QWidget):
         part.connect(part, SIGNAL("stateChanged(int)"),
             self.slotStateChanged, Qt.QueuedConnection)
         part.connect(part, SIGNAL("beat(int,int,int)"), self.slotBeat)
+        part.connect(part, SIGNAL("tempoEvent(double)"), self.slotTempoEvent)
         vs.valueChanged.connect(self.setVolumeFactor)
     
         tool.mainwin.aboutToClose.connect(self.quit)
@@ -160,7 +162,7 @@ class Player(QWidget):
         QMetaObject.invokeMethod(self.player, 'seek', Q_ARG("qlonglong", pos))
         
     def rewind(self, msec):
-        offset = msec * 768 / 1000
+        offset = msec * self._tempo * 192 / 30000
         pos = self.readProperty('position') - offset
         if pos < 0:
             pos = 0
@@ -236,4 +238,6 @@ class Player(QWidget):
         QMetaObject.invokeMethod(self.player,
             'setVolumeFactor', Q_ARG("double", volume / 10.0))
 
-
+    def slotTempoEvent(self, tempo):
+        self._tempo = tempo
+        
