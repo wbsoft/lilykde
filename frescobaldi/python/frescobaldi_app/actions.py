@@ -100,12 +100,16 @@ class ActionManager(object):
                         a.triggered.connect((lambda item: lambda: func(item))(item))
 
         pdfs = updatedFiles("pdf")
-        make_action(pdfs, self.openPDF, "application-pdf", i18n("Open PDF"))
-        make_action(pdfs, self.printPDF, "document-print", i18n("Print"))
-        make_action(updatedFiles("mid*"), self.openMIDI, "media-playback-start",
-            i18n("Play MIDI"))
+        midis = updatedFiles("mid*")
+        if pdfs:
+            make_action(pdfs, self.openPDF, "application-pdf", i18n("Open PDF"))
+            a = bar.addAction(KIcon("document-print"), i18n("Print"))
+            a.triggered.connect(lambda: self.print_(updatedFiles))
+        if midis:
+            make_action(midis, self.openMIDI, "media-playback-start",
+                i18n("Play MIDI"))
         # if any actions were added, also add the email action and show.
-        if len(bar.actions()) > 0:
+        if pdfs or midis:
             a = bar.addAction(KIcon("mail-send"), i18n("Email..."))
             a.triggered.connect(lambda: self.email(updatedFiles, log.preview))
             log.checkScroll(bar.show)
