@@ -12,7 +12,7 @@ macro(install_symlink _to _from)
     execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${_to} \"\$ENV{DESTDIR}${_from}\" )
     ")
   # remove symlink on uninstall
-  uninstall_file(${_from})
+  uninstall_file("${_from}" NO_CHECK)
 endmacro(install_symlink)
 
 # This macro can install docbook files and images from the current directory to the
