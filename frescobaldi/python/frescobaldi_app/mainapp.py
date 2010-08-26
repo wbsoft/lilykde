@@ -1086,7 +1086,7 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         self._timer = QTimer()
         self._timer.setSingleShot(True)
         self._timer.timeout.connect(self.timeoutFunc)
-        mainwin.aboutToClose.connect(self._timer.stop)
+        mainwin.aboutToClose.connect(self.appQuit)
         mainwin.currentDocumentChanged.connect(self.sync)
         mainwin.jobManager().jobFinished.connect(self.openUpdatedPDF)
     
