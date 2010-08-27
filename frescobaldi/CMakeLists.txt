@@ -49,5 +49,6 @@ endif(HANDBOOK)
 install(DIRECTORY 
         rumor
         icons
+        css
         DESTINATION ${APP_DIR}
         PATTERN .* EXCLUDE)

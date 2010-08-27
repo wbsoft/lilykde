@@ -99,6 +99,6 @@ foreach(_ly ${lilypond_files})
   lilypond_png_image(${_ly})
 endforeach(_ly ${lilypond_files})
 
-# Build and install all LilyPond-generaged pictures
+# Build and install all LilyPond-generated pictures
 add_custom_target(lilypond_pngs ALL DEPENDS ${all_pngs})
 install(FILES ${all_pngs} DESTINATION ${APP_DIR}/pics)

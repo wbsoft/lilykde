@@ -70,7 +70,7 @@ class Player(QWidget):
         
         lcd = self.lcd = QLCDNumber()
         lcd.setMaximumHeight(60)
-        lcd.setSegmentStyle(QLCDNumber.Filled)
+        lcd.setSegmentStyle(QLCDNumber.Flat)
         layout.addWidget(lcd, 2, 0, 1, 2)
         
         vs = self.volumeSlider = QSlider(Qt.Vertical)
