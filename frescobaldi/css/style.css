@@ -2,6 +2,7 @@ QLCDNumber {
   border-width: 5 3 2 4;
   border-image: url('css:lcd-borders.png') repeat;
   background-image: url('css:lcd-background.png') repeat;
+  color: black;
 }
 
 QTextEdit#expand {

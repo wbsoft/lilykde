@@ -186,7 +186,7 @@ class TarBall:
                 os.remove(dest)
             os.symlink(os.path.join(curdir, 'data', name), dest)
         
-        for name in ('rumor', 'icons'):
+        for name in ('rumor', 'icons', 'css'):
             dest = os.path.join(app_dir, name)
             if os.path.exists(dest):
                 os.remove(dest)
