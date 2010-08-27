@@ -185,7 +185,7 @@ class ExpansionDialog(KDialog):
         
         edit = QTextEdit(box)
         edit.setAcceptRichText(False)
-        edit.setStyleSheet("QTextEdit { font-family: monospace; }")
+        edit.setObjectName("expand")
         edit.item = None
         edit.dirty = False
         ExpandHighlighter(edit.document())
