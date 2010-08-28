@@ -26,7 +26,7 @@ import re
 from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QLabel, QToolBox, QToolButton, QWidget)
-from PyKDE4.kdecore import i18n
+from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KIcon, KHBox, KMenu
 
 import ly.articulation
@@ -49,9 +49,23 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
         QToolBox.__init__(self)
         SymbolManager.__init__(self)
         UserShortcutDispatcher.__init__(self, tool.mainwin.quickInsertShortcuts)
+        self.tool = tool
         self.mainwin = tool.mainwin
         Articulations(self)
+        Spanners(self)
         self.setMinimumWidth(self.sizeHint().width())
+        self.mainwin.aboutToClose.connect(self.saveSettings)
+        self.loadSettings()
+    
+    def loadSettings(self):
+        current = self.tool.config().readEntry('current', '')
+        for index in range(self.count()):
+            w = self.widget(index)
+            if w._name == current:
+                self.setCurrentIndex(index)
+            
+    def saveSettings(self):
+        self.tool.config().writeEntry('current', self.currentWidget()._name)
         
         
 class Lqi(ShortcutDispatcherClient, QWidget):
@@ -175,3 +189,10 @@ class Articulations(Lqi):
             self.toolbox.addSymbol(action, 'articulation_' + name)
 
 
+class Spanners(Lqi):
+    """A toolbox item with slurs, spanners, etc."""
+    def __init__(self, toolbox):
+        super(Spanners, self).__init__(toolbox, 'spanner',
+            i18n("Spanners"), symbol='slur_solid',
+            tooltip=i18n("Slurs, spanners, hairpins, etcetera."))
+        

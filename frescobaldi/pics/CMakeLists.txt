@@ -82,7 +82,13 @@ endmacro(lilypond_png_image)
 
 
 # Make icons for articulations and notes etc. at 22px
-file(GLOB lilypond_files articulation_*.ly note_*.ly time_*.ly bar_*.ly)
+file(GLOB lilypond_files
+  articulation_*.ly
+  note_*.ly
+  time_*.ly
+  bar_*.ly
+  slur_*.ly
+)
 foreach(_ly ${lilypond_files})
   lilypond_png_icon(${_ly} 22)
 endforeach(_ly ${lilypond_files})
