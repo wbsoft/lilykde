@@ -25,7 +25,8 @@ import re
 
 from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
-    QCheckBox, QComboBox, QGridLayout, QLabel, QToolBox, QToolButton, QWidget)
+    QCheckBox, QComboBox, QGridLayout, QGroupBox, QLabel, QToolBox, QToolButton,
+    QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KIcon, KHBox, KMenu
 
@@ -96,34 +97,36 @@ class Articulations(Lqi):
             i18n("Articulations"), symbol='articulation_prall',
             tooltip=i18n("Different kinds of articulations and other signs."))
             
-        layout = QGridLayout(self)
+        layout = QVBoxLayout(self)
         layout.setSpacing(0)
-        row = 0
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+        
         cols = 5
 
         self.shorthands = QCheckBox(i18n("Allow shorthands"))
         self.shorthands.setChecked(True)
         self.shorthands.setToolTip(i18n(
             "Use short notation for some articulations like staccato."))
-        layout.addWidget(self.shorthands, row, 0, 1, cols)
-        row += 1
+        layout.addWidget(self.shorthands)
 
-        h = KHBox(self)
-        layout.addWidget(h, row, 0, 1, cols)
+        h = KHBox()
+        layout.addWidget(h)
         l = QLabel(i18n("Direction:"), h)
         self.direction = QComboBox(h)
-        for s in (i18n("Up"), i18n("Neutral"), i18n("Down")):
-            self.direction.addItem(s)
+        self.direction.addItems([i18n("Up"), i18n("Neutral"), i18n("Down")])
         self.direction.setCurrentIndex(1)
         l.setBuddy(self.direction)
         h.setToolTip(i18n("The direction to use for the articulations."))
-        row += 1
 
         self.titles = dict(ly.articulation.articulations(i18n))
         for title, group in ly.articulation.groups(i18n):
-            layout.addWidget(QLabel('<u>{0}</u>:'.format(title)), row, 0, 1, cols)
-            row += 1
-            col = 0
+            box = QGroupBox(title)
+            layout.addStretch()
+            layout.addWidget(box)
+            grid = QGridLayout()
+            box.setLayout(grid)
+            row, col = 0, 0
             for sign, title in group:
                 b = QToolButton(clicked=(lambda sign: lambda: self.writeSign(sign))(sign))
                 b.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -135,13 +138,11 @@ class Articulations(Lqi):
                 toolbox.addSymbol(b, 'articulation_' + sign, 22)
                 b.setIconSize(QSize(22, 22))
                 b.setToolTip('<b>{0}</b> (\\{1})'.format(title, sign))
-                layout.addWidget(b, row, col)
+                grid.addWidget(b, row, col)
                 col += 1
                 if col >= cols:
                     col = 0
                     row += 1
-            if col != 0:
-                row += 1
 
         # help text
         l = QLabel("<p><i>{0}</i></p><p><i>{1}</i></p>".format(
@@ -149,7 +150,9 @@ class Articulations(Lqi):
             i18n("If you select some music first, the articulation will "
               "be added to all notes in the selection.")))
         l.setWordWrap(True)
-        layout.addWidget(l, row, 0, 4, cols)
+        layout.addStretch()
+        layout.addWidget(l)
+        layout.addStretch()
 
     def writeSign(self, sign):
         """
