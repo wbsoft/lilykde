@@ -22,7 +22,7 @@ from __future__ import unicode_literals
 import os, re, sip, weakref
 from dbus.service import method
 
-from PyQt4.QtCore import QEvent, QSize, QTimer, Qt
+from PyQt4.QtCore import QDir, QEvent, QSize, QTimer, Qt
 from PyQt4.QtGui import (
     QActionGroup, QColor, QIcon, QLabel, QPalette, QPixmap, QProgressBar,
     QStackedWidget, QWidget)
@@ -57,6 +57,9 @@ class MainApp(kateshell.app.MainApp):
         # Put ourselves in environment so ktexteditservice can find us
         os.environ["TEXTEDIT_DBUS_PATH"] = self.serviceName + '/MainApp'
         os.environ["FRESCOBALDI_PID"] = str(os.getpid())
+        # make files for stylesheets and LilyPond-generated pics easily found:
+        QDir.setSearchPaths('css', KGlobal.dirs().findDirs('appdata', 'css/'))
+        QDir.setSearchPaths('pics', KGlobal.dirs().findDirs('appdata', 'pics/'))
     
     def setupConfiguration(self, config):
         # If the application got upgraded, run the install module

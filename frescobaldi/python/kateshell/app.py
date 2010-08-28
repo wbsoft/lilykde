@@ -28,7 +28,7 @@ from dbus.service import method, signal
 
 from signals import Signal
 
-from PyQt4.QtCore import QDir, QObject, QThread, Qt, SIGNAL
+from PyQt4.QtCore import QObject, QThread, Qt, SIGNAL
 from PyQt4.QtGui import QCursor
 from PyKDE4.kdecore import i18n, KConfig, KGlobal, KUrl
 from PyKDE4.kdeui import KApplication, KMessageBox, KStandardGuiItem
@@ -148,12 +148,6 @@ class MainApp(DBusItem):
         config = KGlobal.config().group("") # root group
         self.setupConfiguration(config)
         config.sync()
-        
-        # Set app-wide style sheet
-        QDir.setSearchPaths('css', KGlobal.dirs().findDirs('appdata', 'css/'))
-        stylesheet = KGlobal.dirs().findResource('appdata', 'css/style.css')
-        if stylesheet:
-            self.kapp.setStyleSheet(open(stylesheet).read())
         
         # DBus init
         serviceName = "{0}{1}".format(servicePrefix, os.getpid())

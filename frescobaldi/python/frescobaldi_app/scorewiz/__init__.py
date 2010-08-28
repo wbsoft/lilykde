@@ -135,7 +135,6 @@ class Titles(QWidget):
         l = QHBoxLayout(self)
         # The html view with the score layout example
         t = QTextBrowser(self)
-        t.setSearchPaths(KGlobal.dirs().findDirs("appdata", "pics"))
         t.setOpenLinks(False)
         t.setOpenExternalLinks(False)
 
@@ -1120,7 +1119,7 @@ a {{
     <td> </td>
     <td align=right>{opus}</td>
 </tr>
-<tr><td colspan=3 align=center><img src='scorewiz.png'></td></tr>
+<tr><td colspan=3 align=center><img src='pics:scorewiz.png'></td></tr>
 <tr><td colspan=3 align=center>{copyright} <i>({copyrightmsg})</i></td></tr>
 <tr><td colspan=3 align=center>{tagline} <i>({taglinemsg})</i></td></tr>
 </table></body></html>
