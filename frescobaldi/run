@@ -178,7 +178,6 @@ class TarBall:
         for name in (
                 'frescobaldiui.rc',
                 'expansions',
-                'lilydoc.css',
                 'frescobaldi.notifyrc',
         ):
             dest = os.path.join(app_dir, name)

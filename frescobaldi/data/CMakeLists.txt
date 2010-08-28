@@ -6,7 +6,7 @@ install(
 
 # UI configuration, etc
 install(
-    FILES frescobaldiui.rc expansions lilydoc.css frescobaldi.notifyrc
+    FILES frescobaldiui.rc expansions frescobaldi.notifyrc
     DESTINATION ${APP_DIR}
 )
 
