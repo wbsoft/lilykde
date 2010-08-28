@@ -247,8 +247,24 @@ More information about writing Rumor scripts is on the
 <para>
 The Quick Insert Panel (<keycap>Meta+Alt+I</keycap>) is available in the left dock.
 It currently has one panel to add articulations and other symbols to your music.
-It can also add those symbols to all notes or chords in a selected music fragment.
 </para>
+
+<para>
+You can just click on a note in the PDF preview and then on an articulation symbol in the
+articulations panel.
+The articulations panel is smart enough to place the articulation after the current
+note or chord and its duration.
+</para>
+
+<para>
+If you select a range of text and then click a symbol, the symbol will be added
+to all notes or chords in the selected music fragment.
+</para>
+ 
+<tip><para>
+You can select a music fragment using the PDF preview: click the first note of
+the range you want to select and then shift-click the second note.
+</para></tip>
 
 </sect1>
 
