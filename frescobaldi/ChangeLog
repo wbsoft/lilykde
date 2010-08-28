@@ -6,6 +6,7 @@ Changes in 1.1.6 --
 * Bugfixes and improvements:
   - Handle keyboard interrupt (SIGINT) nicely, don't show the bug dialog
   - Fix session --start commandline option
+  - Blank staff paper: improved bar line distances with recent LilyPond versions
 * Installation:
   - Install Frescobaldi icon as SVG, not SVGZ
   - make uninstall now possible

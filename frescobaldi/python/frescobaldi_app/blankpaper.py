@@ -261,11 +261,12 @@ class Dialog(KDialog):
         output.append('\\repeat unfold {0} {{ % systems'.format(staff.systemCount()))
         output.append('\\repeat unfold {0} {{ % bars'.format(
             self.barLines.isChecked() and self.barsPerLine.value() or 1))
-        output.extend(('s1', '\\noBreak', '}', '\\break', '\\noPageBreak', '}', '\\pageBreak', '}\n'))
+        output.extend(('r1', '\\noBreak', '}', '\\break', '\\noPageBreak', '}', '\\pageBreak', '}\n'))
 
         # get the layout
         layout = LayoutContexts()
         layout.add("Score", '\\remove "Bar_number_engraver"')
+        layout.add("Voice", "\\override Rest #'stencil = ##f")
         music = staff.music(layout)
         layout.addToStaffContexts('\\remove "Time_signature_engraver"')
         if not self.barLines.isChecked():
@@ -510,7 +511,7 @@ class SingleStaff(StaffBase):
             if self.clef.clef():
                 return ['\\new Staff {{ \\clef "{0}" \\music }}'.format(self.clef.clef())]
             else:
-                layout.add('Staff', '\\remove "Clef_engraver"')
+                layout.add('Staff', "\\override Clef #'transparent = ##t")
                 return ['\\new Staff { \\music }']
         
         
@@ -534,7 +535,7 @@ class PianoStaff(StaffBase):
     def music(self, layout):
         layout.setSpanBarContexts(['PianoStaff'])
         if not self.clefs.isChecked():
-            layout.add('Staff', '\\remove "Clef_engraver"')
+            layout.add('Staff', "\\override Clef #'transparent = ##t")
         if lilyPondVersion() < (2, 13, 4):
             spacing = "#'minimum-Y-extent = #'(-6 . 3)"
         else:
@@ -558,7 +559,7 @@ class OrganStaff(PianoStaff):
     def music(self, layout):
         layout.setSpanBarContexts(['GrandStaff'])
         if not self.clefs.isChecked():
-            layout.add('Staff', '\\remove "Clef_engraver"')
+            layout.add('Staff', "\\override Clef #'transparent = ##t")
         if lilyPondVersion() < (2, 13, 4):
             spacing = "#'minimum-Y-extent = #'(-6 . 3)"
         else:
@@ -646,7 +647,7 @@ class ChoirStaff(StaffBase):
             clefs = (clefs + clefs[-1] * length)[:length]
         else:
             clefs = [None] * length
-            layout.add("Staff", '\\remove "Clef_engraver"')
+            layout.add('Staff', "\\override Clef #'transparent = ##t")
         if lilyPondVersion() < (2, 13, 4):
             layout.add("Staff",
                 "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-6 . 4)")
@@ -871,7 +872,7 @@ class StaffItem(Item):
                 "\\override VerticalAxisGroup #'next-staff-spacing = #'((space . {0}))".format(
                     self.spaceBelow.value() + 5))
         if not clef:
-            music.append('\\remove "Clef_engraver"')
+            music.append("\\override Clef #'transparent = ##t")
         if not clef or clef == 'tab':
             music.append('} { \\music }')
         else:
