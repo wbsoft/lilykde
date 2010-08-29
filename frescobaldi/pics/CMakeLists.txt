@@ -91,13 +91,13 @@ macro(lilypond_png_text_icon _lyfile _size)
     DEPENDS ${_deps}
     COMMAND ${LILYPOND_EXECUTABLE}
         -ddelete-intermediate-files
-        -dresolution=301
         --png -dpixmap-format=pngalpha
+        -dresolution=301
         -o "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}"
         "${_lyfile}"
     COMMAND ${CONVERT_EXECUTABLE}
         "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
-        -resize ${_size}
+        -resize ${_size} -unsharp 0x1
         "${_outp}"
     COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
     VERBATIM
