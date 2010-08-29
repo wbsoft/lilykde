@@ -80,6 +80,30 @@ macro(lilypond_png_image _lyfile_arg)
   list(APPEND all_pngs ${_outp})
 endmacro(lilypond_png_image)
 
+# convert a ly file to a fixed size icon without cropping it
+# and then scaling it down to size.
+macro(lilypond_png_text_icon _lyfile _size)
+  lilypond_deps(_deps ${_lyfile})
+  get_filename_component(_base ${_lyfile} NAME_WE)
+  set(_outp "${CMAKE_CURRENT_BINARY_DIR}/${_base}.png")
+  add_custom_command(
+    OUTPUT ${_outp}
+    DEPENDS ${_deps}
+    COMMAND ${LILYPOND_EXECUTABLE}
+        -ddelete-intermediate-files
+        -dresolution=301
+        --png -dpixmap-format=pngalpha
+        -o "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}"
+        "${_lyfile}"
+    COMMAND ${CONVERT_EXECUTABLE}
+        "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
+        -resize ${_size}
+        "${_outp}"
+    COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_CURRENT_BINARY_DIR}/temp_${_base}.png"
+    VERBATIM
+  )
+  list(APPEND all_pngs ${_outp})
+endmacro(lilypond_png_text_icon)
 
 # Make icons for articulations and notes etc. at 22px
 file(GLOB lilypond_files
@@ -88,7 +112,6 @@ file(GLOB lilypond_files
   time_*.ly
   bar_*.ly
   slur_*.ly
-  dynamic_*.ly
 )
 foreach(_ly ${lilypond_files})
   lilypond_png_icon(${_ly} 22)
@@ -105,6 +128,13 @@ file(GLOB lilypond_files scorewiz.ly)
 foreach(_ly ${lilypond_files})
   lilypond_png_image(${_ly})
 endforeach(_ly ${lilypond_files})
+
+# Text icons for dynamics
+file(GLOB lilypond_files dynamic_*.ly)
+foreach(_ly ${lilypond_files})
+  lilypond_png_text_icon(${_ly} 22)
+endforeach(_ly ${lilypond_files})
+
 
 # Build and install all LilyPond-generated pictures
 add_custom_target(lilypond_pngs ALL DEPENDS ${all_pngs})

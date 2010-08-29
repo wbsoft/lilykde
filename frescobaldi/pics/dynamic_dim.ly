@@ -1,3 +1,3 @@
-\version "2.12.0"
+\version "2.13.21"
 \include "dynamic_defaults.ily"
-\markup \fontsize #-2 \italic dim
+\markup \icon #size2 \italic dim

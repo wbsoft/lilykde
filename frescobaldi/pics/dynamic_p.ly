@@ -1,3 +1,3 @@
-\version "2.12.0"
+\version "2.13.20"
 \include "dynamic_defaults.ily"
-\markup \dynamic p
+\markup \icon #size1 \dynamic p

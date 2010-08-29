@@ -1,3 +1,3 @@
-\version "2.12.0"
+\version "2.13.20"
 \include "dynamic_defaults.ily"
-\markup \fontsize #0 \dynamic sf
+\markup \icon #size1 \dynamic sf
