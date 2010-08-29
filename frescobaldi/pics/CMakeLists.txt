@@ -88,6 +88,7 @@ file(GLOB lilypond_files
   time_*.ly
   bar_*.ly
   slur_*.ly
+  dynamic_*.ly
 )
 foreach(_ly ${lilypond_files})
   lilypond_png_icon(${_ly} 22)
