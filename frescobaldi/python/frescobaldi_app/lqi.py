@@ -54,6 +54,7 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
         self.mainwin = tool.mainwin
         self.widgets = [
             Articulations(self),
+            Dynamics(self),
             Spanners(self),
         ]
         # don't allow us to shrink below the minimum size of our children
@@ -71,8 +72,13 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
             
     def saveSettings(self):
         self.tool.config().writeEntry('current', self.currentWidget()._name)
-        
-        
+    
+    def wheelEvent(self, ev):
+        i = self.currentIndex() + self.count()
+        i += 1 if ev.delta() < 0 else -1
+        self.setCurrentIndex(i % self.count())
+
+
 class Lqi(ShortcutDispatcherClient, QWidget):
     """ Abstract base class for LilyPond Quick Insert tools """
 
@@ -193,10 +199,19 @@ class Articulations(Lqi):
             self.toolbox.addSymbol(action, 'articulation_' + name)
 
 
+class Dynamics(Lqi):
+    """A toolbox item with slurs, spanners, etc."""
+    def __init__(self, toolbox):
+        super(Dynamics, self).__init__(toolbox, 'dynamic',
+            i18n("Dynamics"), symbol='dynamic_f',
+            tooltip=i18n("Dynamic symbols."))
+
+
 class Spanners(Lqi):
     """A toolbox item with slurs, spanners, etc."""
     def __init__(self, toolbox):
         super(Spanners, self).__init__(toolbox, 'spanner',
             i18n("Spanners"), symbol='slur_solid',
             tooltip=i18n("Slurs, spanners, hairpins, etcetera."))
-        
+
+
