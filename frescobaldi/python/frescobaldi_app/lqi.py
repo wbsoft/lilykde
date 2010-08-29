@@ -77,6 +77,7 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
         i = self.currentIndex() + self.count()
         i += 1 if ev.delta() < 0 else -1
         self.setCurrentIndex(i % self.count())
+        ev.accept()
 
 
 class Lqi(ShortcutDispatcherClient, QWidget):
@@ -137,13 +138,13 @@ class Articulations(Lqi):
         self.titles = dict(ly.articulation.articulations(i18n))
         for title, group in ly.articulation.groups(i18n):
             box = QGroupBox(title)
-            layout.addStretch()
+            layout.addStretch(1)
             layout.addWidget(box)
             grid = QGridLayout()
             grid.setSpacing(0)
             box.setLayout(grid)
-            row, col = 0, 0
-            for sign, title in group:
+            for num, (sign, title) in enumerate(group):
+                row, col = divmod(num, cols)
                 b = QToolButton(clicked=(lambda sign: lambda: self.writeSign(sign))(sign))
                 b.setContextMenuPolicy(Qt.CustomContextMenu)
                 b.customContextMenuRequested.connect((lambda button, sign:
@@ -155,11 +156,7 @@ class Articulations(Lqi):
                 b.setIconSize(QSize(22, 22))
                 b.setToolTip('<b>{0}</b> (\\{1})'.format(title, sign))
                 grid.addWidget(b, row, col)
-                col += 1
-                if col >= cols:
-                    col = 0
-                    row += 1
-        layout.addStretch()
+        layout.addStretch(2)
 
     def writeSign(self, sign):
         """
@@ -205,6 +202,70 @@ class Dynamics(Lqi):
         super(Dynamics, self).__init__(toolbox, 'dynamic',
             i18n("Dynamics"), symbol='dynamic_f',
             tooltip=i18n("Dynamic symbols."))
+        
+        layout = QVBoxLayout(self)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+        
+        # help text
+        self.setWhatsThis("<p>{0}</p><p>{1}</p><p>{2}</p>".format(
+            i18n("Click a dynamic sign to add it to your document."),
+            i18n("If you select some music first, dynamic spanners will "
+                 "be added the selected fragment."),
+            i18n("If you have selected some music and you click a sign "
+                 "after a spanner, the sign will terminate the spanner.")))
+        
+        cols = 5
+
+        h = KHBox()
+        layout.addWidget(h)
+        l = QLabel(i18n("Direction:"), h)
+        self.direction = QComboBox(h)
+        self.direction.addItems([i18n("Up"), i18n("Neutral"), i18n("Down")])
+        self.direction.setCurrentIndex(1)
+        l.setBuddy(self.direction)
+        h.setToolTip(i18n("The direction to use for the dynamics."))
+
+        signs = QGroupBox(i18n("Signs"))
+        grid = QGridLayout()
+        grid.setSpacing(0)
+        signs.setLayout(grid)
+        
+        for num, sign in enumerate((
+            'mf', 'f', 'ff', 'fff', 'ffff',
+            'mp', 'p', 'pp', 'ppp', 'pppp',
+            'fp', 'sf', 'sff', 'sfz', 'rfz',
+            'sp', 'spp',)):
+            row, col = divmod(num, cols)
+            b = QToolButton()
+            b.setAutoRaise(True)
+            # load and convert the icon to the default text color
+            toolbox.addSymbol(b, 'dynamic_' + sign, 22)
+            b.setIconSize(QSize(22, 22))
+            grid.addWidget(b, row, col)
+      
+        spanners = QGroupBox(i18n("Spanners"))
+        grid = QGridLayout()
+        grid.setSpacing(0)
+        spanners.setLayout(grid)
+        
+        for num, sign in enumerate((
+            'hairpin_cresc', 'cresc', 'hairpin_dim', 'dim', 'decresc',
+            )):
+            row, col = divmod(num, cols)
+            b = QToolButton()
+            b.setAutoRaise(True)
+            # load and convert the icon to the default text color
+            toolbox.addSymbol(b, 'dynamic_' + sign, 22)
+            b.setIconSize(QSize(22, 22))
+            grid.addWidget(b, row, col)
+      
+        layout.addStretch(1)
+        layout.addWidget(signs)
+        layout.addStretch(1)
+        layout.addWidget(spanners)
+        layout.addStretch(2)
 
 
 class Spanners(Lqi):
