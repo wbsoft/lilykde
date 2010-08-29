@@ -105,6 +105,12 @@ class Articulations(Lqi):
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
         
+        # help text
+        self.setWhatsThis("<p>{0}</p><p>{1}</p>".format(
+            i18n("Click an articulation sign to add it to your document."),
+            i18n("If you select some music first, the articulation will "
+              "be added to all notes in the selection.")))
+        
         cols = 5
 
         self.shorthands = QCheckBox(i18n("Allow shorthands"))
@@ -147,15 +153,6 @@ class Articulations(Lqi):
                 if col >= cols:
                     col = 0
                     row += 1
-
-        # help text
-        l = QLabel("<p><i>{0}</i></p><p><i>{1}</i></p>".format(
-            i18n("Click an articulation sign to add it to your document."),
-            i18n("If you select some music first, the articulation will "
-              "be added to all notes in the selection.")))
-        l.setWordWrap(True)
-        layout.addStretch()
-        layout.addWidget(l)
         layout.addStretch()
 
     def writeSign(self, sign):
