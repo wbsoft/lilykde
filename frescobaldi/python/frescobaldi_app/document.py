@@ -32,7 +32,7 @@ from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KDialog, KIcon, KMessageBox
 from PyKDE4.ktexteditor import KTextEditor
 
-import ly.rx, ly.pitch, ly.parse, ly.tokenize, ly.tools, ly.version
+import ly.rx, ly.dynamic, ly.pitch, ly.parse, ly.tokenize, ly.tools, ly.version
 from kateshell.app import cacheresult
 from kateshell.widgets import promptText
 from kateshell.mainwindow import addAccelerators
@@ -570,6 +570,7 @@ class DocumentManipulator(object):
     def addArticulation(self, art):
         """
         Add artication to selected notes or chord, or just insert it.
+        See lqi.py Articulations.
         """
         text = self.doc.selectionText()
         if text:
@@ -589,6 +590,34 @@ class DocumentManipulator(object):
         else:
             self.adjustCursorToChords()
             self.doc.view.insertText(art)
+    
+    def addDynamic(self, name, direction):
+        """
+        Add dynamics with name, direction (-1, 0 or 1).
+        See lqi.py Dynamics.
+        """
+        if name in ly.dynamic.marks:
+            dynamic = '\\' + name
+        elif name == 'hairpin_cresc':
+            dynamic = '\\<'
+        elif name == 'hairpin_dim':
+            dynamic = '\\>'
+        elif name == 'cresc':
+            dynamic = '\\cresc'
+        elif name == 'decresc':
+            dynamic = '\\decresc'
+        elif name == 'dim':
+            dynamic = '\\dim'
+        else:
+            return
+        direction = ['_', '', '^'][direction+1]
+        
+        text = self.doc.selectionText()
+        if text:
+            pass # TODO: handle selection
+        else:
+            self.adjustCursorToChords()
+            self.doc.view.insertText(direction + dynamic)
         
     def wrapSelection(self, text, before='{', after='}', alwaysMultiLine=False):
         """

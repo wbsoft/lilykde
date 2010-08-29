@@ -270,6 +270,13 @@ class Dynamics(Lqi):
         layout.addWidget(spanners)
         layout.addStretch(2)
 
+    def actionTriggered(self, name):
+        direction = 1 - self.direction.currentIndex()
+        # the actual writing is performed by the manipulator (see document.py)
+        doc = self.mainwin.currentDocument()
+        doc.manipulator().addDynamic(name, direction)
+        doc.view.setFocus()
+        
     def populateAction(self, name, action):
         if name in self.dynamicSpanners:
             action.setText(self.dynamicSpanners[name])
