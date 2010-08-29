@@ -25,8 +25,8 @@ import re
 
 from PyQt4.QtCore import QSize, Qt
 from PyQt4.QtGui import (
-    QCheckBox, QComboBox, QGridLayout, QGroupBox, QLabel, QToolBox, QToolButton,
-    QVBoxLayout, QWidget)
+    QCheckBox, QComboBox, QGridLayout, QGroupBox, QLabel, QSizePolicy, QToolBox,
+    QToolButton, QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KIcon, KHBox, KMenu
 
@@ -52,18 +52,22 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
         UserShortcutDispatcher.__init__(self, tool.mainwin.quickInsertShortcuts)
         self.tool = tool
         self.mainwin = tool.mainwin
-        Articulations(self)
-        Spanners(self)
-        self.setMinimumWidth(self.sizeHint().width())
+        self.widgets = [
+            Articulations(self),
+            Spanners(self),
+        ]
+        # don't allow us to shrink below the minimum size of our children
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        width = max(w.minimumSizeHint().width() for w in self.widgets) + 12
+        self.setMinimumWidth(width)
         self.mainwin.aboutToClose.connect(self.saveSettings)
         self.loadSettings()
     
     def loadSettings(self):
         current = self.tool.config().readEntry('current', '')
-        for index in range(self.count()):
-            w = self.widget(index)
+        for i, w in enumerate(self.widgets):
             if w._name == current:
-                self.setCurrentIndex(index)
+                self.setCurrentIndex(i)
             
     def saveSettings(self):
         self.tool.config().writeEntry('current', self.currentWidget()._name)
@@ -84,7 +88,6 @@ class Lqi(ShortcutDispatcherClient, QWidget):
             toolbox.addItemSymbol(toolbox, i, symbol)
         if tooltip:
             toolbox.setItemToolTip(i, tooltip)
-
 
 class Articulations(Lqi):
     """
@@ -125,6 +128,7 @@ class Articulations(Lqi):
             layout.addStretch()
             layout.addWidget(box)
             grid = QGridLayout()
+            grid.setSpacing(0)
             box.setLayout(grid)
             row, col = 0, 0
             for sign, title in group:
