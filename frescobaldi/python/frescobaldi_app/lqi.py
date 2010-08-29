@@ -30,7 +30,7 @@ from PyQt4.QtGui import (
 from PyKDE4.kdecore import KGlobal, i18n
 from PyKDE4.kdeui import KIcon, KHBox, KMenu
 
-import ly.articulation
+import ly.articulation, ly.dynamic
 from kateshell.shortcut import UserShortcutDispatcher, ShortcutDispatcherClient
 from frescobaldi_app.mainapp import SymbolManager
 
@@ -96,6 +96,38 @@ class Lqi(ShortcutDispatcherClient, QWidget):
         if tooltip:
             toolbox.setItemToolTip(i, tooltip)
 
+    def createButton(self, name, title,
+            symbol=None, icon=None, tooltip=None, size=22):
+        b = QToolButton()
+        b.clicked.connect(lambda: self.actionTriggered(name))
+        b.setAutoRaise(True)
+        b.setContextMenuPolicy(Qt.CustomContextMenu)
+        b.customContextMenuRequested.connect(lambda pos:
+            self.showContextMenu(name, title, b.mapToGlobal(pos), symbol, icon))
+        b.setAutoRaise(True)
+        # load and convert the icon to the default text color
+        if symbol:
+            self.toolbox.addSymbol(b, symbol, size)
+        b.setIconSize(QSize(size, size))
+        b.setToolTip(tooltip if tooltip else title)
+        return b
+    
+    def showContextMenu(self, name, title, pos, symbol=None, icon=None):
+        menu = KMenu(self.mainwin)
+        menu.aboutToHide.connect(menu.deleteLater)
+        a = menu.addAction(KIcon("accessories-character-map"),
+            i18n("Configure Keyboard Shortcut (%1)",
+                 self.shortcutText(name) or i18n("None")))
+        a.triggered.connect(lambda: self.editShortcut(name, title, symbol, icon))
+        menu.popup(pos)
+        
+    def editShortcut(self, name, title, symbol=None, icon=None):
+        if symbol:
+            icon = self.toolbox.symbolIcon(symbol, 22)
+        super(Lqi, self).editShortcut(name, title, icon)
+        self.mainwin.currentDocument().view.setFocus()
+    
+
 class Articulations(Lqi):
     """
     A toolbox item with articulations.
@@ -145,20 +177,12 @@ class Articulations(Lqi):
             box.setLayout(grid)
             for num, (sign, title) in enumerate(group):
                 row, col = divmod(num, cols)
-                b = QToolButton(clicked=(lambda sign: lambda: self.writeSign(sign))(sign))
-                b.setContextMenuPolicy(Qt.CustomContextMenu)
-                b.customContextMenuRequested.connect((lambda button, sign:
-                    lambda pos: self.showContextMenu(sign, button.mapToGlobal(pos)))
-                    (b, sign))
-                b.setAutoRaise(True)
-                # load and convert the icon to the default text color
-                toolbox.addSymbol(b, 'articulation_' + sign, 22)
-                b.setIconSize(QSize(22, 22))
-                b.setToolTip('<b>{0}</b> (\\{1})'.format(title, sign))
+                b = self.createButton(sign, title, 'articulation_' + sign,
+                    tooltip='<b>{0}</b> (\\{1})'.format(title, sign))
                 grid.addWidget(b, row, col)
         layout.addStretch(2)
 
-    def writeSign(self, sign):
+    def actionTriggered(self, sign):
         """
         Write the clicked articulation to the document
         (or add it to all selected pitches).
@@ -173,23 +197,6 @@ class Articulations(Lqi):
         doc.manipulator().addArticulation(art)
         doc.view.setFocus()
     
-    def showContextMenu(self, name, pos):
-        menu = KMenu(self.mainwin)
-        menu.aboutToHide.connect(menu.deleteLater)
-        a = menu.addAction(KIcon("accessories-character-map"),
-            i18n("Configure Keyboard Shortcut (%1)", self.shortcutText(name) or i18n("None")))
-        a.triggered.connect(lambda: self.editShortcut(name))
-        menu.popup(pos)
-        
-    def editShortcut(self, name):
-        title = self.titles[name]
-        icon = self.toolbox.symbolIcon('articulation_' + name, 22)
-        super(Articulations, self).editShortcut(name, title, icon)
-        self.mainwin.currentDocument().view.setFocus()
-        
-    def actionTriggered(self, name):
-        self.writeSign(name)
-        
     def populateAction(self, name, action):
         if name in self.titles:
             action.setText(self.titles[name])
@@ -232,17 +239,11 @@ class Dynamics(Lqi):
         grid.setSpacing(0)
         signs.setLayout(grid)
         
-        for num, sign in enumerate((
-            'mf', 'f', 'ff', 'fff', 'ffff',
-            'mp', 'p', 'pp', 'ppp', 'pppp',
-            'fp', 'sf', 'sff', 'sfz', 'rfz',
-            'sp', 'spp',)):
+        for num, sign in enumerate(ly.dynamic.marks):
             row, col = divmod(num, cols)
-            b = QToolButton()
-            b.setAutoRaise(True)
-            # load and convert the icon to the default text color
-            toolbox.addSymbol(b, 'dynamic_' + sign, 22)
-            b.setIconSize(QSize(22, 22))
+            b = self.createButton(sign,
+                i18n("Dynamic sign %1", "<b><i>{0}</i><b>".format(sign)),
+                'dynamic_' + sign)
             grid.addWidget(b, row, col)
       
         spanners = QGroupBox(i18n("Spanners"))
@@ -250,15 +251,17 @@ class Dynamics(Lqi):
         grid.setSpacing(0)
         spanners.setLayout(grid)
         
-        for num, sign in enumerate((
-            'hairpin_cresc', 'cresc', 'hairpin_dim', 'dim', 'decresc',
+        self.dynamicSpanners = {}
+        for num, (sign, title) in enumerate((
+            ('hairpin_cresc', i18n("Hairpin crescendo")),
+            ('cresc', i18n("Crescendo")),
+            ('hairpin_dim', i18n("Hairpin diminuendo")),
+            ('dim', i18n("Diminuendo")),
+            ('decresc', i18n("Decrescendo")),
             )):
+            self.dynamicSpanners[sign] = title
             row, col = divmod(num, cols)
-            b = QToolButton()
-            b.setAutoRaise(True)
-            # load and convert the icon to the default text color
-            toolbox.addSymbol(b, 'dynamic_' + sign, 22)
-            b.setIconSize(QSize(22, 22))
+            b = self.createButton(sign, title, 'dynamic_' + sign)
             grid.addWidget(b, row, col)
       
         layout.addStretch(1)
@@ -266,6 +269,13 @@ class Dynamics(Lqi):
         layout.addStretch(1)
         layout.addWidget(spanners)
         layout.addStretch(2)
+
+    def populateAction(self, name, action):
+        if name in self.dynamicSpanners:
+            action.setText(self.dynamicSpanners[name])
+        elif name in ly.dynamic.marks:
+            action.setText(i18n("Dynamic sign %1", "\"{0}\"".format(name)))
+        self.toolbox.addSymbol(action, 'dynamic_' + name)
 
 
 class Spanners(Lqi):

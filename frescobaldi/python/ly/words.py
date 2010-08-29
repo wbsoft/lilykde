@@ -192,6 +192,7 @@ musiccommands = (
     'ff',
     'fff',
     'ffff',
+    'fffff',
     'figuremode',
     'figures',
     'finalis',
