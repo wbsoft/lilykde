@@ -175,6 +175,12 @@ class TarBall:
         # puts some files under image/share/ ...
         makedirs(app_dir)
         
+        # default config file
+        config_dir = os.path.join(data['CMAKE_INSTALL_PREFIX'], 'share', 'config')
+        makedirs(config_dir)
+        shutil.copy(os.path.join(curdir, 'data', 'frescobaldirc'), config_dir)
+        
+        # data files
         for name in (
                 'frescobaldiui.rc',
                 'expansions',
@@ -185,6 +191,7 @@ class TarBall:
                 os.remove(dest)
             os.symlink(os.path.join(curdir, 'data', name), dest)
         
+        # data directories
         for name in ('rumor', 'icons', 'css'):
             dest = os.path.join(app_dir, name)
             if os.path.exists(dest):
@@ -264,13 +271,13 @@ class SVN(TarBall):
         
         import ly.version
         for lily in findAllExe('lilypond'):
-            if ly.version.LilyPondInstance(lily).version() >= (2, 13, 19):
+            if ly.version.LilyPondInstance(lily).version() >= (2, 13, 21):
                 break
         else:
             config = KGlobal.config().group(None)
             lily = config.readEntry("lilypond", "lilypond")
             dlg = KUrlRequesterDialog(lily, 
-                "LilyPond >= 2.13.19 is needed to run Frescobaldi from a SVN "
+                "LilyPond >= 2.13.21 is needed to run Frescobaldi from a SVN "
                 "checkout.\n\nPlease install a recent LilyPond (e.g. from a "
                 "binary download) and select the binary here.", None)
             if dlg.exec_():
