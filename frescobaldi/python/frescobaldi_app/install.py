@@ -44,9 +44,6 @@ def install(app, oldVersion):
     if version < (1, 1, 2):
         saveOnRunWarning()
     
-    # on every update:
-    checkNewExpandDefaultShortcuts()
-    
     # ... other stuff can be added here ...
     
 
@@ -95,20 +92,6 @@ def newLilyPondConfig():
         group.writeEntry("convert-ly", conv)
         c.sync()
     
-def checkNewExpandDefaultShortcuts():
-    """ Check the expansions file for new default shortcuts. """
-    exp = KConfig("expansions", KConfig.NoGlobals, "appdata")
-    shc = KGlobal.config().group("expand shortcuts")
-    for name in exp.groupList():
-        group = exp.group(name)
-        if group.hasKey("Name") and group.hasKey("Default Shortcut"):
-            shortcut = group.readEntry("Default Shortcut", "")
-            group.deleteEntry("Default Shortcut")
-            if shortcut:
-                shc.writeEntry(name, shortcut)
-    exp.sync()
-    shc.sync()
-
 def saveOnRunWarning():
     """ Copy old setting to the new save on run notification setting (1.1.2)"""
     c = KGlobal.config()
