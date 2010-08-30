@@ -133,3 +133,8 @@ point_and_click = re.compile(
     r"|(\\pointAndClickOff\b|#\s*\(ly:set-option\s+'point-and-click\s+#f\s*\))",
     re.DOTALL)
 
+# dynamics
+dynamic_mark = re.compile(r"[^_-]?\\(f{1,5}|p{1,5}|mf|mp|fp|spp?|sff?|sfz|rfz)\b")
+dynamic_spanner = re.compile(r"[^_-]?\\[<>]")
+
+    

@@ -591,33 +591,75 @@ class DocumentManipulator(object):
             self.adjustCursorToChords()
             self.doc.view.insertText(art)
     
+    _spannerDynamics = {
+        'hairpin_cresc': '\\<',
+        'hairpin_dim':   '\\>',
+        'cresc':         '\\cresc',
+        'decresc':       '\\decresc',
+        'dim':           '\\dim',
+    }
+        
     def addDynamic(self, name, direction):
         """
         Add dynamics with name, direction (-1, 0 or 1).
         See lqi.py Dynamics.
         """
-        if name in ly.dynamic.marks:
+        isSpanner = name in self._spannerDynamics
+        if isSpanner:
+            dynamic = self._spannerDynamics[name]
+        elif name in ly.dynamic.marks:
             dynamic = '\\' + name
-        elif name == 'hairpin_cresc':
-            dynamic = '\\<'
-        elif name == 'hairpin_dim':
-            dynamic = '\\>'
-        elif name == 'cresc':
-            dynamic = '\\cresc'
-        elif name == 'decresc':
-            dynamic = '\\decresc'
-        elif name == 'dim':
-            dynamic = '\\dim'
         else:
             return
         direction = ['_', '', '^'][direction+1]
         
         text = self.doc.selectionText()
         if text:
-            pass # TODO: handle selection
-        else:
-            self.adjustCursorToChords()
-            self.doc.view.insertText(direction + dynamic)
+            items = list(m for m in ly.rx.chord_rest.finditer(text) if m.group('full'))
+            if len(items) >= 2:
+                # match objects for the first note and the last in the selection
+                first, last = items[0], items[-1]
+                
+                # text after the first note/chord/rest
+                afterFirst = text[first.end('full'):]
+                
+                # text after the last note/chord/rest
+                afterLast = text[last.end('full'):]
+                selRange = self.doc.view.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
+                docRange = self.doc.doc.documentRange()
+                afterLast += self.doc.doc.text(
+                    KTextEditor.Range(selRange.end(), docRange.end()))[:10]
+                
+                start = Cursor(selRange.start())
+                start.walk(text[:first.end('full')])
+                end = Cursor(selRange.start())
+                end.walk(text[:last.end('full')])
+                
+                if isSpanner:
+                    with self.doc.editContext():
+                        # don't terminate the spanner if it already ends with a dynamic
+                        if not ly.rx.dynamic_mark.match(afterLast):
+                            self.doc.doc.insertText(end.kteCursor(), '\\!')
+                        # skip a dynamic mark that might already be at the start
+                        m = ly.rx.dynamic_mark.match(afterFirst)
+                        if m:
+                            start.walk(text[:m.end()])
+                            direction = ''
+                        # on this place, insert the spanner
+                        self.doc.doc.insertText(start.kteCursor(), direction + dynamic)
+                else:
+                    # if a spanner ends on the end, replace it with our dynamic
+                    if afterLast.startswith('\\!'):
+                        r = KTextEditor.Range(
+                            end.line, end.column, end.line, end.column + 2)
+                        self.doc.doc.replaceText(r, dynamic)
+                    elif ly.rx.dynamic_mark.match(afterFirst):
+                        self.doc.doc.insertText(end.kteCursor(), direction + dynamic)
+                    else:
+                        self.doc.doc.insertText(start.kteCursor(), direction + dynamic)
+                return
+        self.adjustCursorToChords()
+        self.doc.view.insertText(direction + dynamic)
         
     def wrapSelection(self, text, before='{', after='}', alwaysMultiLine=False):
         """

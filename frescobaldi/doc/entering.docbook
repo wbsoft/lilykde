@@ -246,8 +246,12 @@ More information about writing Rumor scripts is on the
 
 <para>
 The Quick Insert Panel (<keycap>Meta+Alt+I</keycap>) is available in the left dock.
-It currently has one panel to add articulations and other symbols to your music.
+It has panels to add articulations, dynamics and other symbols to your music.
+You can use the mouse wheel to quickly flip through the panels.
 </para>
+
+<sect2 id="quickinsert-articulations">
+<title>The Articulations panel</title>
 
 <para>
 You can just click on a note in the PDF preview and then on an articulation symbol in the
@@ -265,7 +269,24 @@ to all notes or chords in the selected music fragment.
 You can select a music fragment using the PDF preview: click the first note of
 the range you want to select and then shift-click the second note.
 </para></tip>
+</sect2>
 
+<sect2 id="quickinsert-dynamics">
+<title>The Dynamics panel</title>
+
+<para>
+Typing single dynamics in &lilypond; is not difficult at all, but the power of this panel
+is the possibility to easily insert crescendos and diminuendos in ranges of music.
+</para>
+
+<para>
+If no music is selected the dynamic sign is just placed after the current note or chord.
+If a range of music has been selected (e.g. using the preview), you can click
+e.g. a dynamic mark, a spanner and another mark, to add them to your music.
+If you only click a spanner and a mark, the mark will be added at the end.
+</para>
+
+</sect2>
 </sect1>
 
 <sect1 id="other">

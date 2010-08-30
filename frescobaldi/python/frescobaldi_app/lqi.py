@@ -80,7 +80,47 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
         ev.accept()
 
 
-class Lqi(ShortcutDispatcherClient, QWidget):
+class ActionButton(QToolButton):
+    """ A toolbutton that manages its shortcut and title automatically. """
+    def __init__(self, panel, name, title,
+            symbol=None, icon=None, tooltip=None, size=22):
+        QToolButton.__init__(self)
+        self.panel = panel
+        self.name = name
+        self.title = title
+        self.symbol = symbol
+        self.icon = icon
+        if symbol:
+            panel.toolbox.addSymbol(self, symbol, size)
+        elif icon:
+            self.setIcon(KIcon(icon))
+        self.clicked.connect(self.fire)
+        self.setAutoRaise(True)
+        self.setIconSize(QSize(size, size))
+        self.setToolTip(tooltip if tooltip else title)
+        
+    def fire(self):
+        self.panel.actionTriggered(self.name)
+        
+    def contextMenuEvent(self, ev):
+        menu = KMenu(self.panel.mainwin)
+        menu.aboutToHide.connect(menu.deleteLater)
+        a = menu.addAction(KIcon("accessories-character-map"),
+            i18n("Configure Keyboard Shortcut (%1)",
+                 self.panel.shortcutText(self.name) or i18n("None")))
+        a.triggered.connect(self.editShortcut)
+        menu.popup(ev.globalPos())
+        
+    def editShortcut(self):
+        if self.symbol:
+            icon = self.panel.toolbox.symbolIcon(self.symbol, 22)
+        else:
+            icon = self.icon
+        self.panel.editShortcut(self.name, self.title, icon)
+        self.panel.mainwin.currentDocument().view.setFocus()
+        
+    
+class LqiPanel(ShortcutDispatcherClient, QWidget):
     """ Abstract base class for LilyPond Quick Insert tools """
 
     def __init__(self, toolbox, name, title, icon="", symbol="", tooltip=""):
@@ -96,46 +136,15 @@ class Lqi(ShortcutDispatcherClient, QWidget):
         if tooltip:
             toolbox.setItemToolTip(i, tooltip)
 
-    def createButton(self, name, title,
-            symbol=None, icon=None, tooltip=None, size=22):
-        b = QToolButton()
-        b.clicked.connect(lambda: self.actionTriggered(name))
-        b.setAutoRaise(True)
-        b.setContextMenuPolicy(Qt.CustomContextMenu)
-        b.customContextMenuRequested.connect(lambda pos:
-            self.showContextMenu(name, title, b.mapToGlobal(pos), symbol, icon))
-        b.setAutoRaise(True)
-        # load and convert the icon to the default text color
-        if symbol:
-            self.toolbox.addSymbol(b, symbol, size)
-        b.setIconSize(QSize(size, size))
-        b.setToolTip(tooltip if tooltip else title)
-        return b
-    
-    def showContextMenu(self, name, title, pos, symbol=None, icon=None):
-        menu = KMenu(self.mainwin)
-        menu.aboutToHide.connect(menu.deleteLater)
-        a = menu.addAction(KIcon("accessories-character-map"),
-            i18n("Configure Keyboard Shortcut (%1)",
-                 self.shortcutText(name) or i18n("None")))
-        a.triggered.connect(lambda: self.editShortcut(name, title, symbol, icon))
-        menu.popup(pos)
-        
-    def editShortcut(self, name, title, symbol=None, icon=None):
-        if symbol:
-            icon = self.toolbox.symbolIcon(symbol, 22)
-        super(Lqi, self).editShortcut(name, title, icon)
-        self.mainwin.currentDocument().view.setFocus()
-    
 
-class Articulations(Lqi):
+class Articulations(LqiPanel):
     """
     A toolbox item with articulations.
     Clicking an articulation will insert it in the text document.
     If text (music) is selected, the articulation will be added to all notes.
     """
     def __init__(self, toolbox):
-        Lqi.__init__(self, toolbox, 'articulation',
+        super(Articulations, self).__init__(toolbox, 'articulation',
             i18n("Articulations"), symbol='articulation_prall',
             tooltip=i18n("Different kinds of articulations and other signs."))
             
@@ -177,7 +186,7 @@ class Articulations(Lqi):
             box.setLayout(grid)
             for num, (sign, title) in enumerate(group):
                 row, col = divmod(num, cols)
-                b = self.createButton(sign, title, 'articulation_' + sign,
+                b = ActionButton(self, sign, title, 'articulation_' + sign,
                     tooltip='<b>{0}</b> (\\{1})'.format(title, sign))
                 grid.addWidget(b, row, col)
         layout.addStretch(2)
@@ -203,7 +212,7 @@ class Articulations(Lqi):
             self.toolbox.addSymbol(action, 'articulation_' + name)
 
 
-class Dynamics(Lqi):
+class Dynamics(LqiPanel):
     """A toolbox item with slurs, spanners, etc."""
     def __init__(self, toolbox):
         super(Dynamics, self).__init__(toolbox, 'dynamic',
@@ -241,7 +250,7 @@ class Dynamics(Lqi):
         
         for num, sign in enumerate(ly.dynamic.marks):
             row, col = divmod(num, cols)
-            b = self.createButton(sign,
+            b = ActionButton(self, sign,
                 i18n("Dynamic sign %1", "<b><i>{0}</i><b>".format(sign)),
                 'dynamic_' + sign)
             grid.addWidget(b, row, col)
@@ -261,14 +270,14 @@ class Dynamics(Lqi):
             )):
             self.dynamicSpanners[sign] = title
             row, col = divmod(num, cols)
-            b = self.createButton(sign, title, 'dynamic_' + sign)
+            b = ActionButton(self, sign, title, 'dynamic_' + sign)
             grid.addWidget(b, row, col)
       
         layout.addStretch(1)
         layout.addWidget(signs)
         layout.addStretch(1)
         layout.addWidget(spanners)
-        layout.addStretch(2)
+        layout.addStretch(3)
 
     def actionTriggered(self, name):
         direction = 1 - self.direction.currentIndex()
@@ -285,7 +294,7 @@ class Dynamics(Lqi):
         self.toolbox.addSymbol(action, 'dynamic_' + name)
 
 
-class Spanners(Lqi):
+class Spanners(LqiPanel):
     """A toolbox item with slurs, spanners, etc."""
     def __init__(self, toolbox):
         super(Spanners, self).__init__(toolbox, 'spanner',
