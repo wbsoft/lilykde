@@ -728,30 +728,6 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             rhythm = KApplication.clipboard().text()
             return ly.duration.applyRhythm(text, rhythm)
         
-        # Bar lines
-        for name, text, title, key in (
-            ("bar_double", "||", i18n("Double bar line"), "Alt+;"),
-            ("bar_end", "|.", i18n("Ending bar line"), "Alt+."),
-            ("bar_dotted", ":", i18n("Dotted bar line"), None),
-            ("bar_dashed", "dashed", i18n("Dashed bar line"), None),
-            ("bar_invisible", "", i18n("Invisible bar line"), None),
-            ("bar_repeat_start", "|:", i18n("Repeat start"), None),
-            ("bar_repeat_double", ":|:", i18n("Repeat both"), None),
-            ("bar_repeat_end", ":|", i18n("Repeat end"), None),
-            ("bar_tick", "'", i18n("Tick bar line"), None),
-            ("bar_single", "|", i18n("Single bar line"), None),
-            ("bar_sws", "|.|", i18n("Small-Wide-Small bar line"), None),
-            ("bar_ws", ".|", i18n("Wide-Small bar line"), None),
-            ("bar_ww", ".|.", i18n("Double wide bar line"), None),
-            ("bar_cswc", ":|.:", i18n("Repeat both (old)"), None),
-            ("bar_cswsc", ":|.|:", i18n("Repeat both (classic)"), None),
-            ("bar_segno", "S", i18n("Segno bar line"), None),
-            ):
-            a = self.act(name, title, key=key, func=(lambda text:
-                lambda: self.currentDocument().manipulator().insertBarLine(
-                    text))(text))
-            self.addSymbol(a, name)
-            
         # Setup lyrics hyphen and de-hyphen action
         @self.onSelAction(i18n("Hyphenate Lyrics Text"), keepSelection=False,
             key="Ctrl+L")

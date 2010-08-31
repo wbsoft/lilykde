@@ -34,6 +34,8 @@ import ly.articulation, ly.dynamic
 from kateshell.shortcut import UserShortcutDispatcher, ShortcutDispatcherClient
 from frescobaldi_app.mainapp import SymbolManager
 
+# how many column of toolbuttons to use
+COLUMNS = 5
 
 class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
     """
@@ -56,6 +58,7 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
             Articulations(self),
             Dynamics(self),
             Spanners(self),
+            BarLines(self),
         ]
         # don't allow us to shrink below the minimum size of our children
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
@@ -63,6 +66,7 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
         self.setMinimumWidth(width)
         self.mainwin.aboutToClose.connect(self.saveSettings)
         self.loadSettings()
+        self._wheeldelta = 0
     
     def loadSettings(self):
         current = self.tool.config().readEntry('current', '')
@@ -74,10 +78,14 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
         self.tool.config().writeEntry('current', self.currentWidget()._name)
     
     def wheelEvent(self, ev):
-        i = self.currentIndex() + self.count()
-        i += 1 if ev.delta() < 0 else -1
-        self.setCurrentIndex(i % self.count())
-        ev.accept()
+        self._wheeldelta -= ev.delta()
+        steps, self._wheeldelta = divmod(self._wheeldelta, 120)
+        i = self.currentIndex() + steps
+        if 0 <= i < self.count():
+            self.setCurrentIndex(i)
+            ev.accept()
+        else:
+            ev.ignore()
 
 
 class ActionButton(QToolButton):
@@ -159,8 +167,6 @@ class Articulations(LqiPanel):
             i18n("If you select some music first, the articulation will "
               "be added to all notes in the selection.")))
         
-        cols = 5
-
         self.shorthands = QCheckBox(i18n("Allow shorthands"))
         self.shorthands.setChecked(True)
         self.shorthands.setToolTip(i18n(
@@ -179,17 +185,16 @@ class Articulations(LqiPanel):
         self.titles = dict(ly.articulation.articulations(i18n))
         for title, group in ly.articulation.groups(i18n):
             box = QGroupBox(title)
-            layout.addStretch(1)
             layout.addWidget(box)
             grid = QGridLayout()
             grid.setSpacing(0)
             box.setLayout(grid)
             for num, (sign, title) in enumerate(group):
-                row, col = divmod(num, cols)
+                row, col = divmod(num, COLUMNS)
                 b = ActionButton(self, sign, title, 'articulation_' + sign,
                     tooltip='<b>{0}</b> (\\{1})'.format(title, sign))
                 grid.addWidget(b, row, col)
-        layout.addStretch(2)
+        layout.addStretch()
 
     def actionTriggered(self, sign):
         """
@@ -209,7 +214,7 @@ class Articulations(LqiPanel):
     def populateAction(self, name, action):
         if name in self.titles:
             action.setText(self.titles[name])
-            self.toolbox.addSymbol(action, 'articulation_' + name)
+            action.setIcon(self.toolbox.symbolIcon('articulation_' + name))
 
 
 class Dynamics(LqiPanel):
@@ -232,8 +237,6 @@ class Dynamics(LqiPanel):
             i18n("If you have selected some music and you click a sign "
                  "after a spanner, the sign will terminate the spanner.")))
         
-        cols = 5
-
         h = KHBox()
         layout.addWidget(h)
         l = QLabel(i18n("Direction:"), h)
@@ -249,7 +252,7 @@ class Dynamics(LqiPanel):
         signs.setLayout(grid)
         
         for num, sign in enumerate(ly.dynamic.marks):
-            row, col = divmod(num, cols)
+            row, col = divmod(num, COLUMNS)
             b = ActionButton(self, sign,
                 i18n("Dynamic sign %1", "<b><i>{0}</i><b>".format(sign)),
                 'dynamic_' + sign)
@@ -269,15 +272,13 @@ class Dynamics(LqiPanel):
             ('decresc', i18n("Decrescendo")),
             )):
             self.dynamicSpanners[sign] = title
-            row, col = divmod(num, cols)
             b = ActionButton(self, sign, title, 'dynamic_' + sign)
+            row, col = divmod(num, COLUMNS)
             grid.addWidget(b, row, col)
       
-        layout.addStretch(1)
         layout.addWidget(signs)
-        layout.addStretch(1)
         layout.addWidget(spanners)
-        layout.addStretch(3)
+        layout.addStretch()
 
     def actionTriggered(self, name):
         direction = 1 - self.direction.currentIndex()
@@ -291,7 +292,61 @@ class Dynamics(LqiPanel):
             action.setText(self.dynamicSpanners[name])
         elif name in ly.dynamic.marks:
             action.setText(i18n("Dynamic sign %1", "\"{0}\"".format(name)))
-        self.toolbox.addSymbol(action, 'dynamic_' + name)
+        action.setIcon(self.toolbox.symbolIcon('dynamic_' + name))
+
+
+class BarLines(LqiPanel):
+    """A toolbox item with barlines, etc."""
+    def __init__(self, toolbox):
+        super(BarLines, self).__init__(toolbox, 'bar',
+            i18n("Bar Lines"), symbol='bar_single',
+            tooltip=i18n("Bar lines, breath marks, etcetera."))
+        layout = QVBoxLayout(self)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+        
+        bars = QGroupBox(i18n("Bar Lines"))
+        grid = QGridLayout()
+        grid.setSpacing(0)
+        bars.setLayout(grid)
+
+        self.bars = {}
+        for num, (name, bar, title) in enumerate((
+            ("double", "||", i18n("Double bar line")),
+            ("end", "|.", i18n("Ending bar line")),
+            ("dotted", ":", i18n("Dotted bar line")),
+            ("dashed", "dashed", i18n("Dashed bar line")),
+            ("invisible", "", i18n("Invisible bar line")),
+            ("repeat_start", "|:", i18n("Repeat start")),
+            ("repeat_double", ":|:", i18n("Repeat both")),
+            ("repeat_end", ":|", i18n("Repeat end")),
+            ("cswc", ":|.:", i18n("Repeat both (old)")),
+            ("cswsc", ":|.|:", i18n("Repeat both (classic)")),
+            ("tick", "'", i18n("Tick bar line")),
+            ("single", "|", i18n("Single bar line")),
+            ("sws", "|.|", i18n("Small-Wide-Small bar line")),
+            ("ws", ".|", i18n("Wide-Small bar line")),
+            ("ww", ".|.", i18n("Double wide bar line")),
+            ("segno", "S", i18n("Segno bar line")),
+        )):
+            self.bars[name] = (bar, title)
+            b = ActionButton(self, name, title, 'bar_' + name)
+            row, col = divmod(num, COLUMNS)
+            grid.addWidget(b, row, col)
+        layout.addWidget(bars)
+        layout.addStretch()
+
+    def actionTriggered(self, name):
+        doc = self.mainwin.currentDocument()
+        if name in self.bars:
+            doc.manipulator().insertBarLine(self.bars[name][0])
+            doc.view.setFocus()
+        
+    def populateAction(self, name, action):
+        if name in self.bars:
+            action.setText(self.bars[name][1])
+        action.setIcon(self.toolbox.symbolIcon('bar_' + name))
 
 
 class Spanners(LqiPanel):
