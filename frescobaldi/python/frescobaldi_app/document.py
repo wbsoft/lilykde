@@ -527,7 +527,7 @@ class DocumentManipulator(object):
         """
         Insert a \\bar ".." command with the given type.
         """
-        self.doc.view.insertText('\\bar "{0}"'.format(bar))
+        self.insertIndented('\\bar "{0}"'.format(bar))
     
     def insertBreathingSign(self, sign):
         """
