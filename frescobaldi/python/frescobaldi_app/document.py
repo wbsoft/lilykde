@@ -528,6 +528,57 @@ class DocumentManipulator(object):
         Insert a \\bar ".." command with the given type.
         """
         self.doc.view.insertText('\\bar "{0}"'.format(bar))
+    
+    def insertBreathingSign(self, sign):
+        """
+        Insert a \\breathe mark with possibly an override for another shape.
+        """
+        if sign == 'rcomma':
+            text = '\\breathe'
+        else:
+            text = ("\\once \\override BreathingSign #'text = "
+                    '#(make-musicglyph-markup "scripts.{0}")\n'
+                    "\\breathe").format(sign.replace('_', '.'))
+        self.insertIndented(text)
+        
+    def insertIndented(self, text, cursor=None, wholeLines=None):
+        """Inserts text on the given or current cursor position.
+        
+        The following protocol is used:
+        
+        - if there is a newline in the text or wholeLines is True:
+            add newlines if necessary to have the text on its own lines.
+        - if wholeLines is False:
+            don't add newlines
+        - if no newlines were added:
+            - if the cursor is at a non-space character:
+                add a space after the text
+            - if the cursor is just after a non-space character:
+                add a space before the text.
+        """
+        cursor = cursor or self.doc.view.cursorPosition()
+        line, col = cursor.line(), cursor.column()
+        before = self.doc.line(line)[:col]
+        after = self.doc.line(line)[col:]
+        remove = None
+        if wholeLines or (wholeLines is None and '\n' in text):
+            if not isblank(after):
+                text += '\n'
+                spaces = len(after) - len(after.lstrip())
+                if spaces:
+                    remove = KTextEditor.Range(line, col, line, col + spaces)
+            text = '\n' + self.doc.indent(text, self.doc.currentIndent(cursor))
+            if isblank(before):
+                text = text.lstrip()
+        else:
+            if before and not before[-1].isspace():
+                text = ' ' + text
+            if after and not after[0].isspace():
+                text += ' '
+        if remove:
+            self.doc.doc.replaceText(remove, text)
+        else:
+            self.doc.doc.insertText(cursor, text)
         
     def insertTemplate(self, text, cursor=None, remove=None, doIndent=True):
         """

@@ -335,6 +335,24 @@ class BarLines(LqiPanel):
             row, col = divmod(num, COLUMNS)
             grid.addWidget(b, row, col)
         layout.addWidget(bars)
+        
+        breathes = QGroupBox(i18n("Breathing signs"))
+        grid = QGridLayout()
+        grid.setSpacing(0)
+        breathes.setLayout(grid)
+        
+        self.breathes = {}
+        for num, (name, title) in enumerate((
+            ('rcomma', i18n("Default Breathing Sign")),
+            ('rvarcomma', i18n("Straight Breathing Sign")),
+            ('caesura_curved', i18n("Curved Caesura")),
+            ('caesura_straight', i18n("Straight Caesura")),
+        )):
+            self.breathes[name] = title
+            b = ActionButton(self, name, title, 'breathe_' + name)
+            row, col = divmod(num, COLUMNS)
+            grid.addWidget(b, row, col)
+        layout.addWidget(breathes)
         layout.addStretch()
 
     def actionTriggered(self, name):
@@ -342,12 +360,18 @@ class BarLines(LqiPanel):
         if name in self.bars:
             doc.manipulator().insertBarLine(self.bars[name][0])
             doc.view.setFocus()
+        elif name in self.breathes:
+            doc.manipulator().insertBreathingSign(name)
+            doc.view.setFocus()
         
     def populateAction(self, name, action):
         if name in self.bars:
             action.setText(self.bars[name][1])
-        action.setIcon(self.toolbox.symbolIcon('bar_' + name))
-
+            action.setIcon(self.toolbox.symbolIcon('bar_' + name))
+        elif name in self.breathes:
+            action.setText(self.breathes[name])
+            action.setIcon(self.toolbox.symbolIcon('breathe_' + name))
+            
 
 class Spanners(LqiPanel):
     """A toolbox item with slurs, spanners, etc."""

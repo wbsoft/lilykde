@@ -108,6 +108,7 @@ endmacro(lilypond_png_text_icon)
 # Make icons for articulations and notes etc. at 22px
 file(GLOB lilypond_files
   articulation_*.ly
+  breathe_*.ly
   note_*.ly
   time_*.ly
   bar_*.ly
