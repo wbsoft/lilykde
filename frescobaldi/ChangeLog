@@ -3,7 +3,7 @@ Changes in 1.1.6 --
 * New features:
   - New built-in MIDI player using the KMidPart of KMid 2.4.0 or higher
   - Notification popup when a long build finishes while Frescobaldi is hidden
-  - Quick Insert: New Dynamics panel
+  - Quick Insert: new panels for dynamics and bar lines
 * Bugfixes and improvements:
   - Handle keyboard interrupt (SIGINT) nicely, don't show the bug dialog
   - Fix session --start commandline option

@@ -300,7 +300,7 @@ class BarLines(LqiPanel):
     def __init__(self, toolbox):
         super(BarLines, self).__init__(toolbox, 'bar',
             i18n("Bar Lines"), symbol='bar_single',
-            tooltip=i18n("Bar lines, breath marks, etcetera."))
+            tooltip=i18n("Bar lines, breathing signs, etcetera."))
         layout = QVBoxLayout(self)
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -336,7 +336,7 @@ class BarLines(LqiPanel):
             grid.addWidget(b, row, col)
         layout.addWidget(bars)
         
-        breathes = QGroupBox(i18n("Breathing signs"))
+        breathes = QGroupBox(i18n("Breathing Signs"))
         grid = QGridLayout()
         grid.setSpacing(0)
         breathes.setLayout(grid)
