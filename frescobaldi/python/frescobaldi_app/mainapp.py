@@ -378,6 +378,10 @@ class SymbolManager(object):
 
 class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
     """ Our customized Frescobaldi MainWindow """
+    
+    # called when Apply or Ok is clicked in the settings dialog.
+    settingsChanged = Signal()
+    
     def __init__(self, app):
         SymbolManager.__init__(self)
         kateshell.mainwindow.MainWindow.__init__(self, app)

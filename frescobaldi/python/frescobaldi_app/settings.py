@@ -101,6 +101,7 @@ class SettingsDialog(KPageDialog):
             page.saveSettings()
             page.applySettings()
         self.changed(False)
+        self.mainwin.settingsChanged()
             
     def slotCurrentPageChanged(self, current, before):
         self.setHelp(getattr(current.widget(), "help", "settings-dialog"))

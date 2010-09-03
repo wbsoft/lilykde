@@ -58,6 +58,7 @@ class EditorDialog(kateshell.sessions.EditorDialog):
         layout.addWidget(l, 0, 0)
         layout.addWidget(ver, 0, 1)
         self.loadLilyPondVersions()
+        manager.mainwin.settingsChanged.connect(self.loadLilyPondVersions)
         
     def loadLilyPondVersions(self):
         """ Puts configured lilypond versions in our ComboBox. """
@@ -70,6 +71,7 @@ class EditorDialog(kateshell.sessions.EditorDialog):
                    for path in paths)
         paths.sort(key=ver.get)
         self._paths = paths
+        self.lilyVer.clear()
         self.lilyVer.addItem(i18n("Default"))
         self.lilyVer.addItems([format(ver[p]) for p in paths])
     
