@@ -45,11 +45,16 @@ class EditorDialog(kateshell.sessions.EditorDialog):
         ver = self.lilyVer = QComboBox()
         l.setBuddy(ver)
         l.setToolTip(i18n(
-            "Here you can set a fixed LilyPond version to use while this "
-            "session is active.\n"
-            "This will override the normal way the LilyPond "
-            "version to use is determined."))
+            "Here you can set a fixed LilyPond version to run on documents "
+            "in this session.\n"
+            "See What's This (Shift+F1) for more information."))
+        l.setWhatsThis(i18n(
+            "Here you can set a fixed LilyPond version to run on documents "
+            "in this session.\n\n"
+            "The LilyPond version selected here is run by default on your "
+            "documents, and it's also used by the \"Insert Version\" command."))
         ver.setToolTip(l.toolTip())
+        ver.setWhatsThis(l.whatsThis())
         layout.addWidget(l, 0, 0)
         layout.addWidget(ver, 0, 1)
         self.loadLilyPondVersions()

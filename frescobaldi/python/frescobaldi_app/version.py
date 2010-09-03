@@ -62,7 +62,9 @@ def insertVersion(mainwin):
                 i18n("Version already set"))
             return
     else:
-        version = defaultVersion()
+        lilypond = mainwin.sessionManager().lilyPondCommand()
+        version = (lilypond and ly.version.LilyPondInstance(lilypond).version()
+                            or defaultVersion())
         if version:
             doc.doc.insertLine(0, '\\version "{0}"'.format(version))
         else:
