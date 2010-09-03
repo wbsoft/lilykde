@@ -77,7 +77,14 @@ class SessionList(kateshell.widgets.ListEdit):
 
 
 class EditorDialog(KPageDialog):
-    """A dialog to edit properties of a session."""
+    """A dialog to edit properties of a session.
+    
+    You can subclass this to add more settings to a session config dialog.
+    Add more pages in the __init__() method, and inherit the validate() method
+    to check the input if necessary. Implement the load and save methods to
+    load and save the settings.
+    
+    """
     def __init__(self, manager):
         super(EditorDialog, self).__init__(manager.mainwin)
         self.mainwin = manager.mainwin
@@ -123,12 +130,15 @@ class EditorDialog(KPageDialog):
             conf = self.sm.config(name)
             self.autosave.setChecked(conf.readEntry("autosave", True))
             self.basedir.setUrl(KUrl(conf.readPathEntry("basedir", "")))
+            self.loadSessionConfig(conf)
         else:
             self.setCaption(i18n("Edit new session"))
             self.name.clear()
             self.name.setFocus()
             self.autosave.setChecked(True)
             self.basedir.setUrl(KUrl())
+            self.loadSessionDefaults()
+        self.setCurrentPage(self.firstPage)
         if self.exec_():
             # save
             name = self.name.text()
@@ -137,6 +147,7 @@ class EditorDialog(KPageDialog):
             conf = self.sm.config(name)
             conf.writeEntry("autosave", self.autosave.isChecked())
             conf.writePathEntry("basedir", self.basedir.url().path())
+            self.saveSessionConfig(conf)
             return name
 
     def done(self, result):
@@ -155,37 +166,50 @@ class EditorDialog(KPageDialog):
         self.name.setText(name)
         
         if not name:
+            self.setCurrentPage(self.firstPage)
+            self.name.setFocus()
             KMessageBox.error(self, i18n("Please enter a session name."))
             if self._originalName:
                 self.name.setText(self._originalName)
-            self.setCurrentPage(self.firstPage)
-            self.name.setFocus()
             return False
         
         if name == 'none':
-            KMessageBox.error(self, i18n(
-                "Please do not use the name '%1'.", "none"))
             self.setCurrentPage(self.firstPage)
             self.name.setFocus()
+            KMessageBox.error(self, i18n(
+                "Please do not use the name '%1'.", "none"))
             return False
         
         if '&' in name:
+            self.setCurrentPage(self.firstPage)
+            self.name.setFocus()
             KMessageBox.error(self, i18n(
                 "Please do not use the ampersand (&) character "
                 "in a session name."))
-            self.setCurrentPage(self.firstPage)
-            self.name.setFocus()
             return False
             
         if self._originalName != name and name in self.sm.names():
+            self.setCurrentPage(self.firstPage)
+            self.name.setFocus()
             if KMessageBox.warningContinueCancel(self, i18n(
                 "Another session with the name %1 exists already.\n\n"
                 "Do you want to overwrite it?", name), None,
                 KStandardGuiItem.overwrite(), KStandardGuiItem.cancel(),
                 "session_overwrite") == KMessageBox.Cancel:
-                self.setCurrentPage(self.firstPage)
-                self.name.setFocus()
                 return False
             
         return True
     
+    def loadSessionDefaults(self):
+        """Implement to set defaults for your new session."""
+        pass
+    
+    def loadSessionConfig(self, conf):
+        """Implement to load settings from the config group for this session."""
+        pass
+    
+    def saveSessionConfig(self, conf):
+        """Implement to save settings to the config group for this session."""
+        pass
+
+

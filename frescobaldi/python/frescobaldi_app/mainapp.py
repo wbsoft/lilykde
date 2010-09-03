@@ -446,6 +446,10 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             import frescobaldi_app.charselect
             return frescobaldi_app.charselect.Dialog(self)
         
+    def createSessionManager(self):
+        """Reimplemented from kateshell.mainwindow.MainWindow"""
+        return SessionManager(self)
+    
     def setupActions(self):
         super(MainWindow, self).setupActions()
         
@@ -840,11 +844,13 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
                 return # job configure dialog cancelled by user
         else:
             job.preview = mode == "preview"
-            command = None
-            if config("lilypond").readEntry("automatic version", False):
-                docVersion = d.lilyPondVersion()
-                if docVersion:
-                    command = automaticLilyPondCommand(docVersion)
+            # forces the session a certain version?
+            command = self.sessionManager().lilyPondCommand()
+            if not command:
+                if config("lilypond").readEntry("automatic version", False):
+                    docVersion = d.lilyPondVersion()
+                    if docVersion:
+                        command = automaticLilyPondCommand(docVersion)
             job.command = command or lilyPondCommand()
             
         # check if there is not already a job running. We do it now, so the
@@ -1434,6 +1440,17 @@ class QuickInsertShortcuts(kateshell.mainwindow.UserShortcutManager):
         tool = self.mainwin.tools["quickinsert"]
         tool.materialize()
         return tool.widget
+
+
+class SessionManager(kateshell.mainwindow.SessionManager):
+    def createEditorDialog(self):
+        import frescobaldi_app.sessions
+        return frescobaldi_app.sessions.EditorDialog(self)
+    
+    def lilyPondCommand(self):
+        """Returns the LilyPond command for this session, if configured. """
+        if self.current():
+            return self.config().readEntry('lilypond', '')
 
 
 # Easily get our global config
