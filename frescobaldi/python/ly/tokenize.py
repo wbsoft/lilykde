@@ -78,6 +78,9 @@ text for the list of tokens returned by its items() method. You can also easily
 subclass the Parser classes.
 """
 
+import sys
+sys.path.insert(0, '/home/wilbert/dev/frescobaldi/python')
+
 import re
 import ly.rx
 import ly.pitch
@@ -85,24 +88,27 @@ import ly.words
 
 
 def _make_re(classes):
-    """
+    """Builds a regular expression to parse a text for the given token classes.
+    
     Expects a list of classes representing LilyPond input atoms. Returns
     compiled regular expression with named groups, to match input of the listed
     types. Reads the rx class attribute of the given classes.
+    
     """
-    return re.compile(
-        "|".join("(?P<{0}>{1})".format(cls.__name__, cls.rx) for cls in classes),
-        re.DOTALL)
+    return re.compile("|".join(
+        "(?P<{0}>{1})".format(cls.__name__, cls.rx) for cls in classes))
 
 
 class _tokenizer_meta(type):
-    """
+    """ Metaclass for the Tokenizer class.
+    
     This metaclass makes sure that the regex patterns of Parser subclasses
     inside a subclassed Tokenizer are always correct.
     
     It checks the items() method of all Parser subclasses and creates a
     pattern attribute. If that's different, a new copy (subclass) of the Parser
     subclass is created with the correct pattern.
+    
     """
     def __init__(cls, className, bases, attrd):
         for name in dir(cls):
@@ -121,14 +127,14 @@ class _tokenizer_meta(type):
 
 
 class Tokenizer(object):
-    """
-    This class defines an environment to parse LilyPond text input.
+    """An environment to parse LilyPond text input.
     
     There are two types of nested classes (accessible as class attributes, but
     also via a Tokenizer instance):
     
     - Subclasses of Token (or Unparsed): tokens of LilyPond input.
     - Subclasses of Parser: container with regex to parse LilyPond input.
+    
     """
     __metaclass__ = _tokenizer_meta
     
@@ -143,7 +149,6 @@ class Tokenizer(object):
         if parserClass is None:
             parserClass = self.ToplevelParser
         self.state = [parserClass()]
-        self.incomplete = None
         self.language = "nederlands"
 
     def parser(self, depth = -1):
@@ -199,32 +204,17 @@ class Tokenizer(object):
         return len(self.state), self.state[-1].level
 
     def tokens(self, text, pos = 0):
-        """
-        Iterate over the LilyPond tokens in the string.
+        """Iterate over the LilyPond tokens in the string.
+        
         All returned tokens are a subclass of unicode.
         When they are reassembled, the original string is restored (i.e. no
         data is lost).
+        
         The tokenizer does its best to parse LilyPond input and return
         meaningful strings. It recognizes being in a Scheme context, and also
         "LilyPond in Scheme" (the #{ and #} constructs).
+        
         """
-        if self.incomplete:
-            # last token parsed was incomplete, continue now
-            m = self.incomplete.end_rx.match(text, pos)
-            if m:
-                # we found the end
-                yield self.incomplete(m, self)
-                pos = m.end()
-                self.incomplete = None
-            else:
-                # the incomplete token is still continuing...
-                if pos < len(text):
-                    token = unicode.__new__(self.incomplete, text[pos:])
-                    token.pos, token.end = pos, len(text)
-                    yield token
-                return
-                    
-        tokenClass = None
         m = self.parser().parse(text, pos)
         while m:
             if pos < m.start():
@@ -235,8 +225,6 @@ class Tokenizer(object):
             m = self.parser().parse(text, pos)
         if pos < len(text):
             yield self.Unparsed(text[pos:], pos)
-        if tokenClass and issubclass(tokenClass, self.Incomplete):
-            self.incomplete = tokenClass
     
     def freeze(self):
         """
@@ -248,14 +236,14 @@ class Tokenizer(object):
                     parser.level,
                     parser.argcount,
                 ) for parser in self.state)
-        return state, self.incomplete, self.language
+        return state, self.language
             
     def thaw(self, frozenState):
         """
         Accepts a tuple such as returned by freeze(), and restores
         the state of this tokenizer from it.
         """
-        state, self.incomplete, self.language = frozenState
+        state, self.language = frozenState
         self.state = []
         for cls, token, level, argcount in state:
             parser = cls(token, argcount)
@@ -266,11 +254,13 @@ class Tokenizer(object):
     # Classes that represent pieces of lilypond text:
     # base classes:
     class Token(unicode):
-        """
-        Represents a parsed piece of LilyPond text, the subclass determines
-        the type.
+        """Represents a parsed piece of LilyPond text.
+        
+        The subclass determines the type.
+        
         The matchObj delivers the string and the position.
-        The state can be manipulated on instantiation.
+        The tokenizer's state can be manipulated on instantiation.
+        
         """
         def __new__(cls, matchObj, tokenizer):
             obj = unicode.__new__(cls, matchObj.group())
@@ -278,39 +268,32 @@ class Tokenizer(object):
             return obj
 
     class Item(Token):
-        """
-        Represents a token that decreases the argument count of its calling
-        command.
-        """
+        """A token that decreases the argument count of the current parser."""
         def __init__(self, matchObj, tokenizer):
             tokenizer.endArgument()
 
-    class Incomplete(Token):
-        """
-        Represents an unfinished item, e.g. string or block comment.
-        the end_rx attribute is a regex that can be used to find its end in
-        a following piece of text.
-        """
-        end_rx = None
-
     class Increaser(Token):
+        """A token that increases the level of the current parser."""
         def __init__(self, matchObj, tokenizer):
             tokenizer.inc()
             
     class Decreaser(Token):
+        """A token that decreases the level of the current parser."""
         def __init__(self, matchObj, tokenizer):
             tokenizer.dec()
 
     class Leaver(Token):
+        """A token that leaves the current parser."""
         def __init__(self, matchObj, tokenizer):
             tokenizer.leave()
 
 
-    # real types of lilypond input
+    # Types of lilypond input
     class Unparsed(Token):
-        """
-        Represents an unparsed piece of LilyPond text.
-        Needs to be given a value and a position (where the string was found)
+        """Represents an unparsed piece of LilyPond text.
+        
+        Needs to be given a value and a position (where the string was found).
+        
         """
         def __new__(cls, value, pos):
             obj = unicode.__new__(cls, value)
@@ -318,20 +301,70 @@ class Tokenizer(object):
             obj.end = pos + len(obj)
             return obj
 
-    class Command(Item):
-        rx = r"\\[A-Za-z]+(-[A-Za-z]+)*"
-
-    class String(Item):
-        rx = r'"(\\[\\"]|[^"])*"'
-
-    class IncompleteString(Incomplete, String):
-        rx = r'".*$'
-        end_rx = re.compile(r'(\\[\\"]|[^"])*"', re.DOTALL)
+    ##
+    ## Whitespace
+    ##
+    class NewLine(Token):
+        rx = r"\n"
         
-    class PitchWord(Item):
-        """ A word with just alphanumeric letters """
-        rx = r'[A-Za-z]+'
+    class Space(Token):
+        rx = r"[^\n\S]+"
+
+    ##
+    ## Quoted Strings
+    ##
+    class String(Token):
+        """ Base class for quoted string fragments. """
+    
+    class StringQuoted(String, Item):
+        """ A complete quoted string without a newline. """
+        rx = r'"(\\[\\"]|[^"\n])*"'
         
+    class StringQuoteStart(String):
+        rx = '"'
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.enter(tokenizer.StringParser, self)
+        
+    class StringQuoteEnd(String):
+        rx = '"'
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.leave()
+            tokenizer.endArgument()
+        
+    class StringFragment(String):
+        rx = r'(\\[\\"]|[^"\n])+'
+
+    ##
+    ## Comments
+    ##
+    class Comment(Token):
+        """ Base class for LineComment and BlockComment (also Scheme) """
+    
+    class LineCommentStart(Comment):
+        rx = r'%'
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.enter(tokenizer.LineCommentParser, self)
+    
+    class LineCommentEnd(Comment, NewLine, Leaver):
+        rx = r'\n|$'
+        
+    class LineCommentFragment(Comment):
+        rx = '.+'
+
+    class BlockCommentStart(Comment):
+        rx = r'%\{'
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.enter(tokenizer.BlockCommentParser, self)
+    
+    class BlockCommentEnd(Comment, Leaver):
+        rx = r'%\}'
+            
+    class BlockCommentFragment(Comment):
+        rx = r'(%(?!\})|[^%\n])+'
+        
+    ##
+    ## Scheme
+    ##
     class SchemeToken(Token):
         """ Base class for Scheme tokens. """
         pass
@@ -341,23 +374,64 @@ class Tokenizer(object):
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.SchemeParser, self)
 
-    class Comment(Token):
-        """ Base class for LineComment and BlockComment (also Scheme) """
-        pass
-    
-    class LineComment(Comment):
-        rx = r'%[^\n]*'
-        
-    class BlockComment(Comment):
-        rx = r'%\{.*?%\}'
-        
-    class IncompleteBlockComment(Incomplete, Comment):
-        rx = r'%\{.*$'
-        end_rx = re.compile(r'.*?%\}', re.DOTALL)
-        
-    class Space(Token):
-        rx = r"\s+"
+    class SchemeOpenParenthesis(Increaser, SchemeToken):
+        rx = r"\("
 
+    class SchemeCloseParenthesis(Decreaser, SchemeToken):
+        rx = r"\)"
+
+    class SchemeQuote(SchemeToken):
+        rx = r"[',`]"
+    
+    class SchemeChar(Item, SchemeToken):
+        rx = r'#\\([a-z]+|.)'
+
+    class SchemeWord(Item, SchemeToken):
+        rx = r'[^()"{}\s]+'
+
+    class SchemeLily(Token):
+        rx = "#\{"
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.enter(tokenizer.ToplevelParser, self)
+    
+    class EndSchemeLily(Leaver):
+        rx = r"#\}"
+    
+    ##
+    ## Scheme comments
+    ##
+    class SchemeLineCommentStart(LineCommentStart, SchemeToken):
+        rx = ";"
+    
+    class SchemeBlockCommentStart(Comment, SchemeToken):
+        rx = r"#!"
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.enter(tokenizer.SchemeBlockCommentParser, self)
+
+    class SchemeBlockCommentEnd(Comment, Leaver):
+        rx = r'!#'
+            
+    class SchemeBlockCommentFragment(Comment):
+        rx = r'(!(?!#)|[^!\n])+'
+        
+    ##
+    ## LilyPond commands
+    ##
+    class Command(Item):
+        rx = r"\\[A-Za-z]+(-[A-Za-z]+)*"
+        
+    class Section(Command):
+        """Introduce a section with no music, like \\layout, etc."""
+        rx = r'\\(with|layout|midi|paper|header)\b'
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.enter(tokenizer.SectionParser, self)
+
+    class Context(Command):
+        """ Introduce a \context section within layout, midi. """
+        rx = r'\\context\b'
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.enter(tokenizer.ContextParser, self)
+            
     class Markup(Command):
         rx = r"\\markup\b"
         def __init__(self, matchObj, tokenizer):
@@ -373,8 +447,8 @@ class Tokenizer(object):
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.IncludeParser, self)
     
-    class IncludeFile(String):
-        pass
+    class IncludeFile(StringQuoted):
+        rx = r'"(\\[\\"]|[^"])*"'
     
     class IncludeLanguageFile(IncludeFile):
         rx = r'"({0})\.ly"'.format('|'.join(ly.pitch.pitchInfo.keys()))
@@ -397,45 +471,16 @@ class Tokenizer(object):
     class Articulation(Token):
         rx = "[-_^][_.>|+^-]"
         
-    class EndSchemeLily(Leaver):
-        rx = r"#\}"
-
-    class SchemeOpenParenthesis(Increaser, SchemeToken):
-        rx = r"\("
-
-    class SchemeCloseParenthesis(Decreaser, SchemeToken):
-        rx = r"\)"
-
-    class SchemeQuote(SchemeToken):
-        rx = r"[',`]"
-    
-    class SchemeChar(Item, SchemeToken):
-        rx = r'#\\([a-z]+|.)'
-
-    class SchemeWord(Item, SchemeToken):
-        rx = r'[^()"{}\s]+'
-
-    class SchemeLineComment(Comment, SchemeToken):
-        rx = r";[^\n]*"
-    
-    class SchemeBlockComment(Comment, SchemeToken):
-        rx = r"#!.*?!#"
-        
-    class IncompleteSchemeBlockComment(Incomplete, Comment, SchemeToken):
-        rx = r"#!.*$"
-        end_rx = re.compile(r'.*?!#', re.DOTALL)
-        
-    class SchemeLily(Token):
-        rx = "#\{"
-        def __init__(self, matchObj, tokenizer):
-            tokenizer.enter(tokenizer.ToplevelParser, self)
-
     class OpenBracket(Increaser):
         rx = r"\{"
 
     class CloseBracket(Decreaser):
         rx = r"\}"
 
+    class PitchWord(Item):
+        """ A word with just alphanumeric letters """
+        rx = r'[A-Za-z]+'
+        
     class MarkupScore(Command):
         rx = r"\\score\b"
         def __init__(self, matchObj, tokenizer):
@@ -484,18 +529,6 @@ class Tokenizer(object):
     class LyricWord(Item):
         rx = r'[^\W\d]+'
         
-    class Section(Command):
-        """Introduce a section with no music, like \\layout, etc."""
-        rx = r'\\(with|layout|midi|paper|header)\b'
-        def __init__(self, matchObj, tokenizer):
-            tokenizer.enter(tokenizer.SectionParser, self)
-
-    class Context(Command):
-        """ Introduce a \context section within layout, midi. """
-        rx = r'\\context\b'
-        def __init__(self, matchObj, tokenizer):
-            tokenizer.enter(tokenizer.ContextParser, self)
-            
 
     ### Parsers
     class Parser(object):
@@ -516,14 +549,42 @@ class Tokenizer(object):
         def parse(self, text, pos):
             return self.pattern.search(text, pos)
 
-
+    class StringParser(Parser):
+        items = staticmethod(lambda cls: (
+            cls.StringQuoteEnd,
+            cls.StringFragment,
+            cls.NewLine,
+        ))
+    
+    class CommentParser(Parser):
+        """ Base class for comment parsers. """
+        
+    class LineCommentParser(CommentParser):
+        items = staticmethod(lambda cls: (
+            cls.LineCommentEnd,
+            cls.LineCommentFragment,
+        ))
+    
+    class BlockCommentParser(CommentParser):
+        items = staticmethod(lambda cls: (
+            cls.BlockCommentEnd,
+            cls.BlockCommentFragment,
+            cls.NewLine,
+        ))
+        
+    class SchemeBlockCommentParser(CommentParser):
+        items = staticmethod(lambda cls: (
+            cls.SchemeBlockCommentEnd,
+            cls.SchemeBlockCommentFragment,
+            cls.NewLine,
+        ))
+        
     # base stuff to parse in LilyPond input
     lilybaseItems = classmethod(lambda cls: (
-        cls.BlockComment,
-        cls.IncompleteBlockComment,
-        cls.LineComment,
-        cls.String,
-        cls.IncompleteString,
+        cls.BlockCommentStart,
+        cls.LineCommentStart,
+        cls.StringQuoted,
+        cls.StringQuoteStart,
         cls.EndSchemeLily,
         cls.Scheme,
         cls.Section,
@@ -536,6 +597,7 @@ class Tokenizer(object):
         cls.Include,
         cls.Command,
         cls.Space,
+        cls.NewLine,
     ))
     
     class ToplevelParser(Parser):
@@ -551,18 +613,17 @@ class Tokenizer(object):
     class SchemeParser(Parser):
         argcount = 1
         items = staticmethod(lambda cls: (
-            cls.String,
-            cls.IncompleteString,
+            cls.StringQuoteStart,
             cls.SchemeChar,
             cls.SchemeQuote,
-            cls.SchemeLineComment,
-            cls.SchemeBlockComment,
-            cls.IncompleteSchemeBlockComment,
+            cls.SchemeLineCommentStart,
+            cls.SchemeBlockCommentStart,
             cls.SchemeOpenParenthesis,
             cls.SchemeCloseParenthesis,
             cls.SchemeLily,
             cls.SchemeWord,
             cls.Space,
+            cls.NewLine,
         ))
     
     class MarkupParser(Parser):

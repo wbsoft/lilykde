@@ -219,7 +219,7 @@ def findMatches(model, view, word, invocationType):
     for token in tokenizer.tokens(fragment):
         pass
     # don't bother if we are inside a string or comment
-    if isinstance(token, (tokenizer.Incomplete, tokenizer.Comment)):
+    if isinstance(token, (tokenizer.String, tokenizer.Comment)):
         return
     
     if text.endswith("\\"):
