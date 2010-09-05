@@ -25,12 +25,13 @@ Some nice widgets.
 
 import os
 
-from PyQt4.QtCore import QTimeLine
+from PyQt4.QtCore import QRegExp, QTimeLine
 from PyQt4.QtGui import (
-    QFileDialog, QGridLayout, QLineEdit, QListWidget, QListWidgetItem, QPainter,
-    QPixmap, QWidget)
+    QFileDialog, QGridLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem,
+    QPainter, QPixmap, QRegExpValidator, QWidget)
 from PyKDE4.kdecore import i18n
-from PyKDE4.kdeui import KPushButton, KStandardGuiItem, KVBox
+from PyKDE4.kdeui import (
+    KDialog, KLineEdit, KPushButton, KStandardGuiItem, KVBox)
 
 from signals import Signal
 

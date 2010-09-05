@@ -308,7 +308,7 @@ class Tokenizer(object):
         rx = r"\n"
         
     class Space(Token):
-        rx = r"[^\n\S]+"
+        rx = r"\s+"
 
     ##
     ## Quoted Strings
@@ -597,7 +597,6 @@ class Tokenizer(object):
         cls.Include,
         cls.Command,
         cls.Space,
-        cls.NewLine,
     ))
     
     class ToplevelParser(Parser):
@@ -623,7 +622,6 @@ class Tokenizer(object):
             cls.SchemeLily,
             cls.SchemeWord,
             cls.Space,
-            cls.NewLine,
         ))
     
     class MarkupParser(Parser):

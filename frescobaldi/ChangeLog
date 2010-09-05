@@ -6,6 +6,7 @@ Changes in 1.1.6 --
   - Quick Insert: new panels for dynamics and bar lines
   - LilyPond version to use configurable per session
 * Bugfixes and improvements:
+  - Fix error message on Cut&Assign, introduced in 1.1.3
   - Handle keyboard interrupt (SIGINT) nicely, don't show the bug dialog
   - Fix session --start commandline option
   - Blank staff paper: improved bar line distances with recent LilyPond versions

@@ -26,11 +26,9 @@ Some special widgets
 import os
 from time import time
 
-from PyQt4.QtCore import QProcess, QRegExp, Qt
-from PyQt4.QtGui import (
-    QComboBox, QLabel, QPushButton, QSlider, QSpinBox, QRegExpValidator)
+from PyQt4.QtCore import QProcess, Qt
+from PyQt4.QtGui import QComboBox, QPushButton, QSlider, QSpinBox
 from PyKDE4.kdecore import i18n, KProcess
-from PyKDE4.kdeui import KDialog, KLineEdit, KVBox
 
 from frescobaldi_app.mainapp import SymbolManager
 
