@@ -152,8 +152,6 @@ class ExpansionDialog(KDialog):
             KDialog.Ok | KDialog.Close | KDialog.User1 | KDialog.User2 ))
         self.setButtonGuiItem(KDialog.User1, KStandardGuiItem.remove())
         self.setButtonGuiItem(KDialog.User2, KStandardGuiItem.add())
-        self.closeClicked.connect(self.reject)
-        self.setDefaultButton(KDialog.Ok)
         self.setHelp("expand")
         
         layout = QVBoxLayout(self.mainWidget())
