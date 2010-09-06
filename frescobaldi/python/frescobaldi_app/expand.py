@@ -424,7 +424,7 @@ class ExpansionDialog(KDialog):
     def done(self, result):
         self.saveEditIfNecessary()
         self.manager.expansions.sync()
-        if result:
+        if result == KDialog.Accepted:
             items = self.treeWidget.selectedItems() or self.items()
             items = [item for item in items if not item.isHidden()]
             if len(items) == 1:
