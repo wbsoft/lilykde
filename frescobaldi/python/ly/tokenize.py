@@ -340,27 +340,19 @@ class Tokenizer(object):
     class Comment(Token):
         """ Base class for LineComment and BlockComment (also Scheme) """
     
-    class LineCommentStart(Comment):
-        rx = r'%'
-        def __init__(self, matchObj, tokenizer):
-            tokenizer.enter(tokenizer.LineCommentParser, self)
+    class LineComment(Comment):
+        rx = r"%[^\n]*"
     
-    class LineCommentEnd(Comment, NewLine, Leaver):
-        rx = r'\n|$'
-        
-    class LineCommentFragment(Comment):
-        rx = '.+'
-
     class BlockCommentStart(Comment):
-        rx = r'%\{'
+        rx = r"%\{"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.BlockCommentParser, self)
     
     class BlockCommentEnd(Comment, Leaver):
-        rx = r'%\}'
+        rx = r"%\}"
             
     class BlockCommentFragment(Comment):
-        rx = r'(%(?!\})|[^%\n])+'
+        rx = r"(%(?!\})|[^%\n])+"
         
     ##
     ## Scheme
@@ -370,7 +362,7 @@ class Tokenizer(object):
         pass
     
     class Scheme(SchemeToken):
-        rx = "#"
+        rx = '#'
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.SchemeParser, self)
 
@@ -384,13 +376,13 @@ class Tokenizer(object):
         rx = r"[',`]"
     
     class SchemeChar(Item, SchemeToken):
-        rx = r'#\\([a-z]+|.)'
+        rx = r"#\\([a-z]+|.)"
 
     class SchemeWord(Item, SchemeToken):
         rx = r'[^()"{}\s]+'
 
     class SchemeLily(Token):
-        rx = "#\{"
+        rx = r"#\{"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.ToplevelParser, self)
     
@@ -400,19 +392,19 @@ class Tokenizer(object):
     ##
     ## Scheme comments
     ##
-    class SchemeLineCommentStart(LineCommentStart, SchemeToken):
-        rx = ";"
+    class SchemeLineComment(Comment, SchemeToken):
+        rx = r";[^\n]*"
     
     class SchemeBlockCommentStart(Comment, SchemeToken):
-        rx = r"#!"
+        rx = '#!'
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.SchemeBlockCommentParser, self)
 
     class SchemeBlockCommentEnd(Comment, Leaver):
-        rx = r'!#'
+        rx = '!#'
             
     class SchemeBlockCommentFragment(Comment):
-        rx = r'(!(?!#)|[^!\n])+'
+        rx = r"(!(?!#)|[^!\n])+"
         
     ##
     ## LilyPond commands
@@ -422,13 +414,13 @@ class Tokenizer(object):
         
     class Section(Command):
         """Introduce a section with no music, like \\layout, etc."""
-        rx = r'\\(with|layout|midi|paper|header)\b'
+        rx = r"\\(with|layout|midi|paper|header)\b"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.SectionParser, self)
 
     class Context(Command):
         """ Introduce a \context section within layout, midi. """
-        rx = r'\\context\b'
+        rx = r"\\context\b"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.ContextParser, self)
             
@@ -469,7 +461,7 @@ class Tokenizer(object):
         rx = r"\\\\"
 
     class Articulation(Token):
-        rx = "[-_^][_.>|+^-]"
+        rx = r"[-_^][_.>|+^-]"
         
     class OpenBracket(Increaser):
         rx = r"\{"
@@ -479,7 +471,7 @@ class Tokenizer(object):
 
     class PitchWord(Item):
         """ A word with just alphanumeric letters """
-        rx = r'[A-Za-z]+'
+        rx = r"[A-Za-z]+"
         
     class MarkupScore(Command):
         rx = r"\\score\b"
@@ -503,7 +495,7 @@ class Tokenizer(object):
         rx = r'[^{}"\\\s#]+'
 
     class LyricMode(Command):
-        rx = r'\\(lyricmode|((old)?add)?lyrics|lyricsto)\b'
+        rx = r"\\(lyricmode|((old)?add)?lyrics|lyricsto)\b"
         def __init__(self, matchObj, tokenizer):
             if self == "\\lyricsto":
                 argcount = 2
@@ -512,22 +504,22 @@ class Tokenizer(object):
             tokenizer.enter(tokenizer.LyricModeParser, self, argcount)
             
     class ChordMode(Command):
-        rx = r'\\(chords|chordmode)\b'
+        rx = r"\\(chords|chordmode)\b"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.ChordModeParser, self)
 
     class FigureMode(Command):
-        rx = r'\\(figures|figuremode)\b'
+        rx = r"\\(figures|figuremode)\b"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.FigureModeParser, self)
 
     class NoteMode(Command):
-        rx = r'\\(notes|notemode)\b'
+        rx = r"\\(notes|notemode)\b"
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.NoteModeParser, self)
 
     class LyricWord(Item):
-        rx = r'[^\W\d]+'
+        rx = r"[^\W\d]+"
         
 
     ### Parsers
@@ -559,12 +551,6 @@ class Tokenizer(object):
     class CommentParser(Parser):
         """ Base class for comment parsers. """
         
-    class LineCommentParser(CommentParser):
-        items = staticmethod(lambda cls: (
-            cls.LineCommentEnd,
-            cls.LineCommentFragment,
-        ))
-    
     class BlockCommentParser(CommentParser):
         items = staticmethod(lambda cls: (
             cls.BlockCommentEnd,
@@ -582,7 +568,7 @@ class Tokenizer(object):
     # base stuff to parse in LilyPond input
     lilybaseItems = classmethod(lambda cls: (
         cls.BlockCommentStart,
-        cls.LineCommentStart,
+        cls.LineComment,
         cls.StringQuoted,
         cls.StringQuoteStart,
         cls.EndSchemeLily,
@@ -615,7 +601,7 @@ class Tokenizer(object):
             cls.StringQuoteStart,
             cls.SchemeChar,
             cls.SchemeQuote,
-            cls.SchemeLineCommentStart,
+            cls.SchemeLineComment,
             cls.SchemeBlockCommentStart,
             cls.SchemeOpenParenthesis,
             cls.SchemeCloseParenthesis,
