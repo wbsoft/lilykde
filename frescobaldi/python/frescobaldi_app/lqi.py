@@ -408,6 +408,7 @@ class Spanners(LqiPanel):
         if name in self.spanners:
             doc = self.mainwin.currentDocument()
             doc.manipulator().addSpanner(name)
+        doc.view.setFocus()
 
     def populateAction(self, name, action):
         if name in self.spanners:
