@@ -712,6 +712,34 @@ class DocumentManipulator(object):
         self.adjustCursorToChords()
         self.doc.view.insertText(direction + dynamic)
         
+    def addSpanner(self, name, direction=0):
+        """ Add a simple spanner to the selected music. """
+        if name == "slur":
+            spanner = '(', ')'
+        elif name == "beam":
+            spanner = '[', ']'
+        elif name == "trill":
+            spanner = '\\startTrillSpan', '\\stopTrillSpan'
+        
+        text = self.doc.selectionText()
+        if not text:
+            return
+            
+        items = list(m for m in ly.rx.chord_rest.finditer(text) if m.group('full'))
+        if len(items) < 2:
+            return # can't add spanner to one note or chord
+        
+        first, last = items[0], items[-1]
+        selRange = self.doc.view.selectionRange() # copy othw. crash in KDE 4.3 /PyQt 4.5.x.
+        start = Cursor(selRange.start())
+        start.walk(text[:first.end('full')])
+        end = Cursor(selRange.start())
+        end.walk(text[:last.end('full')])
+        
+        with self.doc.editContext():
+            self.doc.doc.insertText(end.kteCursor(), spanner[1])
+            self.doc.doc.insertText(start.kteCursor(), spanner[0])
+
     def wrapSelection(self, text, before='{', after='}', alwaysMultiLine=False):
         """
         Wrap a piece of text inside some kind of brace construct. Returns the

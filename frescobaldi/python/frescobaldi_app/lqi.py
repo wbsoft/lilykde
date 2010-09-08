@@ -380,4 +380,38 @@ class Spanners(LqiPanel):
             i18n("Spanners"), symbol='slur_solid',
             tooltip=i18n("Slurs, spanners, hairpins, etcetera."))
 
+        layout = QVBoxLayout(self)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+        
+        box = QGroupBox(i18n("Spanners"))
+        grid = QGridLayout()
+        grid.setSpacing(0)
+        box.setLayout(grid)
 
+        self.spanners = {}
+
+        for num, (name, title, symbol) in enumerate((
+            ('slur', i18n("Slur"), 'slur_solid'),
+            ('beam', i18n("Beam"), 'spanner_beam16'),
+            ('trill', i18n("Trill"), 'spanner_trill'),
+        )):
+            self.spanners[name] = (symbol, title)
+            b = ActionButton(self, name, title, symbol)
+            row, col = divmod(num, COLUMNS)
+            grid.addWidget(b, row, col)
+        layout.addWidget(box)
+        layout.addStretch()
+        
+    def actionTriggered(self, name):
+        if name in self.spanners:
+            doc = self.mainwin.currentDocument()
+            doc.manipulator().addSpanner(name)
+
+    def populateAction(self, name, action):
+        if name in self.spanners:
+            symbol, title = self.spanners[name]
+            action.setText(title)
+            action.setIcon(self.toolbox.symbolIcon(symbol))
+            
