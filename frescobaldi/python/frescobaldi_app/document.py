@@ -758,10 +758,14 @@ class DocumentManipulator(object):
         except KeyError:
             return
         
-        # TODO: determine the last used arpeggio type and do not re-insert that
-        lastUsed = '\\arpeggioNormal'
-        
         self.adjustCursorToChords()
+        lastUsed = '\\arpeggioNormal'
+        tokenizer = ly.tokenize.Tokenizer()
+        for token in tokenizer.tokens(self.doc.textToCursor()):
+            if (isinstance(token, tokenizer.Command)
+                    and token in self._arpeggioTypes.values()):
+                lastUsed = token
+            
         with self.doc.editContext():
             self.doc.view.insertText('\\arpeggio')
             if arpeggioType != lastUsed:
