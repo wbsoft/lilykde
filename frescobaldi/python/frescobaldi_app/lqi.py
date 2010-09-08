@@ -178,6 +178,8 @@ class Articulations(LqiPanel):
         l = QLabel(i18n("Direction:"), h)
         self.direction = QComboBox(h)
         self.direction.addItems([i18n("Up"), i18n("Neutral"), i18n("Down")])
+        self.direction.setItemIcon(0, KIcon("arrow-up"))
+        self.direction.setItemIcon(2, KIcon("arrow-down"))
         self.direction.setCurrentIndex(1)
         l.setBuddy(self.direction)
         h.setToolTip(i18n("The direction to use for the articulations."))
@@ -242,6 +244,8 @@ class Dynamics(LqiPanel):
         l = QLabel(i18n("Direction:"), h)
         self.direction = QComboBox(h)
         self.direction.addItems([i18n("Up"), i18n("Neutral"), i18n("Down")])
+        self.direction.setItemIcon(0, KIcon("arrow-up"))
+        self.direction.setItemIcon(2, KIcon("arrow-down"))
         self.direction.setCurrentIndex(1)
         l.setBuddy(self.direction)
         h.setToolTip(i18n("The direction to use for the dynamics."))
@@ -385,6 +389,17 @@ class Spanners(LqiPanel):
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
         
+        h = KHBox()
+        layout.addWidget(h)
+        l = QLabel(i18n("Direction:"), h)
+        self.direction = QComboBox(h)
+        self.direction.addItems([i18n("Up"), i18n("Neutral"), i18n("Down")])
+        self.direction.setItemIcon(0, KIcon("arrow-up"))
+        self.direction.setItemIcon(2, KIcon("arrow-down"))
+        self.direction.setCurrentIndex(1)
+        l.setBuddy(self.direction)
+        h.setToolTip(i18n("The direction to use for the spanners."))
+
         box = QGroupBox(i18n("Spanners"))
         grid = QGridLayout()
         grid.setSpacing(0)
@@ -394,6 +409,7 @@ class Spanners(LqiPanel):
 
         for num, (name, title, symbol) in enumerate((
             ('slur', i18n("Slur"), 'slur_solid'),
+            ('phrasing_slur', i18n("Phrasing Slur"), 'slur_solid'),
             ('beam', i18n("Beam"), 'spanner_beam16'),
             ('trill', i18n("Trill"), 'spanner_trill'),
         )):
@@ -405,9 +421,10 @@ class Spanners(LqiPanel):
         layout.addStretch()
         
     def actionTriggered(self, name):
+        direction = 1 - self.direction.currentIndex()
         if name in self.spanners:
             doc = self.mainwin.currentDocument()
-            doc.manipulator().addSpanner(name)
+            doc.manipulator().addSpanner(name, direction)
         doc.view.setFocus()
 
     def populateAction(self, name, action):

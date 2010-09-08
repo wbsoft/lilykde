@@ -716,10 +716,13 @@ class DocumentManipulator(object):
         """ Add a simple spanner to the selected music. """
         if name == "slur":
             spanner = '(', ')'
+        if name == "phrasing_slur":
+            spanner = '\\(', '\\)'
         elif name == "beam":
             spanner = '[', ']'
         elif name == "trill":
             spanner = '\\startTrillSpan', '\\stopTrillSpan'
+        direction = ['_', '', '^'][direction+1]
         
         text = self.doc.selectionText()
         if not text:
@@ -738,7 +741,7 @@ class DocumentManipulator(object):
         
         with self.doc.editContext():
             self.doc.doc.insertText(end.kteCursor(), spanner[1])
-            self.doc.doc.insertText(start.kteCursor(), spanner[0])
+            self.doc.doc.insertText(start.kteCursor(), direction + spanner[0])
 
     def wrapSelection(self, text, before='{', after='}', alwaysMultiLine=False):
         """
