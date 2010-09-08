@@ -1443,7 +1443,7 @@ class QuickInsertShortcuts(kateshell.mainwindow.UserShortcutManager):
     def client(self):
         tool = self.mainwin.tools["quickinsert"]
         tool.materialize()
-        return tool.widget
+        return tool.widget.toolboxWidget
 
 
 class SessionManager(kateshell.mainwindow.SessionManager):
