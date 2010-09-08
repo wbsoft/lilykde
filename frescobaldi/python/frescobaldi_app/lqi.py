@@ -97,7 +97,7 @@ class ToolBox(SymbolManager, UserShortcutDispatcher, QToolBox):
             BarLines(self),
         ]
         self.mainwin.aboutToClose.connect(self.saveSettings)
-        #self.loadSettings()
+        self.loadSettings()
         self._wheeldelta = 0
     
     def loadSettings(self):
