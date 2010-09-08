@@ -28,7 +28,7 @@ from PyQt4.QtGui import (
     QCheckBox, QComboBox, QGridLayout, QGroupBox, QLabel, QSizePolicy, QToolBox,
     QToolButton, QVBoxLayout, QWidget)
 from PyKDE4.kdecore import KGlobal, i18n
-from PyKDE4.kdeui import KIcon, KHBox, KMenu
+from PyKDE4.kdeui import KIcon, KHBox, KMenu, KVBox
 
 import ly.articulation, ly.dynamic
 from kateshell.shortcut import UserShortcutDispatcher, ShortcutDispatcherClient
@@ -37,7 +37,7 @@ from frescobaldi_app.mainapp import SymbolManager
 # how many column of toolbuttons to use
 COLUMNS = 5
 
-class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
+class QuickInsertPanel(KVBox):
     """
     The Quick Insert Panel manages its own actionCollection of shortcuts in
     the QuickInsertShortcuts instance of the mainwindow.
@@ -49,23 +49,55 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
     tool can always be found.
     """
     def __init__(self, tool):
-        QToolBox.__init__(self)
-        SymbolManager.__init__(self)
-        UserShortcutDispatcher.__init__(self, tool.mainwin.quickInsertShortcuts)
+        KVBox.__init__(self)
         self.tool = tool
-        self.mainwin = tool.mainwin
+        
+        h = KHBox(self)
+        h.layout().setContentsMargins(8, 2, 4, 0)
+        l = QLabel(i18n("Direction:"), h)
+        d = self.directionWidget = QComboBox(h)
+        d.addItems([i18n("Up"), i18n("Neutral"), i18n("Down")])
+        d.setItemIcon(0, KIcon("arrow-up"))
+        d.setItemIcon(2, KIcon("arrow-down"))
+        d.setCurrentIndex(1)
+        l.setBuddy(d)
+        h.setToolTip(i18n(
+            "Where to add articulations et cetera: "
+            "above or below the staff or in the default position."))
+        
+        t = self.toolboxWidget = ToolBox(self)
+        # don't allow us to shrink below the minimum size of our children
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        width = max(w.minimumSizeHint().width() for w in t.widgets) + 12
+        self.setMinimumWidth(width)
+
+
+class ToolBox(SymbolManager, UserShortcutDispatcher, QToolBox):
+    """A QToolBox containing different panels.
+    
+    The mouse wheel pages through the panels.
+    
+    This object also manages the keyboard shortcuts and the loading of
+    LilyPond-generated icons in the right text color.
+    
+    The current page is saved in the config on exit.
+    
+    """
+    def __init__(self, toolWidget):
+        self.toolWidget = toolWidget
+        self.tool = toolWidget.tool
+        self.mainwin = toolWidget.tool.mainwin
+        QToolBox.__init__(self, toolWidget)
+        SymbolManager.__init__(self)
+        UserShortcutDispatcher.__init__(self, self.mainwin.quickInsertShortcuts)
         self.widgets = [
             Articulations(self),
             Dynamics(self),
             Spanners(self),
             BarLines(self),
         ]
-        # don't allow us to shrink below the minimum size of our children
-        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
-        width = max(w.minimumSizeHint().width() for w in self.widgets) + 12
-        self.setMinimumWidth(width)
         self.mainwin.aboutToClose.connect(self.saveSettings)
-        self.loadSettings()
+        #self.loadSettings()
         self._wheeldelta = 0
     
     def loadSettings(self):
@@ -86,6 +118,33 @@ class QuickInsertPanel(SymbolManager, UserShortcutDispatcher, QToolBox):
             ev.accept()
         else:
             ev.ignore()
+
+
+class LqiPanel(ShortcutDispatcherClient, QWidget):
+    """ Abstract base class for LilyPond Quick Insert tools """
+
+    def __init__(self, toolbox, name, title, icon="", symbol="", tooltip=""):
+        QWidget.__init__(self, toolbox)
+        ShortcutDispatcherClient.__init__(self, toolbox, name)
+        self.toolbox = toolbox
+        self.mainwin = toolbox.mainwin
+        i = toolbox.addItem(self, title)
+        if icon:
+            toolbox.setItemIcon(i, KIcon(icon))
+        elif symbol:
+            toolbox.addItemSymbol(toolbox, i, symbol)
+        if tooltip:
+            toolbox.setItemToolTip(i, tooltip)
+
+    def direction(self):
+        """ The value of the generic direction widget.
+        
+        -1 == Down
+         0 == Neutral
+         1 == Up
+         
+        """
+        return 1 - self.toolbox.toolWidget.directionWidget.currentIndex()
 
 
 class ActionButton(QToolButton):
@@ -128,23 +187,6 @@ class ActionButton(QToolButton):
         self.panel.mainwin.currentDocument().view.setFocus()
         
     
-class LqiPanel(ShortcutDispatcherClient, QWidget):
-    """ Abstract base class for LilyPond Quick Insert tools """
-
-    def __init__(self, toolbox, name, title, icon="", symbol="", tooltip=""):
-        QWidget.__init__(self, toolbox)
-        ShortcutDispatcherClient.__init__(self, toolbox, name)
-        self.toolbox = toolbox
-        self.mainwin = toolbox.mainwin
-        i = toolbox.addItem(self, title)
-        if icon:
-            toolbox.setItemIcon(i, KIcon(icon))
-        elif symbol:
-            toolbox.addItemSymbol(toolbox, i, symbol)
-        if tooltip:
-            toolbox.setItemToolTip(i, tooltip)
-
-
 class Articulations(LqiPanel):
     """
     A toolbox item with articulations.
@@ -173,17 +215,6 @@ class Articulations(LqiPanel):
             "Use short notation for some articulations like staccato."))
         layout.addWidget(self.shorthands)
 
-        h = KHBox()
-        layout.addWidget(h)
-        l = QLabel(i18n("Direction:"), h)
-        self.direction = QComboBox(h)
-        self.direction.addItems([i18n("Up"), i18n("Neutral"), i18n("Down")])
-        self.direction.setItemIcon(0, KIcon("arrow-up"))
-        self.direction.setItemIcon(2, KIcon("arrow-down"))
-        self.direction.setCurrentIndex(1)
-        l.setBuddy(self.direction)
-        h.setToolTip(i18n("The direction to use for the articulations."))
-
         self.titles = dict(ly.articulation.articulations(i18n))
         for title, group in ly.articulation.groups(i18n):
             box = QGroupBox(title)
@@ -204,9 +235,9 @@ class Articulations(LqiPanel):
         (or add it to all selected pitches).
         """
         if self.shorthands.isChecked() and sign in ly.articulation.shorthands:
-            art = '^-_'[self.direction.currentIndex()] + ly.articulation.shorthands[sign]
+            art = '_-^'[self.direction()+1] + ly.articulation.shorthands[sign]
         else:
-            art = ('^', '', '_')[self.direction.currentIndex()] + '\\' + sign
+            art = ('_', '', '^')[self.direction()+1] + '\\' + sign
         
         # the actual writing is performed by the manipulator (see document.py)
         doc = self.mainwin.currentDocument()
@@ -239,17 +270,6 @@ class Dynamics(LqiPanel):
             i18n("If you have selected some music and you click a sign "
                  "after a spanner, the sign will terminate the spanner.")))
         
-        h = KHBox()
-        layout.addWidget(h)
-        l = QLabel(i18n("Direction:"), h)
-        self.direction = QComboBox(h)
-        self.direction.addItems([i18n("Up"), i18n("Neutral"), i18n("Down")])
-        self.direction.setItemIcon(0, KIcon("arrow-up"))
-        self.direction.setItemIcon(2, KIcon("arrow-down"))
-        self.direction.setCurrentIndex(1)
-        l.setBuddy(self.direction)
-        h.setToolTip(i18n("The direction to use for the dynamics."))
-
         signs = QGroupBox(i18n("Signs"))
         grid = QGridLayout()
         grid.setSpacing(0)
@@ -285,10 +305,9 @@ class Dynamics(LqiPanel):
         layout.addStretch()
 
     def actionTriggered(self, name):
-        direction = 1 - self.direction.currentIndex()
         # the actual writing is performed by the manipulator (see document.py)
         doc = self.mainwin.currentDocument()
-        doc.manipulator().addDynamic(name, direction)
+        doc.manipulator().addDynamic(name, self.direction())
         doc.view.setFocus()
         
     def populateAction(self, name, action):
@@ -382,24 +401,13 @@ class Spanners(LqiPanel):
     def __init__(self, toolbox):
         super(Spanners, self).__init__(toolbox, 'spanner',
             i18n("Spanners"), symbol='slur_solid',
-            tooltip=i18n("Slurs, spanners, hairpins, etcetera."))
+            tooltip=i18n("Slurs, spanners, etcetera."))
 
         layout = QVBoxLayout(self)
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
         
-        h = KHBox()
-        layout.addWidget(h)
-        l = QLabel(i18n("Direction:"), h)
-        self.direction = QComboBox(h)
-        self.direction.addItems([i18n("Up"), i18n("Neutral"), i18n("Down")])
-        self.direction.setItemIcon(0, KIcon("arrow-up"))
-        self.direction.setItemIcon(2, KIcon("arrow-down"))
-        self.direction.setCurrentIndex(1)
-        l.setBuddy(self.direction)
-        h.setToolTip(i18n("The direction to use for the spanners."))
-
         box = QGroupBox(i18n("Spanners"))
         grid = QGridLayout()
         grid.setSpacing(0)
@@ -421,10 +429,9 @@ class Spanners(LqiPanel):
         layout.addStretch()
         
     def actionTriggered(self, name):
-        direction = 1 - self.direction.currentIndex()
         if name in self.spanners:
             doc = self.mainwin.currentDocument()
-            doc.manipulator().addSpanner(name, direction)
+            doc.manipulator().addSpanner(name, self.direction())
         doc.view.setFocus()
 
     def populateAction(self, name, action):
