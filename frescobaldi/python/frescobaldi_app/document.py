@@ -742,7 +742,34 @@ class DocumentManipulator(object):
         with self.doc.editContext():
             self.doc.doc.insertText(end.kteCursor(), spanner[1])
             self.doc.doc.insertText(start.kteCursor(), direction + spanner[0])
-
+    
+    _arpeggioTypes = {
+        'arpeggio_normal': '\\arpeggioNormal',
+        'arpeggio_arrow_up': '\\arpeggioArrowUp',
+        'arpeggio_arrow_down': '\\arpeggioArrowDown',
+        'arpeggio_bracket': '\\arpeggioBracket',
+        'arpeggio_parenthesis': '\\arpeggioParenthesis',
+    }
+                
+    def addArpeggio(self, name):
+        """ Ad an arpeggio to the current chord. """
+        try:
+            arpeggioType = self._arpeggioTypes[name]
+        except KeyError:
+            return
+        
+        # TODO: determine the last used arpeggio type and do not re-insert that
+        lastUsed = '\\arpeggioNormal'
+        
+        self.adjustCursorToChords()
+        with self.doc.editContext():
+            self.doc.view.insertText('\\arpeggio')
+            if arpeggioType != lastUsed:
+                indent = re.match(r'\s*', self.doc.line()).group()
+                cursor = self.doc.view.cursorPosition()
+                cursor.setColumn(len(indent))
+                self.doc.doc.insertText(cursor, arpeggioType + '\n' + indent)
+    
     def wrapSelection(self, text, before='{', after='}', alwaysMultiLine=False):
         """
         Wrap a piece of text inside some kind of brace construct. Returns the

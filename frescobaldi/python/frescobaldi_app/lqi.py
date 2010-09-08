@@ -409,6 +409,8 @@ class Spanners(LqiPanel):
         self.setLayout(layout)
         
         box = QGroupBox(i18n("Spanners"))
+        box.setToolTip(i18n(
+            "These spanners need a music fragment to be selected."))
         grid = QGridLayout()
         grid.setSpacing(0)
         box.setLayout(grid)
@@ -426,12 +428,36 @@ class Spanners(LqiPanel):
             row, col = divmod(num, COLUMNS)
             grid.addWidget(b, row, col)
         layout.addWidget(box)
+        
+        box = QGroupBox(i18n("Arpeggios"))
+        box.setToolTip(i18n(
+            "Arpeggios are used with chords with multiple notes."))
+        grid = QGridLayout()
+        grid.setSpacing(0)
+        box.setLayout(grid)
+
+        self.arpeggios = {}
+
+        for num, (name, title) in enumerate((
+            ('arpeggio_normal', i18n("Arpeggio")),
+            ('arpeggio_arrow_up', i18n("Arpeggio with Up Arrow")),
+            ('arpeggio_arrow_down', i18n("Arpeggio with Down Arrow")),
+            ('arpeggio_bracket', i18n("Bracket Arpeggio")),
+            ('arpeggio_parenthesis', i18n("Parenthesis Arpeggio")),
+        )):
+            self.arpeggios[name] = title
+            b = ActionButton(self, name, title, name)
+            row, col = divmod(num, COLUMNS)
+            grid.addWidget(b, row, col)
+        layout.addWidget(box)
         layout.addStretch()
         
     def actionTriggered(self, name):
+        doc = self.mainwin.currentDocument()
         if name in self.spanners:
-            doc = self.mainwin.currentDocument()
             doc.manipulator().addSpanner(name, self.direction())
+        elif name in self.arpeggios:
+            doc.manipulator().addArpeggio(name)
         doc.view.setFocus()
 
     def populateAction(self, name, action):
@@ -439,4 +465,8 @@ class Spanners(LqiPanel):
             symbol, title = self.spanners[name]
             action.setText(title)
             action.setIcon(self.toolbox.symbolIcon(symbol))
-            
+        elif name in self.arpeggios:
+            action.setText(self.arpeggios[name])
+            action.setIcon(self.toolbox.symbolIcon(name))
+
+
