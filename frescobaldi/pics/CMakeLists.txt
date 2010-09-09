@@ -109,12 +109,13 @@ endmacro(lilypond_png_text_icon)
 file(GLOB lilypond_files
   arpeggio_*.ly
   articulation_*.ly
-  breathe_*.ly
-  note_*.ly
-  time_*.ly
   bar_*.ly
+  breathe_*.ly
+  glissando_*.ly
+  note_*.ly
   slur_*.ly
   spanner_*.ly
+  time_*.ly
 )
 foreach(_ly ${lilypond_files})
   lilypond_png_icon(${_ly} 22)

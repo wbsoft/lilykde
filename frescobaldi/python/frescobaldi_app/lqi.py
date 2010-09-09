@@ -450,14 +450,39 @@ class Spanners(LqiPanel):
             row, col = divmod(num, COLUMNS)
             grid.addWidget(b, row, col)
         layout.addWidget(box)
+
+        box = QGroupBox(i18n("Glissandos"))
+        box.setToolTip(i18n(
+            "Glissandos are attached to a note and automatically "
+            "extend to the next note."))
+        grid = QGridLayout()
+        grid.setSpacing(0)
+        box.setLayout(grid)
+
+        self.glissandos = {}
+
+        for num, (name, title) in enumerate((
+            ('glissando_normal', i18n("Glissando")),
+            ('glissando_dashed', i18n("Dashed Glissando")),
+            ('glissando_dotted', i18n("Dotted Glissando")),
+            ('glissando_zigzag', i18n("Zigzag Glissando")),
+            ('glissando_trill', i18n("Trill Glissando")),
+        )):
+            self.glissandos[name] = title
+            b = ActionButton(self, name, title, name)
+            row, col = divmod(num, COLUMNS)
+            grid.addWidget(b, row, col)
+        layout.addWidget(box)
         layout.addStretch()
-        
+
     def actionTriggered(self, name):
         doc = self.mainwin.currentDocument()
         if name in self.spanners:
             doc.manipulator().addSpanner(name, self.direction())
         elif name in self.arpeggios:
             doc.manipulator().addArpeggio(name)
+        elif name in self.glissandos:
+            doc.manipulator().addGlissando(name)
         doc.view.setFocus()
 
     def populateAction(self, name, action):
@@ -467,6 +492,9 @@ class Spanners(LqiPanel):
             action.setIcon(self.toolbox.symbolIcon(symbol))
         elif name in self.arpeggios:
             action.setText(self.arpeggios[name])
+            action.setIcon(self.toolbox.symbolIcon(name))
+        elif name in self.glissandos:
+            action.setText(self.glissandos[name])
             action.setIcon(self.toolbox.symbolIcon(name))
 
 

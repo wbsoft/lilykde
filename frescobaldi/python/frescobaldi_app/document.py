@@ -774,6 +774,32 @@ class DocumentManipulator(object):
                 cursor.setColumn(len(indent))
                 self.doc.doc.insertText(cursor, arpeggioType + '\n' + indent)
     
+    _glissandoStyles = {
+        'glissando_normal': '',
+        'glissando_dashed': 'dashed-line',
+        'glissando_dotted': 'dotted-line',
+        'glissando_zigzag': 'zigzag',
+        'glissando_trill':  'trill',
+    }
+    
+    def addGlissando(self, name):
+        """ Add a Glissando to the current chord.
+        
+        Currently uses \\tweak to set different styles.
+        
+        """
+        try:
+            style = self._glissandoStyles[name]
+        except KeyError:
+            return
+            
+        self.adjustCursorToChords()
+        if not style:
+            self.doc.view.insertText("\\glissando")
+        else:
+            self.doc.view.insertText(
+                "-\\tweak #'style #'{0} \\glissando".format(style))
+        
     def wrapSelection(self, text, before='{', after='}', alwaysMultiLine=False):
         """
         Wrap a piece of text inside some kind of brace construct. Returns the
