@@ -288,6 +288,26 @@ If you only click a spanner and a mark, the mark will be added at the end.
 </para>
 
 </sect2>
+
+<sect2 id="quickinsert-spanners">
+<title>The Spanners panel</title>
+
+<para>
+This panel lets you add slurs, beams or trills to a selected music fragment.
+Arpeggios can be added to the chord the cursor is at,
+and glissandos can be added to the current note; &lilypond; will automatically 
+conenct them with the next note.
+</para>
+</sect2>
+
+<sect2 id="quickinsert-barlines">
+<title>The Bar Lines panel</title>
+
+<para>
+With this panel you can insert many different kinds of bar lines and breathing signs.
+</para>
+</sect2>
+
 </sect1>
 
 <sect1 id="other">
