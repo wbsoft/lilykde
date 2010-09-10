@@ -127,6 +127,13 @@ Import/Export:
   If possible put on clipboard for direct pasting in apps like OpenOffice.org.
 
 
+Stability:
+
+- don't error out if the ui.rc file is newer and containers for generated menus
+  can't be found (e.g. after downgrading Frescobaldi)
+
+
+
 DONE:
 =====
 
