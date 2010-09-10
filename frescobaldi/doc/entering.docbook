@@ -248,14 +248,46 @@ More information about writing Rumor scripts is on the
 The Quick Insert Panel (<keycap>Meta+Alt+I</keycap>) is available in the left dock.
 It has panels to add articulations, dynamics and other symbols to your music.
 You can use the mouse wheel to quickly flip through the panels.
-Right-click a button to configure its keyboard shortcut if you want to.
 </para>
 
 <para>
 Some music symbols can be place above the staff or below, or in a neutral (default) position.
-If you want to use an explicit position for those symbols, you can adjust the Direction
-combobox to Up, Down or Neutral before clicking the symbol.
+If you want to use an explicit position for those symbols, you can adjust the
+<guilabel>Direction</guilabel> control to <guilabel>Up</guilabel>, <guilabel>Down</guilabel>
+or <guilabel>Neutral</guilabel> before clicking the symbol.
 </para>
+
+<para>
+Right-click a button to configure its keyboard shortcut if you want to.
+Some buttons have default keyboard shortcuts:
+</para>
+
+<informaltable>
+<tgroup cols="2">
+<tbody>
+
+<row>
+<entry><para><keycap>Alt+'</keycap></para></entry>
+<entry><para>Enter a breathing sign <userinput>\breathe</userinput></para></entry>
+</row>
+
+<row>
+<entry><para><keycap>Ctrl+(</keycap></para></entry>
+<entry><para>Enter a slur over the selected music fragment</para></entry>
+</row>
+
+<row>
+<entry><para><keycap>Alt+.</keycap></para></entry>
+<entry><para>Enter a final bar line <userinput>\bar "|."</userinput></para></entry>
+</row>
+
+<row>
+<entry><para><keycap>Alt+;</keycap></para></entry>
+<entry><para>Enter a double bar line <userinput>\bar "||"</userinput></para></entry>
+</row>
+
+</tbody></tgroup></informaltable>
+
 
 <sect2 id="quickinsert-articulations">
 <title>The Articulations panel</title>
