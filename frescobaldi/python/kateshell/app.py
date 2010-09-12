@@ -386,6 +386,12 @@ class MainApp(DBusItem):
             yield
         finally:
             KApplication.restoreOverrideCursor()
+    
+    def debug(self, message):
+        """Write message to stderr."""
+        message = "{0}: {1}\n".format(
+            self.programName(), "\n ".join(message.splitlines()))
+        sys.stderr.write(message)
 
 
 class Document(DBusItem):

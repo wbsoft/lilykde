@@ -245,11 +245,32 @@ class MainWindow(KParts.MainWindow):
     def setupTools(self):
         """Implement this to create the Tool instances.
         
-        This is called before the ui.rc file s loaded, so the user can
+        This is called before the ui.rc file is loaded, so the user can
         configure the keyboard shortcuts for the tools.
         """
         pass
     
+    def xmlGuiContainer(self, name):
+        """Returns the XMLGUI container with name.
+        
+        If not present, the local ui.rc file is probably erroneous,
+        inform the user via a message box.
+        
+        """
+        obj = self.factory().container(name, self)
+        if obj:
+            return obj
+        else:
+            KMessageBox.error(self, i18n(
+                "Could not find the XMLGUI container \"%1\".\n\n"
+                "Probably the local ui.rc file contains errors. "
+                "It is recommended to delete this file because elements in the "
+                "user interface will be missing. "
+                "This is the full path of the file:\n\n%2\n",
+                name, os.path.join(
+                    KGlobal.dirs().saveLocation('appdata'),
+                    self.xmlFile())))
+                
     def setupGeneratedMenus(self):
         """This should setup menus that are generated on show.
         
@@ -260,66 +281,68 @@ class MainWindow(KParts.MainWindow):
         
         """
         # Set up the documents menu so that it shows all open documents.
-        docMenu = self.factory().container("documents", self)
-        docGroup = QActionGroup(docMenu)
-        docGroup.setExclusive(True)
-        docGroup.triggered.connect(lambda a: a.doc().setActive())
-            
-        def populateDocMenu():
-            for a in docGroup.actions():
-                sip.delete(a)
-            for d in self.app.documents:
-                a = KAction(d.documentName(), docGroup)
-                a.setCheckable(True)
-                a.doc = weakref.ref(d)
-                icon = d.documentIcon()
-                if icon:
-                    a.setIcon(KIcon(icon))
-                if d is self._currentDoc:
-                    a.setChecked(True)
-                docGroup.addAction(a)
-                docMenu.addAction(a)
-            addAccelerators(docMenu.actions())
-        docMenu.setParent(docMenu.parent()) # BUG: SIP otherwise looses outer scope
-        docMenu.aboutToShow.connect(populateDocMenu)
+        docMenu = self.xmlGuiContainer("documents")
+        if docMenu:
+            docGroup = QActionGroup(docMenu)
+            docGroup.setExclusive(True)
+            docGroup.triggered.connect(lambda a: a.doc().setActive())
+                
+            def populateDocMenu():
+                for a in docGroup.actions():
+                    sip.delete(a)
+                for d in self.app.documents:
+                    a = KAction(d.documentName(), docGroup)
+                    a.setCheckable(True)
+                    a.doc = weakref.ref(d)
+                    icon = d.documentIcon()
+                    if icon:
+                        a.setIcon(KIcon(icon))
+                    if d is self._currentDoc:
+                        a.setChecked(True)
+                    docGroup.addAction(a)
+                    docMenu.addAction(a)
+                addAccelerators(docMenu.actions())
+            docMenu.setParent(docMenu.parent()) # BUG: SIP otherwise looses outer scope
+            docMenu.aboutToShow.connect(populateDocMenu)
         
         # sessions menu
-        sessMenu = self.factory().container("sessions", self)
-        sessGroup = QActionGroup(sessMenu)
-        sessGroup.setExclusive(True)
-            
-        def populateSessMenu():
-            for a in sessGroup.actions():
-                sip.delete(a)
-            
-            sm = self.sessionManager()
-            sessions = sm.names()
-            current = sm.current()
-            
-            if not sessions:
-                return
-            # "No Session" action
-            a = KAction(i18n("No Session"), sessGroup)
-            a.setCheckable(True)
-            if not current:
-                a.setChecked(True)
-            else:
-                a.triggered.connect(lambda: sm.switch(None))
-            sessGroup.addAction(a)
-            sessMenu.addAction(a)
-            sessGroup.addAction(sessMenu.addSeparator())
-            # other sessions:
-            for name in sessions:
-                a = KAction(name, sessGroup)
+        sessMenu = self.xmlGuiContainer("sessions")
+        if sessMenu:
+            sessGroup = QActionGroup(sessMenu)
+            sessGroup.setExclusive(True)
+                
+            def populateSessMenu():
+                for a in sessGroup.actions():
+                    sip.delete(a)
+                
+                sm = self.sessionManager()
+                sessions = sm.names()
+                current = sm.current()
+                
+                if not sessions:
+                    return
+                # "No Session" action
+                a = KAction(i18n("No Session"), sessGroup)
                 a.setCheckable(True)
-                if name == current:
+                if not current:
                     a.setChecked(True)
-                a.triggered.connect((lambda name: lambda: sm.switch(name))(name))
+                else:
+                    a.triggered.connect(lambda: sm.switch(None))
                 sessGroup.addAction(a)
                 sessMenu.addAction(a)
-            addAccelerators(sessMenu.actions())
-        sessMenu.setParent(sessMenu.parent()) # BUG: SIP otherwise looses outer scope
-        sessMenu.aboutToShow.connect(populateSessMenu)
+                sessGroup.addAction(sessMenu.addSeparator())
+                # other sessions:
+                for name in sessions:
+                    a = KAction(name, sessGroup)
+                    a.setCheckable(True)
+                    if name == current:
+                        a.setChecked(True)
+                    a.triggered.connect((lambda name: lambda: sm.switch(name))(name))
+                    sessGroup.addAction(a)
+                    sessMenu.addAction(a)
+                addAccelerators(sessMenu.actions())
+            sessMenu.setParent(sessMenu.parent()) # BUG: SIP otherwise looses outer scope
+            sessMenu.aboutToShow.connect(populateSessMenu)
         
     @cacheresult
     def sessionManager(self):
