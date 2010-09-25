@@ -842,9 +842,14 @@ class LilyPondInfoDialog(KDialog):
     def __init__(self, parent):
         KDialog.__init__(self, parent)
         self.setButtons(KDialog.ButtonCode(
-            KDialog.Ok | KDialog.Cancel | KDialog.Help))
+            KDialog.Ok | KDialog.Cancel | KDialog.Help | KDialog.User1))
         self.setCaption(i18n("LilyPond"))
         self.setHelp("settings-paths-lilypond")
+        self.setButtonText(KDialog.User1, i18n("Download..."))
+        self.setButtonIcon(KDialog.User1, KIcon("download"))
+        self.setButtonToolTip(KDialog.User1, i18n(
+            "Download new binary LilyPond releases."))
+        self.user1Clicked.connect(self.downloadLilyPond)
         layout = QGridLayout(self.mainWidget())
         
         l = QLabel(i18n("LilyPond Command:"))
@@ -885,6 +890,10 @@ class LilyPondInfoDialog(KDialog):
             info.commands[name] = widget.text()
         info.default = self.default.isChecked()
         info.auto = self.auto.isChecked()
+    
+    def downloadLilyPond(self):
+        from frescobaldi_app.download import LilyPondDownloadDialog
+        LilyPondDownloadDialog(self).exec_()
 
 
 class SessionsStartup(SettingsGroup):
