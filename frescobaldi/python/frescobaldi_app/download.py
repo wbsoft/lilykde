@@ -39,7 +39,7 @@ class LilyPondDownloadDialog(KDialog):
         """info is a LilyPondInfoDialog (see settings.py)"""
         KDialog.__init__(self, info)
         self.setButtons(KDialog.ButtonCode(
-            KDialog.Help | KDialog.Ok | KDialog.Cancel))
+            KDialog.Help | KDialog.Details | KDialog.Ok | KDialog.Cancel))
         layout = QGridLayout()
         self.mainWidget().setLayout(layout)
         
@@ -53,6 +53,34 @@ class LilyPondDownloadDialog(KDialog):
         l.setWordWrap(True)
         layout.addWidget(l, 0, 0, 1, 2)
         
+        v = self.lilyVersion = QComboBox()
+        v.currentIndexChanged.connect(self.selectVersion, Qt.QueuedConnection)
+        
+        l = QLabel(i18n("Version:"))
+        l.setBuddy(v)
+        layout.addWidget(l, 1, 0)
+        layout.addWidget(v, 1, 1)
+        
+        d = self.installDest = KUrlRequester()
+        d.setMode(KFile.Mode(KFile.Directory | KFile.LocalOnly))
+        d.setPath('~/lilypond_bin/')
+        
+        l = QLabel(i18n("Install into:"))
+        l.setBuddy(d)
+        layout.addWidget(l, 2, 0)
+        layout.addWidget(d, 2, 1)
+        
+        s = self.status = QLabel()
+        layout.addWidget(s, 3, 0, 1, 2)
+        
+        p = self.progress = QProgressBar()
+        layout.addWidget(p, 4, 0, 1, 2)
+        
+        details = QGroupBox(i18n("Details"))
+        layout.addWidget(details, 5, 0, 1, 2)
+        layout = QGridLayout()
+        details.setLayout(layout)
+
         b = self.baseUrl = QComboBox()
         b.setEditable(True)
         b.addItems(['http://download.linuxaudio.org/lilypond/binaries/'])
@@ -60,8 +88,8 @@ class LilyPondDownloadDialog(KDialog):
         
         l = QLabel(i18n("Download from:"))
         l.setBuddy(b)
-        layout.addWidget(l, 1, 0)
-        layout.addWidget(b, 1, 1)
+        layout.addWidget(l, 0, 0)
+        layout.addWidget(b, 0, 1)
         
         m = self.machineType = QComboBox()
         items = [
@@ -90,31 +118,19 @@ class LilyPondDownloadDialog(KDialog):
 
         l = QLabel(i18n("Machine type:"))
         l.setBuddy(m)
+        layout.addWidget(l, 1, 0)
+        layout.addWidget(m, 1, 1)
+        
+        u = self.packageUrl = KUrlRequester()
+        u.setToolTip(i18n(
+            "This is the URL to the package that will be downloaded and "
+            "installed. You can also browse to other places to select a "
+            "package."))
+        l = QLabel(i18n("Package Url:"))
+        l.setBuddy(u)
         layout.addWidget(l, 2, 0)
-        layout.addWidget(m, 2, 1)
-        
-        v = self.lilyVersion = QComboBox()
-        
-        l = QLabel(i18n("Version:"))
-        l.setBuddy(v)
-        layout.addWidget(l, 3, 0)
-        layout.addWidget(v, 3, 1)
-        
-        d = self.installDest = KUrlRequester()
-        d.setMode(KFile.Mode(KFile.Directory | KFile.LocalOnly))
-        d.setPath('~/lilypond_bin/')
-        
-        l = QLabel(i18n("Install into:"))
-        l.setBuddy(d)
-        layout.addWidget(l, 4, 0)
-        layout.addWidget(d, 4, 1)
-        
-        s = self.status = QLabel()
-        layout.addWidget(s, 5, 0, 1, 2)
-        
-        p = self.progress = QProgressBar()
-        layout.addWidget(p, 6, 0, 1, 2)
-        
+        layout.addWidget(u, 2, 1)
+        self.setDetailsWidget(details)
         self.downloadVersions()
         
     def downloadVersions(self):
@@ -180,6 +196,8 @@ class LilyPondDownloadDialog(KDialog):
             
         self.items = items
 
+    def selectVersion(self, index):
+        self.packageUrl.setUrl(KUrl(self.directory + self.items[index]))
 
             
         
