@@ -38,10 +38,15 @@ class LilyPondDownloadDialog(KDialog):
     def __init__(self, info):
         """info is a LilyPondInfoDialog (see settings.py)"""
         KDialog.__init__(self, info)
+        self.info = info
+        
+        # local attributes
+        self.job = None
+        
+        
         self.setButtons(KDialog.ButtonCode(
             KDialog.Help | KDialog.Details | KDialog.Ok | KDialog.Cancel))
-        layout = QGridLayout()
-        self.mainWidget().setLayout(layout)
+        layout = QGridLayout(self.mainWidget())
         
         self.setButtonText(KDialog.Ok, i18n("Start Download"))
         self.setButtonIcon(KDialog.Ok, KIcon("download"))
@@ -102,19 +107,6 @@ class LilyPondDownloadDialog(KDialog):
             'darwin-ppc',
             ]
         m.addItems(items)
-        
-        # default for machine
-        platform, machine = os.uname()[0::4]
-        if '64' in machine:
-            machine = '64'
-        elif '86' in machine:
-            machine = 'x86'
-        elif 'ower' in machine or 'ppc' in machine:
-            machine = 'ppc'
-        mtype = platform.lower() + '-' + machine
-        if mtype in items:
-            m.setCurrentIndex(items.index(mtype))
-        m.currentIndexChanged.connect(self.downloadVersions)
 
         l = QLabel(i18n("Machine type:"))
         l.setBuddy(m)
@@ -130,7 +122,23 @@ class LilyPondDownloadDialog(KDialog):
         l.setBuddy(u)
         layout.addWidget(l, 2, 0)
         layout.addWidget(u, 2, 1)
+        
         self.setDetailsWidget(details)
+        
+        # default for machine
+        platform, machine = os.uname()[0::4]
+        if '64' in machine:
+            machine = '64'
+        elif '86' in machine:
+            machine = 'x86'
+        elif 'ower' in machine or 'ppc' in machine:
+            machine = 'ppc'
+        mtype = platform.lower() + '-' + machine
+        if mtype in items:
+            m.setCurrentIndex(items.index(mtype))
+        else:
+            self.setDetailsWidgetVisible(True)
+        m.currentIndexChanged.connect(self.downloadVersions)
         self.downloadVersions()
         
     def downloadVersions(self):
@@ -199,8 +207,38 @@ class LilyPondDownloadDialog(KDialog):
     def selectVersion(self, index):
         self.packageUrl.setUrl(KUrl(self.directory + self.items[index]))
 
-            
-        
-        
+    def done(self, result):
+        if result == KDialog.Accepted:
+            # Download (OK) clicked
+            self.download()
+        else:
+            if self.downloadBusy():
+                self.cancelDownload()
+            else:
+                KDialog.done(self, result)
     
+    def download(self):
+        """Download the package in the packageUrl."""
+        self.progress.setRange(0, 100)
+        self.status.setText(i18n("Downloading %1...", self.packageUrl.url().fileName()))
+        dest = KGlobal.dirs().saveLocation('tmp')
+        self.job = KIO.copy(self.packageUrl.url(), KUrl(dest),
+            KIO.JobFlags(KIO.Overwrite | KIO.Resume | KIO.HideProgressInfo))
+        QObject.connect(self.job, SIGNAL("percent(KJob*, unsigned long)"), self.slotPercent)
+        QObject.connect(self.job, SIGNAL("result(KJob*)"), self.slotResult)
+        self.job.start()
         
+    def downloadBusy(self):
+        return bool(self.job)
+
+    def slotPercent(self, job, percent):
+        self.progress.setValue(percent)
+        
+    def slotResult(self):
+        if self.job.error():
+            msg = i18n("Download failed: %1", self.job.errorString())
+        else:
+            msg = i18n("Download finished.")
+        self.status.setText(msg)
+
+
