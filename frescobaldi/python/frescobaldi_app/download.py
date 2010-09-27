@@ -48,7 +48,7 @@ class LilyPondDownloadDialog(KDialog):
             KDialog.Help | KDialog.Details | KDialog.Ok | KDialog.Cancel))
         layout = QGridLayout(self.mainWidget())
         
-        self.setButtonText(KDialog.Ok, i18n("Start Download"))
+        self.setButtonText(KDialog.Ok, i18n("Install"))
         self.setButtonIcon(KDialog.Ok, KIcon("download"))
         self.setCaption(i18n("Download LilyPond"))
         
@@ -68,7 +68,8 @@ class LilyPondDownloadDialog(KDialog):
         
         d = self.installDest = KUrlRequester()
         d.setMode(KFile.Mode(KFile.Directory | KFile.LocalOnly))
-        d.setPath('~/lilypond_bin/')
+        d.setPath(config().readPathEntry(
+            'lilypond install path', os.path.expanduser('~/lilypond_bin/')))
         
         l = QLabel(i18n("Install into:"))
         l.setBuddy(d)
@@ -158,6 +159,9 @@ class LilyPondDownloadDialog(KDialog):
         self.progress.reset()
         self.status.setText('')
         if self.loader.error():
+            self.status.setText(i18n(
+                "No listing found. You can browse to a package manually."))
+            self.setDetailsWidgetVisible(True)
             return
         
         versions = {}
@@ -211,6 +215,8 @@ class LilyPondDownloadDialog(KDialog):
         if result == KDialog.Accepted:
             # Download (OK) clicked
             if not self.packageUrl.url().isEmpty():
+                config().writePathEntry('lilypond install path',
+                    self.installDest.url().path())
                 self.download()
         else:
             if self.downloadBusy():
@@ -245,6 +251,7 @@ class LilyPondDownloadDialog(KDialog):
     def slotResult(self):
         if self.job.error():
             self.status.setText(i18n("Download failed: %1", self.job.errorString()))
+            self.job = None
             self.enableButtonOk(True)
         else:
             self.status.setText(i18n("Download finished, unpacking..."))
@@ -253,6 +260,7 @@ class LilyPondDownloadDialog(KDialog):
     def unpack(self):
         fileName = self.job.srcUrls()[0].fileName()
         package = os.path.join(self.job.destUrl().path(), fileName)
+        self.job = None
         m = re.search(r'(\d+(\.\d+)+)(-(\d+))?', fileName)
         version = m.group() if m else 'unknown' # should not happen
         self.prefix = os.path.join(self.installDest.url().path(), version)
@@ -273,7 +281,7 @@ class LilyPondDownloadDialog(KDialog):
         if exitStatus == QProcess.NormalExit and exitCode == 0:
             self.status.setText(i18n("Unpacking finished."))
             self.info.lilypond.setText(os.path.join(self.prefix, "bin", "lilypond"))
-            QTimer.singleShot(250, lambda: KDialog.done(self, KDialog.Accepted))
+            KDialog.done(self, KDialog.Accepted)
         else:
             self.status.setText(i18n("Unpacking failed."))
             KMessageBox.error(self, i18n("An error occurred:\n\n%1",
@@ -288,3 +296,7 @@ class LilyPondDownloadDialog(KDialog):
 
         
             
+def config(group="installertools"):
+    return KGlobal.config().group(group)
+    
+    
