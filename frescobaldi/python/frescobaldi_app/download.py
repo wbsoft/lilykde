@@ -42,7 +42,7 @@ class LilyPondDownloadDialog(KDialog):
         
         # local attributes
         self.job = None
-        
+        self.unpackJob = None
         
         self.setButtons(KDialog.ButtonCode(
             KDialog.Help | KDialog.Details | KDialog.Ok | KDialog.Cancel))
@@ -210,11 +210,12 @@ class LilyPondDownloadDialog(KDialog):
     def done(self, result):
         if result == KDialog.Accepted:
             # Download (OK) clicked
-            self.download()
+            if not self.packageUrl.url().isEmpty():
+                self.download()
         else:
             if self.downloadBusy():
                 self.cancelDownload()
-            else:
+            elif not self.unpackBusy():
                 KDialog.done(self, result)
     
     def download(self):
@@ -225,7 +226,7 @@ class LilyPondDownloadDialog(KDialog):
         self.job = KIO.copy(self.packageUrl.url(), KUrl(dest),
             KIO.JobFlags(KIO.Overwrite | KIO.Resume | KIO.HideProgressInfo))
         QObject.connect(self.job, SIGNAL("percent(KJob*, unsigned long)"), self.slotPercent)
-        QObject.connect(self.job, SIGNAL("result(KJob*)"), self.slotResult)
+        QObject.connect(self.job, SIGNAL("result(KJob*)"), self.slotResult, Qt.QueuedConnection)
         self.job.start()
         self.enableButtonOk(False)
         
@@ -247,7 +248,6 @@ class LilyPondDownloadDialog(KDialog):
             self.enableButtonOk(True)
         else:
             self.status.setText(i18n("Download finished, unpacking..."))
-            self.status.update()
             self.unpack()
 
     def unpack(self):
@@ -255,24 +255,36 @@ class LilyPondDownloadDialog(KDialog):
         package = os.path.join(self.job.destUrl().path(), fileName)
         m = re.search(r'(\d+(\.\d+)+)(-(\d+))?', fileName)
         version = m.group() if m else 'unknown' # should not happen
-        prefix = os.path.join(self.installDest.url().path(), version)
-        if not os.path.exists(prefix):
-            os.makedirs(prefix)
-        unpack = QProcess()
+        self.prefix = os.path.join(self.installDest.url().path(), version)
+        if not os.path.exists(self.prefix):
+            os.makedirs(self.prefix)
+        unpack = self.unpackJob = QProcess()
         unpack.setProcessChannelMode(QProcess.MergedChannels)
-        unpack.setWorkingDirectory(prefix)
-        unpack.start("sh", [package, "--batch", "--prefix", prefix])
-        if unpack.waitForFinished():
-            if unpack.exitCode() == 0:
-                self.info.lilypond.setText(os.path.join(prefix, "bin", "lilypond"))
-                KDialog.done(self, KDialog.Accepted)
-                return
-            else:
-                err = str(unpack.readAllStandardOutput())
-        else:
-            err = unpack.errorString()
+        unpack.setWorkingDirectory(self.prefix)
+        unpack.finished.connect(self.unpackFinished)
+        unpack.error.connect(self.unpackError)
+        unpack.start("sh", [package, "--batch", "--prefix", self.prefix])
+    
+    def unpackBusy(self):
+        return bool(self.unpackJob and self.unpackJob.state())
+        
+    def unpackFinished(self, exitCode, exitStatus):
         self.enableButtonOk(True)
-        KMessageBox.error(self, i18n("An error occurred:\n\n%1", err))
-            
+        if exitStatus == QProcess.NormalExit and exitCode == 0:
+            self.status.setText(i18n("Unpacking finished."))
+            self.info.lilypond.setText(os.path.join(self.prefix, "bin", "lilypond"))
+            QTimer.singleShot(250, lambda: KDialog.done(self, KDialog.Accepted))
+        else:
+            self.status.setText(i18n("Unpacking failed."))
+            KMessageBox.error(self, i18n("An error occurred:\n\n%1",
+                str(self.unpackJob.readAllStandardOutput())))
+        
+    def unpackError(self, err):
+        self.enableButtonOk(True)
+        self.status.setText(i18n("Unpacking failed."))
+        KMessageBox.error(self, i18n("An error occurred:\n\n%1",
+            self.unpackJob.errorString()))
+
+
         
             
