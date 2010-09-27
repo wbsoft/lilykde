@@ -227,18 +227,52 @@ class LilyPondDownloadDialog(KDialog):
         QObject.connect(self.job, SIGNAL("percent(KJob*, unsigned long)"), self.slotPercent)
         QObject.connect(self.job, SIGNAL("result(KJob*)"), self.slotResult)
         self.job.start()
+        self.enableButtonOk(False)
         
     def downloadBusy(self):
         return bool(self.job)
-
+    
+    def cancelDownload(self):
+        self.job.kill()
+        self.status.setText(i18n("Download cancelled."))
+        self.enableButtonOk(True)
+        self.progress.setValue(0)
+        
     def slotPercent(self, job, percent):
         self.progress.setValue(percent)
         
     def slotResult(self):
         if self.job.error():
-            msg = i18n("Download failed: %1", self.job.errorString())
+            self.status.setText(i18n("Download failed: %1", self.job.errorString()))
+            self.enableButtonOk(True)
         else:
-            msg = i18n("Download finished.")
-        self.status.setText(msg)
+            self.status.setText(i18n("Download finished, unpacking..."))
+            self.status.update()
+            self.unpack()
 
-
+    def unpack(self):
+        fileName = self.job.srcUrls()[0].fileName()
+        package = os.path.join(self.job.destUrl().path(), fileName)
+        m = re.search(r'(\d+(\.\d+)+)(-(\d+))?', fileName)
+        version = m.group() if m else 'unknown' # should not happen
+        prefix = os.path.join(self.installDest.url().path(), version)
+        if not os.path.exists(prefix):
+            os.makedirs(prefix)
+        unpack = QProcess()
+        unpack.setProcessChannelMode(QProcess.MergedChannels)
+        unpack.setWorkingDirectory(prefix)
+        unpack.start("sh", [package, "--batch", "--prefix", prefix])
+        if unpack.waitForFinished():
+            if unpack.exitCode() == 0:
+                self.info.lilypond.setText(os.path.join(prefix, "bin", "lilypond"))
+                KDialog.done(self, KDialog.Accepted)
+                return
+            else:
+                err = str(unpack.readAllStandardOutput())
+        else:
+            err = unpack.errorString()
+        self.enableButtonOk(True)
+        KMessageBox.error(self, i18n("An error occurred:\n\n%1", err))
+            
+        
+            
