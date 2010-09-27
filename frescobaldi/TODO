@@ -79,10 +79,6 @@ Running LilyPond:
   nothing to do, and is automatically started when there is something to do.
   Communication should be done via D-Bus.
 
-- A wizard to download LilyPond binaries from lilypond.org and install them into
-  a local directory to explore different versions of LilyPond without needing
-  to install them via a distribution's package manager.
-
 
 PDF Preview:
 
@@ -157,6 +153,11 @@ New LilyPond features (as soon as 2.14 is out):
 General:
 - Print dialog for printing generated PDFs, instead of just calling 'lpr'
 - Session save and restore (combined with named sessions like Kate)
+
+Running LilyPond:
+- A wizard to download LilyPond binaries from lilypond.org and install them into
+  a local directory to explore different versions of LilyPond without needing
+  to install them via a distribution's package manager.
 
 MIDI:
 - embedded MIDI player for playback of files (with stop/start)

@@ -753,6 +753,8 @@ class LilyPondInfoList(ListEdit):
         dlg.loadInfo(item)
         if dlg.exec_():
             dlg.saveInfo(item)
+            # force reread of LilyPond version
+            ly.version.LilyPondInstance(item.lilypond, False)
             return True
         return False
         

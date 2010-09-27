@@ -33,6 +33,9 @@ from PyKDE4.kio import *
 
 from frescobaldi_app.lilydoc import HtmlLoader
 
+# parse version of a LilyPond package
+_version_re = re.compile(r'(\d+(\.\d+)+)(-(\d+))?')
+
 
 class LilyPondDownloadDialog(KDialog):
     def __init__(self, info):
@@ -60,7 +63,8 @@ class LilyPondDownloadDialog(KDialog):
         
         v = self.lilyVersion = QComboBox()
         v.currentIndexChanged.connect(self.selectVersion, Qt.QueuedConnection)
-        
+        v.setToolTip(i18n(
+            "Select the LilyPond version you want to download."))
         l = QLabel(i18n("Version:"))
         l.setBuddy(v)
         layout.addWidget(l, 1, 0)
@@ -70,7 +74,9 @@ class LilyPondDownloadDialog(KDialog):
         d.setMode(KFile.Mode(KFile.Directory | KFile.LocalOnly))
         d.setPath(config().readPathEntry(
             'lilypond install path', os.path.expanduser('~/lilypond_bin/')))
-        
+        d.setToolTip(i18n(
+            "Select a writable directory you want to install LilyPond to.\n"
+            "(A version-numbered directory will be created in this directory.)"))
         l = QLabel(i18n("Install into:"))
         l.setBuddy(d)
         layout.addWidget(l, 2, 0)
@@ -89,6 +95,8 @@ class LilyPondDownloadDialog(KDialog):
 
         b = self.baseUrl = QComboBox()
         b.setEditable(True)
+        b.setToolTip(i18n(
+            "The website where LilyPond binaries can be downloaded."))
         b.addItems(['http://download.linuxaudio.org/lilypond/binaries/'])
         b.setCurrentIndex(0)
         
@@ -117,8 +125,8 @@ class LilyPondDownloadDialog(KDialog):
         u = self.packageUrl = KUrlRequester()
         u.setToolTip(i18n(
             "This is the URL to the package that will be downloaded and "
-            "installed. You can also browse to other places to select a "
-            "package."))
+            "installed.\n"
+            "You can also browse to other places to select a LilyPond package."))
         l = QLabel(i18n("Package Url:"))
         l.setBuddy(u)
         layout.addWidget(l, 2, 0)
@@ -160,15 +168,16 @@ class LilyPondDownloadDialog(KDialog):
         self.status.setText('')
         if self.loader.error():
             self.status.setText(i18n(
-                "No listing found. You can browse to a package manually."))
+                "No packages found. You can browse to a package manually."))
             self.setDetailsWidgetVisible(True)
+            self.packageUrl.lineEdit().setFocus()
             return
         
         versions = {}
         versionStrings = {}
         for m in re.finditer(r'\bhref="(lilypond-.*?\.sh)"', self.loader.html()):
             fileName = m.group(1)
-            m = re.search(r'(\d+(\.\d+)+)(-(\d+))?', fileName)
+            m = _version_re.search(fileName)
             if m:
                 versionStrings[fileName] = m.group()
                 ver, build = m.group(1, 4)
@@ -214,27 +223,32 @@ class LilyPondDownloadDialog(KDialog):
     def done(self, result):
         if result == KDialog.Accepted:
             # Download (OK) clicked
-            if not self.packageUrl.url().isEmpty():
+            url = self.packageUrl.url()
+            if not url.isEmpty():
+                self.enableButtonOk(False)
+                # save the install path
                 config().writePathEntry('lilypond install path',
                     self.installDest.url().path())
-                self.download()
+                if url.isLocalFile():
+                    self.unpack(url.path())
+                else:
+                    self.download(url)
         else:
             if self.downloadBusy():
                 self.cancelDownload()
             elif not self.unpackBusy():
                 KDialog.done(self, result)
     
-    def download(self):
-        """Download the package in the packageUrl."""
+    def download(self, url):
+        """Download the package from given KUrl."""
         self.progress.setRange(0, 100)
-        self.status.setText(i18n("Downloading %1...", self.packageUrl.url().fileName()))
+        self.status.setText(i18n("Downloading %1...", url.fileName()))
         dest = KGlobal.dirs().saveLocation('tmp')
-        self.job = KIO.copy(self.packageUrl.url(), KUrl(dest),
+        self.job = KIO.copy(url, KUrl(dest),
             KIO.JobFlags(KIO.Overwrite | KIO.Resume | KIO.HideProgressInfo))
         QObject.connect(self.job, SIGNAL("percent(KJob*, unsigned long)"), self.slotPercent)
         QObject.connect(self.job, SIGNAL("result(KJob*)"), self.slotResult, Qt.QueuedConnection)
         self.job.start()
-        self.enableButtonOk(False)
         
     def downloadBusy(self):
         return bool(self.job)
@@ -251,19 +265,20 @@ class LilyPondDownloadDialog(KDialog):
     def slotResult(self):
         if self.job.error():
             self.status.setText(i18n("Download failed: %1", self.job.errorString()))
-            self.job = None
             self.enableButtonOk(True)
         else:
-            self.status.setText(i18n("Download finished, unpacking..."))
-            self.unpack()
-
-    def unpack(self):
-        fileName = self.job.srcUrls()[0].fileName()
-        package = os.path.join(self.job.destUrl().path(), fileName)
+            fileName = self.job.srcUrls()[0].fileName()
+            package = os.path.join(self.job.destUrl().path(), fileName)
+            self.unpack(package)
         self.job = None
-        m = re.search(r'(\d+(\.\d+)+)(-(\d+))?', fileName)
-        version = m.group() if m else 'unknown' # should not happen
-        self.prefix = os.path.join(self.installDest.url().path(), version)
+
+    def unpack(self, package):
+        """Unpack the given lilypond .sh archive."""
+        fileName = os.path.basename(package)
+        self.status.setText(i18n("Unpacking %1...", fileName))
+        self.progress.setRange(0, 0)
+        ver = version(fileName) or 'unknown' # should not happen
+        self.prefix = os.path.join(self.installDest.url().path(), ver)
         if not os.path.exists(self.prefix):
             os.makedirs(self.prefix)
         unpack = self.unpackJob = QProcess()
@@ -294,9 +309,13 @@ class LilyPondDownloadDialog(KDialog):
             self.unpackJob.errorString()))
 
 
-        
-            
+
 def config(group="installertools"):
     return KGlobal.config().group(group)
-    
-    
+
+def version(fileName):
+    """Determine version of the given package filename."""
+    m = _version_re.search(fileName)
+    if m:
+        return m.group()
+
