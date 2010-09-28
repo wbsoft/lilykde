@@ -54,6 +54,7 @@ class LilyPondDownloadDialog(KDialog):
         self.setButtonText(KDialog.Ok, i18n("Install"))
         self.setButtonIcon(KDialog.Ok, KIcon("download"))
         self.setCaption(i18n("Download LilyPond"))
+        self.setHelp("download-lilypond")
         
         l = QLabel(i18n(
             "With this tool you can download packaged binary releases "

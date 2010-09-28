@@ -143,8 +143,11 @@ Here you can you configure all &lilypond;-related things.
   i.e. the one that is run for all actions (also the Blank Staff Paper tool, etc.).
   The other checkbox, <guilabel>Include in automatic version selection</guilabel>, if checked,
   will include the current &lilypond; entry in the automatic version selection (see below).
+  The <guibutton>Download</guibutton> button lets you
+  <link linkend="download-lilypond">download and install binary packages</link>
+  from the &lilypond; website.
   </para>
-
+  
   <para>
   Below the list of installed &lilypond; instances, there is a checkbox
   <guilabel>Enable automatic version selection</guilabel>.
@@ -472,6 +475,41 @@ Select the <guilabel>Other/&lilypond;</guilabel> mode to enter settings that aff
 The default indentation settings will only have effect if they are not overridden
 by variables set in the &lilypond; Kate mode or in the current document.
 </para>
+
+</sect1>
+
+<sect1 id="download-lilypond">
+<title>Download LilyPond packages</title>
+
+<para>
+&frescobaldi; can automatically download and install binary &lilypond; packages
+(.sh packages) from the &lilypond; website.
+</para>
+
+<para>
+To install e.g. a new development version of &lilypond;, go to &menu.settings.lilypond;
+and click <guibutton>Add</guibutton>.
+In the dialog that appears (to configure the path to a &lilypond; instance),
+click <guibutton>Download</guibutton>.
+Again a small dialog opens, where you can select the &lilypond; version you want to
+download and a destination directory, which should be writable.
+</para>
+
+<para>
+Then click <guibutton>Install</guibutton>. After downloading and unpacking,
+the dialog will disappear and the path to the newly installed &lilypond; will be
+set in the underlying dialog.
+Click <guibutton>Ok</guibutton> to add the new &lilypond; instance to the list
+and then <guibutton>Ok</guibutton> to close the Settings dialog and apply your changes.
+</para>
+
+<para>
+In the Download dialog,
+you can also click <guibutton>Details</guibutton> to change the website where
+the releases are downloaded from, or to manually browse to an already downloaded
+package.
+</para>
+
 
 </sect1>
 
