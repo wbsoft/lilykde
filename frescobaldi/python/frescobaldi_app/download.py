@@ -187,35 +187,30 @@ class LilyPondDownloadDialog(KDialog):
         files = versions.keys()
         files.sort(key=versions.get)
         
+        # add the versions
+        self.lilyVersion.clear()
+        self.items = []
         # determine last stable and development:
-        stable, development = None, None
+        stable, development = False, False
         for f in files[::-1]:
             if versions[f][0][1] & 1:
                 if not development:
-                    development = f
+                    development = True
+                    self.items.append(f)
+                    self.lilyVersion.addItem(i18n(
+                        "Latest Development Version (%1)", versionStrings[f]))
             elif not stable:
-                stable = f
+                stable = True
+                self.items.append(f)
+                self.lilyVersion.addItem(i18n(
+                    "Latest Stable Version (%1)", versionStrings[f]))
             if stable and development:
                 break
         
-        # add the versions
-        self.lilyVersion.clear()
-        items = []
-        if stable:
-            self.lilyVersion.addItem(i18n("Latest Stable Version (%1)",
-                versionStrings[stable]))
-            items.append(stable)
-            self.lilyVersion.setCurrentIndex(0)
-        if development:
-            self.lilyVersion.addItem(i18n("Latest Development Version (%1)",
-                versionStrings[development]))
-            self.lilyVersion.setCurrentIndex(len(items))
-            items.append(development)
         for f in files:
             self.lilyVersion.addItem(versionStrings[f])
-            items.append(f)
-            
-        self.items = items
+            self.items.append(f)
+        self.lilyVersion.setCurrentIndex(0)
 
     def selectVersion(self, index):
         self.packageUrl.setUrl(KUrl(self.directory + self.items[index]))
