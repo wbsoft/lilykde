@@ -25,11 +25,11 @@ Dialog to download new binary versions of LilyPond
 
 import os, re, shutil
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyKDE4.kdecore import *
-from PyKDE4.kdeui import *
-from PyKDE4.kio import *
+from PyQt4.QtCore import QObject, QProcess, Qt, SIGNAL
+from PyQt4.QtGui import QComboBox, QGridLayout, QGroupBox, QLabel, QProgressBar
+from PyKDE4.kdecore import KGlobal, KUrl, i18n
+from PyKDE4.kdeui import KDialog, KGuiItem, KIcon, KMessageBox
+from PyKDE4.kio import KFile, KIO, KUrlRequester
 
 from frescobaldi_app.lilydoc import HtmlLoader
 
