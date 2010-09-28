@@ -23,7 +23,7 @@ from __future__ import unicode_literals
 Dialog to download new binary versions of LilyPond
 """
 
-import os, re
+import os, re, shutil
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -275,12 +275,31 @@ class LilyPondDownloadDialog(KDialog):
     def unpack(self, package):
         """Unpack the given lilypond .sh archive."""
         fileName = os.path.basename(package)
-        self.status.setText(i18n("Unpacking %1...", fileName))
-        self.progress.setRange(0, 0)
         ver = version(fileName) or 'unknown' # should not happen
         self.prefix = os.path.join(self.installDest.url().path(), ver)
+        self.lilypond = os.path.join(self.prefix, "bin", "lilypond")
         if not os.path.exists(self.prefix):
             os.makedirs(self.prefix)
+        elif os.path.exists(self.lilypond):
+            result = KMessageBox.questionYesNoCancel(self, i18n(
+                "LilyPond %1 seems already to be installed in %2.\n\n"
+                "Do you want to use it or to remove and re-install?",
+                ver, self.prefix), None,
+                KGuiItem(i18n("Use existing LilyPond")),
+                KGuiItem(i18n("Remove and re-install")))
+            if result == KMessageBox.Yes:
+                self.info.lilypond.setText(self.lilypond)
+                self.enableButtonOk(True)
+                KDialog.done(self, KDialog.Accepted)
+                return
+            elif result == KMessageBox.No:
+                shutil.rmtree(self.prefix, True)
+            else: # Cancel
+                self.progress.reset()
+                self.enableButtonOk(True)
+                return
+        self.status.setText(i18n("Unpacking %1...", fileName))
+        self.progress.setRange(0, 0)
         unpack = self.unpackJob = QProcess()
         unpack.setProcessChannelMode(QProcess.MergedChannels)
         unpack.setWorkingDirectory(self.prefix)
@@ -292,10 +311,12 @@ class LilyPondDownloadDialog(KDialog):
         return bool(self.unpackJob and self.unpackJob.state())
         
     def unpackFinished(self, exitCode, exitStatus):
+        self.progress.setRange(0, 100)
+        self.progress.reset()
         self.enableButtonOk(True)
         if exitStatus == QProcess.NormalExit and exitCode == 0:
             self.status.setText(i18n("Unpacking finished."))
-            self.info.lilypond.setText(os.path.join(self.prefix, "bin", "lilypond"))
+            self.info.lilypond.setText(self.lilypond)
             KDialog.done(self, KDialog.Accepted)
         else:
             self.status.setText(i18n("Unpacking failed."))
@@ -303,6 +324,8 @@ class LilyPondDownloadDialog(KDialog):
                 str(self.unpackJob.readAllStandardOutput())))
         
     def unpackError(self, err):
+        self.progress.setRange(0, 100)
+        self.progress.reset()
         self.enableButtonOk(True)
         self.status.setText(i18n("Unpacking failed."))
         KMessageBox.error(self, i18n("An error occurred:\n\n%1",
