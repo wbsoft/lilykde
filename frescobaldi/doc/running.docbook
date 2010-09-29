@@ -70,13 +70,15 @@ If you want &frescobaldi; to always save your last local modifications before ru
 </para>
 
 <para>
-After a succesful &lilypond; run, you will see some buttons appear at the bottom
-of the Log view.
-</para>
-
-<para>
-If &lilypond; created a PDF, buttons will be shown to open the PDF in the default
-PDF viewer, and to print the PDF document.
+If &lilypond; created a PDF, you can open it in your default PDF viewer
+by clicking the <guibutton>Play/View</guibutton> toolbar button
+and selecting the file in the drop-down menu.
+You can print the PDF using the <guibutton>Print Music</guibutton> button.
+You can email all generated files (including source files) using
+<menuchoice>
+  <guimenu>File</guimenu>
+  <guimenuitem>Email Documents</guimenuitem>
+</menuchoice>.
 </para>
 
 </sect1>
@@ -85,8 +87,7 @@ PDF viewer, and to print the PDF document.
 <title>Creating MIDI output</title>
 
 <para>
-If &lilypond; created a MIDI file, a button will be shown to play the MIDI in the
-default MIDI player. If you want &lilypond; to create a MIDI file, add a <userinput>\midi { }</userinput>
+If you want &lilypond; to create a MIDI file, add a <userinput>\midi { }</userinput>
 line in your <userinput>\score { }</userinput> section, like this:
 </para>
 
@@ -110,12 +111,9 @@ Be sure to also add a <userinput>\layout { }</userinput> line if you add a <user
 </para>
 
 <para>
-You can also use the built-in MIDI player (see below).
-</para>
-
-<para>
-Also an email button is shown, allowing you to easily send the source and output
-documents to someone else using your default mail client.
+To play the generated MIDI file(s) in an external MIDI player,
+click the Play/View toolbar button and select the file from the drop-down menu.
+You can also use the built-in MIDI player.
 </para>
 
 <sect2 id="kmid">
@@ -242,10 +240,11 @@ under &menu.settings.lilypond;.
 One of the &lilypond; instances can be set as the default.
 It is also possible to automatically start a &lilypond; instance with a version closest
 to the <userinput>\version</userinput> statement in your document.
+You can even download and install different binary releases of &lilypond; from within
+&frescobaldi;.
 See <link linkend="settings-lilypond">Settings Dialog, &lilypond; Preferences</link> for more information.
 </para>
 
 </sect1>
-
 
 </chapter>

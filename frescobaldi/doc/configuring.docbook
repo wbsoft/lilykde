@@ -492,8 +492,14 @@ and click <guibutton>Add</guibutton>.
 In the dialog that appears (to configure the path to a &lilypond; instance),
 click <guibutton>Download</guibutton>.
 Again a small dialog opens, where you can select the &lilypond; version you want to
-download and a destination directory, which should be writable.
+download and a destination directory, which will be created if it doesn't exist.
 </para>
+
+<note><para>
+Inside the destination directory another directory will be created with the
+version number of the &lilypond; version to be installed,
+so different versions of &lilypond; can coexist in the same destination directory.
+</para></note>
 
 <para>
 Then click <guibutton>Install</guibutton>. After downloading and unpacking,
@@ -510,6 +516,21 @@ the releases are downloaded from, or to manually browse to an already downloaded
 package.
 </para>
 
+<note>
+<para>
+If you install the same version of &lilypond; again, &frescobaldi; will warn you
+and offer the choice to remove and re-install it, or to just use it instead
+of overwriting it.
+</para>
+
+<para>
+When you remove versions of &lilypond; from the list in the settings dialog,
+they are not removed from your file system.
+If you really want to uninstall one of more &lilypond; versions,
+you can just remove the directory of that version from the place where you
+installed it.
+</para>
+</note>
 
 </sect1>
 
