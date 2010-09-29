@@ -26,9 +26,9 @@ from itertools import count, repeat
 
 from PyQt4.QtCore import QProcess, QSize, QTimer, QUrl, Qt
 from PyQt4.QtGui import (
-    QBrush, QCheckBox, QColor, QFont, QFrame, QLabel, QListWidget,
-    QListWidgetItem, QStackedWidget, QTextBrowser, QTextCharFormat, QTextCursor,
-    QToolBar, QVBoxLayout, QWidget)
+    QBrush, QCheckBox, QColor, QFont, QLabel, QListWidget, QListWidgetItem,
+    QStackedWidget, QTextBrowser, QTextCharFormat, QTextCursor, QVBoxLayout,
+    QWidget)
 from PyKDE4.kdecore import KGlobal, KPluginLoader, KProcess, KUrl, i18n
 from PyKDE4.kdeui import (
     KApplication, KDialog, KIcon, KMenu, KMessageBox, KStandardGuiItem)
@@ -376,45 +376,22 @@ class RunLilyPondDialog(KDialog):
         return True
 
 
-class LogWidget(QFrame):
-    
-    preview = False   # this is used by the ActionManager
+class LogWidget(QTextBrowser):
     
     def __init__(self, parent=None):
-        QFrame.__init__(self, parent)
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
-        self.textBrowser = QTextBrowser(self)
-        self.textBrowser.setFocusPolicy(Qt.NoFocus)
-        self.textBrowser.setOpenLinks(False)
-        self.textBrowser.setOpenExternalLinks(False)
-        self.textCursor = QTextCursor(self.textBrowser.document())
+        QTextBrowser.__init__(self, parent)
+        self.setFocusPolicy(Qt.NoFocus)
+        self.setOpenLinks(False)
+        self.setOpenExternalLinks(False)
+        self.insertCursor = QTextCursor(self.document())
         self.formats = textFormats()
-        layout.addWidget(self.textBrowser)
-        self.actionBar = QToolBar(self)
-        self.actionBar.setFloatable(False)
-        self.actionBar.setMovable(False)
-        self.actionBar.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        self.actionBar.setIconSize(QSize(16, 16))
-        self.actionBar.layout().setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(self.actionBar)
-        self.actionBar.hide()
-        # frame style:
-        self.setFrameStyle(self.textBrowser.frameStyle())
-        self.textBrowser.setFrameStyle(QFrame.NoFrame)
-    
-    def clear(self):
-        self.textBrowser.clear()
-        self.actionBar.clear()
-        self.actionBar.hide()
     
     def checkScroll(self, func):
         """
         Checks if we were scrolled to the bottom, calls func and then
         again makes sure to scroll to the bottom, if we were.
         """
-        sb = self.textBrowser.verticalScrollBar()
+        sb = self.verticalScrollBar()
         # were we scrolled to the bottom?
         bottom = sb.value() == sb.maximum()
         func()
@@ -424,11 +401,11 @@ class LogWidget(QFrame):
         
     def write(self, text, format='log'):
         self.checkScroll(lambda:
-            self.textCursor.insertText(text, self.formats[format]))
+            self.insertCursor.insertText(text, self.formats[format]))
 
     def writeMsg(self, text, format='msg'):
         # start on a new line if necessary
-        if self.textCursor.columnNumber() > 0:
+        if self.insertCursor.columnNumber() > 0:
             self.write('\n', format)
         self.write(text, format)
 
@@ -450,10 +427,10 @@ class Log(LogWidget):
         self.anchors = {}
         self.anchorgen = anchorgen()
         LogWidget.__init__(self, tool.widget)
-        self.textBrowser.anchorClicked.connect(self.anchorClicked)
+        self.anchorClicked.connect(self.slotAnchorClicked)
         # context menu:
-        self.textBrowser.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.textBrowser.customContextMenuRequested.connect(self.showContextMenu)
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.showContextMenu)
     
     def clear(self):
         self.anchors.clear()
@@ -474,17 +451,17 @@ class Log(LogWidget):
         self.write(text, format)
         self.show() # because this refers to a warning or error
     
-    def anchorClicked(self, url):
+    def slotAnchorClicked(self, url):
         ref = self.anchors.get(str(url.path()))
         if ref:
             ref.activate()
     
     def showContextMenu(self, pos):
-        m = KMenu(self.textBrowser)
+        m = KMenu(self)
         m.aboutToHide.connect(m.deleteLater)
         m.addTitle(i18n("LilyPond Log"))
         self.addContextMenuActions(m)
-        m.popup(self.textBrowser.mapToGlobal(pos))
+        m.popup(self.mapToGlobal(pos))
         
     def addContextMenuActions(self, menu):
         a = menu.addAction(KIcon("edit-copy"), i18n("&Copy"))
@@ -494,8 +471,8 @@ class Log(LogWidget):
         a.triggered.connect(self.saveLogAs)
 
     def copyLog(self):
-        text = (self.textBrowser.textCursor().selection().toPlainText()
-                or self.textBrowser.toPlainText())
+        text = (self.textCursor().selection().toPlainText()
+                or self.toPlainText())
         if text:
             KApplication.clipboard().setText(text)
         
@@ -504,21 +481,21 @@ class Log(LogWidget):
         fileName = (os.path.splitext(fileName)[0] or "lilypond") + ".log"
         dlg = KEncodingFileDialog(startDir, 'utf-8', '',
             i18n("Save LilyPond Log as"),
-            KEncodingFileDialog.Saving, self.textBrowser)
+            KEncodingFileDialog.Saving, self)
         dlg.setSelection(fileName)
         dlg.setConfirmOverwrite(True)
         if not dlg.exec_():
             return # Cancelled
         encoding = dlg.selectedEncoding()
         fileName = dlg.selectedFile()
-        text = (self.textBrowser.textCursor().selection().toPlainText()
-                or self.textBrowser.toPlainText())
+        text = (self.textCursor().selection().toPlainText()
+                or self.toPlainText())
         try:
             with open(fileName, 'w') as f:
                 f.write(text.encode(encoding, 'replace'))
                 f.write('\n')
         except (OSError, IOError) as e:
-            KMessageBox.error(self.textBrowser,
+            KMessageBox.error(self,
                 i18n("Could not save LilyPond log:\n\n%1", unicode(e)))
 
 

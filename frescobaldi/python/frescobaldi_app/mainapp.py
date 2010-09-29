@@ -1250,16 +1250,13 @@ class LogTool(kateshell.mainwindow.Tool):
     
     def startJob(self, job):
         log = self.createLog(job.document)
-        log.preview = job.preview
         log.clear()
         job.output.connect(log)
     
     def finishJob(self, job, success):
         log = self.log(job.document)
-        if log:
-            self.mainwin.actionManager().addActionsToLog(job.updatedFiles(), log)
-            if not success:
-                log.show() # even if LP didn't show an error location
+        if log and not success:
+            log.show() # even if LP didn't show an error location
         
     def addMenuActions(self, m):
         def act(name, title):

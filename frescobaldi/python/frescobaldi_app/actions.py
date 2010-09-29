@@ -77,43 +77,6 @@ class ActionManager(object):
         else:
             addAccelerators(menu.actions())
 
-    def addActionsToLog(self, updatedFiles, log):
-        """
-        Queries updatedFiles() and adds corresponding actions to the log.
-        See runlily.py for the LogWidget
-        """
-        bar = log.actionBar
-        bar.clear() # clear all actions
-        def make_action(items, func, icon, title):
-            if items:
-                icon = KIcon(icon)
-                a = bar.addAction(icon, title)
-                if len(items) == 1:
-                    a.triggered.connect((lambda item: lambda: func(item))(items[0]))
-                else:
-                    menu = QMenu(bar.widgetForAction(a))
-                    a.setMenu(menu)
-                    bar.widgetForAction(a).setPopupMode(QToolButton.InstantPopup)
-                    sip.transferto(menu, None) # let C++ take ownership
-                    for item in items:
-                        a = menu.addAction(icon, os.path.basename(item))
-                        a.triggered.connect((lambda item: lambda: func(item))(item))
-
-        pdfs = updatedFiles("pdf")
-        midis = updatedFiles("mid*")
-        if pdfs:
-            make_action(pdfs, self.openPDF, "application-pdf", i18n("Open PDF"))
-            a = bar.addAction(KIcon("document-print"), i18n("Print"))
-            a.triggered.connect(lambda: self.print_(updatedFiles))
-        if midis:
-            make_action(midis, self.openMIDI, "media-playback-start",
-                i18n("Play MIDI"))
-        # if any actions were added, also add the email action and show.
-        if pdfs or midis:
-            a = bar.addAction(KIcon("mail-send"), i18n("Email..."))
-            a.triggered.connect(lambda: self.email(updatedFiles, log.preview))
-            log.checkScroll(bar.show)
-        
     def openPDF(self, fileName):
         """
         Opens a PDF in the configured external PDF viewer, or in the
