@@ -495,12 +495,6 @@ Again a small dialog opens, where you can select the &lilypond; version you want
 download and a destination directory, which will be created if it doesn't exist.
 </para>
 
-<note><para>
-Inside the destination directory another directory will be created with the
-version number of the &lilypond; version to be installed,
-so different versions of &lilypond; can coexist in the same destination directory.
-</para></note>
-
 <para>
 Then click <guibutton>Install</guibutton>. After downloading and unpacking,
 the dialog will disappear and the path to the newly installed &lilypond; will be
@@ -517,6 +511,12 @@ package.
 </para>
 
 <note>
+<para>
+Inside the destination directory another directory will be created with the
+version number of the &lilypond; version to be installed,
+so different versions of &lilypond; can coexist in the same destination directory.
+</para>
+
 <para>
 If you install the same version of &lilypond; again, &frescobaldi; will warn you
 and offer the choice to remove and re-install it, or to just use it instead
