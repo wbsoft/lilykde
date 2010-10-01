@@ -813,8 +813,7 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
         LogTool(self)
         KMidTool(self)
         RumorTool(self)
-        if not config().readEntry("disable pdf preview", False):
-            PDFTool(self)
+        PDFTool(self)
         LilyDocTool(self)
             
     def runLilyPond(self, mode):
@@ -1076,8 +1075,9 @@ class PDFTool(kateshell.mainwindow.KPartTool):
         self._timer.setSingleShot(True)
         self._timer.timeout.connect(self.timeoutFunc)
         mainwin.aboutToClose.connect(self.appQuit)
-        mainwin.currentDocumentChanged.connect(self.sync)
-        mainwin.jobManager().jobFinished.connect(self.openUpdatedPDF)
+        if self._config["sync"]:
+            mainwin.currentDocumentChanged.connect(self.sync)
+            mainwin.jobManager().jobFinished.connect(self.openUpdatedPDF)
     
     def appQuit(self):
         """ Called when the application exits. """
@@ -1119,10 +1119,9 @@ class PDFTool(kateshell.mainwindow.KPartTool):
             self._reallyOpenUrl(self._currentUrl)
             
     def sync(self, doc):
-        if self._config["sync"]:
-            pdfs = doc.updatedFiles()("pdf")
-            if pdfs:
-                self.openUrl(KUrl(pdfs[0]))
+        pdfs = doc.updatedFiles()("pdf")
+        if pdfs:
+            self.openUrl(KUrl(pdfs[0]))
 
     def openUpdatedPDF(self, job):
         pdfs = job.updatedFiles()("pdf")
@@ -1154,13 +1153,21 @@ class PDFTool(kateshell.mainwindow.KPartTool):
                 
     def toggleAction(self, name):
         c = self._config[name] = not self._config[name]
-        if not self.part:
-            return
         # if the part has already loaded, perform these settings.
-        if name == "leftpanel":
+        if name == "leftpanel" and self.part:
             self.part.actionCollection().action("show_leftpanel").setChecked(c)
-        elif name == "minipager":
+        elif name == "minipager" and self.part:
             self._okularMiniBar().setVisible(c)
+        elif name == "sync":
+            if c:
+                self.mainwin.currentDocumentChanged.connect(self.sync)
+                self.mainwin.jobManager().jobFinished.connect(self.openUpdatedPDF)
+                d = self.mainwin.currentDocument()
+                if d:
+                    self.sync(d)
+            else:
+                self.mainwin.currentDocumentChanged.disconnect(self.sync)
+                self.mainwin.jobManager().jobFinished.disconnect(self.openUpdatedPDF)
 
     def _okularMiniBar(self):
         """ get the okular miniBar """

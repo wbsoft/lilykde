@@ -306,10 +306,6 @@ class RunningLilyPond(CheckGroup):
             self.addCheckBox(i18n("Run LilyPond with verbose output"),
                 "verbose lilypond output", False))
 
-        layout.addWidget(
-            self.addCheckBox(i18n("Disable the built-in PDF preview"),
-                "disable pdf preview", False))
-        
         h = KHBox()
         QLabel(i18n("LilyPond include path:"), h)
         self.includePath = FilePathEdit(h)
@@ -330,17 +326,6 @@ class RunningLilyPond(CheckGroup):
         conf = config("preferences")
         conf.writePathEntry("lilypond include path",
             self.includePath.value())
-    
-    def applySettings(self):
-        # disable or enable the builtin PDF preview
-        mainwin = self.page.dialog.mainwin
-        disable = config("preferences").readEntry("disable pdf preview", False)
-        running = "pdf" in mainwin.tools
-        if disable and running:
-            mainwin.tools["pdf"].delete()
-        elif not disable and not running:
-            tool = frescobaldi_app.mainapp.PDFTool(mainwin)
-            tool.sync(mainwin.currentDocument())
 
 
 class SavingDocument(CheckGroup):
