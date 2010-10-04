@@ -710,6 +710,13 @@ class MainWindow(SymbolManager, kateshell.mainwindow.MainWindow):
             import ly.duration
             return ly.duration.makeImplicit(text)
             
+        @self.onSelAction(i18n("Make implicit (per line)"), tooltip=i18n(
+            "Make durations implicit (remove repeated durations), "
+            "except for the first duration in a line."))
+        def durations_implicit_per_line(text):
+            import ly.duration
+            return ly.duration.makeImplicitPerLine(text)
+            
         @self.onSelAction(i18n("Make explicit"),
             tooltip=i18n("Make durations explicit (add duration to every note, "
                          "even if it is the same as the preceding note)."))

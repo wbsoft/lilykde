@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="frescobaldi" version="14">
+<kpartgui name="frescobaldi" version="15">
 
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -100,6 +100,7 @@
       <Action name="durations_remove"/>
       <Separator />
       <Action name="durations_implicit"/>
+      <Action name="durations_implicit_per_line"/>
       <Action name="durations_explicit"/>
       <Separator />
       <Action name="durations_copy_rhythm"/>

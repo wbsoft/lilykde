@@ -1,8 +1,10 @@
-Changes in 1.1.7 --
+Changes in 1.1.7 -- October 4th, 2010
 
 * New features:
   - New tool to download LilyPond binary releases. Go to Settings -> Configure
     Frescobaldi -> LilyPond Preferences, Versions -> Add -> Download to use it.
+  - New rhythm command "Make implicit (per line)" that removes repeated
+    durations, except for the first duration in a line.
 * Quick Insert Panel:
   - New default shortcuts for Slur: Ctrl+( and Breathing sign: Alt+'
 * Bugfixes and improvements:

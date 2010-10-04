@@ -89,6 +89,9 @@ def makeImplicit(text):
         return m.group()
     return ly.rx.chord_rest.sub(repl, text)
 
+def makeImplicitPerLine(text):
+    return '\n'.join(makeImplicit(t) for t in makeExplicit(text).split('\n'))
+    
 def makeExplicit(text):
     old = ['']
     def repl(m):
