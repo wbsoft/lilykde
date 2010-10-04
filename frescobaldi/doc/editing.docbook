@@ -13,7 +13,9 @@ In the <menuchoice><guimenu>&lilypond;</guimenu><guisubmenu>Rhythm</guisubmenu><
 menu there are many options to manipulate the durations
 of a selected music fragment. You can double or halve the durations, add or
 remove dots, remove scaling (the <userinput>*n/m</userinput> suffix) or remove all durations.
-<guimenuitem>Make implicit</guimenuitem> removes durations that are equal to the previous note, and
+<guimenuitem>Make implicit</guimenuitem> removes durations that are equal to the previous note,
+<guimenuitem>Make implicit (per line)</guimenuitem> does the same, except that it always adds a duration
+to the first note or chord on a line, and
 <guimenuitem>Make explicit</guimenuitem> adds the duration to every note or chord, even if it has the same
 duration as the previous one. 
 </para>
