@@ -61,5 +61,5 @@ def documentLanguage(text):
     text = ly.rx.all_comments.sub('', text)
     m = ly.rx.language.match(text)
     if m:
-        return m.group(1)
+        return m.group(3)
 

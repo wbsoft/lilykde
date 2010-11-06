@@ -36,7 +36,7 @@ import ly.rx, ly.dynamic, ly.pitch, ly.parse, ly.tokenize, ly.tools, ly.version
 from kateshell.app import cacheresult
 from kateshell.widgets import promptText
 from kateshell.mainwindow import addAccelerators
-from frescobaldi_app.mainapp import lilyPondCommand
+from frescobaldi_app.mainapp import lilyPondCommand, lilyPondVersion
 
 
 class DocumentManipulator(object):
@@ -61,7 +61,11 @@ class DocumentManipulator(object):
     def changeLanguage(self, lang):
         """
         Change the LilyPond pitch name language in our document to lang.
+        
+        This is a bit hairy because LilyPond has a new syntax for this since 2.14,
+        \language "name", while the old \include "name.ly" still is supported as well.
         """
+        newSyntax = (self.doc.lilyPondVersion() or lilyPondVersion()) >= (2, 13, 38)
         text, start = self.doc.selectionOrDocument()
         try:
             changes, includeCommandChanged = ly.tools.translate(text, lang, start)
@@ -77,13 +81,21 @@ class DocumentManipulator(object):
         with self.doc.editContext():
             changes.applyToCursor(EditCursor(self.doc.doc))
             if not start and not includeCommandChanged:
-                self.addLineToTop('\\include "{0}.ly"'.format(lang))
+                if newSyntax:
+                    self.addLineToTop('\\language "{0}"'.format(lang))
+                else:
+                    self.addLineToTop('\\include "{0}.ly"'.format(lang))
         if start and not includeCommandChanged:
             KMessageBox.information(self.doc.app.mainwin,
-                '<p>{0}</p><p><tt>\\include "{1}.ly"</tt></p>'.format(
-                i18n("The pitch language of the selected text has been "
-                     "updated, but you need to manually add the following "
-                     "command to your document:"), lang),
+                '<p>{0}</p>'
+                '<p><tt>\\include "{1}.ly"</tt> {2}</p>'
+                '<p><tt>\\language "{1}"</tt> {3}</p>'.format(
+                    i18n("The pitch language of the selected text has been "
+                         "updated, but you need to manually add the following "
+                         "command to your document:"),
+                    lang,
+                    i18n("(for LilyPond below 2.14), or"),
+                    i18n("(for LilyPond 2.14 and higher.)")),
                 i18n("Pitch Name Language"))
 
     def addLineToTop(self, text):

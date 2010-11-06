@@ -554,6 +554,10 @@ def translate(text, lang, start = 0, changes = None):
             reader = ly.pitch.pitchReader[tokenizer.language]
             changes.replaceToken(token, '"{0}.ly"'.format(lang))
             includeCommandChanged = True
+        elif isinstance(token, tokenizer.LanguageName):
+            reader = ly.pitch.pitchReader[tokenizer.language]
+            changes.replaceToken(token, '"{0}"'.format(lang))
+            includeCommandChanged = True
         elif isinstance(token, tokenizer.PitchWord):
             result = reader(token)
             if result:

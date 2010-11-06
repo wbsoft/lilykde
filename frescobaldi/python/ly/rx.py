@@ -121,10 +121,10 @@ all_comments = re.compile(comment, re.DOTALL)
 
 # document language
 language = re.compile(
-    r'.*\\include\s*"('
+    r'.*\\((include)|language)\s*"('
         "nederlands|english|deutsch|norsk|svenska|suomi|"
         "italiano|catalan|espanol|portugues|vlaams"
-    r')\.ly"', re.DOTALL)
+    r')(?(2)\.ly)"', re.DOTALL)
 
 # point and click, check for matchgroup 1 (on) and/or 2 (off)
 point_and_click = re.compile(

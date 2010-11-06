@@ -434,6 +434,17 @@ class Tokenizer(object):
         def __init__(self, matchObj, tokenizer):
             tokenizer.enter(tokenizer.MarkupParser, self)
     
+    class Language(Command):
+        rx = r"\\language\b"
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.enter(tokenizer.LanguageParser, self)
+    
+    class LanguageName(StringQuoted):
+        rx = r'"({0})"'.format('|'.join(ly.pitch.pitchInfo.keys()))
+        def __init__(self, matchObj, tokenizer):
+            tokenizer.language = self[1:-1]
+            tokenizer.endArgument()
+    
     class Include(Command):
         rx = r"\\include\b"
         def __init__(self, matchObj, tokenizer):
@@ -581,6 +592,7 @@ class Tokenizer(object):
         cls.Markup,
         cls.MarkupLines,
         cls.Include,
+        cls.Language,
         cls.Command,
         cls.Space,
     ))
@@ -665,6 +677,12 @@ class Tokenizer(object):
             cls.IncludeFile,
         ) + cls.lilybaseItems())
 
+    class LanguageParser(Parser):
+        argcount = 1
+        items = staticmethod(lambda cls: (
+            cls.LanguageName,
+        ) + cls.lilybaseItems())
+        
 
 class MusicTokenizer(Tokenizer):
     """
