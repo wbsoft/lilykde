@@ -82,8 +82,8 @@ Running LilyPond:
 
 PDF Preview:
 
-- tighter coupling with editor part, possibly by using a custom PDF (or even
-  SVG) widget instead of embedding Okular:
+- tighter (two-way) coupling with editor part, possibly by using a custom PDF
+  (or PS or even SVG) widget instead of embedding Okular:
   - highlight object text cursor is at
   - right-click object and show relevant options in context menu (by looking
     at the linked position in the document the type of object can be determined)
@@ -91,7 +91,20 @@ PDF Preview:
     simply dragging an object
   - select rectangular section in PDF also selects relevant portion in input
     document
-    
+  
+  This could be done by extending the Okular Part with link stuff, but I prefer
+  to make a new widget that can display PDFs using poppler-qt4. TODO:
+  - get a Python binding for poppler-qt4 that supports all the link stuff
+  - create a widget that shows pages from a PDF with clickable areas that can
+    also be highlighted (show a box or recolor the object region). Best bet may
+    be using a QGraphicsScene (per page or with multiple pages). Every link can
+    be a QGraphicsItem object that can alter its appearance on mouseover.
+  
+  Other advantages:
+  - no need to mess with Okulars settings
+  - no dependency on Okular
+  - point and click can be handled fully inside Frescobaldi
+
 
 Output:
 

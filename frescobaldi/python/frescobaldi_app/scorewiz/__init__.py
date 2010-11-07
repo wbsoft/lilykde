@@ -757,7 +757,10 @@ class Builder(object):
         # pitch language:
         language = s.getLanguage()
         if language:
-            self.include("{0}.ly".format(language))
+            if self.lilyPondVersion >= (2, 13, 38):
+                doc.insert(1, ly.dom.Line('\\language "{0}"'.format(language)))
+            else:
+                self.include("{0}.ly".format(language))
 
         # add code blocks, if any:
         for code in self.codeBlocks[::-1]:
