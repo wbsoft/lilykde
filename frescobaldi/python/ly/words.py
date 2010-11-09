@@ -400,6 +400,7 @@ musiccommands = (
     'stropha',
     'sustainOff',
     'sustainOn',
+    'tabFullNotation',
     'tag',
     'teeny',
     'tempo',

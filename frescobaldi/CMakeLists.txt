@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 2.4)
 project(frescobaldi NONE)
-set(VERSION "1.1.7")
+set(VERSION "1.1.8")
 
 option(HANDBOOK "Install Frescobaldi User Guide" ON)
 option(BYTECOMPILE "Byte-compile Python modules on install" ON)
+option(CHECKMODULES "Check presence and versions of required Python modules" ON)
 
 # Find our own modules
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
@@ -15,7 +16,9 @@ include(Python)
 include(uninstall)
 
 # Check if all required Python modules are present by running checkmodules.py
-python_test_script(${CMAKE_SOURCE_DIR}/checkmodules.py)
+if(CHECKMODULES)
+  python_test_script(${CMAKE_SOURCE_DIR}/checkmodules.py)
+endif(CHECKMODULES)
 
  # Where to install stuff, in separate module
 include(FindKDEInstallDirs)

@@ -1,7 +1,9 @@
-Changes in 1.1.8 --
+Changes in 1.1.8 -- November 9th, 2010
 
 * All pitch name related functions (detection and translation) support
   the new \language LilyPond command (as of LilyPond 2.13.38).
+* Installation: An option has been added to suppress checking presence and
+  versions of required python modules.
 * Translations:
   - Dutch updated by Wilbert Berendsen
   - Turkish updated by Server Acim
