@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-10-04 09:48+0200\n"
+"POT-Creation-Date: 2010-11-09 09:51+0100\n"
 "PO-Revision-Date: 2009-10-08 21:17+0300\n"
 "Last-Translator: Artem Zolochevskiy <artem.zolochevskiy@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -964,7 +964,7 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:70
+#: ../python/frescobaldi_app/document.py:74
 msgid ""
 "Can't perform the requested translation.\n"
 "\n"
@@ -976,7 +976,7 @@ msgstr ""
 "Музыка содержит четвертьтоновые альтерации, которые недоступны в языковой "
 "записи \"%1\"."
 
-#: ../python/frescobaldi_app/document.py:84
+#: ../python/frescobaldi_app/document.py:93
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
@@ -984,37 +984,45 @@ msgstr ""
 "Язык ввода нот выделенного текста был обновлен, но Вы должны вручную "
 "добавить следующую команду в документ:"
 
-#: ../python/frescobaldi_app/document.py:87
+#: ../python/frescobaldi_app/document.py:97
+msgid "(for LilyPond below 2.14), or"
+msgstr ""
+
+#: ../python/frescobaldi_app/document.py:98
+msgid "(for LilyPond 2.14 and higher.)"
+msgstr ""
+
+#: ../python/frescobaldi_app/document.py:99
 #: ../python/frescobaldi_app/mainapp.py:645
 msgid "Pitch Name Language"
 msgstr "Язык нотной записи"
 
-#: ../python/frescobaldi_app/document.py:142
+#: ../python/frescobaldi_app/document.py:154
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
 "Введите имя для переменной, которая будет присвоена выделенному тексту:"
 
-#: ../python/frescobaldi_app/document.py:143
+#: ../python/frescobaldi_app/document.py:155
 #: ../python/frescobaldi_app/mainapp.py:514
 msgid "Cut and Assign"
 msgstr "Вырезать и Присвоить"
 
-#: ../python/frescobaldi_app/document.py:453
+#: ../python/frescobaldi_app/document.py:465
 msgid "Open %1"
 msgstr "Открыть %1"
 
-#: ../python/frescobaldi_app/document.py:917
+#: ../python/frescobaldi_app/document.py:929
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:937
+#: ../python/frescobaldi_app/document.py:949
 msgid ""
 "Could not understand the entered pitches.\n"
 "\n"
 "Please make sure you use pitch names in the language \"%1\"."
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:945
+#: ../python/frescobaldi_app/document.py:957
 #, fuzzy
 msgid ""
 "Can't perform the requested transposition.\n"
@@ -1025,19 +1033,19 @@ msgstr ""
 "Невозможно выполнить требуемое преобразование. Музыка содержит "
 "четвертьтоновые альтерации, которые недоступны в языковой записи %1."
 
-#: ../python/frescobaldi_app/document.py:958
+#: ../python/frescobaldi_app/document.py:970
 msgid "Transpose"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:965
+#: ../python/frescobaldi_app/document.py:977
 msgid "Please enter a start pitch and a destination pitch:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:969
+#: ../python/frescobaldi_app/document.py:981
 msgid "Transpose from:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:973
+#: ../python/frescobaldi_app/document.py:985
 #, fuzzy
 msgid "to:"
 msgstr "Направление:"
@@ -3112,7 +3120,7 @@ msgstr "Язык LilyPond для названий инструментов."
 msgid "Remove default LilyPond tagline"
 msgstr "Удалить строку LilyPond по умолчанию"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:1076
+#: ../python/frescobaldi_app/scorewiz/__init__.py:1079
 msgid "No settings available."
 msgstr "Настройки недоступны."
 

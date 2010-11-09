@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: frescobaldi 1.1.7\n"
+"Project-Id-Version: frescobaldi 1.1.8\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-10-13 22:35+0200\n"
+"POT-Creation-Date: 2010-11-09 09:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -899,7 +899,7 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:70
+#: ../python/frescobaldi_app/document.py:74
 msgid ""
 "Can't perform the requested translation.\n"
 "\n"
@@ -907,42 +907,50 @@ msgid ""
 "the pitch language \"%1\"."
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:84
+#: ../python/frescobaldi_app/document.py:93
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:87
+#: ../python/frescobaldi_app/document.py:97
+msgid "(for LilyPond below 2.14), or"
+msgstr ""
+
+#: ../python/frescobaldi_app/document.py:98
+msgid "(for LilyPond 2.14 and higher.)"
+msgstr ""
+
+#: ../python/frescobaldi_app/document.py:99
 #: ../python/frescobaldi_app/mainapp.py:645
 msgid "Pitch Name Language"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:142
+#: ../python/frescobaldi_app/document.py:154
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:143
+#: ../python/frescobaldi_app/document.py:155
 #: ../python/frescobaldi_app/mainapp.py:514
 msgid "Cut and Assign"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:453
+#: ../python/frescobaldi_app/document.py:465
 msgid "Open %1"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:917
+#: ../python/frescobaldi_app/document.py:929
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:937
+#: ../python/frescobaldi_app/document.py:949
 msgid ""
 "Could not understand the entered pitches.\n"
 "\n"
 "Please make sure you use pitch names in the language \"%1\"."
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:945
+#: ../python/frescobaldi_app/document.py:957
 msgid ""
 "Can't perform the requested transposition.\n"
 "\n"
@@ -950,19 +958,19 @@ msgid ""
 "available in the pitch language \"%1\"."
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:958
+#: ../python/frescobaldi_app/document.py:970
 msgid "Transpose"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:965
+#: ../python/frescobaldi_app/document.py:977
 msgid "Please enter a start pitch and a destination pitch:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:969
+#: ../python/frescobaldi_app/document.py:981
 msgid "Transpose from:"
 msgstr ""
 
-#: ../python/frescobaldi_app/document.py:973
+#: ../python/frescobaldi_app/document.py:985
 msgid "to:"
 msgstr ""
 
@@ -2902,7 +2910,7 @@ msgstr ""
 msgid "Remove default LilyPond tagline"
 msgstr ""
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:1076
+#: ../python/frescobaldi_app/scorewiz/__init__.py:1079
 msgid "No settings available."
 msgstr ""
 

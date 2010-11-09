@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frescobaldi 1.1.7\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-10-04 09:48+0200\n"
+"POT-Creation-Date: 2010-11-09 09:51+0100\n"
 "PO-Revision-Date: 2010-10-13 20:47+0200\n"
 "Last-Translator: Georg Hennig <georg.hennig@web.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -952,7 +952,7 @@ msgstr "Besondere Zeichen"
 msgid "unknown"
 msgstr "unbekannt"
 
-#: ../python/frescobaldi_app/document.py:70
+#: ../python/frescobaldi_app/document.py:74
 msgid ""
 "Can't perform the requested translation.\n"
 "\n"
@@ -964,7 +964,7 @@ msgstr ""
 "Die Musik enthält Viertelton-Schritte, die in der Tonlagensprache \"%1\" "
 "nicht verfügbar sind."
 
-#: ../python/frescobaldi_app/document.py:84
+#: ../python/frescobaldi_app/document.py:93
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
@@ -972,32 +972,40 @@ msgstr ""
 "Die Tonlagensprache des ausgewählten Textes wurde aktualisiert, Sie müssen "
 "aber den folgenden Befehl zu Ihrem Dokument hinzufügen:"
 
-#: ../python/frescobaldi_app/document.py:87
+#: ../python/frescobaldi_app/document.py:97
+msgid "(for LilyPond below 2.14), or"
+msgstr ""
+
+#: ../python/frescobaldi_app/document.py:98
+msgid "(for LilyPond 2.14 and higher.)"
+msgstr ""
+
+#: ../python/frescobaldi_app/document.py:99
 #: ../python/frescobaldi_app/mainapp.py:645
 msgid "Pitch Name Language"
 msgstr "Sprache für Tonlagen"
 
-#: ../python/frescobaldi_app/document.py:142
+#: ../python/frescobaldi_app/document.py:154
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
 "Bitte geben Sie den Namen der Variable ein, der der ausgewählte Text "
 "zugewiesen werden soll:"
 
-#: ../python/frescobaldi_app/document.py:143
+#: ../python/frescobaldi_app/document.py:155
 #: ../python/frescobaldi_app/mainapp.py:514
 msgid "Cut and Assign"
 msgstr "Ausschneiden und zuweisen"
 
-#: ../python/frescobaldi_app/document.py:453
+#: ../python/frescobaldi_app/document.py:465
 msgid "Open %1"
 msgstr "Öffne %1"
 
-#: ../python/frescobaldi_app/document.py:917
+#: ../python/frescobaldi_app/document.py:929
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr ""
 "Bitte Musik auswählen, die in << ... >> oder { ... } eingeschlossen ist."
 
-#: ../python/frescobaldi_app/document.py:937
+#: ../python/frescobaldi_app/document.py:949
 msgid ""
 "Could not understand the entered pitches.\n"
 "\n"
@@ -1007,7 +1015,7 @@ msgstr ""
 "\n"
 "Bitte benutzen Sie nur Tonartnamen in der Sprache \"%1\"."
 
-#: ../python/frescobaldi_app/document.py:945
+#: ../python/frescobaldi_app/document.py:957
 msgid ""
 "Can't perform the requested transposition.\n"
 "\n"
@@ -1019,19 +1027,19 @@ msgstr ""
 "Die transponierte Musik enthielte Viertelton-Schritte, die in der "
 "Tondarstellung \"%1\" nicht verfügbar sind."
 
-#: ../python/frescobaldi_app/document.py:958
+#: ../python/frescobaldi_app/document.py:970
 msgid "Transpose"
 msgstr "Transponieren"
 
-#: ../python/frescobaldi_app/document.py:965
+#: ../python/frescobaldi_app/document.py:977
 msgid "Please enter a start pitch and a destination pitch:"
 msgstr "Bitte geben Sie eine Start- und eine Ziel-Tonart ein:"
 
-#: ../python/frescobaldi_app/document.py:969
+#: ../python/frescobaldi_app/document.py:981
 msgid "Transpose from:"
 msgstr "Transponiere von:"
 
-#: ../python/frescobaldi_app/document.py:973
+#: ../python/frescobaldi_app/document.py:985
 msgid "to:"
 msgstr "nach:"
 
@@ -2616,8 +2624,8 @@ msgstr "Warnungen und Benachrichtigungen"
 #: ../python/frescobaldi_app/settings.py:435
 msgid "Warn when a document contains a conflicting point and click setting"
 msgstr ""
-"Warnen, wenn ein Dokument einen Konflikt bei der \"Point and "
-"Click\"-Einstellung enthält"
+"Warnen, wenn ein Dokument einen Konflikt bei der \"Point and Click\"-"
+"Einstellung enthält"
 
 #: ../python/frescobaldi_app/settings.py:438
 msgid "Warn when a document needs to be saved before LilyPond is run"
@@ -2663,8 +2671,8 @@ msgstr ""
 "wird, wenn ein klickbares Objekt angeklickt wird.\n"
 "\n"
 "Wenn Sie Frescobaldi in einen anderen Ordner verschieben oder Okular von "
-"anderen Programmen neu konfiguriert wird, geht diese Konfiguration verloren."
-"\n"
+"anderen Programmen neu konfiguriert wird, geht diese Konfiguration "
+"verloren.\n"
 "\n"
 "Klicken Sie diesen Knopf, um Frescobaldi als 'nutzerspezifischen Editor' "
 "innerhalb von Okular einzurichten. Das funktioniert am besten, wenn alle "
@@ -3125,7 +3133,7 @@ msgstr "Welche Sprache für die Instrumentennamen benutzt werden sollen."
 msgid "Remove default LilyPond tagline"
 msgstr "Voreingestellte LilyPond-Tagline entfernen"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:1076
+#: ../python/frescobaldi_app/scorewiz/__init__.py:1079
 msgid "No settings available."
 msgstr "Keine Einstellungen vorhanden."
 

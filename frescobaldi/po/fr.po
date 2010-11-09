@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
-"POT-Creation-Date: 2010-10-04 09:48+0200\n"
+"POT-Creation-Date: 2010-11-09 09:51+0100\n"
 "PO-Revision-Date: 2010-10-31 17:24+0100\n"
 "Last-Translator: Valentin Villenave <valentin@villenave.net>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
@@ -444,8 +444,7 @@ msgstr ""
 "\n"
 "Le fichier local ui.rc contient probablement des erreurs. Il est recommandé "
 "de supprimer ce fichier, sans quoi des éléments de l'interface ne "
-"s'afficheront "
-"pas. Voici l'emplacement de ce fichier :\n"
+"s'afficheront pas. Voici l'emplacement de ce fichier :\n"
 "\n"
 "%2\n"
 
@@ -589,8 +588,8 @@ msgid ""
 "There are no up-to-date MIDI or PDF files available. Please run LilyPond to "
 "create one or more output files."
 msgstr ""
-"Aucun fichier MIDI ou PDF n'est disponible. Lancez Lilypond afin de "
-"créer un ou plus de fichiers de rendu."
+"Aucun fichier MIDI ou PDF n'est disponible. Lancez Lilypond afin de créer un "
+"ou plus de fichiers de rendu."
 
 #: ../python/frescobaldi_app/actions.py:126
 msgid "There are no files to send via email."
@@ -610,11 +609,10 @@ msgid ""
 msgstr ""
 "Aucun fichier PDF à imprimer.\n"
 "\n"
-"Vous devez probablement lancer Lilypond pour créer ou mettre à jour un"
-"document PDF. Si vous cherchez à créer des fichiers MIDI, incluez également "
-"un bloc \\layout { } dans votre partition, sans quoi Lilypond ne créera pas "
-"de "
-"fichier PDF."
+"Vous devez probablement lancer Lilypond pour créer ou mettre à jour "
+"undocument PDF. Si vous cherchez à créer des fichiers MIDI, incluez "
+"également un bloc \\layout { } dans votre partition, sans quoi Lilypond ne "
+"créera pas de fichier PDF."
 
 #: ../python/frescobaldi_app/actions.py:146
 msgid "No files to print"
@@ -649,16 +647,14 @@ msgid_plural ""
 "to rebuild the files in publish mode, because then the PDF files are much "
 "smaller."
 msgstr[0] ""
-"Note : ce document PDF contient des liens point-and-click (mode aperçu), "
-"ce qui accroît considérablement la taille du fichier. En recompilant votre "
-"code en mode publication, vous obtiendrez un fichier PDF sera bien plus "
-"léger."
+"Note : ce document PDF contient des liens point-and-click (mode aperçu), ce "
+"qui accroît considérablement la taille du fichier. En recompilant votre code "
+"en mode publication, vous obtiendrez un fichier PDF sera bien plus léger."
 msgstr[1] ""
 "Note : ces documents PDF contiennent des liens point-and-click (mode "
 "aperçu), ce qui accroît considérablement la taille du fichier. En "
-"recompilant "
-"votre code en mode publication, vous obtiendrez des fichiers PDF bien plus "
-"légers."
+"recompilant votre code en mode publication, vous obtiendrez des fichiers PDF "
+"bien plus légers."
 
 #: ../python/frescobaldi_app/actions.py:191
 msgid ""
@@ -897,8 +893,8 @@ msgid ""
 "first set the number of staves per system to 4. Then enter \"SATB\" (without "
 "the quotes) here."
 msgstr ""
-"Pour configurer les clés, saisissez le nombre de portées par système. Ensuite"
-"entrez autant de lettres (S, A, T ou B) qu'il y a de portées.\n"
+"Pour configurer les clés, saisissez le nombre de portées par système. "
+"Ensuiteentrez autant de lettres (S, A, T ou B) qu'il y a de portées.\n"
 "\n"
 "S ou A : clé de sol,\n"
 "T : clé de sol 8va bassa,\n"
@@ -956,7 +952,7 @@ msgstr "Caractères spéciaux"
 msgid "unknown"
 msgstr "inconnu"
 
-#: ../python/frescobaldi_app/document.py:70
+#: ../python/frescobaldi_app/document.py:74
 msgid ""
 "Can't perform the requested translation.\n"
 "\n"
@@ -968,42 +964,50 @@ msgstr ""
 "La partition contient des altérations en quarts de ton qui ne sont pas "
 "disponibles avec les noms de note \"%1\"."
 
-#: ../python/frescobaldi_app/document.py:84
+#: ../python/frescobaldi_app/document.py:93
 msgid ""
 "The pitch language of the selected text has been updated, but you need to "
 "manually add the following command to your document:"
 msgstr ""
-"La langue des noms de notes a été mise à jour dans le code sélectionné. "
-"Vous devez maintenant ajouter manuellement la commande suivante dans "
-"votre document :"
+"La langue des noms de notes a été mise à jour dans le code sélectionné. Vous "
+"devez maintenant ajouter manuellement la commande suivante dans votre "
+"document :"
 
-#: ../python/frescobaldi_app/document.py:87
+#: ../python/frescobaldi_app/document.py:97
+msgid "(for LilyPond below 2.14), or"
+msgstr ""
+
+#: ../python/frescobaldi_app/document.py:98
+msgid "(for LilyPond 2.14 and higher.)"
+msgstr ""
+
+#: ../python/frescobaldi_app/document.py:99
 #: ../python/frescobaldi_app/mainapp.py:645
 msgid "Pitch Name Language"
 msgstr "Langue pour le nom des notes"
 
-#: ../python/frescobaldi_app/document.py:142
+#: ../python/frescobaldi_app/document.py:154
 msgid "Please enter the name for the variable to assign the selected text to:"
 msgstr ""
-"Veuillez saisir le nom de la variable à laquelle vous souhaitez assigner "
-"le texte sélectionné :"
+"Veuillez saisir le nom de la variable à laquelle vous souhaitez assigner le "
+"texte sélectionné :"
 
-#: ../python/frescobaldi_app/document.py:143
+#: ../python/frescobaldi_app/document.py:155
 #: ../python/frescobaldi_app/mainapp.py:514
 msgid "Cut and Assign"
 msgstr "Couper et assigner"
 
-#: ../python/frescobaldi_app/document.py:453
+#: ../python/frescobaldi_app/document.py:465
 msgid "Open %1"
 msgstr "Ouvrir %1"
 
-#: ../python/frescobaldi_app/document.py:917
+#: ../python/frescobaldi_app/document.py:929
 msgid "Please select a music expression, enclosed in << ... >> or { ... }."
 msgstr ""
-"Veuillez sélectionner une expression musicale, contenue dans un bloc "
-"<< ... >> ou { ... }."
+"Veuillez sélectionner une expression musicale, contenue dans un bloc << ... "
+">> ou { ... }."
 
-#: ../python/frescobaldi_app/document.py:937
+#: ../python/frescobaldi_app/document.py:949
 msgid ""
 "Could not understand the entered pitches.\n"
 "\n"
@@ -1013,7 +1017,7 @@ msgstr ""
 "\n"
 "Veillez à utiliser les noms de notes de la langue \"%1\"."
 
-#: ../python/frescobaldi_app/document.py:945
+#: ../python/frescobaldi_app/document.py:957
 msgid ""
 "Can't perform the requested transposition.\n"
 "\n"
@@ -1022,22 +1026,22 @@ msgid ""
 msgstr ""
 "Impossible d'effectuer la transposition demandée.\n"
 "\n"
-"La musique transposée contiendrait des altérations en quarts de ton "
-"qui ne sont pas disponibles avec la langue \"%1\"."
+"La musique transposée contiendrait des altérations en quarts de ton qui ne "
+"sont pas disponibles avec la langue \"%1\"."
 
-#: ../python/frescobaldi_app/document.py:958
+#: ../python/frescobaldi_app/document.py:970
 msgid "Transpose"
 msgstr "Transposer"
 
-#: ../python/frescobaldi_app/document.py:965
+#: ../python/frescobaldi_app/document.py:977
 msgid "Please enter a start pitch and a destination pitch:"
 msgstr "Veuillez indiquer la hauteur de départ et la hauteur d'arrivée :"
 
-#: ../python/frescobaldi_app/document.py:969
+#: ../python/frescobaldi_app/document.py:981
 msgid "Transpose from:"
 msgstr "Transposer à partir de :"
 
-#: ../python/frescobaldi_app/document.py:973
+#: ../python/frescobaldi_app/document.py:985
 msgid "to:"
 msgstr "vers :"
 
@@ -1779,8 +1783,8 @@ msgid ""
 "Selects text from the current position down to and including the next blank "
 "line."
 msgstr ""
-"Sélectionne le texte de la position courante jusqu'à la prochaine "
-"ligne vide, incluse."
+"Sélectionne le texte de la position courante jusqu'à la prochaine ligne "
+"vide, incluse."
 
 #: ../python/frescobaldi_app/mainapp.py:589
 msgid "Select to previous blank line"
@@ -1919,8 +1923,8 @@ msgid ""
 "Make durations implicit (remove repeated durations), except for the first "
 "duration in a line."
 msgstr ""
-"Rendre les durées implicites (enlever les durées répétées), sauf au début "
-"de chaque ligne."
+"Rendre les durées implicites (enlever les durées répétées), sauf au début de "
+"chaque ligne."
 
 #: ../python/frescobaldi_app/mainapp.py:720
 msgid "Make explicit"
@@ -1931,8 +1935,8 @@ msgid ""
 "Make durations explicit (add duration to every note, even if it is the same "
 "as the preceding note)."
 msgstr ""
-"Rendre les durées explicites (ajouter une durée à chaque note, même si "
-"une valeur est répétée)."
+"Rendre les durées explicites (ajouter une durée à chaque note, même si une "
+"valeur est répétée)."
 
 #: ../python/frescobaldi_app/mainapp.py:727
 msgid "Apply rhythm..."
@@ -2027,18 +2031,18 @@ msgid ""
 "You want to run LilyPond in preview mode (with point and click enabled), but "
 "your document contains a command to turn point and click off."
 msgstr ""
-"Vous souhaitez lancer LilyPond en mode aperçu (avec l'option "
-"point-and-click), "
-"mais votre document contient une commande qui désactive le point-and-click."
+"Vous souhaitez lancer LilyPond en mode aperçu (avec l'option point-and-"
+"click), mais votre document contient une commande qui désactive le point-and-"
+"click."
 
 #: ../python/frescobaldi_app/mainapp.py:888
 msgid ""
 "You want to run LilyPond in publish mode (with point and click disabled), "
 "but your document contains a command to turn point and click on."
 msgstr ""
-"Vous souhaitez lancer LilyPond en mode publication (sans l'option "
-"point-and-click), mais votre document contient une commande qui "
-"active le point-and-click."
+"Vous souhaitez lancer LilyPond en mode publication (sans l'option point-and-"
+"click), mais votre document contient une commande qui active le point-and-"
+"click."
 
 #: ../python/frescobaldi_app/mainapp.py:914
 msgid "Abort the running LilyPond process"
@@ -2502,8 +2506,8 @@ msgid ""
 "session.\n"
 "See What's This (Shift+F1) for more information."
 msgstr ""
-"Sélectionnez ici une version précise de LilyPond à utiliser pour traiter "
-"les documents de cette session.\n"
+"Sélectionnez ici une version précise de LilyPond à utiliser pour traiter les "
+"documents de cette session.\n"
 "Voir \"Qu'est-ce que c'est\" pour plus d'informations."
 
 #: ../python/frescobaldi_app/sessions.py:52
@@ -2514,12 +2518,11 @@ msgid ""
 "The LilyPond version selected here is run by default on your documents, and "
 "it's also used by the \"Insert Version\" command."
 msgstr ""
-"Sélectionnez ici une version précise de LilyPond à utiliser pour traiter "
-"les documents de cette session.\n"
+"Sélectionnez ici une version précise de LilyPond à utiliser pour traiter les "
+"documents de cette session.\n"
 "\n"
 "La version de LilyPond choisie ici sera utilisée par défaut sur vos "
-"documents, "
-"et déterminera également la commande \"Insérer version\"."
+"documents, et déterminera également la commande \"Insérer version\"."
 
 #: ../python/frescobaldi_app/settings.py:57
 msgid "Configure"
@@ -2642,8 +2645,8 @@ msgid ""
 "Click this button if Point and Click does not work. See Shift+F1 (What's "
 "This) for more information."
 msgstr ""
-"Cliquez ici si le point-and-click ne fonctionne pas. "
-"Voir «Qu'est-ce que c'est ?» pour plus de détails."
+"Cliquez ici si le point-and-click ne fonctionne pas. Voir «Qu'est-ce que "
+"c'est ?» pour plus de détails."
 
 #: ../python/frescobaldi_app/settings.py:457
 msgid ""
@@ -2658,17 +2661,15 @@ msgid ""
 "preview has not yet been opened."
 msgstr ""
 "Lors de la première compilation, Frescobaldi essaye de configurer l'aperçu "
-"des "
-"PDF dans Okular, pour que les liens des objets cliquables renvoient vers "
+"des PDF dans Okular, pour que les liens des objets cliquables renvoient vers "
 "Frescobaldi.\n"
 "\n"
 "Cependant, ce réglage peut être perdu si Frescobaldi est déplacé ou si "
 "d'autres applications reconfigurent Okular.\n"
 "\n"
-"Cliquez ici pour faire de Frescobaldi l'«éditeur personnalisé» d'Okular. "
-"Ce changement ne sera pris en compte que si aucune fenêtre d'Okular n'est "
-"ouverte, "
-"et si l'aperçu PDF n'a pas encore été activé."
+"Cliquez ici pour faire de Frescobaldi l'«éditeur personnalisé» d'Okular. Ce "
+"changement ne sera pris en compte que si aucune fenêtre d'Okular n'est "
+"ouverte, et si l'aperçu PDF n'a pas encore été activé."
 
 #: ../python/frescobaldi_app/settings.py:477
 msgid ""
@@ -3123,7 +3124,7 @@ msgstr "Quel langue utiliser pour les noms d'instruments."
 msgid "Remove default LilyPond tagline"
 msgstr "Enlever le pied de page par défaut"
 
-#: ../python/frescobaldi_app/scorewiz/__init__.py:1076
+#: ../python/frescobaldi_app/scorewiz/__init__.py:1079
 msgid "No settings available."
 msgstr "Pas de réglages possibles."
 
@@ -3638,8 +3639,8 @@ msgid ""
 "Adds an accompaniment staff and also puts an accompaniment voice in the "
 "upper staff."
 msgstr ""
-"Ajoute une portée d'accompagnement, et une voix d'accompagnement à la "
-"portée du haut."
+"Ajoute une portée d'accompagnement, et une voix d'accompagnement à la portée "
+"du haut."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:914
 msgid "Choir"
@@ -3651,8 +3652,7 @@ msgid ""
 "hyphen denotes a new staff."
 msgstr ""
 "Veuillez choisir les voix du chœur, au moyen des lettres S A T B. Ajoutez "
-"des "
-"tirets pour délimiter les portées."
+"des tirets pour délimiter les portées."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:920
 msgid "Hint: For a double choir you can use two choir parts."
