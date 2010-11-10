@@ -78,9 +78,6 @@ text for the list of tokens returned by its items() method. You can also easily
 subclass the Parser classes.
 """
 
-import sys
-sys.path.insert(0, '/home/wilbert/dev/frescobaldi/python')
-
 import re
 import ly.rx
 import ly.pitch
