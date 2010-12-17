@@ -1,13 +1,13 @@
 # translation of es.po to Español
 # Header entry was created by KBabel!
 #
-# Francisco Vila <francisco.vila@hispalinux.es>, 2008, 2009.
+# Francisco Vila <francisco.vila@hispalinux.es>, 2008, 2009, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: info@frescobaldi.org\n"
 "POT-Creation-Date: 2010-11-09 09:51+0100\n"
-"PO-Revision-Date: 2009-12-04 16:31+0100\n"
+"PO-Revision-Date: 2010-12-16 12:29+0100\n"
 "Last-Translator: Francisco Vila <francisco.vila@hispalinux.es>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -76,14 +76,12 @@ msgid "&Document"
 msgstr "&Documento"
 
 #: dummy.py:7
-#, fuzzy
 msgid "&LilyPond"
-msgstr "LilyPond"
+msgstr "&LilyPond"
 
 #: dummy.py:8
-#, fuzzy
 msgid "&Sessions"
-msgstr "Sesión que iniciar"
+msgstr "&Sesiones"
 
 #: dummy.py:9
 msgid "&Pitch"
@@ -335,7 +333,7 @@ msgstr "Arco abajo"
 
 #: ../python/ly/articulation.py:73
 msgid "Snappizzicato"
-msgstr ""
+msgstr "Snappizzicato"
 
 #: ../python/ly/articulation.py:74
 msgid "Open (e.g. brass)"
@@ -370,9 +368,8 @@ msgid "Right toe"
 msgstr "Punta derecha"
 
 #: ../python/ly/articulation.py:82
-#, fuzzy
 msgid "Half open (e.g. hi-hat)"
-msgstr "Abierto (p.ej. metales)"
+msgstr "Semi-abierto (p.ej. hi-hat)"
 
 #: ../python/kateshell/exception.py:43
 msgid "An internal error has occurred:"
@@ -408,7 +405,7 @@ msgstr "Barra inferior"
 
 #: ../python/kateshell/mainwindow.py:192
 msgid "Close Other Documents"
-msgstr ""
+msgstr "Cerrar otros documentos"
 
 #: ../python/kateshell/mainwindow.py:197
 msgid "Show Path"
@@ -424,12 +421,11 @@ msgstr "Vistas de herramien&tas"
 
 #: ../python/kateshell/mainwindow.py:232
 msgid "New..."
-msgstr ""
+msgstr "Nuevo..."
 
 #: ../python/kateshell/mainwindow.py:240
-#, fuzzy
 msgid "Manage Sessions..."
-msgstr "Insertar o gestionar las expansiones..."
+msgstr "Gestionar sesiones..."
 
 #: ../python/kateshell/mainwindow.py:265
 msgid ""
@@ -441,11 +437,15 @@ msgid ""
 "\n"
 "%2\n"
 msgstr ""
+"No se encontró el contenedor XMLGUI \"%1\".\n"
+"\n"
+"Probablemente el archivo local rc de ui contiene errores. Se recomienda borrar este archivo porque faltarán algunos elementos de la interfaz de usuario. Ésta es la ruta completa del archivo:\n"
+"\n"
+"%2\n"
 
 #: ../python/kateshell/mainwindow.py:325
-#, fuzzy
 msgid "No Session"
-msgstr "Percusión"
+msgstr "Ninguna sesión"
 
 #: ../python/kateshell/mainwindow.py:404
 msgid "Please select some text first."
@@ -506,67 +506,55 @@ msgstr "Instale %1"
 
 #: ../python/kateshell/shortcut.py:163
 msgid "Configure Keyboard Shortcut"
-msgstr ""
+msgstr "Configurar tecla rápida"
 
 #: ../python/kateshell/shortcut.py:172
 msgid "Press the button to configure the keyboard shortcut for:"
-msgstr ""
+msgstr "Pulse el botón para el que quiere configurar una tecla rápida:"
 
 #: ../python/kateshell/sessions.py:41
-#, fuzzy
 msgid "Manage Sessions"
-msgstr "Insertar o gestionar las expansiones..."
+msgstr "Gestionar sesiones"
 
 #: ../python/kateshell/sessions.py:99
-#, fuzzy
 msgid "Session"
-msgstr "Sesión que iniciar"
+msgstr "Sesión"
 
 #: ../python/kateshell/sessions.py:100
 msgid "Properties of this session"
-msgstr ""
+msgstr "Propiedades de esta sesión"
 
 #: ../python/kateshell/sessions.py:105
-#, fuzzy
 msgid "Name:"
-msgstr "Nombre"
+msgstr "Nombre:"
 
 #: ../python/kateshell/sessions.py:112
 msgid "Always save the list of documents in this session"
-msgstr ""
+msgstr "Guardar siempre la lista de documentos en esta sesión"
 
 #: ../python/kateshell/sessions.py:115
-#, fuzzy
 msgid "Base directory:"
-msgstr "Directorio predeterminado:"
+msgstr "Directorio base:"
 
 #: ../python/kateshell/sessions.py:128
-#, fuzzy
 msgid "Edit session: %1"
-msgstr "Empezar en:"
+msgstr "Editar sesión: %1"
 
 #: ../python/kateshell/sessions.py:135
-#, fuzzy
 msgid "Edit new session"
-msgstr "Empezar en:"
+msgstr "Editar sesión nueva"
 
 #: ../python/kateshell/sessions.py:171
-#, fuzzy
 msgid "Please enter a session name."
-msgstr ""
-"Utilice exclusivamente letras, número y el guión bajo en el nombre de la "
-"expansión."
+msgstr "Introduzca un nombre para la sesión."
 
 #: ../python/kateshell/sessions.py:180
 msgid "Please do not use the name '%1'."
-msgstr ""
+msgstr "No utilice el nombre '%1'."
 
 #: ../python/kateshell/sessions.py:187
-#, fuzzy
 msgid "Please do not use the ampersand (&) character in a session name."
-msgstr ""
-"Utilice exclusivamente letras, número y el guión bajo en el nombre de la "
-"expansión."
+msgstr "No utilice el carácter ampersand (&) en el nombre de una sesión."
 
 #: ../python/kateshell/sessions.py:195
 msgid ""
@@ -574,6 +562,9 @@ msgid ""
 "\n"
 "Do you want to overwrite it?"
 msgstr ""
+"Ya existe otra sesión con el nombre %1 .\n"
+"\n"
+"¿Quiere sobreescribirla?"
 
 #: ../python/frescobaldi_app/actions.py:61
 msgid "Open %1 in external viewer"
@@ -585,13 +576,13 @@ msgstr "Reproducir %1"
 
 #: ../python/frescobaldi_app/actions.py:73
 msgid "(No up-to-date MIDI or PDF files available.)"
-msgstr ""
+msgstr "(No está disponible ningún archivo MIDI ni PDF.)"
 
 #: ../python/frescobaldi_app/actions.py:75
 msgid ""
 "There are no up-to-date MIDI or PDF files available. Please run LilyPond to "
 "create one or more output files."
-msgstr ""
+msgstr "No está disponible ningún archivo MIDI ni PDF. Ejecute LilyPond para crear uno o más archivos de salida."
 
 #: ../python/frescobaldi_app/actions.py:126
 msgid "There are no files to send via email."
@@ -609,11 +600,13 @@ msgid ""
 "are creating MIDI files, be sure you also put a \\layout { } section in your "
 "score, otherwise LilyPond will not create a PDF."
 msgstr ""
+"No hay ningún documento PDF para imprimir.\n"
+"\n"
+"Probablemente necesite ejecutar LilyPond para crear o actualizar un documento PDF.  Si está creando archivos MIDI, asegúrese de introducir también una sección \\layout { } en la partitura, pues en caso contrario LilyPond no creará un PDF."
 
 #: ../python/frescobaldi_app/actions.py:146
-#, fuzzy
 msgid "No files to print"
-msgstr "No hay ningún archivo que enviar"
+msgstr "No hay ningún archivo que imprimir"
 
 #: ../python/frescobaldi_app/actions.py:158
 msgid "Email documents"
@@ -658,51 +651,46 @@ msgstr[1] ""
 msgid ""
 "Note: If there are no PDF and no MIDI files, you probably need to run "
 "LilyPond to update those files, before sending the e-mail."
-msgstr ""
+msgstr "Nota: si no hay ningún archivo PDF ni MIDI, probablemente necesite ejecutar LilyPond para actualizar esos archivos, antes de enviar el mensaje de correo electrónico."
 
 #: ../python/frescobaldi_app/actions.py:248
 msgid "Select all"
-msgstr ""
+msgstr "Seleccionar todo"
 
 #: ../python/frescobaldi_app/actions.py:249
-#, fuzzy
 msgid "Print documents"
-msgstr "Enviar documentos por correo-e"
+msgstr "Imprimir documentos"
 
 #: ../python/frescobaldi_app/actions.py:252
-#, fuzzy
 msgid "Please select the files you want to print:"
-msgstr "Seleccione los archivos que quiere enviar:"
+msgstr "Seleccione los archivos que quiere imprimir:"
 
 #: ../python/frescobaldi_app/actions.py:256
-#, fuzzy
 msgid ""
 "These are the PDF documents that are up-to-date (i.e. newer than the "
 "LilyPond source document). Check the documents you want to send to the "
 "printer."
 msgstr ""
-"Estos son los archivos que están al día (es decir, que son más recientes que "
-"el documento fuente de LilyPond).  También se muestran los archivos de "
-"LilyPond incluidos por el documento fuente."
+"Estos son los archivos PDF que están al día (es decir, que son más recientes que "
+"el documento fuente de LilyPond).  Compruebe los documentos que quiere enviar a la impresora."
 
 #: ../python/frescobaldi_app/actions.py:337
 msgid "Print %1"
 msgstr "Imprimir %1"
 
 #: ../python/frescobaldi_app/actions.py:340
-#, fuzzy
 msgid "Print 1 file"
 msgid_plural "Print %1 files"
-msgstr[0] "Imprimir %1"
+msgstr[0] "Imprimir 1 archivo"
 msgstr[1] "Imprimir %1"
 
 #: ../python/frescobaldi_app/actions.py:350
 msgid "A print command (like 'lpr' or 'lp') could not be found on your system."
-msgstr ""
+msgstr "No se ha encontrado ninguna instrucción de impresión (como 'lpr' o 'lp') en el sistema."
 
 #: ../python/frescobaldi_app/actions.py:354
 msgid "The command '%1' could not be found on your system."
-msgstr ""
+msgstr "No se ha encontrado la instrucción '%1' en el sistema."
 
 #: ../python/frescobaldi_app/actions.py:358
 msgid ""
@@ -710,6 +698,9 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Se ha ejecutado la instrucción siguiente, pero devolvió un código de retorno %1.\n"
+"\n"
+"%2"
 
 #: ../python/frescobaldi_app/blankpaper.py:57
 #: ../python/frescobaldi_app/mainapp.py:813
@@ -817,14 +808,12 @@ msgid "Save PDF"
 msgstr "Guardar PDF"
 
 #: ../python/frescobaldi_app/blankpaper.py:365
-#, fuzzy
 msgid "Print..."
-msgstr "Imprimir"
+msgstr "Imprimir..."
 
 #: ../python/frescobaldi_app/blankpaper.py:371
-#, fuzzy
 msgid "Print staff paper"
-msgstr "Crear papel de música en blanco"
+msgstr "Imprimir papel de música en blanco"
 
 #: ../python/frescobaldi_app/blankpaper.py:391
 msgid "Copy LilyPond code to editor"
@@ -944,11 +933,11 @@ msgstr "Conectar las divisorias"
 #: ../python/frescobaldi_app/charselect.py:41
 #: ../python/frescobaldi_app/mainapp.py:939
 msgid "Special Characters"
-msgstr ""
+msgstr "Caracteres especiales"
 
 #: ../python/frescobaldi_app/charselect.py:85
 msgid "unknown"
-msgstr ""
+msgstr "desconocido"
 
 #: ../python/frescobaldi_app/document.py:74
 msgid ""
@@ -972,11 +961,11 @@ msgstr ""
 
 #: ../python/frescobaldi_app/document.py:97
 msgid "(for LilyPond below 2.14), or"
-msgstr ""
+msgstr "(para LilyPond inferior a 2.14), o"
 
 #: ../python/frescobaldi_app/document.py:98
 msgid "(for LilyPond 2.14 and higher.)"
-msgstr ""
+msgstr "(para LilyPond 2.14 y superior.)"
 
 #: ../python/frescobaldi_app/document.py:99
 #: ../python/frescobaldi_app/mainapp.py:645
@@ -985,8 +974,7 @@ msgstr "Idioma de las notas"
 
 #: ../python/frescobaldi_app/document.py:154
 msgid "Please enter the name for the variable to assign the selected text to:"
-msgstr ""
-"Introduzca el nombre de la variable para asignarle el texto seleccionado:"
+msgstr "Introduzca el nombre de la variable para asignarle el texto seleccionado:"
 
 #: ../python/frescobaldi_app/document.py:155
 #: ../python/frescobaldi_app/mainapp.py:514
@@ -1041,23 +1029,21 @@ msgstr "a:"
 
 #: ../python/frescobaldi_app/download.py:54
 msgid "Install"
-msgstr ""
+msgstr "Instalar"
 
 #: ../python/frescobaldi_app/download.py:56
-#, fuzzy
 msgid "Download LilyPond"
-msgstr "LilyPond"
+msgstr "Descargar LilyPond"
 
 #: ../python/frescobaldi_app/download.py:60
 msgid ""
 "With this tool you can download packaged binary releases of LilyPond for "
 "your operating system."
-msgstr ""
+msgstr "Con esta herramienta puede descargar las versiones binarias empaquetadas de LilyPond para su sistema operativo."
 
 #: ../python/frescobaldi_app/download.py:68
-#, fuzzy
 msgid "Select the LilyPond version you want to download."
-msgstr "Seleccione los archivos que quiere enviar:"
+msgstr "Seleccione la versión de LilyPond que quiere descargar."
 
 #: ../python/frescobaldi_app/download.py:69
 #: ../python/frescobaldi_app/scorewiz/__init__.py:450
@@ -1069,67 +1055,68 @@ msgid ""
 "Select a writable directory you want to install LilyPond to.\n"
 "(A version-numbered directory will be created in this directory.)"
 msgstr ""
+"Seleccione una carpeta que pueda escribir y en donde quiera instalar LilyPond.\n"
+"(Se creará una carpeta con la numeración de la versión dentro de este directorio.)"
 
 #: ../python/frescobaldi_app/download.py:81
-#, fuzzy
 msgid "Install into:"
-msgstr "Italiano"
+msgstr "Instalar en:"
 
 #: ../python/frescobaldi_app/download.py:92
 msgid "Details"
-msgstr ""
+msgstr "Detalles"
 
 #: ../python/frescobaldi_app/download.py:100
 msgid "The website where LilyPond binaries can be downloaded."
-msgstr ""
+msgstr "La página web de donde se pueden descargar los binarios de LilyPond."
 
 #: ../python/frescobaldi_app/download.py:104
 msgid "Download from:"
-msgstr ""
+msgstr "Descargar de:"
 
 #: ../python/frescobaldi_app/download.py:121
 msgid "Machine type:"
-msgstr ""
+msgstr "Tipo de máquina:"
 
 #: ../python/frescobaldi_app/download.py:128
 msgid ""
 "This is the URL to the package that will be downloaded and installed.\n"
 "You can also browse to other places to select a LilyPond package."
 msgstr ""
+"Ésta es la URL del paquete que se va a descargar e instalar.\n"
+"También puede navegar a otras páginas para seleccionar un paquete de LilyPond."
 
 #: ../python/frescobaldi_app/download.py:131
 msgid "Package Url:"
-msgstr ""
+msgstr "URL del paquete:"
 
 #: ../python/frescobaldi_app/download.py:162
 msgid "Downloading directory listing..."
-msgstr ""
+msgstr "Descarga del contenido del directorio..."
 
 #: ../python/frescobaldi_app/download.py:172
 msgid "No packages found. You can browse to a package manually."
-msgstr ""
+msgstr "No se ha encontrado ningún paquete.  Puede navegar a un paquete de forma manual."
 
 #: ../python/frescobaldi_app/download.py:202
 msgid "Latest Development Version (%1)"
-msgstr ""
+msgstr "Última versión de desarrollo (%1)"
 
 #: ../python/frescobaldi_app/download.py:207
 msgid "Latest Stable Version (%1)"
-msgstr ""
+msgstr "Última versión estable (%1)"
 
 #: ../python/frescobaldi_app/download.py:241
-#, fuzzy
 msgid "Downloading %1..."
-msgstr "Cargando..."
+msgstr "Descargando %1..."
 
 #: ../python/frescobaldi_app/download.py:254
 msgid "Download cancelled."
-msgstr ""
+msgstr "Descarga cancelada."
 
 #: ../python/frescobaldi_app/download.py:263
-#, fuzzy
 msgid "Download failed: %1"
-msgstr "La impresión ha fallado: %1"
+msgstr "La descarga ha fallado: %1"
 
 #: ../python/frescobaldi_app/download.py:281
 msgid ""
@@ -1137,39 +1124,41 @@ msgid ""
 "\n"
 "Do you want to use it or to remove and re-install?"
 msgstr ""
+"Parece que LilyPond %1 ya está instalado en %2.\n"
+"\n"
+"¿Quiere usarlo, o borrarlo e instalarlo de nuevo?"
 
 #: ../python/frescobaldi_app/download.py:284
-#, fuzzy
 msgid "Use existing LilyPond"
-msgstr "LilyPond"
+msgstr "Usar LilyPond existente"
 
 #: ../python/frescobaldi_app/download.py:285
-#, fuzzy
 msgid "Remove and re-install"
-msgstr "Quitar duraciones"
+msgstr "Eliminar y reinstalar"
 
 #: ../python/frescobaldi_app/download.py:297
 msgid "Unpacking %1..."
-msgstr ""
+msgstr "Descomprimiendo %1..."
 
 #: ../python/frescobaldi_app/download.py:314
 msgid "Unpacking finished."
-msgstr ""
+msgstr "Descompresión finalizada."
 
 #: ../python/frescobaldi_app/download.py:318
 #: ../python/frescobaldi_app/download.py:326
-#, fuzzy
 msgid "Unpacking failed."
-msgstr "La impresión ha fallado: %1"
+msgstr "Descompresión fallida."
 
 #: ../python/frescobaldi_app/download.py:319
 #: ../python/frescobaldi_app/download.py:327
-#, fuzzy
 msgid ""
 "An error occurred:\n"
 "\n"
 "%1"
-msgstr "Se ha producido un error desconocido."
+msgstr ""
+"Se ha producido un error:\n"
+"\n"
+"%1"
 
 #: ../python/frescobaldi_app/expand.py:149
 #: ../python/frescobaldi_app/mainapp.py:938
@@ -1272,6 +1261,9 @@ msgid ""
 "Please install a package containing some and/or or configure the search path "
 "to find them in the Frescobaldi settings under \"Paths.\""
 msgstr ""
+"No se han encontrado diccionarios de enguionado.\n"
+"\n"
+"Instale un paquete que los contenga y/o configure la ruta de búsqueda para localizarlo dentro de los ajustes de Frescobaldi bajo \"Rutas.\""
 
 #: ../python/frescobaldi_app/hyphen.py:132
 #: ../python/frescobaldi_app/mainapp.py:747
@@ -1283,14 +1275,12 @@ msgid "Please select a language:"
 msgstr "Seleccione un idioma:"
 
 #: ../python/frescobaldi_app/kmid.py:68
-#, fuzzy
 msgid "Pause"
-msgstr "Papel"
+msgstr "Pausa"
 
 #: ../python/frescobaldi_app/kmid.py:85
-#, fuzzy
 msgid "Volume"
-msgstr "Inicio"
+msgstr "Volumen"
 
 #: ../python/frescobaldi_app/lilydoc.py:101
 msgid "Home"
@@ -1372,18 +1362,16 @@ msgstr "Índice del manual de aprendizaje"
 #: ../python/frescobaldi_app/lilydoc.py:876
 #: ../python/frescobaldi_app/lilydoc.py:899
 #: ../python/frescobaldi_app/lilydoc.py:925
-#, fuzzy
 msgid "Internals Reference"
-msgstr "Preferencias generales"
+msgstr "Referencia de funcionamiento interno"
 
 #: ../python/frescobaldi_app/lilydoc.py:877
-#, fuzzy
 msgid "The %1 context"
-msgstr "Tabla de contenidos"
+msgstr "El contexto %1"
 
 #: ../python/frescobaldi_app/lilydoc.py:900
 msgid "The %1 layout object"
-msgstr ""
+msgstr "El objeto de presentación %1"
 
 #: ../python/frescobaldi_app/lilydoc.py:950
 msgid "LilyPond &Help"
@@ -1409,11 +1397,11 @@ msgstr "Abajo"
 msgid ""
 "Where to add articulations et cetera: above or below the staff or in the "
 "default position."
-msgstr ""
+msgstr "Dónde añadir las articulaciones y otros: por encima o por debajo del pentagrama o en la posición predeterminada."
 
 #: ../python/frescobaldi_app/lqi.py:176
 msgid "Configure Keyboard Shortcut (%1)"
-msgstr ""
+msgstr "Configurar tecla rápida (%1)"
 
 #: ../python/frescobaldi_app/lqi.py:198
 msgid "Articulations"
@@ -1445,69 +1433,64 @@ msgstr "Utilizar notación corta para ciertas articulaciones como el picado."
 
 #: ../python/frescobaldi_app/lqi.py:257
 msgid "Dynamics"
-msgstr ""
+msgstr "Indicaciones dinámicas"
 
 #: ../python/frescobaldi_app/lqi.py:258
 msgid "Dynamic symbols."
-msgstr ""
+msgstr "Símbolos de dinámica."
 
 #: ../python/frescobaldi_app/lqi.py:267
-#, fuzzy
 msgid "Click a dynamic sign to add it to your document."
-msgstr "Pulse sobre una articulación para insertarla en el documento."
+msgstr "Pulse sobre una indicación de matiz para insertarla en el documento."
 
 #: ../python/frescobaldi_app/lqi.py:268
-#, fuzzy
 msgid ""
 "If you select some music first, dynamic spanners will be added the selected "
 "fragment."
-msgstr ""
-"Si selecciona un bloque de música previamente, se añade la articulación a "
-"todas las notas de la selección."
+msgstr "Si selecciona un bloque de música previamente, se añaden extensiones de matiz al fragmento seleccionado."
 
 #: ../python/frescobaldi_app/lqi.py:270
 msgid ""
 "If you have selected some music and you click a sign after a spanner, the "
 "sign will terminate the spanner."
-msgstr ""
+msgstr "Si ha seleccionado música y pulsa un signo después de un objeto de extensión, el signo termina el objeto de extensión."
 
 #: ../python/frescobaldi_app/lqi.py:281 ../python/frescobaldi_app/lqi.py:317
 msgid "Dynamic sign %1"
-msgstr ""
+msgstr "Indicación de matiz dinámico %1"
 
 #: ../python/frescobaldi_app/lqi.py:285 ../python/frescobaldi_app/lqi.py:403
 #: ../python/frescobaldi_app/lqi.py:411
 msgid "Spanners"
-msgstr ""
+msgstr "Extensores"
 
 #: ../python/frescobaldi_app/lqi.py:292
 msgid "Hairpin crescendo"
-msgstr ""
+msgstr "Regulador crescendo"
 
 #: ../python/frescobaldi_app/lqi.py:293
 msgid "Crescendo"
-msgstr ""
+msgstr "Crescendo"
 
 #: ../python/frescobaldi_app/lqi.py:294
 msgid "Hairpin diminuendo"
-msgstr ""
+msgstr "Regulador diminuendo"
 
 #: ../python/frescobaldi_app/lqi.py:295
 msgid "Diminuendo"
-msgstr ""
+msgstr "Diminuendo"
 
 #: ../python/frescobaldi_app/lqi.py:296
 msgid "Decrescendo"
-msgstr ""
+msgstr "Decrescendo"
 
 #: ../python/frescobaldi_app/lqi.py:325 ../python/frescobaldi_app/lqi.py:332
-#, fuzzy
 msgid "Bar Lines"
-msgstr "&Barras de compás"
+msgstr "Barras de compás"
 
 #: ../python/frescobaldi_app/lqi.py:326
 msgid "Bar lines, breathing signs, etcetera."
-msgstr ""
+msgstr "Barras de compás, sisnos de respiración, etc."
 
 #: ../python/frescobaldi_app/lqi.py:339
 msgid "Double bar line"
@@ -1570,118 +1553,112 @@ msgid "Double wide bar line"
 msgstr "Barra gruesa doble"
 
 #: ../python/frescobaldi_app/lqi.py:354
-#, fuzzy
 msgid "Segno bar line"
-msgstr "Línea divisoria simple"
+msgstr "Barra de compás en forma de Segno"
 
 #: ../python/frescobaldi_app/lqi.py:362
 msgid "Breathing Signs"
-msgstr ""
+msgstr "Signos de respiración"
 
 #: ../python/frescobaldi_app/lqi.py:369
 msgid "Default Breathing Sign"
-msgstr ""
+msgstr "Signo de respiración predeterminado"
 
 #: ../python/frescobaldi_app/lqi.py:370
 msgid "Straight Breathing Sign"
-msgstr ""
+msgstr "Signo de respiración recto"
 
 #: ../python/frescobaldi_app/lqi.py:371
 msgid "Curved Caesura"
-msgstr ""
+msgstr "Cesura curva"
 
 #: ../python/frescobaldi_app/lqi.py:372
 msgid "Straight Caesura"
-msgstr ""
+msgstr "Cesura recta"
 
 #: ../python/frescobaldi_app/lqi.py:404
 msgid "Slurs, spanners, etcetera."
-msgstr ""
+msgstr "Ligaduras, extensiones de texto, etc."
 
 #: ../python/frescobaldi_app/lqi.py:413
 msgid "These spanners need a music fragment to be selected."
-msgstr ""
+msgstr "Estos objetos de extensión requieren seleccionar un fragmento de música."
 
 #: ../python/frescobaldi_app/lqi.py:421
 msgid "Slur"
-msgstr ""
+msgstr "Ligadura de expresión"
 
 #: ../python/frescobaldi_app/lqi.py:422
 msgid "Phrasing Slur"
-msgstr ""
+msgstr "Ligadura de fraseo"
 
 #: ../python/frescobaldi_app/lqi.py:423
 msgid "Beam"
-msgstr ""
+msgstr "Barra"
 
 #: ../python/frescobaldi_app/lqi.py:432
 msgid "Arpeggios"
-msgstr ""
+msgstr "Acordes arpegiados"
 
 #: ../python/frescobaldi_app/lqi.py:434
 msgid "Arpeggios are used with chords with multiple notes."
-msgstr ""
+msgstr "Los arpegios se usan con acordes de varias notas."
 
 #: ../python/frescobaldi_app/lqi.py:442
 msgid "Arpeggio"
-msgstr ""
+msgstr "Acorde arpegiado"
 
 #: ../python/frescobaldi_app/lqi.py:443
 msgid "Arpeggio with Up Arrow"
-msgstr ""
+msgstr "Arpegio con flecha arriba"
 
 #: ../python/frescobaldi_app/lqi.py:444
 msgid "Arpeggio with Down Arrow"
-msgstr ""
+msgstr "Arpegio con flecha abajo"
 
 #: ../python/frescobaldi_app/lqi.py:445
-#, fuzzy
 msgid "Bracket Arpeggio"
-msgstr "Corchete"
+msgstr "Arpegio de corchete"
 
 #: ../python/frescobaldi_app/lqi.py:446
 msgid "Parenthesis Arpeggio"
-msgstr ""
+msgstr "Arpegio de paréntesis"
 
 #: ../python/frescobaldi_app/lqi.py:454
 msgid "Glissandos"
-msgstr ""
+msgstr "Glissandos"
 
 #: ../python/frescobaldi_app/lqi.py:456
-msgid ""
-"Glissandos are attached to a note and automatically extend to the next note."
-msgstr ""
+msgid "Glissandos are attached to a note and automatically extend to the next note."
+msgstr "Los glissandos se unen a una nota y se extienden automáticamente hasta la nota siguiente."
 
 #: ../python/frescobaldi_app/lqi.py:465
 msgid "Glissando"
-msgstr ""
+msgstr "Glissando"
 
 #: ../python/frescobaldi_app/lqi.py:466
-#, fuzzy
 msgid "Dashed Glissando"
-msgstr "Barra discontinua"
+msgstr "Glissando discontinuo"
 
 #: ../python/frescobaldi_app/lqi.py:467
-#, fuzzy
 msgid "Dotted Glissando"
-msgstr "Barra punteada"
+msgstr "Glissando de puntos"
 
 #: ../python/frescobaldi_app/lqi.py:468
 msgid "Zigzag Glissando"
-msgstr ""
+msgstr "Glissando en zig-zag"
 
 #: ../python/frescobaldi_app/lqi.py:469
 msgid "Trill Glissando"
-msgstr ""
+msgstr "Glissando de trino"
 
 #: ../python/frescobaldi_app/mainapp.py:56
 msgid "LilyPond files"
 msgstr "Archivos de LilyPond"
 
 #: ../python/frescobaldi_app/mainapp.py:170
-#, fuzzy
 msgid "Print Source..."
-msgstr "Imprimir"
+msgstr "Imprimir fuente..."
 
 #: ../python/frescobaldi_app/mainapp.py:461
 #: ../python/frescobaldi_app/sessions.py:38
@@ -1703,23 +1680,20 @@ msgid "Run LilyPond (publish)"
 msgstr "Ejecutar LilyPond (publicar)"
 
 #: ../python/frescobaldi_app/mainapp.py:488
-#, fuzzy
 msgid "Run LilyPond (custom)..."
-msgstr "Ejecutar LilyPond (publicar)"
+msgstr "Ejecutar LilyPond (personalizado)"
 
 #: ../python/frescobaldi_app/mainapp.py:493
 msgid "Interrupt LilyPond Job"
 msgstr "Interrumpir la tarea de LilyPond"
 
 #: ../python/frescobaldi_app/mainapp.py:502
-#, fuzzy
 msgid "Print Music..."
-msgstr "Imprimir"
+msgstr "Imprimir la música..."
 
 #: ../python/frescobaldi_app/mainapp.py:508
-#, fuzzy
 msgid "Email Documents..."
-msgstr "Enviar documentos por correo-e"
+msgstr "Enviar documentos por correo-e..."
 
 #: ../python/frescobaldi_app/mainapp.py:516
 msgid "Cut selection and assign it to a LilyPond variable."
@@ -1743,12 +1717,11 @@ msgstr "Expandir la última palabra o abrir el diálogo de expansiones."
 
 #: ../python/frescobaldi_app/mainapp.py:530
 msgid "Special Characters..."
-msgstr ""
+msgstr "Caracteres especiales..."
 
 #: ../python/frescobaldi_app/mainapp.py:531
-#, fuzzy
 msgid "Insert special characters."
-msgstr "Insertar par de llaves"
+msgstr "Insertar caracteres especiales."
 
 #: ../python/frescobaldi_app/mainapp.py:536
 msgid "Add to Expansions"
@@ -1812,7 +1785,7 @@ msgstr "Mover el bloque seleccionado a la línea en blanco anterior."
 
 #: ../python/frescobaldi_app/mainapp.py:629
 msgid "Play/View"
-msgstr ""
+msgstr "Reproducir/Ver"
 
 #: ../python/frescobaldi_app/mainapp.py:646
 msgid ""
@@ -1910,21 +1883,17 @@ msgstr "Hacer implícitas"
 
 #: ../python/frescobaldi_app/mainapp.py:708
 msgid "Make durations implicit (remove repeated durations)."
-msgstr ""
-"Hacer que las duraciones sean implícitas (quitar las duraciones repetidas)."
+msgstr "Hacer que las duraciones sean implícitas (quitar las duraciones repetidas)."
 
 #: ../python/frescobaldi_app/mainapp.py:713
-#, fuzzy
 msgid "Make implicit (per line)"
-msgstr "Hacer implícitas"
+msgstr "Hacer implícitas (línea a línea)"
 
 #: ../python/frescobaldi_app/mainapp.py:714
-#, fuzzy
 msgid ""
 "Make durations implicit (remove repeated durations), except for the first "
 "duration in a line."
-msgstr ""
-"Hacer que las duraciones sean implícitas (quitar las duraciones repetidas)."
+msgstr "Hacer que las duraciones sean implícitas (quitar las duraciones repetidas), excepto para la primera duración de cada línea."
 
 #: ../python/frescobaldi_app/mainapp.py:720
 msgid "Make explicit"
@@ -1968,7 +1937,7 @@ msgstr "Quitar el enguionado"
 
 #: ../python/frescobaldi_app/mainapp.py:757
 msgid "Copy Lyrics with hyphenation removed"
-msgstr ""
+msgstr "Copiar la letra sin los separadores de sílabas"
 
 #: ../python/frescobaldi_app/mainapp.py:763
 msgid "Single Quote"
@@ -2009,6 +1978,9 @@ msgid ""
 "\n"
 "Save the document now?"
 msgstr ""
+"El documento ha sido modificado y debe guardarse antes de que LilyPond pueda iniciarse.\n"
+"\n"
+"¿Guardar el documento ahora?"
 
 #: ../python/frescobaldi_app/mainapp.py:870
 msgid "There is already a LilyPond job running for this document."
@@ -2020,28 +1992,29 @@ msgstr "No se puede procesar el documento"
 
 #: ../python/frescobaldi_app/mainapp.py:880
 msgid "Continue anyway?"
-msgstr ""
+msgstr "¿Continuar de todas formas?"
 
 #: ../python/frescobaldi_app/mainapp.py:884
 msgid ""
 "You want to run LilyPond in preview mode (with point and click enabled), but "
 "your document contains a command to turn point and click off."
-msgstr ""
+msgstr "Usted desea ejecutar LilyPond en el modo de vista previa (con la opción de apuntar y pulsar activada), pero el documento contiene una instrucción para desactivar la opción de apuntar y pulsar."
 
 #: ../python/frescobaldi_app/mainapp.py:888
 msgid ""
 "You want to run LilyPond in publish mode (with point and click disabled), "
 "but your document contains a command to turn point and click on."
 msgstr ""
+"Usted quiere ejecutar LilyPond en el modo de publicación (con la opción de apuntar y pulsar desactivada), "
+"pero el documento contiene una instrucción para activar la opción de apuntar y pulsar."
 
 #: ../python/frescobaldi_app/mainapp.py:914
 msgid "Abort the running LilyPond process"
 msgstr "Interrumpir el proceso de LilyPond en ejecución"
 
 #: ../python/frescobaldi_app/mainapp.py:917
-#, fuzzy
 msgid "Run LilyPond in preview mode (Shift-click for custom dialog)"
-msgstr "Ejecutar LilyPond en el modo de vista previa"
+msgstr "Ejecutar LilyPond en el modo de vista previa (Mays.+clic para activar el diálogo de opciones personalizadas)"
 
 #: ../python/frescobaldi_app/mainapp.py:940
 #: ../python/frescobaldi_app/mainapp.py:1214
@@ -2050,12 +2023,11 @@ msgstr "Inserción rápida"
 
 #: ../python/frescobaldi_app/mainapp.py:952
 msgid "LilyPond has successfully compiled %1."
-msgstr ""
+msgstr "LilyPond ha compilado %1 con éxito."
 
 #: ../python/frescobaldi_app/mainapp.py:956
-#, fuzzy
 msgid "LilyPond exited with an error compiling %1."
-msgstr "LilyPond [%1] devolvió al salir el código %2."
+msgstr "LilyPond ha terminado con un error al compilar %1."
 
 #: ../python/frescobaldi_app/mainapp.py:964
 msgid "Apply Rhythm"
@@ -2089,6 +2061,8 @@ msgid ""
 "Could not load the KMid part.\n"
 "Please install KMid 2.4.0 or higher."
 msgstr ""
+"No se ha podido cargar la parte KMid.\n"
+"Instale KMid 2.4.0 o superior."
 
 #: ../python/frescobaldi_app/mainapp.py:1075
 #: ../python/frescobaldi_app/runlily.py:742
@@ -2112,9 +2086,8 @@ msgid "S&ynchronize Preview with Current Document"
 msgstr "&Sincronizar la vista previa con el documento actual"
 
 #: ../python/frescobaldi_app/mainapp.py:1150
-#, fuzzy
 msgid "Reload"
-msgstr "Grabar"
+msgstr "Recargar"
 
 #: ../python/frescobaldi_app/mainapp.py:1226
 #: ../python/frescobaldi_app/runlily.py:462
@@ -2406,19 +2379,16 @@ msgstr "Se ha producido un error desconocido."
 
 #: ../python/frescobaldi_app/runlily.py:247
 #: ../python/frescobaldi_app/runlily.py:250
-#, fuzzy
 msgid "Run LilyPond"
-msgstr "LilyPond"
+msgstr "Ejecutar LilyPond"
 
 #: ../python/frescobaldi_app/runlily.py:257
-#, fuzzy
 msgid "Select which LilyPond version you want to run:"
-msgstr "Seleccione los archivos que quiere enviar:"
+msgstr "Seleccione la versión de LilyPond que quiere ejecutar:"
 
 #: ../python/frescobaldi_app/runlily.py:265
-#, fuzzy
 msgid "Run LilyPond in preview mode (with Point and Click)"
-msgstr "Ejecutar LilyPond en el modo de vista previa"
+msgstr "Ejecutar LilyPond en el modo de vista previa (con Apuntar y Pulsar)"
 
 #: ../python/frescobaldi_app/runlily.py:268
 #: ../python/frescobaldi_app/settings.py:306
@@ -2426,56 +2396,49 @@ msgid "Run LilyPond with verbose output"
 msgstr "Ejecutar LilyPond con salida prolija"
 
 #: ../python/frescobaldi_app/runlily.py:310
-#, fuzzy
 msgid "Command"
-msgstr "Instrucción de impresión:"
+msgstr "Instrucción"
 
 #: ../python/frescobaldi_app/runlily.py:317
-#, fuzzy
 msgid "LilyPond %1"
-msgstr "LilyPond"
+msgstr "LilyPond %1"
 
 #: ../python/frescobaldi_app/runlily.py:318
-#, fuzzy
 msgid "Use LilyPond version %1"
-msgstr "Introducir la versión de LilyPond"
+msgstr "Usar la versión de LilyPond %1"
 
 #: ../python/frescobaldi_app/runlily.py:321
 #: ../python/frescobaldi_app/settings.py:815
-#, fuzzy
 msgid "default"
-msgstr "Predeterminado"
+msgstr "predeterminado"
 
 #: ../python/frescobaldi_app/runlily.py:322
-#, fuzzy
 msgid "Default LilyPond Version."
-msgstr "Introducir la versión de LilyPond"
+msgstr "Versión predeterminada de LilyPond."
 
 #: ../python/frescobaldi_app/runlily.py:324
 msgid "automatic"
-msgstr ""
+msgstr "automática"
 
 #: ../python/frescobaldi_app/runlily.py:325
-#, fuzzy
 msgid "Automatic LilyPond Version (determined from document)."
-msgstr "La versión de LilyPond que se va a usar para los documentos nuevos"
+msgstr "Versión de LilyPond automática (determinada a partir del documento)."
 
 #: ../python/frescobaldi_app/runlily.py:330
-#, fuzzy
 msgid "Path: %1"
-msgstr "Reproducir %1"
+msgstr "Ruta: %1"
 
 #: ../python/frescobaldi_app/runlily.py:334
-#, fuzzy
 msgid "LilyPond (version unknown)"
-msgstr "Introducir la versión de LilyPond"
+msgstr "LilyPond (versión desconocida)"
 
 #: ../python/frescobaldi_app/runlily.py:335
-#, fuzzy
 msgid ""
 "Use LilyPond (version unknown)\n"
 "Path: %1"
-msgstr "Introducir la versión de LilyPond"
+msgstr ""
+"Usar LilyPond (versión desconocida)\n"
+"Ruta: %1"
 
 #: ../python/frescobaldi_app/runlily.py:450
 msgid "Click to edit this file"
@@ -2496,24 +2459,21 @@ msgstr ""
 "%1"
 
 #: ../python/frescobaldi_app/sessions.py:39
-#, fuzzy
 msgid "LilyPond-related settings"
-msgstr "Archivos de LilyPond"
+msgstr "Ajustes de LilyPond"
 
 #: ../python/frescobaldi_app/sessions.py:44
-#, fuzzy
 msgid "LilyPond version to use:"
-msgstr "Introducir la versión de LilyPond"
+msgstr "Versión de LilyPond que usar:"
 
 #: ../python/frescobaldi_app/sessions.py:48
-#, fuzzy
 msgid ""
 "Here you can set a fixed LilyPond version to run on documents in this "
 "session.\n"
 "See What's This (Shift+F1) for more information."
 msgstr ""
-"Aquí puede elegir los guiones de Guile que quere que Rumor cargue. Compruebe "
-"la salida de \"Qué es esto\" para más información."
+"Aquí puede establecer una versión fija de LilyPond para ejecutarla sobre los documentos dentro de esta sesión.\n"
+"Selecciones Qué es esto (Mays.+F1) para ver más información."
 
 #: ../python/frescobaldi_app/sessions.py:52
 msgid ""
@@ -2523,6 +2483,9 @@ msgid ""
 "The LilyPond version selected here is run by default on your documents, and "
 "it's also used by the \"Insert Version\" command."
 msgstr ""
+"Aquí puede establecer una versión fija de LilyPond para ejecutarla sobre los documentos dentro de esta sesión.\n"
+"\n"
+"La versión de LilyPond que está seleccionada aquí se ejecuta de forma predeterminada sobre los documentos, y se usa también por parte de la instrucción \"Insertar versión\"."
 
 #: ../python/frescobaldi_app/settings.py:57
 msgid "Configure"
@@ -2538,9 +2501,8 @@ msgstr "Preferencias generales de Frescobaldi"
 
 #: ../python/frescobaldi_app/settings.py:222
 #: ../python/frescobaldi_app/settings.py:223
-#, fuzzy
 msgid "LilyPond Preferences"
-msgstr "Archivos de LilyPond"
+msgstr "Preferencias de LilyPond"
 
 #: ../python/frescobaldi_app/settings.py:238
 msgid "Paths"
@@ -2567,23 +2529,20 @@ msgid "Editor Component Options"
 msgstr "Opciones del componente del editor"
 
 #: ../python/frescobaldi_app/settings.py:298
-#, fuzzy
 msgid "Running LilyPond"
-msgstr "LilyPond"
+msgstr "Ejecutar LilyPond"
 
 #: ../python/frescobaldi_app/settings.py:303
 msgid "Let LilyPond delete intermediate output files"
 msgstr "Permitir a LilyPond borrar los archivos de salida intermedios"
 
 #: ../python/frescobaldi_app/settings.py:310
-#, fuzzy
 msgid "LilyPond include path:"
-msgstr "Archivos de LilyPond"
+msgstr "Ruta de inclusión para LilyPond:"
 
 #: ../python/frescobaldi_app/settings.py:336
-#, fuzzy
 msgid "When saving documents"
-msgstr "Enviar documentos por correo-e"
+msgstr "Al guardar los documentos"
 
 #: ../python/frescobaldi_app/settings.py:341
 msgid "Remember cursor position, bookmarks, etc."
@@ -2619,34 +2578,33 @@ msgstr "Escriba un número de versión de LilyPond válido, p.ej.: 2.12.0"
 
 #: ../python/frescobaldi_app/settings.py:430
 msgid "Warnings and Notifications"
-msgstr ""
+msgstr "Advertencias y avisos"
 
 #: ../python/frescobaldi_app/settings.py:435
 msgid "Warn when a document contains a conflicting point and click setting"
-msgstr ""
+msgstr "Avisar si el documento contiene un ajuste conflictivo para la opción Apuntar y Pulsar"
 
 #: ../python/frescobaldi_app/settings.py:438
-#, fuzzy
 msgid "Warn when a document needs to be saved before LilyPond is run"
-msgstr "Guardar el documento al ejecutar LilyPond"
+msgstr "Avisar si el documento necesita guardarse antes de ejecutar LilyPond"
 
 #: ../python/frescobaldi_app/settings.py:441
 msgid "Warn when saving a session would overwrite another"
-msgstr ""
+msgstr "Avisar si al guardar la sesión se sobreescribe otra"
 
 #: ../python/frescobaldi_app/settings.py:447
 msgid "Point and Click"
-msgstr ""
+msgstr "Apuntar y Pulsar"
 
 #: ../python/frescobaldi_app/settings.py:450
 msgid "Enable Point and Click"
-msgstr ""
+msgstr "Activar la opción Apuntar y Pulsar"
 
 #: ../python/frescobaldi_app/settings.py:453
 msgid ""
 "Click this button if Point and Click does not work. See Shift+F1 (What's "
 "This) for more information."
-msgstr ""
+msgstr "Pulse el botón si la opción Apuntar y Pulsar no funciona. Véase Mays.+F1 (Qué es esto) para más información."
 
 #: ../python/frescobaldi_app/settings.py:457
 msgid ""
@@ -2660,6 +2618,11 @@ msgid ""
 "Okular.  This works best when all instances of Okular are closed and the PDF "
 "preview has not yet been opened."
 msgstr ""
+"En la primera ejecución, Frescobaldi trata de auto-configurar Okular (que aporta la vista previa del PDF) para que llame a Frescobaldi cuando se pulsa sobre un objeto que contiene un enlace.\n"
+"\n"
+"Sin embargo, este ajuste puede perderse si mueve Frescobaldi a un lugar distinto o cuando otras aplicaciones reconfiguran Okular.\n"
+"\n"
+"Pulse este botón para configurar Frescobaldi como 'editor personalizado' dentro de Okular.  Esto funciona mejor si todas las instancias de Okular están cerradas y aún no se ha abierto la vista previa del PDF."
 
 #: ../python/frescobaldi_app/settings.py:477
 msgid ""
@@ -2668,10 +2631,13 @@ msgid ""
 "If you already opened the PDF preview, restart Frescobaldi for the new "
 "settings to take effect."
 msgstr ""
+"Se ha reconfigurado la vista previa de PDF de Okular.\n"
+"\n"
+"Si ya ha abierto la vista previa de PDF, reinicie Frescobaldi para que tengan efecto los nuevos ajustes."
 
 #: ../python/frescobaldi_app/settings.py:484
 msgid "Helper applications"
-msgstr ""
+msgstr "Aplicaciones de apoyo"
 
 #: ../python/frescobaldi_app/settings.py:489
 msgid "PDF Viewer:"
@@ -2692,16 +2658,15 @@ msgstr "Reproductor MIDI:"
 
 #: ../python/frescobaldi_app/settings.py:531
 msgid "Url:"
-msgstr ""
+msgstr "URL:"
 
 #: ../python/frescobaldi_app/settings.py:536
 msgid "Url or path to the LilyPond documentation."
 msgstr "Dirección o ruta d la documentación de LilyPond."
 
 #: ../python/frescobaldi_app/settings.py:563
-#, fuzzy
 msgid "Lyrics Hyphenation"
-msgstr "Quitar el enguionado"
+msgstr "Separación de sílabas"
 
 #: ../python/frescobaldi_app/settings.py:570
 msgid ""
@@ -2730,119 +2695,106 @@ msgstr ""
 "y reproducción de MIDI utilizando Rumor)."
 
 #: ../python/frescobaldi_app/settings.py:615
-msgid ""
-"Full command to start Timidity (or any other program) as an ALSA MIDI client."
+msgid "Full command to start Timidity (or any other program) as an ALSA MIDI client."
 msgstr ""
 "Instrucción completa para iniciar Timidity (o cualquier otro programa) como "
 "cliente de MIDI ALSA."
 
 #: ../python/frescobaldi_app/settings.py:648
-#, fuzzy
 msgid "LilyPond versions to use:"
-msgstr "Introducir la versión de LilyPond"
+msgstr "Versiones de LilyPond que usar:"
 
 #: ../python/frescobaldi_app/settings.py:655
-msgid ""
-"Enable automatic version selection (choose LilyPond version from document)"
-msgstr ""
+msgid "Enable automatic version selection (choose LilyPond version from document)"
+msgstr "Activar la selección automática de la versión de LilyPond (determinarla a partir del documento)"
 
 #: ../python/frescobaldi_app/settings.py:710
-#, fuzzy
 msgid "Document Tabs"
-msgstr "Mostrar solapas del documento"
+msgstr "Solapas de documento"
 
 #: ../python/frescobaldi_app/settings.py:715
 msgid "Close Button"
-msgstr ""
+msgstr "Botón de cierre"
 
 #: ../python/frescobaldi_app/settings.py:717
 msgid "Large Tabs"
-msgstr ""
+msgstr "Solapas grandes"
 
 #: ../python/frescobaldi_app/settings.py:719
 msgid "Tabs can be moved"
-msgstr ""
+msgstr "Las solapas se pueden mover"
 
 #: ../python/frescobaldi_app/settings.py:777
 msgid "Convert-ly:"
-msgstr ""
+msgstr "Convert-ly:"
 
 #: ../python/frescobaldi_app/settings.py:778
-#, fuzzy
 msgid "Lilypond-book:"
-msgstr "LilyPond"
+msgstr "Lilypond-book:"
 
 #: ../python/frescobaldi_app/settings.py:809
-#, fuzzy
 msgid "Path"
-msgstr "Rutas"
+msgstr "Ruta"
 
 #: ../python/frescobaldi_app/settings.py:810
-#, fuzzy
 msgid "Version"
-msgstr "Versión:"
+msgstr "Versión"
 
 #: ../python/frescobaldi_app/settings.py:813
-#, fuzzy
 msgid "Can't determine LilyPond version."
-msgstr "Introducir la versión de LilyPond"
+msgstr "No puede determinarse la versión de LilyPond."
 
 #: ../python/frescobaldi_app/settings.py:835
 msgid "Download..."
-msgstr ""
+msgstr "Descargar..."
 
 #: ../python/frescobaldi_app/settings.py:838
 msgid "Download new binary LilyPond releases."
-msgstr ""
+msgstr "Descargar versiones nuevas del binario de LilyPond."
 
 #: ../python/frescobaldi_app/settings.py:842
-#, fuzzy
 msgid "LilyPond Command:"
-msgstr "Índice de instrucciones de LilyPond"
+msgstr "Instrucción de LilyPond:"
 
 #: ../python/frescobaldi_app/settings.py:846
 msgid "Name or full path of the LilyPond program."
 msgstr "El nombre o la ruta completa del programa LilyPond."
 
 #: ../python/frescobaldi_app/settings.py:847
-#, fuzzy
 msgid "LilyPond Command"
-msgstr "Índice de instrucciones de LilyPond"
+msgstr "Instrucción de LilyPond"
 
 #: ../python/frescobaldi_app/settings.py:860
-#, fuzzy
 msgid "Set as default"
-msgstr "Establecer estos ajustes como predeterminados."
+msgstr "Establecer como predeterminados"
 
 #: ../python/frescobaldi_app/settings.py:862
 msgid "Include in automatic version selection"
-msgstr ""
+msgstr "Incluir en la selección automática de la versión"
 
 #: ../python/frescobaldi_app/settings.py:890
 msgid "Session to load if Frescobaldi is started without arguments"
-msgstr ""
+msgstr "Sesión que cargar si Frescobaldi se inicia sin argumentos"
 
 #: ../python/frescobaldi_app/settings.py:903
-#, fuzzy
 msgid "Start with no session"
-msgstr "Empezar en:"
+msgstr "Iniciar sin ninguna sesión"
 
 #: ../python/frescobaldi_app/settings.py:904
 msgid "Start with last used session"
-msgstr ""
+msgstr "Iniciar con la última sesión utilizada"
 
 #: ../python/frescobaldi_app/settings.py:905
-#, fuzzy
 msgid "Start with session:"
-msgstr "Empezar en:"
+msgstr "Iniciar con la sesión:"
 
 #: ../python/frescobaldi_app/settings.py:909
 msgid "Choose a session."
-msgstr ""
+msgstr "Seleccione una sesión."
 
 #: ../python/frescobaldi_app/settings.py:918
 msgid "Choose..."
-msgstr ""
+msgstr "Seleccionar..."
 
 #: ../python/frescobaldi_app/version.py:61
 msgid "Your document has already a LilyPond version statement."
@@ -3035,8 +2987,7 @@ msgstr "Utilizar comillas tipográficas"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:465
 msgid "Replace normal quotes in titles with nice typographical quotes."
-msgstr ""
-"Sustituir las comillas normales con las vistosas comillas tipográficas."
+msgstr "Sustituir las comillas normales con las vistosas comillas tipográficas."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:469
 msgid "Suppress the default tagline output by LilyPond."
@@ -3047,8 +2998,7 @@ msgid "Remove bar numbers"
 msgstr "Quitar números de compás"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:473
-msgid ""
-"Suppress the display of measure numbers at the beginning of every system."
+msgid "Suppress the display of measure numbers at the beginning of every system."
 msgstr ""
 "Eliminar la numeración de compases que aparece a la izquierda de los "
 "sistemas."
@@ -3076,11 +3026,11 @@ msgstr ""
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:486
 msgid "Wrap score in \\book block"
-msgstr ""
+msgstr "Encerrar la partitura dentro de un bloque \\book"
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:488
 msgid "If checked, wraps the \\score block inside a \\book block."
-msgstr ""
+msgstr "Si está activado, encierra el bloque \\score dentro de un bloque \\book."
 
 #: ../python/frescobaldi_app/scorewiz/__init__.py:498
 msgid "Landscape"
@@ -3186,8 +3136,7 @@ msgstr "Configurar el número de voces distintas deseado en cada pentagrama."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:387
 msgid "This is primarily useful when you write polyphonic music like a fuge."
-msgstr ""
-"Esto es de utilidad sobre todo al escribir música polifónica como una fuga."
+msgstr "Esto es de utilidad sobre todo al escribir música polifónica como una fuga."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:391
 msgid "Right hand:"
@@ -3664,26 +3613,23 @@ msgid "Voicing:"
 msgstr "Canto:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:942
-#, fuzzy
 msgid "Lyrics:"
-msgstr "Letra"
+msgstr "Letra:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:946
 msgid "All voices same lyrics"
 msgstr "Misma letra en todas las voces"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:947
-#, fuzzy
 msgid "A set of the same lyrics is placed between all staves."
-msgstr "Se coloca un bloque de letra único entre todos los pentagramas."
+msgstr "Se coloca el mismo conjunto de letras entre todos los pentagramas."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:948
 msgid "Every voice same lyrics"
 msgstr "Misma letra todas las voces"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:949
-msgid ""
-"Every voice gets its own lyrics, using the same text as the other voices."
+msgid "Every voice gets its own lyrics, using the same text as the other voices."
 msgstr "Cada letra tiene su voz, usando el mismo texto que las otras voces."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:951
@@ -3696,12 +3642,11 @@ msgstr "Cada una de las voces recibe un bloque de letras distinto."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:953
 msgid "Distribute stanzas"
-msgstr ""
+msgstr "Distribuir las estrofas"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:954
-#, fuzzy
 msgid "One set of stanzas is distributed across the staves."
-msgstr "Se coloca un bloque de letra único entre todos los pentagramas."
+msgstr "Se distribuye un conjunto de estrofas a través de los pentagramas."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:959
 msgid "Piano reduction"
@@ -3713,13 +3658,13 @@ msgstr "Añade una reducción de piano generada automáticamente."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:963
 msgid "Rehearsal MIDI files"
-msgstr ""
+msgstr "Archivos MIDI para ensayo"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:965
 msgid ""
 "Creates a rehearsal MIDI file for every voice, even if no MIDI output is "
 "generated for the main score."
-msgstr ""
+msgstr "Crea un archivo MIDI de ensayo para todas las voces, incluso si no se genera ninguna salida MIDI para la partitura principal."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1017
 msgid "Choir|Ch."
@@ -3727,7 +3672,7 @@ msgstr "Coro|Co."
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1262
 msgid "Rehearsal MIDI files:"
-msgstr ""
+msgstr "Archivos MIDI de ensayo:"
 
 #: ../python/frescobaldi_app/scorewiz/parts.py:1309
 msgid "Piano"
@@ -3901,69 +3846,3 @@ msgstr "Teclados"
 msgid "Special"
 msgstr "Especial"
 
-#~ msgid "Open PDF"
-#~ msgstr "Abrir PDF"
-
-#~ msgid "Print"
-#~ msgstr "Imprimir"
-
-#~ msgid "Play MIDI"
-#~ msgstr "Reproducir MIDI"
-
-#~ msgid "Email..."
-#~ msgstr "Correo-e..."
-
-#~ msgid "Disable the built-in PDF preview"
-#~ msgstr "Desactivar la vista previa de PDF incorporada"
-
-#~ msgid "The direction to use for the articulations."
-#~ msgstr "Dirección que usar para las articulaciones."
-
-#~ msgid "&Generated Files"
-#~ msgstr "Archivos &generados"
-
-#~ msgid "Your document has been modified, please save first."
-#~ msgstr "El documento ha sido modificado, grábelo primero."
-
-#~ msgid "LilyPond documentation:"
-#~ msgstr "Documentación de LilyPond:"
-
-#~ msgid "The document has been sent to the printer."
-#~ msgstr "El documento se ha enviado a la impresora."
-
-#~ msgid ""
-#~ "Printing failed: %1\n"
-#~ "\n"
-#~ "The print command %2 does probably not exist. Please check your settings."
-#~ msgstr ""
-#~ "La impresión ha fallado: %1\n"
-#~ "\n"
-#~ "La instrucción de impresión %2 probablemente no existe. Compruebe la "
-#~ "configuración."
-
-#~ msgid "The print command contains errors. Please check your settings."
-#~ msgstr ""
-#~ "La instrucción de imprimir tiene errores. Compruebe la configuración."
-
-#~ msgid "Directly print on default printer"
-#~ msgstr "Imprimir directamente en la impresora predeterminada"
-
-#, fuzzy
-#~ msgid "Notify when a document has been sent to the printer"
-#~ msgstr "El documento se ha enviado a la impresora."
-
-#~ msgid "Printcommand:"
-#~ msgstr "Instrucción de impresión:"
-
-#~ msgid ""
-#~ "Command to print a PDF file, for example lpr or kprinter. You may add "
-#~ "some arguments, e.g. lpr -P myprinter."
-#~ msgstr ""
-#~ "Instrucción para imprimir un archivo PDF, por ejemplo lpr o kprinter. "
-#~ "Puede añadir argumentos, como p.ej. lpr -P mi_impresora."
-
-#~ msgid "Space above:"
-#~ msgstr "Especio por encima:"
-
-#~ msgid "Name or full path of the convert-ly program."
-#~ msgstr "El nombre o la ruta completa del programa convert-ly."
