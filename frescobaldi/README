@@ -12,6 +12,7 @@ features:
 * Advanced point-and-click support: clicking on notes or other objects will put
   the text cursor at the correct position, even if you change the document
   without re-running LilyPond
+* Built-in MIDI player (uses the embeddable KMid part)
 * Editing tools:
   - advanced syntax coloring that also signals some often made errors
   - auto-indent nested structures, those can be folded for quick overview
@@ -26,7 +27,8 @@ features:
 * A powerful Rumor panel, using the Rumor program to enter music by playing it
   on a MIDI keyboard or even your computer keyboard
 * Quick buttons to open, send, play or print LilyPond-generated files
-* Sessions to easily edit on groups of related files
+* Sessions to easily work on groups of related files
+* Convenient tool to install and use multiple LilyPond versions
 * Built-in LilyPond documentation browser with editor context menu support
   (right-click a command in the editor to lookup its documentation)
 * Comprehensive User Guide with help buttons on all dialogs
