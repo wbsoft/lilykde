@@ -1008,7 +1008,7 @@ class Builder(object):
         """
         s = self.wizard.settings
         base, mul = midiDurations[s.metroDur.currentIndex()]
-        val = int(s.metroVal.currentText()) * mul
+        val = int(re.search(r"\d*", s.metroVal.currentText()).group() or "100") * mul
         return "(ly:make-moment {0} {1})".format(val, base)
         
     def setMidiTempo(self, node):
