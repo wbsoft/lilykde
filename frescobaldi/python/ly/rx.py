@@ -82,7 +82,7 @@ skip_pitches = (
 # a sounding pitch/chord with duration
 chord = re.compile(
     # skip this:
-    r"<<|>>|" + quotedstring +
+    r"<<|>>|\\<|" + quotedstring +
     # but catch either a pitch plus an octave
     r"|(?P<full>(?P<chord>" + named_pitch +
     # or a chord:
@@ -96,7 +96,7 @@ chord = re.compile(
 # a sounding pitch/chord OR rest/skip with duration
 chord_rest = re.compile(
     # skip this:
-    r"<<|>>|" + quotedstring +
+    r"<<|>>|\\<|" + quotedstring +
     # but catch either a pitch plus an octave
     r"|(?P<full>(?P<chord>" + named_pitch +
     # or a chord:
