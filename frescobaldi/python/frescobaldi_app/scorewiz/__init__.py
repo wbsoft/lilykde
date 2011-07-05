@@ -454,7 +454,7 @@ class Settings(SymbolManager, QWidget):
         version = defaultVersion()
         if version:
             self.lyversion.addItem(str(version))
-        self.lyversion.addItems(('2.10.0', '2.11.0'))
+        self.lyversion.addItems(('2.12.0', '2.10.0'))
         h.setToolTip(i18n(
             "The LilyPond version you will be using for this document."))
 

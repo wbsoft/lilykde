@@ -538,8 +538,10 @@ class PianoStaff(StaffBase):
             layout.add('Staff', "\\override Clef #'transparent = ##t")
         if lilyPondVersion() < (2, 13, 4):
             spacing = "#'minimum-Y-extent = #'(-6 . 3)"
-        else:
+        elif lilyPondVersion() < (2, 14, 0):
             spacing = "#'next-staff-spacing = #'((space . 10))"
+        else:
+            spacing = "#'next-staff-spacing = #'((basic-distance . 10))"
         return ['\\new PianoStaff <<',
             '\\new Staff \\with {',
             '\\override VerticalAxisGroup ' + spacing,
@@ -562,10 +564,14 @@ class OrganStaff(PianoStaff):
             layout.add('Staff', "\\override Clef #'transparent = ##t")
         if lilyPondVersion() < (2, 13, 4):
             spacing = "#'minimum-Y-extent = #'(-6 . 3)"
-        else:
+        elif lilyPondVersion() < (2, 14, 0):
             spacing = "#'next-staff-spacing = #'((space . 12) (stretchability . 1))"
             layout.add('Staff', "\\override VerticalAxisGroup "
                 "#'next-staff-spacing = #'((space . 10) (stretchability . 1))")
+        else:
+            spacing = "#'next-staff-spacing = #'((basic-distance . 12) (stretchability . 1))"
+            layout.add('Staff', "\\override VerticalAxisGroup "
+                "#'next-staff-spacing = #'((basic-distance . 10) (stretchability . 1))")
         return ['<<',
             '\\new GrandStaff <<',
             '\\new Staff \\with {',
@@ -867,9 +873,13 @@ class StaffItem(Item):
             music.append(
                 "\\override VerticalAxisGroup #'minimum-Y-extent = #'(-{0} . 5)".format(
                     self.spaceBelow.value()))
-        else:
+        elif lilyPondVersion() < (2, 14, 0):
             music.append(
                 "\\override VerticalAxisGroup #'next-staff-spacing = #'((space . {0}))".format(
+                    self.spaceBelow.value() + 5))
+        else:
+            music.append(
+                "\\override VerticalAxisGroup #'next-staff-spacing = #'((basic-distance . {0}))".format(
                     self.spaceBelow.value() + 5))
         if not clef:
             music.append("\\override Clef #'transparent = ##t")
